@@ -49,6 +49,11 @@ export const navData: NavData = [
         ),
       },
       {
+        title: 'Stop Machine Reason',
+        path: '/stop-machine-reason',
+        icon: icon('ic-disabled'),
+      },
+      {
         title: 'Blog',
         path: '/blog',
         icon: icon('ic-blog'),
