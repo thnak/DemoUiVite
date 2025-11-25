@@ -21,7 +21,6 @@ import {
   _productCategories,
   _quantityPerSignal,
   _areaDescriptions,
-  _productCategories,
   _productGroupCodes,
   _productGroupNames,
   _productGroupDescriptions,
