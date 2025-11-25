@@ -49,6 +49,11 @@ export const navData: NavData = [
         ),
       },
       {
+        title: 'Working Parameter',
+        path: '/working-parameter',
+        icon: icon('ic-analytics'),
+      },
+      {
         title: 'Blog',
         path: '/blog',
         icon: icon('ic-blog'),

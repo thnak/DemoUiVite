@@ -12,9 +12,13 @@ import {
   _description,
   _phoneNumber,
   _productNames,
+  _machineNames,
   _publishStatus,
+  _idealCycleTime,
   _stockQuantities,
+  _downtimeThreshold,
   _productCategories,
+  _quantityPerSignal,
 } from './_mock';
 
 // ----------------------------------------------------------------------
@@ -232,3 +236,14 @@ export const _notifications = [
     isUnRead: false,
   },
 ];
+
+// ----------------------------------------------------------------------
+
+export const _workingParameters = [...Array(20)].map((_, index) => ({
+  id: _id(index),
+  product: _productNames(index),
+  machine: _machineNames(index),
+  idealCycleTime: _idealCycleTime(index),
+  quantityPerSignal: _quantityPerSignal(index),
+  downtimeThreshold: _downtimeThreshold(index),
+}));
