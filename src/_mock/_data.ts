@@ -8,12 +8,14 @@ import {
   _fullName,
   _taskNames,
   _createdAt,
+  _areaNames,
   _postTitles,
   _description,
   _phoneNumber,
   _productNames,
   _publishStatus,
   _stockQuantities,
+  _areaDescriptions,
   _productCategories,
   _productGroupCodes,
   _productGroupNames,
@@ -124,6 +126,12 @@ export const _products = [...Array(20)].map((_, index) => {
 });
 
 // ----------------------------------------------------------------------
+
+export const _areas = [...Array(20)].map((_, index) => ({
+  id: _id(index),
+  name: _areaNames(index),
+  description: _areaDescriptions(index),
+}));
 
 export const _productGroups = [...Array(20)].map((_, index) => ({
   id: _id(index),
