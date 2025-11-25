@@ -4,11 +4,13 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
@@ -62,6 +64,7 @@ const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
 export function CreateUserView() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [emailVerified, setEmailVerified] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
     email: '',
@@ -76,17 +79,21 @@ export function CreateUserView() {
     role: '',
   });
 
+  const handleCloseError = useCallback(() => {
+    setErrorMessage(null);
+  }, []);
+
   const handleAvatarChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-      alert('Please select a valid image file (jpeg, jpg, png, gif)');
+      setErrorMessage('Please select a valid image file (*.jpeg, *.jpg, *.png, *.gif)');
       return;
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      alert('File size must be less than 3 MB');
+      setErrorMessage('File size must not exceed 3 MB');
       return;
     }
 
@@ -391,6 +398,17 @@ export function CreateUserView() {
           </Card>
         </Grid>
       </Grid>
+
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </DashboardContent>
   );
 }
