@@ -8,6 +8,7 @@ import {
   _fullName,
   _taskNames,
   _createdAt,
+  _areaNames,
   _postTitles,
   _description,
   _phoneNumber,
@@ -19,6 +20,11 @@ import {
   _downtimeThreshold,
   _productCategories,
   _quantityPerSignal,
+  _areaDescriptions,
+  _productCategories,
+  _productGroupCodes,
+  _productGroupNames,
+  _productGroupDescriptions,
 } from './_mock';
 
 // ----------------------------------------------------------------------
@@ -126,6 +132,21 @@ export const _products = [...Array(20)].map((_, index) => {
 
 // ----------------------------------------------------------------------
 
+export const _areas = [...Array(20)].map((_, index) => ({
+  id: _id(index),
+  name: _areaNames(index),
+  description: _areaDescriptions(index),
+}));
+
+export const _productGroups = [...Array(20)].map((_, index) => ({
+  id: _id(index),
+  code: _productGroupCodes(index),
+  name: _productGroupNames(index),
+  description: _productGroupDescriptions(index),
+}));
+
+// ----------------------------------------------------------------------
+
 export const _langs = [
   {
     value: 'en',
@@ -189,6 +210,78 @@ export const _tasks = Array.from({ length: 5 }, (_, index) => ({
 
 // ----------------------------------------------------------------------
 
+export type StopType = 'Plan' | 'UnPlan';
+
+const STOP_TYPES: StopType[] = ['Plan', 'UnPlan'];
+
+const STOP_GROUPS = [
+  'Mechanical',
+  'Electrical',
+  'Quality',
+  'Material',
+  'Changeover',
+  'Maintenance',
+  'Operator',
+  'External',
+];
+
+const STOP_REASON_NAMES = [
+  'Motor Overheating',
+  'Belt Replacement',
+  'Quality Inspection',
+  'Material Shortage',
+  'Product Changeover',
+  'Scheduled Maintenance',
+  'Operator Break',
+  'Power Outage',
+  'Sensor Malfunction',
+  'Calibration',
+  'Tool Change',
+  'Safety Check',
+  'Software Update',
+  'Emergency Stop',
+  'Cleaning',
+  'Lubrication',
+  'Alignment Adjustment',
+  'Component Failure',
+  'Training Session',
+  'Shift Handover',
+];
+
+const STOP_REASON_DESCRIPTIONS = [
+  'Machine stopped due to motor temperature exceeding safe limits',
+  'Scheduled replacement of worn conveyor belt',
+  'Quality control inspection of produced items',
+  'Production halted due to insufficient raw materials',
+  'Reconfiguration for different product specifications',
+  'Regular preventive maintenance as per schedule',
+  'Mandatory operator rest period',
+  'Unplanned power supply interruption',
+  'Malfunction detected in proximity sensor',
+  'Periodic calibration of measuring instruments',
+  'Replacement of worn cutting or forming tools',
+  'Routine safety equipment verification',
+  'Installation of software patches or updates',
+  'Machine stopped due to emergency situation',
+  'Cleaning of machine components and work area',
+  'Application of lubricants to moving parts',
+  'Adjustment of machine alignment parameters',
+  'Unexpected failure of machine component',
+  'Operator training on new procedures',
+  'Handover briefing between shifts',
+];
+
+export const _stopMachineReasons = [...Array(20)].map((_, index) => ({
+  id: _id(index),
+  code: `SMR-${String(index + 1).padStart(3, '0')}`,
+  name: STOP_REASON_NAMES[index % 20],
+  stopGroup: STOP_GROUPS[index % 8],
+  stopType: STOP_TYPES[index % 2] as StopType,
+  description: STOP_REASON_DESCRIPTIONS[index % 20],
+}));
+
+// ----------------------------------------------------------------------
+
 export const _notifications = [
   {
     id: _id(1),
@@ -246,4 +339,85 @@ export const _workingParameters = [...Array(20)].map((_, index) => ({
   idealCycleTime: _idealCycleTime(index),
   quantityPerSignal: _quantityPerSignal(index),
   downtimeThreshold: _downtimeThreshold(index),
+  }));
+
+export type MachineInputType = 'WeightChannels' | 'PairChannel';
+
+const MACHINE_INPUT_TYPES: MachineInputType[] = ['WeightChannels', 'PairChannel'];
+
+const MACHINE_AREAS = [
+  'Production Line A',
+  'Production Line B',
+  'Warehouse Zone 1',
+  'Warehouse Zone 2',
+  'Assembly Area',
+  'Quality Control',
+  'Packaging Zone',
+  'Storage Area',
+];
+
+const MACHINE_CALENDARS = [
+  'Ultimate 7 Days Work',
+  '6 Days with Break Times',
+  'Standard 5 Days Work',
+  '24/7 Continuous Operation',
+  'Night Shift Schedule',
+  'Weekend Maintenance',
+];
+
+const MACHINE_NAMES = [
+  'CNC Milling Machine',
+  'Industrial Robot Arm',
+  'Conveyor Belt System',
+  'Packaging Machine',
+  'Quality Scanner',
+  'Assembly Line Unit',
+  'Welding Station',
+  'Paint Sprayer',
+  'Laser Cutter',
+  'Press Machine',
+  '3D Printer',
+  'Injection Molder',
+  'Sorting Machine',
+  'Labeling Machine',
+  'Palletizer',
+  'Wrapping Machine',
+  'Testing Equipment',
+  'Inspection Camera',
+  'Material Handler',
+  'Storage Retrieval',
+];
+
+const MACHINE_CODES = [
+  'MCH-001',
+  'MCH-002',
+  'MCH-003',
+  'MCH-004',
+  'MCH-005',
+  'MCH-006',
+  'MCH-007',
+  'MCH-008',
+  'MCH-009',
+  'MCH-010',
+  'MCH-011',
+  'MCH-012',
+  'MCH-013',
+  'MCH-014',
+  'MCH-015',
+  'MCH-016',
+  'MCH-017',
+  'MCH-018',
+  'MCH-019',
+  'MCH-020',
+];
+
+export const _machines = [...Array(20)].map((_, index) => ({
+  id: _id(index),
+  code: MACHINE_CODES[index],
+  name: MACHINE_NAMES[index],
+  imageUrl: `/assets/images/product/product-${(index % 20) + 1}.webp`,
+  area: MACHINE_AREAS[index % MACHINE_AREAS.length],
+  inputType: MACHINE_INPUT_TYPES[index % 2] as MachineInputType,
+  numberOfInputChannels: [4, 8, 12, 16, 24, 32][index % 6],
+  workCalendar: MACHINE_CALENDARS[index % MACHINE_CALENDARS.length],
 }));
