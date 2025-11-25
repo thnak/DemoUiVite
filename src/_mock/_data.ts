@@ -7,10 +7,14 @@ import {
   _boolean,
   _fullName,
   _taskNames,
+  _createdAt,
   _postTitles,
   _description,
   _phoneNumber,
   _productNames,
+  _publishStatus,
+  _stockQuantities,
+  _productCategories,
 } from './_mock';
 
 // ----------------------------------------------------------------------
@@ -82,8 +86,14 @@ const COLORS = [
   '#FFC107',
 ];
 
-export const _products = [...Array(24)].map((_, index) => {
+export type ProductStatus = 'published' | 'draft';
+export type StockStatus = 'in_stock' | 'low_stock' | 'out_of_stock';
+
+export const _products = [...Array(20)].map((_, index) => {
   const setIndex = index + 1;
+  const stockQty = _stockQuantities(index);
+  const stockStatus: StockStatus =
+    stockQty === 0 ? 'out_of_stock' : stockQty <= 10 ? 'low_stock' : 'in_stock';
 
   return {
     id: _id(index),
@@ -96,11 +106,17 @@ export const _products = [...Array(24)].map((_, index) => {
       (setIndex === 2 && COLORS.slice(1, 3)) ||
       (setIndex === 3 && COLORS.slice(2, 4)) ||
       (setIndex === 4 && COLORS.slice(3, 6)) ||
-      (setIndex === 23 && COLORS.slice(4, 6)) ||
-      (setIndex === 24 && COLORS.slice(5, 6)) ||
+      (setIndex === 19 && COLORS.slice(4, 6)) ||
+      (setIndex === 20 && COLORS.slice(5, 6)) ||
       COLORS,
     status:
       ([1, 3, 5].includes(setIndex) && 'sale') || ([4, 8, 12].includes(setIndex) && 'new') || '',
+    // New fields for list view
+    category: _productCategories(index),
+    stock: stockQty,
+    stockStatus,
+    publish: _publishStatus(index),
+    createdAt: _createdAt(index),
   };
 });
 
