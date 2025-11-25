@@ -150,7 +150,7 @@ export function ProductListView() {
                 }
                 headLabel={[
                   { id: 'name', label: 'Product' },
-                  { id: 'createdAt', label: 'Create at' },
+                  { id: 'createdAt', label: 'Created at' },
                   { id: 'stock', label: 'Stock' },
                   { id: 'price', label: 'Price' },
                   { id: 'publish', label: 'Publish' },
