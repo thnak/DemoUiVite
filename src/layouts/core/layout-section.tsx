@@ -1,65 +1,75 @@
-import type { Theme, SxProps } from '@mui/material/styles';
+import type { Theme, SxProps, CSSObject } from '@mui/material/styles';
 
 import { mergeClasses } from 'minimal-shared/utils';
 
-import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import GlobalStyles from '@mui/material/GlobalStyles';
 
 import { layoutClasses } from './classes';
+import { layoutSectionVars } from './css-vars';
 
 // ----------------------------------------------------------------------
 
-export type LayoutSectionProps = React.ComponentProps<typeof Box> & {
+export type LayoutSectionProps = React.ComponentProps<'div'> & {
   sx?: SxProps<Theme>;
-  cssVars?: Record<string, string | number>;
+  cssVars?: CSSObject;
   children?: React.ReactNode;
-  sidebarSection?: React.ReactNode;
-  headerSection?: React.ReactNode;
   footerSection?: React.ReactNode;
+  headerSection?: React.ReactNode;
+  sidebarSection?: React.ReactNode;
 };
 
 export function LayoutSection({
   sx,
   cssVars,
   children,
-  className,
-  sidebarSection,
-  headerSection,
   footerSection,
+  headerSection,
+  sidebarSection,
+  className,
   ...other
 }: LayoutSectionProps) {
   const inputGlobalStyles = (
-    <GlobalStyles
-      styles={{
-        body: {
-          ...cssVars,
-        },
-      }}
-    />
+    <GlobalStyles styles={(theme) => ({ body: { ...layoutSectionVars(theme), ...cssVars } })} />
   );
 
   return (
     <>
       {inputGlobalStyles}
 
-      <Box
+      <LayoutRoot
         id="root__layout"
-        className={mergeClasses([
-          layoutClasses.root,
-          sidebarSection ? layoutClasses.hasSidebar : undefined,
-          className,
-        ])}
+        className={mergeClasses([layoutClasses.root, className])}
         sx={sx}
         {...other}
       >
-        {sidebarSection}
-
-        <Box className={layoutClasses.sidebarContainer}>
-          {headerSection}
-          {children}
-          {footerSection}
-        </Box>
-      </Box>
+        {sidebarSection ? (
+          <>
+            {sidebarSection}
+            <LayoutSidebarContainer className={layoutClasses.sidebarContainer}>
+              {headerSection}
+              {children}
+              {footerSection}
+            </LayoutSidebarContainer>
+          </>
+        ) : (
+          <>
+            {headerSection}
+            {children}
+            {footerSection}
+          </>
+        )}
+      </LayoutRoot>
     </>
   );
 }
+
+// ----------------------------------------------------------------------
+
+const LayoutRoot = styled('div')``;
+
+const LayoutSidebarContainer = styled('div')(() => ({
+  display: 'flex',
+  flex: '1 1 auto',
+  flexDirection: 'column',
+}));

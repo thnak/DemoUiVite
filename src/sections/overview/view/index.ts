@@ -1,1 +1,1 @@
-export * from './overview-view';
+export * from './overview-analytics-view';

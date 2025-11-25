@@ -1,46 +1,92 @@
-import type { Theme } from '@mui/material/styles';
+import type { Breakpoint } from '@mui/material/styles';
+
+import { merge } from 'es-toolkit';
+import { useBoolean } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
 
-import { Logo } from 'src/components/logo';
+import { _langs, _notifications } from 'src/_mock';
 
+import { NavMobile, NavDesktop } from './nav';
 import { layoutClasses } from '../core/classes';
+import { _account } from '../nav-config-account';
+import { dashboardLayoutVars } from './css-vars';
+import { navData } from '../nav-config-dashboard';
 import { MainSection } from '../core/main-section';
+import { Searchbar } from '../components/searchbar';
+import { _workspaces } from '../nav-config-workspace';
+import { MenuButton } from '../components/menu-button';
 import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
+import { AccountPopover } from '../components/account-popover';
+import { LanguagePopover } from '../components/language-popover';
+import { NotificationsPopover } from '../components/notifications-popover';
+
+import type { MainSectionProps } from '../core/main-section';
+import type { HeaderSectionProps } from '../core/header-section';
+import type { LayoutSectionProps } from '../core/layout-section';
 
 // ----------------------------------------------------------------------
 
-export type DashboardLayoutProps = {
-  children?: React.ReactNode;
+type LayoutBaseProps = Pick<LayoutSectionProps, 'sx' | 'children' | 'cssVars'>;
+
+export type DashboardLayoutProps = LayoutBaseProps & {
+  layoutQuery?: Breakpoint;
+  slotProps?: {
+    header?: HeaderSectionProps;
+    main?: MainSectionProps;
+  };
 };
 
-function dashboardLayoutVars(theme: Theme) {
-  return {
-    '--layout-nav-zIndex': '1101',
-    '--layout-nav-mobile-width': '280px',
-    '--layout-nav-vertical-width': '280px',
-    '--layout-header-zIndex': '1100',
-    '--layout-header-mobile-height': '64px',
-    '--layout-header-desktop-height': '72px',
-    '--layout-transition-easing': 'linear',
-    '--layout-transition-duration': '120ms',
-    '--layout-dashboard-content-pt': theme.spacing(1),
-    '--layout-dashboard-content-pb': theme.spacing(8),
-    '--layout-dashboard-content-px': theme.spacing(5),
-  };
-}
-
-export function DashboardLayout({ children }: DashboardLayoutProps) {
+export function DashboardLayout({
+  sx,
+  cssVars,
+  children,
+  slotProps,
+  layoutQuery = 'lg',
+}: DashboardLayoutProps) {
   const theme = useTheme();
 
+  const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
+
   const renderHeader = () => {
-    const headerSlots = {
-      leftArea: <Logo />,
+    const headerSlotProps: HeaderSectionProps['slotProps'] = {
+      container: {
+        maxWidth: false,
+      },
+    };
+
+    const headerSlots: HeaderSectionProps['slots'] = {
+      topArea: (
+        <Alert severity="info" sx={{ display: 'none', borderRadius: 0 }}>
+          This is an info Alert.
+        </Alert>
+      ),
+      leftArea: (
+        <>
+          {/** @slot Nav mobile */}
+          <MenuButton
+            onClick={onOpen}
+            sx={{ mr: 1, ml: -1, [theme.breakpoints.up(layoutQuery)]: { display: 'none' } }}
+          />
+          <NavMobile data={navData} open={open} onClose={onClose} workspaces={_workspaces} />
+        </>
+      ),
       rightArea: (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0, sm: 0.75 } }}>
-          {/* Add header components here */}
+          {/** @slot Searchbar */}
+          <Searchbar />
+
+          {/** @slot Language popover */}
+          <LanguagePopover data={_langs} />
+
+          {/** @slot Notifications popover */}
+          <NotificationsPopover data={_notifications} />
+
+          {/** @slot Account drawer */}
+          <AccountPopover data={_account} />
         </Box>
       ),
     };
@@ -48,45 +94,53 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     return (
       <HeaderSection
         disableElevation
-        layoutQuery="lg"
-        slots={headerSlots}
-        slotProps={{
-          container: {
-            maxWidth: false,
-            sx: { px: { xs: 2, lg: 5 } },
-          },
-        }}
-        sx={{
-          bgcolor: 'var(--palette-background-default)',
-        }}
+        layoutQuery={layoutQuery}
+        {...slotProps?.header}
+        slots={{ ...headerSlots, ...slotProps?.header?.slots }}
+        slotProps={merge(headerSlotProps, slotProps?.header?.slotProps ?? {})}
+        sx={slotProps?.header?.sx}
       />
     );
   };
 
-  const renderMain = () => (
-    <MainSection
-      sx={{
-        px: { xs: 2, lg: 5 },
-        pt: 'var(--layout-dashboard-content-pt)',
-        pb: 'var(--layout-dashboard-content-pb)',
-      }}
-    >
-      {children}
-    </MainSection>
-  );
+  const renderFooter = () => null;
+
+  const renderMain = () => <MainSection {...slotProps?.main}>{children}</MainSection>;
 
   return (
     <LayoutSection
+      /** **************************************
+       * @Header
+       *************************************** */
       headerSection={renderHeader()}
-      cssVars={dashboardLayoutVars(theme)}
-      sx={{
-        [`& .${layoutClasses.sidebarContainer}`]: {
-          transition: theme.transitions.create(['padding-left'], {
-            easing: 'var(--layout-transition-easing)',
-            duration: 'var(--layout-transition-duration)',
-          }),
+      /** **************************************
+       * @Sidebar
+       *************************************** */
+      sidebarSection={
+        <NavDesktop data={navData} layoutQuery={layoutQuery} workspaces={_workspaces} />
+      }
+      /** **************************************
+       * @Footer
+       *************************************** */
+      footerSection={renderFooter()}
+      /** **************************************
+       * @Styles
+       *************************************** */
+      cssVars={{ ...dashboardLayoutVars(theme), ...cssVars }}
+      sx={[
+        {
+          [`& .${layoutClasses.sidebarContainer}`]: {
+            [theme.breakpoints.up(layoutQuery)]: {
+              pl: 'var(--layout-nav-vertical-width)',
+              transition: theme.transitions.create(['padding-left'], {
+                easing: 'var(--layout-transition-easing)',
+                duration: 'var(--layout-transition-duration)',
+              }),
+            },
+          },
         },
-      }}
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
     >
       {renderMain()}
     </LayoutSection>

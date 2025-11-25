@@ -1,6 +1,6 @@
 import { CONFIG } from 'src/config-global';
 
-import { OverviewView } from 'src/sections/overview/view';
+import { OverviewAnalyticsView } from 'src/sections/overview/view';
 
 // ----------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ export default function Page() {
       />
       <meta name="keywords" content="react,material,kit,application,dashboard,admin,template" />
 
-      <OverviewView />
+      <OverviewAnalyticsView />
     </>
   );
 }
