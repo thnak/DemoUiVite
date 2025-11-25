@@ -261,28 +261,40 @@ export const _taskNames = (index: number) =>
 
 export const _productNames = (index: number) =>
   [
-    'Nike Air Force 1 NDESTRUKT',
-    'Nike Space Hippie 04',
-    'Nike Air Zoom Pegasus 37 A.I.R. Chaz Bear',
-    'Nike Blazer Low 77 Vintage',
-    'Nike ZoomX SuperRep Surge',
-    'Zoom Freak 2',
-    'Nike Air Max Zephyr',
-    'Jordan Delta',
-    'Air Jordan XXXV PF',
-    'Nike Waffle Racer Crater',
-    'Kyrie 7 EP Sisterhood',
-    'Nike Air Zoom BB NXT',
-    'Nike Air Force 1 07 LX',
-    'Nike Air Force 1 Shadow SE',
-    'Nike Air Zoom Tempo NEXT%',
-    'Nike DBreak-Type',
-    'Nike Air Max Up',
-    'Nike Air Max 270 React ENG',
-    'NikeCourt Royale',
-    'Nike Air Zoom Pegasus 37 Premium',
-    'Nike Air Zoom SuperRep',
-    'NikeCourt Royale',
-    'Nike React Art3mis',
-    'Nike React Infinity Run Flyknit A.I.R. Chaz Bear',
+    'Urban Explorer Sneakers',
+    'Classic Leather Loafers',
+    'Mountain Trekking Boots',
+    'Elegance Stiletto Heels',
+    'Comfy Running Shoes',
+    'Chic Ballet Flats',
+    'Vintage Oxford Shoes',
+    'Waterproof Hiking Boots',
+    'Sporty Tennis Shoes',
+    'Luxury Dress Shoes',
+    'Casual Canvas Slip-Ons',
+    'High-Top Basketball Shoes',
+    'Professional Golf Shoes',
+    'Beach Sandals',
+    'Winter Snow Boots',
+    'Designer Platform Heels',
+    'Athletic CrossFit Shoes',
+    'Formal Wingtip Brogues',
+    'Kids Velcro Sneakers',
+    'Retro Skate Shoes',
   ][index];
+
+export const _productCategories = (index: number) =>
+  ['Accessories', 'Shose', 'Apparel', 'Shose', 'Apparel', 'Shose', 'Accessories', 'Shose', 'Apparel', 'Shose'][index % 10];
+
+export const _stockQuantities = (index: number) =>
+  [0, 72, 10, 72, 10, 72, 0, 72, 15, 72, 5, 72, 0, 50, 72, 8, 72, 0, 72, 12][index];
+
+export const _publishStatus = (index: number) =>
+  (['draft', 'published', 'published', 'draft', 'published', 'published', 'draft', 'published', 'published', 'draft'] as const)[index % 10];
+
+export const _createdAt = (index: number) => {
+  // Generate dates from 25 Nov 2025 going backwards
+  const baseDate = new Date('2025-11-25T11:43:00');
+  const newDate = new Date(baseDate.getTime() - index * 24 * 60 * 60 * 1000 - index * 60 * 60 * 1000);
+  return newDate.toISOString();
+};
