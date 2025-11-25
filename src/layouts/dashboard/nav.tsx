@@ -6,6 +6,7 @@ import { varAlpha } from 'minimal-shared/utils';
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
 import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import ListItemButton from '@mui/material/ListItemButton';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
 
@@ -18,13 +19,13 @@ import { Scrollbar } from 'src/components/scrollbar';
 import { NavUpgrade } from '../components/nav-upgrade';
 import { WorkspacesPopover } from '../components/workspaces-popover';
 
-import type { NavItem } from '../nav-config-dashboard';
+import type { NavData } from '../nav-config-dashboard';
 import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
 
 // ----------------------------------------------------------------------
 
 export type NavContentProps = {
-  data: NavItem[];
+  data: NavData;
   slots?: {
     topArea?: React.ReactNode;
     bottomArea?: React.ReactNode;
@@ -130,59 +131,78 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
             ...(Array.isArray(sx) ? sx : [sx]),
           ]}
         >
-          <Box
-            component="ul"
-            sx={{
-              gap: 0.5,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            {data.map((item) => {
-              const isActived = item.path === pathname;
+          {data.map((group) => (
+            <Box key={group.subheader} sx={{ mb: 2 }}>
+              <Typography
+                variant="overline"
+                sx={{
+                  px: 2,
+                  mb: 1,
+                  display: 'block',
+                  color: 'text.secondary',
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '1.2px',
+                }}
+              >
+                {group.subheader}
+              </Typography>
+              <Box
+                component="ul"
+                sx={{
+                  gap: 0.5,
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                {group.items.map((item) => {
+                  const isActived = item.path === pathname;
 
-              return (
-                <ListItem disableGutters disablePadding key={item.title}>
-                  <ListItemButton
-                    disableGutters
-                    component={RouterLink}
-                    href={item.path}
-                    sx={[
-                      (theme) => ({
-                        pl: 2,
-                        py: 1,
-                        gap: 2,
-                        pr: 1.5,
-                        borderRadius: 0.75,
-                        typography: 'body2',
-                        fontWeight: 'fontWeightMedium',
-                        color: theme.vars.palette.text.secondary,
-                        minHeight: 44,
-                        ...(isActived && {
-                          fontWeight: 'fontWeightSemiBold',
-                          color: theme.vars.palette.primary.main,
-                          bgcolor: varAlpha(theme.vars.palette.primary.mainChannel, 0.08),
-                          '&:hover': {
-                            bgcolor: varAlpha(theme.vars.palette.primary.mainChannel, 0.16),
-                          },
-                        }),
-                      }),
-                    ]}
-                  >
-                    <Box component="span" sx={{ width: 24, height: 24 }}>
-                      {item.icon}
-                    </Box>
+                  return (
+                    <ListItem disableGutters disablePadding key={item.title}>
+                      <ListItemButton
+                        disableGutters
+                        component={RouterLink}
+                        href={item.path}
+                        sx={[
+                          (theme) => ({
+                            pl: 2,
+                            py: 1,
+                            gap: 2,
+                            pr: 1.5,
+                            borderRadius: 0.75,
+                            typography: 'body2',
+                            fontWeight: 'fontWeightMedium',
+                            color: theme.vars.palette.text.secondary,
+                            minHeight: 44,
+                            ...(isActived && {
+                              fontWeight: 'fontWeightSemiBold',
+                              color: theme.vars.palette.primary.main,
+                              bgcolor: varAlpha(theme.vars.palette.primary.mainChannel, 0.08),
+                              '&:hover': {
+                                bgcolor: varAlpha(theme.vars.palette.primary.mainChannel, 0.16),
+                              },
+                            }),
+                          }),
+                        ]}
+                      >
+                        <Box component="span" sx={{ width: 24, height: 24 }}>
+                          {item.icon}
+                        </Box>
 
-                    <Box component="span" sx={{ flexGrow: 1 }}>
-                      {item.title}
-                    </Box>
+                        <Box component="span" sx={{ flexGrow: 1 }}>
+                          {item.title}
+                        </Box>
 
-                    {item.info && item.info}
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
-          </Box>
+                        {item.info && item.info}
+                      </ListItemButton>
+                    </ListItem>
+                  );
+                })}
+              </Box>
+            </Box>
+          ))}
         </Box>
       </Scrollbar>
 
