@@ -28,6 +28,7 @@ export const StopMachineReasonListPage = lazy(
 );
 export const ProductGroupListPage = lazy(() => import('src/pages/product-group-list'));
 export const MachineListPage = lazy(() => import('src/pages/machine-list'));
+export const MachineOEEPage = lazy(() => import('src/pages/machine-oee'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -71,6 +72,7 @@ export const routesSection: RouteObject[] = [
       { path: 'stop-machine-reason', element: <StopMachineReasonListPage /> },
       { path: 'product-groups', element: <ProductGroupListPage /> },
       { path: 'machines', element: <MachineListPage /> },
+      { path: 'machines/:id/oee', element: <MachineOEEPage /> },
       { path: 'blog', element: <BlogPage /> },
     ],
   },
