@@ -353,6 +353,7 @@ export type OEEData = {
 };
 
 export type ProductOEEData = {
+  id: string; // unique entry ID
   productId: string;
   productName: string;
   oeeData: OEEData;
@@ -506,6 +507,7 @@ function generateProductOEEData(seed: number, productCount: number): ProductOEED
   return [...Array(productCount)].map((_, index) => {
     const productSeed = seed + index * 100;
     return {
+      id: `${seed}-${index}`, // unique entry ID based on seed and index
       productId: _id(index),
       productName: PRODUCT_NAMES_FOR_OEE[index % PRODUCT_NAMES_FOR_OEE.length],
       oeeData: generateOEEData(productSeed),

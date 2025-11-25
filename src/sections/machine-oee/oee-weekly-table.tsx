@@ -79,7 +79,9 @@ export function OEEWeeklyTable({ title, subheader, weekData, sx, ...other }: Pro
                       </Label>
                     </TableCell>
                     <TableCell>
-                      {bestProduct?.productName} ({fPercent(bestProduct?.oeeData.oee || 0)})
+                      {bestProduct
+                        ? `${bestProduct.productName} (${fPercent(bestProduct.oeeData.oee)})`
+                        : '-'}
                     </TableCell>
                   </TableRow>
                 );

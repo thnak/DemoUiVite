@@ -52,7 +52,7 @@ export function OEEProductTable({ title, subheader, products, sx, ...other }: Pr
             </TableHead>
             <TableBody>
               {sortedProducts.map((product, index) => (
-                <TableRow key={`${product.productId}-${index}`} hover>
+                <TableRow key={product.id} hover>
                   <TableCell>
                     {index === 0 ? '🏆 ' : ''}
                     {product.productName}
