@@ -58,6 +58,7 @@ export const navData: NavData = [
         path: '/product-groups',
         icon: icon('ic-cart'),
       },
+      {
         title: 'Machine',
         path: '/machines',
         icon: icon('ic-cart'),
