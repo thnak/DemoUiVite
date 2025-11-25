@@ -54,6 +54,15 @@ export const navData: NavData = [
         ),
       },
       {
+        title: 'Product Group',
+        path: '/product-groups',
+        icon: icon('ic-cart'),
+      },
+        title: 'Machine',
+        path: '/machines',
+        icon: icon('ic-cart'),
+      },
+      {
         title: 'Blog',
         path: '/blog',
         icon: icon('ic-blog'),

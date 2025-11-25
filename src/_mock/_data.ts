@@ -17,6 +17,9 @@ import {
   _stockQuantities,
   _areaDescriptions,
   _productCategories,
+  _productGroupCodes,
+  _productGroupNames,
+  _productGroupDescriptions,
 } from './_mock';
 
 // ----------------------------------------------------------------------
@@ -128,6 +131,13 @@ export const _areas = [...Array(20)].map((_, index) => ({
   id: _id(index),
   name: _areaNames(index),
   description: _areaDescriptions(index),
+}));
+
+export const _productGroups = [...Array(20)].map((_, index) => ({
+  id: _id(index),
+  code: _productGroupCodes(index),
+  name: _productGroupNames(index),
+  description: _productGroupDescriptions(index),
 }));
 
 // ----------------------------------------------------------------------
@@ -242,3 +252,86 @@ export const _notifications = [
     isUnRead: false,
   },
 ];
+
+// ----------------------------------------------------------------------
+
+export type MachineInputType = 'WeightChannels' | 'PairChannel';
+
+const MACHINE_INPUT_TYPES: MachineInputType[] = ['WeightChannels', 'PairChannel'];
+
+const MACHINE_AREAS = [
+  'Production Line A',
+  'Production Line B',
+  'Warehouse Zone 1',
+  'Warehouse Zone 2',
+  'Assembly Area',
+  'Quality Control',
+  'Packaging Zone',
+  'Storage Area',
+];
+
+const MACHINE_CALENDARS = [
+  'Ultimate 7 Days Work',
+  '6 Days with Break Times',
+  'Standard 5 Days Work',
+  '24/7 Continuous Operation',
+  'Night Shift Schedule',
+  'Weekend Maintenance',
+];
+
+const MACHINE_NAMES = [
+  'CNC Milling Machine',
+  'Industrial Robot Arm',
+  'Conveyor Belt System',
+  'Packaging Machine',
+  'Quality Scanner',
+  'Assembly Line Unit',
+  'Welding Station',
+  'Paint Sprayer',
+  'Laser Cutter',
+  'Press Machine',
+  '3D Printer',
+  'Injection Molder',
+  'Sorting Machine',
+  'Labeling Machine',
+  'Palletizer',
+  'Wrapping Machine',
+  'Testing Equipment',
+  'Inspection Camera',
+  'Material Handler',
+  'Storage Retrieval',
+];
+
+const MACHINE_CODES = [
+  'MCH-001',
+  'MCH-002',
+  'MCH-003',
+  'MCH-004',
+  'MCH-005',
+  'MCH-006',
+  'MCH-007',
+  'MCH-008',
+  'MCH-009',
+  'MCH-010',
+  'MCH-011',
+  'MCH-012',
+  'MCH-013',
+  'MCH-014',
+  'MCH-015',
+  'MCH-016',
+  'MCH-017',
+  'MCH-018',
+  'MCH-019',
+  'MCH-020',
+];
+
+export const _machines = [...Array(20)].map((_, index) => ({
+  id: _id(index),
+  code: MACHINE_CODES[index],
+  name: MACHINE_NAMES[index],
+  imageUrl: `/assets/images/product/product-${(index % 20) + 1}.webp`,
+  area: MACHINE_AREAS[index % MACHINE_AREAS.length],
+  inputType: MACHINE_INPUT_TYPES[index % 2] as MachineInputType,
+  numberOfInputChannels: [4, 8, 12, 16, 24, 32][index % 6],
+  workCalendar: MACHINE_CALENDARS[index % MACHINE_CALENDARS.length],
+}));
