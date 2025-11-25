@@ -1,6 +1,7 @@
 import type { MachineInputType } from 'src/_mock';
 
 import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -55,6 +56,7 @@ export function MachineTableRow({
   onEditRow,
   onDeleteRow,
 }: MachineTableRowProps) {
+  const navigate = useNavigate();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -74,6 +76,11 @@ export function MachineTableRow({
     handleClosePopover();
     onDeleteRow?.();
   }, [onDeleteRow, handleClosePopover]);
+
+  const handleViewOEE = useCallback(() => {
+    handleClosePopover();
+    navigate(`/machines/${row.id}/oee`);
+  }, [navigate, row.id, handleClosePopover]);
 
   return (
     <>
@@ -136,7 +143,7 @@ export function MachineTableRow({
           sx={{
             p: 0.5,
             gap: 0.5,
-            width: 140,
+            width: 160,
             display: 'flex',
             flexDirection: 'column',
             [`& .${menuItemClasses.root}`]: {
@@ -147,6 +154,11 @@ export function MachineTableRow({
             },
           }}
         >
+          <MenuItem onClick={handleViewOEE} sx={{ color: 'primary.main' }}>
+            <Iconify icon="mdi:gauge" />
+            OEE Dashboard
+          </MenuItem>
+
           <MenuItem onClick={handleEdit}>
             <Iconify icon="solar:pen-bold" />
             Edit

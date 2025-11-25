@@ -17,10 +17,10 @@ import {
   _publishStatus,
   _idealCycleTime,
   _stockQuantities,
+  _areaDescriptions,
   _downtimeThreshold,
   _productCategories,
   _quantityPerSignal,
-  _areaDescriptions,
   _productGroupCodes,
   _productGroupNames,
   _productGroupDescriptions,
@@ -344,6 +344,43 @@ export type MachineInputType = 'WeightChannels' | 'PairChannel';
 
 const MACHINE_INPUT_TYPES: MachineInputType[] = ['WeightChannels', 'PairChannel'];
 
+// OEE Data Types
+export type OEEData = {
+  availability: number;
+  performance: number;
+  quality: number;
+  oee: number;
+};
+
+export type ProductOEEData = {
+  productId: string;
+  productName: string;
+  oeeData: OEEData;
+  runTime: number; // in hours
+};
+
+export type DailyOEEData = {
+  date: string;
+  dayOfWeek: string;
+  oeeData: OEEData;
+  productData: ProductOEEData[];
+};
+
+export type MonthlyOEEData = {
+  month: string;
+  monthNumber: number;
+  oeeData: OEEData;
+  productData: ProductOEEData[];
+  weeklyData: DailyOEEData[];
+};
+
+export type YearlyOEEData = {
+  year: number;
+  oeeData: OEEData;
+  monthlyData: MonthlyOEEData[];
+  bestProduct: ProductOEEData;
+};
+
 const MACHINE_AREAS = [
   'Production Line A',
   'Production Line B',
@@ -420,3 +457,132 @@ export const _machines = [...Array(20)].map((_, index) => ({
   numberOfInputChannels: [4, 8, 12, 16, 24, 32][index % 6],
   workCalendar: MACHINE_CALENDARS[index % MACHINE_CALENDARS.length],
 }));
+
+// ----------------------------------------------------------------------
+// OEE Data Generator Functions
+// ----------------------------------------------------------------------
+
+const PRODUCT_NAMES_FOR_OEE = [
+  'Widget Alpha',
+  'Component Beta',
+  'Part Gamma',
+  'Assembly Delta',
+  'Module Epsilon',
+  'Unit Zeta',
+  'Device Eta',
+  'Element Theta',
+];
+
+const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+const MONTHS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
+// Seed-based random number generator for consistent data
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
+// Generate random OEE data within realistic ranges
+function generateOEEData(seed: number): OEEData {
+  const availability = 75 + seededRandom(seed) * 20; // 75-95%
+  const performance = 70 + seededRandom(seed + 1) * 25; // 70-95%
+  const quality = 85 + seededRandom(seed + 2) * 14; // 85-99%
+  const oee = (availability * performance * quality) / 10000;
+  
+  return {
+    availability: Math.round(availability * 10) / 10,
+    performance: Math.round(performance * 10) / 10,
+    quality: Math.round(quality * 10) / 10,
+    oee: Math.round(oee * 10) / 10,
+  };
+}
+
+// Generate product OEE data
+function generateProductOEEData(seed: number, productCount: number): ProductOEEData[] {
+  return [...Array(productCount)].map((_, index) => {
+    const productSeed = seed + index * 100;
+    return {
+      productId: _id(index),
+      productName: PRODUCT_NAMES_FOR_OEE[index % PRODUCT_NAMES_FOR_OEE.length],
+      oeeData: generateOEEData(productSeed),
+      runTime: Math.round((10 + seededRandom(productSeed) * 40) * 10) / 10,
+    };
+  });
+}
+
+// Generate daily OEE data for a week
+function generateWeeklyData(seed: number, weekNumber: number): DailyOEEData[] {
+  return DAYS_OF_WEEK.map((day, dayIndex) => {
+    const daySeed = seed + weekNumber * 7 + dayIndex;
+    const productCount = 2 + Math.floor(seededRandom(daySeed) * 3); // 2-4 products
+    return {
+      date: `Week ${weekNumber + 1}, ${day}`,
+      dayOfWeek: day,
+      oeeData: generateOEEData(daySeed),
+      productData: generateProductOEEData(daySeed, productCount),
+    };
+  });
+}
+
+// Generate monthly OEE data
+function generateMonthlyData(seed: number, year: number): MonthlyOEEData[] {
+  return MONTHS.map((month, monthIndex) => {
+    const monthSeed = seed + year * 12 + monthIndex;
+    const productCount = 3 + Math.floor(seededRandom(monthSeed) * 4); // 3-6 products
+    return {
+      month,
+      monthNumber: monthIndex + 1,
+      oeeData: generateOEEData(monthSeed),
+      productData: generateProductOEEData(monthSeed, productCount),
+      weeklyData: generateWeeklyData(monthSeed, monthIndex),
+    };
+  });
+}
+
+// Find best product by OEE
+function findBestProduct(products: ProductOEEData[]): ProductOEEData {
+  return products.reduce((best, current) =>
+    current.oeeData.oee > best.oeeData.oee ? current : best
+  );
+}
+
+// Generate yearly OEE data for a machine
+export function generateMachineOEEData(machineId: string, year: number): YearlyOEEData {
+  // Create seed from machineId and year for consistency
+  const seed = machineId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) + year;
+  
+  const monthlyData = generateMonthlyData(seed, year);
+  
+  // Calculate yearly averages
+  const yearlyOEE = {
+    availability: Math.round(monthlyData.reduce((sum, m) => sum + m.oeeData.availability, 0) / 12 * 10) / 10,
+    performance: Math.round(monthlyData.reduce((sum, m) => sum + m.oeeData.performance, 0) / 12 * 10) / 10,
+    quality: Math.round(monthlyData.reduce((sum, m) => sum + m.oeeData.quality, 0) / 12 * 10) / 10,
+    oee: 0,
+  };
+  yearlyOEE.oee = Math.round((yearlyOEE.availability * yearlyOEE.performance * yearlyOEE.quality) / 10000 * 10) / 10;
+  
+  // Collect all products from all months and find the best one
+  const allProducts = monthlyData.flatMap(m => m.productData);
+  const bestProduct = findBestProduct(allProducts);
+  
+  return {
+    year,
+    oeeData: yearlyOEE,
+    monthlyData,
+    bestProduct,
+  };
+}
+
+// Get OEE data for a specific machine across multiple years
+export function getMachineOEEHistory(machineId: string, startYear: number = 2023, endYear: number = 2025): YearlyOEEData[] {
+  const years: YearlyOEEData[] = [];
+  for (let year = startYear; year <= endYear; year++) {
+    years.push(generateMachineOEEData(machineId, year));
+  }
+  return years;
+}
