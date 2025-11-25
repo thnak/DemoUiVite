@@ -54,6 +54,11 @@ export const navData: NavData = [
         ),
       },
       {
+        title: 'Stop Machine Reason',
+        path: '/stop-machine-reason',
+        icon: icon('ic-disabled'),
+        },
+        {
         title: 'Product Group',
         path: '/product-groups',
         icon: icon('ic-cart'),

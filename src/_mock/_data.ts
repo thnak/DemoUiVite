@@ -205,6 +205,78 @@ export const _tasks = Array.from({ length: 5 }, (_, index) => ({
 
 // ----------------------------------------------------------------------
 
+export type StopType = 'Plan' | 'UnPlan';
+
+const STOP_TYPES: StopType[] = ['Plan', 'UnPlan'];
+
+const STOP_GROUPS = [
+  'Mechanical',
+  'Electrical',
+  'Quality',
+  'Material',
+  'Changeover',
+  'Maintenance',
+  'Operator',
+  'External',
+];
+
+const STOP_REASON_NAMES = [
+  'Motor Overheating',
+  'Belt Replacement',
+  'Quality Inspection',
+  'Material Shortage',
+  'Product Changeover',
+  'Scheduled Maintenance',
+  'Operator Break',
+  'Power Outage',
+  'Sensor Malfunction',
+  'Calibration',
+  'Tool Change',
+  'Safety Check',
+  'Software Update',
+  'Emergency Stop',
+  'Cleaning',
+  'Lubrication',
+  'Alignment Adjustment',
+  'Component Failure',
+  'Training Session',
+  'Shift Handover',
+];
+
+const STOP_REASON_DESCRIPTIONS = [
+  'Machine stopped due to motor temperature exceeding safe limits',
+  'Scheduled replacement of worn conveyor belt',
+  'Quality control inspection of produced items',
+  'Production halted due to insufficient raw materials',
+  'Reconfiguration for different product specifications',
+  'Regular preventive maintenance as per schedule',
+  'Mandatory operator rest period',
+  'Unplanned power supply interruption',
+  'Malfunction detected in proximity sensor',
+  'Periodic calibration of measuring instruments',
+  'Replacement of worn cutting or forming tools',
+  'Routine safety equipment verification',
+  'Installation of software patches or updates',
+  'Machine stopped due to emergency situation',
+  'Cleaning of machine components and work area',
+  'Application of lubricants to moving parts',
+  'Adjustment of machine alignment parameters',
+  'Unexpected failure of machine component',
+  'Operator training on new procedures',
+  'Handover briefing between shifts',
+];
+
+export const _stopMachineReasons = [...Array(20)].map((_, index) => ({
+  id: _id(index),
+  code: `SMR-${String(index + 1).padStart(3, '0')}`,
+  name: STOP_REASON_NAMES[index % 20],
+  stopGroup: STOP_GROUPS[index % 8],
+  stopType: STOP_TYPES[index % 2] as StopType,
+  description: STOP_REASON_DESCRIPTIONS[index % 20],
+}));
+
+// ----------------------------------------------------------------------
+
 export const _notifications = [
   {
     id: _id(1),
