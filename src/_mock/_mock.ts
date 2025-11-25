@@ -298,3 +298,51 @@ export const _createdAt = (index: number) => {
   const newDate = new Date(baseDate.getTime() - index * 24 * 60 * 60 * 1000 - index * 60 * 60 * 1000);
   return newDate.toISOString();
 };
+
+export const _areaNames = (index: number) =>
+  [
+    'North America',
+    'South America',
+    'Europe',
+    'Asia Pacific',
+    'Middle East',
+    'Africa',
+    'Central America',
+    'Caribbean',
+    'Eastern Europe',
+    'Western Europe',
+    'Southeast Asia',
+    'East Asia',
+    'South Asia',
+    'Oceania',
+    'Nordic Region',
+    'Mediterranean',
+    'Balkans',
+    'Central Asia',
+    'North Africa',
+    'Sub-Saharan Africa',
+  ][index];
+
+export const _areaDescriptions = (index: number) =>
+  [
+    'Covers United States, Canada, and Mexico with major metropolitan markets',
+    'Includes Brazil, Argentina, Chile, and other South American countries',
+    'Western and Eastern European markets including UK, Germany, and France',
+    'Australia, New Zealand, Japan, and Southeast Asian markets',
+    'Gulf states, Israel, and surrounding regions',
+    'Sub-Saharan African markets and North African territories',
+    'Guatemala, Honduras, El Salvador, and surrounding countries',
+    'Island nations including Jamaica, Cuba, and Dominican Republic',
+    'Poland, Czech Republic, Hungary, and former Soviet states',
+    'France, Germany, Netherlands, Belgium, and surrounding nations',
+    'Vietnam, Thailand, Indonesia, Philippines, and Malaysia',
+    'China, Japan, South Korea, and Taiwan',
+    'India, Pakistan, Bangladesh, and Sri Lanka',
+    'Australia, New Zealand, and Pacific Island nations',
+    'Sweden, Norway, Denmark, Finland, and Iceland',
+    'Spain, Italy, Greece, and coastal regions',
+    'Serbia, Croatia, Slovenia, and surrounding countries',
+    'Kazakhstan, Uzbekistan, and neighboring states',
+    'Egypt, Libya, Tunisia, Morocco, and Algeria',
+    'Nigeria, Kenya, South Africa, and other nations south of Sahara',
+  ][index];
