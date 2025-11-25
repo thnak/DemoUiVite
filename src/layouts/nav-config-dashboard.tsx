@@ -39,6 +39,11 @@ export const navData: NavData = [
         icon: icon('ic-user'),
       },
       {
+        title: 'Area',
+        path: '/area',
+        icon: icon('ic-analytics'),
+      },
+      {
         title: 'Product',
         path: '/products',
         icon: icon('ic-cart'),
@@ -52,6 +57,15 @@ export const navData: NavData = [
         title: 'Stop Machine Reason',
         path: '/stop-machine-reason',
         icon: icon('ic-disabled'),
+        },
+        {
+        title: 'Product Group',
+        path: '/product-groups',
+        icon: icon('ic-cart'),
+      },
+        title: 'Machine',
+        path: '/machines',
+        icon: icon('ic-cart'),
       },
       {
         title: 'Blog',
