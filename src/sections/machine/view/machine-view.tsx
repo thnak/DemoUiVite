@@ -13,8 +13,6 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { useRouter } from 'src/routes/hooks';
-
 import { _machines } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -40,7 +38,6 @@ const INPUT_TYPE_OPTIONS: { value: MachineInputType | 'all'; label: string }[] =
 ];
 
 export function MachineView() {
-  const router = useRouter();
   const table = useTable();
 
   const [filterName, setFilterName] = useState('');
@@ -142,7 +139,7 @@ export function MachineView() {
           variant="contained"
           color="inherit"
           startIcon={<Iconify icon="mingcute:add-line" />}
-          onClick={() => router.push('/machines/create')}
+          onClick={() => console.log('Add machine clicked')}
         >
           Add machine
         </Button>
