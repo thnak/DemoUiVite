@@ -57,6 +57,62 @@ export const _fullName = (index: number) =>
     'Willis Ankunding',
   ][index];
 
+export const _email = (index: number) =>
+  [
+    'benny89@yahoo.com',
+    'avery43@hotmail.com',
+    'mireya13@hotmail.com',
+    'tyrel.greenholt@gmail.com',
+    'joana.simonis84@gmail.com',
+    'darwin.greenfelder@gmail.com',
+    'ramiro_funk@gmail.com',
+    'marcos_hessel@gmail.com',
+    'trace_goodwin@gmail.com',
+    'olen95@yahoo.com',
+    'nikko_lind40@gmail.com',
+    'jennings57@yahoo.com',
+    'pink_kozey@gmail.com',
+    'maxime60@yahoo.com',
+    'saige_ziemann@yahoo.com',
+    'ashleigh_ziemann@gmail.com',
+    'earlene_witting58@hotmail.com',
+    'lois.grimes@hotmail.com',
+    'ignatius.daniel53@hotmail.com',
+    'emmalee.fahey@gmail.com',
+    'winifred_waelchi@yahoo.com',
+    'wilford_littel61@hotmail.com',
+    'robb_spencer@gmail.com',
+    'lorenz_stracke@gmail.com',
+  ][index];
+
+export const _phoneNumber = (index: number) =>
+  [
+    '+46 8 123 456',
+    '+54 11 1234-5678',
+    '+34 91 123 4567',
+    '+52 55 1234 5678',
+    '+86 10 1234 5678',
+    '+1 212 555 1234',
+    '+33 1 23 45 67 89',
+    '+49 30 1234 5678',
+    '+81 3 1234 5678',
+    '+44 20 7946 0958',
+    '+61 2 8765 4321',
+    '+39 06 1234 5678',
+    '+7 495 123 45 67',
+    '+91 22 1234 5678',
+    '+55 11 1234 5678',
+    '+82 2 1234 5678',
+    '+31 20 123 4567',
+    '+48 22 123 45 67',
+    '+90 212 123 4567',
+    '+971 4 123 4567',
+    '+41 22 123 45 67',
+    '+65 6123 4567',
+    '+60 3 1234 5678',
+    '+27 11 123 4567',
+  ][index];
+
 export const _price = (index: number) =>
   [
     35.17, 57.22, 64.78, 50.79, 9.57, 61.46, 96.73, 63.04, 33.18, 36.3, 54.42, 20.52, 62.82, 19.96,

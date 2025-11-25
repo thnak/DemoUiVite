@@ -1,3 +1,5 @@
+import type { UserStatus } from 'src/_mock';
+
 import type { UserProps } from './user-table-row';
 
 // ----------------------------------------------------------------------
@@ -55,10 +57,18 @@ export function getComparator<Key extends keyof any>(
 type ApplyFilterProps = {
   inputData: UserProps[];
   filterName: string;
+  filterRole?: string;
+  filterStatus?: UserStatus | 'all';
   comparator: (a: any, b: any) => number;
 };
 
-export function applyFilter({ inputData, comparator, filterName }: ApplyFilterProps) {
+export function applyFilter({
+  inputData,
+  comparator,
+  filterName,
+  filterRole,
+  filterStatus,
+}: ApplyFilterProps) {
   const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 
   stabilizedThis.sort((a, b) => {
@@ -71,8 +81,18 @@ export function applyFilter({ inputData, comparator, filterName }: ApplyFilterPr
 
   if (filterName) {
     inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (user) =>
+        user.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+        user.email.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
+  }
+
+  if (filterRole) {
+    inputData = inputData.filter((user) => user.role === filterRole);
+  }
+
+  if (filterStatus && filterStatus !== 'all') {
+    inputData = inputData.filter((user) => user.status === filterStatus);
   }
 
   return inputData;

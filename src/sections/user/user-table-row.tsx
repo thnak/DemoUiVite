@@ -1,3 +1,5 @@
+import type { UserStatus } from 'src/_mock';
+
 import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -8,6 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 import MenuList from '@mui/material/MenuList';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
 import { Label } from 'src/components/label';
@@ -18,10 +21,12 @@ import { Iconify } from 'src/components/iconify';
 export type UserProps = {
   id: string;
   name: string;
+  email: string;
   role: string;
-  status: string;
+  status: UserStatus;
   company: string;
   avatarUrl: string;
+  phoneNumber: string;
   isVerified: boolean;
 };
 
@@ -29,6 +34,21 @@ type UserTableRowProps = {
   row: UserProps;
   selected: boolean;
   onSelectRow: () => void;
+};
+
+const getStatusColor = (status: UserStatus): 'success' | 'warning' | 'error' | 'default' => {
+  switch (status) {
+    case 'active':
+      return 'success';
+    case 'pending':
+      return 'warning';
+    case 'banned':
+      return 'error';
+    case 'rejected':
+      return 'default';
+    default:
+      return 'default';
+  }
 };
 
 export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) {
@@ -58,27 +78,31 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
             }}
           >
             <Avatar alt={row.name} src={row.avatarUrl} />
-            {row.name}
+            <Box>
+              <Typography variant="subtitle2" noWrap>
+                {row.name}
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+                {row.email}
+              </Typography>
+            </Box>
           </Box>
         </TableCell>
+
+        <TableCell>{row.phoneNumber}</TableCell>
 
         <TableCell>{row.company}</TableCell>
 
         <TableCell>{row.role}</TableCell>
 
-        <TableCell align="center">
-          {row.isVerified ? (
-            <Iconify width={22} icon="solar:check-circle-bold" sx={{ color: 'success.main' }} />
-          ) : (
-            '-'
-          )}
-        </TableCell>
-
         <TableCell>
-          <Label color={(row.status === 'banned' && 'error') || 'success'}>{row.status}</Label>
+          <Label color={getStatusColor(row.status)}>{row.status}</Label>
         </TableCell>
 
         <TableCell align="right">
+          <IconButton>
+            <Iconify icon="solar:pen-bold" />
+          </IconButton>
           <IconButton onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>

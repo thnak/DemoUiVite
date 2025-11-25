@@ -2,12 +2,14 @@ import {
   _id,
   _price,
   _times,
+  _email,
   _company,
   _boolean,
   _fullName,
   _taskNames,
   _postTitles,
   _description,
+  _phoneNumber,
   _productNames,
 } from './_mock';
 
@@ -21,26 +23,32 @@ export const _myAccount = {
 
 // ----------------------------------------------------------------------
 
-export const _users = [...Array(1000)].map((_, index) => ({
+export type UserStatus = 'active' | 'pending' | 'banned' | 'rejected';
+
+const USER_STATUSES: UserStatus[] = ['active', 'pending', 'banned', 'rejected'];
+
+export const _users = [...Array(20)].map((_, index) => ({
   id: _id(index),
   name: _fullName(index),
+  email: _email(index),
+  phoneNumber: _phoneNumber(index),
   company: _company(index),
   isVerified: _boolean(index),
   avatarUrl: `/assets/images/avatar/avatar-${index + 1}.webp`,
-  status: index % 4 ? 'active' : 'banned',
+  status: USER_STATUSES[index % 4] as UserStatus,
   role:
     [
-      'Leader',
-      'Hr Manager',
-      'UI Designer',
-      'UX Designer',
-      'UI/UX Designer',
+      'Content Creator',
+      'IT Administrator',
+      'Financial Planner',
+      'HR Recruiter',
+      'Graphic Designer',
       'Project Manager',
       'Backend Developer',
       'Full Stack Designer',
       'Front End Developer',
       'Full Stack Developer',
-    ][index] || 'UI Designer',
+    ][index % 10] || 'UI Designer',
 }));
 
 // ----------------------------------------------------------------------
