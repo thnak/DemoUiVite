@@ -21,6 +21,7 @@ export const ProductsPage = lazy(() => import('src/pages/products'));
 export const ProductListPage = lazy(() => import('src/pages/product-list'));
 export const ProductCreatePage = lazy(() => import('src/pages/product-create'));
 export const ProductEditPage = lazy(() => import('src/pages/product-edit'));
+export const ProductGroupListPage = lazy(() => import('src/pages/product-group-list'));
 export const MachineListPage = lazy(() => import('src/pages/machine-list'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
@@ -60,6 +61,7 @@ export const routesSection: RouteObject[] = [
       { path: 'products', element: <ProductListPage /> },
       { path: 'products/create', element: <ProductCreatePage /> },
       { path: 'products/:id/edit', element: <ProductEditPage /> },
+      { path: 'product-groups', element: <ProductGroupListPage /> },
       { path: 'machines', element: <MachineListPage /> },
       { path: 'blog', element: <BlogPage /> },
     ],

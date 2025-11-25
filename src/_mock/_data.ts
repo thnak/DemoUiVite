@@ -15,6 +15,9 @@ import {
   _publishStatus,
   _stockQuantities,
   _productCategories,
+  _productGroupCodes,
+  _productGroupNames,
+  _productGroupDescriptions,
 } from './_mock';
 
 // ----------------------------------------------------------------------
@@ -119,6 +122,15 @@ export const _products = [...Array(20)].map((_, index) => {
     createdAt: _createdAt(index),
   };
 });
+
+// ----------------------------------------------------------------------
+
+export const _productGroups = [...Array(20)].map((_, index) => ({
+  id: _id(index),
+  code: _productGroupCodes(index),
+  name: _productGroupNames(index),
+  description: _productGroupDescriptions(index),
+}));
 
 // ----------------------------------------------------------------------
 
