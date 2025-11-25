@@ -54,6 +54,10 @@ export const navData: NavData = [
         ),
       },
       {
+        title: 'Working Parameter',
+        path: '/working-parameter',
+        icon: icon('ic-analytics'),
+      },{
         title: 'Stop Machine Reason',
         path: '/stop-machine-reason',
         icon: icon('ic-disabled'),

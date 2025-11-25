@@ -299,6 +299,62 @@ export const _createdAt = (index: number) => {
   return newDate.toISOString();
 };
 
+// Working Parameter mock data generators
+export const _machineNames = (index: number) =>
+  [
+    'CNC Machine A1',
+    'Laser Cutter B2',
+    'Assembly Robot C3',
+    'Packaging Unit D4',
+    'Welding Station E5',
+    'Milling Machine F6',
+    'Press Brake G7',
+    'Injection Molder H8',
+    'Conveyor Belt I9',
+    'Quality Scanner J10',
+    'Drilling Unit K11',
+    'Grinding Machine L12',
+    'Paint Booth M13',
+    'Heat Treatment N14',
+    'Testing Chamber O15',
+    'Stamping Press P16',
+    'Cutting Station Q17',
+    'Polishing Unit R18',
+    'Inspection Robot S19',
+    'Finishing Line T20',
+  ][index % 20];
+
+export const _idealCycleTime = (index: number) =>
+  [12.5, 8.3, 15.0, 22.7, 5.5, 18.2, 30.0, 10.8, 7.2, 25.5, 14.3, 9.1, 20.0, 11.5, 6.8, 28.3, 16.7, 4.2, 19.5, 13.0][
+    index % 20
+  ];
+
+export const _quantityPerSignal = (index: number) =>
+  [1, 5, 2, 10, 1, 3, 1, 4, 6, 2, 8, 1, 5, 3, 2, 1, 4, 10, 2, 6][index % 20];
+
+export const _downtimeThreshold = (index: number) =>
+  [
+    '00:05:00',
+    '00:10:00',
+    '00:03:00',
+    '00:15:00',
+    '00:02:00',
+    '00:08:00',
+    '00:20:00',
+    '00:05:00',
+    '00:04:00',
+    '00:12:00',
+    '00:06:00',
+    '00:03:00',
+    '00:10:00',
+    '00:07:00',
+    '00:02:30',
+    '00:15:00',
+    '00:08:00',
+    '00:01:30',
+    '00:09:00',
+    '00:05:30',
+  ][index % 20];
 export const _areaNames = (index: number) =>
   [
     'North America',

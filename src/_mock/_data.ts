@@ -13,8 +13,13 @@ import {
   _description,
   _phoneNumber,
   _productNames,
+  _machineNames,
   _publishStatus,
+  _idealCycleTime,
   _stockQuantities,
+  _downtimeThreshold,
+  _productCategories,
+  _quantityPerSignal,
   _areaDescriptions,
   _productCategories,
   _productGroupCodes,
@@ -326,6 +331,15 @@ export const _notifications = [
 ];
 
 // ----------------------------------------------------------------------
+
+export const _workingParameters = [...Array(20)].map((_, index) => ({
+  id: _id(index),
+  product: _productNames(index),
+  machine: _machineNames(index),
+  idealCycleTime: _idealCycleTime(index),
+  quantityPerSignal: _quantityPerSignal(index),
+  downtimeThreshold: _downtimeThreshold(index),
+  }));
 
 export type MachineInputType = 'WeightChannels' | 'PairChannel';
 
