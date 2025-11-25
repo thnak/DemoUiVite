@@ -100,7 +100,7 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
         </TableCell>
 
         <TableCell align="right">
-          <IconButton onClick={handleClosePopover}>
+          <IconButton>
             <Iconify icon="solar:pen-bold" />
           </IconButton>
           <IconButton onClick={handleOpenPopover}>
