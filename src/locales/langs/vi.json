@@ -1,0 +1,42 @@
+{
+  "nav": {
+    "overview": "Tổng quan",
+    "dashboard": "Bảng điều khiển",
+    "management": "Quản lý",
+    "user": "Người dùng",
+    "area": "Khu vực",
+    "product": "Sản phẩm",
+    "workingParameter": "Thông số làm việc",
+    "stopMachineReason": "Lý do dừng máy",
+    "productGroup": "Nhóm sản phẩm",
+    "machine": "Máy móc",
+    "blog": "Blog",
+    "other": "Khác",
+    "signIn": "Đăng nhập",
+    "notFound": "Không tìm thấy"
+  },
+  "account": {
+    "home": "Trang chủ",
+    "profile": "Hồ sơ",
+    "settings": "Cài đặt"
+  },
+  "dashboard": {
+    "welcome": "Xin chào, Chào mừng trở lại 👋",
+    "weeklySales": "Doanh số tuần",
+    "newUsers": "Người dùng mới",
+    "purchaseOrders": "Đơn đặt hàng",
+    "messages": "Tin nhắn",
+    "currentVisits": "Lượt truy cập hiện tại",
+    "websiteVisits": "Lượt truy cập website",
+    "conversionRates": "Tỷ lệ chuyển đổi",
+    "currentSubject": "Chủ đề hiện tại",
+    "news": "Tin tức",
+    "orderTimeline": "Tiến độ đơn hàng",
+    "trafficBySite": "Lưu lượng theo trang",
+    "tasks": "Nhiệm vụ"
+  },
+  "common": {
+    "search": "Tìm kiếm",
+    "logout": "Đăng xuất"
+  }
+}
