@@ -22,6 +22,7 @@ import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
 import { AccountPopover } from '../components/account-popover';
 import { LanguagePopover } from '../components/language-popover';
+import { ThemeModeToggle } from '../components/theme-mode-toggle';
 import { NotificationsPopover } from '../components/notifications-popover';
 
 import type { MainSectionProps } from '../core/main-section';
@@ -78,6 +79,9 @@ export function DashboardLayout({
         <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0, sm: 0.75 } }}>
           {/** @slot Searchbar */}
           <Searchbar />
+
+          {/** @slot Theme mode toggle */}
+          <ThemeModeToggle />
 
           {/** @slot Language popover */}
           <LanguagePopover data={_langs} />
