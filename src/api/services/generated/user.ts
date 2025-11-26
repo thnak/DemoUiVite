@@ -121,14 +121,14 @@ export async function generateNewUserCode(): Promise<string> {
  * @returns Promise<void>
  */
 export async function postapiUsersettheme(params?: { theme?: string }): Promise<void> {
-  await axiosInstance.post(USER_ENDPOINTS.postapiUsersettheme, { params });
+  await axiosInstance.post(USER_ENDPOINTS.postapiUsersettheme, null, { params });
 }
 
 /**
  * @returns Promise<void>
  */
 export async function postapiUsersetdarkmode(params?: { darkMode?: boolean }): Promise<void> {
-  await axiosInstance.post(USER_ENDPOINTS.postapiUsersetdarkmode, { params });
+  await axiosInstance.post(USER_ENDPOINTS.postapiUsersetdarkmode, null, { params });
 }
 
 /**

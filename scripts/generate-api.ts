@@ -253,12 +253,12 @@ function generateTypesFile(schemas: Record<string, SchemaObject>): string {
   return lines.join('\n');
 }
 
-function generateServiceFile(tag: string, endpoints: GeneratedEndpoint[]): string {
+function generateServiceFile(tag: string, endpoints: GeneratedEndpoint[], schemas: Record<string, SchemaObject>): string {
   const lines: string[] = [];
   const serviceName = toCamelCase(tag);
   const ServiceName = toPascalCase(tag);
 
-  // Collect unique types
+  // Collect unique types from request body, response, and query parameters
   const typesToImport = new Set<string>();
   for (const endpoint of endpoints) {
     if (endpoint.requestBody?.type) {
@@ -268,6 +268,13 @@ function generateServiceFile(tag: string, endpoints: GeneratedEndpoint[]): strin
     }
     if (endpoint.responseType) {
       for (const typeName of extractTypeNames(endpoint.responseType)) {
+        typesToImport.add(typeName);
+      }
+    }
+    // Also collect types from query parameters
+    for (const param of endpoint.parameters.filter((p) => p.in === 'query')) {
+      const paramType = resolveType(param.schema, schemas);
+      for (const typeName of extractTypeNames(paramType)) {
         typesToImport.add(typeName);
       }
     }
@@ -371,19 +378,41 @@ function generateServiceFile(tag: string, endpoints: GeneratedEndpoint[]): strin
     const hasData = endpoint.requestBody;
     const hasQueryParams = queryParams.length > 0;
 
+    // For GET and DELETE, body must be passed as config.data
+    const isGetOrDelete = method === 'get' || method === 'delete';
+
     if (returnType === 'void') {
-      if (hasData && hasQueryParams) {
-        lines.push(`  await axiosInstance.${method}(${urlExpr}, data, { params });`);
-      } else if (hasData) {
-        lines.push(`  await axiosInstance.${method}(${urlExpr}, data);`);
-      } else if (hasQueryParams) {
-        lines.push(`  await axiosInstance.${method}(${urlExpr}, { params });`);
+      if (isGetOrDelete) {
+        // GET/DELETE with body uses config object
+        if (hasData && hasQueryParams) {
+          lines.push(`  await axiosInstance.${method}(${urlExpr}, { data, params });`);
+        } else if (hasData) {
+          lines.push(`  await axiosInstance.${method}(${urlExpr}, { data });`);
+        } else if (hasQueryParams) {
+          lines.push(`  await axiosInstance.${method}(${urlExpr}, { params });`);
+        } else {
+          lines.push(`  await axiosInstance.${method}(${urlExpr});`);
+        }
       } else {
-        lines.push(`  await axiosInstance.${method}(${urlExpr});`);
+        // POST/PUT/PATCH with body as second argument
+        if (hasData && hasQueryParams) {
+          lines.push(`  await axiosInstance.${method}(${urlExpr}, data, { params });`);
+        } else if (hasData) {
+          lines.push(`  await axiosInstance.${method}(${urlExpr}, data);`);
+        } else if (hasQueryParams) {
+          lines.push(`  await axiosInstance.${method}(${urlExpr}, null, { params });`);
+        } else {
+          lines.push(`  await axiosInstance.${method}(${urlExpr});`);
+        }
       }
     } else {
-      if (method === 'get' || method === 'delete') {
-        if (hasQueryParams) {
+      if (isGetOrDelete) {
+        // GET/DELETE with body uses config object
+        if (hasData && hasQueryParams) {
+          lines.push(`  const response = await axiosInstance.${method}<${returnType}>(${urlExpr}, { data, params });`);
+        } else if (hasData) {
+          lines.push(`  const response = await axiosInstance.${method}<${returnType}>(${urlExpr}, { data });`);
+        } else if (hasQueryParams) {
           lines.push(`  const response = await axiosInstance.${method}<${returnType}>(${urlExpr}, { params });`);
         } else {
           lines.push(`  const response = await axiosInstance.${method}<${returnType}>(${urlExpr});`);
@@ -409,7 +438,7 @@ function generateServiceFile(tag: string, endpoints: GeneratedEndpoint[]): strin
   return lines.join('\n');
 }
 
-function generateHooksFile(tag: string, endpoints: GeneratedEndpoint[]): string {
+function generateHooksFile(tag: string, endpoints: GeneratedEndpoint[], schemas: Record<string, SchemaObject>): string {
   const lines: string[] = [];
   const ServiceName = toPascalCase(tag);
   const serviceName = toCamelCase(tag);
@@ -430,11 +459,19 @@ function generateHooksFile(tag: string, endpoints: GeneratedEndpoint[]): string 
         typesToImport.add(typeName);
       }
     }
+    // Also collect types from query parameters
+    for (const param of endpoint.parameters.filter((p) => p.in === 'query')) {
+      const paramType = resolveType(param.schema, schemas);
+      for (const typeName of extractTypeNames(paramType)) {
+        typesToImport.add(typeName);
+      }
+    }
   }
 
-  // Separate queries (GET) from mutations (POST, PUT, DELETE, PATCH)
-  const queryEndpoints = endpoints.filter((e) => e.method.toLowerCase() === 'get');
-  const mutationEndpoints = endpoints.filter((e) => e.method.toLowerCase() !== 'get');
+  // Separate queries (GET without body) from mutations (POST, PUT, DELETE, PATCH, or GET with body)
+  // GET endpoints with a request body are unusual and should be treated as mutations
+  const queryEndpoints = endpoints.filter((e) => e.method.toLowerCase() === 'get' && !e.requestBody);
+  const mutationEndpoints = endpoints.filter((e) => e.method.toLowerCase() !== 'get' || e.requestBody);
 
   lines.push(`import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';`);
   lines.push(``);
@@ -694,27 +731,11 @@ async function main() {
     }
   }
 
-  // Limit to a subset of tags for initial generation
-  const targetTags = [
-    'AdaptiveRuleConfig',
-    'AdminGlobalSetting',
-    'ApiGateway',
-    'Brand',
-    'Category',
-    'Customer',
-    'Product',
-    'User',
-    'Warehouse',
-  ];
-
-  const filteredTags = Object.keys(endpointsByTag).filter((tag) =>
-    targetTags.includes(tag)
-  );
-
-  if (filteredTags.length === 0) {
-    console.log('⚠️  No matching tags found. Using all tags...');
-    filteredTags.push(...Object.keys(endpointsByTag));
-  }
+  // Generate for all tags from the OpenAPI spec, excluding 'Auth' which has a manually maintained service
+  const excludedTags = ['Auth'];
+  const filteredTags = Object.keys(endpointsByTag)
+    .filter((tag) => !excludedTags.includes(tag))
+    .sort();
 
   console.log(`📝 Generating code for ${filteredTags.length} tags:\n`);
 
@@ -740,12 +761,12 @@ async function main() {
     console.log(`   📂 ${tag} (${endpoints.length} endpoints)`);
 
     // Generate service file
-    const serviceContent = generateServiceFile(tag, endpoints);
+    const serviceContent = generateServiceFile(tag, endpoints, spec.components.schemas);
     const serviceFileName = `${toKebabCase(tag)}.ts`;
     fs.writeFileSync(path.join(generatedServicesDir, serviceFileName), serviceContent);
 
     // Generate hooks file
-    const hooksContent = generateHooksFile(tag, endpoints);
+    const hooksContent = generateHooksFile(tag, endpoints, spec.components.schemas);
     const hooksFileName = `use-${toKebabCase(tag)}.ts`;
     fs.writeFileSync(path.join(generatedHooksDir, hooksFileName), hooksContent);
   }
