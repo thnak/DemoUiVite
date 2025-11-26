@@ -5,7 +5,6 @@ import { ThemeProvider as ThemeVarsProvider } from '@mui/material/styles';
 
 import { createTheme } from './create-theme';
 
-import type {} from './extend-theme-types';
 import type { ThemeOptions } from './types';
 
 // ----------------------------------------------------------------------
@@ -20,7 +19,7 @@ export function ThemeProvider({ themeOverrides, children, ...other }: ThemeProvi
   });
 
   return (
-    <ThemeVarsProvider disableTransitionOnChange theme={theme} {...other}>
+    <ThemeVarsProvider disableTransitionOnChange theme={theme} {...other} noSsr>
       <CssBaseline />
       {children}
     </ThemeVarsProvider>
