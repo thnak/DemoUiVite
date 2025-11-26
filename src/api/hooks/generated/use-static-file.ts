@@ -1,11 +1,11 @@
-import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
+import type { UseMutationOptions } from '@tanstack/react-query';
 
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import {
+  postapiStaticFileupload,
   deleteapiStaticFiledelete,
   postapiStaticFilerequestadultcontent,
-  postapiStaticFileupload,
 } from '../../services/generated/static-file';
 
 // ----------------------------------------------------------------------
@@ -27,7 +27,8 @@ export function usePostapiStaticFileupload(
   options?: Omit<UseMutationOptions<void, Error, { params?: { subPath?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { params?: { subPath?: string } }) => postapiStaticFileupload(variables.params),
+    mutationFn: (variables: { params?: { subPath?: string } }) =>
+      postapiStaticFileupload(variables.params),
     ...options,
   });
 }
@@ -35,10 +36,14 @@ export function usePostapiStaticFileupload(
 /**
  */
 export function useDeleteapiStaticFiledelete(
-  options?: Omit<UseMutationOptions<void, Error, { params?: { relativePath?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<void, Error, { params?: { relativePath?: string } }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { params?: { relativePath?: string } }) => deleteapiStaticFiledelete(variables.params),
+    mutationFn: (variables: { params?: { relativePath?: string } }) =>
+      deleteapiStaticFiledelete(variables.params),
     ...options,
   });
 }
@@ -46,10 +51,14 @@ export function useDeleteapiStaticFiledelete(
 /**
  */
 export function usePostapiStaticFilerequestadultcontent(
-  options?: Omit<UseMutationOptions<void, Error, { params?: { relativePath?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<void, Error, { params?: { relativePath?: string } }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { params?: { relativePath?: string } }) => postapiStaticFilerequestadultcontent(variables.params),
+    mutationFn: (variables: { params?: { relativePath?: string } }) =>
+      postapiStaticFilerequestadultcontent(variables.params),
     ...options,
   });
 }

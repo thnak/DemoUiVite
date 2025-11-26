@@ -1,10 +1,8 @@
-import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
+import type { UseQueryOptions } from '@tanstack/react-query';
 
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
-import {
-  getAccountssologin,
-} from '../../services/generated/identity-components-endpoint-route-builder-extensions';
+import { getAccountssologin } from '../../services/generated/identity-components-endpoint-route-builder-extensions';
 
 // ----------------------------------------------------------------------
 // IdentityComponentsEndpointRouteBuilderExtensions Hooks
@@ -17,7 +15,10 @@ import {
  */
 export const identityComponentsEndpointRouteBuilderExtensionsKeys = {
   all: ['identityComponentsEndpointRouteBuilderExtensions'] as const,
-  getAccountssologin: ['identityComponentsEndpointRouteBuilderExtensions', 'getAccountssologin'] as const,
+  getAccountssologin: [
+    'identityComponentsEndpointRouteBuilderExtensions',
+    'getAccountssologin',
+  ] as const,
 };
 
 /**

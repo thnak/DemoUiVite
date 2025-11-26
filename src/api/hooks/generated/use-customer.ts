@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createCustomer,
   deleteCustomer,
-  generateNewCustomerCode,
+  updateCustomer,
   getCustomerById,
   getCustomerPage,
-  updateCustomer,
+  generateNewCustomerCode,
 } from '../../services/generated/customer';
 
 import type {
+  SortType,
   BooleanResult,
   CustomerEntity,
-  CustomerEntityBasePaginationResponse,
   CustomerEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  CustomerEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewCustomerCode(
  * Get paginated list of Customer
  */
 export function useGetCustomerPage(
-  options?: Omit<UseMutationOptions<CustomerEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      CustomerEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getCustomerPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getCustomerPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetCustomerPage(
  * Create a new Customer
  */
 export function useCreateCustomer(
-  options?: Omit<UseMutationOptions<CustomerEntityResult, Error, { data: CustomerEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<CustomerEntityResult, Error, { data: CustomerEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: CustomerEntity }) => createCustomer(variables.data),
@@ -90,10 +103,14 @@ export function useCreateCustomer(
  * Update an existing Customer
  */
 export function useUpdateCustomer(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateCustomer(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateCustomer(variables.id, variables.data),
     ...options,
   });
 }

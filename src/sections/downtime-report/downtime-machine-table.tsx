@@ -67,7 +67,13 @@ export function DowntimeMachineTable({ title, subheader, data, sx, ...other }: P
                         <LinearProgress
                           variant="determinate"
                           value={progressValue}
-                          color={progressValue > 70 ? 'error' : progressValue > 40 ? 'warning' : 'primary'}
+                          color={
+                            progressValue > 70
+                              ? 'error'
+                              : progressValue > 40
+                                ? 'warning'
+                                : 'primary'
+                          }
                           sx={{ width: 1, height: 8, borderRadius: 1 }}
                         />
                         <Box

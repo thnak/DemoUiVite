@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createWebhook,
   deleteWebhook,
-  generateNewWebhookCode,
-  getWebhookById,
-  getWebhookPage,
   searchWebhook,
   updateWebhook,
+  getWebhookById,
+  getWebhookPage,
+  generateNewWebhookCode,
 } from '../../services/generated/webhook';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   WebhookEntity,
-  WebhookEntityBasePaginationResponse,
   WebhookEntityResult,
+  StringObjectKeyValuePair,
+  WebhookEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -82,10 +82,20 @@ export function useSearchWebhook(
  * Get paginated list of Webhook
  */
 export function useGetWebhookPage(
-  options?: Omit<UseMutationOptions<WebhookEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      WebhookEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getWebhookPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getWebhookPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -94,7 +104,10 @@ export function useGetWebhookPage(
  * Create a new Webhook
  */
 export function useCreateWebhook(
-  options?: Omit<UseMutationOptions<WebhookEntityResult, Error, { data: WebhookEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<WebhookEntityResult, Error, { data: WebhookEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: WebhookEntity }) => createWebhook(variables.data),
@@ -106,10 +119,14 @@ export function useCreateWebhook(
  * Update an existing Webhook
  */
 export function useUpdateWebhook(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateWebhook(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateWebhook(variables.id, variables.data),
     ...options,
   });
 }

@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
-  MachineGroupMachineMapping,
-  MachineGroupMachineMappingBasePaginationResponse,
-  MachineGroupMachineMappingResult,
   SortType,
+  BooleanResult,
   StringObjectKeyValuePair,
+  MachineGroupMachineMapping,
+  MachineGroupMachineMappingResult,
+  MachineGroupMachineMappingBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -33,8 +33,12 @@ export const MACHINEGROUPMACHINEMAPPING_ENDPOINTS = {
  * Retrieves a specific Machine Group Machine Mapping entity by its unique identifier.
  * @returns Promise<MachineGroupMachineMapping>
  */
-export async function getMachineGroupMachineMappingById(id: string): Promise<MachineGroupMachineMapping> {
-  const response = await axiosInstance.get<MachineGroupMachineMapping>(`/api/machinegroupmachinemapping/${id}`);
+export async function getMachineGroupMachineMappingById(
+  id: string
+): Promise<MachineGroupMachineMapping> {
+  const response = await axiosInstance.get<MachineGroupMachineMapping>(
+    `/api/machinegroupmachinemapping/${id}`
+  );
   return response.data;
 }
 
@@ -48,8 +52,15 @@ export async function getMachineGroupMachineMappingById(id: string): Promise<Mac
  * @param data - Request body
  * @returns Promise<MachineGroupMachineMappingBasePaginationResponse>
  */
-export async function getMachineGroupMachineMappingPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<MachineGroupMachineMappingBasePaginationResponse> {
-  const response = await axiosInstance.post<MachineGroupMachineMappingBasePaginationResponse>(MACHINEGROUPMACHINEMAPPING_ENDPOINTS.getMachineGroupMachineMappingPage, data, { params });
+export async function getMachineGroupMachineMappingPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<MachineGroupMachineMappingBasePaginationResponse> {
+  const response = await axiosInstance.post<MachineGroupMachineMappingBasePaginationResponse>(
+    MACHINEGROUPMACHINEMAPPING_ENDPOINTS.getMachineGroupMachineMappingPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +71,13 @@ export async function getMachineGroupMachineMappingPage(data: SortType[], params
  * @param data - Request body
  * @returns Promise<MachineGroupMachineMappingResult>
  */
-export async function createMachineGroupMachineMapping(data: MachineGroupMachineMapping): Promise<MachineGroupMachineMappingResult> {
-  const response = await axiosInstance.post<MachineGroupMachineMappingResult>(MACHINEGROUPMACHINEMAPPING_ENDPOINTS.createMachineGroupMachineMapping, data);
+export async function createMachineGroupMachineMapping(
+  data: MachineGroupMachineMapping
+): Promise<MachineGroupMachineMappingResult> {
+  const response = await axiosInstance.post<MachineGroupMachineMappingResult>(
+    MACHINEGROUPMACHINEMAPPING_ENDPOINTS.createMachineGroupMachineMapping,
+    data
+  );
   return response.data;
 }
 
@@ -72,8 +88,14 @@ export async function createMachineGroupMachineMapping(data: MachineGroupMachine
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateMachineGroupMachineMapping(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(`/api/machinegroupmachinemapping/update/${id}`, data);
+export async function updateMachineGroupMachineMapping(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    `/api/machinegroupmachinemapping/update/${id}`,
+    data
+  );
   return response.data;
 }
 
@@ -84,7 +106,9 @@ export async function updateMachineGroupMachineMapping(id: string, data: StringO
  * @returns Promise<BooleanResult>
  */
 export async function deleteMachineGroupMachineMapping(id: string): Promise<BooleanResult> {
-  const response = await axiosInstance.delete<BooleanResult>(`/api/machinegroupmachinemapping/delete/${id}`);
+  const response = await axiosInstance.delete<BooleanResult>(
+    `/api/machinegroupmachinemapping/delete/${id}`
+  );
   return response.data;
 }
 
@@ -95,6 +119,8 @@ export async function deleteMachineGroupMachineMapping(id: string): Promise<Bool
  * @returns Promise<string>
  */
 export async function generateNewMachineGroupMachineMappingCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(MACHINEGROUPMACHINEMAPPING_ENDPOINTS.generateNewMachineGroupMachineMappingCode);
+  const response = await axiosInstance.get<string>(
+    MACHINEGROUPMACHINEMAPPING_ENDPOINTS.generateNewMachineGroupMachineMappingCode
+  );
   return response.data;
 }

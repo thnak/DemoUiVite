@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
   SortType,
+  BooleanResult,
   StorageBlockEntity,
-  StorageBlockEntityBasePaginationResponse,
   StorageBlockEntityResult,
   StringObjectKeyValuePair,
+  StorageBlockEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getStorageBlockById(id: string): Promise<StorageBlockEntit
  * @param data - Request body
  * @returns Promise<StorageBlockEntityBasePaginationResponse>
  */
-export async function getStorageBlockPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<StorageBlockEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<StorageBlockEntityBasePaginationResponse>(STORAGEBLOCK_ENDPOINTS.getStorageBlockPage, data, { params });
+export async function getStorageBlockPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<StorageBlockEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<StorageBlockEntityBasePaginationResponse>(
+    STORAGEBLOCK_ENDPOINTS.getStorageBlockPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +67,13 @@ export async function getStorageBlockPage(data: SortType[], params?: { pageNumbe
  * @param data - Request body
  * @returns Promise<StorageBlockEntityResult>
  */
-export async function createStorageBlock(data: StorageBlockEntity): Promise<StorageBlockEntityResult> {
-  const response = await axiosInstance.post<StorageBlockEntityResult>(STORAGEBLOCK_ENDPOINTS.createStorageBlock, data);
+export async function createStorageBlock(
+  data: StorageBlockEntity
+): Promise<StorageBlockEntityResult> {
+  const response = await axiosInstance.post<StorageBlockEntityResult>(
+    STORAGEBLOCK_ENDPOINTS.createStorageBlock,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +84,10 @@ export async function createStorageBlock(data: StorageBlockEntity): Promise<Stor
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateStorageBlock(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateStorageBlock(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/storageblock/update/${id}`, data);
   return response.data;
 }
@@ -95,6 +110,8 @@ export async function deleteStorageBlock(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewStorageBlockCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(STORAGEBLOCK_ENDPOINTS.generateNewStorageBlockCode);
+  const response = await axiosInstance.get<string>(
+    STORAGEBLOCK_ENDPOINTS.generateNewStorageBlockCode
+  );
   return response.data;
 }

@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
-  DefectEntity,
-  DefectEntityBasePaginationResponse,
-  DefectEntityResult,
   SortType,
+  DefectEntity,
+  BooleanResult,
+  DefectEntityResult,
   StringObjectKeyValuePair,
+  DefectEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getDefectById(id: string): Promise<DefectEntity> {
  * @param data - Request body
  * @returns Promise<DefectEntityBasePaginationResponse>
  */
-export async function getDefectPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<DefectEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<DefectEntityBasePaginationResponse>(DEFECT_ENDPOINTS.getDefectPage, data, { params });
+export async function getDefectPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<DefectEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<DefectEntityBasePaginationResponse>(
+    DEFECT_ENDPOINTS.getDefectPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -61,7 +68,10 @@ export async function getDefectPage(data: SortType[], params?: { pageNumber?: nu
  * @returns Promise<DefectEntityResult>
  */
 export async function createDefect(data: DefectEntity): Promise<DefectEntityResult> {
-  const response = await axiosInstance.post<DefectEntityResult>(DEFECT_ENDPOINTS.createDefect, data);
+  const response = await axiosInstance.post<DefectEntityResult>(
+    DEFECT_ENDPOINTS.createDefect,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +82,10 @@ export async function createDefect(data: DefectEntity): Promise<DefectEntityResu
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateDefect(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateDefect(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/defect/update/${id}`, data);
   return response.data;
 }

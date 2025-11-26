@@ -5,21 +5,21 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createOperation,
   deleteOperation,
-  generateNewOperationCode,
-  getOperationById,
-  getOperationPage,
-  getapiOperationsearchbycode,
   searchOperation,
   updateOperation,
+  getOperationById,
+  getOperationPage,
+  generateNewOperationCode,
+  getapiOperationsearchbycode,
 } from '../../services/generated/operation';
 
 import type {
+  SortType,
   BooleanResult,
   OperationEntity,
-  OperationEntityBasePaginationResponse,
   OperationEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  OperationEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -97,10 +97,20 @@ export function useGetapiOperationsearchbycode(
  * Get paginated list of Operation
  */
 export function useGetOperationPage(
-  options?: Omit<UseMutationOptions<OperationEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      OperationEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getOperationPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getOperationPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -109,7 +119,10 @@ export function useGetOperationPage(
  * Create a new Operation
  */
 export function useCreateOperation(
-  options?: Omit<UseMutationOptions<OperationEntityResult, Error, { data: OperationEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<OperationEntityResult, Error, { data: OperationEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: OperationEntity }) => createOperation(variables.data),
@@ -121,10 +134,14 @@ export function useCreateOperation(
  * Update an existing Operation
  */
 export function useUpdateOperation(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateOperation(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateOperation(variables.id, variables.data),
     ...options,
   });
 }

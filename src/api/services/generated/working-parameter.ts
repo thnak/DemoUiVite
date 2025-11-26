@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   WorkingParameterEntity,
-  WorkingParameterEntityBasePaginationResponse,
+  StringObjectKeyValuePair,
   WorkingParameterEntityResult,
+  WorkingParameterEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getWorkingParameterById(id: string): Promise<WorkingParame
  * @param data - Request body
  * @returns Promise<WorkingParameterEntityBasePaginationResponse>
  */
-export async function getWorkingParameterPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<WorkingParameterEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<WorkingParameterEntityBasePaginationResponse>(WORKINGPARAMETER_ENDPOINTS.getWorkingParameterPage, data, { params });
+export async function getWorkingParameterPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<WorkingParameterEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<WorkingParameterEntityBasePaginationResponse>(
+    WORKINGPARAMETER_ENDPOINTS.getWorkingParameterPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +67,13 @@ export async function getWorkingParameterPage(data: SortType[], params?: { pageN
  * @param data - Request body
  * @returns Promise<WorkingParameterEntityResult>
  */
-export async function createWorkingParameter(data: WorkingParameterEntity): Promise<WorkingParameterEntityResult> {
-  const response = await axiosInstance.post<WorkingParameterEntityResult>(WORKINGPARAMETER_ENDPOINTS.createWorkingParameter, data);
+export async function createWorkingParameter(
+  data: WorkingParameterEntity
+): Promise<WorkingParameterEntityResult> {
+  const response = await axiosInstance.post<WorkingParameterEntityResult>(
+    WORKINGPARAMETER_ENDPOINTS.createWorkingParameter,
+    data
+  );
   return response.data;
 }
 
@@ -72,8 +84,14 @@ export async function createWorkingParameter(data: WorkingParameterEntity): Prom
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateWorkingParameter(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(`/api/workingparameter/update/${id}`, data);
+export async function updateWorkingParameter(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    `/api/workingparameter/update/${id}`,
+    data
+  );
   return response.data;
 }
 
@@ -95,6 +113,8 @@ export async function deleteWorkingParameter(id: string): Promise<BooleanResult>
  * @returns Promise<string>
  */
 export async function generateNewWorkingParameterCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(WORKINGPARAMETER_ENDPOINTS.generateNewWorkingParameterCode);
+  const response = await axiosInstance.get<string>(
+    WORKINGPARAMETER_ENDPOINTS.generateNewWorkingParameterCode
+  );
   return response.data;
 }

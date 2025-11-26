@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
-  MongoBlob,
-  MongoBlobBasePaginationResponse,
-  MongoBlobResult,
   SortType,
+  MongoBlob,
+  BooleanResult,
+  MongoBlobResult,
   StringObjectKeyValuePair,
+  MongoBlobBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getMongoBlobById(id: string): Promise<MongoBlob> {
  * @param data - Request body
  * @returns Promise<MongoBlobBasePaginationResponse>
  */
-export async function getMongoBlobPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<MongoBlobBasePaginationResponse> {
-  const response = await axiosInstance.post<MongoBlobBasePaginationResponse>(MONGOBLOB_ENDPOINTS.getMongoBlobPage, data, { params });
+export async function getMongoBlobPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<MongoBlobBasePaginationResponse> {
+  const response = await axiosInstance.post<MongoBlobBasePaginationResponse>(
+    MONGOBLOB_ENDPOINTS.getMongoBlobPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -61,7 +68,10 @@ export async function getMongoBlobPage(data: SortType[], params?: { pageNumber?:
  * @returns Promise<MongoBlobResult>
  */
 export async function createMongoBlob(data: MongoBlob): Promise<MongoBlobResult> {
-  const response = await axiosInstance.post<MongoBlobResult>(MONGOBLOB_ENDPOINTS.createMongoBlob, data);
+  const response = await axiosInstance.post<MongoBlobResult>(
+    MONGOBLOB_ENDPOINTS.createMongoBlob,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +82,10 @@ export async function createMongoBlob(data: MongoBlob): Promise<MongoBlobResult>
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateMongoBlob(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateMongoBlob(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/mongoblob/update/${id}`, data);
   return response.data;
 }

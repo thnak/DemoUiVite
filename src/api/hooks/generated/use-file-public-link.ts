@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createFilePublicLink,
   deleteFilePublicLink,
-  generateNewFilePublicLinkCode,
+  updateFilePublicLink,
   getFilePublicLinkById,
   getFilePublicLinkPage,
-  updateFilePublicLink,
+  generateNewFilePublicLinkCode,
 } from '../../services/generated/file-public-link';
 
 import type {
+  SortType,
   BooleanResult,
   FilePublicLinkEntity,
-  FilePublicLinkEntityBasePaginationResponse,
-  FilePublicLinkEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  FilePublicLinkEntityResult,
+  FilePublicLinkEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewFilePublicLinkCode(
  * Get paginated list of File Public Link
  */
 export function useGetFilePublicLinkPage(
-  options?: Omit<UseMutationOptions<FilePublicLinkEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      FilePublicLinkEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getFilePublicLinkPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getFilePublicLinkPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetFilePublicLinkPage(
  * Create a new File Public Link
  */
 export function useCreateFilePublicLink(
-  options?: Omit<UseMutationOptions<FilePublicLinkEntityResult, Error, { data: FilePublicLinkEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<FilePublicLinkEntityResult, Error, { data: FilePublicLinkEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: FilePublicLinkEntity }) => createFilePublicLink(variables.data),
@@ -90,10 +103,14 @@ export function useCreateFilePublicLink(
  * Update an existing File Public Link
  */
 export function useUpdateFilePublicLink(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateFilePublicLink(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateFilePublicLink(variables.id, variables.data),
     ...options,
   });
 }

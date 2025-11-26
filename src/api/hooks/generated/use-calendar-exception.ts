@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createCalendarException,
   deleteCalendarException,
-  generateNewCalendarExceptionCode,
+  updateCalendarException,
   getCalendarExceptionById,
   getCalendarExceptionPage,
-  updateCalendarException,
+  generateNewCalendarExceptionCode,
 } from '../../services/generated/calendar-exception';
 
 import type {
+  SortType,
   BooleanResult,
   CalendarExceptionEntity,
-  CalendarExceptionEntityBasePaginationResponse,
-  CalendarExceptionEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  CalendarExceptionEntityResult,
+  CalendarExceptionEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,8 +31,12 @@ import type {
  */
 export const calendarExceptionKeys = {
   all: ['calendarException'] as const,
-  getCalendarExceptionById: (id: string) => ['calendarException', 'getCalendarExceptionById', id] as const,
-  generateNewCalendarExceptionCode: ['calendarException', 'generateNewCalendarExceptionCode'] as const,
+  getCalendarExceptionById: (id: string) =>
+    ['calendarException', 'getCalendarExceptionById', id] as const,
+  generateNewCalendarExceptionCode: [
+    'calendarException',
+    'generateNewCalendarExceptionCode',
+  ] as const,
 };
 
 /**
@@ -66,10 +70,20 @@ export function useGenerateNewCalendarExceptionCode(
  * Get paginated list of Calendar Exception
  */
 export function useGetCalendarExceptionPage(
-  options?: Omit<UseMutationOptions<CalendarExceptionEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      CalendarExceptionEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getCalendarExceptionPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getCalendarExceptionPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,10 +92,14 @@ export function useGetCalendarExceptionPage(
  * Create a new Calendar Exception
  */
 export function useCreateCalendarException(
-  options?: Omit<UseMutationOptions<CalendarExceptionEntityResult, Error, { data: CalendarExceptionEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<CalendarExceptionEntityResult, Error, { data: CalendarExceptionEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: CalendarExceptionEntity }) => createCalendarException(variables.data),
+    mutationFn: (variables: { data: CalendarExceptionEntity }) =>
+      createCalendarException(variables.data),
     ...options,
   });
 }
@@ -90,10 +108,14 @@ export function useCreateCalendarException(
  * Update an existing Calendar Exception
  */
 export function useUpdateCalendarException(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateCalendarException(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateCalendarException(variables.id, variables.data),
     ...options,
   });
 }

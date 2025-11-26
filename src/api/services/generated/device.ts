@@ -1,24 +1,24 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
+  SortType,
+  SensorDto,
   DataSource,
-  GetDeviceLogsResponsePaginationQuery,
-  GetSensorEntityByIdDto,
+  BooleanResult,
+  IoTDeviceType,
+  IoTSensorType,
   IoTDeviceEntity,
+  IoTDeviceStatus,
+  IoTSensorEntity,
+  RequestToCreateDto,
+  GetSensorEntityByIdDto,
+  SensorDtoPaginationQuery,
+  StringObjectKeyValuePair,
   IoTDeviceEntityEntityLogEntity,
   IoTDeviceEntityPaginationQuery,
-  IoTDeviceStatus,
-  IoTDeviceType,
-  IoTSensorEntity,
   IoTSensorEntityPaginationQuery,
-  IoTSensorType,
-  RequestToCreateDto,
   SensorDeviceDtoPaginationQuery,
-  SensorDto,
-  SensorDtoPaginationQuery,
-  SortType,
-  StringObjectKeyValuePair,
+  GetDeviceLogsResponsePaginationQuery,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -63,7 +63,10 @@ export const DEVICE_ENDPOINTS = {
  * @returns Promise<BooleanResult>
  */
 export async function postapiDeviceaddnewdevice(data: RequestToCreateDto): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(DEVICE_ENDPOINTS.postapiDeviceaddnewdevice, data);
+  const response = await axiosInstance.post<BooleanResult>(
+    DEVICE_ENDPOINTS.postapiDeviceaddnewdevice,
+    data
+  );
   return response.data;
 }
 
@@ -71,7 +74,9 @@ export async function postapiDeviceaddnewdevice(data: RequestToCreateDto): Promi
  * @returns Promise<BooleanResult>
  */
 export async function postapiDeviceaddnewdeviceform(): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(DEVICE_ENDPOINTS.postapiDeviceaddnewdeviceform);
+  const response = await axiosInstance.post<BooleanResult>(
+    DEVICE_ENDPOINTS.postapiDeviceaddnewdeviceform
+  );
   return response.data;
 }
 
@@ -80,7 +85,10 @@ export async function postapiDeviceaddnewdeviceform(): Promise<BooleanResult> {
  * @returns Promise<BooleanResult>
  */
 export async function postapiDeviceaddnewsensor(data: IoTSensorEntity): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(DEVICE_ENDPOINTS.postapiDeviceaddnewsensor, data);
+  const response = await axiosInstance.post<BooleanResult>(
+    DEVICE_ENDPOINTS.postapiDeviceaddnewsensor,
+    data
+  );
   return response.data;
 }
 
@@ -88,8 +96,13 @@ export async function postapiDeviceaddnewsensor(data: IoTSensorEntity): Promise<
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function postapiDevicecreatemillionsamples(data: IoTDeviceEntity[]): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(DEVICE_ENDPOINTS.postapiDevicecreatemillionsamples, data);
+export async function postapiDevicecreatemillionsamples(
+  data: IoTDeviceEntity[]
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    DEVICE_ENDPOINTS.postapiDevicecreatemillionsamples,
+    data
+  );
   return response.data;
 }
 
@@ -97,7 +110,9 @@ export async function postapiDevicecreatemillionsamples(data: IoTDeviceEntity[])
  * @returns Promise<BooleanResult>
  */
 export async function postapiDevicedeletedevice(): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(DEVICE_ENDPOINTS.postapiDevicedeletedevice);
+  const response = await axiosInstance.post<BooleanResult>(
+    DEVICE_ENDPOINTS.postapiDevicedeletedevice
+  );
   return response.data;
 }
 
@@ -105,7 +120,9 @@ export async function postapiDevicedeletedevice(): Promise<BooleanResult> {
  * @returns Promise<BooleanResult>
  */
 export async function postapiDevicedeletesensor(): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(DEVICE_ENDPOINTS.postapiDevicedeletesensor);
+  const response = await axiosInstance.post<BooleanResult>(
+    DEVICE_ENDPOINTS.postapiDevicedeletesensor
+  );
   return response.data;
 }
 
@@ -116,56 +133,104 @@ export async function postapiDevicedeletesensor(): Promise<BooleanResult> {
  * @param data - Request body
  * @returns Promise<IoTDeviceEntityPaginationQuery>
  */
-export async function postapiDevicegetdevice(data: SortType[], params?: { search?: string; typeList?: IoTDeviceType[]; statusList?: IoTDeviceStatus[]; fromTime?: string; toTime?: string; pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<IoTDeviceEntityPaginationQuery> {
-  const response = await axiosInstance.post<IoTDeviceEntityPaginationQuery>(DEVICE_ENDPOINTS.postapiDevicegetdevice, data, { params });
+export async function postapiDevicegetdevice(
+  data: SortType[],
+  params?: {
+    search?: string;
+    typeList?: IoTDeviceType[];
+    statusList?: IoTDeviceStatus[];
+    fromTime?: string;
+    toTime?: string;
+    pageNumber?: number;
+    pageSize?: number;
+    searchTerm?: string;
+  }
+): Promise<IoTDeviceEntityPaginationQuery> {
+  const response = await axiosInstance.post<IoTDeviceEntityPaginationQuery>(
+    DEVICE_ENDPOINTS.postapiDevicegetdevice,
+    data,
+    { params }
+  );
   return response.data;
 }
 
 /**
  * @returns Promise<BooleanResult>
  */
-export async function getapiDevicecheckavailableip(params?: { ip?: string }): Promise<BooleanResult> {
-  const response = await axiosInstance.get<BooleanResult>(DEVICE_ENDPOINTS.getapiDevicecheckavailableip, { params });
+export async function getapiDevicecheckavailableip(params?: {
+  ip?: string;
+}): Promise<BooleanResult> {
+  const response = await axiosInstance.get<BooleanResult>(
+    DEVICE_ENDPOINTS.getapiDevicecheckavailableip,
+    { params }
+  );
   return response.data;
 }
 
 /**
  * @returns Promise<BooleanResult>
  */
-export async function getapiDevicecheckavailablemac(params?: { mac?: string }): Promise<BooleanResult> {
-  const response = await axiosInstance.get<BooleanResult>(DEVICE_ENDPOINTS.getapiDevicecheckavailablemac, { params });
+export async function getapiDevicecheckavailablemac(params?: {
+  mac?: string;
+}): Promise<BooleanResult> {
+  const response = await axiosInstance.get<BooleanResult>(
+    DEVICE_ENDPOINTS.getapiDevicecheckavailablemac,
+    { params }
+  );
   return response.data;
 }
 
 /**
  * @returns Promise<IoTDeviceEntity>
  */
-export async function getapiDevicegetdevicebyiddeviceId(deviceId: string): Promise<IoTDeviceEntity> {
-  const response = await axiosInstance.get<IoTDeviceEntity>(`/api/Device/get-device-by-id/${deviceId}`);
+export async function getapiDevicegetdevicebyiddeviceId(
+  deviceId: string
+): Promise<IoTDeviceEntity> {
+  const response = await axiosInstance.get<IoTDeviceEntity>(
+    `/api/Device/get-device-by-id/${deviceId}`
+  );
   return response.data;
 }
 
 /**
  * @returns Promise<IoTDeviceEntity[]>
  */
-export async function getapiDevicesearchdevice(params?: { search?: string; pageSize?: number }): Promise<IoTDeviceEntity[]> {
-  const response = await axiosInstance.get<IoTDeviceEntity[]>(DEVICE_ENDPOINTS.getapiDevicesearchdevice, { params });
+export async function getapiDevicesearchdevice(params?: {
+  search?: string;
+  pageSize?: number;
+}): Promise<IoTDeviceEntity[]> {
+  const response = await axiosInstance.get<IoTDeviceEntity[]>(
+    DEVICE_ENDPOINTS.getapiDevicesearchdevice,
+    { params }
+  );
   return response.data;
 }
 
 /**
  * @returns Promise<DataSource[]>
  */
-export async function getapiDevicefindmqtttemplate(params?: { device?: string; template?: string; limit?: number }): Promise<DataSource[]> {
-  const response = await axiosInstance.get<DataSource[]>(DEVICE_ENDPOINTS.getapiDevicefindmqtttemplate, { params });
+export async function getapiDevicefindmqtttemplate(params?: {
+  device?: string;
+  template?: string;
+  limit?: number;
+}): Promise<DataSource[]> {
+  const response = await axiosInstance.get<DataSource[]>(
+    DEVICE_ENDPOINTS.getapiDevicefindmqtttemplate,
+    { params }
+  );
   return response.data;
 }
 
 /**
  * @returns Promise<IoTDeviceEntityEntityLogEntity[]>
  */
-export async function getapiDevicefindentitytemplate(params?: { logId?: string }): Promise<IoTDeviceEntityEntityLogEntity[]> {
-  const response = await axiosInstance.get<IoTDeviceEntityEntityLogEntity[]>(DEVICE_ENDPOINTS.getapiDevicefindentitytemplate, { params });
+export async function getapiDevicefindentitytemplate(params?: {
+  logId?: string;
+}): Promise<IoTDeviceEntityEntityLogEntity[]> {
+  const response = await axiosInstance.get<IoTDeviceEntityEntityLogEntity[]>(
+    DEVICE_ENDPOINTS.getapiDevicefindentitytemplate,
+    { params }
+  );
   return response.data;
 }
 
@@ -176,16 +241,37 @@ export async function getapiDevicefindentitytemplate(params?: { logId?: string }
  * @param data - Request body
  * @returns Promise<SensorDeviceDtoPaginationQuery>
  */
-export async function postapiDevicegetsensor(data: SortType[], params?: { search?: string; id?: string; fromTime?: string; toTime?: string; typeList?: IoTSensorType[]; pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<SensorDeviceDtoPaginationQuery> {
-  const response = await axiosInstance.post<SensorDeviceDtoPaginationQuery>(DEVICE_ENDPOINTS.postapiDevicegetsensor, data, { params });
+export async function postapiDevicegetsensor(
+  data: SortType[],
+  params?: {
+    search?: string;
+    id?: string;
+    fromTime?: string;
+    toTime?: string;
+    typeList?: IoTSensorType[];
+    pageNumber?: number;
+    pageSize?: number;
+    searchTerm?: string;
+  }
+): Promise<SensorDeviceDtoPaginationQuery> {
+  const response = await axiosInstance.post<SensorDeviceDtoPaginationQuery>(
+    DEVICE_ENDPOINTS.postapiDevicegetsensor,
+    data,
+    { params }
+  );
   return response.data;
 }
 
 /**
  * @returns Promise<StringObjectKeyValuePair[]>
  */
-export async function getapiDevicegeteditablesensor(params?: { id?: string }): Promise<StringObjectKeyValuePair[]> {
-  const response = await axiosInstance.get<StringObjectKeyValuePair[]>(DEVICE_ENDPOINTS.getapiDevicegeteditablesensor, { params });
+export async function getapiDevicegeteditablesensor(params?: {
+  id?: string;
+}): Promise<StringObjectKeyValuePair[]> {
+  const response = await axiosInstance.get<StringObjectKeyValuePair[]>(
+    DEVICE_ENDPOINTS.getapiDevicegeteditablesensor,
+    { params }
+  );
   return response.data;
 }
 
@@ -196,16 +282,34 @@ export async function getapiDevicegeteditablesensor(params?: { id?: string }): P
  * @param data - Request body
  * @returns Promise<IoTSensorEntityPaginationQuery>
  */
-export async function postapiDevicegetrawsensor(data: SortType[], params?: { CreateTimeFrom?: string; CreateTimeTo?: string; Types?: IoTSensorType[]; pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<IoTSensorEntityPaginationQuery> {
-  const response = await axiosInstance.post<IoTSensorEntityPaginationQuery>(DEVICE_ENDPOINTS.postapiDevicegetrawsensor, data, { params });
+export async function postapiDevicegetrawsensor(
+  data: SortType[],
+  params?: {
+    CreateTimeFrom?: string;
+    CreateTimeTo?: string;
+    Types?: IoTSensorType[];
+    pageNumber?: number;
+    pageSize?: number;
+    searchTerm?: string;
+  }
+): Promise<IoTSensorEntityPaginationQuery> {
+  const response = await axiosInstance.post<IoTSensorEntityPaginationQuery>(
+    DEVICE_ENDPOINTS.postapiDevicegetrawsensor,
+    data,
+    { params }
+  );
   return response.data;
 }
 
 /**
  * @returns Promise<GetSensorEntityByIdDto>
  */
-export async function getapiDevicegetsensorbysensorIdsensorId(sensorId: string): Promise<GetSensorEntityByIdDto> {
-  const response = await axiosInstance.get<GetSensorEntityByIdDto>(`/api/Device/get-sensor-by-sensorId/${sensorId}`);
+export async function getapiDevicegetsensorbysensorIdsensorId(
+  sensorId: string
+): Promise<GetSensorEntityByIdDto> {
+  const response = await axiosInstance.get<GetSensorEntityByIdDto>(
+    `/api/Device/get-sensor-by-sensorId/${sensorId}`
+  );
   return response.data;
 }
 
@@ -216,16 +320,27 @@ export async function getapiDevicegetsensorbysensorIdsensorId(sensorId: string):
  * @param data - Request body
  * @returns Promise<SensorDtoPaginationQuery>
  */
-export async function getapiDevicegetsensorbydeviceid(data: SortType[], params?: { DeviceId: string; pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<SensorDtoPaginationQuery> {
-  const response = await axiosInstance.get<SensorDtoPaginationQuery>(DEVICE_ENDPOINTS.getapiDevicegetsensorbydeviceid, { data, params });
+export async function getapiDevicegetsensorbydeviceid(
+  data: SortType[],
+  params?: { DeviceId: string; pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<SensorDtoPaginationQuery> {
+  const response = await axiosInstance.get<SensorDtoPaginationQuery>(
+    DEVICE_ENDPOINTS.getapiDevicegetsensorbydeviceid,
+    { data, params }
+  );
   return response.data;
 }
 
 /**
  * @returns Promise<SensorDto[]>
  */
-export async function getapiDevicesearchsensor(params?: { search?: string; pageSize?: number }): Promise<SensorDto[]> {
-  const response = await axiosInstance.get<SensorDto[]>(DEVICE_ENDPOINTS.getapiDevicesearchsensor, { params });
+export async function getapiDevicesearchsensor(params?: {
+  search?: string;
+  pageSize?: number;
+}): Promise<SensorDto[]> {
+  const response = await axiosInstance.get<SensorDto[]>(DEVICE_ENDPOINTS.getapiDevicesearchsensor, {
+    params,
+  });
   return response.data;
 }
 
@@ -236,8 +351,22 @@ export async function getapiDevicesearchsensor(params?: { search?: string; pageS
  * @param data - Request body
  * @returns Promise<GetDeviceLogsResponsePaginationQuery>
  */
-export async function postapiDevicegetdevicelog(data: SortType[], params?: { DeviceId: string; CreateTimeFrom?: string; CreateTimeTo?: string; pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<GetDeviceLogsResponsePaginationQuery> {
-  const response = await axiosInstance.post<GetDeviceLogsResponsePaginationQuery>(DEVICE_ENDPOINTS.postapiDevicegetdevicelog, data, { params });
+export async function postapiDevicegetdevicelog(
+  data: SortType[],
+  params?: {
+    DeviceId: string;
+    CreateTimeFrom?: string;
+    CreateTimeTo?: string;
+    pageNumber?: number;
+    pageSize?: number;
+    searchTerm?: string;
+  }
+): Promise<GetDeviceLogsResponsePaginationQuery> {
+  const response = await axiosInstance.post<GetDeviceLogsResponsePaginationQuery>(
+    DEVICE_ENDPOINTS.postapiDevicegetdevicelog,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -254,7 +383,9 @@ export async function getapiDevicedownloadexceldeviceandsensor(): Promise<void> 
  * @returns Promise<BooleanResult>
  */
 export async function postapiDeviceupdatedevice(): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(DEVICE_ENDPOINTS.postapiDeviceupdatedevice);
+  const response = await axiosInstance.post<BooleanResult>(
+    DEVICE_ENDPOINTS.postapiDeviceupdatedevice
+  );
   return response.data;
 }
 
@@ -262,7 +393,9 @@ export async function postapiDeviceupdatedevice(): Promise<BooleanResult> {
  * @returns Promise<BooleanResult>
  */
 export async function postapiDeviceupdatedeviceby(): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(DEVICE_ENDPOINTS.postapiDeviceupdatedeviceby);
+  const response = await axiosInstance.post<BooleanResult>(
+    DEVICE_ENDPOINTS.postapiDeviceupdatedeviceby
+  );
   return response.data;
 }
 
@@ -273,8 +406,15 @@ export async function postapiDeviceupdatedeviceby(): Promise<BooleanResult> {
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function postapiDeviceupdatesensor(data: StringObjectKeyValuePair[], params?: { SensorId?: string }): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(DEVICE_ENDPOINTS.postapiDeviceupdatesensor, data, { params });
+export async function postapiDeviceupdatesensor(
+  data: StringObjectKeyValuePair[],
+  params?: { SensorId?: string }
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    DEVICE_ENDPOINTS.postapiDeviceupdatesensor,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -284,6 +424,8 @@ export async function postapiDeviceupdatesensor(data: StringObjectKeyValuePair[]
  * @returns Promise<BooleanResult>
  */
 export async function postapiDeviceuploadexcel(): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(DEVICE_ENDPOINTS.postapiDeviceuploadexcel);
+  const response = await axiosInstance.post<BooleanResult>(
+    DEVICE_ENDPOINTS.postapiDeviceuploadexcel
+  );
   return response.data;
 }

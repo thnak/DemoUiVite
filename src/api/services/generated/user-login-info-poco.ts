@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   UserLoginInfoPocoEntity,
-  UserLoginInfoPocoEntityBasePaginationResponse,
+  StringObjectKeyValuePair,
   UserLoginInfoPocoEntityResult,
+  UserLoginInfoPocoEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getUserLoginInfoPocoById(id: string): Promise<UserLoginInf
  * @param data - Request body
  * @returns Promise<UserLoginInfoPocoEntityBasePaginationResponse>
  */
-export async function getUserLoginInfoPocoPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<UserLoginInfoPocoEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<UserLoginInfoPocoEntityBasePaginationResponse>(USERLOGININFOPOCO_ENDPOINTS.getUserLoginInfoPocoPage, data, { params });
+export async function getUserLoginInfoPocoPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<UserLoginInfoPocoEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<UserLoginInfoPocoEntityBasePaginationResponse>(
+    USERLOGININFOPOCO_ENDPOINTS.getUserLoginInfoPocoPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +67,13 @@ export async function getUserLoginInfoPocoPage(data: SortType[], params?: { page
  * @param data - Request body
  * @returns Promise<UserLoginInfoPocoEntityResult>
  */
-export async function createUserLoginInfoPoco(data: UserLoginInfoPocoEntity): Promise<UserLoginInfoPocoEntityResult> {
-  const response = await axiosInstance.post<UserLoginInfoPocoEntityResult>(USERLOGININFOPOCO_ENDPOINTS.createUserLoginInfoPoco, data);
+export async function createUserLoginInfoPoco(
+  data: UserLoginInfoPocoEntity
+): Promise<UserLoginInfoPocoEntityResult> {
+  const response = await axiosInstance.post<UserLoginInfoPocoEntityResult>(
+    USERLOGININFOPOCO_ENDPOINTS.createUserLoginInfoPoco,
+    data
+  );
   return response.data;
 }
 
@@ -72,8 +84,14 @@ export async function createUserLoginInfoPoco(data: UserLoginInfoPocoEntity): Pr
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateUserLoginInfoPoco(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(`/api/userlogininfopoco/update/${id}`, data);
+export async function updateUserLoginInfoPoco(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    `/api/userlogininfopoco/update/${id}`,
+    data
+  );
   return response.data;
 }
 
@@ -95,6 +113,8 @@ export async function deleteUserLoginInfoPoco(id: string): Promise<BooleanResult
  * @returns Promise<string>
  */
 export async function generateNewUserLoginInfoPocoCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(USERLOGININFOPOCO_ENDPOINTS.generateNewUserLoginInfoPocoCode);
+  const response = await axiosInstance.get<string>(
+    USERLOGININFOPOCO_ENDPOINTS.generateNewUserLoginInfoPocoCode
+  );
   return response.data;
 }

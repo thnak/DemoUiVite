@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
-  OperationParameterSettingEntity,
-  OperationParameterSettingEntityBasePaginationResponse,
-  OperationParameterSettingEntityResult,
   SortType,
+  BooleanResult,
   StringObjectKeyValuePair,
+  OperationParameterSettingEntity,
+  OperationParameterSettingEntityResult,
+  OperationParameterSettingEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -33,8 +33,12 @@ export const OPERATIONPARAMETERSETTING_ENDPOINTS = {
  * Retrieves a specific Operation Parameter Setting entity by its unique identifier.
  * @returns Promise<OperationParameterSettingEntity>
  */
-export async function getOperationParameterSettingById(id: string): Promise<OperationParameterSettingEntity> {
-  const response = await axiosInstance.get<OperationParameterSettingEntity>(`/api/operationparametersetting/${id}`);
+export async function getOperationParameterSettingById(
+  id: string
+): Promise<OperationParameterSettingEntity> {
+  const response = await axiosInstance.get<OperationParameterSettingEntity>(
+    `/api/operationparametersetting/${id}`
+  );
   return response.data;
 }
 
@@ -48,8 +52,15 @@ export async function getOperationParameterSettingById(id: string): Promise<Oper
  * @param data - Request body
  * @returns Promise<OperationParameterSettingEntityBasePaginationResponse>
  */
-export async function getOperationParameterSettingPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<OperationParameterSettingEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<OperationParameterSettingEntityBasePaginationResponse>(OPERATIONPARAMETERSETTING_ENDPOINTS.getOperationParameterSettingPage, data, { params });
+export async function getOperationParameterSettingPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<OperationParameterSettingEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<OperationParameterSettingEntityBasePaginationResponse>(
+    OPERATIONPARAMETERSETTING_ENDPOINTS.getOperationParameterSettingPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +71,13 @@ export async function getOperationParameterSettingPage(data: SortType[], params?
  * @param data - Request body
  * @returns Promise<OperationParameterSettingEntityResult>
  */
-export async function createOperationParameterSetting(data: OperationParameterSettingEntity): Promise<OperationParameterSettingEntityResult> {
-  const response = await axiosInstance.post<OperationParameterSettingEntityResult>(OPERATIONPARAMETERSETTING_ENDPOINTS.createOperationParameterSetting, data);
+export async function createOperationParameterSetting(
+  data: OperationParameterSettingEntity
+): Promise<OperationParameterSettingEntityResult> {
+  const response = await axiosInstance.post<OperationParameterSettingEntityResult>(
+    OPERATIONPARAMETERSETTING_ENDPOINTS.createOperationParameterSetting,
+    data
+  );
   return response.data;
 }
 
@@ -72,8 +88,14 @@ export async function createOperationParameterSetting(data: OperationParameterSe
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateOperationParameterSetting(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(`/api/operationparametersetting/update/${id}`, data);
+export async function updateOperationParameterSetting(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    `/api/operationparametersetting/update/${id}`,
+    data
+  );
   return response.data;
 }
 
@@ -84,7 +106,9 @@ export async function updateOperationParameterSetting(id: string, data: StringOb
  * @returns Promise<BooleanResult>
  */
 export async function deleteOperationParameterSetting(id: string): Promise<BooleanResult> {
-  const response = await axiosInstance.delete<BooleanResult>(`/api/operationparametersetting/delete/${id}`);
+  const response = await axiosInstance.delete<BooleanResult>(
+    `/api/operationparametersetting/delete/${id}`
+  );
   return response.data;
 }
 
@@ -95,6 +119,8 @@ export async function deleteOperationParameterSetting(id: string): Promise<Boole
  * @returns Promise<string>
  */
 export async function generateNewOperationParameterSettingCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(OPERATIONPARAMETERSETTING_ENDPOINTS.generateNewOperationParameterSettingCode);
+  const response = await axiosInstance.get<string>(
+    OPERATIONPARAMETERSETTING_ENDPOINTS.generateNewOperationParameterSettingCode
+  );
   return response.data;
 }

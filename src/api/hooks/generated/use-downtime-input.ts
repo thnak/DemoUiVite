@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDowntimeInput,
   deleteDowntimeInput,
-  generateNewDowntimeInputCode,
+  updateDowntimeInput,
   getDowntimeInputById,
   getDowntimeInputPage,
-  updateDowntimeInput,
+  generateNewDowntimeInputCode,
 } from '../../services/generated/downtime-input';
 
 import type {
+  SortType,
   BooleanResult,
   DowntimeInput,
-  DowntimeInputBasePaginationResponse,
   DowntimeInputResult,
-  SortType,
   StringObjectKeyValuePair,
+  DowntimeInputBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewDowntimeInputCode(
  * Get paginated list of Downtime Input
  */
 export function useGetDowntimeInputPage(
-  options?: Omit<UseMutationOptions<DowntimeInputBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      DowntimeInputBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getDowntimeInputPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getDowntimeInputPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetDowntimeInputPage(
  * Create a new Downtime Input
  */
 export function useCreateDowntimeInput(
-  options?: Omit<UseMutationOptions<DowntimeInputResult, Error, { data: DowntimeInput }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<DowntimeInputResult, Error, { data: DowntimeInput }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: DowntimeInput }) => createDowntimeInput(variables.data),
@@ -90,10 +103,14 @@ export function useCreateDowntimeInput(
  * Update an existing Downtime Input
  */
 export function useUpdateDowntimeInput(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateDowntimeInput(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateDowntimeInput(variables.id, variables.data),
     ...options,
   });
 }

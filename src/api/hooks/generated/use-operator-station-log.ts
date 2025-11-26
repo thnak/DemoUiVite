@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createOperatorStationLog,
   deleteOperatorStationLog,
-  generateNewOperatorStationLogCode,
+  updateOperatorStationLog,
   getOperatorStationLogById,
   getOperatorStationLogPage,
-  updateOperatorStationLog,
+  generateNewOperatorStationLogCode,
 } from '../../services/generated/operator-station-log';
 
 import type {
+  SortType,
   BooleanResult,
   OperatorStationLogEntity,
-  OperatorStationLogEntityBasePaginationResponse,
-  OperatorStationLogEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  OperatorStationLogEntityResult,
+  OperatorStationLogEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,8 +31,12 @@ import type {
  */
 export const operatorStationLogKeys = {
   all: ['operatorStationLog'] as const,
-  getOperatorStationLogById: (id: string) => ['operatorStationLog', 'getOperatorStationLogById', id] as const,
-  generateNewOperatorStationLogCode: ['operatorStationLog', 'generateNewOperatorStationLogCode'] as const,
+  getOperatorStationLogById: (id: string) =>
+    ['operatorStationLog', 'getOperatorStationLogById', id] as const,
+  generateNewOperatorStationLogCode: [
+    'operatorStationLog',
+    'generateNewOperatorStationLogCode',
+  ] as const,
 };
 
 /**
@@ -66,10 +70,20 @@ export function useGenerateNewOperatorStationLogCode(
  * Get paginated list of Operator Station Log
  */
 export function useGetOperatorStationLogPage(
-  options?: Omit<UseMutationOptions<OperatorStationLogEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      OperatorStationLogEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getOperatorStationLogPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getOperatorStationLogPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,10 +92,14 @@ export function useGetOperatorStationLogPage(
  * Create a new Operator Station Log
  */
 export function useCreateOperatorStationLog(
-  options?: Omit<UseMutationOptions<OperatorStationLogEntityResult, Error, { data: OperatorStationLogEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<OperatorStationLogEntityResult, Error, { data: OperatorStationLogEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: OperatorStationLogEntity }) => createOperatorStationLog(variables.data),
+    mutationFn: (variables: { data: OperatorStationLogEntity }) =>
+      createOperatorStationLog(variables.data),
     ...options,
   });
 }
@@ -90,10 +108,14 @@ export function useCreateOperatorStationLog(
  * Update an existing Operator Station Log
  */
 export function useUpdateOperatorStationLog(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateOperatorStationLog(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateOperatorStationLog(variables.id, variables.data),
     ...options,
   });
 }

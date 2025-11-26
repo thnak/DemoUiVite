@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
   SortType,
   StopEntity,
-  StopEntityBasePaginationResponse,
+  BooleanResult,
   StopEntityResult,
   StringObjectKeyValuePair,
+  StopEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getStopById(id: string): Promise<StopEntity> {
  * @param data - Request body
  * @returns Promise<StopEntityBasePaginationResponse>
  */
-export async function getStopPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<StopEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<StopEntityBasePaginationResponse>(STOP_ENDPOINTS.getStopPage, data, { params });
+export async function getStopPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<StopEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<StopEntityBasePaginationResponse>(
+    STOP_ENDPOINTS.getStopPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -72,7 +79,10 @@ export async function createStop(data: StopEntity): Promise<StopEntityResult> {
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateStop(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateStop(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/stop/update/${id}`, data);
   return response.data;
 }

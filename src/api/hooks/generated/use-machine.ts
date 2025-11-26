@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createMachine,
   deleteMachine,
-  generateNewMachineCode,
-  getMachineById,
-  getMachinePage,
   searchMachine,
   updateMachine,
+  getMachineById,
+  getMachinePage,
+  generateNewMachineCode,
 } from '../../services/generated/machine';
 
 import type {
+  SortType,
   BooleanResult,
   MachineEntity,
-  MachineEntityBasePaginationResponse,
   MachineEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  MachineEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -82,10 +82,20 @@ export function useSearchMachine(
  * Get paginated list of Machine
  */
 export function useGetMachinePage(
-  options?: Omit<UseMutationOptions<MachineEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      MachineEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getMachinePage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getMachinePage(variables.data, variables.params),
     ...options,
   });
 }
@@ -94,7 +104,10 @@ export function useGetMachinePage(
  * Create a new Machine
  */
 export function useCreateMachine(
-  options?: Omit<UseMutationOptions<MachineEntityResult, Error, { data: MachineEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<MachineEntityResult, Error, { data: MachineEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: MachineEntity }) => createMachine(variables.data),
@@ -106,10 +119,14 @@ export function useCreateMachine(
  * Update an existing Machine
  */
 export function useUpdateMachine(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateMachine(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateMachine(variables.id, variables.data),
     ...options,
   });
 }

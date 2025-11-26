@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   WorkOrderEntity,
-  WorkOrderEntityBasePaginationResponse,
   WorkOrderEntityResult,
+  StringObjectKeyValuePair,
+  WorkOrderEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getWorkOrderById(id: string): Promise<WorkOrderEntity> {
  * @param data - Request body
  * @returns Promise<WorkOrderEntityBasePaginationResponse>
  */
-export async function getWorkOrderPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<WorkOrderEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<WorkOrderEntityBasePaginationResponse>(WORKORDER_ENDPOINTS.getWorkOrderPage, data, { params });
+export async function getWorkOrderPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<WorkOrderEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<WorkOrderEntityBasePaginationResponse>(
+    WORKORDER_ENDPOINTS.getWorkOrderPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -61,7 +68,10 @@ export async function getWorkOrderPage(data: SortType[], params?: { pageNumber?:
  * @returns Promise<WorkOrderEntityResult>
  */
 export async function createWorkOrder(data: WorkOrderEntity): Promise<WorkOrderEntityResult> {
-  const response = await axiosInstance.post<WorkOrderEntityResult>(WORKORDER_ENDPOINTS.createWorkOrder, data);
+  const response = await axiosInstance.post<WorkOrderEntityResult>(
+    WORKORDER_ENDPOINTS.createWorkOrder,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +82,10 @@ export async function createWorkOrder(data: WorkOrderEntity): Promise<WorkOrderE
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateWorkOrder(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateWorkOrder(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/workorder/update/${id}`, data);
   return response.data;
 }

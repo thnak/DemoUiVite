@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createMachineType,
   deleteMachineType,
-  generateNewMachineTypeCode,
+  updateMachineType,
   getMachineTypeById,
   getMachineTypePage,
-  updateMachineType,
+  generateNewMachineTypeCode,
 } from '../../services/generated/machine-type';
 
 import type {
+  SortType,
   BooleanResult,
   MachineTypeEntity,
-  MachineTypeEntityBasePaginationResponse,
   MachineTypeEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  MachineTypeEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewMachineTypeCode(
  * Get paginated list of Machine Type
  */
 export function useGetMachineTypePage(
-  options?: Omit<UseMutationOptions<MachineTypeEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      MachineTypeEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getMachineTypePage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getMachineTypePage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetMachineTypePage(
  * Create a new Machine Type
  */
 export function useCreateMachineType(
-  options?: Omit<UseMutationOptions<MachineTypeEntityResult, Error, { data: MachineTypeEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<MachineTypeEntityResult, Error, { data: MachineTypeEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: MachineTypeEntity }) => createMachineType(variables.data),
@@ -90,10 +103,14 @@ export function useCreateMachineType(
  * Update an existing Machine Type
  */
 export function useUpdateMachineType(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateMachineType(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateMachineType(variables.id, variables.data),
     ...options,
   });
 }

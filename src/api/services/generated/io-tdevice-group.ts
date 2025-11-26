@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   IoTDeviceGroupEntity,
-  IoTDeviceGroupEntityBasePaginationResponse,
-  IoTDeviceGroupEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  IoTDeviceGroupEntityResult,
+  IoTDeviceGroupEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -49,8 +49,15 @@ export async function getIoTDeviceGroupById(id: string): Promise<IoTDeviceGroupE
  * @param data - Request body
  * @returns Promise<IoTDeviceGroupEntityBasePaginationResponse>
  */
-export async function getIoTDeviceGroupPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<IoTDeviceGroupEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<IoTDeviceGroupEntityBasePaginationResponse>(IOTDEVICEGROUP_ENDPOINTS.getIoTDeviceGroupPage, data, { params });
+export async function getIoTDeviceGroupPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<IoTDeviceGroupEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<IoTDeviceGroupEntityBasePaginationResponse>(
+    IOTDEVICEGROUP_ENDPOINTS.getIoTDeviceGroupPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -61,8 +68,13 @@ export async function getIoTDeviceGroupPage(data: SortType[], params?: { pageNum
  * @param data - Request body
  * @returns Promise<IoTDeviceGroupEntityResult>
  */
-export async function createIoTDeviceGroup(data: IoTDeviceGroupEntity): Promise<IoTDeviceGroupEntityResult> {
-  const response = await axiosInstance.post<IoTDeviceGroupEntityResult>(IOTDEVICEGROUP_ENDPOINTS.createIoTDeviceGroup, data);
+export async function createIoTDeviceGroup(
+  data: IoTDeviceGroupEntity
+): Promise<IoTDeviceGroupEntityResult> {
+  const response = await axiosInstance.post<IoTDeviceGroupEntityResult>(
+    IOTDEVICEGROUP_ENDPOINTS.createIoTDeviceGroup,
+    data
+  );
   return response.data;
 }
 
@@ -73,8 +85,14 @@ export async function createIoTDeviceGroup(data: IoTDeviceGroupEntity): Promise<
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateIoTDeviceGroup(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(`/api/iotdevicegroup/update/${id}`, data);
+export async function updateIoTDeviceGroup(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    `/api/iotdevicegroup/update/${id}`,
+    data
+  );
   return response.data;
 }
 
@@ -96,7 +114,9 @@ export async function deleteIoTDeviceGroup(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewIoTDeviceGroupCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(IOTDEVICEGROUP_ENDPOINTS.generateNewIoTDeviceGroupCode);
+  const response = await axiosInstance.get<string>(
+    IOTDEVICEGROUP_ENDPOINTS.generateNewIoTDeviceGroupCode
+  );
   return response.data;
 }
 
@@ -106,7 +126,13 @@ export async function generateNewIoTDeviceGroupCode(): Promise<string> {
  * Searches Io TDevice Group entities by text across searchable fields.
  * @returns Promise<IoTDeviceGroupEntity[]>
  */
-export async function searchIoTDeviceGroup(params?: { searchText?: string; maxResults?: number }): Promise<IoTDeviceGroupEntity[]> {
-  const response = await axiosInstance.get<IoTDeviceGroupEntity[]>(IOTDEVICEGROUP_ENDPOINTS.searchIoTDeviceGroup, { params });
+export async function searchIoTDeviceGroup(params?: {
+  searchText?: string;
+  maxResults?: number;
+}): Promise<IoTDeviceGroupEntity[]> {
+  const response = await axiosInstance.get<IoTDeviceGroupEntity[]>(
+    IOTDEVICEGROUP_ENDPOINTS.searchIoTDeviceGroup,
+    { params }
+  );
   return response.data;
 }

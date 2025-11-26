@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   FileInfoEntity,
-  FileInfoEntityBasePaginationResponse,
   FileInfoEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  FileInfoEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getFileInfoById(id: string): Promise<FileInfoEntity> {
  * @param data - Request body
  * @returns Promise<FileInfoEntityBasePaginationResponse>
  */
-export async function getFileInfoPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<FileInfoEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<FileInfoEntityBasePaginationResponse>(FILEINFO_ENDPOINTS.getFileInfoPage, data, { params });
+export async function getFileInfoPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<FileInfoEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<FileInfoEntityBasePaginationResponse>(
+    FILEINFO_ENDPOINTS.getFileInfoPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -61,7 +68,10 @@ export async function getFileInfoPage(data: SortType[], params?: { pageNumber?: 
  * @returns Promise<FileInfoEntityResult>
  */
 export async function createFileInfo(data: FileInfoEntity): Promise<FileInfoEntityResult> {
-  const response = await axiosInstance.post<FileInfoEntityResult>(FILEINFO_ENDPOINTS.createFileInfo, data);
+  const response = await axiosInstance.post<FileInfoEntityResult>(
+    FILEINFO_ENDPOINTS.createFileInfo,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +82,10 @@ export async function createFileInfo(data: FileInfoEntity): Promise<FileInfoEnti
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateFileInfo(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateFileInfo(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/fileinfo/update/${id}`, data);
   return response.data;
 }

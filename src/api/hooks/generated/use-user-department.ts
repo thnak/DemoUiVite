@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createUserDepartment,
   deleteUserDepartment,
-  generateNewUserDepartmentCode,
+  updateUserDepartment,
   getUserDepartmentById,
   getUserDepartmentPage,
-  updateUserDepartment,
+  generateNewUserDepartmentCode,
 } from '../../services/generated/user-department';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   UserDepartmentEntity,
-  UserDepartmentEntityBasePaginationResponse,
+  StringObjectKeyValuePair,
   UserDepartmentEntityResult,
+  UserDepartmentEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewUserDepartmentCode(
  * Get paginated list of User Department
  */
 export function useGetUserDepartmentPage(
-  options?: Omit<UseMutationOptions<UserDepartmentEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      UserDepartmentEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getUserDepartmentPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getUserDepartmentPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetUserDepartmentPage(
  * Create a new User Department
  */
 export function useCreateUserDepartment(
-  options?: Omit<UseMutationOptions<UserDepartmentEntityResult, Error, { data: UserDepartmentEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<UserDepartmentEntityResult, Error, { data: UserDepartmentEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: UserDepartmentEntity }) => createUserDepartment(variables.data),
@@ -90,10 +103,14 @@ export function useCreateUserDepartment(
  * Update an existing User Department
  */
 export function useUpdateUserDepartment(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateUserDepartment(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateUserDepartment(variables.id, variables.data),
     ...options,
   });
 }

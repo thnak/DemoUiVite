@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createFolderInfo,
   deleteFolderInfo,
-  generateNewFolderInfoCode,
+  updateFolderInfo,
   getFolderInfoById,
   getFolderInfoPage,
-  updateFolderInfo,
+  generateNewFolderInfoCode,
 } from '../../services/generated/folder-info';
 
 import type {
+  SortType,
   BooleanResult,
   FolderInfoEntity,
-  FolderInfoEntityBasePaginationResponse,
   FolderInfoEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  FolderInfoEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewFolderInfoCode(
  * Get paginated list of Folder Info
  */
 export function useGetFolderInfoPage(
-  options?: Omit<UseMutationOptions<FolderInfoEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      FolderInfoEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getFolderInfoPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getFolderInfoPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetFolderInfoPage(
  * Create a new Folder Info
  */
 export function useCreateFolderInfo(
-  options?: Omit<UseMutationOptions<FolderInfoEntityResult, Error, { data: FolderInfoEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<FolderInfoEntityResult, Error, { data: FolderInfoEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: FolderInfoEntity }) => createFolderInfo(variables.data),
@@ -90,10 +103,14 @@ export function useCreateFolderInfo(
  * Update an existing Folder Info
  */
 export function useUpdateFolderInfo(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateFolderInfo(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateFolderInfo(variables.id, variables.data),
     ...options,
   });
 }

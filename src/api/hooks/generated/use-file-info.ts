@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createFileInfo,
   deleteFileInfo,
-  generateNewFileInfoCode,
+  updateFileInfo,
   getFileInfoById,
   getFileInfoPage,
-  updateFileInfo,
+  generateNewFileInfoCode,
 } from '../../services/generated/file-info';
 
 import type {
+  SortType,
   BooleanResult,
   FileInfoEntity,
-  FileInfoEntityBasePaginationResponse,
   FileInfoEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  FileInfoEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewFileInfoCode(
  * Get paginated list of File Info
  */
 export function useGetFileInfoPage(
-  options?: Omit<UseMutationOptions<FileInfoEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      FileInfoEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getFileInfoPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getFileInfoPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetFileInfoPage(
  * Create a new File Info
  */
 export function useCreateFileInfo(
-  options?: Omit<UseMutationOptions<FileInfoEntityResult, Error, { data: FileInfoEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<FileInfoEntityResult, Error, { data: FileInfoEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: FileInfoEntity }) => createFileInfo(variables.data),
@@ -90,10 +103,14 @@ export function useCreateFileInfo(
  * Update an existing File Info
  */
 export function useUpdateFileInfo(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateFileInfo(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateFileInfo(variables.id, variables.data),
     ...options,
   });
 }

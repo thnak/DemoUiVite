@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   SupplierEntity,
-  SupplierEntityBasePaginationResponse,
   SupplierEntityResult,
+  StringObjectKeyValuePair,
+  SupplierEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getSupplierById(id: string): Promise<SupplierEntity> {
  * @param data - Request body
  * @returns Promise<SupplierEntityBasePaginationResponse>
  */
-export async function getSupplierPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<SupplierEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<SupplierEntityBasePaginationResponse>(SUPPLIER_ENDPOINTS.getSupplierPage, data, { params });
+export async function getSupplierPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<SupplierEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<SupplierEntityBasePaginationResponse>(
+    SUPPLIER_ENDPOINTS.getSupplierPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -61,7 +68,10 @@ export async function getSupplierPage(data: SortType[], params?: { pageNumber?: 
  * @returns Promise<SupplierEntityResult>
  */
 export async function createSupplier(data: SupplierEntity): Promise<SupplierEntityResult> {
-  const response = await axiosInstance.post<SupplierEntityResult>(SUPPLIER_ENDPOINTS.createSupplier, data);
+  const response = await axiosInstance.post<SupplierEntityResult>(
+    SUPPLIER_ENDPOINTS.createSupplier,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +82,10 @@ export async function createSupplier(data: SupplierEntity): Promise<SupplierEnti
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateSupplier(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateSupplier(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/supplier/update/${id}`, data);
   return response.data;
 }

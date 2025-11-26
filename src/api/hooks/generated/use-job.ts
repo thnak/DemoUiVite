@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createJob,
   deleteJob,
-  generateNewJobCode,
+  updateJob,
   getJobById,
   getJobPage,
-  updateJob,
+  generateNewJobCode,
 } from '../../services/generated/job';
 
 import type {
-  BooleanResult,
-  JobEntity,
-  JobEntityBasePaginationResponse,
-  JobEntityResult,
   SortType,
+  JobEntity,
+  BooleanResult,
+  JobEntityResult,
   StringObjectKeyValuePair,
+  JobEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewJobCode(
  * Get paginated list of Job
  */
 export function useGetJobPage(
-  options?: Omit<UseMutationOptions<JobEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      JobEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getJobPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getJobPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -90,10 +100,14 @@ export function useCreateJob(
  * Update an existing Job
  */
 export function useUpdateJob(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateJob(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateJob(variables.id, variables.data),
     ...options,
   });
 }

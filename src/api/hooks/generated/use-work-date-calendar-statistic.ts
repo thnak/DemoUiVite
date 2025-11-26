@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createWorkDateCalendarStatistic,
   deleteWorkDateCalendarStatistic,
-  generateNewWorkDateCalendarStatisticCode,
+  updateWorkDateCalendarStatistic,
   getWorkDateCalendarStatisticById,
   getWorkDateCalendarStatisticPage,
-  updateWorkDateCalendarStatistic,
+  generateNewWorkDateCalendarStatisticCode,
 } from '../../services/generated/work-date-calendar-statistic';
 
 import type {
-  BooleanResult,
   SortType,
+  BooleanResult,
   StringObjectKeyValuePair,
   WorkDateCalendarStatisticEntity,
-  WorkDateCalendarStatisticEntityBasePaginationResponse,
   WorkDateCalendarStatisticEntityResult,
+  WorkDateCalendarStatisticEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,8 +31,12 @@ import type {
  */
 export const workDateCalendarStatisticKeys = {
   all: ['workDateCalendarStatistic'] as const,
-  getWorkDateCalendarStatisticById: (id: string) => ['workDateCalendarStatistic', 'getWorkDateCalendarStatisticById', id] as const,
-  generateNewWorkDateCalendarStatisticCode: ['workDateCalendarStatistic', 'generateNewWorkDateCalendarStatisticCode'] as const,
+  getWorkDateCalendarStatisticById: (id: string) =>
+    ['workDateCalendarStatistic', 'getWorkDateCalendarStatisticById', id] as const,
+  generateNewWorkDateCalendarStatisticCode: [
+    'workDateCalendarStatistic',
+    'generateNewWorkDateCalendarStatisticCode',
+  ] as const,
 };
 
 /**
@@ -66,10 +70,20 @@ export function useGenerateNewWorkDateCalendarStatisticCode(
  * Get paginated list of Work Date Calendar Statistic
  */
 export function useGetWorkDateCalendarStatisticPage(
-  options?: Omit<UseMutationOptions<WorkDateCalendarStatisticEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      WorkDateCalendarStatisticEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getWorkDateCalendarStatisticPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getWorkDateCalendarStatisticPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,10 +92,18 @@ export function useGetWorkDateCalendarStatisticPage(
  * Create a new Work Date Calendar Statistic
  */
 export function useCreateWorkDateCalendarStatistic(
-  options?: Omit<UseMutationOptions<WorkDateCalendarStatisticEntityResult, Error, { data: WorkDateCalendarStatisticEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      WorkDateCalendarStatisticEntityResult,
+      Error,
+      { data: WorkDateCalendarStatisticEntity }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: WorkDateCalendarStatisticEntity }) => createWorkDateCalendarStatistic(variables.data),
+    mutationFn: (variables: { data: WorkDateCalendarStatisticEntity }) =>
+      createWorkDateCalendarStatistic(variables.data),
     ...options,
   });
 }
@@ -90,10 +112,14 @@ export function useCreateWorkDateCalendarStatistic(
  * Update an existing Work Date Calendar Statistic
  */
 export function useUpdateWorkDateCalendarStatistic(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateWorkDateCalendarStatistic(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateWorkDateCalendarStatistic(variables.id, variables.data),
     ...options,
   });
 }

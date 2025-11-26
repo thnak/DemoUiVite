@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   ParaphraseMapEntity,
-  ParaphraseMapEntityBasePaginationResponse,
-  ParaphraseMapEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  ParaphraseMapEntityResult,
+  ParaphraseMapEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getParaphraseMapById(id: string): Promise<ParaphraseMapEnt
  * @param data - Request body
  * @returns Promise<ParaphraseMapEntityBasePaginationResponse>
  */
-export async function getParaphraseMapPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<ParaphraseMapEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<ParaphraseMapEntityBasePaginationResponse>(PARAPHRASEMAP_ENDPOINTS.getParaphraseMapPage, data, { params });
+export async function getParaphraseMapPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<ParaphraseMapEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<ParaphraseMapEntityBasePaginationResponse>(
+    PARAPHRASEMAP_ENDPOINTS.getParaphraseMapPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +67,13 @@ export async function getParaphraseMapPage(data: SortType[], params?: { pageNumb
  * @param data - Request body
  * @returns Promise<ParaphraseMapEntityResult>
  */
-export async function createParaphraseMap(data: ParaphraseMapEntity): Promise<ParaphraseMapEntityResult> {
-  const response = await axiosInstance.post<ParaphraseMapEntityResult>(PARAPHRASEMAP_ENDPOINTS.createParaphraseMap, data);
+export async function createParaphraseMap(
+  data: ParaphraseMapEntity
+): Promise<ParaphraseMapEntityResult> {
+  const response = await axiosInstance.post<ParaphraseMapEntityResult>(
+    PARAPHRASEMAP_ENDPOINTS.createParaphraseMap,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +84,10 @@ export async function createParaphraseMap(data: ParaphraseMapEntity): Promise<Pa
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateParaphraseMap(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateParaphraseMap(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/paraphrasemap/update/${id}`, data);
   return response.data;
 }
@@ -95,6 +110,8 @@ export async function deleteParaphraseMap(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewParaphraseMapCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(PARAPHRASEMAP_ENDPOINTS.generateNewParaphraseMapCode);
+  const response = await axiosInstance.get<string>(
+    PARAPHRASEMAP_ENDPOINTS.generateNewParaphraseMapCode
+  );
   return response.data;
 }

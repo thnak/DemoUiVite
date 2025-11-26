@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDocument,
   deleteDocument,
-  generateNewDocumentCode,
+  updateDocument,
   getDocumentById,
   getDocumentPage,
-  updateDocument,
+  generateNewDocumentCode,
 } from '../../services/generated/document';
 
 import type {
+  SortType,
   BooleanResult,
   DocumentEntity,
-  DocumentEntityBasePaginationResponse,
   DocumentEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  DocumentEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewDocumentCode(
  * Get paginated list of Document
  */
 export function useGetDocumentPage(
-  options?: Omit<UseMutationOptions<DocumentEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      DocumentEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getDocumentPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getDocumentPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetDocumentPage(
  * Create a new Document
  */
 export function useCreateDocument(
-  options?: Omit<UseMutationOptions<DocumentEntityResult, Error, { data: DocumentEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<DocumentEntityResult, Error, { data: DocumentEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: DocumentEntity }) => createDocument(variables.data),
@@ -90,10 +103,14 @@ export function useCreateDocument(
  * Update an existing Document
  */
 export function useUpdateDocument(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateDocument(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateDocument(variables.id, variables.data),
     ...options,
   });
 }

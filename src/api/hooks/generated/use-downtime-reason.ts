@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDowntimeReason,
   deleteDowntimeReason,
-  generateNewDowntimeReasonCode,
-  getDowntimeReasonById,
-  getDowntimeReasonPage,
   searchDowntimeReason,
   updateDowntimeReason,
+  getDowntimeReasonById,
+  getDowntimeReasonPage,
+  generateNewDowntimeReasonCode,
 } from '../../services/generated/downtime-reason';
 
 import type {
+  SortType,
   BooleanResult,
   DowntimeReasonEntity,
-  DowntimeReasonEntityBasePaginationResponse,
-  DowntimeReasonEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  DowntimeReasonEntityResult,
+  DowntimeReasonEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -82,10 +82,20 @@ export function useSearchDowntimeReason(
  * Get paginated list of Downtime Reason
  */
 export function useGetDowntimeReasonPage(
-  options?: Omit<UseMutationOptions<DowntimeReasonEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      DowntimeReasonEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getDowntimeReasonPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getDowntimeReasonPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -94,7 +104,10 @@ export function useGetDowntimeReasonPage(
  * Create a new Downtime Reason
  */
 export function useCreateDowntimeReason(
-  options?: Omit<UseMutationOptions<DowntimeReasonEntityResult, Error, { data: DowntimeReasonEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<DowntimeReasonEntityResult, Error, { data: DowntimeReasonEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: DowntimeReasonEntity }) => createDowntimeReason(variables.data),
@@ -106,10 +119,14 @@ export function useCreateDowntimeReason(
  * Update an existing Downtime Reason
  */
 export function useUpdateDowntimeReason(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateDowntimeReason(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateDowntimeReason(variables.id, variables.data),
     ...options,
   });
 }

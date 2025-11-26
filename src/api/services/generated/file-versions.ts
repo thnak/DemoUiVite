@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
-  FileVersions,
-  FileVersionsBasePaginationResponse,
-  FileVersionsResult,
   SortType,
+  FileVersions,
+  BooleanResult,
+  FileVersionsResult,
   StringObjectKeyValuePair,
+  FileVersionsBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getFileVersionsById(id: string): Promise<FileVersions> {
  * @param data - Request body
  * @returns Promise<FileVersionsBasePaginationResponse>
  */
-export async function getFileVersionsPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<FileVersionsBasePaginationResponse> {
-  const response = await axiosInstance.post<FileVersionsBasePaginationResponse>(FILEVERSIONS_ENDPOINTS.getFileVersionsPage, data, { params });
+export async function getFileVersionsPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<FileVersionsBasePaginationResponse> {
+  const response = await axiosInstance.post<FileVersionsBasePaginationResponse>(
+    FILEVERSIONS_ENDPOINTS.getFileVersionsPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -61,7 +68,10 @@ export async function getFileVersionsPage(data: SortType[], params?: { pageNumbe
  * @returns Promise<FileVersionsResult>
  */
 export async function createFileVersions(data: FileVersions): Promise<FileVersionsResult> {
-  const response = await axiosInstance.post<FileVersionsResult>(FILEVERSIONS_ENDPOINTS.createFileVersions, data);
+  const response = await axiosInstance.post<FileVersionsResult>(
+    FILEVERSIONS_ENDPOINTS.createFileVersions,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +82,10 @@ export async function createFileVersions(data: FileVersions): Promise<FileVersio
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateFileVersions(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateFileVersions(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/fileversions/update/${id}`, data);
   return response.data;
 }
@@ -95,6 +108,8 @@ export async function deleteFileVersions(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewFileVersionsCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(FILEVERSIONS_ENDPOINTS.generateNewFileVersionsCode);
+  const response = await axiosInstance.get<string>(
+    FILEVERSIONS_ENDPOINTS.generateNewFileVersionsCode
+  );
   return response.data;
 }

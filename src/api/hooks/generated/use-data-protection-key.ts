@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDataProtectionKey,
   deleteDataProtectionKey,
-  generateNewDataProtectionKeyCode,
+  updateDataProtectionKey,
   getDataProtectionKeyById,
   getDataProtectionKeyPage,
-  updateDataProtectionKey,
+  generateNewDataProtectionKeyCode,
 } from '../../services/generated/data-protection-key';
 
 import type {
+  SortType,
   BooleanResult,
   DataProtectionKeyEntity,
-  DataProtectionKeyEntityBasePaginationResponse,
-  DataProtectionKeyEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  DataProtectionKeyEntityResult,
+  DataProtectionKeyEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,8 +31,12 @@ import type {
  */
 export const dataProtectionKeyKeys = {
   all: ['dataProtectionKey'] as const,
-  getDataProtectionKeyById: (id: string) => ['dataProtectionKey', 'getDataProtectionKeyById', id] as const,
-  generateNewDataProtectionKeyCode: ['dataProtectionKey', 'generateNewDataProtectionKeyCode'] as const,
+  getDataProtectionKeyById: (id: string) =>
+    ['dataProtectionKey', 'getDataProtectionKeyById', id] as const,
+  generateNewDataProtectionKeyCode: [
+    'dataProtectionKey',
+    'generateNewDataProtectionKeyCode',
+  ] as const,
 };
 
 /**
@@ -66,10 +70,20 @@ export function useGenerateNewDataProtectionKeyCode(
  * Get paginated list of Data Protection Key
  */
 export function useGetDataProtectionKeyPage(
-  options?: Omit<UseMutationOptions<DataProtectionKeyEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      DataProtectionKeyEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getDataProtectionKeyPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getDataProtectionKeyPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,10 +92,14 @@ export function useGetDataProtectionKeyPage(
  * Create a new Data Protection Key
  */
 export function useCreateDataProtectionKey(
-  options?: Omit<UseMutationOptions<DataProtectionKeyEntityResult, Error, { data: DataProtectionKeyEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<DataProtectionKeyEntityResult, Error, { data: DataProtectionKeyEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: DataProtectionKeyEntity }) => createDataProtectionKey(variables.data),
+    mutationFn: (variables: { data: DataProtectionKeyEntity }) =>
+      createDataProtectionKey(variables.data),
     ...options,
   });
 }
@@ -90,10 +108,14 @@ export function useCreateDataProtectionKey(
  * Update an existing Data Protection Key
  */
 export function useUpdateDataProtectionKey(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateDataProtectionKey(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateDataProtectionKey(variables.id, variables.data),
     ...options,
   });
 }

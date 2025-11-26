@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   ProductEntity,
-  ProductEntityBasePaginationResponse,
   ProductEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  ProductEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -49,8 +49,15 @@ export async function getProductById(id: string): Promise<ProductEntity> {
  * @param data - Request body
  * @returns Promise<ProductEntityBasePaginationResponse>
  */
-export async function getProductPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<ProductEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<ProductEntityBasePaginationResponse>(PRODUCT_ENDPOINTS.getProductPage, data, { params });
+export async function getProductPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<ProductEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<ProductEntityBasePaginationResponse>(
+    PRODUCT_ENDPOINTS.getProductPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -62,7 +69,10 @@ export async function getProductPage(data: SortType[], params?: { pageNumber?: n
  * @returns Promise<ProductEntityResult>
  */
 export async function createProduct(data: ProductEntity): Promise<ProductEntityResult> {
-  const response = await axiosInstance.post<ProductEntityResult>(PRODUCT_ENDPOINTS.createProduct, data);
+  const response = await axiosInstance.post<ProductEntityResult>(
+    PRODUCT_ENDPOINTS.createProduct,
+    data
+  );
   return response.data;
 }
 
@@ -73,7 +83,10 @@ export async function createProduct(data: ProductEntity): Promise<ProductEntityR
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateProduct(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateProduct(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/product/update/${id}`, data);
   return response.data;
 }
@@ -106,7 +119,12 @@ export async function generateNewProductCode(): Promise<string> {
  * Searches Product entities by text across searchable fields.
  * @returns Promise<ProductEntity[]>
  */
-export async function searchProduct(params?: { searchText?: string; maxResults?: number }): Promise<ProductEntity[]> {
-  const response = await axiosInstance.get<ProductEntity[]>(PRODUCT_ENDPOINTS.searchProduct, { params });
+export async function searchProduct(params?: {
+  searchText?: string;
+  maxResults?: number;
+}): Promise<ProductEntity[]> {
+  const response = await axiosInstance.get<ProductEntity[]>(PRODUCT_ENDPOINTS.searchProduct, {
+    params,
+  });
   return response.data;
 }

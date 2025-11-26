@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createStop,
   deleteStop,
-  generateNewStopCode,
+  updateStop,
   getStopById,
   getStopPage,
-  updateStop,
+  generateNewStopCode,
 } from '../../services/generated/stop';
 
 import type {
-  BooleanResult,
   SortType,
   StopEntity,
-  StopEntityBasePaginationResponse,
+  BooleanResult,
   StopEntityResult,
   StringObjectKeyValuePair,
+  StopEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewStopCode(
  * Get paginated list of Stop
  */
 export function useGetStopPage(
-  options?: Omit<UseMutationOptions<StopEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      StopEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getStopPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getStopPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -90,10 +100,14 @@ export function useCreateStop(
  * Update an existing Stop
  */
 export function useUpdateStop(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateStop(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateStop(variables.id, variables.data),
     ...options,
   });
 }

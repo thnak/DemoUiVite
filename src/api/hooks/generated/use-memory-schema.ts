@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createMemorySchema,
   deleteMemorySchema,
-  generateNewMemorySchemaCode,
+  updateMemorySchema,
   getMemorySchemaById,
   getMemorySchemaPage,
-  updateMemorySchema,
+  generateNewMemorySchemaCode,
 } from '../../services/generated/memory-schema';
 
 import type {
+  SortType,
   BooleanResult,
   MemorySchemaEntity,
-  MemorySchemaEntityBasePaginationResponse,
   MemorySchemaEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  MemorySchemaEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewMemorySchemaCode(
  * Get paginated list of Memory Schema
  */
 export function useGetMemorySchemaPage(
-  options?: Omit<UseMutationOptions<MemorySchemaEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      MemorySchemaEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getMemorySchemaPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getMemorySchemaPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetMemorySchemaPage(
  * Create a new Memory Schema
  */
 export function useCreateMemorySchema(
-  options?: Omit<UseMutationOptions<MemorySchemaEntityResult, Error, { data: MemorySchemaEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<MemorySchemaEntityResult, Error, { data: MemorySchemaEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: MemorySchemaEntity }) => createMemorySchema(variables.data),
@@ -90,10 +103,14 @@ export function useCreateMemorySchema(
  * Update an existing Memory Schema
  */
 export function useUpdateMemorySchema(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateMemorySchema(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateMemorySchema(variables.id, variables.data),
     ...options,
   });
 }

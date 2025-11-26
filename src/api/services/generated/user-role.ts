@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   UserRoleEntity,
-  UserRoleEntityBasePaginationResponse,
   UserRoleEntityResult,
+  StringObjectKeyValuePair,
+  UserRoleEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getUserRoleById(id: string): Promise<UserRoleEntity> {
  * @param data - Request body
  * @returns Promise<UserRoleEntityBasePaginationResponse>
  */
-export async function getUserRolePage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<UserRoleEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<UserRoleEntityBasePaginationResponse>(USERROLE_ENDPOINTS.getUserRolePage, data, { params });
+export async function getUserRolePage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<UserRoleEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<UserRoleEntityBasePaginationResponse>(
+    USERROLE_ENDPOINTS.getUserRolePage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -61,7 +68,10 @@ export async function getUserRolePage(data: SortType[], params?: { pageNumber?: 
  * @returns Promise<UserRoleEntityResult>
  */
 export async function createUserRole(data: UserRoleEntity): Promise<UserRoleEntityResult> {
-  const response = await axiosInstance.post<UserRoleEntityResult>(USERROLE_ENDPOINTS.createUserRole, data);
+  const response = await axiosInstance.post<UserRoleEntityResult>(
+    USERROLE_ENDPOINTS.createUserRole,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +82,10 @@ export async function createUserRole(data: UserRoleEntity): Promise<UserRoleEnti
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateUserRole(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateUserRole(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/userrole/update/${id}`, data);
   return response.data;
 }

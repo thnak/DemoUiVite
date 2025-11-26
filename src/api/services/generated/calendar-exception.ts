@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   CalendarExceptionEntity,
-  CalendarExceptionEntityBasePaginationResponse,
-  CalendarExceptionEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  CalendarExceptionEntityResult,
+  CalendarExceptionEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getCalendarExceptionById(id: string): Promise<CalendarExce
  * @param data - Request body
  * @returns Promise<CalendarExceptionEntityBasePaginationResponse>
  */
-export async function getCalendarExceptionPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<CalendarExceptionEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<CalendarExceptionEntityBasePaginationResponse>(CALENDAREXCEPTION_ENDPOINTS.getCalendarExceptionPage, data, { params });
+export async function getCalendarExceptionPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<CalendarExceptionEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<CalendarExceptionEntityBasePaginationResponse>(
+    CALENDAREXCEPTION_ENDPOINTS.getCalendarExceptionPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +67,13 @@ export async function getCalendarExceptionPage(data: SortType[], params?: { page
  * @param data - Request body
  * @returns Promise<CalendarExceptionEntityResult>
  */
-export async function createCalendarException(data: CalendarExceptionEntity): Promise<CalendarExceptionEntityResult> {
-  const response = await axiosInstance.post<CalendarExceptionEntityResult>(CALENDAREXCEPTION_ENDPOINTS.createCalendarException, data);
+export async function createCalendarException(
+  data: CalendarExceptionEntity
+): Promise<CalendarExceptionEntityResult> {
+  const response = await axiosInstance.post<CalendarExceptionEntityResult>(
+    CALENDAREXCEPTION_ENDPOINTS.createCalendarException,
+    data
+  );
   return response.data;
 }
 
@@ -72,8 +84,14 @@ export async function createCalendarException(data: CalendarExceptionEntity): Pr
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateCalendarException(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(`/api/calendarexception/update/${id}`, data);
+export async function updateCalendarException(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    `/api/calendarexception/update/${id}`,
+    data
+  );
   return response.data;
 }
 
@@ -95,6 +113,8 @@ export async function deleteCalendarException(id: string): Promise<BooleanResult
  * @returns Promise<string>
  */
 export async function generateNewCalendarExceptionCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(CALENDAREXCEPTION_ENDPOINTS.generateNewCalendarExceptionCode);
+  const response = await axiosInstance.get<string>(
+    CALENDAREXCEPTION_ENDPOINTS.generateNewCalendarExceptionCode
+  );
   return response.data;
 }

@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createManufacturer,
   deleteManufacturer,
-  generateNewManufacturerCode,
-  getManufacturerById,
-  getManufacturerPage,
   searchManufacturer,
   updateManufacturer,
+  getManufacturerById,
+  getManufacturerPage,
+  generateNewManufacturerCode,
 } from '../../services/generated/manufacturer';
 
 import type {
+  SortType,
   BooleanResult,
   ManufacturerEntity,
-  ManufacturerEntityBasePaginationResponse,
   ManufacturerEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  ManufacturerEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -82,10 +82,20 @@ export function useSearchManufacturer(
  * Get paginated list of Manufacturer
  */
 export function useGetManufacturerPage(
-  options?: Omit<UseMutationOptions<ManufacturerEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      ManufacturerEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getManufacturerPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getManufacturerPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -94,7 +104,10 @@ export function useGetManufacturerPage(
  * Create a new Manufacturer
  */
 export function useCreateManufacturer(
-  options?: Omit<UseMutationOptions<ManufacturerEntityResult, Error, { data: ManufacturerEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<ManufacturerEntityResult, Error, { data: ManufacturerEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: ManufacturerEntity }) => createManufacturer(variables.data),
@@ -106,10 +119,14 @@ export function useCreateManufacturer(
  * Update an existing Manufacturer
  */
 export function useUpdateManufacturer(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateManufacturer(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateManufacturer(variables.id, variables.data),
     ...options,
   });
 }

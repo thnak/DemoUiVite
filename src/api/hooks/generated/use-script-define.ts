@@ -3,29 +3,29 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
-  getapiScriptDefinegetscriptdefinitionid,
-  getapiScriptDefineupdateenablestateid,
   postapiScriptDefinecreate,
+  postapiScriptDefinetryrunscript,
+  postapiScriptDefineuploadpluginid,
+  getapiScriptDefineupdateenablestateid,
+  putapiScriptDefineupdatescriptdefineid,
+  getapiScriptDefinegetscriptdefinitionid,
   postapiScriptDefinegetscriptdefinitions,
   postapiScriptDefinerecheckscriptdefineid,
-  postapiScriptDefinesearchscriptdefinebytype,
-  postapiScriptDefinesearchscriptdefinitions,
-  postapiScriptDefinetryrunscript,
-  postapiScriptDefinetryrunscriptvariantscriptId,
-  postapiScriptDefineuploadpluginid,
   putapiScriptDefinedeletescriptdefinename,
-  putapiScriptDefineupdatescriptdefineid,
+  postapiScriptDefinesearchscriptdefinitions,
+  postapiScriptDefinesearchscriptdefinebytype,
+  postapiScriptDefinetryrunscriptvariantscriptId,
 } from '../../services/generated/script-define';
 
 import type {
+  SortType,
+  ObjectResult,
   BooleanResult,
   CreateRequest,
-  ObjectResult,
-  ScriptDefinitionEntity,
-  ScriptDefinitionEntityPaginationQuery,
-  SortType,
-  StringObjectKeyValuePair,
   TryRunMetricRequest,
+  ScriptDefinitionEntity,
+  StringObjectKeyValuePair,
+  ScriptDefinitionEntityPaginationQuery,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -39,8 +39,10 @@ import type {
  */
 export const scriptDefineKeys = {
   all: ['scriptDefine'] as const,
-  getapiScriptDefinegetscriptdefinitionid: (id: string) => ['scriptDefine', 'getapiScriptDefinegetscriptdefinitionid', id] as const,
-  getapiScriptDefineupdateenablestateid: (id: string) => ['scriptDefine', 'getapiScriptDefineupdateenablestateid', id] as const,
+  getapiScriptDefinegetscriptdefinitionid: (id: string) =>
+    ['scriptDefine', 'getapiScriptDefinegetscriptdefinitionid', id] as const,
+  getapiScriptDefineupdateenablestateid: (id: string) =>
+    ['scriptDefine', 'getapiScriptDefineupdateenablestateid', id] as const,
 };
 
 /**
@@ -86,7 +88,8 @@ export function usePostapiScriptDefinerecheckscriptdefineid(
   options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string }) => postapiScriptDefinerecheckscriptdefineid(variables.id),
+    mutationFn: (variables: { id: string }) =>
+      postapiScriptDefinerecheckscriptdefineid(variables.id),
     ...options,
   });
 }
@@ -97,7 +100,8 @@ export function usePutapiScriptDefinedeletescriptdefinename(
   options?: Omit<UseMutationOptions<BooleanResult, Error, { name: string }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { name: string }) => putapiScriptDefinedeletescriptdefinename(variables.name),
+    mutationFn: (variables: { name: string }) =>
+      putapiScriptDefinedeletescriptdefinename(variables.name),
     ...options,
   });
 }
@@ -105,10 +109,14 @@ export function usePutapiScriptDefinedeletescriptdefinename(
 /**
  */
 export function usePostapiScriptDefinetryrunscript(
-  options?: Omit<UseMutationOptions<ObjectResult, Error, { data: TryRunMetricRequest }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<ObjectResult, Error, { data: TryRunMetricRequest }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: TryRunMetricRequest }) => postapiScriptDefinetryrunscript(variables.data),
+    mutationFn: (variables: { data: TryRunMetricRequest }) =>
+      postapiScriptDefinetryrunscript(variables.data),
     ...options,
   });
 }
@@ -116,10 +124,14 @@ export function usePostapiScriptDefinetryrunscript(
 /**
  */
 export function usePostapiScriptDefinetryrunscriptvariantscriptId(
-  options?: Omit<UseMutationOptions<ObjectResult, Error, { scriptId: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<ObjectResult, Error, { scriptId: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { scriptId: string; data: StringObjectKeyValuePair[] }) => postapiScriptDefinetryrunscriptvariantscriptId(variables.scriptId, variables.data),
+    mutationFn: (variables: { scriptId: string; data: StringObjectKeyValuePair[] }) =>
+      postapiScriptDefinetryrunscriptvariantscriptId(variables.scriptId, variables.data),
     ...options,
   });
 }
@@ -127,10 +139,37 @@ export function usePostapiScriptDefinetryrunscriptvariantscriptId(
 /**
  */
 export function usePostapiScriptDefinegetscriptdefinitions(
-  options?: Omit<UseMutationOptions<ScriptDefinitionEntityPaginationQuery, Error, { data: SortType[]; params?: { search?: string; fromTime?: string; toTime?: string; pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      ScriptDefinitionEntityPaginationQuery,
+      Error,
+      {
+        data: SortType[];
+        params?: {
+          search?: string;
+          fromTime?: string;
+          toTime?: string;
+          pageNumber?: number;
+          pageSize?: number;
+          searchTerm?: string;
+        };
+      }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { search?: string; fromTime?: string; toTime?: string; pageNumber?: number; pageSize?: number; searchTerm?: string } }) => postapiScriptDefinegetscriptdefinitions(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: {
+        search?: string;
+        fromTime?: string;
+        toTime?: string;
+        pageNumber?: number;
+        pageSize?: number;
+        searchTerm?: string;
+      };
+    }) => postapiScriptDefinegetscriptdefinitions(variables.data, variables.params),
     ...options,
   });
 }
@@ -138,10 +177,23 @@ export function usePostapiScriptDefinegetscriptdefinitions(
 /**
  */
 export function usePostapiScriptDefinesearchscriptdefinitions(
-  options?: Omit<UseMutationOptions<ScriptDefinitionEntityPaginationQuery, Error, { data: SortType[]; params?: { search?: string; pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      ScriptDefinitionEntityPaginationQuery,
+      Error,
+      {
+        data: SortType[];
+        params?: { search?: string; pageNumber?: number; pageSize?: number; searchTerm?: string };
+      }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { search?: string; pageNumber?: number; pageSize?: number; searchTerm?: string } }) => postapiScriptDefinesearchscriptdefinitions(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { search?: string; pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => postapiScriptDefinesearchscriptdefinitions(variables.data, variables.params),
     ...options,
   });
 }
@@ -149,7 +201,10 @@ export function usePostapiScriptDefinesearchscriptdefinitions(
 /**
  */
 export function usePostapiScriptDefinesearchscriptdefinebytype(
-  options?: Omit<UseMutationOptions<ScriptDefinitionEntityPaginationQuery, Error, void>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<ScriptDefinitionEntityPaginationQuery, Error, void>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: postapiScriptDefinesearchscriptdefinebytype,
@@ -160,10 +215,14 @@ export function usePostapiScriptDefinesearchscriptdefinebytype(
 /**
  */
 export function usePutapiScriptDefineupdatescriptdefineid(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => putapiScriptDefineupdatescriptdefineid(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      putapiScriptDefineupdatescriptdefineid(variables.id, variables.data),
     ...options,
   });
 }

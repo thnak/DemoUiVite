@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   DefectGroupEntity,
-  DefectGroupEntityBasePaginationResponse,
   DefectGroupEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  DefectGroupEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -49,8 +49,15 @@ export async function getDefectGroupById(id: string): Promise<DefectGroupEntity>
  * @param data - Request body
  * @returns Promise<DefectGroupEntityBasePaginationResponse>
  */
-export async function getDefectGroupPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<DefectGroupEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<DefectGroupEntityBasePaginationResponse>(DEFECTGROUP_ENDPOINTS.getDefectGroupPage, data, { params });
+export async function getDefectGroupPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<DefectGroupEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<DefectGroupEntityBasePaginationResponse>(
+    DEFECTGROUP_ENDPOINTS.getDefectGroupPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -62,7 +69,10 @@ export async function getDefectGroupPage(data: SortType[], params?: { pageNumber
  * @returns Promise<DefectGroupEntityResult>
  */
 export async function createDefectGroup(data: DefectGroupEntity): Promise<DefectGroupEntityResult> {
-  const response = await axiosInstance.post<DefectGroupEntityResult>(DEFECTGROUP_ENDPOINTS.createDefectGroup, data);
+  const response = await axiosInstance.post<DefectGroupEntityResult>(
+    DEFECTGROUP_ENDPOINTS.createDefectGroup,
+    data
+  );
   return response.data;
 }
 
@@ -73,7 +83,10 @@ export async function createDefectGroup(data: DefectGroupEntity): Promise<Defect
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateDefectGroup(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateDefectGroup(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/defectgroup/update/${id}`, data);
   return response.data;
 }
@@ -96,7 +109,9 @@ export async function deleteDefectGroup(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewDefectGroupCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(DEFECTGROUP_ENDPOINTS.generateNewDefectGroupCode);
+  const response = await axiosInstance.get<string>(
+    DEFECTGROUP_ENDPOINTS.generateNewDefectGroupCode
+  );
   return response.data;
 }
 
@@ -106,7 +121,13 @@ export async function generateNewDefectGroupCode(): Promise<string> {
  * Searches Defect Group entities by text across searchable fields.
  * @returns Promise<DefectGroupEntity[]>
  */
-export async function searchDefectGroup(params?: { searchText?: string; maxResults?: number }): Promise<DefectGroupEntity[]> {
-  const response = await axiosInstance.get<DefectGroupEntity[]>(DEFECTGROUP_ENDPOINTS.searchDefectGroup, { params });
+export async function searchDefectGroup(params?: {
+  searchText?: string;
+  maxResults?: number;
+}): Promise<DefectGroupEntity[]> {
+  const response = await axiosInstance.get<DefectGroupEntity[]>(
+    DEFECTGROUP_ENDPOINTS.searchDefectGroup,
+    { params }
+  );
   return response.data;
 }

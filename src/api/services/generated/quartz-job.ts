@@ -1,10 +1,10 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  QuartzCollectionCleanupResultDto,
-  QuartzCollectionDto,
   QuartzJobDto,
+  QuartzCollectionDto,
   QuartzJobSummaryDto,
+  QuartzCollectionCleanupResultDto,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,7 +31,9 @@ export const QUARTZJOB_ENDPOINTS = {
  * @returns Promise<QuartzJobSummaryDto>
  */
 export async function getapiQuartzJobsummary(): Promise<QuartzJobSummaryDto> {
-  const response = await axiosInstance.get<QuartzJobSummaryDto>(QUARTZJOB_ENDPOINTS.getapiQuartzJobsummary);
+  const response = await axiosInstance.get<QuartzJobSummaryDto>(
+    QUARTZJOB_ENDPOINTS.getapiQuartzJobsummary
+  );
   return response.data;
 }
 
@@ -59,7 +61,9 @@ export async function getapiQuartzJobgroupgroupName(groupName: string): Promise<
  * @returns Promise<QuartzJobDto[]>
  */
 export async function getapiQuartzJobexecuting(): Promise<QuartzJobDto[]> {
-  const response = await axiosInstance.get<QuartzJobDto[]>(QUARTZJOB_ENDPOINTS.getapiQuartzJobexecuting);
+  const response = await axiosInstance.get<QuartzJobDto[]>(
+    QUARTZJOB_ENDPOINTS.getapiQuartzJobexecuting
+  );
   return response.data;
 }
 
@@ -68,7 +72,9 @@ export async function getapiQuartzJobexecuting(): Promise<QuartzJobDto[]> {
  * @returns Promise<QuartzCollectionDto[]>
  */
 export async function getapiQuartzJobcollections(): Promise<QuartzCollectionDto[]> {
-  const response = await axiosInstance.get<QuartzCollectionDto[]>(QUARTZJOB_ENDPOINTS.getapiQuartzJobcollections);
+  const response = await axiosInstance.get<QuartzCollectionDto[]>(
+    QUARTZJOB_ENDPOINTS.getapiQuartzJobcollections
+  );
   return response.data;
 }
 
@@ -77,7 +83,9 @@ export async function getapiQuartzJobcollections(): Promise<QuartzCollectionDto[
  * @returns Promise<QuartzCollectionCleanupResultDto[]>
  */
 export async function deleteapiQuartzJobcollections(): Promise<QuartzCollectionCleanupResultDto[]> {
-  const response = await axiosInstance.delete<QuartzCollectionCleanupResultDto[]>(QUARTZJOB_ENDPOINTS.deleteapiQuartzJobcollections);
+  const response = await axiosInstance.delete<QuartzCollectionCleanupResultDto[]>(
+    QUARTZJOB_ENDPOINTS.deleteapiQuartzJobcollections
+  );
   return response.data;
 }
 
@@ -86,7 +94,11 @@ export async function deleteapiQuartzJobcollections(): Promise<QuartzCollectionC
  * @param collectionName - Name of the collection to delete
  * @returns Promise<QuartzCollectionCleanupResultDto>
  */
-export async function deleteapiQuartzJobcollectionscollectionName(collectionName: string): Promise<QuartzCollectionCleanupResultDto> {
-  const response = await axiosInstance.delete<QuartzCollectionCleanupResultDto>(`/api/QuartzJob/collections/${collectionName}`);
+export async function deleteapiQuartzJobcollectionscollectionName(
+  collectionName: string
+): Promise<QuartzCollectionCleanupResultDto> {
+  const response = await axiosInstance.delete<QuartzCollectionCleanupResultDto>(
+    `/api/QuartzJob/collections/${collectionName}`
+  );
   return response.data;
 }

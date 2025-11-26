@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   FileMetadataEntity,
-  FileMetadataEntityBasePaginationResponse,
   FileMetadataEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  FileMetadataEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getFileMetadataById(id: string): Promise<FileMetadataEntit
  * @param data - Request body
  * @returns Promise<FileMetadataEntityBasePaginationResponse>
  */
-export async function getFileMetadataPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<FileMetadataEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<FileMetadataEntityBasePaginationResponse>(FILEMETADATA_ENDPOINTS.getFileMetadataPage, data, { params });
+export async function getFileMetadataPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<FileMetadataEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<FileMetadataEntityBasePaginationResponse>(
+    FILEMETADATA_ENDPOINTS.getFileMetadataPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +67,13 @@ export async function getFileMetadataPage(data: SortType[], params?: { pageNumbe
  * @param data - Request body
  * @returns Promise<FileMetadataEntityResult>
  */
-export async function createFileMetadata(data: FileMetadataEntity): Promise<FileMetadataEntityResult> {
-  const response = await axiosInstance.post<FileMetadataEntityResult>(FILEMETADATA_ENDPOINTS.createFileMetadata, data);
+export async function createFileMetadata(
+  data: FileMetadataEntity
+): Promise<FileMetadataEntityResult> {
+  const response = await axiosInstance.post<FileMetadataEntityResult>(
+    FILEMETADATA_ENDPOINTS.createFileMetadata,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +84,10 @@ export async function createFileMetadata(data: FileMetadataEntity): Promise<File
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateFileMetadata(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateFileMetadata(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/filemetadata/update/${id}`, data);
   return response.data;
 }
@@ -95,6 +110,8 @@ export async function deleteFileMetadata(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewFileMetadataCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(FILEMETADATA_ENDPOINTS.generateNewFileMetadataCode);
+  const response = await axiosInstance.get<string>(
+    FILEMETADATA_ENDPOINTS.generateNewFileMetadataCode
+  );
   return response.data;
 }

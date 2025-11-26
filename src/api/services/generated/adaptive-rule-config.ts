@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  AdaptiveRuleConfigEntity,
-  AdaptiveRuleConfigEntityBasePaginationResponse,
-  AdaptiveRuleConfigEntityResult,
-  BooleanResult,
   SortType,
+  BooleanResult,
+  AdaptiveRuleConfigEntity,
   StringObjectKeyValuePair,
+  AdaptiveRuleConfigEntityResult,
+  AdaptiveRuleConfigEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -34,7 +34,9 @@ export const ADAPTIVERULECONFIG_ENDPOINTS = {
  * @returns Promise<AdaptiveRuleConfigEntity>
  */
 export async function getAdaptiveRuleConfigById(id: string): Promise<AdaptiveRuleConfigEntity> {
-  const response = await axiosInstance.get<AdaptiveRuleConfigEntity>(`/api/adaptiveruleconfig/${id}`);
+  const response = await axiosInstance.get<AdaptiveRuleConfigEntity>(
+    `/api/adaptiveruleconfig/${id}`
+  );
   return response.data;
 }
 
@@ -48,8 +50,15 @@ export async function getAdaptiveRuleConfigById(id: string): Promise<AdaptiveRul
  * @param data - Request body
  * @returns Promise<AdaptiveRuleConfigEntityBasePaginationResponse>
  */
-export async function getAdaptiveRuleConfigPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<AdaptiveRuleConfigEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<AdaptiveRuleConfigEntityBasePaginationResponse>(ADAPTIVERULECONFIG_ENDPOINTS.getAdaptiveRuleConfigPage, data, { params });
+export async function getAdaptiveRuleConfigPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<AdaptiveRuleConfigEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<AdaptiveRuleConfigEntityBasePaginationResponse>(
+    ADAPTIVERULECONFIG_ENDPOINTS.getAdaptiveRuleConfigPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +69,13 @@ export async function getAdaptiveRuleConfigPage(data: SortType[], params?: { pag
  * @param data - Request body
  * @returns Promise<AdaptiveRuleConfigEntityResult>
  */
-export async function createAdaptiveRuleConfig(data: AdaptiveRuleConfigEntity): Promise<AdaptiveRuleConfigEntityResult> {
-  const response = await axiosInstance.post<AdaptiveRuleConfigEntityResult>(ADAPTIVERULECONFIG_ENDPOINTS.createAdaptiveRuleConfig, data);
+export async function createAdaptiveRuleConfig(
+  data: AdaptiveRuleConfigEntity
+): Promise<AdaptiveRuleConfigEntityResult> {
+  const response = await axiosInstance.post<AdaptiveRuleConfigEntityResult>(
+    ADAPTIVERULECONFIG_ENDPOINTS.createAdaptiveRuleConfig,
+    data
+  );
   return response.data;
 }
 
@@ -72,8 +86,14 @@ export async function createAdaptiveRuleConfig(data: AdaptiveRuleConfigEntity): 
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateAdaptiveRuleConfig(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(`/api/adaptiveruleconfig/update/${id}`, data);
+export async function updateAdaptiveRuleConfig(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    `/api/adaptiveruleconfig/update/${id}`,
+    data
+  );
   return response.data;
 }
 
@@ -84,7 +104,9 @@ export async function updateAdaptiveRuleConfig(id: string, data: StringObjectKey
  * @returns Promise<BooleanResult>
  */
 export async function deleteAdaptiveRuleConfig(id: string): Promise<BooleanResult> {
-  const response = await axiosInstance.delete<BooleanResult>(`/api/adaptiveruleconfig/delete/${id}`);
+  const response = await axiosInstance.delete<BooleanResult>(
+    `/api/adaptiveruleconfig/delete/${id}`
+  );
   return response.data;
 }
 
@@ -95,6 +117,8 @@ export async function deleteAdaptiveRuleConfig(id: string): Promise<BooleanResul
  * @returns Promise<string>
  */
 export async function generateNewAdaptiveRuleConfigCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(ADAPTIVERULECONFIG_ENDPOINTS.generateNewAdaptiveRuleConfigCode);
+  const response = await axiosInstance.get<string>(
+    ADAPTIVERULECONFIG_ENDPOINTS.generateNewAdaptiveRuleConfigCode
+  );
   return response.data;
 }

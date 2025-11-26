@@ -32,6 +32,10 @@ export async function deleteapiStaticFiledelete(params?: { relativePath?: string
 /**
  * @returns Promise<void>
  */
-export async function postapiStaticFilerequestadultcontent(params?: { relativePath?: string }): Promise<void> {
-  await axiosInstance.post(STATICFILE_ENDPOINTS.postapiStaticFilerequestadultcontent, null, { params });
+export async function postapiStaticFilerequestadultcontent(params?: {
+  relativePath?: string;
+}): Promise<void> {
+  await axiosInstance.post(STATICFILE_ENDPOINTS.postapiStaticFilerequestadultcontent, null, {
+    params,
+  });
 }

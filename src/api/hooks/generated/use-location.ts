@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createLocation,
   deleteLocation,
-  generateNewLocationCode,
-  getLocationById,
-  getLocationPage,
   searchLocation,
   updateLocation,
+  getLocationById,
+  getLocationPage,
+  generateNewLocationCode,
 } from '../../services/generated/location';
 
 import type {
+  SortType,
   BooleanResult,
   LocationEntity,
-  LocationEntityBasePaginationResponse,
   LocationEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  LocationEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -82,10 +82,20 @@ export function useSearchLocation(
  * Get paginated list of Location
  */
 export function useGetLocationPage(
-  options?: Omit<UseMutationOptions<LocationEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      LocationEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getLocationPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getLocationPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -94,7 +104,10 @@ export function useGetLocationPage(
  * Create a new Location
  */
 export function useCreateLocation(
-  options?: Omit<UseMutationOptions<LocationEntityResult, Error, { data: LocationEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<LocationEntityResult, Error, { data: LocationEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: LocationEntity }) => createLocation(variables.data),
@@ -106,10 +119,14 @@ export function useCreateLocation(
  * Update an existing Location
  */
 export function useUpdateLocation(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateLocation(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateLocation(variables.id, variables.data),
     ...options,
   });
 }

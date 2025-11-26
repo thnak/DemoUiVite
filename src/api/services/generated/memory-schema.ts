@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   MemorySchemaEntity,
-  MemorySchemaEntityBasePaginationResponse,
   MemorySchemaEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  MemorySchemaEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getMemorySchemaById(id: string): Promise<MemorySchemaEntit
  * @param data - Request body
  * @returns Promise<MemorySchemaEntityBasePaginationResponse>
  */
-export async function getMemorySchemaPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<MemorySchemaEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<MemorySchemaEntityBasePaginationResponse>(MEMORYSCHEMA_ENDPOINTS.getMemorySchemaPage, data, { params });
+export async function getMemorySchemaPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<MemorySchemaEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<MemorySchemaEntityBasePaginationResponse>(
+    MEMORYSCHEMA_ENDPOINTS.getMemorySchemaPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +67,13 @@ export async function getMemorySchemaPage(data: SortType[], params?: { pageNumbe
  * @param data - Request body
  * @returns Promise<MemorySchemaEntityResult>
  */
-export async function createMemorySchema(data: MemorySchemaEntity): Promise<MemorySchemaEntityResult> {
-  const response = await axiosInstance.post<MemorySchemaEntityResult>(MEMORYSCHEMA_ENDPOINTS.createMemorySchema, data);
+export async function createMemorySchema(
+  data: MemorySchemaEntity
+): Promise<MemorySchemaEntityResult> {
+  const response = await axiosInstance.post<MemorySchemaEntityResult>(
+    MEMORYSCHEMA_ENDPOINTS.createMemorySchema,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +84,10 @@ export async function createMemorySchema(data: MemorySchemaEntity): Promise<Memo
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateMemorySchema(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateMemorySchema(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/memoryschema/update/${id}`, data);
   return response.data;
 }
@@ -95,6 +110,8 @@ export async function deleteMemorySchema(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewMemorySchemaCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(MEMORYSCHEMA_ENDPOINTS.generateNewMemorySchemaCode);
+  const response = await axiosInstance.get<string>(
+    MEMORYSCHEMA_ENDPOINTS.generateNewMemorySchemaCode
+  );
   return response.data;
 }

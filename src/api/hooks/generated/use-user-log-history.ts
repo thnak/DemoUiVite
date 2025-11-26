@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createUserLogHistory,
   deleteUserLogHistory,
-  generateNewUserLogHistoryCode,
+  updateUserLogHistory,
   getUserLogHistoryById,
   getUserLogHistoryPage,
-  updateUserLogHistory,
+  generateNewUserLogHistoryCode,
 } from '../../services/generated/user-log-history';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   UserLogHistoryEntity,
-  UserLogHistoryEntityBasePaginationResponse,
+  StringObjectKeyValuePair,
   UserLogHistoryEntityResult,
+  UserLogHistoryEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewUserLogHistoryCode(
  * Get paginated list of User Log History
  */
 export function useGetUserLogHistoryPage(
-  options?: Omit<UseMutationOptions<UserLogHistoryEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      UserLogHistoryEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getUserLogHistoryPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getUserLogHistoryPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetUserLogHistoryPage(
  * Create a new User Log History
  */
 export function useCreateUserLogHistory(
-  options?: Omit<UseMutationOptions<UserLogHistoryEntityResult, Error, { data: UserLogHistoryEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<UserLogHistoryEntityResult, Error, { data: UserLogHistoryEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: UserLogHistoryEntity }) => createUserLogHistory(variables.data),
@@ -90,10 +103,14 @@ export function useCreateUserLogHistory(
  * Update an existing User Log History
  */
 export function useUpdateUserLogHistory(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateUserLogHistory(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateUserLogHistory(variables.id, variables.data),
     ...options,
   });
 }

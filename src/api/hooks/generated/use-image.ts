@@ -2,10 +2,7 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 
 import { useQuery, useMutation } from '@tanstack/react-query';
 
-import {
-  getapiImagegeneratesize,
-  postapiImagefavicon,
-} from '../../services/generated/image';
+import { postapiImagefavicon, getapiImagegeneratesize } from '../../services/generated/image';
 
 // ----------------------------------------------------------------------
 // Image Hooks

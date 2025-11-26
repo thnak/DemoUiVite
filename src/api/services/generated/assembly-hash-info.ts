@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  AssemblyHashInfoEntity,
-  AssemblyHashInfoEntityBasePaginationResponse,
-  AssemblyHashInfoEntityResult,
-  BooleanResult,
   SortType,
+  BooleanResult,
+  AssemblyHashInfoEntity,
   StringObjectKeyValuePair,
+  AssemblyHashInfoEntityResult,
+  AssemblyHashInfoEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getAssemblyHashInfoById(id: string): Promise<AssemblyHashI
  * @param data - Request body
  * @returns Promise<AssemblyHashInfoEntityBasePaginationResponse>
  */
-export async function getAssemblyHashInfoPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<AssemblyHashInfoEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<AssemblyHashInfoEntityBasePaginationResponse>(ASSEMBLYHASHINFO_ENDPOINTS.getAssemblyHashInfoPage, data, { params });
+export async function getAssemblyHashInfoPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<AssemblyHashInfoEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<AssemblyHashInfoEntityBasePaginationResponse>(
+    ASSEMBLYHASHINFO_ENDPOINTS.getAssemblyHashInfoPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +67,13 @@ export async function getAssemblyHashInfoPage(data: SortType[], params?: { pageN
  * @param data - Request body
  * @returns Promise<AssemblyHashInfoEntityResult>
  */
-export async function createAssemblyHashInfo(data: AssemblyHashInfoEntity): Promise<AssemblyHashInfoEntityResult> {
-  const response = await axiosInstance.post<AssemblyHashInfoEntityResult>(ASSEMBLYHASHINFO_ENDPOINTS.createAssemblyHashInfo, data);
+export async function createAssemblyHashInfo(
+  data: AssemblyHashInfoEntity
+): Promise<AssemblyHashInfoEntityResult> {
+  const response = await axiosInstance.post<AssemblyHashInfoEntityResult>(
+    ASSEMBLYHASHINFO_ENDPOINTS.createAssemblyHashInfo,
+    data
+  );
   return response.data;
 }
 
@@ -72,8 +84,14 @@ export async function createAssemblyHashInfo(data: AssemblyHashInfoEntity): Prom
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateAssemblyHashInfo(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(`/api/assemblyhashinfo/update/${id}`, data);
+export async function updateAssemblyHashInfo(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    `/api/assemblyhashinfo/update/${id}`,
+    data
+  );
   return response.data;
 }
 
@@ -95,6 +113,8 @@ export async function deleteAssemblyHashInfo(id: string): Promise<BooleanResult>
  * @returns Promise<string>
  */
 export async function generateNewAssemblyHashInfoCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(ASSEMBLYHASHINFO_ENDPOINTS.generateNewAssemblyHashInfoCode);
+  const response = await axiosInstance.get<string>(
+    ASSEMBLYHASHINFO_ENDPOINTS.generateNewAssemblyHashInfoCode
+  );
   return response.data;
 }

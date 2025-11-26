@@ -17,7 +17,10 @@ export const IMAGE_ENDPOINTS = {
 /**
  * @returns Promise<void>
  */
-export async function getapiImagegeneratesize(size: string, params?: { text?: string }): Promise<void> {
+export async function getapiImagegeneratesize(
+  size: string,
+  params?: { text?: string }
+): Promise<void> {
   await axiosInstance.get(`/api/Image/generate/${size}`, { params });
 }
 

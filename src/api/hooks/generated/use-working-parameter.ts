@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createWorkingParameter,
   deleteWorkingParameter,
-  generateNewWorkingParameterCode,
+  updateWorkingParameter,
   getWorkingParameterById,
   getWorkingParameterPage,
-  updateWorkingParameter,
+  generateNewWorkingParameterCode,
 } from '../../services/generated/working-parameter';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   WorkingParameterEntity,
-  WorkingParameterEntityBasePaginationResponse,
+  StringObjectKeyValuePair,
   WorkingParameterEntityResult,
+  WorkingParameterEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,7 +31,8 @@ import type {
  */
 export const workingParameterKeys = {
   all: ['workingParameter'] as const,
-  getWorkingParameterById: (id: string) => ['workingParameter', 'getWorkingParameterById', id] as const,
+  getWorkingParameterById: (id: string) =>
+    ['workingParameter', 'getWorkingParameterById', id] as const,
   generateNewWorkingParameterCode: ['workingParameter', 'generateNewWorkingParameterCode'] as const,
 };
 
@@ -66,10 +67,20 @@ export function useGenerateNewWorkingParameterCode(
  * Get paginated list of Working Parameter
  */
 export function useGetWorkingParameterPage(
-  options?: Omit<UseMutationOptions<WorkingParameterEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      WorkingParameterEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getWorkingParameterPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getWorkingParameterPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,10 +89,14 @@ export function useGetWorkingParameterPage(
  * Create a new Working Parameter
  */
 export function useCreateWorkingParameter(
-  options?: Omit<UseMutationOptions<WorkingParameterEntityResult, Error, { data: WorkingParameterEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<WorkingParameterEntityResult, Error, { data: WorkingParameterEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: WorkingParameterEntity }) => createWorkingParameter(variables.data),
+    mutationFn: (variables: { data: WorkingParameterEntity }) =>
+      createWorkingParameter(variables.data),
     ...options,
   });
 }
@@ -90,10 +105,14 @@ export function useCreateWorkingParameter(
  * Update an existing Working Parameter
  */
 export function useUpdateWorkingParameter(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateWorkingParameter(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateWorkingParameter(variables.id, variables.data),
     ...options,
   });
 }

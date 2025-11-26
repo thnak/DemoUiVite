@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDefectGroup,
   deleteDefectGroup,
-  generateNewDefectGroupCode,
-  getDefectGroupById,
-  getDefectGroupPage,
   searchDefectGroup,
   updateDefectGroup,
+  getDefectGroupById,
+  getDefectGroupPage,
+  generateNewDefectGroupCode,
 } from '../../services/generated/defect-group';
 
 import type {
+  SortType,
   BooleanResult,
   DefectGroupEntity,
-  DefectGroupEntityBasePaginationResponse,
   DefectGroupEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  DefectGroupEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -82,10 +82,20 @@ export function useSearchDefectGroup(
  * Get paginated list of Defect Group
  */
 export function useGetDefectGroupPage(
-  options?: Omit<UseMutationOptions<DefectGroupEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      DefectGroupEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getDefectGroupPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getDefectGroupPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -94,7 +104,10 @@ export function useGetDefectGroupPage(
  * Create a new Defect Group
  */
 export function useCreateDefectGroup(
-  options?: Omit<UseMutationOptions<DefectGroupEntityResult, Error, { data: DefectGroupEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<DefectGroupEntityResult, Error, { data: DefectGroupEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: DefectGroupEntity }) => createDefectGroup(variables.data),
@@ -106,10 +119,14 @@ export function useCreateDefectGroup(
  * Update an existing Defect Group
  */
 export function useUpdateDefectGroup(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateDefectGroup(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateDefectGroup(variables.id, variables.data),
     ...options,
   });
 }

@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
-  PageEntity,
-  PageEntityBasePaginationResponse,
-  PageEntityResult,
   SortType,
+  PageEntity,
+  BooleanResult,
+  PageEntityResult,
   StringObjectKeyValuePair,
+  PageEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -62,8 +62,15 @@ export async function getPageById(id: string): Promise<PageEntity> {
  * @param data - Request body
  * @returns Promise<PageEntityBasePaginationResponse>
  */
-export async function getPagePage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<PageEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<PageEntityBasePaginationResponse>(PAGE_ENDPOINTS.getPagePage, data, { params });
+export async function getPagePage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<PageEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<PageEntityBasePaginationResponse>(
+    PAGE_ENDPOINTS.getPagePage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -86,7 +93,10 @@ export async function createPage(data: PageEntity): Promise<PageEntityResult> {
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updatePage(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updatePage(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/page/update/${id}`, data);
   return response.data;
 }
@@ -129,7 +139,10 @@ export async function postapiPage(data: PageEntity): Promise<PageEntity> {
  * @param ordered - If true, returns pages ordered by their Order property.
  * @returns Promise<PageEntity[]>
  */
-export async function getapiPage(params?: { activeOnly?: boolean; ordered?: boolean }): Promise<PageEntity[]> {
+export async function getapiPage(params?: {
+  activeOnly?: boolean;
+  ordered?: boolean;
+}): Promise<PageEntity[]> {
   const response = await axiosInstance.get<PageEntity[]>(PAGE_ENDPOINTS.getapiPage, { params });
   return response.data;
 }
@@ -188,7 +201,10 @@ export async function putapiPageid(id: string, data: PageEntity): Promise<PageEn
  * @param confirm - Confirmation flag (must be true to proceed).
  * @returns Promise<void>
  */
-export async function deleteapiPagebytags(params?: { tags?: string; confirm?: boolean }): Promise<void> {
+export async function deleteapiPagebytags(params?: {
+  tags?: string;
+  confirm?: boolean;
+}): Promise<void> {
   await axiosInstance.delete(PAGE_ENDPOINTS.deleteapiPagebytags, { params });
 }
 
@@ -198,7 +214,9 @@ export async function deleteapiPagebytags(params?: { tags?: string; confirm?: bo
  * @returns Promise<PageEntity[]>
  */
 export async function getapiPagebytags(params?: { tags?: string }): Promise<PageEntity[]> {
-  const response = await axiosInstance.get<PageEntity[]>(PAGE_ENDPOINTS.getapiPagebytags, { params });
+  const response = await axiosInstance.get<PageEntity[]>(PAGE_ENDPOINTS.getapiPagebytags, {
+    params,
+  });
   return response.data;
 }
 
@@ -218,7 +236,11 @@ export async function deleteapiPageinactive(params?: { confirm?: boolean }): Pro
  * @param activeOnly - If true, returns only active pages.
  * @returns Promise<unknown>
  */
-export async function getapiPagepaginated(params?: { page?: number; pageSize?: number; activeOnly?: boolean }): Promise<unknown> {
+export async function getapiPagepaginated(params?: {
+  page?: number;
+  pageSize?: number;
+  activeOnly?: boolean;
+}): Promise<unknown> {
   const response = await axiosInstance.get<unknown>(PAGE_ENDPOINTS.getapiPagepaginated, { params });
   return response.data;
 }

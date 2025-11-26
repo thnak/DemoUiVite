@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   OperationEntity,
-  OperationEntityBasePaginationResponse,
   OperationEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  OperationEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -50,8 +50,15 @@ export async function getOperationById(id: string): Promise<OperationEntity> {
  * @param data - Request body
  * @returns Promise<OperationEntityBasePaginationResponse>
  */
-export async function getOperationPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<OperationEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<OperationEntityBasePaginationResponse>(OPERATION_ENDPOINTS.getOperationPage, data, { params });
+export async function getOperationPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<OperationEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<OperationEntityBasePaginationResponse>(
+    OPERATION_ENDPOINTS.getOperationPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -63,7 +70,10 @@ export async function getOperationPage(data: SortType[], params?: { pageNumber?:
  * @returns Promise<OperationEntityResult>
  */
 export async function createOperation(data: OperationEntity): Promise<OperationEntityResult> {
-  const response = await axiosInstance.post<OperationEntityResult>(OPERATION_ENDPOINTS.createOperation, data);
+  const response = await axiosInstance.post<OperationEntityResult>(
+    OPERATION_ENDPOINTS.createOperation,
+    data
+  );
   return response.data;
 }
 
@@ -74,7 +84,10 @@ export async function createOperation(data: OperationEntity): Promise<OperationE
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateOperation(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateOperation(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/operation/update/${id}`, data);
   return response.data;
 }
@@ -107,8 +120,13 @@ export async function generateNewOperationCode(): Promise<string> {
  * Searches Operation entities by text across searchable fields.
  * @returns Promise<OperationEntity[]>
  */
-export async function searchOperation(params?: { searchText?: string; maxResults?: number }): Promise<OperationEntity[]> {
-  const response = await axiosInstance.get<OperationEntity[]>(OPERATION_ENDPOINTS.searchOperation, { params });
+export async function searchOperation(params?: {
+  searchText?: string;
+  maxResults?: number;
+}): Promise<OperationEntity[]> {
+  const response = await axiosInstance.get<OperationEntity[]>(OPERATION_ENDPOINTS.searchOperation, {
+    params,
+  });
   return response.data;
 }
 

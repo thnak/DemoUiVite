@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
-  JobEntity,
-  JobEntityBasePaginationResponse,
-  JobEntityResult,
   SortType,
+  JobEntity,
+  BooleanResult,
+  JobEntityResult,
   StringObjectKeyValuePair,
+  JobEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getJobById(id: string): Promise<JobEntity> {
  * @param data - Request body
  * @returns Promise<JobEntityBasePaginationResponse>
  */
-export async function getJobPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<JobEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<JobEntityBasePaginationResponse>(JOB_ENDPOINTS.getJobPage, data, { params });
+export async function getJobPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<JobEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<JobEntityBasePaginationResponse>(
+    JOB_ENDPOINTS.getJobPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -72,7 +79,10 @@ export async function createJob(data: JobEntity): Promise<JobEntityResult> {
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateJob(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateJob(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/job/update/${id}`, data);
   return response.data;
 }

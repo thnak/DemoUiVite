@@ -160,6 +160,190 @@ export const _langs = [
 ];
 
 // ----------------------------------------------------------------------
+// User Profile Mock Data
+// ----------------------------------------------------------------------
+
+const COUNTRIES = [
+  'United States',
+  'Canada',
+  'United Kingdom',
+  'Australia',
+  'India',
+  'Germany',
+  'France',
+  'Japan',
+  'China',
+  'Brazil',
+  'South Africa',
+  'Russia',
+  'Mexico',
+  'Italy',
+  'Spain',
+  'Sweden',
+  'Switzerland',
+  'Netherlands',
+];
+
+const ROLES = [
+  'CEO',
+  'CTO',
+  'Project Coordinator',
+  'Team Leader',
+  'Software Developer',
+  'Marketing Strategist',
+  'Data Analyst',
+  'Product Owner',
+  'Graphic Designer',
+  'Operations Manager',
+  'Customer Support Specialist',
+  'Sales Manager',
+];
+
+export const _userProfile = {
+  id: 'user-profile-1',
+  displayName: 'Jaydon Frankie',
+  role: 'CTO',
+  email: 'ashlynn.ohara62@gmail.com',
+  avatarUrl: '/assets/images/avatar/avatar-25.webp',
+  coverUrl: '/assets/images/cover/cover-4.webp',
+  followerCount: 1947,
+  followingCount: 9124,
+  about:
+    'Tart I love sugar plum I love oat cake. Sweet roll caramels I love jujubes. Topping cake wafer..',
+  location: 'United Kingdom',
+  company: 'Gleichner, Mueller and Tromp',
+  school: 'Nikolaus - Leuschke',
+  socialLinks: {
+    facebook: 'https://www.facebook.com/frankie',
+    instagram: 'https://www.instagram.com/frankie',
+    linkedin: 'https://www.linkedin.com/in/frankie',
+    twitter: 'https://www.twitter.com/frankie',
+  },
+};
+
+export const _userProfileFollowers = [...Array(18)].map((_, index) => ({
+  id: _id(index),
+  name:
+    [
+      'Jayvion Simon',
+      'Lucian Obrien',
+      'Deja Brady',
+      'Harrison Stein',
+      'Reece Chung',
+      'Lainey Davidson',
+      'Cristopher Cardenas',
+      'Melanie Noble',
+      'Chase Day',
+      'Shawn Manning',
+      'Soren Durham',
+      'Cortez Herring',
+      'Brycen Jimenez',
+      'Giana Brandt',
+      'Aspen Schmitt',
+      'Colten Aguilar',
+      'Angelique Morse',
+      'Selina Boyer',
+    ][index] || _fullName(index),
+  avatarUrl: `/assets/images/avatar/avatar-${(index % 25) + 1}.webp`,
+  country: COUNTRIES[index % COUNTRIES.length],
+  isFollowed: _boolean(index),
+}));
+
+export const _userProfileFriends = [...Array(18)].map((_, index) => ({
+  id: _id(index),
+  name:
+    [
+      'Jayvion Simon',
+      'Lucian Obrien',
+      'Deja Brady',
+      'Harrison Stein',
+      'Reece Chung',
+      'Lainey Davidson',
+      'Cristopher Cardenas',
+      'Melanie Noble',
+      'Chase Day',
+      'Shawn Manning',
+      'Soren Durham',
+      'Cortez Herring',
+      'Brycen Jimenez',
+      'Giana Brandt',
+      'Aspen Schmitt',
+      'Colten Aguilar',
+      'Angelique Morse',
+      'Selina Boyer',
+    ][index] || _fullName(index),
+  role: ROLES[index % ROLES.length],
+  avatarUrl: `/assets/images/avatar/avatar-${(index % 25) + 1}.webp`,
+  socialLinks: {
+    facebook: `https://www.facebook.com/user${index}`,
+    instagram: `https://www.instagram.com/user${index}`,
+    linkedin: `https://www.linkedin.com/in/user${index}`,
+    twitter: `https://www.twitter.com/user${index}`,
+  },
+}));
+
+const GALLERY_TITLES = [
+  'The Future of Renewable Energy: Innovations and Challenges Ahead',
+  'Exploring the Impact of Artificial Intelligence on Modern Society',
+  'Climate Change and Its Effects on Global Ecosystems',
+  'The Rise of Remote Work: Benefits, Challenges, and Best Practices',
+  'Understanding Blockchain Technology: Beyond Cryptocurrency',
+  'Mental Health in the Digital Age: Navigating Online Wellbeing',
+  'Sustainable Fashion: How the Industry is Changing',
+  'Space Exploration: New Frontiers and Technological Breakthroughs',
+  'The Evolution of E-Commerce: Trends Shaping Online Shopping',
+];
+
+export const _userProfileGallery = [...Array(9)].map((_, index) => ({
+  id: _id(index),
+  title: GALLERY_TITLES[index % GALLERY_TITLES.length],
+  coverUrl: `/assets/images/cover/cover-${(index % 24) + 1}.webp`,
+  postedAt: _createdAt(index),
+}));
+
+const POST_COMMENTS_DATA = [
+  { name: 'Lainey Davidson', content: 'Praesent venenatis metus at' },
+  {
+    name: 'Cristopher Cardenas',
+    content:
+      'Etiam rhoncus. Nullam vel sem. Pellentesque libero tortor, tincidunt et, tincidunt eget, semper nec, quam. Sed lectus.',
+  },
+];
+
+export const _userProfilePosts = [...Array(5)].map((_, index) => ({
+  id: _id(index),
+  author: {
+    id: 'user-profile-1',
+    name: 'Jaydon Frankie',
+    avatarUrl: '/assets/images/avatar/avatar-25.webp',
+  },
+  content:
+    [
+      'The sun slowly set over the horizon, painting the sky in vibrant hues of orange and pink.',
+      'She eagerly opened the gift, her eyes sparkling with excitement.',
+      'The old oak tree stood tall and majestic, its branches swaying gently in the wind.',
+      'A gentle breeze rustled the leaves as the children played in the park.',
+      'The aroma of freshly baked cookies filled the kitchen, enticing everyone nearby.',
+    ][index] || '',
+  coverUrl: index % 2 === 0 ? `/assets/images/cover/cover-${(index % 24) + 1}.webp` : null,
+  likes: Math.floor(Math.random() * 50) + 10,
+  personLikes: [...Array(Math.min(3, Math.floor(Math.random() * 5) + 1))].map((__, i) => ({
+    name: _fullName(i),
+    avatarUrl: `/assets/images/avatar/avatar-${(i % 25) + 1}.webp`,
+  })),
+  comments: POST_COMMENTS_DATA.slice(0, (index % 2) + 1).map((comment, i) => ({
+    id: `comment-${index}-${i}`,
+    author: {
+      name: comment.name,
+      avatarUrl: `/assets/images/avatar/avatar-${((index + i) % 25) + 1}.webp`,
+    },
+    content: comment.content,
+    postedAt: _createdAt(index + i + 1),
+  })),
+  postedAt: _createdAt(index),
+}));
+
+// ----------------------------------------------------------------------
 
 export const _timeline = [...Array(5)].map((_, index) => ({
   id: _id(index),
@@ -741,7 +925,12 @@ const DOWNTIME_REASONS_BY_CATEGORY: Record<DowntimeReasonCategory, string[]> = {
     'Setup adjustment',
     'Line reconfiguration',
   ],
-  Utilities: ['Compressed air failure', 'Cooling system issue', 'Steam supply issue', 'Water supply issue'],
+  Utilities: [
+    'Compressed air failure',
+    'Cooling system issue',
+    'Steam supply issue',
+    'Water supply issue',
+  ],
 };
 
 function generateDowntimeEvent(

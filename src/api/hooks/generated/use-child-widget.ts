@@ -3,12 +3,12 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
-  getapiChildWidgetgetallfromparentparentId,
   getapiChildWidgetgetid,
   postapiChildWidgetcreate,
-  postapiChildWidgetselectscriptid,
-  postapiChildWidgetupdateid,
   putapiChildWidgetdeleteid,
+  postapiChildWidgetupdateid,
+  postapiChildWidgetselectscriptid,
+  getapiChildWidgetgetallfromparentparentId,
 } from '../../services/generated/child-widget';
 
 import type {
@@ -29,7 +29,8 @@ import type {
 export const childWidgetKeys = {
   all: ['childWidget'] as const,
   getapiChildWidgetgetid: (id: string) => ['childWidget', 'getapiChildWidgetgetid', id] as const,
-  getapiChildWidgetgetallfromparentparentId: (parentId: string) => ['childWidget', 'getapiChildWidgetgetallfromparentparentId', parentId] as const,
+  getapiChildWidgetgetallfromparentparentId: (parentId: string) =>
+    ['childWidget', 'getapiChildWidgetgetallfromparentparentId', parentId] as const,
 };
 
 /**
@@ -61,10 +62,14 @@ export function useGetapiChildWidgetgetallfromparentparentId(
 /**
  */
 export function usePostapiChildWidgetcreate(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { data: ChildWidgetConfigEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { data: ChildWidgetConfigEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: ChildWidgetConfigEntity }) => postapiChildWidgetcreate(variables.data),
+    mutationFn: (variables: { data: ChildWidgetConfigEntity }) =>
+      postapiChildWidgetcreate(variables.data),
     ...options,
   });
 }
@@ -83,10 +88,14 @@ export function usePutapiChildWidgetdeleteid(
 /**
  */
 export function usePostapiChildWidgetupdateid(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => postapiChildWidgetupdateid(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      postapiChildWidgetupdateid(variables.id, variables.data),
     ...options,
   });
 }

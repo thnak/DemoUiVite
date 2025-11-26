@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createOperationVariant,
   deleteOperationVariant,
-  generateNewOperationVariantCode,
+  updateOperationVariant,
   getOperationVariantById,
   getOperationVariantPage,
-  updateOperationVariant,
+  generateNewOperationVariantCode,
 } from '../../services/generated/operation-variant';
 
 import type {
+  SortType,
   BooleanResult,
   OperationVariantEntity,
-  OperationVariantEntityBasePaginationResponse,
-  OperationVariantEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  OperationVariantEntityResult,
+  OperationVariantEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,7 +31,8 @@ import type {
  */
 export const operationVariantKeys = {
   all: ['operationVariant'] as const,
-  getOperationVariantById: (id: string) => ['operationVariant', 'getOperationVariantById', id] as const,
+  getOperationVariantById: (id: string) =>
+    ['operationVariant', 'getOperationVariantById', id] as const,
   generateNewOperationVariantCode: ['operationVariant', 'generateNewOperationVariantCode'] as const,
 };
 
@@ -66,10 +67,20 @@ export function useGenerateNewOperationVariantCode(
  * Get paginated list of Operation Variant
  */
 export function useGetOperationVariantPage(
-  options?: Omit<UseMutationOptions<OperationVariantEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      OperationVariantEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getOperationVariantPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getOperationVariantPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,10 +89,14 @@ export function useGetOperationVariantPage(
  * Create a new Operation Variant
  */
 export function useCreateOperationVariant(
-  options?: Omit<UseMutationOptions<OperationVariantEntityResult, Error, { data: OperationVariantEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<OperationVariantEntityResult, Error, { data: OperationVariantEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: OperationVariantEntity }) => createOperationVariant(variables.data),
+    mutationFn: (variables: { data: OperationVariantEntity }) =>
+      createOperationVariant(variables.data),
     ...options,
   });
 }
@@ -90,10 +105,14 @@ export function useCreateOperationVariant(
  * Update an existing Operation Variant
  */
 export function useUpdateOperationVariant(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateOperationVariant(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateOperationVariant(variables.id, variables.data),
     ...options,
   });
 }

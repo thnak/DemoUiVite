@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createOperationParameterSetting,
   deleteOperationParameterSetting,
-  generateNewOperationParameterSettingCode,
+  updateOperationParameterSetting,
   getOperationParameterSettingById,
   getOperationParameterSettingPage,
-  updateOperationParameterSetting,
+  generateNewOperationParameterSettingCode,
 } from '../../services/generated/operation-parameter-setting';
 
 import type {
-  BooleanResult,
-  OperationParameterSettingEntity,
-  OperationParameterSettingEntityBasePaginationResponse,
-  OperationParameterSettingEntityResult,
   SortType,
+  BooleanResult,
   StringObjectKeyValuePair,
+  OperationParameterSettingEntity,
+  OperationParameterSettingEntityResult,
+  OperationParameterSettingEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,8 +31,12 @@ import type {
  */
 export const operationParameterSettingKeys = {
   all: ['operationParameterSetting'] as const,
-  getOperationParameterSettingById: (id: string) => ['operationParameterSetting', 'getOperationParameterSettingById', id] as const,
-  generateNewOperationParameterSettingCode: ['operationParameterSetting', 'generateNewOperationParameterSettingCode'] as const,
+  getOperationParameterSettingById: (id: string) =>
+    ['operationParameterSetting', 'getOperationParameterSettingById', id] as const,
+  generateNewOperationParameterSettingCode: [
+    'operationParameterSetting',
+    'generateNewOperationParameterSettingCode',
+  ] as const,
 };
 
 /**
@@ -66,10 +70,20 @@ export function useGenerateNewOperationParameterSettingCode(
  * Get paginated list of Operation Parameter Setting
  */
 export function useGetOperationParameterSettingPage(
-  options?: Omit<UseMutationOptions<OperationParameterSettingEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      OperationParameterSettingEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getOperationParameterSettingPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getOperationParameterSettingPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,10 +92,18 @@ export function useGetOperationParameterSettingPage(
  * Create a new Operation Parameter Setting
  */
 export function useCreateOperationParameterSetting(
-  options?: Omit<UseMutationOptions<OperationParameterSettingEntityResult, Error, { data: OperationParameterSettingEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      OperationParameterSettingEntityResult,
+      Error,
+      { data: OperationParameterSettingEntity }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: OperationParameterSettingEntity }) => createOperationParameterSetting(variables.data),
+    mutationFn: (variables: { data: OperationParameterSettingEntity }) =>
+      createOperationParameterSetting(variables.data),
     ...options,
   });
 }
@@ -90,10 +112,14 @@ export function useCreateOperationParameterSetting(
  * Update an existing Operation Parameter Setting
  */
 export function useUpdateOperationParameterSetting(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateOperationParameterSetting(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateOperationParameterSetting(variables.id, variables.data),
     ...options,
   });
 }

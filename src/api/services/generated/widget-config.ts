@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   WidgetConfigEntity,
-  WidgetConfigEntityBasePaginationResponse,
+  StringObjectKeyValuePair,
   WidgetConfigEntityResult,
+  WidgetConfigEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getWidgetConfigById(id: string): Promise<WidgetConfigEntit
  * @param data - Request body
  * @returns Promise<WidgetConfigEntityBasePaginationResponse>
  */
-export async function getWidgetConfigPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<WidgetConfigEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<WidgetConfigEntityBasePaginationResponse>(WIDGETCONFIG_ENDPOINTS.getWidgetConfigPage, data, { params });
+export async function getWidgetConfigPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<WidgetConfigEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<WidgetConfigEntityBasePaginationResponse>(
+    WIDGETCONFIG_ENDPOINTS.getWidgetConfigPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +67,13 @@ export async function getWidgetConfigPage(data: SortType[], params?: { pageNumbe
  * @param data - Request body
  * @returns Promise<WidgetConfigEntityResult>
  */
-export async function createWidgetConfig(data: WidgetConfigEntity): Promise<WidgetConfigEntityResult> {
-  const response = await axiosInstance.post<WidgetConfigEntityResult>(WIDGETCONFIG_ENDPOINTS.createWidgetConfig, data);
+export async function createWidgetConfig(
+  data: WidgetConfigEntity
+): Promise<WidgetConfigEntityResult> {
+  const response = await axiosInstance.post<WidgetConfigEntityResult>(
+    WIDGETCONFIG_ENDPOINTS.createWidgetConfig,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +84,10 @@ export async function createWidgetConfig(data: WidgetConfigEntity): Promise<Widg
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateWidgetConfig(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateWidgetConfig(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/widgetconfig/update/${id}`, data);
   return response.data;
 }
@@ -95,6 +110,8 @@ export async function deleteWidgetConfig(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewWidgetConfigCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(WIDGETCONFIG_ENDPOINTS.generateNewWidgetConfigCode);
+  const response = await axiosInstance.get<string>(
+    WIDGETCONFIG_ENDPOINTS.generateNewWidgetConfigCode
+  );
   return response.data;
 }

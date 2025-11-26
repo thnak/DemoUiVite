@@ -1,9 +1,6 @@
 import axiosInstance from '../../axios-instance';
 
-import type {
-  LocalizeAppLangDtoBasePaginationResponse,
-  SortType,
-} from '../../types/generated';
+import type { SortType, LocalizeAppLangDtoBasePaginationResponse } from '../../types/generated';
 
 // ----------------------------------------------------------------------
 // Localization Service
@@ -29,8 +26,15 @@ export const LOCALIZATION_ENDPOINTS = {
  * @param data - Request body
  * @returns Promise<LocalizeAppLangDtoBasePaginationResponse>
  */
-export async function postapitranslationsgetlang(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<LocalizeAppLangDtoBasePaginationResponse> {
-  const response = await axiosInstance.post<LocalizeAppLangDtoBasePaginationResponse>(LOCALIZATION_ENDPOINTS.postapitranslationsgetlang, data, { params });
+export async function postapitranslationsgetlang(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<LocalizeAppLangDtoBasePaginationResponse> {
+  const response = await axiosInstance.post<LocalizeAppLangDtoBasePaginationResponse>(
+    LOCALIZATION_ENDPOINTS.postapitranslationsgetlang,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -40,7 +44,9 @@ GET /api/translations/{langCode}
  * @param langCode - The language code (e.g., "en", "es", "vi").
  * @returns Promise<Record<string, string>>
  */
-export async function getapitranslationslangCode(langCode: string): Promise<Record<string, string>> {
+export async function getapitranslationslangCode(
+  langCode: string
+): Promise<Record<string, string>> {
   const response = await axiosInstance.get<Record<string, string>>(`/api/translations/${langCode}`);
   return response.data;
 }
@@ -51,8 +57,14 @@ export async function getapitranslationslangCode(langCode: string): Promise<Reco
  * @param keys - Comma-separated list of translation keys.
  * @returns Promise<Record<string, string>>
  */
-export async function getapitranslationsbatch(params?: { lang?: string; keys?: string[] }): Promise<Record<string, string>> {
-  const response = await axiosInstance.get<Record<string, string>>(LOCALIZATION_ENDPOINTS.getapitranslationsbatch, { params });
+export async function getapitranslationsbatch(params?: {
+  lang?: string;
+  keys?: string[];
+}): Promise<Record<string, string>> {
+  const response = await axiosInstance.get<Record<string, string>>(
+    LOCALIZATION_ENDPOINTS.getapitranslationsbatch,
+    { params }
+  );
   return response.data;
 }
 

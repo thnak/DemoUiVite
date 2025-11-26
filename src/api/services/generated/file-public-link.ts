@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   FilePublicLinkEntity,
-  FilePublicLinkEntityBasePaginationResponse,
-  FilePublicLinkEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  FilePublicLinkEntityResult,
+  FilePublicLinkEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getFilePublicLinkById(id: string): Promise<FilePublicLinkE
  * @param data - Request body
  * @returns Promise<FilePublicLinkEntityBasePaginationResponse>
  */
-export async function getFilePublicLinkPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<FilePublicLinkEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<FilePublicLinkEntityBasePaginationResponse>(FILEPUBLICLINK_ENDPOINTS.getFilePublicLinkPage, data, { params });
+export async function getFilePublicLinkPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<FilePublicLinkEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<FilePublicLinkEntityBasePaginationResponse>(
+    FILEPUBLICLINK_ENDPOINTS.getFilePublicLinkPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +67,13 @@ export async function getFilePublicLinkPage(data: SortType[], params?: { pageNum
  * @param data - Request body
  * @returns Promise<FilePublicLinkEntityResult>
  */
-export async function createFilePublicLink(data: FilePublicLinkEntity): Promise<FilePublicLinkEntityResult> {
-  const response = await axiosInstance.post<FilePublicLinkEntityResult>(FILEPUBLICLINK_ENDPOINTS.createFilePublicLink, data);
+export async function createFilePublicLink(
+  data: FilePublicLinkEntity
+): Promise<FilePublicLinkEntityResult> {
+  const response = await axiosInstance.post<FilePublicLinkEntityResult>(
+    FILEPUBLICLINK_ENDPOINTS.createFilePublicLink,
+    data
+  );
   return response.data;
 }
 
@@ -72,8 +84,14 @@ export async function createFilePublicLink(data: FilePublicLinkEntity): Promise<
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateFilePublicLink(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(`/api/filepubliclink/update/${id}`, data);
+export async function updateFilePublicLink(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    `/api/filepubliclink/update/${id}`,
+    data
+  );
   return response.data;
 }
 
@@ -95,6 +113,8 @@ export async function deleteFilePublicLink(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewFilePublicLinkCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(FILEPUBLICLINK_ENDPOINTS.generateNewFilePublicLinkCode);
+  const response = await axiosInstance.get<string>(
+    FILEPUBLICLINK_ENDPOINTS.generateNewFilePublicLinkCode
+  );
   return response.data;
 }

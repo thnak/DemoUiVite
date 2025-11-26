@@ -1,8 +1,6 @@
 import axiosInstance from '../../axios-instance';
 
-import type {
-  SortType,
-} from '../../types/generated';
+import type { SortType } from '../../types/generated';
 
 // ----------------------------------------------------------------------
 // Sensor Service
@@ -24,6 +22,9 @@ export const SENSOR_ENDPOINTS = {
  * @param data - Request body
  * @returns Promise<void>
  */
-export async function postapiSensorgetdevicesensors(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<void> {
+export async function postapiSensorgetdevicesensors(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<void> {
   await axiosInstance.post(SENSOR_ENDPOINTS.postapiSensorgetdevicesensors, data, { params });
 }

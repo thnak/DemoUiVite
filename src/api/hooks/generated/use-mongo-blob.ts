@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createMongoBlob,
   deleteMongoBlob,
-  generateNewMongoBlobCode,
+  updateMongoBlob,
   getMongoBlobById,
   getMongoBlobPage,
-  updateMongoBlob,
+  generateNewMongoBlobCode,
 } from '../../services/generated/mongo-blob';
 
 import type {
-  BooleanResult,
-  MongoBlob,
-  MongoBlobBasePaginationResponse,
-  MongoBlobResult,
   SortType,
+  MongoBlob,
+  BooleanResult,
+  MongoBlobResult,
   StringObjectKeyValuePair,
+  MongoBlobBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewMongoBlobCode(
  * Get paginated list of Mongo Blob
  */
 export function useGetMongoBlobPage(
-  options?: Omit<UseMutationOptions<MongoBlobBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      MongoBlobBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getMongoBlobPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getMongoBlobPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -90,10 +100,14 @@ export function useCreateMongoBlob(
  * Update an existing Mongo Blob
  */
 export function useUpdateMongoBlob(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateMongoBlob(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateMongoBlob(variables.id, variables.data),
     ...options,
   });
 }

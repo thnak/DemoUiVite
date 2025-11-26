@@ -52,10 +52,14 @@ export function useGetapiAuthloginwithtoken(
  * Generate JWT token with optional custom expiration time
  */
 export function usePostapiAuthgeneratetoken(
-  options?: Omit<UseMutationOptions<AuthTokenResponseResult, Error, { data: GenerateTokenRequest }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<AuthTokenResponseResult, Error, { data: GenerateTokenRequest }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: GenerateTokenRequest }) => postapiAuthgeneratetoken(variables.data),
+    mutationFn: (variables: { data: GenerateTokenRequest }) =>
+      postapiAuthgeneratetoken(variables.data),
     ...options,
   });
 }
@@ -67,7 +71,8 @@ export function usePostapiAuthgeneratetokenfromcurrent(
   options?: Omit<UseMutationOptions<void, Error, { data: number }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: number }) => postapiAuthgeneratetokenfromcurrent(variables.data),
+    mutationFn: (variables: { data: number }) =>
+      postapiAuthgeneratetokenfromcurrent(variables.data),
     ...options,
   });
 }
@@ -79,7 +84,8 @@ export function usePostapiAuthrefreshtoken(
   options?: Omit<UseMutationOptions<void, Error, { data: RefreshTokenRequest }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: RefreshTokenRequest }) => postapiAuthrefreshtoken(variables.data),
+    mutationFn: (variables: { data: RefreshTokenRequest }) =>
+      postapiAuthrefreshtoken(variables.data),
     ...options,
   });
 }
@@ -91,7 +97,8 @@ export function usePostapiAuthrevoketoken(
   options?: Omit<UseMutationOptions<void, Error, { data: RefreshTokenRequest }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: RefreshTokenRequest }) => postapiAuthrevoketoken(variables.data),
+    mutationFn: (variables: { data: RefreshTokenRequest }) =>
+      postapiAuthrevoketoken(variables.data),
     ...options,
   });
 }
@@ -124,10 +131,14 @@ export function usePostapiAuthgenerateqrlogintoken(
  * Login using a one-time QR code token
  */
 export function usePostapiAuthloginwithqrtoken(
-  options?: Omit<UseMutationOptions<AuthTokenResponseResult, Error, { data: QrLoginRequest }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<AuthTokenResponseResult, Error, { data: QrLoginRequest }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: QrLoginRequest }) => postapiAuthloginwithqrtoken(variables.data),
+    mutationFn: (variables: { data: QrLoginRequest }) =>
+      postapiAuthloginwithqrtoken(variables.data),
     ...options,
   });
 }

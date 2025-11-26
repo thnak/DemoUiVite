@@ -1,10 +1,8 @@
-import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
+import type { UseQueryOptions } from '@tanstack/react-query';
 
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
-import {
-  getapiVideostreamandsavefileName,
-} from '../../services/generated/video';
+import { getapiVideostreamandsavefileName } from '../../services/generated/video';
 
 // ----------------------------------------------------------------------
 // Video Hooks
@@ -17,7 +15,8 @@ import {
  */
 export const videoKeys = {
   all: ['video'] as const,
-  getapiVideostreamandsavefileName: (fileName: string) => ['video', 'getapiVideostreamandsavefileName', fileName] as const,
+  getapiVideostreamandsavefileName: (fileName: string) =>
+    ['video', 'getapiVideostreamandsavefileName', fileName] as const,
 };
 
 /**

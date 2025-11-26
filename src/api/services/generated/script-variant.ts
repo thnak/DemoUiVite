@@ -1,14 +1,14 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   ScriptVariantDto,
   ScriptVariantEntity,
-  ScriptVariantEntityBasePaginationResponse,
-  ScriptVariantEntityPaginationQuery,
-  ScriptVariantEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  ScriptVariantEntityResult,
+  ScriptVariantEntityPaginationQuery,
+  ScriptVariantEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -57,8 +57,15 @@ export async function getScriptVariantById(id: string): Promise<ScriptVariantEnt
  * @param data - Request body
  * @returns Promise<ScriptVariantEntityBasePaginationResponse>
  */
-export async function getScriptVariantPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<ScriptVariantEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<ScriptVariantEntityBasePaginationResponse>(SCRIPTVARIANT_ENDPOINTS.getScriptVariantPage, data, { params });
+export async function getScriptVariantPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<ScriptVariantEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<ScriptVariantEntityBasePaginationResponse>(
+    SCRIPTVARIANT_ENDPOINTS.getScriptVariantPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -69,8 +76,13 @@ export async function getScriptVariantPage(data: SortType[], params?: { pageNumb
  * @param data - Request body
  * @returns Promise<ScriptVariantEntityResult>
  */
-export async function createScriptVariant(data: ScriptVariantEntity): Promise<ScriptVariantEntityResult> {
-  const response = await axiosInstance.post<ScriptVariantEntityResult>(SCRIPTVARIANT_ENDPOINTS.createScriptVariant, data);
+export async function createScriptVariant(
+  data: ScriptVariantEntity
+): Promise<ScriptVariantEntityResult> {
+  const response = await axiosInstance.post<ScriptVariantEntityResult>(
+    SCRIPTVARIANT_ENDPOINTS.createScriptVariant,
+    data
+  );
   return response.data;
 }
 
@@ -81,7 +93,10 @@ export async function createScriptVariant(data: ScriptVariantEntity): Promise<Sc
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateScriptVariant(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateScriptVariant(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/scriptvariant/update/${id}`, data);
   return response.data;
 }
@@ -104,7 +119,9 @@ export async function deleteScriptVariant(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewScriptVariantCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(SCRIPTVARIANT_ENDPOINTS.generateNewScriptVariantCode);
+  const response = await axiosInstance.get<string>(
+    SCRIPTVARIANT_ENDPOINTS.generateNewScriptVariantCode
+  );
   return response.data;
 }
 
@@ -114,8 +131,14 @@ export async function generateNewScriptVariantCode(): Promise<string> {
  * Searches Script Variant entities by text across searchable fields.
  * @returns Promise<ScriptVariantEntity[]>
  */
-export async function searchScriptVariant(params?: { searchText?: string; maxResults?: number }): Promise<ScriptVariantEntity[]> {
-  const response = await axiosInstance.get<ScriptVariantEntity[]>(SCRIPTVARIANT_ENDPOINTS.searchScriptVariant, { params });
+export async function searchScriptVariant(params?: {
+  searchText?: string;
+  maxResults?: number;
+}): Promise<ScriptVariantEntity[]> {
+  const response = await axiosInstance.get<ScriptVariantEntity[]>(
+    SCRIPTVARIANT_ENDPOINTS.searchScriptVariant,
+    { params }
+  );
   return response.data;
 }
 
@@ -123,8 +146,13 @@ export async function searchScriptVariant(params?: { searchText?: string; maxRes
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function postapiScriptVariantcreate(data: ScriptVariantEntity): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(SCRIPTVARIANT_ENDPOINTS.postapiScriptVariantcreate, data);
+export async function postapiScriptVariantcreate(
+  data: ScriptVariantEntity
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    SCRIPTVARIANT_ENDPOINTS.postapiScriptVariantcreate,
+    data
+  );
   return response.data;
 }
 
@@ -150,8 +178,15 @@ export async function getapiScriptVariantgetid(id: string): Promise<ScriptVarian
  * @param data - Request body
  * @returns Promise<ScriptVariantEntityPaginationQuery>
  */
-export async function postapiScriptVariantgetscripts(data: SortType[], params?: { search?: string; pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<ScriptVariantEntityPaginationQuery> {
-  const response = await axiosInstance.post<ScriptVariantEntityPaginationQuery>(SCRIPTVARIANT_ENDPOINTS.postapiScriptVariantgetscripts, data, { params });
+export async function postapiScriptVariantgetscripts(
+  data: SortType[],
+  params?: { search?: string; pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<ScriptVariantEntityPaginationQuery> {
+  const response = await axiosInstance.post<ScriptVariantEntityPaginationQuery>(
+    SCRIPTVARIANT_ENDPOINTS.postapiScriptVariantgetscripts,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -159,8 +194,15 @@ export async function postapiScriptVariantgetscripts(data: SortType[], params?: 
  * @param type - Type of response result
  * @returns Promise<ScriptVariantDto[]>
  */
-export async function getapiScriptVariantgetscriptbyresponsetype(params?: { type?: string; search?: string; pageSize?: number }): Promise<ScriptVariantDto[]> {
-  const response = await axiosInstance.get<ScriptVariantDto[]>(SCRIPTVARIANT_ENDPOINTS.getapiScriptVariantgetscriptbyresponsetype, { params });
+export async function getapiScriptVariantgetscriptbyresponsetype(params?: {
+  type?: string;
+  search?: string;
+  pageSize?: number;
+}): Promise<ScriptVariantDto[]> {
+  const response = await axiosInstance.get<ScriptVariantDto[]>(
+    SCRIPTVARIANT_ENDPOINTS.getapiScriptVariantgetscriptbyresponsetype,
+    { params }
+  );
   return response.data;
 }
 
@@ -168,7 +210,10 @@ export async function getapiScriptVariantgetscriptbyresponsetype(params?: { type
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function postapiScriptVariantupdateid(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function postapiScriptVariantupdateid(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/ScriptVariant/update/${id}`, data);
   return response.data;
 }

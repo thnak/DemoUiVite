@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   ProductionOrderEntity,
-  ProductionOrderEntityBasePaginationResponse,
-  ProductionOrderEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  ProductionOrderEntityResult,
+  ProductionOrderEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getProductionOrderById(id: string): Promise<ProductionOrde
  * @param data - Request body
  * @returns Promise<ProductionOrderEntityBasePaginationResponse>
  */
-export async function getProductionOrderPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<ProductionOrderEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<ProductionOrderEntityBasePaginationResponse>(PRODUCTIONORDER_ENDPOINTS.getProductionOrderPage, data, { params });
+export async function getProductionOrderPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<ProductionOrderEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<ProductionOrderEntityBasePaginationResponse>(
+    PRODUCTIONORDER_ENDPOINTS.getProductionOrderPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +67,13 @@ export async function getProductionOrderPage(data: SortType[], params?: { pageNu
  * @param data - Request body
  * @returns Promise<ProductionOrderEntityResult>
  */
-export async function createProductionOrder(data: ProductionOrderEntity): Promise<ProductionOrderEntityResult> {
-  const response = await axiosInstance.post<ProductionOrderEntityResult>(PRODUCTIONORDER_ENDPOINTS.createProductionOrder, data);
+export async function createProductionOrder(
+  data: ProductionOrderEntity
+): Promise<ProductionOrderEntityResult> {
+  const response = await axiosInstance.post<ProductionOrderEntityResult>(
+    PRODUCTIONORDER_ENDPOINTS.createProductionOrder,
+    data
+  );
   return response.data;
 }
 
@@ -72,8 +84,14 @@ export async function createProductionOrder(data: ProductionOrderEntity): Promis
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateProductionOrder(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(`/api/productionorder/update/${id}`, data);
+export async function updateProductionOrder(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    `/api/productionorder/update/${id}`,
+    data
+  );
   return response.data;
 }
 
@@ -95,6 +113,8 @@ export async function deleteProductionOrder(id: string): Promise<BooleanResult> 
  * @returns Promise<string>
  */
 export async function generateNewProductionOrderCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(PRODUCTIONORDER_ENDPOINTS.generateNewProductionOrderCode);
+  const response = await axiosInstance.get<string>(
+    PRODUCTIONORDER_ENDPOINTS.generateNewProductionOrderCode
+  );
   return response.data;
 }

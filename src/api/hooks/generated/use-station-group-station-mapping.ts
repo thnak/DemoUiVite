@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createStationGroupStationMapping,
   deleteStationGroupStationMapping,
-  generateNewStationGroupStationMappingCode,
+  updateStationGroupStationMapping,
   getStationGroupStationMappingById,
   getStationGroupStationMappingPage,
-  updateStationGroupStationMapping,
+  generateNewStationGroupStationMappingCode,
 } from '../../services/generated/station-group-station-mapping';
 
 import type {
-  BooleanResult,
   SortType,
-  StationGroupStationMapping,
-  StationGroupStationMappingBasePaginationResponse,
-  StationGroupStationMappingResult,
+  BooleanResult,
   StringObjectKeyValuePair,
+  StationGroupStationMapping,
+  StationGroupStationMappingResult,
+  StationGroupStationMappingBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,8 +31,12 @@ import type {
  */
 export const stationGroupStationMappingKeys = {
   all: ['stationGroupStationMapping'] as const,
-  getStationGroupStationMappingById: (id: string) => ['stationGroupStationMapping', 'getStationGroupStationMappingById', id] as const,
-  generateNewStationGroupStationMappingCode: ['stationGroupStationMapping', 'generateNewStationGroupStationMappingCode'] as const,
+  getStationGroupStationMappingById: (id: string) =>
+    ['stationGroupStationMapping', 'getStationGroupStationMappingById', id] as const,
+  generateNewStationGroupStationMappingCode: [
+    'stationGroupStationMapping',
+    'generateNewStationGroupStationMappingCode',
+  ] as const,
 };
 
 /**
@@ -66,10 +70,20 @@ export function useGenerateNewStationGroupStationMappingCode(
  * Get paginated list of Station Group Station Mapping
  */
 export function useGetStationGroupStationMappingPage(
-  options?: Omit<UseMutationOptions<StationGroupStationMappingBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      StationGroupStationMappingBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getStationGroupStationMappingPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getStationGroupStationMappingPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,10 +92,18 @@ export function useGetStationGroupStationMappingPage(
  * Create a new Station Group Station Mapping
  */
 export function useCreateStationGroupStationMapping(
-  options?: Omit<UseMutationOptions<StationGroupStationMappingResult, Error, { data: StationGroupStationMapping }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      StationGroupStationMappingResult,
+      Error,
+      { data: StationGroupStationMapping }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: StationGroupStationMapping }) => createStationGroupStationMapping(variables.data),
+    mutationFn: (variables: { data: StationGroupStationMapping }) =>
+      createStationGroupStationMapping(variables.data),
     ...options,
   });
 }
@@ -90,10 +112,14 @@ export function useCreateStationGroupStationMapping(
  * Update an existing Station Group Station Mapping
  */
 export function useUpdateStationGroupStationMapping(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateStationGroupStationMapping(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateStationGroupStationMapping(variables.id, variables.data),
     ...options,
   });
 }

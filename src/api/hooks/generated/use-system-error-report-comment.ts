@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createSystemErrorReportComment,
   deleteSystemErrorReportComment,
-  generateNewSystemErrorReportCommentCode,
+  updateSystemErrorReportComment,
   getSystemErrorReportCommentById,
   getSystemErrorReportCommentPage,
-  updateSystemErrorReportComment,
+  generateNewSystemErrorReportCommentCode,
 } from '../../services/generated/system-error-report-comment';
 
 import type {
-  BooleanResult,
   SortType,
+  BooleanResult,
   StringObjectKeyValuePair,
   SystemErrorReportCommentEntity,
-  SystemErrorReportCommentEntityBasePaginationResponse,
   SystemErrorReportCommentEntityResult,
+  SystemErrorReportCommentEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,8 +31,12 @@ import type {
  */
 export const systemErrorReportCommentKeys = {
   all: ['systemErrorReportComment'] as const,
-  getSystemErrorReportCommentById: (id: string) => ['systemErrorReportComment', 'getSystemErrorReportCommentById', id] as const,
-  generateNewSystemErrorReportCommentCode: ['systemErrorReportComment', 'generateNewSystemErrorReportCommentCode'] as const,
+  getSystemErrorReportCommentById: (id: string) =>
+    ['systemErrorReportComment', 'getSystemErrorReportCommentById', id] as const,
+  generateNewSystemErrorReportCommentCode: [
+    'systemErrorReportComment',
+    'generateNewSystemErrorReportCommentCode',
+  ] as const,
 };
 
 /**
@@ -66,10 +70,20 @@ export function useGenerateNewSystemErrorReportCommentCode(
  * Get paginated list of System Error Report Comment
  */
 export function useGetSystemErrorReportCommentPage(
-  options?: Omit<UseMutationOptions<SystemErrorReportCommentEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      SystemErrorReportCommentEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getSystemErrorReportCommentPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getSystemErrorReportCommentPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,10 +92,18 @@ export function useGetSystemErrorReportCommentPage(
  * Create a new System Error Report Comment
  */
 export function useCreateSystemErrorReportComment(
-  options?: Omit<UseMutationOptions<SystemErrorReportCommentEntityResult, Error, { data: SystemErrorReportCommentEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      SystemErrorReportCommentEntityResult,
+      Error,
+      { data: SystemErrorReportCommentEntity }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SystemErrorReportCommentEntity }) => createSystemErrorReportComment(variables.data),
+    mutationFn: (variables: { data: SystemErrorReportCommentEntity }) =>
+      createSystemErrorReportComment(variables.data),
     ...options,
   });
 }
@@ -90,10 +112,14 @@ export function useCreateSystemErrorReportComment(
  * Update an existing System Error Report Comment
  */
 export function useUpdateSystemErrorReportComment(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateSystemErrorReportComment(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateSystemErrorReportComment(variables.id, variables.data),
     ...options,
   });
 }

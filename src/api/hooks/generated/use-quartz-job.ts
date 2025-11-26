@@ -3,20 +3,20 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
-  deleteapiQuartzJobcollections,
-  deleteapiQuartzJobcollectionscollectionName,
   getapiQuartzJoball,
-  getapiQuartzJobcollections,
-  getapiQuartzJobexecuting,
-  getapiQuartzJobgroupgroupName,
   getapiQuartzJobsummary,
+  getapiQuartzJobexecuting,
+  getapiQuartzJobcollections,
+  deleteapiQuartzJobcollections,
+  getapiQuartzJobgroupgroupName,
+  deleteapiQuartzJobcollectionscollectionName,
 } from '../../services/generated/quartz-job';
 
 import type {
-  QuartzCollectionCleanupResultDto,
-  QuartzCollectionDto,
   QuartzJobDto,
+  QuartzCollectionDto,
   QuartzJobSummaryDto,
+  QuartzCollectionCleanupResultDto,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -32,7 +32,8 @@ export const quartzJobKeys = {
   all: ['quartzJob'] as const,
   getapiQuartzJobsummary: ['quartzJob', 'getapiQuartzJobsummary'] as const,
   getapiQuartzJoball: ['quartzJob', 'getapiQuartzJoball'] as const,
-  getapiQuartzJobgroupgroupName: (groupName: string) => ['quartzJob', 'getapiQuartzJobgroupgroupName', groupName] as const,
+  getapiQuartzJobgroupgroupName: (groupName: string) =>
+    ['quartzJob', 'getapiQuartzJobgroupgroupName', groupName] as const,
   getapiQuartzJobexecuting: ['quartzJob', 'getapiQuartzJobexecuting'] as const,
   getapiQuartzJobcollections: ['quartzJob', 'getapiQuartzJobcollections'] as const,
 };
@@ -119,10 +120,14 @@ export function useDeleteapiQuartzJobcollections(
  * Delete a specific Quartz_* collection from MongoDB
  */
 export function useDeleteapiQuartzJobcollectionscollectionName(
-  options?: Omit<UseMutationOptions<QuartzCollectionCleanupResultDto, Error, { collectionName: string }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<QuartzCollectionCleanupResultDto, Error, { collectionName: string }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { collectionName: string }) => deleteapiQuartzJobcollectionscollectionName(variables.collectionName),
+    mutationFn: (variables: { collectionName: string }) =>
+      deleteapiQuartzJobcollectionscollectionName(variables.collectionName),
     ...options,
   });
 }

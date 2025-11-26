@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createWidgetConfig,
   deleteWidgetConfig,
-  generateNewWidgetConfigCode,
+  updateWidgetConfig,
   getWidgetConfigById,
   getWidgetConfigPage,
-  updateWidgetConfig,
+  generateNewWidgetConfigCode,
 } from '../../services/generated/widget-config';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   WidgetConfigEntity,
-  WidgetConfigEntityBasePaginationResponse,
+  StringObjectKeyValuePair,
   WidgetConfigEntityResult,
+  WidgetConfigEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewWidgetConfigCode(
  * Get paginated list of Widget Config
  */
 export function useGetWidgetConfigPage(
-  options?: Omit<UseMutationOptions<WidgetConfigEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      WidgetConfigEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getWidgetConfigPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getWidgetConfigPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetWidgetConfigPage(
  * Create a new Widget Config
  */
 export function useCreateWidgetConfig(
-  options?: Omit<UseMutationOptions<WidgetConfigEntityResult, Error, { data: WidgetConfigEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<WidgetConfigEntityResult, Error, { data: WidgetConfigEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: WidgetConfigEntity }) => createWidgetConfig(variables.data),
@@ -90,10 +103,14 @@ export function useCreateWidgetConfig(
  * Update an existing Widget Config
  */
 export function useUpdateWidgetConfig(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateWidgetConfig(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateWidgetConfig(variables.id, variables.data),
     ...options,
   });
 }

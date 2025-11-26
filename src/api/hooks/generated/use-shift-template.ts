@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createShiftTemplate,
   deleteShiftTemplate,
-  generateNewShiftTemplateCode,
-  getShiftTemplateById,
-  getShiftTemplatePage,
   searchShiftTemplate,
   updateShiftTemplate,
+  getShiftTemplateById,
+  getShiftTemplatePage,
+  generateNewShiftTemplateCode,
 } from '../../services/generated/shift-template';
 
 import type {
+  SortType,
   BooleanResult,
   ShiftTemplateEntity,
-  ShiftTemplateEntityBasePaginationResponse,
-  ShiftTemplateEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  ShiftTemplateEntityResult,
+  ShiftTemplateEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -82,10 +82,20 @@ export function useSearchShiftTemplate(
  * Get paginated list of Shift Template
  */
 export function useGetShiftTemplatePage(
-  options?: Omit<UseMutationOptions<ShiftTemplateEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      ShiftTemplateEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getShiftTemplatePage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getShiftTemplatePage(variables.data, variables.params),
     ...options,
   });
 }
@@ -94,7 +104,10 @@ export function useGetShiftTemplatePage(
  * Create a new Shift Template
  */
 export function useCreateShiftTemplate(
-  options?: Omit<UseMutationOptions<ShiftTemplateEntityResult, Error, { data: ShiftTemplateEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<ShiftTemplateEntityResult, Error, { data: ShiftTemplateEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: ShiftTemplateEntity }) => createShiftTemplate(variables.data),
@@ -106,10 +119,14 @@ export function useCreateShiftTemplate(
  * Update an existing Shift Template
  */
 export function useUpdateShiftTemplate(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateShiftTemplate(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateShiftTemplate(variables.id, variables.data),
     ...options,
   });
 }

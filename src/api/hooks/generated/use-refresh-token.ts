@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createRefreshToken,
   deleteRefreshToken,
-  generateNewRefreshTokenCode,
+  updateRefreshToken,
   getRefreshTokenById,
   getRefreshTokenPage,
-  updateRefreshToken,
+  generateNewRefreshTokenCode,
 } from '../../services/generated/refresh-token';
 
 import type {
+  SortType,
   BooleanResult,
   RefreshTokenEntity,
-  RefreshTokenEntityBasePaginationResponse,
   RefreshTokenEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  RefreshTokenEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewRefreshTokenCode(
  * Get paginated list of Refresh Token
  */
 export function useGetRefreshTokenPage(
-  options?: Omit<UseMutationOptions<RefreshTokenEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      RefreshTokenEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getRefreshTokenPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getRefreshTokenPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetRefreshTokenPage(
  * Create a new Refresh Token
  */
 export function useCreateRefreshToken(
-  options?: Omit<UseMutationOptions<RefreshTokenEntityResult, Error, { data: RefreshTokenEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<RefreshTokenEntityResult, Error, { data: RefreshTokenEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: RefreshTokenEntity }) => createRefreshToken(variables.data),
@@ -90,10 +103,14 @@ export function useCreateRefreshToken(
  * Update an existing Refresh Token
  */
 export function useUpdateRefreshToken(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateRefreshToken(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateRefreshToken(variables.id, variables.data),
     ...options,
   });
 }

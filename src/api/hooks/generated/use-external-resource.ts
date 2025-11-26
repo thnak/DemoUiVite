@@ -3,13 +3,13 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
-  getapiExternalResourcedownloadresourcefolder,
-  getapiExternalResourcelistresourcefolders,
   getapiExternalResourcerandomimage,
   getapiExternalResourcerandommedia,
   getapiExternalResourcerandomvideo,
-  postapiExternalResourceuploadresourcefolder,
   postapiExternalResourceuploaduiresource,
+  getapiExternalResourcelistresourcefolders,
+  postapiExternalResourceuploadresourcefolder,
+  getapiExternalResourcedownloadresourcefolder,
 } from '../../services/generated/external-resource';
 
 // ----------------------------------------------------------------------
@@ -23,11 +23,24 @@ import {
  */
 export const externalResourceKeys = {
   all: ['externalResource'] as const,
-  getapiExternalResourcedownloadresourcefolder: (folder: string) => ['externalResource', 'getapiExternalResourcedownloadresourcefolder', folder] as const,
-  getapiExternalResourcelistresourcefolders: ['externalResource', 'getapiExternalResourcelistresourcefolders'] as const,
-  getapiExternalResourcerandomimage: ['externalResource', 'getapiExternalResourcerandomimage'] as const,
-  getapiExternalResourcerandomvideo: ['externalResource', 'getapiExternalResourcerandomvideo'] as const,
-  getapiExternalResourcerandommedia: ['externalResource', 'getapiExternalResourcerandommedia'] as const,
+  getapiExternalResourcedownloadresourcefolder: (folder: string) =>
+    ['externalResource', 'getapiExternalResourcedownloadresourcefolder', folder] as const,
+  getapiExternalResourcelistresourcefolders: [
+    'externalResource',
+    'getapiExternalResourcelistresourcefolders',
+  ] as const,
+  getapiExternalResourcerandomimage: [
+    'externalResource',
+    'getapiExternalResourcerandomimage',
+  ] as const,
+  getapiExternalResourcerandomvideo: [
+    'externalResource',
+    'getapiExternalResourcerandomvideo',
+  ] as const,
+  getapiExternalResourcerandommedia: [
+    'externalResource',
+    'getapiExternalResourcerandommedia',
+  ] as const,
 };
 
 /**
@@ -111,7 +124,8 @@ export function usePostapiExternalResourceuploadresourcefolder(
   options?: Omit<UseMutationOptions<unknown, Error, { folder: string }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { folder: string }) => postapiExternalResourceuploadresourcefolder(variables.folder),
+    mutationFn: (variables: { folder: string }) =>
+      postapiExternalResourceuploadresourcefolder(variables.folder),
     ...options,
   });
 }

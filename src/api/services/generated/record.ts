@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
-  GetRecordResponsePaginationQuery,
-  IoTSensorType,
-  IotRecordModel,
   ObjectId,
   SortType,
+  BooleanResult,
+  IoTSensorType,
+  IotRecordModel,
+  GetRecordResponsePaginationQuery,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -29,15 +29,24 @@ export const RECORD_ENDPOINTS = {
  * @returns Promise<BooleanResult>
  */
 export async function postapiRecordcreateanonymous(data: IotRecordModel): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(RECORD_ENDPOINTS.postapiRecordcreateanonymous, data);
+  const response = await axiosInstance.post<BooleanResult>(
+    RECORD_ENDPOINTS.postapiRecordcreateanonymous,
+    data
+  );
   return response.data;
 }
 
 /**
  * @returns Promise<number>
  */
-export async function getapiRecordsumvalue(params?: { sensor?: string; startDate?: string; endDate?: string }): Promise<number> {
-  const response = await axiosInstance.get<number>(RECORD_ENDPOINTS.getapiRecordsumvalue, { params });
+export async function getapiRecordsumvalue(params?: {
+  sensor?: string;
+  startDate?: string;
+  endDate?: string;
+}): Promise<number> {
+  const response = await axiosInstance.get<number>(RECORD_ENDPOINTS.getapiRecordsumvalue, {
+    params,
+  });
   return response.data;
 }
 
@@ -50,7 +59,23 @@ export async function getapiRecordsumvalue(params?: { sensor?: string; startDate
  * @param data - Request body
  * @returns Promise<GetRecordResponsePaginationQuery>
  */
-export async function postapiRecordgetrecords(data: SortType[], params?: { fromTime?: string; toTime?: string; SensorId?: ObjectId; DeviceId?: ObjectId; typeList?: IoTSensorType[]; pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<GetRecordResponsePaginationQuery> {
-  const response = await axiosInstance.post<GetRecordResponsePaginationQuery>(RECORD_ENDPOINTS.postapiRecordgetrecords, data, { params });
+export async function postapiRecordgetrecords(
+  data: SortType[],
+  params?: {
+    fromTime?: string;
+    toTime?: string;
+    SensorId?: ObjectId;
+    DeviceId?: ObjectId;
+    typeList?: IoTSensorType[];
+    pageNumber?: number;
+    pageSize?: number;
+    searchTerm?: string;
+  }
+): Promise<GetRecordResponsePaginationQuery> {
+  const response = await axiosInstance.post<GetRecordResponsePaginationQuery>(
+    RECORD_ENDPOINTS.postapiRecordgetrecords,
+    data,
+    { params }
+  );
   return response.data;
 }

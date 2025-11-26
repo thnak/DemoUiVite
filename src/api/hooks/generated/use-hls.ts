@@ -3,9 +3,9 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
+  postapihlsfileNametranscode,
   getapihlsfileNameplaylistm3u8,
   getapihlsfileNamesegmentssegmentName,
-  postapihlsfileNametranscode,
 } from '../../services/generated/hls';
 
 // ----------------------------------------------------------------------
@@ -19,8 +19,10 @@ import {
  */
 export const hlsKeys = {
   all: ['hls'] as const,
-  getapihlsfileNameplaylistm3u8: (fileName: string) => ['hls', 'getapihlsfileNameplaylistm3u8', fileName] as const,
-  getapihlsfileNamesegmentssegmentName: (fileName: string, segmentName: string) => ['hls', 'getapihlsfileNamesegmentssegmentName', fileName, segmentName] as const,
+  getapihlsfileNameplaylistm3u8: (fileName: string) =>
+    ['hls', 'getapihlsfileNameplaylistm3u8', fileName] as const,
+  getapihlsfileNamesegmentssegmentName: (fileName: string, segmentName: string) =>
+    ['hls', 'getapihlsfileNamesegmentssegmentName', fileName, segmentName] as const,
 };
 
 /**
@@ -56,7 +58,8 @@ export function usePostapihlsfileNametranscode(
   options?: Omit<UseMutationOptions<void, Error, { fileName: string }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { fileName: string }) => postapihlsfileNametranscode(variables.fileName),
+    mutationFn: (variables: { fileName: string }) =>
+      postapihlsfileNametranscode(variables.fileName),
     ...options,
   });
 }

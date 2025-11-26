@@ -4,17 +4,17 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
   getapiRecordsumvalue,
-  postapiRecordcreateanonymous,
   postapiRecordgetrecords,
+  postapiRecordcreateanonymous,
 } from '../../services/generated/record';
 
 import type {
-  BooleanResult,
-  GetRecordResponsePaginationQuery,
-  IoTSensorType,
-  IotRecordModel,
   ObjectId,
   SortType,
+  BooleanResult,
+  IoTSensorType,
+  IotRecordModel,
+  GetRecordResponsePaginationQuery,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -50,7 +50,8 @@ export function usePostapiRecordcreateanonymous(
   options?: Omit<UseMutationOptions<BooleanResult, Error, { data: IotRecordModel }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: IotRecordModel }) => postapiRecordcreateanonymous(variables.data),
+    mutationFn: (variables: { data: IotRecordModel }) =>
+      postapiRecordcreateanonymous(variables.data),
     ...options,
   });
 }
@@ -58,10 +59,41 @@ export function usePostapiRecordcreateanonymous(
 /**
  */
 export function usePostapiRecordgetrecords(
-  options?: Omit<UseMutationOptions<GetRecordResponsePaginationQuery, Error, { data: SortType[]; params?: { fromTime?: string; toTime?: string; SensorId?: ObjectId; DeviceId?: ObjectId; typeList?: IoTSensorType[]; pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      GetRecordResponsePaginationQuery,
+      Error,
+      {
+        data: SortType[];
+        params?: {
+          fromTime?: string;
+          toTime?: string;
+          SensorId?: ObjectId;
+          DeviceId?: ObjectId;
+          typeList?: IoTSensorType[];
+          pageNumber?: number;
+          pageSize?: number;
+          searchTerm?: string;
+        };
+      }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { fromTime?: string; toTime?: string; SensorId?: ObjectId; DeviceId?: ObjectId; typeList?: IoTSensorType[]; pageNumber?: number; pageSize?: number; searchTerm?: string } }) => postapiRecordgetrecords(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: {
+        fromTime?: string;
+        toTime?: string;
+        SensorId?: ObjectId;
+        DeviceId?: ObjectId;
+        typeList?: IoTSensorType[];
+        pageNumber?: number;
+        pageSize?: number;
+        searchTerm?: string;
+      };
+    }) => postapiRecordgetrecords(variables.data, variables.params),
     ...options,
   });
 }

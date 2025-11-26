@@ -2,8 +2,8 @@ import axiosInstance from '../../axios-instance';
 
 import type {
   BooleanResult,
-  SystemErrorReportDtoListResult,
   SystemErrorReportStatus,
+  SystemErrorReportDtoListResult,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -24,7 +24,9 @@ export const SYSTEMERROR_ENDPOINTS = {
  * @returns Promise<BooleanResult>
  */
 export async function postapiSystemErrorCreateNewErrorReport(): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(SYSTEMERROR_ENDPOINTS.postapiSystemErrorCreateNewErrorReport);
+  const response = await axiosInstance.post<BooleanResult>(
+    SYSTEMERROR_ENDPOINTS.postapiSystemErrorCreateNewErrorReport
+  );
   return response.data;
 }
 
@@ -32,7 +34,12 @@ export async function postapiSystemErrorCreateNewErrorReport(): Promise<BooleanR
  * @param status - Represents the progress status of a system error report.
  * @returns Promise<SystemErrorReportDtoListResult>
  */
-export async function getapiSystemErrorGetUnresolvedReports(params?: { status?: SystemErrorReportStatus }): Promise<SystemErrorReportDtoListResult> {
-  const response = await axiosInstance.get<SystemErrorReportDtoListResult>(SYSTEMERROR_ENDPOINTS.getapiSystemErrorGetUnresolvedReports, { params });
+export async function getapiSystemErrorGetUnresolvedReports(params?: {
+  status?: SystemErrorReportStatus;
+}): Promise<SystemErrorReportDtoListResult> {
+  const response = await axiosInstance.get<SystemErrorReportDtoListResult>(
+    SYSTEMERROR_ENDPOINTS.getapiSystemErrorGetUnresolvedReports,
+    { params }
+  );
   return response.data;
 }

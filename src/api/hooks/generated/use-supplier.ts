@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createSupplier,
   deleteSupplier,
-  generateNewSupplierCode,
+  updateSupplier,
   getSupplierById,
   getSupplierPage,
-  updateSupplier,
+  generateNewSupplierCode,
 } from '../../services/generated/supplier';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   SupplierEntity,
-  SupplierEntityBasePaginationResponse,
   SupplierEntityResult,
+  StringObjectKeyValuePair,
+  SupplierEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewSupplierCode(
  * Get paginated list of Supplier
  */
 export function useGetSupplierPage(
-  options?: Omit<UseMutationOptions<SupplierEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      SupplierEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getSupplierPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getSupplierPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetSupplierPage(
  * Create a new Supplier
  */
 export function useCreateSupplier(
-  options?: Omit<UseMutationOptions<SupplierEntityResult, Error, { data: SupplierEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<SupplierEntityResult, Error, { data: SupplierEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: SupplierEntity }) => createSupplier(variables.data),
@@ -90,10 +103,14 @@ export function useCreateSupplier(
  * Update an existing Supplier
  */
 export function useUpdateSupplier(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateSupplier(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateSupplier(variables.id, variables.data),
     ...options,
   });
 }

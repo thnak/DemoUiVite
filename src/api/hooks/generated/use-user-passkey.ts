@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createUserPasskey,
   deleteUserPasskey,
-  generateNewUserPasskeyCode,
+  updateUserPasskey,
   getUserPasskeyById,
   getUserPasskeyPage,
-  updateUserPasskey,
+  generateNewUserPasskeyCode,
 } from '../../services/generated/user-passkey';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   UserPasskeyEntity,
-  UserPasskeyEntityBasePaginationResponse,
   UserPasskeyEntityResult,
+  StringObjectKeyValuePair,
+  UserPasskeyEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewUserPasskeyCode(
  * Get paginated list of User Passkey
  */
 export function useGetUserPasskeyPage(
-  options?: Omit<UseMutationOptions<UserPasskeyEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      UserPasskeyEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getUserPasskeyPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getUserPasskeyPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetUserPasskeyPage(
  * Create a new User Passkey
  */
 export function useCreateUserPasskey(
-  options?: Omit<UseMutationOptions<UserPasskeyEntityResult, Error, { data: UserPasskeyEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<UserPasskeyEntityResult, Error, { data: UserPasskeyEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: UserPasskeyEntity }) => createUserPasskey(variables.data),
@@ -90,10 +103,14 @@ export function useCreateUserPasskey(
  * Update an existing User Passkey
  */
 export function useUpdateUserPasskey(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateUserPasskey(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateUserPasskey(variables.id, variables.data),
     ...options,
   });
 }

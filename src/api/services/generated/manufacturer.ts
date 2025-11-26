@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   ManufacturerEntity,
-  ManufacturerEntityBasePaginationResponse,
   ManufacturerEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  ManufacturerEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -49,8 +49,15 @@ export async function getManufacturerById(id: string): Promise<ManufacturerEntit
  * @param data - Request body
  * @returns Promise<ManufacturerEntityBasePaginationResponse>
  */
-export async function getManufacturerPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<ManufacturerEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<ManufacturerEntityBasePaginationResponse>(MANUFACTURER_ENDPOINTS.getManufacturerPage, data, { params });
+export async function getManufacturerPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<ManufacturerEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<ManufacturerEntityBasePaginationResponse>(
+    MANUFACTURER_ENDPOINTS.getManufacturerPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -61,8 +68,13 @@ export async function getManufacturerPage(data: SortType[], params?: { pageNumbe
  * @param data - Request body
  * @returns Promise<ManufacturerEntityResult>
  */
-export async function createManufacturer(data: ManufacturerEntity): Promise<ManufacturerEntityResult> {
-  const response = await axiosInstance.post<ManufacturerEntityResult>(MANUFACTURER_ENDPOINTS.createManufacturer, data);
+export async function createManufacturer(
+  data: ManufacturerEntity
+): Promise<ManufacturerEntityResult> {
+  const response = await axiosInstance.post<ManufacturerEntityResult>(
+    MANUFACTURER_ENDPOINTS.createManufacturer,
+    data
+  );
   return response.data;
 }
 
@@ -73,7 +85,10 @@ export async function createManufacturer(data: ManufacturerEntity): Promise<Manu
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateManufacturer(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateManufacturer(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/manufacturer/update/${id}`, data);
   return response.data;
 }
@@ -96,7 +111,9 @@ export async function deleteManufacturer(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewManufacturerCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(MANUFACTURER_ENDPOINTS.generateNewManufacturerCode);
+  const response = await axiosInstance.get<string>(
+    MANUFACTURER_ENDPOINTS.generateNewManufacturerCode
+  );
   return response.data;
 }
 
@@ -106,7 +123,13 @@ export async function generateNewManufacturerCode(): Promise<string> {
  * Searches Manufacturer entities by text across searchable fields.
  * @returns Promise<ManufacturerEntity[]>
  */
-export async function searchManufacturer(params?: { searchText?: string; maxResults?: number }): Promise<ManufacturerEntity[]> {
-  const response = await axiosInstance.get<ManufacturerEntity[]>(MANUFACTURER_ENDPOINTS.searchManufacturer, { params });
+export async function searchManufacturer(params?: {
+  searchText?: string;
+  maxResults?: number;
+}): Promise<ManufacturerEntity[]> {
+  const response = await axiosInstance.get<ManufacturerEntity[]>(
+    MANUFACTURER_ENDPOINTS.searchManufacturer,
+    { params }
+  );
   return response.data;
 }

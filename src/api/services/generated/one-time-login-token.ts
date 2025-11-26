@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   OneTimeLoginTokenEntity,
-  OneTimeLoginTokenEntityBasePaginationResponse,
-  OneTimeLoginTokenEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  OneTimeLoginTokenEntityResult,
+  OneTimeLoginTokenEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getOneTimeLoginTokenById(id: string): Promise<OneTimeLogin
  * @param data - Request body
  * @returns Promise<OneTimeLoginTokenEntityBasePaginationResponse>
  */
-export async function getOneTimeLoginTokenPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<OneTimeLoginTokenEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<OneTimeLoginTokenEntityBasePaginationResponse>(ONETIMELOGINTOKEN_ENDPOINTS.getOneTimeLoginTokenPage, data, { params });
+export async function getOneTimeLoginTokenPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<OneTimeLoginTokenEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<OneTimeLoginTokenEntityBasePaginationResponse>(
+    ONETIMELOGINTOKEN_ENDPOINTS.getOneTimeLoginTokenPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +67,13 @@ export async function getOneTimeLoginTokenPage(data: SortType[], params?: { page
  * @param data - Request body
  * @returns Promise<OneTimeLoginTokenEntityResult>
  */
-export async function createOneTimeLoginToken(data: OneTimeLoginTokenEntity): Promise<OneTimeLoginTokenEntityResult> {
-  const response = await axiosInstance.post<OneTimeLoginTokenEntityResult>(ONETIMELOGINTOKEN_ENDPOINTS.createOneTimeLoginToken, data);
+export async function createOneTimeLoginToken(
+  data: OneTimeLoginTokenEntity
+): Promise<OneTimeLoginTokenEntityResult> {
+  const response = await axiosInstance.post<OneTimeLoginTokenEntityResult>(
+    ONETIMELOGINTOKEN_ENDPOINTS.createOneTimeLoginToken,
+    data
+  );
   return response.data;
 }
 
@@ -72,8 +84,14 @@ export async function createOneTimeLoginToken(data: OneTimeLoginTokenEntity): Pr
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateOneTimeLoginToken(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(`/api/onetimelogintoken/update/${id}`, data);
+export async function updateOneTimeLoginToken(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    `/api/onetimelogintoken/update/${id}`,
+    data
+  );
   return response.data;
 }
 
@@ -95,6 +113,8 @@ export async function deleteOneTimeLoginToken(id: string): Promise<BooleanResult
  * @returns Promise<string>
  */
 export async function generateNewOneTimeLoginTokenCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(ONETIMELOGINTOKEN_ENDPOINTS.generateNewOneTimeLoginTokenCode);
+  const response = await axiosInstance.get<string>(
+    ONETIMELOGINTOKEN_ENDPOINTS.generateNewOneTimeLoginTokenCode
+  );
   return response.data;
 }

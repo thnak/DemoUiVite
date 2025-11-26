@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   DowntimeGroupEntity,
-  DowntimeGroupEntityBasePaginationResponse,
-  DowntimeGroupEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  DowntimeGroupEntityResult,
+  DowntimeGroupEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -49,8 +49,15 @@ export async function getDowntimeGroupById(id: string): Promise<DowntimeGroupEnt
  * @param data - Request body
  * @returns Promise<DowntimeGroupEntityBasePaginationResponse>
  */
-export async function getDowntimeGroupPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<DowntimeGroupEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<DowntimeGroupEntityBasePaginationResponse>(DOWNTIMEGROUP_ENDPOINTS.getDowntimeGroupPage, data, { params });
+export async function getDowntimeGroupPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<DowntimeGroupEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<DowntimeGroupEntityBasePaginationResponse>(
+    DOWNTIMEGROUP_ENDPOINTS.getDowntimeGroupPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -61,8 +68,13 @@ export async function getDowntimeGroupPage(data: SortType[], params?: { pageNumb
  * @param data - Request body
  * @returns Promise<DowntimeGroupEntityResult>
  */
-export async function createDowntimeGroup(data: DowntimeGroupEntity): Promise<DowntimeGroupEntityResult> {
-  const response = await axiosInstance.post<DowntimeGroupEntityResult>(DOWNTIMEGROUP_ENDPOINTS.createDowntimeGroup, data);
+export async function createDowntimeGroup(
+  data: DowntimeGroupEntity
+): Promise<DowntimeGroupEntityResult> {
+  const response = await axiosInstance.post<DowntimeGroupEntityResult>(
+    DOWNTIMEGROUP_ENDPOINTS.createDowntimeGroup,
+    data
+  );
   return response.data;
 }
 
@@ -73,7 +85,10 @@ export async function createDowntimeGroup(data: DowntimeGroupEntity): Promise<Do
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateDowntimeGroup(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateDowntimeGroup(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/downtimegroup/update/${id}`, data);
   return response.data;
 }
@@ -96,7 +111,9 @@ export async function deleteDowntimeGroup(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewDowntimeGroupCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(DOWNTIMEGROUP_ENDPOINTS.generateNewDowntimeGroupCode);
+  const response = await axiosInstance.get<string>(
+    DOWNTIMEGROUP_ENDPOINTS.generateNewDowntimeGroupCode
+  );
   return response.data;
 }
 
@@ -106,7 +123,13 @@ export async function generateNewDowntimeGroupCode(): Promise<string> {
  * Searches Downtime Group entities by text across searchable fields.
  * @returns Promise<DowntimeGroupEntity[]>
  */
-export async function searchDowntimeGroup(params?: { searchText?: string; maxResults?: number }): Promise<DowntimeGroupEntity[]> {
-  const response = await axiosInstance.get<DowntimeGroupEntity[]>(DOWNTIMEGROUP_ENDPOINTS.searchDowntimeGroup, { params });
+export async function searchDowntimeGroup(params?: {
+  searchText?: string;
+  maxResults?: number;
+}): Promise<DowntimeGroupEntity[]> {
+  const response = await axiosInstance.get<DowntimeGroupEntity[]>(
+    DOWNTIMEGROUP_ENDPOINTS.searchDowntimeGroup,
+    { params }
+  );
   return response.data;
 }

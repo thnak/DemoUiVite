@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createSystemErrorReport,
   deleteSystemErrorReport,
-  generateNewSystemErrorReportCode,
+  updateSystemErrorReport,
   getSystemErrorReportById,
   getSystemErrorReportPage,
-  updateSystemErrorReport,
+  generateNewSystemErrorReportCode,
 } from '../../services/generated/system-error-report';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   SystemErrorReportEntity,
-  SystemErrorReportEntityBasePaginationResponse,
+  StringObjectKeyValuePair,
   SystemErrorReportEntityResult,
+  SystemErrorReportEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,8 +31,12 @@ import type {
  */
 export const systemErrorReportKeys = {
   all: ['systemErrorReport'] as const,
-  getSystemErrorReportById: (id: string) => ['systemErrorReport', 'getSystemErrorReportById', id] as const,
-  generateNewSystemErrorReportCode: ['systemErrorReport', 'generateNewSystemErrorReportCode'] as const,
+  getSystemErrorReportById: (id: string) =>
+    ['systemErrorReport', 'getSystemErrorReportById', id] as const,
+  generateNewSystemErrorReportCode: [
+    'systemErrorReport',
+    'generateNewSystemErrorReportCode',
+  ] as const,
 };
 
 /**
@@ -66,10 +70,20 @@ export function useGenerateNewSystemErrorReportCode(
  * Get paginated list of System Error Report
  */
 export function useGetSystemErrorReportPage(
-  options?: Omit<UseMutationOptions<SystemErrorReportEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      SystemErrorReportEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getSystemErrorReportPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getSystemErrorReportPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,10 +92,14 @@ export function useGetSystemErrorReportPage(
  * Create a new System Error Report
  */
 export function useCreateSystemErrorReport(
-  options?: Omit<UseMutationOptions<SystemErrorReportEntityResult, Error, { data: SystemErrorReportEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<SystemErrorReportEntityResult, Error, { data: SystemErrorReportEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SystemErrorReportEntity }) => createSystemErrorReport(variables.data),
+    mutationFn: (variables: { data: SystemErrorReportEntity }) =>
+      createSystemErrorReport(variables.data),
     ...options,
   });
 }
@@ -90,10 +108,14 @@ export function useCreateSystemErrorReport(
  * Update an existing System Error Report
  */
 export function useUpdateSystemErrorReport(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateSystemErrorReport(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateSystemErrorReport(variables.id, variables.data),
     ...options,
   });
 }

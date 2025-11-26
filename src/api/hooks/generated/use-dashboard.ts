@@ -3,35 +3,35 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
+  postapiDashboardcreate,
+  postapiDashboardgettemplate,
+  postapiDashboarddeletewidget,
+  postapiDashboardupdatewidget,
+  getapiDashboardsearchdashboard,
+  postapiDashboarddeletedashboard,
+  postapiDashboardupdatetemplateid,
   getapiDashboardgetdashboardcombine,
+  getapiDashboardgetwidgettemplateId,
+  postapiDashboardselectscriptwidgetId,
+  postapiDashboardcreatewidgetdashboard,
+  postapiDashboardupdatecombinecontenttemplateId,
   getapiDashboardgetscriptdefinebywidgetidwidgetId,
   getapiDashboardgetscriptvariantbywidgetidwidgetId,
-  getapiDashboardgetwidgettemplateId,
-  getapiDashboardsearchdashboard,
-  postapiDashboardcreate,
-  postapiDashboardcreatewidgetdashboard,
-  postapiDashboarddeletedashboard,
-  postapiDashboarddeletewidget,
-  postapiDashboardgettemplate,
-  postapiDashboardselectscriptwidgetId,
-  postapiDashboardupdatecombinecontenttemplateId,
-  postapiDashboardupdatetemplateid,
-  postapiDashboardupdatewidget,
 } from '../../services/generated/dashboard';
 
 import type {
-  BooleanResult,
-  DashboardCombineDto,
-  DashboardCombineDtoResult,
-  DashboardTemplateEntity,
-  DashboardTemplateEntityPaginationQuery,
-  ScriptDefinitionEntityResult,
-  ScriptVariantEntityResult,
-  SelectScriptRequest,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   WidgetConfigEntity,
+  DashboardCombineDto,
+  SelectScriptRequest,
+  DashboardTemplateEntity,
+  StringObjectKeyValuePair,
+  DashboardCombineDtoResult,
+  ScriptVariantEntityResult,
+  ScriptDefinitionEntityResult,
   WidgetConfigEntityPaginationQuery,
+  DashboardTemplateEntityPaginationQuery,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -45,11 +45,14 @@ import type {
  */
 export const dashboardKeys = {
   all: ['dashboard'] as const,
-  getapiDashboardgetwidgettemplateId: (templateId: string) => ['dashboard', 'getapiDashboardgetwidgettemplateId', templateId] as const,
+  getapiDashboardgetwidgettemplateId: (templateId: string) =>
+    ['dashboard', 'getapiDashboardgetwidgettemplateId', templateId] as const,
   getapiDashboardgetdashboardcombine: ['dashboard', 'getapiDashboardgetdashboardcombine'] as const,
   getapiDashboardsearchdashboard: ['dashboard', 'getapiDashboardsearchdashboard'] as const,
-  getapiDashboardgetscriptdefinebywidgetidwidgetId: (widgetId: string) => ['dashboard', 'getapiDashboardgetscriptdefinebywidgetidwidgetId', widgetId] as const,
-  getapiDashboardgetscriptvariantbywidgetidwidgetId: (widgetId: string) => ['dashboard', 'getapiDashboardgetscriptvariantbywidgetidwidgetId', widgetId] as const,
+  getapiDashboardgetscriptdefinebywidgetidwidgetId: (widgetId: string) =>
+    ['dashboard', 'getapiDashboardgetscriptdefinebywidgetidwidgetId', widgetId] as const,
+  getapiDashboardgetscriptvariantbywidgetidwidgetId: (widgetId: string) =>
+    ['dashboard', 'getapiDashboardgetscriptvariantbywidgetidwidgetId', widgetId] as const,
 };
 
 /**
@@ -120,10 +123,14 @@ export function useGetapiDashboardgetscriptvariantbywidgetidwidgetId(
 /**
  */
 export function usePostapiDashboarddeletedashboard(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { params?: { query?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { params?: { query?: string } }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { params?: { query?: string } }) => postapiDashboarddeletedashboard(variables.params),
+    mutationFn: (variables: { params?: { query?: string } }) =>
+      postapiDashboarddeletedashboard(variables.params),
     ...options,
   });
 }
@@ -131,10 +138,14 @@ export function usePostapiDashboarddeletedashboard(
 /**
  */
 export function usePostapiDashboarddeletewidget(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { params?: { query?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { params?: { query?: string } }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { params?: { query?: string } }) => postapiDashboarddeletewidget(variables.params),
+    mutationFn: (variables: { params?: { query?: string } }) =>
+      postapiDashboarddeletewidget(variables.params),
     ...options,
   });
 }
@@ -142,10 +153,37 @@ export function usePostapiDashboarddeletewidget(
 /**
  */
 export function usePostapiDashboardgettemplate(
-  options?: Omit<UseMutationOptions<DashboardTemplateEntityPaginationQuery, Error, { data: SortType[]; params?: { search?: string; fromTime?: string; toTime?: string; pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      DashboardTemplateEntityPaginationQuery,
+      Error,
+      {
+        data: SortType[];
+        params?: {
+          search?: string;
+          fromTime?: string;
+          toTime?: string;
+          pageNumber?: number;
+          pageSize?: number;
+          searchTerm?: string;
+        };
+      }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { search?: string; fromTime?: string; toTime?: string; pageNumber?: number; pageSize?: number; searchTerm?: string } }) => postapiDashboardgettemplate(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: {
+        search?: string;
+        fromTime?: string;
+        toTime?: string;
+        pageNumber?: number;
+        pageSize?: number;
+        searchTerm?: string;
+      };
+    }) => postapiDashboardgettemplate(variables.data, variables.params),
     ...options,
   });
 }
@@ -153,10 +191,14 @@ export function usePostapiDashboardgettemplate(
 /**
  */
 export function usePostapiDashboardupdatetemplateid(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => postapiDashboardupdatetemplateid(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      postapiDashboardupdatetemplateid(variables.id, variables.data),
     ...options,
   });
 }
@@ -164,10 +206,18 @@ export function usePostapiDashboardupdatetemplateid(
 /**
  */
 export function usePostapiDashboardupdatewidget(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { data: StringObjectKeyValuePair[]; params?: { WidgetId?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      BooleanResult,
+      Error,
+      { data: StringObjectKeyValuePair[]; params?: { WidgetId?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: StringObjectKeyValuePair[]; params?: { WidgetId?: string } }) => postapiDashboardupdatewidget(variables.data, variables.params),
+    mutationFn: (variables: { data: StringObjectKeyValuePair[]; params?: { WidgetId?: string } }) =>
+      postapiDashboardupdatewidget(variables.data, variables.params),
     ...options,
   });
 }
@@ -175,10 +225,14 @@ export function usePostapiDashboardupdatewidget(
 /**
  */
 export function usePostapiDashboardupdatecombinecontenttemplateId(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { templateId: string; data: DashboardCombineDto }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { templateId: string; data: DashboardCombineDto }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { templateId: string; data: DashboardCombineDto }) => postapiDashboardupdatecombinecontenttemplateId(variables.templateId, variables.data),
+    mutationFn: (variables: { templateId: string; data: DashboardCombineDto }) =>
+      postapiDashboardupdatecombinecontenttemplateId(variables.templateId, variables.data),
     ...options,
   });
 }
@@ -186,10 +240,14 @@ export function usePostapiDashboardupdatecombinecontenttemplateId(
 /**
  */
 export function usePostapiDashboardselectscriptwidgetId(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { widgetId: string; data: SelectScriptRequest }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { widgetId: string; data: SelectScriptRequest }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { widgetId: string; data: SelectScriptRequest }) => postapiDashboardselectscriptwidgetId(variables.widgetId, variables.data),
+    mutationFn: (variables: { widgetId: string; data: SelectScriptRequest }) =>
+      postapiDashboardselectscriptwidgetId(variables.widgetId, variables.data),
     ...options,
   });
 }
@@ -197,10 +255,14 @@ export function usePostapiDashboardselectscriptwidgetId(
 /**
  */
 export function usePostapiDashboardcreate(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { data: DashboardTemplateEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { data: DashboardTemplateEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: DashboardTemplateEntity }) => postapiDashboardcreate(variables.data),
+    mutationFn: (variables: { data: DashboardTemplateEntity }) =>
+      postapiDashboardcreate(variables.data),
     ...options,
   });
 }
@@ -208,10 +270,14 @@ export function usePostapiDashboardcreate(
 /**
  */
 export function usePostapiDashboardcreatewidgetdashboard(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { dashboard: string; data: WidgetConfigEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { dashboard: string; data: WidgetConfigEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { dashboard: string; data: WidgetConfigEntity }) => postapiDashboardcreatewidgetdashboard(variables.dashboard, variables.data),
+    mutationFn: (variables: { dashboard: string; data: WidgetConfigEntity }) =>
+      postapiDashboardcreatewidgetdashboard(variables.dashboard, variables.data),
     ...options,
   });
 }

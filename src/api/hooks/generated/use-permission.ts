@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createPermission,
   deletePermission,
-  generateNewPermissionCode,
+  updatePermission,
   getPermissionById,
   getPermissionPage,
-  updatePermission,
+  generateNewPermissionCode,
 } from '../../services/generated/permission';
 
 import type {
+  SortType,
   BooleanResult,
   PermissionEntity,
-  PermissionEntityBasePaginationResponse,
   PermissionEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  PermissionEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewPermissionCode(
  * Get paginated list of Permission
  */
 export function useGetPermissionPage(
-  options?: Omit<UseMutationOptions<PermissionEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      PermissionEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getPermissionPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getPermissionPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetPermissionPage(
  * Create a new Permission
  */
 export function useCreatePermission(
-  options?: Omit<UseMutationOptions<PermissionEntityResult, Error, { data: PermissionEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<PermissionEntityResult, Error, { data: PermissionEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: PermissionEntity }) => createPermission(variables.data),
@@ -90,10 +103,14 @@ export function useCreatePermission(
  * Update an existing Permission
  */
 export function useUpdatePermission(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updatePermission(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updatePermission(variables.id, variables.data),
     ...options,
   });
 }

@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
   SortType,
+  BooleanResult,
   StringObjectKeyValuePair,
   WorkDateCalendarStatisticEntity,
-  WorkDateCalendarStatisticEntityBasePaginationResponse,
   WorkDateCalendarStatisticEntityResult,
+  WorkDateCalendarStatisticEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -33,8 +33,12 @@ export const WORKDATECALENDARSTATISTIC_ENDPOINTS = {
  * Retrieves a specific Work Date Calendar Statistic entity by its unique identifier.
  * @returns Promise<WorkDateCalendarStatisticEntity>
  */
-export async function getWorkDateCalendarStatisticById(id: string): Promise<WorkDateCalendarStatisticEntity> {
-  const response = await axiosInstance.get<WorkDateCalendarStatisticEntity>(`/api/workdatecalendarstatistic/${id}`);
+export async function getWorkDateCalendarStatisticById(
+  id: string
+): Promise<WorkDateCalendarStatisticEntity> {
+  const response = await axiosInstance.get<WorkDateCalendarStatisticEntity>(
+    `/api/workdatecalendarstatistic/${id}`
+  );
   return response.data;
 }
 
@@ -48,8 +52,15 @@ export async function getWorkDateCalendarStatisticById(id: string): Promise<Work
  * @param data - Request body
  * @returns Promise<WorkDateCalendarStatisticEntityBasePaginationResponse>
  */
-export async function getWorkDateCalendarStatisticPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<WorkDateCalendarStatisticEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<WorkDateCalendarStatisticEntityBasePaginationResponse>(WORKDATECALENDARSTATISTIC_ENDPOINTS.getWorkDateCalendarStatisticPage, data, { params });
+export async function getWorkDateCalendarStatisticPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<WorkDateCalendarStatisticEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<WorkDateCalendarStatisticEntityBasePaginationResponse>(
+    WORKDATECALENDARSTATISTIC_ENDPOINTS.getWorkDateCalendarStatisticPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +71,13 @@ export async function getWorkDateCalendarStatisticPage(data: SortType[], params?
  * @param data - Request body
  * @returns Promise<WorkDateCalendarStatisticEntityResult>
  */
-export async function createWorkDateCalendarStatistic(data: WorkDateCalendarStatisticEntity): Promise<WorkDateCalendarStatisticEntityResult> {
-  const response = await axiosInstance.post<WorkDateCalendarStatisticEntityResult>(WORKDATECALENDARSTATISTIC_ENDPOINTS.createWorkDateCalendarStatistic, data);
+export async function createWorkDateCalendarStatistic(
+  data: WorkDateCalendarStatisticEntity
+): Promise<WorkDateCalendarStatisticEntityResult> {
+  const response = await axiosInstance.post<WorkDateCalendarStatisticEntityResult>(
+    WORKDATECALENDARSTATISTIC_ENDPOINTS.createWorkDateCalendarStatistic,
+    data
+  );
   return response.data;
 }
 
@@ -72,8 +88,14 @@ export async function createWorkDateCalendarStatistic(data: WorkDateCalendarStat
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateWorkDateCalendarStatistic(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(`/api/workdatecalendarstatistic/update/${id}`, data);
+export async function updateWorkDateCalendarStatistic(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    `/api/workdatecalendarstatistic/update/${id}`,
+    data
+  );
   return response.data;
 }
 
@@ -84,7 +106,9 @@ export async function updateWorkDateCalendarStatistic(id: string, data: StringOb
  * @returns Promise<BooleanResult>
  */
 export async function deleteWorkDateCalendarStatistic(id: string): Promise<BooleanResult> {
-  const response = await axiosInstance.delete<BooleanResult>(`/api/workdatecalendarstatistic/delete/${id}`);
+  const response = await axiosInstance.delete<BooleanResult>(
+    `/api/workdatecalendarstatistic/delete/${id}`
+  );
   return response.data;
 }
 
@@ -95,6 +119,8 @@ export async function deleteWorkDateCalendarStatistic(id: string): Promise<Boole
  * @returns Promise<string>
  */
 export async function generateNewWorkDateCalendarStatisticCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(WORKDATECALENDARSTATISTIC_ENDPOINTS.generateNewWorkDateCalendarStatisticCode);
+  const response = await axiosInstance.get<string>(
+    WORKDATECALENDARSTATISTIC_ENDPOINTS.generateNewWorkDateCalendarStatisticCode
+  );
   return response.data;
 }

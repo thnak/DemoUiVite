@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   UserPermissionEntity,
-  UserPermissionEntityBasePaginationResponse,
+  StringObjectKeyValuePair,
   UserPermissionEntityResult,
+  UserPermissionEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getUserPermissionById(id: string): Promise<UserPermissionE
  * @param data - Request body
  * @returns Promise<UserPermissionEntityBasePaginationResponse>
  */
-export async function getUserPermissionPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<UserPermissionEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<UserPermissionEntityBasePaginationResponse>(USERPERMISSION_ENDPOINTS.getUserPermissionPage, data, { params });
+export async function getUserPermissionPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<UserPermissionEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<UserPermissionEntityBasePaginationResponse>(
+    USERPERMISSION_ENDPOINTS.getUserPermissionPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +67,13 @@ export async function getUserPermissionPage(data: SortType[], params?: { pageNum
  * @param data - Request body
  * @returns Promise<UserPermissionEntityResult>
  */
-export async function createUserPermission(data: UserPermissionEntity): Promise<UserPermissionEntityResult> {
-  const response = await axiosInstance.post<UserPermissionEntityResult>(USERPERMISSION_ENDPOINTS.createUserPermission, data);
+export async function createUserPermission(
+  data: UserPermissionEntity
+): Promise<UserPermissionEntityResult> {
+  const response = await axiosInstance.post<UserPermissionEntityResult>(
+    USERPERMISSION_ENDPOINTS.createUserPermission,
+    data
+  );
   return response.data;
 }
 
@@ -72,8 +84,14 @@ export async function createUserPermission(data: UserPermissionEntity): Promise<
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateUserPermission(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(`/api/userpermission/update/${id}`, data);
+export async function updateUserPermission(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    `/api/userpermission/update/${id}`,
+    data
+  );
   return response.data;
 }
 
@@ -95,6 +113,8 @@ export async function deleteUserPermission(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewUserPermissionCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(USERPERMISSION_ENDPOINTS.generateNewUserPermissionCode);
+  const response = await axiosInstance.get<string>(
+    USERPERMISSION_ENDPOINTS.generateNewUserPermissionCode
+  );
   return response.data;
 }

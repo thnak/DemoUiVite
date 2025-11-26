@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createWorkCell,
   deleteWorkCell,
-  generateNewWorkCellCode,
+  updateWorkCell,
   getWorkCellById,
   getWorkCellPage,
-  updateWorkCell,
+  generateNewWorkCellCode,
 } from '../../services/generated/work-cell';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   WorkCellEntity,
-  WorkCellEntityBasePaginationResponse,
   WorkCellEntityResult,
+  StringObjectKeyValuePair,
+  WorkCellEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewWorkCellCode(
  * Get paginated list of Work Cell
  */
 export function useGetWorkCellPage(
-  options?: Omit<UseMutationOptions<WorkCellEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      WorkCellEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getWorkCellPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getWorkCellPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetWorkCellPage(
  * Create a new Work Cell
  */
 export function useCreateWorkCell(
-  options?: Omit<UseMutationOptions<WorkCellEntityResult, Error, { data: WorkCellEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<WorkCellEntityResult, Error, { data: WorkCellEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: WorkCellEntity }) => createWorkCell(variables.data),
@@ -90,10 +103,14 @@ export function useCreateWorkCell(
  * Update an existing Work Cell
  */
 export function useUpdateWorkCell(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateWorkCell(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateWorkCell(variables.id, variables.data),
     ...options,
   });
 }

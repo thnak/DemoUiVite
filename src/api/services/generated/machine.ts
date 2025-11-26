@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   MachineEntity,
-  MachineEntityBasePaginationResponse,
   MachineEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  MachineEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -49,8 +49,15 @@ export async function getMachineById(id: string): Promise<MachineEntity> {
  * @param data - Request body
  * @returns Promise<MachineEntityBasePaginationResponse>
  */
-export async function getMachinePage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<MachineEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<MachineEntityBasePaginationResponse>(MACHINE_ENDPOINTS.getMachinePage, data, { params });
+export async function getMachinePage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<MachineEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<MachineEntityBasePaginationResponse>(
+    MACHINE_ENDPOINTS.getMachinePage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -62,7 +69,10 @@ export async function getMachinePage(data: SortType[], params?: { pageNumber?: n
  * @returns Promise<MachineEntityResult>
  */
 export async function createMachine(data: MachineEntity): Promise<MachineEntityResult> {
-  const response = await axiosInstance.post<MachineEntityResult>(MACHINE_ENDPOINTS.createMachine, data);
+  const response = await axiosInstance.post<MachineEntityResult>(
+    MACHINE_ENDPOINTS.createMachine,
+    data
+  );
   return response.data;
 }
 
@@ -73,7 +83,10 @@ export async function createMachine(data: MachineEntity): Promise<MachineEntityR
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateMachine(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateMachine(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/machine/update/${id}`, data);
   return response.data;
 }
@@ -106,7 +119,12 @@ export async function generateNewMachineCode(): Promise<string> {
  * Searches Machine entities by text across searchable fields.
  * @returns Promise<MachineEntity[]>
  */
-export async function searchMachine(params?: { searchText?: string; maxResults?: number }): Promise<MachineEntity[]> {
-  const response = await axiosInstance.get<MachineEntity[]>(MACHINE_ENDPOINTS.searchMachine, { params });
+export async function searchMachine(params?: {
+  searchText?: string;
+  maxResults?: number;
+}): Promise<MachineEntity[]> {
+  const response = await axiosInstance.get<MachineEntity[]>(MACHINE_ENDPOINTS.searchMachine, {
+    params,
+  });
   return response.data;
 }

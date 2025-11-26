@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createChildWidgetConfig,
   deleteChildWidgetConfig,
-  generateNewChildWidgetConfigCode,
+  updateChildWidgetConfig,
   getChildWidgetConfigById,
   getChildWidgetConfigPage,
-  updateChildWidgetConfig,
+  generateNewChildWidgetConfigCode,
 } from '../../services/generated/child-widget-config';
 
 import type {
+  SortType,
   BooleanResult,
   ChildWidgetConfigEntity,
-  ChildWidgetConfigEntityBasePaginationResponse,
-  ChildWidgetConfigEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  ChildWidgetConfigEntityResult,
+  ChildWidgetConfigEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,8 +31,12 @@ import type {
  */
 export const childWidgetConfigKeys = {
   all: ['childWidgetConfig'] as const,
-  getChildWidgetConfigById: (id: string) => ['childWidgetConfig', 'getChildWidgetConfigById', id] as const,
-  generateNewChildWidgetConfigCode: ['childWidgetConfig', 'generateNewChildWidgetConfigCode'] as const,
+  getChildWidgetConfigById: (id: string) =>
+    ['childWidgetConfig', 'getChildWidgetConfigById', id] as const,
+  generateNewChildWidgetConfigCode: [
+    'childWidgetConfig',
+    'generateNewChildWidgetConfigCode',
+  ] as const,
 };
 
 /**
@@ -66,10 +70,20 @@ export function useGenerateNewChildWidgetConfigCode(
  * Get paginated list of Child Widget Config
  */
 export function useGetChildWidgetConfigPage(
-  options?: Omit<UseMutationOptions<ChildWidgetConfigEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      ChildWidgetConfigEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getChildWidgetConfigPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getChildWidgetConfigPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,10 +92,14 @@ export function useGetChildWidgetConfigPage(
  * Create a new Child Widget Config
  */
 export function useCreateChildWidgetConfig(
-  options?: Omit<UseMutationOptions<ChildWidgetConfigEntityResult, Error, { data: ChildWidgetConfigEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<ChildWidgetConfigEntityResult, Error, { data: ChildWidgetConfigEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: ChildWidgetConfigEntity }) => createChildWidgetConfig(variables.data),
+    mutationFn: (variables: { data: ChildWidgetConfigEntity }) =>
+      createChildWidgetConfig(variables.data),
     ...options,
   });
 }
@@ -90,10 +108,14 @@ export function useCreateChildWidgetConfig(
  * Update an existing Child Widget Config
  */
 export function useUpdateChildWidgetConfig(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateChildWidgetConfig(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateChildWidgetConfig(variables.id, variables.data),
     ...options,
   });
 }

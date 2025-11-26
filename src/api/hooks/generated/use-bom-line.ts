@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createBomLine,
   deleteBomLine,
-  generateNewBomLineCode,
+  updateBomLine,
   getBomLineById,
   getBomLinePage,
-  updateBomLine,
+  generateNewBomLineCode,
 } from '../../services/generated/bom-line';
 
 import type {
-  BomLineEntity,
-  BomLineEntityBasePaginationResponse,
-  BomLineEntityResult,
-  BooleanResult,
   SortType,
+  BomLineEntity,
+  BooleanResult,
+  BomLineEntityResult,
   StringObjectKeyValuePair,
+  BomLineEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewBomLineCode(
  * Get paginated list of Bom Line
  */
 export function useGetBomLinePage(
-  options?: Omit<UseMutationOptions<BomLineEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      BomLineEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getBomLinePage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getBomLinePage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetBomLinePage(
  * Create a new Bom Line
  */
 export function useCreateBomLine(
-  options?: Omit<UseMutationOptions<BomLineEntityResult, Error, { data: BomLineEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BomLineEntityResult, Error, { data: BomLineEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: BomLineEntity }) => createBomLine(variables.data),
@@ -90,10 +103,14 @@ export function useCreateBomLine(
  * Update an existing Bom Line
  */
 export function useUpdateBomLine(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateBomLine(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateBomLine(variables.id, variables.data),
     ...options,
   });
 }

@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   FolderInfoEntity,
-  FolderInfoEntityBasePaginationResponse,
   FolderInfoEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  FolderInfoEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getFolderInfoById(id: string): Promise<FolderInfoEntity> {
  * @param data - Request body
  * @returns Promise<FolderInfoEntityBasePaginationResponse>
  */
-export async function getFolderInfoPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<FolderInfoEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<FolderInfoEntityBasePaginationResponse>(FOLDERINFO_ENDPOINTS.getFolderInfoPage, data, { params });
+export async function getFolderInfoPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<FolderInfoEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<FolderInfoEntityBasePaginationResponse>(
+    FOLDERINFO_ENDPOINTS.getFolderInfoPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -61,7 +68,10 @@ export async function getFolderInfoPage(data: SortType[], params?: { pageNumber?
  * @returns Promise<FolderInfoEntityResult>
  */
 export async function createFolderInfo(data: FolderInfoEntity): Promise<FolderInfoEntityResult> {
-  const response = await axiosInstance.post<FolderInfoEntityResult>(FOLDERINFO_ENDPOINTS.createFolderInfo, data);
+  const response = await axiosInstance.post<FolderInfoEntityResult>(
+    FOLDERINFO_ENDPOINTS.createFolderInfo,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +82,10 @@ export async function createFolderInfo(data: FolderInfoEntity): Promise<FolderIn
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateFolderInfo(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateFolderInfo(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/folderinfo/update/${id}`, data);
   return response.data;
 }

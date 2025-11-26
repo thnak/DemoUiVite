@@ -50,7 +50,9 @@ export async function postAccountPasskeyCreationOptions(): Promise<void> {
 /**
  * @returns Promise<void>
  */
-export async function postAccountPasskeyRequestOptions(params?: { username?: string }): Promise<void> {
+export async function postAccountPasskeyRequestOptions(params?: {
+  username?: string;
+}): Promise<void> {
   await axiosInstance.post(VAULTFORCE_ENDPOINTS.postAccountPasskeyRequestOptions, null, { params });
 }
 

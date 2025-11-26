@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createUserRole,
   deleteUserRole,
-  generateNewUserRoleCode,
+  updateUserRole,
   getUserRoleById,
   getUserRolePage,
-  updateUserRole,
+  generateNewUserRoleCode,
 } from '../../services/generated/user-role';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   UserRoleEntity,
-  UserRoleEntityBasePaginationResponse,
   UserRoleEntityResult,
+  StringObjectKeyValuePair,
+  UserRoleEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewUserRoleCode(
  * Get paginated list of User Role
  */
 export function useGetUserRolePage(
-  options?: Omit<UseMutationOptions<UserRoleEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      UserRoleEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getUserRolePage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getUserRolePage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetUserRolePage(
  * Create a new User Role
  */
 export function useCreateUserRole(
-  options?: Omit<UseMutationOptions<UserRoleEntityResult, Error, { data: UserRoleEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<UserRoleEntityResult, Error, { data: UserRoleEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: UserRoleEntity }) => createUserRole(variables.data),
@@ -90,10 +103,14 @@ export function useCreateUserRole(
  * Update an existing User Role
  */
 export function useUpdateUserRole(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateUserRole(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateUserRole(variables.id, variables.data),
     ...options,
   });
 }

@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   CalendarEntity,
-  CalendarEntityBasePaginationResponse,
   CalendarEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  CalendarEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getCalendarById(id: string): Promise<CalendarEntity> {
  * @param data - Request body
  * @returns Promise<CalendarEntityBasePaginationResponse>
  */
-export async function getCalendarPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<CalendarEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<CalendarEntityBasePaginationResponse>(CALENDAR_ENDPOINTS.getCalendarPage, data, { params });
+export async function getCalendarPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<CalendarEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<CalendarEntityBasePaginationResponse>(
+    CALENDAR_ENDPOINTS.getCalendarPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -61,7 +68,10 @@ export async function getCalendarPage(data: SortType[], params?: { pageNumber?: 
  * @returns Promise<CalendarEntityResult>
  */
 export async function createCalendar(data: CalendarEntity): Promise<CalendarEntityResult> {
-  const response = await axiosInstance.post<CalendarEntityResult>(CALENDAR_ENDPOINTS.createCalendar, data);
+  const response = await axiosInstance.post<CalendarEntityResult>(
+    CALENDAR_ENDPOINTS.createCalendar,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +82,10 @@ export async function createCalendar(data: CalendarEntity): Promise<CalendarEnti
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateCalendar(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateCalendar(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/calendar/update/${id}`, data);
   return response.data;
 }

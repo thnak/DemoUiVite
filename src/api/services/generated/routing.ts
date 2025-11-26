@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   RoutingEntity,
-  RoutingEntityBasePaginationResponse,
   RoutingEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  RoutingEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getRoutingById(id: string): Promise<RoutingEntity> {
  * @param data - Request body
  * @returns Promise<RoutingEntityBasePaginationResponse>
  */
-export async function getRoutingPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<RoutingEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<RoutingEntityBasePaginationResponse>(ROUTING_ENDPOINTS.getRoutingPage, data, { params });
+export async function getRoutingPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<RoutingEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<RoutingEntityBasePaginationResponse>(
+    ROUTING_ENDPOINTS.getRoutingPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -61,7 +68,10 @@ export async function getRoutingPage(data: SortType[], params?: { pageNumber?: n
  * @returns Promise<RoutingEntityResult>
  */
 export async function createRouting(data: RoutingEntity): Promise<RoutingEntityResult> {
-  const response = await axiosInstance.post<RoutingEntityResult>(ROUTING_ENDPOINTS.createRouting, data);
+  const response = await axiosInstance.post<RoutingEntityResult>(
+    ROUTING_ENDPOINTS.createRouting,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +82,10 @@ export async function createRouting(data: RoutingEntity): Promise<RoutingEntityR
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateRouting(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateRouting(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/routing/update/${id}`, data);
   return response.data;
 }

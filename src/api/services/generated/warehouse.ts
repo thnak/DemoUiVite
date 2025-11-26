@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   WarehouseEntity,
-  WarehouseEntityBasePaginationResponse,
   WarehouseEntityResult,
+  StringObjectKeyValuePair,
+  WarehouseEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getWarehouseById(id: string): Promise<WarehouseEntity> {
  * @param data - Request body
  * @returns Promise<WarehouseEntityBasePaginationResponse>
  */
-export async function getWarehousePage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<WarehouseEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<WarehouseEntityBasePaginationResponse>(WAREHOUSE_ENDPOINTS.getWarehousePage, data, { params });
+export async function getWarehousePage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<WarehouseEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<WarehouseEntityBasePaginationResponse>(
+    WAREHOUSE_ENDPOINTS.getWarehousePage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -61,7 +68,10 @@ export async function getWarehousePage(data: SortType[], params?: { pageNumber?:
  * @returns Promise<WarehouseEntityResult>
  */
 export async function createWarehouse(data: WarehouseEntity): Promise<WarehouseEntityResult> {
-  const response = await axiosInstance.post<WarehouseEntityResult>(WAREHOUSE_ENDPOINTS.createWarehouse, data);
+  const response = await axiosInstance.post<WarehouseEntityResult>(
+    WAREHOUSE_ENDPOINTS.createWarehouse,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +82,10 @@ export async function createWarehouse(data: WarehouseEntity): Promise<WarehouseE
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateWarehouse(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateWarehouse(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/warehouse/update/${id}`, data);
   return response.data;
 }

@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   QualityCheckPointEntity,
-  QualityCheckPointEntityBasePaginationResponse,
-  QualityCheckPointEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  QualityCheckPointEntityResult,
+  QualityCheckPointEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getQualityCheckPointById(id: string): Promise<QualityCheck
  * @param data - Request body
  * @returns Promise<QualityCheckPointEntityBasePaginationResponse>
  */
-export async function getQualityCheckPointPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<QualityCheckPointEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<QualityCheckPointEntityBasePaginationResponse>(QUALITYCHECKPOINT_ENDPOINTS.getQualityCheckPointPage, data, { params });
+export async function getQualityCheckPointPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<QualityCheckPointEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<QualityCheckPointEntityBasePaginationResponse>(
+    QUALITYCHECKPOINT_ENDPOINTS.getQualityCheckPointPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +67,13 @@ export async function getQualityCheckPointPage(data: SortType[], params?: { page
  * @param data - Request body
  * @returns Promise<QualityCheckPointEntityResult>
  */
-export async function createQualityCheckPoint(data: QualityCheckPointEntity): Promise<QualityCheckPointEntityResult> {
-  const response = await axiosInstance.post<QualityCheckPointEntityResult>(QUALITYCHECKPOINT_ENDPOINTS.createQualityCheckPoint, data);
+export async function createQualityCheckPoint(
+  data: QualityCheckPointEntity
+): Promise<QualityCheckPointEntityResult> {
+  const response = await axiosInstance.post<QualityCheckPointEntityResult>(
+    QUALITYCHECKPOINT_ENDPOINTS.createQualityCheckPoint,
+    data
+  );
   return response.data;
 }
 
@@ -72,8 +84,14 @@ export async function createQualityCheckPoint(data: QualityCheckPointEntity): Pr
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateQualityCheckPoint(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(`/api/qualitycheckpoint/update/${id}`, data);
+export async function updateQualityCheckPoint(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    `/api/qualitycheckpoint/update/${id}`,
+    data
+  );
   return response.data;
 }
 
@@ -95,6 +113,8 @@ export async function deleteQualityCheckPoint(id: string): Promise<BooleanResult
  * @returns Promise<string>
  */
 export async function generateNewQualityCheckPointCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(QUALITYCHECKPOINT_ENDPOINTS.generateNewQualityCheckPointCode);
+  const response = await axiosInstance.get<string>(
+    QUALITYCHECKPOINT_ENDPOINTS.generateNewQualityCheckPointCode
+  );
   return response.data;
 }

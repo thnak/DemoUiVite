@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   DepartmentEntity,
-  DepartmentEntityBasePaginationResponse,
   DepartmentEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  DepartmentEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -49,8 +49,15 @@ export async function getDepartmentById(id: string): Promise<DepartmentEntity> {
  * @param data - Request body
  * @returns Promise<DepartmentEntityBasePaginationResponse>
  */
-export async function getDepartmentPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<DepartmentEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<DepartmentEntityBasePaginationResponse>(DEPARTMENT_ENDPOINTS.getDepartmentPage, data, { params });
+export async function getDepartmentPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<DepartmentEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<DepartmentEntityBasePaginationResponse>(
+    DEPARTMENT_ENDPOINTS.getDepartmentPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -62,7 +69,10 @@ export async function getDepartmentPage(data: SortType[], params?: { pageNumber?
  * @returns Promise<DepartmentEntityResult>
  */
 export async function createDepartment(data: DepartmentEntity): Promise<DepartmentEntityResult> {
-  const response = await axiosInstance.post<DepartmentEntityResult>(DEPARTMENT_ENDPOINTS.createDepartment, data);
+  const response = await axiosInstance.post<DepartmentEntityResult>(
+    DEPARTMENT_ENDPOINTS.createDepartment,
+    data
+  );
   return response.data;
 }
 
@@ -73,7 +83,10 @@ export async function createDepartment(data: DepartmentEntity): Promise<Departme
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateDepartment(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateDepartment(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/department/update/${id}`, data);
   return response.data;
 }
@@ -106,7 +119,13 @@ export async function generateNewDepartmentCode(): Promise<string> {
  * Searches Department entities by text across searchable fields.
  * @returns Promise<DepartmentEntity[]>
  */
-export async function searchDepartment(params?: { searchText?: string; maxResults?: number }): Promise<DepartmentEntity[]> {
-  const response = await axiosInstance.get<DepartmentEntity[]>(DEPARTMENT_ENDPOINTS.searchDepartment, { params });
+export async function searchDepartment(params?: {
+  searchText?: string;
+  maxResults?: number;
+}): Promise<DepartmentEntity[]> {
+  const response = await axiosInstance.get<DepartmentEntity[]>(
+    DEPARTMENT_ENDPOINTS.searchDepartment,
+    { params }
+  );
   return response.data;
 }

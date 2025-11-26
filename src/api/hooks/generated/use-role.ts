@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createRole,
   deleteRole,
-  generateNewRoleCode,
+  updateRole,
   getRoleById,
   getRolePage,
-  updateRole,
+  generateNewRoleCode,
 } from '../../services/generated/role';
 
 import type {
-  BooleanResult,
-  RoleEntity,
-  RoleEntityBasePaginationResponse,
-  RoleEntityResult,
   SortType,
+  RoleEntity,
+  BooleanResult,
+  RoleEntityResult,
   StringObjectKeyValuePair,
+  RoleEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewRoleCode(
  * Get paginated list of Role
  */
 export function useGetRolePage(
-  options?: Omit<UseMutationOptions<RoleEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      RoleEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getRolePage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getRolePage(variables.data, variables.params),
     ...options,
   });
 }
@@ -90,10 +100,14 @@ export function useCreateRole(
  * Update an existing Role
  */
 export function useUpdateRole(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateRole(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateRole(variables.id, variables.data),
     ...options,
   });
 }

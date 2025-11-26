@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   JtiTokenEntity,
-  JtiTokenEntityBasePaginationResponse,
   JtiTokenEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  JtiTokenEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getJtiTokenById(id: string): Promise<JtiTokenEntity> {
  * @param data - Request body
  * @returns Promise<JtiTokenEntityBasePaginationResponse>
  */
-export async function getJtiTokenPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<JtiTokenEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<JtiTokenEntityBasePaginationResponse>(JTITOKEN_ENDPOINTS.getJtiTokenPage, data, { params });
+export async function getJtiTokenPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<JtiTokenEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<JtiTokenEntityBasePaginationResponse>(
+    JTITOKEN_ENDPOINTS.getJtiTokenPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -61,7 +68,10 @@ export async function getJtiTokenPage(data: SortType[], params?: { pageNumber?: 
  * @returns Promise<JtiTokenEntityResult>
  */
 export async function createJtiToken(data: JtiTokenEntity): Promise<JtiTokenEntityResult> {
-  const response = await axiosInstance.post<JtiTokenEntityResult>(JTITOKEN_ENDPOINTS.createJtiToken, data);
+  const response = await axiosInstance.post<JtiTokenEntityResult>(
+    JTITOKEN_ENDPOINTS.createJtiToken,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +82,10 @@ export async function createJtiToken(data: JtiTokenEntity): Promise<JtiTokenEnti
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateJtiToken(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateJtiToken(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/jtitoken/update/${id}`, data);
   return response.data;
 }

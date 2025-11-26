@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createUserSetting,
   deleteUserSetting,
-  generateNewUserSettingCode,
+  updateUserSetting,
   getUserSettingById,
   getUserSettingPage,
-  updateUserSetting,
+  generateNewUserSettingCode,
 } from '../../services/generated/user-setting';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   UserSettingEntity,
-  UserSettingEntityBasePaginationResponse,
   UserSettingEntityResult,
+  StringObjectKeyValuePair,
+  UserSettingEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,10 +66,20 @@ export function useGenerateNewUserSettingCode(
  * Get paginated list of User Setting
  */
 export function useGetUserSettingPage(
-  options?: Omit<UseMutationOptions<UserSettingEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<
+      UserSettingEntityBasePaginationResponse,
+      Error,
+      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
+    >,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getUserSettingPage(variables.data, variables.params),
+    mutationFn: (variables: {
+      data: SortType[];
+      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
+    }) => getUserSettingPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -78,7 +88,10 @@ export function useGetUserSettingPage(
  * Create a new User Setting
  */
 export function useCreateUserSetting(
-  options?: Omit<UseMutationOptions<UserSettingEntityResult, Error, { data: UserSettingEntity }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<UserSettingEntityResult, Error, { data: UserSettingEntity }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
     mutationFn: (variables: { data: UserSettingEntity }) => createUserSetting(variables.data),
@@ -90,10 +103,14 @@ export function useCreateUserSetting(
  * Update an existing User Setting
  */
 export function useUpdateUserSetting(
-  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
+  options?: Omit<
+    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
+    'mutationFn'
+  >
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateUserSetting(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
+      updateUserSetting(variables.id, variables.data),
     ...options,
   });
 }

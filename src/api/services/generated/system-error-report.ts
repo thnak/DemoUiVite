@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   SystemErrorReportEntity,
-  SystemErrorReportEntityBasePaginationResponse,
+  StringObjectKeyValuePair,
   SystemErrorReportEntityResult,
+  SystemErrorReportEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getSystemErrorReportById(id: string): Promise<SystemErrorR
  * @param data - Request body
  * @returns Promise<SystemErrorReportEntityBasePaginationResponse>
  */
-export async function getSystemErrorReportPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<SystemErrorReportEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<SystemErrorReportEntityBasePaginationResponse>(SYSTEMERRORREPORT_ENDPOINTS.getSystemErrorReportPage, data, { params });
+export async function getSystemErrorReportPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<SystemErrorReportEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<SystemErrorReportEntityBasePaginationResponse>(
+    SYSTEMERRORREPORT_ENDPOINTS.getSystemErrorReportPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +67,13 @@ export async function getSystemErrorReportPage(data: SortType[], params?: { page
  * @param data - Request body
  * @returns Promise<SystemErrorReportEntityResult>
  */
-export async function createSystemErrorReport(data: SystemErrorReportEntity): Promise<SystemErrorReportEntityResult> {
-  const response = await axiosInstance.post<SystemErrorReportEntityResult>(SYSTEMERRORREPORT_ENDPOINTS.createSystemErrorReport, data);
+export async function createSystemErrorReport(
+  data: SystemErrorReportEntity
+): Promise<SystemErrorReportEntityResult> {
+  const response = await axiosInstance.post<SystemErrorReportEntityResult>(
+    SYSTEMERRORREPORT_ENDPOINTS.createSystemErrorReport,
+    data
+  );
   return response.data;
 }
 
@@ -72,8 +84,14 @@ export async function createSystemErrorReport(data: SystemErrorReportEntity): Pr
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateSystemErrorReport(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(`/api/systemerrorreport/update/${id}`, data);
+export async function updateSystemErrorReport(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(
+    `/api/systemerrorreport/update/${id}`,
+    data
+  );
   return response.data;
 }
 
@@ -95,6 +113,8 @@ export async function deleteSystemErrorReport(id: string): Promise<BooleanResult
  * @returns Promise<string>
  */
 export async function generateNewSystemErrorReportCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(SYSTEMERRORREPORT_ENDPOINTS.generateNewSystemErrorReportCode);
+  const response = await axiosInstance.get<string>(
+    SYSTEMERRORREPORT_ENDPOINTS.generateNewSystemErrorReportCode
+  );
   return response.data;
 }

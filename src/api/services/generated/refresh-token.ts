@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   RefreshTokenEntity,
-  RefreshTokenEntityBasePaginationResponse,
   RefreshTokenEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  RefreshTokenEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,15 @@ export async function getRefreshTokenById(id: string): Promise<RefreshTokenEntit
  * @param data - Request body
  * @returns Promise<RefreshTokenEntityBasePaginationResponse>
  */
-export async function getRefreshTokenPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<RefreshTokenEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<RefreshTokenEntityBasePaginationResponse>(REFRESHTOKEN_ENDPOINTS.getRefreshTokenPage, data, { params });
+export async function getRefreshTokenPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<RefreshTokenEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<RefreshTokenEntityBasePaginationResponse>(
+    REFRESHTOKEN_ENDPOINTS.getRefreshTokenPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -60,8 +67,13 @@ export async function getRefreshTokenPage(data: SortType[], params?: { pageNumbe
  * @param data - Request body
  * @returns Promise<RefreshTokenEntityResult>
  */
-export async function createRefreshToken(data: RefreshTokenEntity): Promise<RefreshTokenEntityResult> {
-  const response = await axiosInstance.post<RefreshTokenEntityResult>(REFRESHTOKEN_ENDPOINTS.createRefreshToken, data);
+export async function createRefreshToken(
+  data: RefreshTokenEntity
+): Promise<RefreshTokenEntityResult> {
+  const response = await axiosInstance.post<RefreshTokenEntityResult>(
+    REFRESHTOKEN_ENDPOINTS.createRefreshToken,
+    data
+  );
   return response.data;
 }
 
@@ -72,7 +84,10 @@ export async function createRefreshToken(data: RefreshTokenEntity): Promise<Refr
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateRefreshToken(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateRefreshToken(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/refreshtoken/update/${id}`, data);
   return response.data;
 }
@@ -95,6 +110,8 @@ export async function deleteRefreshToken(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewRefreshTokenCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(REFRESHTOKEN_ENDPOINTS.generateNewRefreshTokenCode);
+  const response = await axiosInstance.get<string>(
+    REFRESHTOKEN_ENDPOINTS.generateNewRefreshTokenCode
+  );
   return response.data;
 }

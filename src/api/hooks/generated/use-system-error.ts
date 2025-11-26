@@ -9,8 +9,8 @@ import {
 
 import type {
   BooleanResult,
-  SystemErrorReportDtoListResult,
   SystemErrorReportStatus,
+  SystemErrorReportDtoListResult,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -24,7 +24,10 @@ import type {
  */
 export const systemErrorKeys = {
   all: ['systemError'] as const,
-  getapiSystemErrorGetUnresolvedReports: ['systemError', 'getapiSystemErrorGetUnresolvedReports'] as const,
+  getapiSystemErrorGetUnresolvedReports: [
+    'systemError',
+    'getapiSystemErrorGetUnresolvedReports',
+  ] as const,
 };
 
 /**

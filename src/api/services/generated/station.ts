@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
   SortType,
+  BooleanResult,
   StationEntity,
-  StationEntityBasePaginationResponse,
   StationEntityResult,
   StringObjectKeyValuePair,
+  StationEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -50,8 +50,15 @@ export async function getStationById(id: string): Promise<StationEntity> {
  * @param data - Request body
  * @returns Promise<StationEntityBasePaginationResponse>
  */
-export async function getStationPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<StationEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<StationEntityBasePaginationResponse>(STATION_ENDPOINTS.getStationPage, data, { params });
+export async function getStationPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<StationEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<StationEntityBasePaginationResponse>(
+    STATION_ENDPOINTS.getStationPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -63,7 +70,10 @@ export async function getStationPage(data: SortType[], params?: { pageNumber?: n
  * @returns Promise<StationEntityResult>
  */
 export async function createStation(data: StationEntity): Promise<StationEntityResult> {
-  const response = await axiosInstance.post<StationEntityResult>(STATION_ENDPOINTS.createStation, data);
+  const response = await axiosInstance.post<StationEntityResult>(
+    STATION_ENDPOINTS.createStation,
+    data
+  );
   return response.data;
 }
 
@@ -74,7 +84,10 @@ export async function createStation(data: StationEntity): Promise<StationEntityR
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateStation(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateStation(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/station/update/${id}`, data);
   return response.data;
 }
@@ -107,8 +120,13 @@ export async function generateNewStationCode(): Promise<string> {
  * Searches Station entities by text across searchable fields.
  * @returns Promise<StationEntity[]>
  */
-export async function searchStation(params?: { searchText?: string; maxResults?: number }): Promise<StationEntity[]> {
-  const response = await axiosInstance.get<StationEntity[]>(STATION_ENDPOINTS.searchStation, { params });
+export async function searchStation(params?: {
+  searchText?: string;
+  maxResults?: number;
+}): Promise<StationEntity[]> {
+  const response = await axiosInstance.get<StationEntity[]>(STATION_ENDPOINTS.searchStation, {
+    params,
+  });
   return response.data;
 }
 

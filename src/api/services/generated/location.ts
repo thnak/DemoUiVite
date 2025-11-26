@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   LocationEntity,
-  LocationEntityBasePaginationResponse,
   LocationEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  LocationEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -49,8 +49,15 @@ export async function getLocationById(id: string): Promise<LocationEntity> {
  * @param data - Request body
  * @returns Promise<LocationEntityBasePaginationResponse>
  */
-export async function getLocationPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<LocationEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<LocationEntityBasePaginationResponse>(LOCATION_ENDPOINTS.getLocationPage, data, { params });
+export async function getLocationPage(
+  data: SortType[],
+  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
+): Promise<LocationEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<LocationEntityBasePaginationResponse>(
+    LOCATION_ENDPOINTS.getLocationPage,
+    data,
+    { params }
+  );
   return response.data;
 }
 
@@ -62,7 +69,10 @@ export async function getLocationPage(data: SortType[], params?: { pageNumber?: 
  * @returns Promise<LocationEntityResult>
  */
 export async function createLocation(data: LocationEntity): Promise<LocationEntityResult> {
-  const response = await axiosInstance.post<LocationEntityResult>(LOCATION_ENDPOINTS.createLocation, data);
+  const response = await axiosInstance.post<LocationEntityResult>(
+    LOCATION_ENDPOINTS.createLocation,
+    data
+  );
   return response.data;
 }
 
@@ -73,7 +83,10 @@ export async function createLocation(data: LocationEntity): Promise<LocationEnti
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateLocation(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+export async function updateLocation(
+  id: string,
+  data: StringObjectKeyValuePair[]
+): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/location/update/${id}`, data);
   return response.data;
 }
@@ -106,7 +119,12 @@ export async function generateNewLocationCode(): Promise<string> {
  * Searches Location entities by text across searchable fields.
  * @returns Promise<LocationEntity[]>
  */
-export async function searchLocation(params?: { searchText?: string; maxResults?: number }): Promise<LocationEntity[]> {
-  const response = await axiosInstance.get<LocationEntity[]>(LOCATION_ENDPOINTS.searchLocation, { params });
+export async function searchLocation(params?: {
+  searchText?: string;
+  maxResults?: number;
+}): Promise<LocationEntity[]> {
+  const response = await axiosInstance.get<LocationEntity[]>(LOCATION_ENDPOINTS.searchLocation, {
+    params,
+  });
   return response.data;
 }
