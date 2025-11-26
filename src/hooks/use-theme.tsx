@@ -46,7 +46,6 @@ export function useTheme() {
       document.documentElement.appendChild(el);
 
       // trigger a reflow then add animate class
-       
       el.getBoundingClientRect();
       requestAnimationFrame(() => {
         el.classList.add('animate');

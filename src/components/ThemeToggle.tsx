@@ -6,9 +6,8 @@ export const ThemeToggle: React.FC = () => {
   const { theme, toggle } = useTheme();
 
   const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const rect = (e.currentTarget as HTMLButtonElement).getBoundingClientRect();
-    const x = (e.clientX - rect.left + rect.left) / window.innerWidth; // absolute page coords normalized
-    const y = (e.clientY - rect.top + rect.top) / window.innerHeight;
+    const x = e.clientX / window.innerWidth;
+    const y = e.clientY / window.innerHeight;
     // fallback to center if computation is odd
     toggle({ x: isFinite(x) ? x : 0.5, y: isFinite(y) ? y : 0.5 });
   };
