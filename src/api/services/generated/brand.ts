@@ -48,15 +48,8 @@ export async function getBrandById(id: string): Promise<BrandEntity> {
  * @param data - Request body
  * @returns Promise<BrandEntityBasePaginationResponse>
  */
-export async function getBrandPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<BrandEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<BrandEntityBasePaginationResponse>(
-    BRAND_ENDPOINTS.getBrandPage,
-    data,
-    { params }
-  );
+export async function getBrandPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<BrandEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<BrandEntityBasePaginationResponse>(BRAND_ENDPOINTS.getBrandPage, data, { params });
   return response.data;
 }
 
@@ -79,10 +72,7 @@ export async function createBrand(data: BrandEntity): Promise<BrandEntityResult>
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateBrand(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateBrand(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/brand/update/${id}`, data);
   return response.data;
 }

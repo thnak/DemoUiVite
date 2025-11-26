@@ -66,20 +66,10 @@ export function useGenerateNewBrandCode(
  * Get paginated list of Brand
  */
 export function useGetBrandPage(
-  options?: Omit<
-    UseMutationOptions<
-      BrandEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BrandEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getBrandPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getBrandPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -100,14 +90,10 @@ export function useCreateBrand(
  * Update an existing Brand
  */
 export function useUpdateBrand(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateBrand(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateBrand(variables.id, variables.data),
     ...options,
   });
 }

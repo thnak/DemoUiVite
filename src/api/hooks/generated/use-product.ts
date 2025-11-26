@@ -82,20 +82,10 @@ export function useSearchProduct(
  * Get paginated list of Product
  */
 export function useGetProductPage(
-  options?: Omit<
-    UseMutationOptions<
-      ProductEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<ProductEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getProductPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getProductPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -104,10 +94,7 @@ export function useGetProductPage(
  * Create a new Product
  */
 export function useCreateProduct(
-  options?: Omit<
-    UseMutationOptions<ProductEntityResult, Error, { data: ProductEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<ProductEntityResult, Error, { data: ProductEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: ProductEntity }) => createProduct(variables.data),
@@ -119,14 +106,10 @@ export function useCreateProduct(
  * Update an existing Product
  */
 export function useUpdateProduct(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateProduct(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateProduct(variables.id, variables.data),
     ...options,
   });
 }

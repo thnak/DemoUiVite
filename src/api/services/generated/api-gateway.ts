@@ -48,15 +48,8 @@ export async function getApiGatewayById(id: string): Promise<ApiGatewayEntity> {
  * @param data - Request body
  * @returns Promise<ApiGatewayEntityBasePaginationResponse>
  */
-export async function getApiGatewayPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<ApiGatewayEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<ApiGatewayEntityBasePaginationResponse>(
-    APIGATEWAY_ENDPOINTS.getApiGatewayPage,
-    data,
-    { params }
-  );
+export async function getApiGatewayPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<ApiGatewayEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<ApiGatewayEntityBasePaginationResponse>(APIGATEWAY_ENDPOINTS.getApiGatewayPage, data, { params });
   return response.data;
 }
 
@@ -68,10 +61,7 @@ export async function getApiGatewayPage(
  * @returns Promise<ApiGatewayEntityResult>
  */
 export async function createApiGateway(data: ApiGatewayEntity): Promise<ApiGatewayEntityResult> {
-  const response = await axiosInstance.post<ApiGatewayEntityResult>(
-    APIGATEWAY_ENDPOINTS.createApiGateway,
-    data
-  );
+  const response = await axiosInstance.post<ApiGatewayEntityResult>(APIGATEWAY_ENDPOINTS.createApiGateway, data);
   return response.data;
 }
 
@@ -82,10 +72,7 @@ export async function createApiGateway(data: ApiGatewayEntity): Promise<ApiGatew
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateApiGateway(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateApiGateway(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/apigateway/update/${id}`, data);
   return response.data;
 }

@@ -48,15 +48,8 @@ export async function getCategoryById(id: string): Promise<CategoryEntity> {
  * @param data - Request body
  * @returns Promise<CategoryEntityBasePaginationResponse>
  */
-export async function getCategoryPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<CategoryEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<CategoryEntityBasePaginationResponse>(
-    CATEGORY_ENDPOINTS.getCategoryPage,
-    data,
-    { params }
-  );
+export async function getCategoryPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<CategoryEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<CategoryEntityBasePaginationResponse>(CATEGORY_ENDPOINTS.getCategoryPage, data, { params });
   return response.data;
 }
 
@@ -68,10 +61,7 @@ export async function getCategoryPage(
  * @returns Promise<CategoryEntityResult>
  */
 export async function createCategory(data: CategoryEntity): Promise<CategoryEntityResult> {
-  const response = await axiosInstance.post<CategoryEntityResult>(
-    CATEGORY_ENDPOINTS.createCategory,
-    data
-  );
+  const response = await axiosInstance.post<CategoryEntityResult>(CATEGORY_ENDPOINTS.createCategory, data);
   return response.data;
 }
 
@@ -82,10 +72,7 @@ export async function createCategory(data: CategoryEntity): Promise<CategoryEnti
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateCategory(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateCategory(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/category/update/${id}`, data);
   return response.data;
 }

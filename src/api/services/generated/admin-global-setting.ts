@@ -34,9 +34,7 @@ export const ADMINGLOBALSETTING_ENDPOINTS = {
  * @returns Promise<AdminGlobalSettingEntity>
  */
 export async function getAdminGlobalSettingById(id: string): Promise<AdminGlobalSettingEntity> {
-  const response = await axiosInstance.get<AdminGlobalSettingEntity>(
-    `/api/adminglobalsetting/${id}`
-  );
+  const response = await axiosInstance.get<AdminGlobalSettingEntity>(`/api/adminglobalsetting/${id}`);
   return response.data;
 }
 
@@ -50,15 +48,8 @@ export async function getAdminGlobalSettingById(id: string): Promise<AdminGlobal
  * @param data - Request body
  * @returns Promise<AdminGlobalSettingEntityBasePaginationResponse>
  */
-export async function getAdminGlobalSettingPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<AdminGlobalSettingEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<AdminGlobalSettingEntityBasePaginationResponse>(
-    ADMINGLOBALSETTING_ENDPOINTS.getAdminGlobalSettingPage,
-    data,
-    { params }
-  );
+export async function getAdminGlobalSettingPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<AdminGlobalSettingEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<AdminGlobalSettingEntityBasePaginationResponse>(ADMINGLOBALSETTING_ENDPOINTS.getAdminGlobalSettingPage, data, { params });
   return response.data;
 }
 
@@ -69,13 +60,8 @@ export async function getAdminGlobalSettingPage(
  * @param data - Request body
  * @returns Promise<AdminGlobalSettingEntityResult>
  */
-export async function createAdminGlobalSetting(
-  data: AdminGlobalSettingEntity
-): Promise<AdminGlobalSettingEntityResult> {
-  const response = await axiosInstance.post<AdminGlobalSettingEntityResult>(
-    ADMINGLOBALSETTING_ENDPOINTS.createAdminGlobalSetting,
-    data
-  );
+export async function createAdminGlobalSetting(data: AdminGlobalSettingEntity): Promise<AdminGlobalSettingEntityResult> {
+  const response = await axiosInstance.post<AdminGlobalSettingEntityResult>(ADMINGLOBALSETTING_ENDPOINTS.createAdminGlobalSetting, data);
   return response.data;
 }
 
@@ -86,14 +72,8 @@ export async function createAdminGlobalSetting(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateAdminGlobalSetting(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/adminglobalsetting/update/${id}`,
-    data
-  );
+export async function updateAdminGlobalSetting(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/adminglobalsetting/update/${id}`, data);
   return response.data;
 }
 
@@ -104,9 +84,7 @@ export async function updateAdminGlobalSetting(
  * @returns Promise<BooleanResult>
  */
 export async function deleteAdminGlobalSetting(id: string): Promise<BooleanResult> {
-  const response = await axiosInstance.delete<BooleanResult>(
-    `/api/adminglobalsetting/delete/${id}`
-  );
+  const response = await axiosInstance.delete<BooleanResult>(`/api/adminglobalsetting/delete/${id}`);
   return response.data;
 }
 
@@ -117,8 +95,6 @@ export async function deleteAdminGlobalSetting(id: string): Promise<BooleanResul
  * @returns Promise<string>
  */
 export async function generateNewAdminGlobalSettingCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    ADMINGLOBALSETTING_ENDPOINTS.generateNewAdminGlobalSettingCode
-  );
+  const response = await axiosInstance.get<string>(ADMINGLOBALSETTING_ENDPOINTS.generateNewAdminGlobalSettingCode);
   return response.data;
 }
