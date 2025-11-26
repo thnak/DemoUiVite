@@ -25,7 +25,7 @@ function ThemeProviderInner({ themeOverrides, children, ...other }: ThemeProvide
   });
 
   return (
-    <ThemeVarsProvider disableTransitionOnChange theme={theme} {...other} noSsr>
+    <ThemeVarsProvider theme={theme} {...other} noSsr>
       <CssBaseline />
       {children}
     </ThemeVarsProvider>
