@@ -36,10 +36,11 @@ export function DowntimeParetoChart({
   // Sort by value descending
   const sortedData = [...data].sort((a, b) => b.value - a.value);
 
-  // Calculate cumulative percentage
+  // Calculate cumulative percentage (handle empty data or all zeros)
   const total = sortedData.reduce((sum, item) => sum + item.value, 0);
   let cumulative = 0;
   const cumulativeData = sortedData.map((item) => {
+    if (total === 0) return 0;
     cumulative += item.value;
     return Math.round((cumulative / total) * 100);
   });
