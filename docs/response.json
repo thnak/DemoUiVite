@@ -37771,6 +37771,9 @@
             "description": "Optional: The desired expiration time for the token in minutes. If not specified, the default expiration is used.",
             "format": "int32",
             "nullable": true
+          },
+          "setRefreshTokenInCookie": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false,
