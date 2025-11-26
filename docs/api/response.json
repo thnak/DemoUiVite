@@ -765,6 +765,289 @@
         }
       }
     },
+    "/api/area/{id}": {
+      "get": {
+        "tags": [
+          "Area"
+        ],
+        "summary": "Get Area by ID",
+        "description": "Retrieves a specific Area entity by its unique identifier.",
+        "operationId": "GetAreaById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AreaEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/area/get-page": {
+      "post": {
+        "tags": [
+          "Area"
+        ],
+        "summary": "Get paginated list of Area",
+        "description": "Retrieves a paginated list of Area entities.",
+        "operationId": "GetAreaPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AreaEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/area/create": {
+      "post": {
+        "tags": [
+          "Area"
+        ],
+        "summary": "Create a new Area",
+        "description": "Creates a new Area entity in the system.",
+        "operationId": "CreateArea",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AreaEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AreaEntityResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AreaEntityResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/area/update/{id}": {
+      "post": {
+        "tags": [
+          "Area"
+        ],
+        "summary": "Update an existing Area",
+        "description": "Updates specific fields of an existing Area entity by ID.",
+        "operationId": "UpdateArea",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/area/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Area"
+        ],
+        "summary": "Delete a Area",
+        "description": "Deletes a Area entity by its unique identifier.",
+        "operationId": "DeleteArea",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/area/generate-new-code": {
+      "get": {
+        "tags": [
+          "Area"
+        ],
+        "summary": "Generate a new code for Area",
+        "description": "Generates a new unique code for a Area entity.",
+        "operationId": "GenerateNewAreaCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/area/search": {
+      "get": {
+        "tags": [
+          "Area"
+        ],
+        "summary": "Search Area entities",
+        "description": "Searches Area entities by text across searchable fields.",
+        "operationId": "SearchArea",
+        "parameters": [
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AreaEntity"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/assemblyhashinfo/{id}": {
       "get": {
         "tags": [
@@ -15006,289 +15289,6 @@
         }
       }
     },
-    "/api/location/{id}": {
-      "get": {
-        "tags": [
-          "Location"
-        ],
-        "summary": "Get Location by ID",
-        "description": "Retrieves a specific Location entity by its unique identifier.",
-        "operationId": "GetLocationById",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LocationEntity"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/api/location/get-page": {
-      "post": {
-        "tags": [
-          "Location"
-        ],
-        "summary": "Get paginated list of Location",
-        "description": "Retrieves a paginated list of Location entities.",
-        "operationId": "GetLocationPage",
-        "parameters": [
-          {
-            "name": "pageNumber",
-            "in": "query",
-            "description": "Page number, starting from 0.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "description": "Number of items per page.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "searchTerm",
-            "in": "query",
-            "description": "Search term for filtering results.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LocationEntityBasePaginationResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/location/create": {
-      "post": {
-        "tags": [
-          "Location"
-        ],
-        "summary": "Create a new Location",
-        "description": "Creates a new Location entity in the system.",
-        "operationId": "CreateLocation",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LocationEntity"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LocationEntityResult"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LocationEntityResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/location/update/{id}": {
-      "post": {
-        "tags": [
-          "Location"
-        ],
-        "summary": "Update an existing Location",
-        "description": "Updates specific fields of an existing Location entity by ID.",
-        "operationId": "UpdateLocation",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
-                },
-                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/location/delete/{id}": {
-      "delete": {
-        "tags": [
-          "Location"
-        ],
-        "summary": "Delete a Location",
-        "description": "Deletes a Location entity by its unique identifier.",
-        "operationId": "DeleteLocation",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/location/generate-new-code": {
-      "get": {
-        "tags": [
-          "Location"
-        ],
-        "summary": "Generate a new code for Location",
-        "description": "Generates a new unique code for a Location entity.",
-        "operationId": "GenerateNewLocationCode",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/location/search": {
-      "get": {
-        "tags": [
-          "Location"
-        ],
-        "summary": "Search Location entities",
-        "description": "Searches Location entities by text across searchable fields.",
-        "operationId": "SearchLocation",
-        "parameters": [
-          {
-            "name": "searchText",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "maxResults",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/LocationEntity"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/machine/{id}": {
       "get": {
         "tags": [
@@ -15565,6 +15565,247 @@
                   "items": {
                     "$ref": "#/components/schemas/MachineEntity"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machineareamapping/{id}": {
+      "get": {
+        "tags": [
+          "MachineAreaMapping"
+        ],
+        "summary": "Get Machine Area Mapping by ID",
+        "description": "Retrieves a specific Machine Area Mapping entity by its unique identifier.",
+        "operationId": "GetMachineAreaMappingById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineAreaMapping"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/machineareamapping/get-page": {
+      "post": {
+        "tags": [
+          "MachineAreaMapping"
+        ],
+        "summary": "Get paginated list of Machine Area Mapping",
+        "description": "Retrieves a paginated list of Machine Area Mapping entities.",
+        "operationId": "GetMachineAreaMappingPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineAreaMappingBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machineareamapping/create": {
+      "post": {
+        "tags": [
+          "MachineAreaMapping"
+        ],
+        "summary": "Create a new Machine Area Mapping",
+        "description": "Creates a new Machine Area Mapping entity in the system.",
+        "operationId": "CreateMachineAreaMapping",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MachineAreaMapping"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineAreaMappingResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineAreaMappingResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machineareamapping/update/{id}": {
+      "post": {
+        "tags": [
+          "MachineAreaMapping"
+        ],
+        "summary": "Update an existing Machine Area Mapping",
+        "description": "Updates specific fields of an existing Machine Area Mapping entity by ID.",
+        "operationId": "UpdateMachineAreaMapping",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machineareamapping/delete/{id}": {
+      "delete": {
+        "tags": [
+          "MachineAreaMapping"
+        ],
+        "summary": "Delete a Machine Area Mapping",
+        "description": "Deletes a Machine Area Mapping entity by its unique identifier.",
+        "operationId": "DeleteMachineAreaMapping",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machineareamapping/generate-new-code": {
+      "get": {
+        "tags": [
+          "MachineAreaMapping"
+        ],
+        "summary": "Generate a new code for Machine Area Mapping",
+        "description": "Generates a new unique code for a Machine Area Mapping entity.",
+        "operationId": "GenerateNewMachineAreaMappingCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -34079,6 +34320,192 @@
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
+      "AreaDimensions": {
+        "type": "object",
+        "properties": {
+          "length": {
+            "type": "number",
+            "format": "double"
+          },
+          "width": {
+            "type": "number",
+            "format": "double"
+          },
+          "height": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AreaEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "weightCapacity": {
+            "type": "number",
+            "format": "double"
+          },
+          "areaCapacity": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "volumeCapacity": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "position": {
+            "$ref": "#/components/schemas/Position"
+          },
+          "dimensions": {
+            "$ref": "#/components/schemas/AreaDimensions"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AreaStatus"
+          },
+          "type": {
+            "$ref": "#/components/schemas/AreaType"
+          },
+          "allowOverCapacity": {
+            "type": "boolean"
+          },
+          "allowNegativeStock": {
+            "type": "boolean"
+          },
+          "allowMixedProducts": {
+            "type": "boolean"
+          },
+          "allowMixedLots": {
+            "type": "boolean"
+          },
+          "pickingSequence": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AreaEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AreaEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "AreaEntityResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/AreaEntity"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "AreaStatus": {
+        "enum": [
+          "active",
+          "maintenance",
+          "hold"
+        ],
+        "type": "string",
+        "description": "Trạng thái vị trí"
+      },
+      "AreaType": {
+        "enum": [
+          "aisle",
+          "rack",
+          "shelf",
+          "bin",
+          "floor",
+          "receivingDock",
+          "shippingDock",
+          "station"
+        ],
+        "type": "string",
+        "description": "Loại vị trí trong kho hoặc nhà xưởng"
+      },
       "AssemblyHashInfoEntity": {
         "type": "object",
         "properties": {
@@ -34725,7 +35152,7 @@
           "parentCalendarId": {
             "$ref": "#/components/schemas/ObjectId"
           },
-          "shiftPatternId": {
+          "shiftTemplateId": {
             "$ref": "#/components/schemas/ObjectId"
           },
           "description": {
@@ -39538,25 +39965,7 @@
         "additionalProperties": false,
         "description": "Base class for paginated responses"
       },
-      "LocationDimensions": {
-        "type": "object",
-        "properties": {
-          "length": {
-            "type": "number",
-            "format": "double"
-          },
-          "width": {
-            "type": "number",
-            "format": "double"
-          },
-          "height": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "additionalProperties": false
-      },
-      "LocationEntity": {
+      "MachineAreaMapping": {
         "type": "object",
         "properties": {
           "id": {
@@ -39570,78 +39979,22 @@
             "type": "string",
             "format": "date-time"
           },
-          "code": {
-            "type": "string",
-            "nullable": true
+          "machineId": {
+            "$ref": "#/components/schemas/ObjectId"
           },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
-          "weightCapacity": {
-            "type": "number",
-            "format": "double"
-          },
-          "areaCapacity": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "volumeCapacity": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "position": {
-            "$ref": "#/components/schemas/Position"
-          },
-          "dimensions": {
-            "$ref": "#/components/schemas/LocationDimensions"
-          },
-          "status": {
-            "$ref": "#/components/schemas/LocationStatus"
-          },
-          "type": {
-            "$ref": "#/components/schemas/LocationType"
-          },
-          "allowOverCapacity": {
-            "type": "boolean"
-          },
-          "allowNegativeStock": {
-            "type": "boolean"
-          },
-          "allowMixedProducts": {
-            "type": "boolean"
-          },
-          "allowMixedLots": {
-            "type": "boolean"
-          },
-          "pickingSequence": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "imageUrl": {
-            "type": "string",
-            "nullable": true
+          "areaId": {
+            "$ref": "#/components/schemas/ObjectId"
           }
         },
         "additionalProperties": false
       },
-      "LocationEntityBasePaginationResponse": {
+      "MachineAreaMappingBasePaginationResponse": {
         "type": "object",
         "properties": {
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LocationEntity"
+              "$ref": "#/components/schemas/MachineAreaMapping"
             },
             "description": "List of items in the current page",
             "nullable": true
@@ -39679,11 +40032,11 @@
         "additionalProperties": false,
         "description": "Base class for paginated responses"
       },
-      "LocationEntityResult": {
+      "MachineAreaMappingResult": {
         "type": "object",
         "properties": {
           "value": {
-            "$ref": "#/components/schemas/LocationEntity"
+            "$ref": "#/components/schemas/MachineAreaMapping"
           },
           "isSuccess": {
             "type": "boolean",
@@ -39700,29 +40053,6 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
-      },
-      "LocationStatus": {
-        "enum": [
-          "active",
-          "maintenance",
-          "hold"
-        ],
-        "type": "string",
-        "description": "Trạng thái vị trí"
-      },
-      "LocationType": {
-        "enum": [
-          "aisle",
-          "rack",
-          "shelf",
-          "bin",
-          "floor",
-          "receivingDock",
-          "shippingDock",
-          "station"
-        ],
-        "type": "string",
-        "description": "Loại vị trí trong kho hoặc nhà xưởng"
       },
       "MachineEntity": {
         "type": "object",
@@ -39754,9 +40084,6 @@
             "$ref": "#/components/schemas/ObjectId"
           },
           "departmentId": {
-            "$ref": "#/components/schemas/ObjectId"
-          },
-          "locationId": {
             "$ref": "#/components/schemas/ObjectId"
           },
           "calculationMode": {
@@ -43920,6 +44247,16 @@
           "isOverTimeShift": {
             "type": "boolean",
             "description": "Có phải ca làm thêm giờ hay không"
+          },
+          "name": {
+            "type": "string",
+            "description": "Tên mô tả của ca làm việc",
+            "nullable": true
+          },
+          "normalizedName": {
+            "type": "string",
+            "description": "Tên chuẩn hóa của ca làm việc (chuyển về chữ thường, bỏ dấu, thay khoảng trắng bằng gạch dưới).\r\nCó thể dùng để tạo mã.\r\nBE use case only.",
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -47614,6 +47951,9 @@
       "name": "AppVersion"
     },
     {
+      "name": "Area"
+    },
+    {
       "name": "AssemblyHashInfo"
     },
     {
@@ -47758,10 +48098,10 @@
       "name": "Localization"
     },
     {
-      "name": "Location"
+      "name": "Machine"
     },
     {
-      "name": "Machine"
+      "name": "MachineAreaMapping"
     },
     {
       "name": "MachineGroup"

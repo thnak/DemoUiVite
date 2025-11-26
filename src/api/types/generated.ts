@@ -173,6 +173,75 @@ export type ApiGatewayEntityResult = {
   errorType?: ErrorType;
 };
 
+export type AreaDimensions = {
+  length?: number;
+  width?: number;
+  height?: number;
+};
+
+export type AreaEntity = {
+  id?: ObjectId;
+  createTime?: string;
+  modifiedTime?: string;
+  code?: string | null;
+  name?: string | null;
+  description?: string | null;
+  address?: string | null;
+  weightCapacity?: number;
+  areaCapacity?: number;
+  volumeCapacity?: number;
+  position?: Position;
+  dimensions?: AreaDimensions;
+  status?: AreaStatus;
+  type?: AreaType;
+  allowOverCapacity?: boolean;
+  allowNegativeStock?: boolean;
+  allowMixedProducts?: boolean;
+  allowMixedLots?: boolean;
+  pickingSequence?: number;
+  imageUrl?: string | null;
+};
+
+/**
+ * Base class for paginated responses
+ */
+export type AreaEntityBasePaginationResponse = {
+  /** List of items in the current page */
+  items?: AreaEntity[] | null;
+  /** Total number of items across all pages */
+  totalItems?: number;
+  /** Current page number (0-based) */
+  pageNumber?: number;
+  /** Number of items per page */
+  pageSize?: number;
+  /** Total number of pages */
+  totalPages?: number;
+  /** List of fields that can be used for sorting */
+  sortableFields?: string[] | null;
+};
+
+/**
+ * Represents the result of an operation, containing a value, success status, message, and error type.
+ */
+export type AreaEntityResult = {
+  value?: AreaEntity;
+  /** Gets a value indicating whether the operation was successful. */
+  isSuccess?: boolean;
+  /** Gets the message describing the result. */
+  message?: string | null;
+  errorType?: ErrorType;
+};
+
+/**
+ * Trạng thái vị trí
+ */
+export type AreaStatus = 'active' | 'maintenance' | 'hold';
+
+/**
+ * Loại vị trí trong kho hoặc nhà xưởng
+ */
+export type AreaType = 'aisle' | 'rack' | 'shelf' | 'bin' | 'floor' | 'receivingDock' | 'shippingDock' | 'station';
+
 export type AssemblyHashInfoEntity = {
   id?: ObjectId;
   createTime?: string;
@@ -436,7 +505,7 @@ export type CalendarEntity = {
   name?: string | null;
   type?: CalendarType;
   parentCalendarId?: ObjectId;
-  shiftPatternId?: ObjectId;
+  shiftTemplateId?: ObjectId;
   description?: string | null;
 };
 
@@ -2254,41 +2323,20 @@ export type LocalizeAppLangDtoBasePaginationResponse = {
   sortableFields?: string[] | null;
 };
 
-export type LocationDimensions = {
-  length?: number;
-  width?: number;
-  height?: number;
-};
-
-export type LocationEntity = {
+export type MachineAreaMapping = {
   id?: ObjectId;
   createTime?: string;
   modifiedTime?: string;
-  code?: string | null;
-  name?: string | null;
-  description?: string | null;
-  address?: string | null;
-  weightCapacity?: number;
-  areaCapacity?: number;
-  volumeCapacity?: number;
-  position?: Position;
-  dimensions?: LocationDimensions;
-  status?: LocationStatus;
-  type?: LocationType;
-  allowOverCapacity?: boolean;
-  allowNegativeStock?: boolean;
-  allowMixedProducts?: boolean;
-  allowMixedLots?: boolean;
-  pickingSequence?: number;
-  imageUrl?: string | null;
+  machineId?: ObjectId;
+  areaId?: ObjectId;
 };
 
 /**
  * Base class for paginated responses
  */
-export type LocationEntityBasePaginationResponse = {
+export type MachineAreaMappingBasePaginationResponse = {
   /** List of items in the current page */
-  items?: LocationEntity[] | null;
+  items?: MachineAreaMapping[] | null;
   /** Total number of items across all pages */
   totalItems?: number;
   /** Current page number (0-based) */
@@ -2304,24 +2352,14 @@ export type LocationEntityBasePaginationResponse = {
 /**
  * Represents the result of an operation, containing a value, success status, message, and error type.
  */
-export type LocationEntityResult = {
-  value?: LocationEntity;
+export type MachineAreaMappingResult = {
+  value?: MachineAreaMapping;
   /** Gets a value indicating whether the operation was successful. */
   isSuccess?: boolean;
   /** Gets the message describing the result. */
   message?: string | null;
   errorType?: ErrorType;
 };
-
-/**
- * Trạng thái vị trí
- */
-export type LocationStatus = 'active' | 'maintenance' | 'hold';
-
-/**
- * Loại vị trí trong kho hoặc nhà xưởng
- */
-export type LocationType = 'aisle' | 'rack' | 'shelf' | 'bin' | 'floor' | 'receivingDock' | 'shippingDock' | 'station';
 
 export type MachineEntity = {
   id?: ObjectId;
@@ -2332,7 +2370,6 @@ export type MachineEntity = {
   description?: string | null;
   machineTypeId?: ObjectId;
   departmentId?: ObjectId;
-  locationId?: ObjectId;
   calculationMode?: OutputCalculationMode;
   ignoreZeroValueInParallelChannelMode?: boolean;
   calendarId?: ObjectId;
@@ -3927,6 +3964,12 @@ export type ShiftDefinition = {
   breakDefinitions?: BreakDefinition[] | null;
   /** Có phải ca làm thêm giờ hay không */
   isOverTimeShift?: boolean;
+  /** Tên mô tả của ca làm việc */
+  name?: string | null;
+  /** Tên chuẩn hóa của ca làm việc (chuyển về chữ thường, bỏ dấu, thay khoảng trắng bằng gạch dưới).
+Có thể dùng để tạo mã.
+BE use case only. */
+  normalizedName?: string | null;
 };
 
 export type ShiftTemplateEntity = {
