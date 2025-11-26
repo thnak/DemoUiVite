@@ -33,8 +33,13 @@ export const AUTH_ENDPOINTS = {
  * @param data - Request body
  * @returns Promise<AuthTokenResponseResult>
  */
-export async function postapiAuthgeneratetoken(data: GenerateTokenRequest): Promise<AuthTokenResponseResult> {
-  const response = await axiosInstance.post<AuthTokenResponseResult>(AUTH_ENDPOINTS.postapiAuthgeneratetoken, data);
+export async function postapiAuthgeneratetoken(
+  data: GenerateTokenRequest
+): Promise<AuthTokenResponseResult> {
+  const response = await axiosInstance.post<AuthTokenResponseResult>(
+    AUTH_ENDPOINTS.postapiAuthgeneratetoken,
+    data
+  );
   return response.data;
 }
 
@@ -82,7 +87,9 @@ The authenticated user on one device can scan this QR code on another device to 
  * @returns Promise<QrLoginTokenResponseResult>
  */
 export async function postapiAuthgenerateqrlogintoken(): Promise<QrLoginTokenResponseResult> {
-  const response = await axiosInstance.post<QrLoginTokenResponseResult>(AUTH_ENDPOINTS.postapiAuthgenerateqrlogintoken);
+  const response = await axiosInstance.post<QrLoginTokenResponseResult>(
+    AUTH_ENDPOINTS.postapiAuthgenerateqrlogintoken
+  );
   return response.data;
 }
 
@@ -94,14 +101,22 @@ The token is validated and then marked as consumed. If successful, returns authe
  * @param data - Request body
  * @returns Promise<AuthTokenResponseResult>
  */
-export async function postapiAuthloginwithqrtoken(data: QrLoginRequest): Promise<AuthTokenResponseResult> {
-  const response = await axiosInstance.post<AuthTokenResponseResult>(AUTH_ENDPOINTS.postapiAuthloginwithqrtoken, data);
+export async function postapiAuthloginwithqrtoken(
+  data: QrLoginRequest
+): Promise<AuthTokenResponseResult> {
+  const response = await axiosInstance.post<AuthTokenResponseResult>(
+    AUTH_ENDPOINTS.postapiAuthloginwithqrtoken,
+    data
+  );
   return response.data;
 }
 
 /**
  * @returns Promise<void>
  */
-export async function getapiAuthloginwithtoken(params?: { token?: string; redirectUri?: string }): Promise<void> {
+export async function getapiAuthloginwithtoken(params?: {
+  token?: string;
+  redirectUri?: string;
+}): Promise<void> {
   await axiosInstance.get(AUTH_ENDPOINTS.getapiAuthloginwithtoken, { params });
 }
