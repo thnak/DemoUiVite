@@ -82,15 +82,13 @@ export function ShiftTemplateForm({
       },
     []
   );
-
-  const handleSelectChange = useCallback(
+  useCallback(
     (field: 'weekType' | 'shiftPattern') => (event: SelectChangeEvent) => {
       setFormData((prev) => ({ ...prev, [field]: event.target.value }));
     },
     []
   );
-
-  // ----------------------------------------------------------------------
+// ----------------------------------------------------------------------
   // Shift Definition Handlers
   // ----------------------------------------------------------------------
 
@@ -260,31 +258,6 @@ export function ShiftTemplateForm({
               rows={2}
             />
 
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-              <FormControl fullWidth>
-                <InputLabel>Week Type</InputLabel>
-                <Select
-                  value={formData.weekType}
-                  label="Week Type"
-                  onChange={handleSelectChange('weekType')}
-                >
-                  <MenuItem value="5-day">5-Day Week</MenuItem>
-                  <MenuItem value="7-day">7-Day Week</MenuItem>
-                </Select>
-              </FormControl>
-
-              <FormControl fullWidth>
-                <InputLabel>Shift Pattern</InputLabel>
-                <Select
-                  value={formData.shiftPattern}
-                  label="Shift Pattern"
-                  onChange={handleSelectChange('shiftPattern')}
-                >
-                  <MenuItem value="2-shifts">2 Shifts/Day</MenuItem>
-                  <MenuItem value="3-shifts">3 Shifts/Day</MenuItem>
-                </Select>
-              </FormControl>
-            </Stack>
           </Stack>
         </CardContent>
       </Card>
