@@ -144,8 +144,7 @@ export function UserView() {
           onChange={handleFilterStatus}
           sx={{
             px: 2.5,
-            boxShadow: (theme) =>
-              `inset 0 -2px 0 0 ${theme.vars.palette.background.neutral}`,
+            boxShadow: (theme) => `inset 0 -2px 0 0 ${theme.vars.palette.background.neutral}`,
           }}
         >
           {STATUS_OPTIONS.map((tab) => (

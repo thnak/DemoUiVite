@@ -43,13 +43,12 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
   }, []);
 
   const handleInputChange = useCallback(
-    (field: keyof AreaFormData) =>
-      (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setFormData((prev) => ({
-          ...prev,
-          [field]: event.target.value,
-        }));
-      },
+    (field: keyof AreaFormData) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setFormData((prev) => ({
+        ...prev,
+        [field]: event.target.value,
+      }));
+    },
     []
   );
 

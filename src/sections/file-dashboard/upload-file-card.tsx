@@ -42,7 +42,12 @@ export function UploadFileCard({ sx, ...other }: UploadFileCardProps) {
           bgcolor: 'grey.100',
         }}
       >
-        <Iconify icon="solar:cloud-upload-bold" width={24} height={24} sx={{ color: 'primary.main' }} />
+        <Iconify
+          icon="solar:cloud-upload-bold"
+          width={24}
+          height={24}
+          sx={{ color: 'primary.main' }}
+        />
       </Box>
       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
         Upload file

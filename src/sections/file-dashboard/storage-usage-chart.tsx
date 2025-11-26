@@ -34,7 +34,13 @@ export function StorageUsageChart({
   const strokeDashoffset = circumference - (usedPercentage / 100) * circumference;
 
   return (
-    <Card sx={[{ p: 3, display: 'flex', flexDirection: 'column', gap: 3 }, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
+    <Card
+      sx={[
+        { p: 3, display: 'flex', flexDirection: 'column', gap: 3 },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
+      {...other}
+    >
       {/* Circular Progress */}
       <Box
         sx={{
@@ -110,7 +116,12 @@ export function StorageUsageChart({
                   bgcolor: 'grey.100',
                 }}
               >
-                <Iconify icon={category.icon} width={24} height={24} sx={{ color: category.color }} />
+                <Iconify
+                  icon={category.icon}
+                  width={24}
+                  height={24}
+                  sx={{ color: category.color }}
+                />
               </Box>
               <Box>
                 <Typography variant="subtitle2">{category.name}</Typography>

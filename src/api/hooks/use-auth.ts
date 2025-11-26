@@ -2,18 +2,9 @@ import type { UseMutationOptions } from '@tanstack/react-query';
 
 import { useMutation } from '@tanstack/react-query';
 
-import {
-  revokeToken,
-  refreshToken,
-  generateToken,
-  revokeAllTokens,
-} from '../services';
+import { revokeToken, refreshToken, generateToken, revokeAllTokens } from '../services';
 
-import type {
-  RefreshTokenRequest,
-  GenerateTokenRequest,
-  AuthTokenResponseResult,
-} from '../types';
+import type { RefreshTokenRequest, GenerateTokenRequest, AuthTokenResponseResult } from '../types';
 
 // ----------------------------------------------------------------------
 // Auth Hooks - TanStack Query hooks for authentication

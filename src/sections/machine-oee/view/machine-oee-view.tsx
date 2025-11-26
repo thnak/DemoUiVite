@@ -34,20 +34,14 @@ export function MachineOEEView() {
   const navigate = useNavigate();
 
   // Find the machine or use the first one
-  const machine = useMemo(
-    () => _machines.find((m) => m.id === id) || _machines[0],
-    [id]
-  );
+  const machine = useMemo(() => _machines.find((m) => m.id === id) || _machines[0], [id]);
 
   const [selectedYear, setSelectedYear] = useState<number>(2025);
   const [selectedMonth, setSelectedMonth] = useState<number>(1);
   const [timePeriod, setTimePeriod] = useState<TimePeriod>('year');
 
   // Get OEE data for the machine
-  const oeeHistory = useMemo(
-    () => getMachineOEEHistory(machine.id, 2023, 2025),
-    [machine.id]
-  );
+  const oeeHistory = useMemo(() => getMachineOEEHistory(machine.id, 2023, 2025), [machine.id]);
 
   const currentYearData = useMemo(
     () => oeeHistory.find((y) => y.year === selectedYear) || oeeHistory[oeeHistory.length - 1],
@@ -55,7 +49,9 @@ export function MachineOEEView() {
   );
 
   const currentMonthData = useMemo(
-    () => currentYearData.monthlyData.find((m) => m.monthNumber === selectedMonth) || currentYearData.monthlyData[0],
+    () =>
+      currentYearData.monthlyData.find((m) => m.monthNumber === selectedMonth) ||
+      currentYearData.monthlyData[0],
     [currentYearData, selectedMonth]
   );
 
@@ -174,11 +170,7 @@ export function MachineOEEView() {
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
           <FormControl size="small" sx={{ minWidth: 200 }}>
             <InputLabel>Machine</InputLabel>
-            <Select
-              value={machine.id}
-              label="Machine"
-              onChange={handleMachineChange}
-            >
+            <Select value={machine.id} label="Machine" onChange={handleMachineChange}>
               {_machines.map((m) => (
                 <MenuItem key={m.id} value={m.id}>
                   {m.name}
@@ -189,11 +181,7 @@ export function MachineOEEView() {
 
           <FormControl size="small" sx={{ minWidth: 100 }}>
             <InputLabel>Year</InputLabel>
-            <Select
-              value={selectedYear}
-              label="Year"
-              onChange={handleYearChange}
-            >
+            <Select value={selectedYear} label="Year" onChange={handleYearChange}>
               {oeeHistory.map((y) => (
                 <MenuItem key={y.year} value={y.year}>
                   {y.year}
@@ -205,11 +193,7 @@ export function MachineOEEView() {
           {(timePeriod === 'month' || timePeriod === 'week') && (
             <FormControl size="small" sx={{ minWidth: 120 }}>
               <InputLabel>Month</InputLabel>
-              <Select
-                value={selectedMonth}
-                label="Month"
-                onChange={handleMonthChange}
-              >
+              <Select value={selectedMonth} label="Month" onChange={handleMonthChange}>
                 {currentYearData.monthlyData.map((m) => (
                   <MenuItem key={m.monthNumber} value={m.monthNumber}>
                     {m.month}
@@ -231,9 +215,24 @@ export function MachineOEEView() {
             boxShadow: (theme) => `inset 0 -2px 0 0 ${theme.vars.palette.background.neutral}`,
           }}
         >
-          <Tab value="year" label="Yearly" icon={<Iconify icon="mdi:calendar" />} iconPosition="start" />
-          <Tab value="month" label="Monthly" icon={<Iconify icon="mdi:calendar-month" />} iconPosition="start" />
-          <Tab value="week" label="Weekly" icon={<Iconify icon="mdi:calendar-week" />} iconPosition="start" />
+          <Tab
+            value="year"
+            label="Yearly"
+            icon={<Iconify icon="mdi:calendar" />}
+            iconPosition="start"
+          />
+          <Tab
+            value="month"
+            label="Monthly"
+            icon={<Iconify icon="mdi:calendar-month" />}
+            iconPosition="start"
+          />
+          <Tab
+            value="week"
+            label="Weekly"
+            icon={<Iconify icon="mdi:calendar-week" />}
+            iconPosition="start"
+          />
         </Tabs>
       </Card>
 

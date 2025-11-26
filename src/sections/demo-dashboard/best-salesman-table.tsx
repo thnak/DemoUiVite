@@ -25,7 +25,13 @@ type BestSalesmanTableProps = CardProps & {
   data: Salesman[];
 };
 
-export function BestSalesmanTable({ title, subheader, data, sx, ...other }: BestSalesmanTableProps) {
+export function BestSalesmanTable({
+  title,
+  subheader,
+  data,
+  sx,
+  ...other
+}: BestSalesmanTableProps) {
   const getRankColor = (rank: number) => {
     if (rank === 1) return 'success';
     if (rank === 2) return 'info';

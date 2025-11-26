@@ -72,7 +72,10 @@ export function OEEWidgetSummary({
           </Typography>
           <Typography variant="h3">{fPercent(value)}</Typography>
           {subtitle && (
-            <Typography variant="caption" sx={{ color: 'text.secondary', mt: 0.5, display: 'block' }}>
+            <Typography
+              variant="caption"
+              sx={{ color: 'text.secondary', mt: 0.5, display: 'block' }}
+            >
               {subtitle}
             </Typography>
           )}

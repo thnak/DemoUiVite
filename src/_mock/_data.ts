@@ -333,7 +333,7 @@ export const _workingParameters = [...Array(20)].map((_, index) => ({
   idealCycleTime: _idealCycleTime(index),
   quantityPerSignal: _quantityPerSignal(index),
   downtimeThreshold: _downtimeThreshold(index),
-  }));
+}));
 
 export type MachineInputType = 'WeightChannels' | 'PairChannel';
 
@@ -472,8 +472,18 @@ const PRODUCT_NAMES_FOR_OEE = [
 const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 const MONTHS = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 // Seed-based random number generator for consistent data
@@ -488,7 +498,7 @@ function generateOEEData(seed: number): OEEData {
   const performance = 70 + seededRandom(seed + 1) * 25; // 70-95%
   const quality = 85 + seededRandom(seed + 2) * 14; // 85-99%
   const oee = (availability * performance * quality) / 10000;
-  
+
   return {
     availability: Math.round(availability * 10) / 10,
     performance: Math.round(performance * 10) / 10,
@@ -551,22 +561,28 @@ function findBestProduct(products: ProductOEEData[]): ProductOEEData {
 export function generateMachineOEEData(machineId: string, year: number): YearlyOEEData {
   // Create seed from machineId and year for consistency
   const seed = machineId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) + year;
-  
+
   const monthlyData = generateMonthlyData(seed, year);
-  
+
   // Calculate yearly averages
   const yearlyOEE = {
-    availability: Math.round(monthlyData.reduce((sum, m) => sum + m.oeeData.availability, 0) / 12 * 10) / 10,
-    performance: Math.round(monthlyData.reduce((sum, m) => sum + m.oeeData.performance, 0) / 12 * 10) / 10,
-    quality: Math.round(monthlyData.reduce((sum, m) => sum + m.oeeData.quality, 0) / 12 * 10) / 10,
+    availability:
+      Math.round((monthlyData.reduce((sum, m) => sum + m.oeeData.availability, 0) / 12) * 10) / 10,
+    performance:
+      Math.round((monthlyData.reduce((sum, m) => sum + m.oeeData.performance, 0) / 12) * 10) / 10,
+    quality:
+      Math.round((monthlyData.reduce((sum, m) => sum + m.oeeData.quality, 0) / 12) * 10) / 10,
     oee: 0,
   };
-  yearlyOEE.oee = Math.round((yearlyOEE.availability * yearlyOEE.performance * yearlyOEE.quality) / 10000 * 10) / 10;
-  
+  yearlyOEE.oee =
+    Math.round(
+      ((yearlyOEE.availability * yearlyOEE.performance * yearlyOEE.quality) / 10000) * 10
+    ) / 10;
+
   // Collect all products from all months and find the best one
-  const allProducts = monthlyData.flatMap(m => m.productData);
+  const allProducts = monthlyData.flatMap((m) => m.productData);
   const bestProduct = findBestProduct(allProducts);
-  
+
   return {
     year,
     oeeData: yearlyOEE,
@@ -576,7 +592,11 @@ export function generateMachineOEEData(machineId: string, year: number): YearlyO
 }
 
 // Get OEE data for a specific machine across multiple years
-export function getMachineOEEHistory(machineId: string, startYear: number = 2023, endYear: number = 2025): YearlyOEEData[] {
+export function getMachineOEEHistory(
+  machineId: string,
+  startYear: number = 2023,
+  endYear: number = 2025
+): YearlyOEEData[] {
   const years: YearlyOEEData[] = [];
   for (let year = startYear; year <= endYear; year++) {
     years.push(generateMachineOEEData(machineId, year));
