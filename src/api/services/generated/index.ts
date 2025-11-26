@@ -2,7 +2,7 @@ export * from './adaptive-rule-config';
 export * from './admin-global-setting';
 export * from './api-gateway';
 export * from './app-version';
-export * from './area';
+// export * from './area'; // Temporarily disabled - file doesn't exist
 export * from './assembly-hash-info';
 export * from './blob';
 export * from './bom-header';
@@ -51,7 +51,7 @@ export * from './jti-token';
 export * from './language-key-lang';
 export * from './localization';
 export * from './machine';
-export * from './machine-area-mapping';
+// export * from './machine-area-mapping'; // Temporarily disabled - file doesn't exist
 export * from './machine-group';
 export * from './machine-group-machine-mapping';
 export * from './machine-output-mapping';

@@ -6,7 +6,7 @@ import type {
   ShiftDefinitionFormData,
 } from 'src/types/shift';
 
-import { useState, useCallback } from 'react';
+import { Fragment, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -29,6 +29,7 @@ import { Iconify } from 'src/components/iconify';
 import { WeekSummaryChart } from 'src/components/WeekSummaryChart';
 
 import {
+  generateId,
   DAY_LABELS,
   DAYS_OF_WEEK,
   createDefaultBreak,
@@ -66,13 +67,37 @@ export function ShiftTemplateForm({
     }
   );
 
+  // Normal mode shared state: days and breaks that apply to all shifts
+  const [sharedDays, setSharedDays] = useState<DayOfWeek[]>(() => {
+    const firstDef = initialData?.definitions?.[0];
+    return firstDef?.days ?? ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+  });
+  const [sharedBreaks, setSharedBreaks] = useState<ShiftBreakFormData[]>(() => {
+    const firstDef = initialData?.definitions?.[0];
+    return firstDef?.breaks ?? [];
+  });
+
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // ----------------------------------------------------------------------
 
-  const handleModeChange = useCallback((_: React.SyntheticEvent, newMode: EditorMode) => {
-    setMode(newMode);
-  }, []);
+  const handleModeChange = useCallback(
+    (_: React.SyntheticEvent, newMode: EditorMode) => {
+      // When switching from normal to advanced, sync the shared days/breaks to all definitions
+      if (mode === 'normal' && newMode === 'advanced') {
+        setFormData((prev) => ({
+          ...prev,
+          definitions: prev.definitions.map((def) => ({
+            ...def,
+            days: sharedDays,
+            breaks: sharedBreaks.map((b) => ({ ...b, id: generateId() })),
+          })),
+        }));
+      }
+      setMode(newMode);
+    },
+    [mode, sharedDays, sharedBreaks]
+  );
 
   const handleInputChange = useCallback(
     (field: keyof ShiftTemplateFormData) =>
@@ -82,18 +107,47 @@ export function ShiftTemplateForm({
       },
     []
   );
-  useCallback(
-    (field: 'weekType' | 'shiftPattern') => (event: SelectChangeEvent) => {
-      setFormData((prev) => ({ ...prev, [field]: event.target.value }));
+
+  // ----------------------------------------------------------------------
+  // Shared Days Handler (Normal Mode)
+  // ----------------------------------------------------------------------
+
+  const handleSharedDaysChange = useCallback((event: SelectChangeEvent<DayOfWeek[]>) => {
+    const value = event.target.value as DayOfWeek[];
+    setSharedDays(value);
+    setErrors((prev) => ({ ...prev, sharedDays: '' }));
+  }, []);
+
+  // ----------------------------------------------------------------------
+  // Shared Break Handlers (Normal Mode)
+  // ----------------------------------------------------------------------
+
+  const handleAddSharedBreak = useCallback(() => {
+    const newBreak = createDefaultBreak();
+    setSharedBreaks((prev) => [...prev, newBreak]);
+  }, []);
+
+  const handleRemoveSharedBreak = useCallback((breakId: string) => {
+    setSharedBreaks((prev) => prev.filter((b) => b.id !== breakId));
+  }, []);
+
+  const handleSharedBreakChange = useCallback(
+    (breakId: string, field: keyof ShiftBreakFormData, value: string) => {
+      setSharedBreaks((prev) =>
+        prev.map((b) => (b.id === breakId ? { ...b, [field]: value } : b))
+      );
     },
     []
   );
-// ----------------------------------------------------------------------
+
+  // ----------------------------------------------------------------------
   // Shift Definition Handlers
   // ----------------------------------------------------------------------
 
   const handleAddDefinition = useCallback(() => {
     const newDef = createDefaultShiftDefinition(`Shift ${formData.definitions.length + 1}`);
+    // In advanced mode, new definitions get their own days/breaks
+    // In normal mode, they will inherit shared days/breaks when switching to advanced or on submit
     setFormData((prev) => ({
       ...prev,
       definitions: [...prev.definitions, newDef],
@@ -119,16 +173,8 @@ export function ShiftTemplateForm({
     []
   );
 
-  const handleDaysChange = useCallback((defId: string, event: SelectChangeEvent<DayOfWeek[]>) => {
-    const value = event.target.value as DayOfWeek[];
-    setFormData((prev) => ({
-      ...prev,
-      definitions: prev.definitions.map((def) => (def.id === defId ? { ...def, days: value } : def)),
-    }));
-  }, []);
-
   // ----------------------------------------------------------------------
-  // Break Handlers
+  // Break Handlers (Advanced Mode - per shift)
   // ----------------------------------------------------------------------
 
   const handleAddBreak = useCallback((defId: string) => {
@@ -184,30 +230,61 @@ export function ShiftTemplateForm({
       newErrors.definitions = 'At least one shift definition is required';
     }
 
+    // In normal mode, validate shared days
+    if (mode === 'normal') {
+      if (sharedDays.length === 0) {
+        newErrors.sharedDays = 'Select at least one day';
+      }
+    }
+
     formData.definitions.forEach((def, index) => {
       if (!def.name.trim()) {
         newErrors[`def-${index}-name`] = 'Shift name is required';
       }
-      if (def.days.length === 0) {
+      // In advanced mode, validate per-definition days
+      if (mode === 'advanced' && def.days.length === 0) {
         newErrors[`def-${index}-days`] = 'Select at least one day';
       }
     });
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [formData]);
+  }, [formData, mode, sharedDays]);
 
   const handleSubmit = useCallback(() => {
     if (validate()) {
-      onSubmit(formData);
+      // In normal mode, apply shared days and breaks to all definitions before submitting
+      if (mode === 'normal') {
+        const updatedData = {
+          ...formData,
+          definitions: formData.definitions.map((def) => ({
+            ...def,
+            days: sharedDays,
+            breaks: sharedBreaks.map((b) => ({ ...b, id: generateId() })),
+          })),
+        };
+        onSubmit(updatedData);
+      } else {
+        onSubmit(formData);
+      }
     }
-  }, [formData, onSubmit, validate]);
+  }, [formData, onSubmit, validate, mode, sharedDays, sharedBreaks]);
 
   // ----------------------------------------------------------------------
   // Calculate Summary
   // ----------------------------------------------------------------------
 
-  const weekSummary = calculateWeekSummary(formData.definitions);
+  // For summary calculation, use the appropriate data based on mode
+  const effectiveDefinitions =
+    mode === 'normal'
+      ? formData.definitions.map((def) => ({
+          ...def,
+          days: sharedDays,
+          breaks: sharedBreaks,
+        }))
+      : formData.definitions;
+
+  const weekSummary = calculateWeekSummary(effectiveDefinitions);
 
   // ----------------------------------------------------------------------
 
@@ -261,6 +338,135 @@ export function ShiftTemplateForm({
           </Stack>
         </CardContent>
       </Card>
+
+      {/* Normal Mode: Shared Days and Breaks */}
+      {mode === 'normal' && (
+        <Card>
+          <CardContent>
+            <Typography variant="h6" sx={{ mb: 3 }}>
+              Days & Breaks (Applied to All Shifts)
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Select the days of the week and define break times. These settings will apply to all
+              shifts you create.
+            </Typography>
+            <Stack spacing={3}>
+              {/* Shared Days Selector */}
+              <FormControl fullWidth error={!!errors.sharedDays}>
+                <InputLabel>Days of Week</InputLabel>
+                <Select
+                  multiple
+                  value={sharedDays}
+                  onChange={handleSharedDaysChange}
+                  input={<OutlinedInput label="Days of Week" />}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                      {selected.map((day) => (
+                        <Chip key={day} label={DAY_LABELS[day].slice(0, 3)} size="small" />
+                      ))}
+                    </Box>
+                  )}
+                >
+                  {DAYS_OF_WEEK.map((day) => (
+                    <MenuItem key={day} value={day}>
+                      {DAY_LABELS[day]}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.sharedDays && (
+                  <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>
+                    {errors.sharedDays}
+                  </Typography>
+                )}
+              </FormControl>
+
+              {/* Shared Breaks Section */}
+              <Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mb: 1,
+                  }}
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    Break Times (Applied to All Shifts)
+                  </Typography>
+                  <Button size="small" onClick={handleAddSharedBreak}>
+                    Add Break
+                  </Button>
+                </Box>
+
+                {sharedBreaks.length === 0 ? (
+                  <Typography variant="body2" color="text.disabled" sx={{ fontStyle: 'italic' }}>
+                    No breaks defined
+                  </Typography>
+                ) : (
+                  <Stack spacing={1}>
+                    {sharedBreaks.map((breakItem) => (
+                      <Box
+                        key={breakItem.id}
+                        sx={{
+                          display: 'flex',
+                          gap: 1,
+                          alignItems: 'center',
+                          p: 1,
+                          bgcolor: 'grey.50',
+                          borderRadius: 1,
+                        }}
+                      >
+                        <TextField
+                          size="small"
+                          label="Name"
+                          value={breakItem.name || ''}
+                          onChange={(e) =>
+                            handleSharedBreakChange(breakItem.id, 'name', e.target.value)
+                          }
+                          sx={{ flex: 1 }}
+                        />
+                        <TextField
+                          size="small"
+                          type="time"
+                          label="Start"
+                          value={breakItem.startTime}
+                          onChange={(e) =>
+                            handleSharedBreakChange(breakItem.id, 'startTime', e.target.value)
+                          }
+                          slotProps={{
+                            inputLabel: { shrink: true },
+                          }}
+                          sx={{ width: 130 }}
+                        />
+                        <TextField
+                          size="small"
+                          type="time"
+                          label="End"
+                          value={breakItem.endTime}
+                          onChange={(e) =>
+                            handleSharedBreakChange(breakItem.id, 'endTime', e.target.value)
+                          }
+                          slotProps={{
+                            inputLabel: { shrink: true },
+                          }}
+                          sx={{ width: 130 }}
+                        />
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => handleRemoveSharedBreak(breakItem.id)}
+                        >
+                          <Iconify icon="solar:trash-bin-trash-bold" />
+                        </IconButton>
+                      </Box>
+                    ))}
+                  </Stack>
+                )}
+              </Box>
+            </Stack>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Shift Definitions */}
       <Card>
@@ -336,117 +542,91 @@ export function ShiftTemplateForm({
                     />
                   </Stack>
 
-                  <FormControl fullWidth size="small" error={!!errors[`def-${defIndex}-days`]}>
-                    <InputLabel>Days</InputLabel>
-                    <Select
-                      multiple
-                      value={def.days}
-                      onChange={(e) => handleDaysChange(def.id, e as SelectChangeEvent<DayOfWeek[]>)}
-                      input={<OutlinedInput label="Days" />}
-                      renderValue={(selected) => (
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                          {selected.map((day) => (
-                            <Chip key={day} label={DAY_LABELS[day].slice(0, 3)} size="small" />
-                          ))}
-                        </Box>
-                      )}
-                    >
-                      {DAYS_OF_WEEK.map((day) => (
-                        <MenuItem key={day} value={day}>
-                          {DAY_LABELS[day]}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {errors[`def-${defIndex}-days`] && (
-                      <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>
-                        {errors[`def-${defIndex}-days`]}
-                      </Typography>
-                    )}
-                  </FormControl>
+                  {/* Advanced Mode: Per-shift Breaks */}
+                  {mode === 'advanced' && (
+                    <Box>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          mb: 1,
+                        }}
+                      >
+                        <Typography variant="body2" color="text.secondary">
+                          Breaks
+                        </Typography>
+                        <Button size="small" onClick={() => handleAddBreak(def.id)}>
+                          Add Break
+                        </Button>
+                      </Box>
 
-                  {/* Breaks Section */}
-                  <Box>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        mb: 1,
-                      }}
-                    >
-                      <Typography variant="body2" color="text.secondary">
-                        Breaks
-                      </Typography>
-                      <Button size="small" onClick={() => handleAddBreak(def.id)}>
-                        Add Break
-                      </Button>
-                    </Box>
-
-                    {def.breaks.length === 0 ? (
-                      <Typography variant="body2" color="text.disabled" sx={{ fontStyle: 'italic' }}>
-                        No breaks defined
-                      </Typography>
-                    ) : (
-                      <Stack spacing={1}>
-                        {def.breaks.map((breakItem) => (
-                          <Box
-                            key={breakItem.id}
-                            sx={{
-                              display: 'flex',
-                              gap: 1,
-                              alignItems: 'center',
-                              p: 1,
-                              bgcolor: 'grey.50',
-                              borderRadius: 1,
-                            }}
-                          >
-                            <TextField
-                              size="small"
-                              label="Name"
-                              value={breakItem.name || ''}
-                              onChange={(e) =>
-                                handleBreakChange(def.id, breakItem.id, 'name', e.target.value)
-                              }
-                              sx={{ flex: 1 }}
-                            />
-                            <TextField
-                              size="small"
-                              type="time"
-                              label="Start"
-                              value={breakItem.startTime}
-                              onChange={(e) =>
-                                handleBreakChange(def.id, breakItem.id, 'startTime', e.target.value)
-                              }
-                              slotProps={{
-                                inputLabel: { shrink: true },
+                      {def.breaks.length === 0 ? (
+                        <Typography variant="body2" color="text.disabled" sx={{ fontStyle: 'italic' }}>
+                          No breaks defined
+                        </Typography>
+                      ) : (
+                        <Stack spacing={1}>
+                          {def.breaks.map((breakItem) => (
+                            <Box
+                              key={breakItem.id}
+                              sx={{
+                                display: 'flex',
+                                gap: 1,
+                                alignItems: 'center',
+                                p: 1,
+                                bgcolor: 'grey.50',
+                                borderRadius: 1,
                               }}
-                              sx={{ width: 130 }}
-                            />
-                            <TextField
-                              size="small"
-                              type="time"
-                              label="End"
-                              value={breakItem.endTime}
-                              onChange={(e) =>
-                                handleBreakChange(def.id, breakItem.id, 'endTime', e.target.value)
-                              }
-                              slotProps={{
-                                inputLabel: { shrink: true },
-                              }}
-                              sx={{ width: 130 }}
-                            />
-                            <IconButton
-                              size="small"
-                              color="error"
-                              onClick={() => handleRemoveBreak(def.id, breakItem.id)}
                             >
-                              <Iconify icon="solar:trash-bin-trash-bold" />
-                            </IconButton>
-                          </Box>
-                        ))}
-                      </Stack>
-                    )}
-                  </Box>
+                              <TextField
+                                size="small"
+                                label="Name"
+                                value={breakItem.name || ''}
+                                onChange={(e) =>
+                                  handleBreakChange(def.id, breakItem.id, 'name', e.target.value)
+                                }
+                                sx={{ flex: 1 }}
+                              />
+                              <TextField
+                                size="small"
+                                type="time"
+                                label="Start"
+                                value={breakItem.startTime}
+                                onChange={(e) =>
+                                  handleBreakChange(def.id, breakItem.id, 'startTime', e.target.value)
+                                }
+                                slotProps={{
+                                  inputLabel: { shrink: true },
+                                }}
+                                sx={{ width: 130 }}
+                              />
+                              <TextField
+                                size="small"
+                                type="time"
+                                label="End"
+                                value={breakItem.endTime}
+                                onChange={(e) =>
+                                  handleBreakChange(def.id, breakItem.id, 'endTime', e.target.value)
+                                }
+                                slotProps={{
+                                  inputLabel: { shrink: true },
+                                }}
+                                sx={{ width: 130 }}
+                              />
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => handleRemoveBreak(def.id, breakItem.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" />
+                              </IconButton>
+                            </Box>
+                          ))}
+                        </Stack>
+                      )}
+                    </Box>
+                  )}
                 </Stack>
               </Card>
             ))}
@@ -483,7 +663,7 @@ export function ShiftTemplateForm({
 
                 {/* Data Rows */}
                 {formData.definitions.map((def) => (
-                  <>
+                  <Fragment key={def.id}>
                     <Box key={`${def.id}-name`} sx={{ p: 1, bgcolor: 'grey.50', borderRadius: 1 }}>
                       <Typography variant="body2" noWrap>
                         {def.name}
@@ -525,7 +705,7 @@ export function ShiftTemplateForm({
                         </Box>
                       );
                     })}
-                  </>
+                  </Fragment>
                 ))}
               </Box>
             </Box>
