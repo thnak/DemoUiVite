@@ -1,10 +1,6 @@
 import axiosInstance from '../axios-instance';
 
-import type {
-  RefreshTokenRequest,
-  GenerateTokenRequest,
-  AuthTokenResponseResult,
-} from '../types';
+import type { RefreshTokenRequest, GenerateTokenRequest, AuthTokenResponseResult } from '../types';
 
 // ----------------------------------------------------------------------
 // Auth Service

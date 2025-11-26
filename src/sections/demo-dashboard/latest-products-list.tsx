@@ -171,8 +171,7 @@ function ColorPreview({ colors, limit = 3 }: ColorPreviewProps) {
             height: 16,
             borderRadius: '50%',
             backgroundColor: color,
-            border:
-              color.toUpperCase() === '#FFFFFF' ? '1px solid rgba(0, 0, 0, 0.12)' : 'none',
+            border: color.toUpperCase() === '#FFFFFF' ? '1px solid rgba(0, 0, 0, 0.12)' : 'none',
           }}
           aria-label={`Color option ${index + 1}`}
         />

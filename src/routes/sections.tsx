@@ -25,9 +25,7 @@ export const ProductListPage = lazy(() => import('src/pages/product-list'));
 export const ProductCreatePage = lazy(() => import('src/pages/product-create'));
 export const ProductEditPage = lazy(() => import('src/pages/product-edit'));
 export const WorkingParameterListPage = lazy(() => import('src/pages/working-parameter-list'));
-export const StopMachineReasonListPage = lazy(
-  () => import('src/pages/stop-machine-reason-list')
-);
+export const StopMachineReasonListPage = lazy(() => import('src/pages/stop-machine-reason-list'));
 export const ProductGroupListPage = lazy(() => import('src/pages/product-group-list'));
 export const MachineListPage = lazy(() => import('src/pages/machine-list'));
 export const MachineOEEPage = lazy(() => import('src/pages/machine-oee'));

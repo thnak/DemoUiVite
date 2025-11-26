@@ -58,6 +58,7 @@ All documentation is located in the [`docs/`](./docs/) folder:
 
 - **[Quickstart Guide](./docs/guides/quickstart.md)** - Get started with the project
 - **[Internationalization (i18n)](./docs/guides/i18n.md)** - Multi-language support documentation
+- **[API Services](./docs/guides/api-usage.md)** - Auto-generated API services and React Query hooks
 
 ## 🎨 Demo
 
@@ -86,6 +87,7 @@ An E-commerce Dashboard demo is available at `/demo/dashboard`:
 | `npm run fm:check` | Check Prettier formatting |
 | `npm run fm:fix` | Fix Prettier formatting |
 | `npm run fix:all` | Fix all linting and formatting |
+| `npm run generate:api` | Generate API services from OpenAPI spec |
 
 ## 📋 Requirements
 

@@ -57,7 +57,10 @@ interface ProductCreateEditViewProps {
   };
 }
 
-export function ProductCreateEditView({ isEdit = false, currentProduct }: ProductCreateEditViewProps) {
+export function ProductCreateEditView({
+  isEdit = false,
+  currentProduct,
+}: ProductCreateEditViewProps) {
   const router = useRouter();
 
   const [imageUrl, setImageUrl] = useState<string | null>(currentProduct?.coverUrl || null);
@@ -97,12 +100,13 @@ export function ProductCreateEditView({ isEdit = false, currentProduct }: Produc
   }, []);
 
   const handleInputChange = useCallback(
-    (field: keyof ProductFormData) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setFormData((prev) => ({
-        ...prev,
-        [field]: event.target.value,
-      }));
-    },
+    (field: keyof ProductFormData) =>
+      (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setFormData((prev) => ({
+          ...prev,
+          [field]: event.target.value,
+        }));
+      },
     []
   );
 
@@ -206,11 +210,7 @@ export function ProductCreateEditView({ isEdit = false, currentProduct }: Produc
                   />
                 ) : (
                   <Stack alignItems="center" spacing={0.5}>
-                    <Iconify
-                      icon="mingcute:add-line"
-                      width={24}
-                      sx={{ color: 'text.secondary' }}
-                    />
+                    <Iconify icon="mingcute:add-line" width={24} sx={{ color: 'text.secondary' }} />
                     <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                       Upload image
                     </Typography>

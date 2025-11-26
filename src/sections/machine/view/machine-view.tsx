@@ -90,13 +90,10 @@ export function MachineView() {
     [table]
   );
 
-  const handleEditMachine = useCallback(
-    (id: string) => {
-      console.log('Edit machine:', id);
-      // Implement edit logic here
-    },
-    []
-  );
+  const handleEditMachine = useCallback((id: string) => {
+    console.log('Edit machine:', id);
+    // Implement edit logic here
+  }, []);
 
   const handleDeleteMachine = useCallback((id: string) => {
     console.log('Delete machine:', id);

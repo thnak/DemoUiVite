@@ -48,7 +48,14 @@ export function FileDashboardView() {
 
             {/* Folders Section */}
             <Grid size={{ xs: 12 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  mb: 2,
+                }}
+              >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Typography variant="h6">Folders</Typography>
                   <Box
@@ -63,7 +70,12 @@ export function FileDashboardView() {
                       cursor: 'pointer',
                     }}
                   >
-                    <Iconify icon="eva:plus-fill" width={16} height={16} sx={{ color: 'common.white' }} />
+                    <Iconify
+                      icon="eva:plus-fill"
+                      width={16}
+                      height={16}
+                      sx={{ color: 'common.white' }}
+                    />
                   </Box>
                 </Box>
                 <Button
@@ -101,7 +113,12 @@ export function FileDashboardView() {
                           cursor: 'pointer',
                         }}
                       >
-                        <Iconify icon="eva:plus-fill" width={16} height={16} sx={{ color: 'common.white' }} />
+                        <Iconify
+                          icon="eva:plus-fill"
+                          width={16}
+                          height={16}
+                          sx={{ color: 'common.white' }}
+                        />
                       </Box>
                     </Box>
                   }

@@ -15,11 +15,7 @@ type AreaTableToolbarProps = {
   onFilterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export function AreaTableToolbar({
-  numSelected,
-  filterName,
-  onFilterName,
-}: AreaTableToolbarProps) {
+export function AreaTableToolbar({ numSelected, filterName, onFilterName }: AreaTableToolbarProps) {
   return (
     <Toolbar
       sx={{

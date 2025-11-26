@@ -284,18 +284,44 @@ export const _productNames = (index: number) =>
   ][index];
 
 export const _productCategories = (index: number) =>
-  ['Accessories', 'Shose', 'Apparel', 'Shose', 'Apparel', 'Shose', 'Accessories', 'Shose', 'Apparel', 'Shose'][index % 10];
+  [
+    'Accessories',
+    'Shose',
+    'Apparel',
+    'Shose',
+    'Apparel',
+    'Shose',
+    'Accessories',
+    'Shose',
+    'Apparel',
+    'Shose',
+  ][index % 10];
 
 export const _stockQuantities = (index: number) =>
   [0, 72, 10, 72, 10, 72, 0, 72, 15, 72, 5, 72, 0, 50, 72, 8, 72, 0, 72, 12][index];
 
 export const _publishStatus = (index: number) =>
-  (['draft', 'published', 'published', 'draft', 'published', 'published', 'draft', 'published', 'published', 'draft'] as const)[index % 10];
+  (
+    [
+      'draft',
+      'published',
+      'published',
+      'draft',
+      'published',
+      'published',
+      'draft',
+      'published',
+      'published',
+      'draft',
+    ] as const
+  )[index % 10];
 
 export const _createdAt = (index: number) => {
   // Generate dates from 25 Nov 2025 going backwards
   const baseDate = new Date('2025-11-25T11:43:00');
-  const newDate = new Date(baseDate.getTime() - index * 24 * 60 * 60 * 1000 - index * 60 * 60 * 1000);
+  const newDate = new Date(
+    baseDate.getTime() - index * 24 * 60 * 60 * 1000 - index * 60 * 60 * 1000
+  );
   return newDate.toISOString();
 };
 
@@ -325,9 +351,10 @@ export const _machineNames = (index: number) =>
   ][index % 20];
 
 export const _idealCycleTime = (index: number) =>
-  [12.5, 8.3, 15.0, 22.7, 5.5, 18.2, 30.0, 10.8, 7.2, 25.5, 14.3, 9.1, 20.0, 11.5, 6.8, 28.3, 16.7, 4.2, 19.5, 13.0][
-    index % 20
-  ];
+  [
+    12.5, 8.3, 15.0, 22.7, 5.5, 18.2, 30.0, 10.8, 7.2, 25.5, 14.3, 9.1, 20.0, 11.5, 6.8, 28.3, 16.7,
+    4.2, 19.5, 13.0,
+  ][index % 20];
 
 export const _quantityPerSignal = (index: number) =>
   [1, 5, 2, 10, 1, 3, 1, 4, 6, 2, 8, 1, 5, 3, 2, 1, 4, 10, 2, 6][index % 20];
@@ -401,7 +428,7 @@ export const _areaDescriptions = (index: number) =>
     'Kazakhstan, Uzbekistan, and neighboring states',
     'Egypt, Libya, Tunisia, Morocco, and Algeria',
     'Nigeria, Kenya, South Africa, and other nations south of Sahara',
-      ][index];
+  ][index];
 export const _productGroupCodes = (index: number) =>
   [
     'PG-001',

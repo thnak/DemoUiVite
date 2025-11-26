@@ -182,18 +182,10 @@ export function CreateUserView() {
                 component="label"
               >
                 {avatarUrl ? (
-                  <Avatar
-                    src={avatarUrl}
-                    alt="Avatar"
-                    sx={{ width: '100%', height: '100%' }}
-                  />
+                  <Avatar src={avatarUrl} alt="Avatar" sx={{ width: '100%', height: '100%' }} />
                 ) : (
                   <Stack alignItems="center" spacing={0.5}>
-                    <Iconify
-                      icon="mingcute:add-line"
-                      width={24}
-                      sx={{ color: 'text.secondary' }}
-                    />
+                    <Iconify icon="mingcute:add-line" width={24} sx={{ color: 'text.secondary' }} />
                     <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                       Upload photo
                     </Typography>
