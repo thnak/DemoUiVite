@@ -6,6 +6,17 @@
     <meta name="theme-color" content="#000000" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Demo UI Vite</title>
+    <script>
+      // Early theme detection to prevent flash
+      (function() {
+        var mode = localStorage.getItem('theme-mode');
+        var resolved = mode;
+        if (!mode || mode === 'system') {
+          resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-color-scheme', resolved);
+      })();
+    </script>
   </head>
 
   <body>
