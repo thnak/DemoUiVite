@@ -56,12 +56,14 @@ export function useGenerateToken(
  * const { mutate } = useRefreshToken({
  *   onSuccess: (data) => {
  *     if (data.isSuccess && data.value) {
- *       localStorage.setItem('accessToken', data.value.accessToken);
+ *       // Store tokens securely based on your app's requirements
+ *       // Note: Consider using httpOnly cookies for better security
+ *       storeTokenSecurely('accessToken', data.value.accessToken);
  *     }
  *   },
  * });
  *
- * mutate({ refreshToken: localStorage.getItem('refreshToken') });
+ * mutate({ refreshToken: getStoredRefreshToken() });
  * ```
  */
 export function useRefreshToken(
@@ -83,11 +85,12 @@ export function useRefreshToken(
  * ```tsx
  * const { mutate } = useRevokeToken({
  *   onSuccess: () => {
- *     localStorage.removeItem('refreshToken');
+ *     // Clear stored refresh token
+ *     clearStoredRefreshToken();
  *   },
  * });
  *
- * mutate({ refreshToken: localStorage.getItem('refreshToken') });
+ * mutate({ refreshToken: getStoredRefreshToken() });
  * ```
  */
 export function useRevokeToken(

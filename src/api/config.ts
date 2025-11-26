@@ -26,8 +26,9 @@ export function getApiBaseUrl(devBaseUrl?: string): string {
   }
 
   if (isDevelopment) {
-    // Default development URL - can be overridden via environment variable
-    return import.meta.env.VITE_API_BASE_URL || '';
+    // Default development URL - can be overridden via VITE_API_BASE_URL environment variable
+    // Falls back to current origin if not set (useful for proxy setup)
+    return import.meta.env.VITE_API_BASE_URL || window.location.origin;
   }
 
   // Production: use origin (same domain)
