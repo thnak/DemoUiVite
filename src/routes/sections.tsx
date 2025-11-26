@@ -17,6 +17,8 @@ export const BlogPage = lazy(() => import('src/pages/blog'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const UserCreatePage = lazy(() => import('src/pages/user-create'));
 export const AreaPage = lazy(() => import('src/pages/area'));
+export const AreaCreatePage = lazy(() => import('src/pages/area-create'));
+export const AreaEditPage = lazy(() => import('src/pages/area-edit'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const ProductListPage = lazy(() => import('src/pages/product-list'));
@@ -65,6 +67,8 @@ export const routesSection: RouteObject[] = [
       { path: 'user', element: <UserPage /> },
       { path: 'user/create', element: <UserCreatePage /> },
       { path: 'area', element: <AreaPage /> },
+      { path: 'area/create', element: <AreaCreatePage /> },
+      { path: 'area/:id/edit', element: <AreaEditPage /> },
       { path: 'products', element: <ProductListPage /> },
       { path: 'products/create', element: <ProductCreatePage /> },
       { path: 'products/:id/edit', element: <ProductEditPage /> },

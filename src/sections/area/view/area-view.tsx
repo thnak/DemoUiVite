@@ -9,6 +9,8 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
+import { RouterLink } from 'src/routes/components';
+
 import { _areas } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -72,6 +74,8 @@ export function AreaView() {
           </Box>
         </Box>
         <Button
+          component={RouterLink}
+          href="/area/create"
           variant="contained"
           color="inherit"
           startIcon={<Iconify icon="mingcute:add-line" />}

@@ -10,6 +10,8 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
+import { useRouter } from 'src/routes/hooks';
+
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
@@ -27,6 +29,7 @@ type AreaTableRowProps = {
 };
 
 export function AreaTableRow({ row, selected, onSelectRow }: AreaTableRowProps) {
+  const router = useRouter();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -36,6 +39,15 @@ export function AreaTableRow({ row, selected, onSelectRow }: AreaTableRowProps) 
   const handleClosePopover = useCallback(() => {
     setOpenPopover(null);
   }, []);
+
+  const handleEditRow = useCallback(() => {
+    router.push(`/area/${row.id}/edit`);
+  }, [router, row.id]);
+
+  const handleEditFromMenu = useCallback(() => {
+    handleClosePopover();
+    handleEditRow();
+  }, [handleClosePopover, handleEditRow]);
 
   return (
     <>
@@ -64,7 +76,7 @@ export function AreaTableRow({ row, selected, onSelectRow }: AreaTableRowProps) 
         </TableCell>
 
         <TableCell align="right">
-          <IconButton>
+          <IconButton onClick={handleEditRow}>
             <Iconify icon="solar:pen-bold" />
           </IconButton>
           <IconButton onClick={handleOpenPopover}>
@@ -96,7 +108,7 @@ export function AreaTableRow({ row, selected, onSelectRow }: AreaTableRowProps) 
             },
           }}
         >
-          <MenuItem onClick={handleClosePopover}>
+          <MenuItem onClick={handleEditFromMenu}>
             <Iconify icon="solar:pen-bold" />
             Edit
           </MenuItem>
