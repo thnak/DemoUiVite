@@ -44,7 +44,9 @@ function resolveMode(mode: ThemeModeValue): 'light' | 'dark' {
 
 // Apply theme to document
 function applyTheme(resolvedMode: 'light' | 'dark') {
-  document.documentElement.setAttribute('data-color-scheme', resolvedMode);
+  if (typeof document !== 'undefined') {
+    document.documentElement.setAttribute('data-color-scheme', resolvedMode);
+  }
 }
 
 // ----------------------------------------------------------------------
@@ -73,7 +75,9 @@ export function ThemeModeProvider({ children }: ThemeModeProviderProps) {
 
   const setMode = useCallback((newMode: ThemeModeValue) => {
     setModeState(newMode);
-    localStorage.setItem(STORAGE_KEY, newMode);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEY, newMode);
+    }
   }, []);
 
   // Update resolved mode when mode changes
@@ -85,7 +89,7 @@ export function ThemeModeProvider({ children }: ThemeModeProviderProps) {
 
   // Listen to system preference changes when mode is 'system'
   useEffect(() => {
-    if (mode !== 'system') {
+    if (typeof window === 'undefined' || mode !== 'system') {
       return undefined;
     }
 
