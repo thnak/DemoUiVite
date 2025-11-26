@@ -1,15 +1,19 @@
-import type { UseMutationOptions } from '@tanstack/react-query';
+import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 
-import { useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
-  putapiTenantupdate,
-  postapiTenantcreate,
   deleteapiTenantdeleteid,
+  postapiTenantcreate,
   postapiTenantgetalltenants,
+  putapiTenantupdate,
 } from '../../services/generated/tenant';
 
-import type { SortType, UpdateTenantRequest, CreateNewTenantRequest } from '../../types/generated';
+import type {
+  CreateNewTenantRequest,
+  SortType,
+  UpdateTenantRequest,
+} from '../../types/generated';
 
 // ----------------------------------------------------------------------
 // Tenant Hooks
@@ -30,8 +34,7 @@ export function usePostapiTenantcreate(
   options?: Omit<UseMutationOptions<void, Error, { data: CreateNewTenantRequest }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: CreateNewTenantRequest }) =>
-      postapiTenantcreate(variables.data),
+    mutationFn: (variables: { data: CreateNewTenantRequest }) => postapiTenantcreate(variables.data),
     ...options,
   });
 }
@@ -50,20 +53,10 @@ export function useDeleteapiTenantdeleteid(
 /**
  */
 export function usePostapiTenantgetalltenants(
-  options?: Omit<
-    UseMutationOptions<
-      void,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<void, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => postapiTenantgetalltenants(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => postapiTenantgetalltenants(variables.data, variables.params),
     ...options,
   });
 }

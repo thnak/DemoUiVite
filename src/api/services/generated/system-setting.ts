@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
-  SystemSettingEntity,
+  SortType,
   StringObjectKeyValuePair,
-  SystemSettingEntityResult,
+  SystemSettingEntity,
   SystemSettingEntityBasePaginationResponse,
+  SystemSettingEntityResult,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getSystemSettingById(id: string): Promise<SystemSettingEnt
  * @param data - Request body
  * @returns Promise<SystemSettingEntityBasePaginationResponse>
  */
-export async function getSystemSettingPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<SystemSettingEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<SystemSettingEntityBasePaginationResponse>(
-    SYSTEMSETTING_ENDPOINTS.getSystemSettingPage,
-    data,
-    { params }
-  );
+export async function getSystemSettingPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<SystemSettingEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<SystemSettingEntityBasePaginationResponse>(SYSTEMSETTING_ENDPOINTS.getSystemSettingPage, data, { params });
   return response.data;
 }
 
@@ -67,13 +60,8 @@ export async function getSystemSettingPage(
  * @param data - Request body
  * @returns Promise<SystemSettingEntityResult>
  */
-export async function createSystemSetting(
-  data: SystemSettingEntity
-): Promise<SystemSettingEntityResult> {
-  const response = await axiosInstance.post<SystemSettingEntityResult>(
-    SYSTEMSETTING_ENDPOINTS.createSystemSetting,
-    data
-  );
+export async function createSystemSetting(data: SystemSettingEntity): Promise<SystemSettingEntityResult> {
+  const response = await axiosInstance.post<SystemSettingEntityResult>(SYSTEMSETTING_ENDPOINTS.createSystemSetting, data);
   return response.data;
 }
 
@@ -84,10 +72,7 @@ export async function createSystemSetting(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateSystemSetting(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateSystemSetting(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/systemsetting/update/${id}`, data);
   return response.data;
 }
@@ -110,8 +95,6 @@ export async function deleteSystemSetting(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewSystemSettingCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    SYSTEMSETTING_ENDPOINTS.generateNewSystemSettingCode
-  );
+  const response = await axiosInstance.get<string>(SYSTEMSETTING_ENDPOINTS.generateNewSystemSettingCode);
   return response.data;
 }

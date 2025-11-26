@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createBomHeader,
   deleteBomHeader,
-  updateBomHeader,
+  generateNewBomHeaderCode,
   getBomHeaderById,
   getBomHeaderPage,
-  generateNewBomHeaderCode,
+  updateBomHeader,
 } from '../../services/generated/bom-header';
 
 import type {
-  SortType,
-  BooleanResult,
   BomHeaderEntity,
-  BomHeaderEntityResult,
-  StringObjectKeyValuePair,
   BomHeaderEntityBasePaginationResponse,
+  BomHeaderEntityResult,
+  BooleanResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,20 +66,10 @@ export function useGenerateNewBomHeaderCode(
  * Get paginated list of Bom Header
  */
 export function useGetBomHeaderPage(
-  options?: Omit<
-    UseMutationOptions<
-      BomHeaderEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BomHeaderEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getBomHeaderPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getBomHeaderPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -88,10 +78,7 @@ export function useGetBomHeaderPage(
  * Create a new Bom Header
  */
 export function useCreateBomHeader(
-  options?: Omit<
-    UseMutationOptions<BomHeaderEntityResult, Error, { data: BomHeaderEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BomHeaderEntityResult, Error, { data: BomHeaderEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: BomHeaderEntity }) => createBomHeader(variables.data),
@@ -103,14 +90,10 @@ export function useCreateBomHeader(
  * Update an existing Bom Header
  */
 export function useUpdateBomHeader(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateBomHeader(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateBomHeader(variables.id, variables.data),
     ...options,
   });
 }

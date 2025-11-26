@@ -4,13 +4,16 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
   getapitranslationsbatch,
-  postapitranslationsupload,
   getapitranslationsdownload,
   getapitranslationslangCode,
   postapitranslationsgetlang,
+  postapitranslationsupload,
 } from '../../services/generated/localization';
 
-import type { SortType, LocalizeAppLangDtoBasePaginationResponse } from '../../types/generated';
+import type {
+  LocalizeAppLangDtoBasePaginationResponse,
+  SortType,
+} from '../../types/generated';
 
 // ----------------------------------------------------------------------
 // Localization Hooks
@@ -23,8 +26,7 @@ import type { SortType, LocalizeAppLangDtoBasePaginationResponse } from '../../t
  */
 export const localizationKeys = {
   all: ['localization'] as const,
-  getapitranslationslangCode: (langCode: string) =>
-    ['localization', 'getapitranslationslangCode', langCode] as const,
+  getapitranslationslangCode: (langCode: string) => ['localization', 'getapitranslationslangCode', langCode] as const,
   getapitranslationsbatch: ['localization', 'getapitranslationsbatch'] as const,
   getapitranslationsdownload: ['localization', 'getapitranslationsdownload'] as const,
 };
@@ -73,20 +75,10 @@ export function useGetapitranslationsdownload(
 /**
  */
 export function usePostapitranslationsgetlang(
-  options?: Omit<
-    UseMutationOptions<
-      LocalizeAppLangDtoBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<LocalizeAppLangDtoBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => postapitranslationsgetlang(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => postapitranslationsgetlang(variables.data, variables.params),
     ...options,
   });
 }

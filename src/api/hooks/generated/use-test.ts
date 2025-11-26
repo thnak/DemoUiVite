@@ -1,8 +1,10 @@
-import type { UseQueryOptions } from '@tanstack/react-query';
+import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
-import { getapiTeststream } from '../../services/generated/test';
+import {
+  getapiTeststream,
+} from '../../services/generated/test';
 
 // ----------------------------------------------------------------------
 // Test Hooks

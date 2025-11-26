@@ -123,16 +123,7 @@ export type AdminGlobalSettingEntityResult = {
 /**
  * Specifies the available time intervals for data aggregation in the system.
  */
-export type AggregationInterval =
-  | 'notScheduled'
-  | 'oneSecond'
-  | 'fiveSeconds'
-  | 'tenSeconds'
-  | 'twentySeconds'
-  | 'thirtySeconds'
-  | 'oneMinute'
-  | 'fiveMinutes'
-  | 'fifteenMinutes';
+export type AggregationInterval = 'notScheduled' | 'oneSecond' | 'fiveSeconds' | 'tenSeconds' | 'twentySeconds' | 'thirtySeconds' | 'oneMinute' | 'fiveMinutes' | 'fifteenMinutes';
 
 export type ApiGatewayEntity = {
   id?: ObjectId;
@@ -652,14 +643,7 @@ export type ChangePasswordDto = {
 /**
  * Type of changes for an entity
  */
-export type ChangesType =
-  | 'create'
-  | 'update'
-  | 'delete'
-  | 'restore'
-  | 'permanentDelete'
-  | 'export'
-  | 'import';
+export type ChangesType = 'create' | 'update' | 'delete' | 'restore' | 'permanentDelete' | 'export' | 'import';
 
 export type ChildWidgetConfigEntity = {
   id?: ObjectId;
@@ -920,14 +904,7 @@ export type DataSource = {
 
 export type DataSourceFormat = 'jsonTable' | 'number' | 'string' | 'boolean';
 
-export type DayOfWeek =
-  | 'sunday'
-  | 'monday'
-  | 'tuesday'
-  | 'wednesday'
-  | 'thursday'
-  | 'friday'
-  | 'saturday';
+export type DayOfWeek = 'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday';
 
 export type DefectEntity = {
   id?: ObjectId;
@@ -1059,36 +1036,7 @@ export type DepartmentEntityResult = {
 /**
  * Represents the reason for a disconnection event in the system.
  */
-export type DisconnectReason =
-  | 'normalDisconnection'
-  | 'disconnectWithWillMessage'
-  | 'unspecifiedError'
-  | 'malformedPacket'
-  | 'protocolError'
-  | 'implementationSpecificError'
-  | 'notAuthorized'
-  | 'serverBusy'
-  | 'serverShuttingDown'
-  | 'keepAliveTimeout'
-  | 'sessionTakenOver'
-  | 'topicFilterInvalid'
-  | 'topicNameInvalid'
-  | 'receiveMaximumExceeded'
-  | 'topicAliasInvalid'
-  | 'packetTooLarge'
-  | 'messageRateTooHigh'
-  | 'quotaExceeded'
-  | 'administrativeAction'
-  | 'payloadFormatInvalid'
-  | 'retainNotSupported'
-  | 'qoSNotSupported'
-  | 'useAnotherServer'
-  | 'serverMoved'
-  | 'sharedSubscriptionsNotSupported'
-  | 'connectionRateExceeded'
-  | 'maximumConnectTime'
-  | 'subscriptionIdentifiersNotSupported'
-  | 'wildcardSubscriptionsNotSupported';
+export type DisconnectReason = 'normalDisconnection' | 'disconnectWithWillMessage' | 'unspecifiedError' | 'malformedPacket' | 'protocolError' | 'implementationSpecificError' | 'notAuthorized' | 'serverBusy' | 'serverShuttingDown' | 'keepAliveTimeout' | 'sessionTakenOver' | 'topicFilterInvalid' | 'topicNameInvalid' | 'receiveMaximumExceeded' | 'topicAliasInvalid' | 'packetTooLarge' | 'messageRateTooHigh' | 'quotaExceeded' | 'administrativeAction' | 'payloadFormatInvalid' | 'retainNotSupported' | 'qoSNotSupported' | 'useAnotherServer' | 'serverMoved' | 'sharedSubscriptionsNotSupported' | 'connectionRateExceeded' | 'maximumConnectTime' | 'subscriptionIdentifiersNotSupported' | 'wildcardSubscriptionsNotSupported';
 
 export type DocumentEntity = {
   id?: ObjectId;
@@ -1214,16 +1162,7 @@ export type DowntimeInputResult = {
   errorType?: ErrorType;
 };
 
-export type DowntimeReasonCategories =
-  | 'changeoverOrSetup'
-  | 'plannedMaintenance'
-  | 'breaks'
-  | 'meetingsOrTraining'
-  | 'materialIssues'
-  | 'operatorIssues'
-  | 'qualityIssues'
-  | 'breakdown'
-  | 'uncategorized';
+export type DowntimeReasonCategories = 'changeoverOrSetup' | 'plannedMaintenance' | 'breaks' | 'meetingsOrTraining' | 'materialIssues' | 'operatorIssues' | 'qualityIssues' | 'breakdown' | 'uncategorized';
 
 export type DowntimeReasonEntity = {
   id?: ObjectId;
@@ -1279,20 +1218,7 @@ export type EntityLogMetaData = {
 /**
  * Chỉ định các loại lỗi có thể xảy ra trong ứng dụng.
  */
-export type ErrorType =
-  | 'none'
-  | 'notFound'
-  | 'duplicate'
-  | 'cancelled'
-  | 'validation'
-  | 'database'
-  | 'unknown'
-  | 'permissionDenied'
-  | 'javaScriptError'
-  | 'internalError'
-  | 'invalidArgument'
-  | 'apiError'
-  | 'unauthorized';
+export type ErrorType = 'none' | 'notFound' | 'duplicate' | 'cancelled' | 'validation' | 'database' | 'unknown' | 'permissionDenied' | 'javaScriptError' | 'internalError' | 'invalidArgument' | 'apiError' | 'unauthorized';
 
 export type EscalationStep = {
   order?: number;
@@ -1301,13 +1227,7 @@ export type EscalationStep = {
   delayMinutes?: number;
 };
 
-export type FileClassify =
-  | 'normal'
-  | 'thumbnailFile'
-  | 'thumbnailWebpFile'
-  | 'm3U8File'
-  | 'm3U8FileSegment'
-  | 'iotImageFile';
+export type FileClassify = 'normal' | 'thumbnailFile' | 'thumbnailWebpFile' | 'm3U8File' | 'm3U8FileSegment' | 'iotImageFile';
 
 export type FileInfoEntity = {
   id?: ObjectId;
@@ -1748,13 +1668,7 @@ export type FolderPermissionEntityResult = {
   errorType?: ErrorType;
 };
 
-export type FolderType =
-  | 'folder'
-  | 'hiddenFolder'
-  | 'deletedFolder'
-  | 'systemFolder'
-  | 'trashFolder'
-  | 'rootFolder';
+export type FolderType = 'folder' | 'hiddenFolder' | 'deletedFolder' | 'systemFolder' | 'trashFolder' | 'rootFolder';
 
 /**
  * Represents a request to generate a JWT access token for a user, including credentials and optional expiration.
@@ -1876,7 +1790,8 @@ export type IfElseClause = {
 /**
  * Represents the base type for if-else clauses in the system.
  */
-export type IfElseClauseType = {};
+export type IfElseClauseType = {
+};
 
 export type IntegrationSettings = {
   erpEndpoint?: string | null;
@@ -2043,12 +1958,7 @@ export type IoTDeviceGroupEntityResult = {
   errorType?: ErrorType;
 };
 
-export type IoTDeviceGroupStatus =
-  | 'active'
-  | 'inactive'
-  | 'maintenance'
-  | 'offline'
-  | 'decommissioned';
+export type IoTDeviceGroupStatus = 'active' | 'inactive' | 'maintenance' | 'offline' | 'decommissioned';
 
 export type IoTDeviceModelEntity = {
   id?: ObjectId;
@@ -2097,25 +2007,9 @@ export type IoTDeviceModelEntityResult = {
 /**
  * Status of an IoT Device
  */
-export type IoTDeviceStatus =
-  | 'active'
-  | 'inactive'
-  | 'maintenance'
-  | 'offline'
-  | 'online'
-  | 'decommissioned'
-  | 'idle'
-  | 'banned'
-  | 'updatingFirmware'
-  | 'error';
+export type IoTDeviceStatus = 'active' | 'inactive' | 'maintenance' | 'offline' | 'online' | 'decommissioned' | 'idle' | 'banned' | 'updatingFirmware' | 'error';
 
-export type IoTDeviceType =
-  | 'gateway'
-  | 'sensorNode'
-  | 'edgeDevice'
-  | 'actuator'
-  | 'controller'
-  | 'other';
+export type IoTDeviceType = 'gateway' | 'sensorNode' | 'edgeDevice' | 'actuator' | 'controller' | 'other';
 
 export type IoTSensorEntity = {
   id?: ObjectId;
@@ -2182,33 +2076,12 @@ export type IoTSensorEntityResult = {
   errorType?: ErrorType;
 };
 
-export type IoTSensorStatus =
-  | 'operational'
-  | 'maintenance'
-  | 'offline'
-  | 'faulty'
-  | 'decommissioned';
+export type IoTSensorStatus = 'operational' | 'maintenance' | 'offline' | 'faulty' | 'decommissioned';
 
 /**
  * Io t sensor type
  */
-export type IoTSensorType =
-  | 'temperature'
-  | 'humidity'
-  | 'pressure'
-  | 'light'
-  | 'camera'
-  | 'proximity'
-  | 'accelerometer'
-  | 'gyroscope'
-  | 'magnetometer'
-  | 'heartRate'
-  | 'gps'
-  | 'pingStatus'
-  | 'counter'
-  | 'analog'
-  | 'press'
-  | 'unknown';
+export type IoTSensorType = 'temperature' | 'humidity' | 'pressure' | 'light' | 'camera' | 'proximity' | 'accelerometer' | 'gyroscope' | 'magnetometer' | 'heartRate' | 'gps' | 'pingStatus' | 'counter' | 'analog' | 'press' | 'unknown';
 
 export type IotRecordModel = {
   deviceId?: string | null;
@@ -2487,24 +2360,6 @@ export type MachineAreaMappingResult = {
   message?: string | null;
   errorType?: ErrorType;
 };
-
-/**
- * Trạng thái vị trí
- */
-export type LocationStatus = 'active' | 'maintenance' | 'hold';
-
-/**
- * Loại vị trí trong kho hoặc nhà xưởng
- */
-export type LocationType =
-  | 'aisle'
-  | 'rack'
-  | 'shelf'
-  | 'bin'
-  | 'floor'
-  | 'receivingDock'
-  | 'shippingDock'
-  | 'station';
 
 export type MachineEntity = {
   id?: ObjectId;
@@ -2904,36 +2759,7 @@ export type MqttControllerGetTemplateResponse = {
   description?: string | null;
 };
 
-export type MqttDisconnectReasonCode =
-  | 'normalDisconnection'
-  | 'disconnectWithWillMessage'
-  | 'unspecifiedError'
-  | 'malformedPacket'
-  | 'protocolError'
-  | 'implementationSpecificError'
-  | 'notAuthorized'
-  | 'serverBusy'
-  | 'serverShuttingDown'
-  | 'keepAliveTimeout'
-  | 'sessionTakenOver'
-  | 'topicFilterInvalid'
-  | 'topicNameInvalid'
-  | 'receiveMaximumExceeded'
-  | 'topicAliasInvalid'
-  | 'packetTooLarge'
-  | 'messageRateTooHigh'
-  | 'quotaExceeded'
-  | 'administrativeAction'
-  | 'payloadFormatInvalid'
-  | 'retainNotSupported'
-  | 'qoSNotSupported'
-  | 'useAnotherServer'
-  | 'serverMoved'
-  | 'sharedSubscriptionsNotSupported'
-  | 'connectionRateExceeded'
-  | 'maximumConnectTime'
-  | 'subscriptionIdentifiersNotSupported'
-  | 'wildcardSubscriptionsNotSupported';
+export type MqttDisconnectReasonCode = 'normalDisconnection' | 'disconnectWithWillMessage' | 'unspecifiedError' | 'malformedPacket' | 'protocolError' | 'implementationSpecificError' | 'notAuthorized' | 'serverBusy' | 'serverShuttingDown' | 'keepAliveTimeout' | 'sessionTakenOver' | 'topicFilterInvalid' | 'topicNameInvalid' | 'receiveMaximumExceeded' | 'topicAliasInvalid' | 'packetTooLarge' | 'messageRateTooHigh' | 'quotaExceeded' | 'administrativeAction' | 'payloadFormatInvalid' | 'retainNotSupported' | 'qoSNotSupported' | 'useAnotherServer' | 'serverMoved' | 'sharedSubscriptionsNotSupported' | 'connectionRateExceeded' | 'maximumConnectTime' | 'subscriptionIdentifiersNotSupported' | 'wildcardSubscriptionsNotSupported';
 
 export type NotificationSettings = {
   useEmail?: boolean;
@@ -3350,27 +3176,9 @@ export type PermissionEntityResult = {
  */
 export type PermissionType = 'permission' | 'department' | 'employeeId' | 'securityClearance';
 
-export type PinInputMode =
-  | 'unspecified'
-  | 'input'
-  | 'output'
-  | 'pullUp'
-  | 'inputPullUp'
-  | 'pullDown'
-  | 'inputPullDown'
-  | 'openDrain'
-  | 'outputOpenDrain'
-  | 'analog';
+export type PinInputMode = 'unspecified' | 'input' | 'output' | 'pullUp' | 'inputPullUp' | 'pullDown' | 'inputPullDown' | 'openDrain' | 'outputOpenDrain' | 'analog';
 
-export type PinInterruptMode =
-  | 'disabled'
-  | 'risingEdge'
-  | 'fallingEdge'
-  | 'edgeChange'
-  | 'lowThreshold'
-  | 'highThreshold'
-  | 'lowWaveformEdge'
-  | 'highWaveformEdge';
+export type PinInterruptMode = 'disabled' | 'risingEdge' | 'fallingEdge' | 'edgeChange' | 'lowThreshold' | 'highThreshold' | 'lowWaveformEdge' | 'highWaveformEdge';
 
 export type Position = {
   x?: number;
@@ -3442,18 +3250,7 @@ export type ProductEntityResult = {
   errorType?: ErrorType;
 };
 
-export type ProductType =
-  | 'finishedGood'
-  | 'assembly'
-  | 'component'
-  | 'rawMaterial'
-  | 'subAssembly'
-  | 'service'
-  | 'nonStockItem'
-  | 'tooling'
-  | 'consumable'
-  | 'digital'
-  | 'unknown';
+export type ProductType = 'finishedGood' | 'assembly' | 'component' | 'rawMaterial' | 'subAssembly' | 'service' | 'nonStockItem' | 'tooling' | 'consumable' | 'digital' | 'unknown';
 
 /**
  * Enum để phân loại sản lượng
@@ -3512,17 +3309,7 @@ export type ProductionSettings = {
   defaultScrapPercent?: number;
 };
 
-export type ProductionStatus =
-  | 'inPlanning'
-  | 'pending'
-  | 'scheduled'
-  | 'ready'
-  | 'inProgress'
-  | 'paused'
-  | 'completed'
-  | 'completedShort'
-  | 'closed'
-  | 'cancelled';
+export type ProductionStatus = 'inPlanning' | 'pending' | 'scheduled' | 'ready' | 'inProgress' | 'paused' | 'completed' | 'completedShort' | 'closed' | 'cancelled';
 
 /**
  * Request to login using a QR code token
@@ -3939,14 +3726,7 @@ export type SchedulingAlgorithm = 'finite' | 'infinite' | 'heuristic';
 /**
  * Represents the classification of scripts in the system.
  */
-export type ScriptClassify =
-  | 'utility'
-  | 'dataProcessing'
-  | 'integration'
-  | 'maintenance'
-  | 'monitoring'
-  | 'reporting'
-  | 'custom';
+export type ScriptClassify = 'utility' | 'dataProcessing' | 'integration' | 'maintenance' | 'monitoring' | 'reporting' | 'custom';
 
 export type ScriptDefinitionEntity = {
   id?: ObjectId;
@@ -4409,15 +4189,7 @@ export type StationGroupStationMappingResult = {
   errorType?: ErrorType;
 };
 
-export type StationJobStatus =
-  | 'pending'
-  | 'scheduled'
-  | 'ready'
-  | 'inProgress'
-  | 'paused'
-  | 'completed'
-  | 'failed'
-  | 'cancelled';
+export type StationJobStatus = 'pending' | 'scheduled' | 'ready' | 'inProgress' | 'paused' | 'completed' | 'failed' | 'cancelled';
 
 export type StopEntity = {
   id?: ObjectId;
@@ -4737,24 +4509,7 @@ export type SystemErrorReportStatus = 'new' | 'inProgress' | 'resolved' | 'close
 /**
  * System error type
  */
-export type SystemErrorType =
-  | 'unknown'
-  | 'system'
-  | 'validation'
-  | 'network'
-  | 'api'
-  | 'authentication'
-  | 'authorization'
-  | 'clientLogic'
-  | 'timeout'
-  | 'resourceNotFound'
-  | 'conflict'
-  | 'dependency'
-  | 'configuration'
-  | 'userAction'
-  | 'thirdParty'
-  | 'warning'
-  | 'info';
+export type SystemErrorType = 'unknown' | 'system' | 'validation' | 'network' | 'api' | 'authentication' | 'authorization' | 'clientLogic' | 'timeout' | 'resourceNotFound' | 'conflict' | 'dependency' | 'configuration' | 'userAction' | 'thirdParty' | 'warning' | 'info';
 
 export type SystemSettingEntity = {
   id?: ObjectId;
@@ -4817,22 +4572,7 @@ export type TryRunMetricRequest = {
 /**
  * Represents the unit of measure for quantities in the system.
  */
-export type UnitOfMeasure =
-  | 'none'
-  | 'piece'
-  | 'kilogram'
-  | 'gram'
-  | 'liter'
-  | 'milliliter'
-  | 'meter'
-  | 'centimeter'
-  | 'millimeter'
-  | 'inch'
-  | 'foot'
-  | 'yard'
-  | 'gallon'
-  | 'pound'
-  | 'ounce';
+export type UnitOfMeasure = 'none' | 'piece' | 'kilogram' | 'gram' | 'liter' | 'milliliter' | 'meter' | 'centimeter' | 'millimeter' | 'inch' | 'foot' | 'yard' | 'gallon' | 'pound' | 'ounce';
 
 export type UnitSystem = 'metric' | 'imperial';
 

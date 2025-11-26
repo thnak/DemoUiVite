@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createWorkOrder,
   deleteWorkOrder,
-  updateWorkOrder,
+  generateNewWorkOrderCode,
   getWorkOrderById,
   getWorkOrderPage,
-  generateNewWorkOrderCode,
+  updateWorkOrder,
 } from '../../services/generated/work-order';
 
 import type {
-  SortType,
   BooleanResult,
-  WorkOrderEntity,
-  WorkOrderEntityResult,
+  SortType,
   StringObjectKeyValuePair,
+  WorkOrderEntity,
   WorkOrderEntityBasePaginationResponse,
+  WorkOrderEntityResult,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,20 +66,10 @@ export function useGenerateNewWorkOrderCode(
  * Get paginated list of Work Order
  */
 export function useGetWorkOrderPage(
-  options?: Omit<
-    UseMutationOptions<
-      WorkOrderEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<WorkOrderEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getWorkOrderPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getWorkOrderPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -88,10 +78,7 @@ export function useGetWorkOrderPage(
  * Create a new Work Order
  */
 export function useCreateWorkOrder(
-  options?: Omit<
-    UseMutationOptions<WorkOrderEntityResult, Error, { data: WorkOrderEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<WorkOrderEntityResult, Error, { data: WorkOrderEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: WorkOrderEntity }) => createWorkOrder(variables.data),
@@ -103,14 +90,10 @@ export function useCreateWorkOrder(
  * Update an existing Work Order
  */
 export function useUpdateWorkOrder(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateWorkOrder(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateWorkOrder(variables.id, variables.data),
     ...options,
   });
 }

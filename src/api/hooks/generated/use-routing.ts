@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createRouting,
   deleteRouting,
-  updateRouting,
+  generateNewRoutingCode,
   getRoutingById,
   getRoutingPage,
-  generateNewRoutingCode,
+  updateRouting,
 } from '../../services/generated/routing';
 
 import type {
-  SortType,
   BooleanResult,
   RoutingEntity,
-  RoutingEntityResult,
-  StringObjectKeyValuePair,
   RoutingEntityBasePaginationResponse,
+  RoutingEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,20 +66,10 @@ export function useGenerateNewRoutingCode(
  * Get paginated list of Routing
  */
 export function useGetRoutingPage(
-  options?: Omit<
-    UseMutationOptions<
-      RoutingEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<RoutingEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getRoutingPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getRoutingPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -88,10 +78,7 @@ export function useGetRoutingPage(
  * Create a new Routing
  */
 export function useCreateRouting(
-  options?: Omit<
-    UseMutationOptions<RoutingEntityResult, Error, { data: RoutingEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<RoutingEntityResult, Error, { data: RoutingEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: RoutingEntity }) => createRouting(variables.data),
@@ -103,14 +90,10 @@ export function useCreateRouting(
  * Update an existing Routing
  */
 export function useUpdateRouting(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateRouting(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateRouting(variables.id, variables.data),
     ...options,
   });
 }

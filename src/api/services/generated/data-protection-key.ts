@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   DataProtectionKeyEntity,
-  StringObjectKeyValuePair,
-  DataProtectionKeyEntityResult,
   DataProtectionKeyEntityBasePaginationResponse,
+  DataProtectionKeyEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getDataProtectionKeyById(id: string): Promise<DataProtecti
  * @param data - Request body
  * @returns Promise<DataProtectionKeyEntityBasePaginationResponse>
  */
-export async function getDataProtectionKeyPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<DataProtectionKeyEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<DataProtectionKeyEntityBasePaginationResponse>(
-    DATAPROTECTIONKEY_ENDPOINTS.getDataProtectionKeyPage,
-    data,
-    { params }
-  );
+export async function getDataProtectionKeyPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<DataProtectionKeyEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<DataProtectionKeyEntityBasePaginationResponse>(DATAPROTECTIONKEY_ENDPOINTS.getDataProtectionKeyPage, data, { params });
   return response.data;
 }
 
@@ -67,13 +60,8 @@ export async function getDataProtectionKeyPage(
  * @param data - Request body
  * @returns Promise<DataProtectionKeyEntityResult>
  */
-export async function createDataProtectionKey(
-  data: DataProtectionKeyEntity
-): Promise<DataProtectionKeyEntityResult> {
-  const response = await axiosInstance.post<DataProtectionKeyEntityResult>(
-    DATAPROTECTIONKEY_ENDPOINTS.createDataProtectionKey,
-    data
-  );
+export async function createDataProtectionKey(data: DataProtectionKeyEntity): Promise<DataProtectionKeyEntityResult> {
+  const response = await axiosInstance.post<DataProtectionKeyEntityResult>(DATAPROTECTIONKEY_ENDPOINTS.createDataProtectionKey, data);
   return response.data;
 }
 
@@ -84,14 +72,8 @@ export async function createDataProtectionKey(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateDataProtectionKey(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/dataprotectionkey/update/${id}`,
-    data
-  );
+export async function updateDataProtectionKey(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/dataprotectionkey/update/${id}`, data);
   return response.data;
 }
 
@@ -113,8 +95,6 @@ export async function deleteDataProtectionKey(id: string): Promise<BooleanResult
  * @returns Promise<string>
  */
 export async function generateNewDataProtectionKeyCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    DATAPROTECTIONKEY_ENDPOINTS.generateNewDataProtectionKeyCode
-  );
+  const response = await axiosInstance.get<string>(DATAPROTECTIONKEY_ENDPOINTS.generateNewDataProtectionKeyCode);
   return response.data;
 }

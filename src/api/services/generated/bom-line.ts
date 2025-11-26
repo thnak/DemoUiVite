@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BomLineEntity,
-  BooleanResult,
-  BomLineEntityResult,
-  StringObjectKeyValuePair,
   BomLineEntityBasePaginationResponse,
+  BomLineEntityResult,
+  BooleanResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getBomLineById(id: string): Promise<BomLineEntity> {
  * @param data - Request body
  * @returns Promise<BomLineEntityBasePaginationResponse>
  */
-export async function getBomLinePage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<BomLineEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<BomLineEntityBasePaginationResponse>(
-    BOMLINE_ENDPOINTS.getBomLinePage,
-    data,
-    { params }
-  );
+export async function getBomLinePage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<BomLineEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<BomLineEntityBasePaginationResponse>(BOMLINE_ENDPOINTS.getBomLinePage, data, { params });
   return response.data;
 }
 
@@ -68,10 +61,7 @@ export async function getBomLinePage(
  * @returns Promise<BomLineEntityResult>
  */
 export async function createBomLine(data: BomLineEntity): Promise<BomLineEntityResult> {
-  const response = await axiosInstance.post<BomLineEntityResult>(
-    BOMLINE_ENDPOINTS.createBomLine,
-    data
-  );
+  const response = await axiosInstance.post<BomLineEntityResult>(BOMLINE_ENDPOINTS.createBomLine, data);
   return response.data;
 }
 
@@ -82,10 +72,7 @@ export async function createBomLine(data: BomLineEntity): Promise<BomLineEntityR
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateBomLine(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateBomLine(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/bomline/update/${id}`, data);
   return response.data;
 }

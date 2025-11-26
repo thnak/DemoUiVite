@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
-  UserLogHistoryEntity,
+  SortType,
   StringObjectKeyValuePair,
-  UserLogHistoryEntityResult,
+  UserLogHistoryEntity,
   UserLogHistoryEntityBasePaginationResponse,
+  UserLogHistoryEntityResult,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getUserLogHistoryById(id: string): Promise<UserLogHistoryE
  * @param data - Request body
  * @returns Promise<UserLogHistoryEntityBasePaginationResponse>
  */
-export async function getUserLogHistoryPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<UserLogHistoryEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<UserLogHistoryEntityBasePaginationResponse>(
-    USERLOGHISTORY_ENDPOINTS.getUserLogHistoryPage,
-    data,
-    { params }
-  );
+export async function getUserLogHistoryPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<UserLogHistoryEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<UserLogHistoryEntityBasePaginationResponse>(USERLOGHISTORY_ENDPOINTS.getUserLogHistoryPage, data, { params });
   return response.data;
 }
 
@@ -67,13 +60,8 @@ export async function getUserLogHistoryPage(
  * @param data - Request body
  * @returns Promise<UserLogHistoryEntityResult>
  */
-export async function createUserLogHistory(
-  data: UserLogHistoryEntity
-): Promise<UserLogHistoryEntityResult> {
-  const response = await axiosInstance.post<UserLogHistoryEntityResult>(
-    USERLOGHISTORY_ENDPOINTS.createUserLogHistory,
-    data
-  );
+export async function createUserLogHistory(data: UserLogHistoryEntity): Promise<UserLogHistoryEntityResult> {
+  const response = await axiosInstance.post<UserLogHistoryEntityResult>(USERLOGHISTORY_ENDPOINTS.createUserLogHistory, data);
   return response.data;
 }
 
@@ -84,14 +72,8 @@ export async function createUserLogHistory(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateUserLogHistory(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/userloghistory/update/${id}`,
-    data
-  );
+export async function updateUserLogHistory(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/userloghistory/update/${id}`, data);
   return response.data;
 }
 
@@ -113,8 +95,6 @@ export async function deleteUserLogHistory(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewUserLogHistoryCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    USERLOGHISTORY_ENDPOINTS.generateNewUserLogHistoryCode
-  );
+  const response = await axiosInstance.get<string>(USERLOGHISTORY_ENDPOINTS.generateNewUserLogHistoryCode);
   return response.data;
 }

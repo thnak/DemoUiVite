@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   MachineTypeEntity,
-  MachineTypeEntityResult,
-  StringObjectKeyValuePair,
   MachineTypeEntityBasePaginationResponse,
+  MachineTypeEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getMachineTypeById(id: string): Promise<MachineTypeEntity>
  * @param data - Request body
  * @returns Promise<MachineTypeEntityBasePaginationResponse>
  */
-export async function getMachineTypePage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<MachineTypeEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<MachineTypeEntityBasePaginationResponse>(
-    MACHINETYPE_ENDPOINTS.getMachineTypePage,
-    data,
-    { params }
-  );
+export async function getMachineTypePage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<MachineTypeEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<MachineTypeEntityBasePaginationResponse>(MACHINETYPE_ENDPOINTS.getMachineTypePage, data, { params });
   return response.data;
 }
 
@@ -68,10 +61,7 @@ export async function getMachineTypePage(
  * @returns Promise<MachineTypeEntityResult>
  */
 export async function createMachineType(data: MachineTypeEntity): Promise<MachineTypeEntityResult> {
-  const response = await axiosInstance.post<MachineTypeEntityResult>(
-    MACHINETYPE_ENDPOINTS.createMachineType,
-    data
-  );
+  const response = await axiosInstance.post<MachineTypeEntityResult>(MACHINETYPE_ENDPOINTS.createMachineType, data);
   return response.data;
 }
 
@@ -82,10 +72,7 @@ export async function createMachineType(data: MachineTypeEntity): Promise<Machin
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateMachineType(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateMachineType(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/machinetype/update/${id}`, data);
   return response.data;
 }
@@ -108,8 +95,6 @@ export async function deleteMachineType(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewMachineTypeCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    MACHINETYPE_ENDPOINTS.generateNewMachineTypeCode
-  );
+  const response = await axiosInstance.get<string>(MACHINETYPE_ENDPOINTS.generateNewMachineTypeCode);
   return response.data;
 }

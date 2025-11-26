@@ -1,16 +1,16 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
-  UserEntity,
-  UserInfoDto,
   BooleanResult,
-  UserEntityResult,
-  ChangePasswordDto,
-  UpdateUserInfoDto,
-  StringObjectKeyValuePair,
   ChangeLockScreenPasswordDto,
+  ChangePasswordDto,
+  SortType,
+  StringObjectKeyValuePair,
+  UpdateUserInfoDto,
+  UserEntity,
   UserEntityBasePaginationResponse,
+  UserEntityResult,
+  UserInfoDto,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,15 +66,8 @@ export async function getUserById(id: string): Promise<UserEntity> {
  * @param data - Request body
  * @returns Promise<UserEntityBasePaginationResponse>
  */
-export async function getUserPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<UserEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<UserEntityBasePaginationResponse>(
-    USER_ENDPOINTS.getUserPage,
-    data,
-    { params }
-  );
+export async function getUserPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<UserEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<UserEntityBasePaginationResponse>(USER_ENDPOINTS.getUserPage, data, { params });
   return response.data;
 }
 
@@ -97,10 +90,7 @@ export async function createUser(data: UserEntity): Promise<UserEntityResult> {
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateUser(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateUser(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/user/update/${id}`, data);
   return response.data;
 }
@@ -144,10 +134,7 @@ export async function postapiUsersetdarkmode(params?: { darkMode?: boolean }): P
 /**
  * @returns Promise<void>
  */
-export async function getapiUsersetculture(params?: {
-  culture?: string;
-  redirectUri?: string;
-}): Promise<void> {
+export async function getapiUsersetculture(params?: { culture?: string; redirectUri?: string }): Promise<void> {
   await axiosInstance.get(USER_ENDPOINTS.getapiUsersetculture, { params });
 }
 
@@ -208,10 +195,7 @@ export async function getapiUsergetuserinfo(): Promise<UserInfoDto> {
  * @returns Promise<BooleanResult>
  */
 export async function postapiUserupdateuserinfo(data: UpdateUserInfoDto): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    USER_ENDPOINTS.postapiUserupdateuserinfo,
-    data
-  );
+  const response = await axiosInstance.post<BooleanResult>(USER_ENDPOINTS.postapiUserupdateuserinfo, data);
   return response.data;
 }
 
@@ -221,10 +205,7 @@ export async function postapiUserupdateuserinfo(data: UpdateUserInfoDto): Promis
  * @returns Promise<BooleanResult>
  */
 export async function postapiUserchangepassword(data: ChangePasswordDto): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    USER_ENDPOINTS.postapiUserchangepassword,
-    data
-  );
+  const response = await axiosInstance.post<BooleanResult>(USER_ENDPOINTS.postapiUserchangepassword, data);
   return response.data;
 }
 
@@ -233,13 +214,8 @@ export async function postapiUserchangepassword(data: ChangePasswordDto): Promis
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function postapiUserchangelockscreenpassword(
-  data: ChangeLockScreenPasswordDto
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    USER_ENDPOINTS.postapiUserchangelockscreenpassword,
-    data
-  );
+export async function postapiUserchangelockscreenpassword(data: ChangeLockScreenPasswordDto): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(USER_ENDPOINTS.postapiUserchangelockscreenpassword, data);
   return response.data;
 }
 
@@ -247,12 +223,7 @@ export async function postapiUserchangelockscreenpassword(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function postapiUserupdateuserconfig(
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    USER_ENDPOINTS.postapiUserupdateuserconfig,
-    data
-  );
+export async function postapiUserupdateuserconfig(data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(USER_ENDPOINTS.postapiUserupdateuserconfig, data);
   return response.data;
 }

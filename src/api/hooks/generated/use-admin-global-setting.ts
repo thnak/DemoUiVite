@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createAdminGlobalSetting,
   deleteAdminGlobalSetting,
-  updateAdminGlobalSetting,
+  generateNewAdminGlobalSettingCode,
   getAdminGlobalSettingById,
   getAdminGlobalSettingPage,
-  generateNewAdminGlobalSettingCode,
+  updateAdminGlobalSetting,
 } from '../../services/generated/admin-global-setting';
 
 import type {
-  SortType,
-  BooleanResult,
   AdminGlobalSettingEntity,
-  StringObjectKeyValuePair,
-  AdminGlobalSettingEntityResult,
   AdminGlobalSettingEntityBasePaginationResponse,
+  AdminGlobalSettingEntityResult,
+  BooleanResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,12 +31,8 @@ import type {
  */
 export const adminGlobalSettingKeys = {
   all: ['adminGlobalSetting'] as const,
-  getAdminGlobalSettingById: (id: string) =>
-    ['adminGlobalSetting', 'getAdminGlobalSettingById', id] as const,
-  generateNewAdminGlobalSettingCode: [
-    'adminGlobalSetting',
-    'generateNewAdminGlobalSettingCode',
-  ] as const,
+  getAdminGlobalSettingById: (id: string) => ['adminGlobalSetting', 'getAdminGlobalSettingById', id] as const,
+  generateNewAdminGlobalSettingCode: ['adminGlobalSetting', 'generateNewAdminGlobalSettingCode'] as const,
 };
 
 /**
@@ -70,20 +66,10 @@ export function useGenerateNewAdminGlobalSettingCode(
  * Get paginated list of Admin Global Setting
  */
 export function useGetAdminGlobalSettingPage(
-  options?: Omit<
-    UseMutationOptions<
-      AdminGlobalSettingEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<AdminGlobalSettingEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getAdminGlobalSettingPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getAdminGlobalSettingPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -92,14 +78,10 @@ export function useGetAdminGlobalSettingPage(
  * Create a new Admin Global Setting
  */
 export function useCreateAdminGlobalSetting(
-  options?: Omit<
-    UseMutationOptions<AdminGlobalSettingEntityResult, Error, { data: AdminGlobalSettingEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<AdminGlobalSettingEntityResult, Error, { data: AdminGlobalSettingEntity }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: AdminGlobalSettingEntity }) =>
-      createAdminGlobalSetting(variables.data),
+    mutationFn: (variables: { data: AdminGlobalSettingEntity }) => createAdminGlobalSetting(variables.data),
     ...options,
   });
 }
@@ -108,14 +90,10 @@ export function useCreateAdminGlobalSetting(
  * Update an existing Admin Global Setting
  */
 export function useUpdateAdminGlobalSetting(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateAdminGlobalSetting(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateAdminGlobalSetting(variables.id, variables.data),
     ...options,
   });
 }

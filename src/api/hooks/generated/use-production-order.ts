@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createProductionOrder,
   deleteProductionOrder,
-  updateProductionOrder,
+  generateNewProductionOrderCode,
   getProductionOrderById,
   getProductionOrderPage,
-  generateNewProductionOrderCode,
+  updateProductionOrder,
 } from '../../services/generated/production-order';
 
 import type {
-  SortType,
   BooleanResult,
   ProductionOrderEntity,
-  StringObjectKeyValuePair,
-  ProductionOrderEntityResult,
   ProductionOrderEntityBasePaginationResponse,
+  ProductionOrderEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,8 +31,7 @@ import type {
  */
 export const productionOrderKeys = {
   all: ['productionOrder'] as const,
-  getProductionOrderById: (id: string) =>
-    ['productionOrder', 'getProductionOrderById', id] as const,
+  getProductionOrderById: (id: string) => ['productionOrder', 'getProductionOrderById', id] as const,
   generateNewProductionOrderCode: ['productionOrder', 'generateNewProductionOrderCode'] as const,
 };
 
@@ -67,20 +66,10 @@ export function useGenerateNewProductionOrderCode(
  * Get paginated list of Production Order
  */
 export function useGetProductionOrderPage(
-  options?: Omit<
-    UseMutationOptions<
-      ProductionOrderEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<ProductionOrderEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getProductionOrderPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getProductionOrderPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -89,14 +78,10 @@ export function useGetProductionOrderPage(
  * Create a new Production Order
  */
 export function useCreateProductionOrder(
-  options?: Omit<
-    UseMutationOptions<ProductionOrderEntityResult, Error, { data: ProductionOrderEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<ProductionOrderEntityResult, Error, { data: ProductionOrderEntity }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: ProductionOrderEntity }) =>
-      createProductionOrder(variables.data),
+    mutationFn: (variables: { data: ProductionOrderEntity }) => createProductionOrder(variables.data),
     ...options,
   });
 }
@@ -105,14 +90,10 @@ export function useCreateProductionOrder(
  * Update an existing Production Order
  */
 export function useUpdateProductionOrder(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateProductionOrder(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateProductionOrder(variables.id, variables.data),
     ...options,
   });
 }

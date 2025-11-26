@@ -1,10 +1,14 @@
-import type { UseMutationOptions } from '@tanstack/react-query';
+import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 
-import { useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
-import { postapiSensorgetdevicesensors } from '../../services/generated/sensor';
+import {
+  postapiSensorgetdevicesensors,
+} from '../../services/generated/sensor';
 
-import type { SortType } from '../../types/generated';
+import type {
+  SortType,
+} from '../../types/generated';
 
 // ----------------------------------------------------------------------
 // Sensor Hooks
@@ -22,20 +26,10 @@ export const sensorKeys = {
 /**
  */
 export function usePostapiSensorgetdevicesensors(
-  options?: Omit<
-    UseMutationOptions<
-      void,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<void, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => postapiSensorgetdevicesensors(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => postapiSensorgetdevicesensors(variables.data, variables.params),
     ...options,
   });
 }

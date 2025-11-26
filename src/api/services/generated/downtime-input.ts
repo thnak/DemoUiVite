@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   DowntimeInput,
-  DowntimeInputResult,
-  StringObjectKeyValuePair,
   DowntimeInputBasePaginationResponse,
+  DowntimeInputResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getDowntimeInputById(id: string): Promise<DowntimeInput> {
  * @param data - Request body
  * @returns Promise<DowntimeInputBasePaginationResponse>
  */
-export async function getDowntimeInputPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<DowntimeInputBasePaginationResponse> {
-  const response = await axiosInstance.post<DowntimeInputBasePaginationResponse>(
-    DOWNTIMEINPUT_ENDPOINTS.getDowntimeInputPage,
-    data,
-    { params }
-  );
+export async function getDowntimeInputPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<DowntimeInputBasePaginationResponse> {
+  const response = await axiosInstance.post<DowntimeInputBasePaginationResponse>(DOWNTIMEINPUT_ENDPOINTS.getDowntimeInputPage, data, { params });
   return response.data;
 }
 
@@ -68,10 +61,7 @@ export async function getDowntimeInputPage(
  * @returns Promise<DowntimeInputResult>
  */
 export async function createDowntimeInput(data: DowntimeInput): Promise<DowntimeInputResult> {
-  const response = await axiosInstance.post<DowntimeInputResult>(
-    DOWNTIMEINPUT_ENDPOINTS.createDowntimeInput,
-    data
-  );
+  const response = await axiosInstance.post<DowntimeInputResult>(DOWNTIMEINPUT_ENDPOINTS.createDowntimeInput, data);
   return response.data;
 }
 
@@ -82,10 +72,7 @@ export async function createDowntimeInput(data: DowntimeInput): Promise<Downtime
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateDowntimeInput(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateDowntimeInput(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/downtimeinput/update/${id}`, data);
   return response.data;
 }
@@ -108,8 +95,6 @@ export async function deleteDowntimeInput(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewDowntimeInputCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    DOWNTIMEINPUT_ENDPOINTS.generateNewDowntimeInputCode
-  );
+  const response = await axiosInstance.get<string>(DOWNTIMEINPUT_ENDPOINTS.generateNewDowntimeInputCode);
   return response.data;
 }

@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
-  WorkCellEntity,
-  WorkCellEntityResult,
+  SortType,
   StringObjectKeyValuePair,
+  WorkCellEntity,
   WorkCellEntityBasePaginationResponse,
+  WorkCellEntityResult,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getWorkCellById(id: string): Promise<WorkCellEntity> {
  * @param data - Request body
  * @returns Promise<WorkCellEntityBasePaginationResponse>
  */
-export async function getWorkCellPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<WorkCellEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<WorkCellEntityBasePaginationResponse>(
-    WORKCELL_ENDPOINTS.getWorkCellPage,
-    data,
-    { params }
-  );
+export async function getWorkCellPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<WorkCellEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<WorkCellEntityBasePaginationResponse>(WORKCELL_ENDPOINTS.getWorkCellPage, data, { params });
   return response.data;
 }
 
@@ -68,10 +61,7 @@ export async function getWorkCellPage(
  * @returns Promise<WorkCellEntityResult>
  */
 export async function createWorkCell(data: WorkCellEntity): Promise<WorkCellEntityResult> {
-  const response = await axiosInstance.post<WorkCellEntityResult>(
-    WORKCELL_ENDPOINTS.createWorkCell,
-    data
-  );
+  const response = await axiosInstance.post<WorkCellEntityResult>(WORKCELL_ENDPOINTS.createWorkCell, data);
   return response.data;
 }
 
@@ -82,10 +72,7 @@ export async function createWorkCell(data: WorkCellEntity): Promise<WorkCellEnti
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateWorkCell(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateWorkCell(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/workcell/update/${id}`, data);
   return response.data;
 }

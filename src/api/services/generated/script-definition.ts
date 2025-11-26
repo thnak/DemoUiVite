@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   ScriptDefinitionEntity,
-  StringObjectKeyValuePair,
-  ScriptDefinitionEntityResult,
   ScriptDefinitionEntityBasePaginationResponse,
+  ScriptDefinitionEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -49,15 +49,8 @@ export async function getScriptDefinitionById(id: string): Promise<ScriptDefinit
  * @param data - Request body
  * @returns Promise<ScriptDefinitionEntityBasePaginationResponse>
  */
-export async function getScriptDefinitionPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<ScriptDefinitionEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<ScriptDefinitionEntityBasePaginationResponse>(
-    SCRIPTDEFINITION_ENDPOINTS.getScriptDefinitionPage,
-    data,
-    { params }
-  );
+export async function getScriptDefinitionPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<ScriptDefinitionEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<ScriptDefinitionEntityBasePaginationResponse>(SCRIPTDEFINITION_ENDPOINTS.getScriptDefinitionPage, data, { params });
   return response.data;
 }
 
@@ -68,13 +61,8 @@ export async function getScriptDefinitionPage(
  * @param data - Request body
  * @returns Promise<ScriptDefinitionEntityResult>
  */
-export async function createScriptDefinition(
-  data: ScriptDefinitionEntity
-): Promise<ScriptDefinitionEntityResult> {
-  const response = await axiosInstance.post<ScriptDefinitionEntityResult>(
-    SCRIPTDEFINITION_ENDPOINTS.createScriptDefinition,
-    data
-  );
+export async function createScriptDefinition(data: ScriptDefinitionEntity): Promise<ScriptDefinitionEntityResult> {
+  const response = await axiosInstance.post<ScriptDefinitionEntityResult>(SCRIPTDEFINITION_ENDPOINTS.createScriptDefinition, data);
   return response.data;
 }
 
@@ -85,14 +73,8 @@ export async function createScriptDefinition(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateScriptDefinition(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/scriptdefinition/update/${id}`,
-    data
-  );
+export async function updateScriptDefinition(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/scriptdefinition/update/${id}`, data);
   return response.data;
 }
 
@@ -114,9 +96,7 @@ export async function deleteScriptDefinition(id: string): Promise<BooleanResult>
  * @returns Promise<string>
  */
 export async function generateNewScriptDefinitionCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    SCRIPTDEFINITION_ENDPOINTS.generateNewScriptDefinitionCode
-  );
+  const response = await axiosInstance.get<string>(SCRIPTDEFINITION_ENDPOINTS.generateNewScriptDefinitionCode);
   return response.data;
 }
 
@@ -126,13 +106,7 @@ export async function generateNewScriptDefinitionCode(): Promise<string> {
  * Searches Script Definition entities by text across searchable fields.
  * @returns Promise<ScriptDefinitionEntity[]>
  */
-export async function searchScriptDefinition(params?: {
-  searchText?: string;
-  maxResults?: number;
-}): Promise<ScriptDefinitionEntity[]> {
-  const response = await axiosInstance.get<ScriptDefinitionEntity[]>(
-    SCRIPTDEFINITION_ENDPOINTS.searchScriptDefinition,
-    { params }
-  );
+export async function searchScriptDefinition(params?: { searchText?: string; maxResults?: number }): Promise<ScriptDefinitionEntity[]> {
+  const response = await axiosInstance.get<ScriptDefinitionEntity[]>(SCRIPTDEFINITION_ENDPOINTS.searchScriptDefinition, { params });
   return response.data;
 }

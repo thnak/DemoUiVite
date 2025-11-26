@@ -16,9 +16,6 @@ export const CULTURE_ENDPOINTS = {
 /**
  * @returns Promise<void>
  */
-export async function getCultureset(params?: {
-  culture?: string;
-  redirectUri?: string;
-}): Promise<void> {
+export async function getCultureset(params?: { culture?: string; redirectUri?: string }): Promise<void> {
   await axiosInstance.get(CULTURE_ENDPOINTS.getCultureset, { params });
 }

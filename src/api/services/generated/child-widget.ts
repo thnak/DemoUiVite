@@ -28,13 +28,8 @@ export const CHILDWIDGET_ENDPOINTS = {
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function postapiChildWidgetcreate(
-  data: ChildWidgetConfigEntity
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    CHILDWIDGET_ENDPOINTS.postapiChildWidgetcreate,
-    data
-  );
+export async function postapiChildWidgetcreate(data: ChildWidgetConfigEntity): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(CHILDWIDGET_ENDPOINTS.postapiChildWidgetcreate, data);
   return response.data;
 }
 
@@ -57,12 +52,8 @@ export async function getapiChildWidgetgetid(id: string): Promise<ChildWidgetCon
 /**
  * @returns Promise<ChildWidgetConfigEntity[]>
  */
-export async function getapiChildWidgetgetallfromparentparentId(
-  parentId: string
-): Promise<ChildWidgetConfigEntity[]> {
-  const response = await axiosInstance.get<ChildWidgetConfigEntity[]>(
-    `/api/ChildWidget/get-all-from-parent/${parentId}`
-  );
+export async function getapiChildWidgetgetallfromparentparentId(parentId: string): Promise<ChildWidgetConfigEntity[]> {
+  const response = await axiosInstance.get<ChildWidgetConfigEntity[]>(`/api/ChildWidget/get-all-from-parent/${parentId}`);
   return response.data;
 }
 
@@ -70,10 +61,7 @@ export async function getapiChildWidgetgetallfromparentparentId(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function postapiChildWidgetupdateid(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function postapiChildWidgetupdateid(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/ChildWidget/update/${id}`, data);
   return response.data;
 }

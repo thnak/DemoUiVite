@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   DocumentEntity,
-  DocumentEntityResult,
-  StringObjectKeyValuePair,
   DocumentEntityBasePaginationResponse,
+  DocumentEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getDocumentById(id: string): Promise<DocumentEntity> {
  * @param data - Request body
  * @returns Promise<DocumentEntityBasePaginationResponse>
  */
-export async function getDocumentPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<DocumentEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<DocumentEntityBasePaginationResponse>(
-    DOCUMENT_ENDPOINTS.getDocumentPage,
-    data,
-    { params }
-  );
+export async function getDocumentPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<DocumentEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<DocumentEntityBasePaginationResponse>(DOCUMENT_ENDPOINTS.getDocumentPage, data, { params });
   return response.data;
 }
 
@@ -68,10 +61,7 @@ export async function getDocumentPage(
  * @returns Promise<DocumentEntityResult>
  */
 export async function createDocument(data: DocumentEntity): Promise<DocumentEntityResult> {
-  const response = await axiosInstance.post<DocumentEntityResult>(
-    DOCUMENT_ENDPOINTS.createDocument,
-    data
-  );
+  const response = await axiosInstance.post<DocumentEntityResult>(DOCUMENT_ENDPOINTS.createDocument, data);
   return response.data;
 }
 
@@ -82,10 +72,7 @@ export async function createDocument(data: DocumentEntity): Promise<DocumentEnti
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateDocument(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateDocument(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/document/update/${id}`, data);
   return response.data;
 }

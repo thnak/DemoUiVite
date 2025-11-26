@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   MachineOutputMapping,
-  StringObjectKeyValuePair,
-  MachineOutputMappingResult,
   MachineOutputMappingBasePaginationResponse,
+  MachineOutputMappingResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getMachineOutputMappingById(id: string): Promise<MachineOu
  * @param data - Request body
  * @returns Promise<MachineOutputMappingBasePaginationResponse>
  */
-export async function getMachineOutputMappingPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<MachineOutputMappingBasePaginationResponse> {
-  const response = await axiosInstance.post<MachineOutputMappingBasePaginationResponse>(
-    MACHINEOUTPUTMAPPING_ENDPOINTS.getMachineOutputMappingPage,
-    data,
-    { params }
-  );
+export async function getMachineOutputMappingPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<MachineOutputMappingBasePaginationResponse> {
+  const response = await axiosInstance.post<MachineOutputMappingBasePaginationResponse>(MACHINEOUTPUTMAPPING_ENDPOINTS.getMachineOutputMappingPage, data, { params });
   return response.data;
 }
 
@@ -67,13 +60,8 @@ export async function getMachineOutputMappingPage(
  * @param data - Request body
  * @returns Promise<MachineOutputMappingResult>
  */
-export async function createMachineOutputMapping(
-  data: MachineOutputMapping
-): Promise<MachineOutputMappingResult> {
-  const response = await axiosInstance.post<MachineOutputMappingResult>(
-    MACHINEOUTPUTMAPPING_ENDPOINTS.createMachineOutputMapping,
-    data
-  );
+export async function createMachineOutputMapping(data: MachineOutputMapping): Promise<MachineOutputMappingResult> {
+  const response = await axiosInstance.post<MachineOutputMappingResult>(MACHINEOUTPUTMAPPING_ENDPOINTS.createMachineOutputMapping, data);
   return response.data;
 }
 
@@ -84,14 +72,8 @@ export async function createMachineOutputMapping(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateMachineOutputMapping(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/machineoutputmapping/update/${id}`,
-    data
-  );
+export async function updateMachineOutputMapping(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/machineoutputmapping/update/${id}`, data);
   return response.data;
 }
 
@@ -102,9 +84,7 @@ export async function updateMachineOutputMapping(
  * @returns Promise<BooleanResult>
  */
 export async function deleteMachineOutputMapping(id: string): Promise<BooleanResult> {
-  const response = await axiosInstance.delete<BooleanResult>(
-    `/api/machineoutputmapping/delete/${id}`
-  );
+  const response = await axiosInstance.delete<BooleanResult>(`/api/machineoutputmapping/delete/${id}`);
   return response.data;
 }
 
@@ -115,8 +95,6 @@ export async function deleteMachineOutputMapping(id: string): Promise<BooleanRes
  * @returns Promise<string>
  */
 export async function generateNewMachineOutputMappingCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    MACHINEOUTPUTMAPPING_ENDPOINTS.generateNewMachineOutputMappingCode
-  );
+  const response = await axiosInstance.get<string>(MACHINEOUTPUTMAPPING_ENDPOINTS.generateNewMachineOutputMappingCode);
   return response.data;
 }

@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   FirmwareVersionEntity,
-  StringObjectKeyValuePair,
-  FirmwareVersionEntityResult,
   FirmwareVersionEntityBasePaginationResponse,
+  FirmwareVersionEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getFirmwareVersionById(id: string): Promise<FirmwareVersio
  * @param data - Request body
  * @returns Promise<FirmwareVersionEntityBasePaginationResponse>
  */
-export async function getFirmwareVersionPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<FirmwareVersionEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<FirmwareVersionEntityBasePaginationResponse>(
-    FIRMWAREVERSION_ENDPOINTS.getFirmwareVersionPage,
-    data,
-    { params }
-  );
+export async function getFirmwareVersionPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<FirmwareVersionEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<FirmwareVersionEntityBasePaginationResponse>(FIRMWAREVERSION_ENDPOINTS.getFirmwareVersionPage, data, { params });
   return response.data;
 }
 
@@ -67,13 +60,8 @@ export async function getFirmwareVersionPage(
  * @param data - Request body
  * @returns Promise<FirmwareVersionEntityResult>
  */
-export async function createFirmwareVersion(
-  data: FirmwareVersionEntity
-): Promise<FirmwareVersionEntityResult> {
-  const response = await axiosInstance.post<FirmwareVersionEntityResult>(
-    FIRMWAREVERSION_ENDPOINTS.createFirmwareVersion,
-    data
-  );
+export async function createFirmwareVersion(data: FirmwareVersionEntity): Promise<FirmwareVersionEntityResult> {
+  const response = await axiosInstance.post<FirmwareVersionEntityResult>(FIRMWAREVERSION_ENDPOINTS.createFirmwareVersion, data);
   return response.data;
 }
 
@@ -84,14 +72,8 @@ export async function createFirmwareVersion(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateFirmwareVersion(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/firmwareversion/update/${id}`,
-    data
-  );
+export async function updateFirmwareVersion(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/firmwareversion/update/${id}`, data);
   return response.data;
 }
 
@@ -113,8 +95,6 @@ export async function deleteFirmwareVersion(id: string): Promise<BooleanResult> 
  * @returns Promise<string>
  */
 export async function generateNewFirmwareVersionCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    FIRMWAREVERSION_ENDPOINTS.generateNewFirmwareVersionCode
-  );
+  const response = await axiosInstance.get<string>(FIRMWAREVERSION_ENDPOINTS.generateNewFirmwareVersionCode);
   return response.data;
 }

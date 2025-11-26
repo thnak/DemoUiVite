@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createOneTimeLoginToken,
   deleteOneTimeLoginToken,
-  updateOneTimeLoginToken,
+  generateNewOneTimeLoginTokenCode,
   getOneTimeLoginTokenById,
   getOneTimeLoginTokenPage,
-  generateNewOneTimeLoginTokenCode,
+  updateOneTimeLoginToken,
 } from '../../services/generated/one-time-login-token';
 
 import type {
-  SortType,
   BooleanResult,
   OneTimeLoginTokenEntity,
-  StringObjectKeyValuePair,
-  OneTimeLoginTokenEntityResult,
   OneTimeLoginTokenEntityBasePaginationResponse,
+  OneTimeLoginTokenEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,12 +31,8 @@ import type {
  */
 export const oneTimeLoginTokenKeys = {
   all: ['oneTimeLoginToken'] as const,
-  getOneTimeLoginTokenById: (id: string) =>
-    ['oneTimeLoginToken', 'getOneTimeLoginTokenById', id] as const,
-  generateNewOneTimeLoginTokenCode: [
-    'oneTimeLoginToken',
-    'generateNewOneTimeLoginTokenCode',
-  ] as const,
+  getOneTimeLoginTokenById: (id: string) => ['oneTimeLoginToken', 'getOneTimeLoginTokenById', id] as const,
+  generateNewOneTimeLoginTokenCode: ['oneTimeLoginToken', 'generateNewOneTimeLoginTokenCode'] as const,
 };
 
 /**
@@ -70,20 +66,10 @@ export function useGenerateNewOneTimeLoginTokenCode(
  * Get paginated list of One Time Login Token
  */
 export function useGetOneTimeLoginTokenPage(
-  options?: Omit<
-    UseMutationOptions<
-      OneTimeLoginTokenEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<OneTimeLoginTokenEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getOneTimeLoginTokenPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getOneTimeLoginTokenPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -92,14 +78,10 @@ export function useGetOneTimeLoginTokenPage(
  * Create a new One Time Login Token
  */
 export function useCreateOneTimeLoginToken(
-  options?: Omit<
-    UseMutationOptions<OneTimeLoginTokenEntityResult, Error, { data: OneTimeLoginTokenEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<OneTimeLoginTokenEntityResult, Error, { data: OneTimeLoginTokenEntity }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: OneTimeLoginTokenEntity }) =>
-      createOneTimeLoginToken(variables.data),
+    mutationFn: (variables: { data: OneTimeLoginTokenEntity }) => createOneTimeLoginToken(variables.data),
     ...options,
   });
 }
@@ -108,14 +90,10 @@ export function useCreateOneTimeLoginToken(
  * Update an existing One Time Login Token
  */
 export function useUpdateOneTimeLoginToken(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateOneTimeLoginToken(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateOneTimeLoginToken(variables.id, variables.data),
     ...options,
   });
 }

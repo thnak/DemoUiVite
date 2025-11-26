@@ -5,21 +5,21 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createStation,
   deleteStation,
-  searchStation,
-  updateStation,
+  generateNewStationCode,
   getStationById,
   getStationPage,
-  generateNewStationCode,
   getapiStationsearchbycode,
+  searchStation,
+  updateStation,
 } from '../../services/generated/station';
 
 import type {
-  SortType,
   BooleanResult,
+  SortType,
   StationEntity,
+  StationEntityBasePaginationResponse,
   StationEntityResult,
   StringObjectKeyValuePair,
-  StationEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -97,20 +97,10 @@ export function useGetapiStationsearchbycode(
  * Get paginated list of Station
  */
 export function useGetStationPage(
-  options?: Omit<
-    UseMutationOptions<
-      StationEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<StationEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getStationPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getStationPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -119,10 +109,7 @@ export function useGetStationPage(
  * Create a new Station
  */
 export function useCreateStation(
-  options?: Omit<
-    UseMutationOptions<StationEntityResult, Error, { data: StationEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<StationEntityResult, Error, { data: StationEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: StationEntity }) => createStation(variables.data),
@@ -134,14 +121,10 @@ export function useCreateStation(
  * Update an existing Station
  */
 export function useUpdateStation(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateStation(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateStation(variables.id, variables.data),
     ...options,
   });
 }

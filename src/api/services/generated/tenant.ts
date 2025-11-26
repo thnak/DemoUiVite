@@ -1,6 +1,10 @@
 import axiosInstance from '../../axios-instance';
 
-import type { SortType, UpdateTenantRequest, CreateNewTenantRequest } from '../../types/generated';
+import type {
+  CreateNewTenantRequest,
+  SortType,
+  UpdateTenantRequest,
+} from '../../types/generated';
 
 // ----------------------------------------------------------------------
 // Tenant Service
@@ -40,10 +44,7 @@ export async function deleteapiTenantdeleteid(id: string): Promise<void> {
  * @param data - Request body
  * @returns Promise<void>
  */
-export async function postapiTenantgetalltenants(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<void> {
+export async function postapiTenantgetalltenants(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<void> {
   await axiosInstance.post(TENANT_ENDPOINTS.postapiTenantgetalltenants, data, { params });
 }
 

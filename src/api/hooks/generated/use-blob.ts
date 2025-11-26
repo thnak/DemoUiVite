@@ -2,7 +2,10 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 
 import { useQuery, useMutation } from '@tanstack/react-query';
 
-import { postapiBlobUploadFile, getapiBlobDownloadFile } from '../../services/generated/blob';
+import {
+  getapiBlobDownloadFile,
+  postapiBlobUploadFile,
+} from '../../services/generated/blob';
 
 // ----------------------------------------------------------------------
 // Blob Hooks

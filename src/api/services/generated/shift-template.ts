@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   ShiftTemplateEntity,
-  StringObjectKeyValuePair,
-  ShiftTemplateEntityResult,
   ShiftTemplateEntityBasePaginationResponse,
+  ShiftTemplateEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -49,15 +49,8 @@ export async function getShiftTemplateById(id: string): Promise<ShiftTemplateEnt
  * @param data - Request body
  * @returns Promise<ShiftTemplateEntityBasePaginationResponse>
  */
-export async function getShiftTemplatePage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<ShiftTemplateEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<ShiftTemplateEntityBasePaginationResponse>(
-    SHIFTTEMPLATE_ENDPOINTS.getShiftTemplatePage,
-    data,
-    { params }
-  );
+export async function getShiftTemplatePage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<ShiftTemplateEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<ShiftTemplateEntityBasePaginationResponse>(SHIFTTEMPLATE_ENDPOINTS.getShiftTemplatePage, data, { params });
   return response.data;
 }
 
@@ -68,13 +61,8 @@ export async function getShiftTemplatePage(
  * @param data - Request body
  * @returns Promise<ShiftTemplateEntityResult>
  */
-export async function createShiftTemplate(
-  data: ShiftTemplateEntity
-): Promise<ShiftTemplateEntityResult> {
-  const response = await axiosInstance.post<ShiftTemplateEntityResult>(
-    SHIFTTEMPLATE_ENDPOINTS.createShiftTemplate,
-    data
-  );
+export async function createShiftTemplate(data: ShiftTemplateEntity): Promise<ShiftTemplateEntityResult> {
+  const response = await axiosInstance.post<ShiftTemplateEntityResult>(SHIFTTEMPLATE_ENDPOINTS.createShiftTemplate, data);
   return response.data;
 }
 
@@ -85,10 +73,7 @@ export async function createShiftTemplate(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateShiftTemplate(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateShiftTemplate(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/shifttemplate/update/${id}`, data);
   return response.data;
 }
@@ -111,9 +96,7 @@ export async function deleteShiftTemplate(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewShiftTemplateCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    SHIFTTEMPLATE_ENDPOINTS.generateNewShiftTemplateCode
-  );
+  const response = await axiosInstance.get<string>(SHIFTTEMPLATE_ENDPOINTS.generateNewShiftTemplateCode);
   return response.data;
 }
 
@@ -123,13 +106,7 @@ export async function generateNewShiftTemplateCode(): Promise<string> {
  * Searches Shift Template entities by text across searchable fields.
  * @returns Promise<ShiftTemplateEntity[]>
  */
-export async function searchShiftTemplate(params?: {
-  searchText?: string;
-  maxResults?: number;
-}): Promise<ShiftTemplateEntity[]> {
-  const response = await axiosInstance.get<ShiftTemplateEntity[]>(
-    SHIFTTEMPLATE_ENDPOINTS.searchShiftTemplate,
-    { params }
-  );
+export async function searchShiftTemplate(params?: { searchText?: string; maxResults?: number }): Promise<ShiftTemplateEntity[]> {
+  const response = await axiosInstance.get<ShiftTemplateEntity[]>(SHIFTTEMPLATE_ENDPOINTS.searchShiftTemplate, { params });
   return response.data;
 }

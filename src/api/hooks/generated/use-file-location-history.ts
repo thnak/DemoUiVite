@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createFileLocationHistory,
   deleteFileLocationHistory,
-  updateFileLocationHistory,
+  generateNewFileLocationHistoryCode,
   getFileLocationHistoryById,
   getFileLocationHistoryPage,
-  generateNewFileLocationHistoryCode,
+  updateFileLocationHistory,
 } from '../../services/generated/file-location-history';
 
 import type {
-  SortType,
   BooleanResult,
-  StringObjectKeyValuePair,
   FileLocationHistoryEntity,
-  FileLocationHistoryEntityResult,
   FileLocationHistoryEntityBasePaginationResponse,
+  FileLocationHistoryEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,12 +31,8 @@ import type {
  */
 export const fileLocationHistoryKeys = {
   all: ['fileLocationHistory'] as const,
-  getFileLocationHistoryById: (id: string) =>
-    ['fileLocationHistory', 'getFileLocationHistoryById', id] as const,
-  generateNewFileLocationHistoryCode: [
-    'fileLocationHistory',
-    'generateNewFileLocationHistoryCode',
-  ] as const,
+  getFileLocationHistoryById: (id: string) => ['fileLocationHistory', 'getFileLocationHistoryById', id] as const,
+  generateNewFileLocationHistoryCode: ['fileLocationHistory', 'generateNewFileLocationHistoryCode'] as const,
 };
 
 /**
@@ -70,20 +66,10 @@ export function useGenerateNewFileLocationHistoryCode(
  * Get paginated list of File Location History
  */
 export function useGetFileLocationHistoryPage(
-  options?: Omit<
-    UseMutationOptions<
-      FileLocationHistoryEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<FileLocationHistoryEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getFileLocationHistoryPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getFileLocationHistoryPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -92,14 +78,10 @@ export function useGetFileLocationHistoryPage(
  * Create a new File Location History
  */
 export function useCreateFileLocationHistory(
-  options?: Omit<
-    UseMutationOptions<FileLocationHistoryEntityResult, Error, { data: FileLocationHistoryEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<FileLocationHistoryEntityResult, Error, { data: FileLocationHistoryEntity }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: FileLocationHistoryEntity }) =>
-      createFileLocationHistory(variables.data),
+    mutationFn: (variables: { data: FileLocationHistoryEntity }) => createFileLocationHistory(variables.data),
     ...options,
   });
 }
@@ -108,14 +90,10 @@ export function useCreateFileLocationHistory(
  * Update an existing File Location History
  */
 export function useUpdateFileLocationHistory(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateFileLocationHistory(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateFileLocationHistory(variables.id, variables.data),
     ...options,
   });
 }

@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   MachineGroupEntity,
-  MachineGroupEntityResult,
-  StringObjectKeyValuePair,
   MachineGroupEntityBasePaginationResponse,
+  MachineGroupEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -49,15 +49,8 @@ export async function getMachineGroupById(id: string): Promise<MachineGroupEntit
  * @param data - Request body
  * @returns Promise<MachineGroupEntityBasePaginationResponse>
  */
-export async function getMachineGroupPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<MachineGroupEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<MachineGroupEntityBasePaginationResponse>(
-    MACHINEGROUP_ENDPOINTS.getMachineGroupPage,
-    data,
-    { params }
-  );
+export async function getMachineGroupPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<MachineGroupEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<MachineGroupEntityBasePaginationResponse>(MACHINEGROUP_ENDPOINTS.getMachineGroupPage, data, { params });
   return response.data;
 }
 
@@ -68,13 +61,8 @@ export async function getMachineGroupPage(
  * @param data - Request body
  * @returns Promise<MachineGroupEntityResult>
  */
-export async function createMachineGroup(
-  data: MachineGroupEntity
-): Promise<MachineGroupEntityResult> {
-  const response = await axiosInstance.post<MachineGroupEntityResult>(
-    MACHINEGROUP_ENDPOINTS.createMachineGroup,
-    data
-  );
+export async function createMachineGroup(data: MachineGroupEntity): Promise<MachineGroupEntityResult> {
+  const response = await axiosInstance.post<MachineGroupEntityResult>(MACHINEGROUP_ENDPOINTS.createMachineGroup, data);
   return response.data;
 }
 
@@ -85,10 +73,7 @@ export async function createMachineGroup(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateMachineGroup(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateMachineGroup(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/machinegroup/update/${id}`, data);
   return response.data;
 }
@@ -111,9 +96,7 @@ export async function deleteMachineGroup(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewMachineGroupCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    MACHINEGROUP_ENDPOINTS.generateNewMachineGroupCode
-  );
+  const response = await axiosInstance.get<string>(MACHINEGROUP_ENDPOINTS.generateNewMachineGroupCode);
   return response.data;
 }
 
@@ -123,13 +106,7 @@ export async function generateNewMachineGroupCode(): Promise<string> {
  * Searches Machine Group entities by text across searchable fields.
  * @returns Promise<MachineGroupEntity[]>
  */
-export async function searchMachineGroup(params?: {
-  searchText?: string;
-  maxResults?: number;
-}): Promise<MachineGroupEntity[]> {
-  const response = await axiosInstance.get<MachineGroupEntity[]>(
-    MACHINEGROUP_ENDPOINTS.searchMachineGroup,
-    { params }
-  );
+export async function searchMachineGroup(params?: { searchText?: string; maxResults?: number }): Promise<MachineGroupEntity[]> {
+  const response = await axiosInstance.get<MachineGroupEntity[]>(MACHINEGROUP_ENDPOINTS.searchMachineGroup, { params });
   return response.data;
 }

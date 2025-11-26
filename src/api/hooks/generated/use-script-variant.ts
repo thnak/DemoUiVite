@@ -5,28 +5,28 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createScriptVariant,
   deleteScriptVariant,
-  searchScriptVariant,
-  updateScriptVariant,
+  generateNewScriptVariantCode,
   getScriptVariantById,
   getScriptVariantPage,
   getapiScriptVariantgetid,
+  getapiScriptVariantgetscriptbyresponsetype,
   postapiScriptVariantcreate,
-  generateNewScriptVariantCode,
+  postapiScriptVariantgetscripts,
   postapiScriptVariantupdateid,
   putapiScriptVariantdeletename,
-  postapiScriptVariantgetscripts,
-  getapiScriptVariantgetscriptbyresponsetype,
+  searchScriptVariant,
+  updateScriptVariant,
 } from '../../services/generated/script-variant';
 
 import type {
-  SortType,
   BooleanResult,
   ScriptVariantDto,
   ScriptVariantEntity,
-  StringObjectKeyValuePair,
-  ScriptVariantEntityResult,
-  ScriptVariantEntityPaginationQuery,
   ScriptVariantEntityBasePaginationResponse,
+  ScriptVariantEntityPaginationQuery,
+  ScriptVariantEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -43,12 +43,8 @@ export const scriptVariantKeys = {
   getScriptVariantById: (id: string) => ['scriptVariant', 'getScriptVariantById', id] as const,
   generateNewScriptVariantCode: ['scriptVariant', 'generateNewScriptVariantCode'] as const,
   searchScriptVariant: ['scriptVariant', 'searchScriptVariant'] as const,
-  getapiScriptVariantgetid: (id: string) =>
-    ['scriptVariant', 'getapiScriptVariantgetid', id] as const,
-  getapiScriptVariantgetscriptbyresponsetype: [
-    'scriptVariant',
-    'getapiScriptVariantgetscriptbyresponsetype',
-  ] as const,
+  getapiScriptVariantgetid: (id: string) => ['scriptVariant', 'getapiScriptVariantgetid', id] as const,
+  getapiScriptVariantgetscriptbyresponsetype: ['scriptVariant', 'getapiScriptVariantgetscriptbyresponsetype'] as const,
 };
 
 /**
@@ -122,20 +118,10 @@ export function useGetapiScriptVariantgetscriptbyresponsetype(
  * Get paginated list of Script Variant
  */
 export function useGetScriptVariantPage(
-  options?: Omit<
-    UseMutationOptions<
-      ScriptVariantEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<ScriptVariantEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getScriptVariantPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getScriptVariantPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -144,10 +130,7 @@ export function useGetScriptVariantPage(
  * Create a new Script Variant
  */
 export function useCreateScriptVariant(
-  options?: Omit<
-    UseMutationOptions<ScriptVariantEntityResult, Error, { data: ScriptVariantEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<ScriptVariantEntityResult, Error, { data: ScriptVariantEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: ScriptVariantEntity }) => createScriptVariant(variables.data),
@@ -159,14 +142,10 @@ export function useCreateScriptVariant(
  * Update an existing Script Variant
  */
 export function useUpdateScriptVariant(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateScriptVariant(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateScriptVariant(variables.id, variables.data),
     ...options,
   });
 }
@@ -186,14 +165,10 @@ export function useDeleteScriptVariant(
 /**
  */
 export function usePostapiScriptVariantcreate(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { data: ScriptVariantEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { data: ScriptVariantEntity }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: ScriptVariantEntity }) =>
-      postapiScriptVariantcreate(variables.data),
+    mutationFn: (variables: { data: ScriptVariantEntity }) => postapiScriptVariantcreate(variables.data),
     ...options,
   });
 }
@@ -212,23 +187,10 @@ export function usePutapiScriptVariantdeletename(
 /**
  */
 export function usePostapiScriptVariantgetscripts(
-  options?: Omit<
-    UseMutationOptions<
-      ScriptVariantEntityPaginationQuery,
-      Error,
-      {
-        data: SortType[];
-        params?: { search?: string; pageNumber?: number; pageSize?: number; searchTerm?: string };
-      }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<ScriptVariantEntityPaginationQuery, Error, { data: SortType[]; params?: { search?: string; pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { search?: string; pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => postapiScriptVariantgetscripts(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { search?: string; pageNumber?: number; pageSize?: number; searchTerm?: string } }) => postapiScriptVariantgetscripts(variables.data, variables.params),
     ...options,
   });
 }
@@ -236,14 +198,10 @@ export function usePostapiScriptVariantgetscripts(
 /**
  */
 export function usePostapiScriptVariantupdateid(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      postapiScriptVariantupdateid(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => postapiScriptVariantupdateid(variables.id, variables.data),
     ...options,
   });
 }

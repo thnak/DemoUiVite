@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createMachineGroupMachineMapping,
   deleteMachineGroupMachineMapping,
-  updateMachineGroupMachineMapping,
+  generateNewMachineGroupMachineMappingCode,
   getMachineGroupMachineMappingById,
   getMachineGroupMachineMappingPage,
-  generateNewMachineGroupMachineMappingCode,
+  updateMachineGroupMachineMapping,
 } from '../../services/generated/machine-group-machine-mapping';
 
 import type {
-  SortType,
   BooleanResult,
-  StringObjectKeyValuePair,
   MachineGroupMachineMapping,
-  MachineGroupMachineMappingResult,
   MachineGroupMachineMappingBasePaginationResponse,
+  MachineGroupMachineMappingResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,12 +31,8 @@ import type {
  */
 export const machineGroupMachineMappingKeys = {
   all: ['machineGroupMachineMapping'] as const,
-  getMachineGroupMachineMappingById: (id: string) =>
-    ['machineGroupMachineMapping', 'getMachineGroupMachineMappingById', id] as const,
-  generateNewMachineGroupMachineMappingCode: [
-    'machineGroupMachineMapping',
-    'generateNewMachineGroupMachineMappingCode',
-  ] as const,
+  getMachineGroupMachineMappingById: (id: string) => ['machineGroupMachineMapping', 'getMachineGroupMachineMappingById', id] as const,
+  generateNewMachineGroupMachineMappingCode: ['machineGroupMachineMapping', 'generateNewMachineGroupMachineMappingCode'] as const,
 };
 
 /**
@@ -70,20 +66,10 @@ export function useGenerateNewMachineGroupMachineMappingCode(
  * Get paginated list of Machine Group Machine Mapping
  */
 export function useGetMachineGroupMachineMappingPage(
-  options?: Omit<
-    UseMutationOptions<
-      MachineGroupMachineMappingBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<MachineGroupMachineMappingBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getMachineGroupMachineMappingPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getMachineGroupMachineMappingPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -92,18 +78,10 @@ export function useGetMachineGroupMachineMappingPage(
  * Create a new Machine Group Machine Mapping
  */
 export function useCreateMachineGroupMachineMapping(
-  options?: Omit<
-    UseMutationOptions<
-      MachineGroupMachineMappingResult,
-      Error,
-      { data: MachineGroupMachineMapping }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<MachineGroupMachineMappingResult, Error, { data: MachineGroupMachineMapping }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: MachineGroupMachineMapping }) =>
-      createMachineGroupMachineMapping(variables.data),
+    mutationFn: (variables: { data: MachineGroupMachineMapping }) => createMachineGroupMachineMapping(variables.data),
     ...options,
   });
 }
@@ -112,14 +90,10 @@ export function useCreateMachineGroupMachineMapping(
  * Update an existing Machine Group Machine Mapping
  */
 export function useUpdateMachineGroupMachineMapping(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateMachineGroupMachineMapping(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateMachineGroupMachineMapping(variables.id, variables.data),
     ...options,
   });
 }

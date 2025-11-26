@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
-  WebhookEntity,
-  WebhookEntityResult,
+  SortType,
   StringObjectKeyValuePair,
+  WebhookEntity,
   WebhookEntityBasePaginationResponse,
+  WebhookEntityResult,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -49,15 +49,8 @@ export async function getWebhookById(id: string): Promise<WebhookEntity> {
  * @param data - Request body
  * @returns Promise<WebhookEntityBasePaginationResponse>
  */
-export async function getWebhookPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<WebhookEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<WebhookEntityBasePaginationResponse>(
-    WEBHOOK_ENDPOINTS.getWebhookPage,
-    data,
-    { params }
-  );
+export async function getWebhookPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<WebhookEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<WebhookEntityBasePaginationResponse>(WEBHOOK_ENDPOINTS.getWebhookPage, data, { params });
   return response.data;
 }
 
@@ -69,10 +62,7 @@ export async function getWebhookPage(
  * @returns Promise<WebhookEntityResult>
  */
 export async function createWebhook(data: WebhookEntity): Promise<WebhookEntityResult> {
-  const response = await axiosInstance.post<WebhookEntityResult>(
-    WEBHOOK_ENDPOINTS.createWebhook,
-    data
-  );
+  const response = await axiosInstance.post<WebhookEntityResult>(WEBHOOK_ENDPOINTS.createWebhook, data);
   return response.data;
 }
 
@@ -83,10 +73,7 @@ export async function createWebhook(data: WebhookEntity): Promise<WebhookEntityR
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateWebhook(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateWebhook(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/webhook/update/${id}`, data);
   return response.data;
 }
@@ -119,12 +106,7 @@ export async function generateNewWebhookCode(): Promise<string> {
  * Searches Webhook entities by text across searchable fields.
  * @returns Promise<WebhookEntity[]>
  */
-export async function searchWebhook(params?: {
-  searchText?: string;
-  maxResults?: number;
-}): Promise<WebhookEntity[]> {
-  const response = await axiosInstance.get<WebhookEntity[]>(WEBHOOK_ENDPOINTS.searchWebhook, {
-    params,
-  });
+export async function searchWebhook(params?: { searchText?: string; maxResults?: number }): Promise<WebhookEntity[]> {
+  const response = await axiosInstance.get<WebhookEntity[]>(WEBHOOK_ENDPOINTS.searchWebhook, { params });
   return response.data;
 }

@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createScriptDefinition,
   deleteScriptDefinition,
-  searchScriptDefinition,
-  updateScriptDefinition,
+  generateNewScriptDefinitionCode,
   getScriptDefinitionById,
   getScriptDefinitionPage,
-  generateNewScriptDefinitionCode,
+  searchScriptDefinition,
+  updateScriptDefinition,
 } from '../../services/generated/script-definition';
 
 import type {
-  SortType,
   BooleanResult,
   ScriptDefinitionEntity,
-  StringObjectKeyValuePair,
-  ScriptDefinitionEntityResult,
   ScriptDefinitionEntityBasePaginationResponse,
+  ScriptDefinitionEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -32,8 +32,7 @@ import type {
  */
 export const scriptDefinitionKeys = {
   all: ['scriptDefinition'] as const,
-  getScriptDefinitionById: (id: string) =>
-    ['scriptDefinition', 'getScriptDefinitionById', id] as const,
+  getScriptDefinitionById: (id: string) => ['scriptDefinition', 'getScriptDefinitionById', id] as const,
   generateNewScriptDefinitionCode: ['scriptDefinition', 'generateNewScriptDefinitionCode'] as const,
   searchScriptDefinition: ['scriptDefinition', 'searchScriptDefinition'] as const,
 };
@@ -83,20 +82,10 @@ export function useSearchScriptDefinition(
  * Get paginated list of Script Definition
  */
 export function useGetScriptDefinitionPage(
-  options?: Omit<
-    UseMutationOptions<
-      ScriptDefinitionEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<ScriptDefinitionEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getScriptDefinitionPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getScriptDefinitionPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -105,14 +94,10 @@ export function useGetScriptDefinitionPage(
  * Create a new Script Definition
  */
 export function useCreateScriptDefinition(
-  options?: Omit<
-    UseMutationOptions<ScriptDefinitionEntityResult, Error, { data: ScriptDefinitionEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<ScriptDefinitionEntityResult, Error, { data: ScriptDefinitionEntity }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: ScriptDefinitionEntity }) =>
-      createScriptDefinition(variables.data),
+    mutationFn: (variables: { data: ScriptDefinitionEntity }) => createScriptDefinition(variables.data),
     ...options,
   });
 }
@@ -121,14 +106,10 @@ export function useCreateScriptDefinition(
  * Update an existing Script Definition
  */
 export function useUpdateScriptDefinition(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateScriptDefinition(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateScriptDefinition(variables.id, variables.data),
     ...options,
   });
 }

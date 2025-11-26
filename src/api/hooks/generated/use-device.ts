@@ -3,52 +3,52 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
-  postapiDevicegetdevice,
-  postapiDevicegetsensor,
+  getapiDevicecheckavailableip,
+  getapiDevicecheckavailablemac,
+  getapiDevicedownloadexceldeviceandsensor,
+  getapiDevicefindentitytemplate,
+  getapiDevicefindmqtttemplate,
+  getapiDevicegetdevicebyiddeviceId,
+  getapiDevicegeteditablesensor,
+  getapiDevicegetsensorbydeviceid,
+  getapiDevicegetsensorbysensorIdsensorId,
   getapiDevicesearchdevice,
   getapiDevicesearchsensor,
-  postapiDeviceuploadexcel,
   postapiDeviceaddnewdevice,
+  postapiDeviceaddnewdeviceform,
   postapiDeviceaddnewsensor,
+  postapiDevicecreatemillionsamples,
   postapiDevicedeletedevice,
   postapiDevicedeletesensor,
+  postapiDevicegetdevice,
   postapiDevicegetdevicelog,
   postapiDevicegetrawsensor,
+  postapiDevicegetsensor,
   postapiDeviceupdatedevice,
-  postapiDeviceupdatesensor,
   postapiDeviceupdatedeviceby,
-  getapiDevicecheckavailableip,
-  getapiDevicefindmqtttemplate,
-  getapiDevicecheckavailablemac,
-  getapiDevicegeteditablesensor,
-  postapiDeviceaddnewdeviceform,
-  getapiDevicefindentitytemplate,
-  getapiDevicegetsensorbydeviceid,
-  getapiDevicegetdevicebyiddeviceId,
-  postapiDevicecreatemillionsamples,
-  getapiDevicegetsensorbysensorIdsensorId,
-  getapiDevicedownloadexceldeviceandsensor,
+  postapiDeviceupdatesensor,
+  postapiDeviceuploadexcel,
 } from '../../services/generated/device';
 
 import type {
-  SortType,
-  SensorDto,
-  DataSource,
   BooleanResult,
-  IoTDeviceType,
-  IoTSensorType,
-  IoTDeviceEntity,
-  IoTDeviceStatus,
-  IoTSensorEntity,
-  RequestToCreateDto,
+  DataSource,
+  GetDeviceLogsResponsePaginationQuery,
   GetSensorEntityByIdDto,
-  SensorDtoPaginationQuery,
-  StringObjectKeyValuePair,
+  IoTDeviceEntity,
   IoTDeviceEntityEntityLogEntity,
   IoTDeviceEntityPaginationQuery,
+  IoTDeviceStatus,
+  IoTDeviceType,
+  IoTSensorEntity,
   IoTSensorEntityPaginationQuery,
+  IoTSensorType,
+  RequestToCreateDto,
   SensorDeviceDtoPaginationQuery,
-  GetDeviceLogsResponsePaginationQuery,
+  SensorDto,
+  SensorDtoPaginationQuery,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -64,19 +64,14 @@ export const deviceKeys = {
   all: ['device'] as const,
   getapiDevicecheckavailableip: ['device', 'getapiDevicecheckavailableip'] as const,
   getapiDevicecheckavailablemac: ['device', 'getapiDevicecheckavailablemac'] as const,
-  getapiDevicegetdevicebyiddeviceId: (deviceId: string) =>
-    ['device', 'getapiDevicegetdevicebyiddeviceId', deviceId] as const,
+  getapiDevicegetdevicebyiddeviceId: (deviceId: string) => ['device', 'getapiDevicegetdevicebyiddeviceId', deviceId] as const,
   getapiDevicesearchdevice: ['device', 'getapiDevicesearchdevice'] as const,
   getapiDevicefindmqtttemplate: ['device', 'getapiDevicefindmqtttemplate'] as const,
   getapiDevicefindentitytemplate: ['device', 'getapiDevicefindentitytemplate'] as const,
   getapiDevicegeteditablesensor: ['device', 'getapiDevicegeteditablesensor'] as const,
-  getapiDevicegetsensorbysensorIdsensorId: (sensorId: string) =>
-    ['device', 'getapiDevicegetsensorbysensorIdsensorId', sensorId] as const,
+  getapiDevicegetsensorbysensorIdsensorId: (sensorId: string) => ['device', 'getapiDevicegetsensorbysensorIdsensorId', sensorId] as const,
   getapiDevicesearchsensor: ['device', 'getapiDevicesearchsensor'] as const,
-  getapiDevicedownloadexceldeviceandsensor: [
-    'device',
-    'getapiDevicedownloadexceldeviceandsensor',
-  ] as const,
+  getapiDevicedownloadexceldeviceandsensor: ['device', 'getapiDevicedownloadexceldeviceandsensor'] as const,
 };
 
 /**
@@ -211,14 +206,10 @@ export function useGetapiDevicedownloadexceldeviceandsensor(
 /**
  */
 export function usePostapiDeviceaddnewdevice(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { data: RequestToCreateDto }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { data: RequestToCreateDto }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: RequestToCreateDto }) =>
-      postapiDeviceaddnewdevice(variables.data),
+    mutationFn: (variables: { data: RequestToCreateDto }) => postapiDeviceaddnewdevice(variables.data),
     ...options,
   });
 }
@@ -248,14 +239,10 @@ export function usePostapiDeviceaddnewsensor(
 /**
  */
 export function usePostapiDevicecreatemillionsamples(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { data: IoTDeviceEntity[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { data: IoTDeviceEntity[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: IoTDeviceEntity[] }) =>
-      postapiDevicecreatemillionsamples(variables.data),
+    mutationFn: (variables: { data: IoTDeviceEntity[] }) => postapiDevicecreatemillionsamples(variables.data),
     ...options,
   });
 }
@@ -285,41 +272,10 @@ export function usePostapiDevicedeletesensor(
 /**
  */
 export function usePostapiDevicegetdevice(
-  options?: Omit<
-    UseMutationOptions<
-      IoTDeviceEntityPaginationQuery,
-      Error,
-      {
-        data: SortType[];
-        params?: {
-          search?: string;
-          typeList?: IoTDeviceType[];
-          statusList?: IoTDeviceStatus[];
-          fromTime?: string;
-          toTime?: string;
-          pageNumber?: number;
-          pageSize?: number;
-          searchTerm?: string;
-        };
-      }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<IoTDeviceEntityPaginationQuery, Error, { data: SortType[]; params?: { search?: string; typeList?: IoTDeviceType[]; statusList?: IoTDeviceStatus[]; fromTime?: string; toTime?: string; pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: {
-        search?: string;
-        typeList?: IoTDeviceType[];
-        statusList?: IoTDeviceStatus[];
-        fromTime?: string;
-        toTime?: string;
-        pageNumber?: number;
-        pageSize?: number;
-        searchTerm?: string;
-      };
-    }) => postapiDevicegetdevice(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { search?: string; typeList?: IoTDeviceType[]; statusList?: IoTDeviceStatus[]; fromTime?: string; toTime?: string; pageNumber?: number; pageSize?: number; searchTerm?: string } }) => postapiDevicegetdevice(variables.data, variables.params),
     ...options,
   });
 }
@@ -327,41 +283,10 @@ export function usePostapiDevicegetdevice(
 /**
  */
 export function usePostapiDevicegetsensor(
-  options?: Omit<
-    UseMutationOptions<
-      SensorDeviceDtoPaginationQuery,
-      Error,
-      {
-        data: SortType[];
-        params?: {
-          search?: string;
-          id?: string;
-          fromTime?: string;
-          toTime?: string;
-          typeList?: IoTSensorType[];
-          pageNumber?: number;
-          pageSize?: number;
-          searchTerm?: string;
-        };
-      }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<SensorDeviceDtoPaginationQuery, Error, { data: SortType[]; params?: { search?: string; id?: string; fromTime?: string; toTime?: string; typeList?: IoTSensorType[]; pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: {
-        search?: string;
-        id?: string;
-        fromTime?: string;
-        toTime?: string;
-        typeList?: IoTSensorType[];
-        pageNumber?: number;
-        pageSize?: number;
-        searchTerm?: string;
-      };
-    }) => postapiDevicegetsensor(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { search?: string; id?: string; fromTime?: string; toTime?: string; typeList?: IoTSensorType[]; pageNumber?: number; pageSize?: number; searchTerm?: string } }) => postapiDevicegetsensor(variables.data, variables.params),
     ...options,
   });
 }
@@ -369,37 +294,10 @@ export function usePostapiDevicegetsensor(
 /**
  */
 export function usePostapiDevicegetrawsensor(
-  options?: Omit<
-    UseMutationOptions<
-      IoTSensorEntityPaginationQuery,
-      Error,
-      {
-        data: SortType[];
-        params?: {
-          CreateTimeFrom?: string;
-          CreateTimeTo?: string;
-          Types?: IoTSensorType[];
-          pageNumber?: number;
-          pageSize?: number;
-          searchTerm?: string;
-        };
-      }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<IoTSensorEntityPaginationQuery, Error, { data: SortType[]; params?: { CreateTimeFrom?: string; CreateTimeTo?: string; Types?: IoTSensorType[]; pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: {
-        CreateTimeFrom?: string;
-        CreateTimeTo?: string;
-        Types?: IoTSensorType[];
-        pageNumber?: number;
-        pageSize?: number;
-        searchTerm?: string;
-      };
-    }) => postapiDevicegetrawsensor(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { CreateTimeFrom?: string; CreateTimeTo?: string; Types?: IoTSensorType[]; pageNumber?: number; pageSize?: number; searchTerm?: string } }) => postapiDevicegetrawsensor(variables.data, variables.params),
     ...options,
   });
 }
@@ -407,23 +305,10 @@ export function usePostapiDevicegetrawsensor(
 /**
  */
 export function useGetapiDevicegetsensorbydeviceid(
-  options?: Omit<
-    UseMutationOptions<
-      SensorDtoPaginationQuery,
-      Error,
-      {
-        data: SortType[];
-        params?: { DeviceId: string; pageNumber?: number; pageSize?: number; searchTerm?: string };
-      }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<SensorDtoPaginationQuery, Error, { data: SortType[]; params?: { DeviceId: string; pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { DeviceId: string; pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getapiDevicegetsensorbydeviceid(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { DeviceId: string; pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getapiDevicegetsensorbydeviceid(variables.data, variables.params),
     ...options,
   });
 }
@@ -431,37 +316,10 @@ export function useGetapiDevicegetsensorbydeviceid(
 /**
  */
 export function usePostapiDevicegetdevicelog(
-  options?: Omit<
-    UseMutationOptions<
-      GetDeviceLogsResponsePaginationQuery,
-      Error,
-      {
-        data: SortType[];
-        params?: {
-          DeviceId: string;
-          CreateTimeFrom?: string;
-          CreateTimeTo?: string;
-          pageNumber?: number;
-          pageSize?: number;
-          searchTerm?: string;
-        };
-      }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<GetDeviceLogsResponsePaginationQuery, Error, { data: SortType[]; params?: { DeviceId: string; CreateTimeFrom?: string; CreateTimeTo?: string; pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: {
-        DeviceId: string;
-        CreateTimeFrom?: string;
-        CreateTimeTo?: string;
-        pageNumber?: number;
-        pageSize?: number;
-        searchTerm?: string;
-      };
-    }) => postapiDevicegetdevicelog(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { DeviceId: string; CreateTimeFrom?: string; CreateTimeTo?: string; pageNumber?: number; pageSize?: number; searchTerm?: string } }) => postapiDevicegetdevicelog(variables.data, variables.params),
     ...options,
   });
 }
@@ -491,18 +349,10 @@ export function usePostapiDeviceupdatedeviceby(
 /**
  */
 export function usePostapiDeviceupdatesensor(
-  options?: Omit<
-    UseMutationOptions<
-      BooleanResult,
-      Error,
-      { data: StringObjectKeyValuePair[]; params?: { SensorId?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { data: StringObjectKeyValuePair[]; params?: { SensorId?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: StringObjectKeyValuePair[]; params?: { SensorId?: string } }) =>
-      postapiDeviceupdatesensor(variables.data, variables.params),
+    mutationFn: (variables: { data: StringObjectKeyValuePair[]; params?: { SensorId?: string } }) => postapiDeviceupdatesensor(variables.data, variables.params),
     ...options,
   });
 }

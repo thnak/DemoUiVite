@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   PermissionEntity,
-  PermissionEntityResult,
-  StringObjectKeyValuePair,
   PermissionEntityBasePaginationResponse,
+  PermissionEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getPermissionById(id: string): Promise<PermissionEntity> {
  * @param data - Request body
  * @returns Promise<PermissionEntityBasePaginationResponse>
  */
-export async function getPermissionPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<PermissionEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<PermissionEntityBasePaginationResponse>(
-    PERMISSION_ENDPOINTS.getPermissionPage,
-    data,
-    { params }
-  );
+export async function getPermissionPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<PermissionEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<PermissionEntityBasePaginationResponse>(PERMISSION_ENDPOINTS.getPermissionPage, data, { params });
   return response.data;
 }
 
@@ -68,10 +61,7 @@ export async function getPermissionPage(
  * @returns Promise<PermissionEntityResult>
  */
 export async function createPermission(data: PermissionEntity): Promise<PermissionEntityResult> {
-  const response = await axiosInstance.post<PermissionEntityResult>(
-    PERMISSION_ENDPOINTS.createPermission,
-    data
-  );
+  const response = await axiosInstance.post<PermissionEntityResult>(PERMISSION_ENDPOINTS.createPermission, data);
   return response.data;
 }
 
@@ -82,10 +72,7 @@ export async function createPermission(data: PermissionEntity): Promise<Permissi
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updatePermission(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updatePermission(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/permission/update/${id}`, data);
   return response.data;
 }

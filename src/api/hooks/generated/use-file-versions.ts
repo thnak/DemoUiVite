@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createFileVersions,
   deleteFileVersions,
-  updateFileVersions,
+  generateNewFileVersionsCode,
   getFileVersionsById,
   getFileVersionsPage,
-  generateNewFileVersionsCode,
+  updateFileVersions,
 } from '../../services/generated/file-versions';
 
 import type {
-  SortType,
-  FileVersions,
   BooleanResult,
-  FileVersionsResult,
-  StringObjectKeyValuePair,
+  FileVersions,
   FileVersionsBasePaginationResponse,
+  FileVersionsResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,20 +66,10 @@ export function useGenerateNewFileVersionsCode(
  * Get paginated list of File Versions
  */
 export function useGetFileVersionsPage(
-  options?: Omit<
-    UseMutationOptions<
-      FileVersionsBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<FileVersionsBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getFileVersionsPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getFileVersionsPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -88,10 +78,7 @@ export function useGetFileVersionsPage(
  * Create a new File Versions
  */
 export function useCreateFileVersions(
-  options?: Omit<
-    UseMutationOptions<FileVersionsResult, Error, { data: FileVersions }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<FileVersionsResult, Error, { data: FileVersions }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: FileVersions }) => createFileVersions(variables.data),
@@ -103,14 +90,10 @@ export function useCreateFileVersions(
  * Update an existing File Versions
  */
 export function useUpdateFileVersions(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateFileVersions(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateFileVersions(variables.id, variables.data),
     ...options,
   });
 }

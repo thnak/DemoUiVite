@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createCategory,
   deleteCategory,
-  updateCategory,
+  generateNewCategoryCode,
   getCategoryById,
   getCategoryPage,
-  generateNewCategoryCode,
+  updateCategory,
 } from '../../services/generated/category';
 
 import type {
-  SortType,
   BooleanResult,
   CategoryEntity,
-  CategoryEntityResult,
-  StringObjectKeyValuePair,
   CategoryEntityBasePaginationResponse,
+  CategoryEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,20 +66,10 @@ export function useGenerateNewCategoryCode(
  * Get paginated list of Category
  */
 export function useGetCategoryPage(
-  options?: Omit<
-    UseMutationOptions<
-      CategoryEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<CategoryEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getCategoryPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getCategoryPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -88,10 +78,7 @@ export function useGetCategoryPage(
  * Create a new Category
  */
 export function useCreateCategory(
-  options?: Omit<
-    UseMutationOptions<CategoryEntityResult, Error, { data: CategoryEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<CategoryEntityResult, Error, { data: CategoryEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: CategoryEntity }) => createCategory(variables.data),
@@ -103,14 +90,10 @@ export function useCreateCategory(
  * Update an existing Category
  */
 export function useUpdateCategory(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateCategory(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateCategory(variables.id, variables.data),
     ...options,
   });
 }

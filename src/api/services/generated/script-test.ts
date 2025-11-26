@@ -1,6 +1,9 @@
 import axiosInstance from '../../axios-instance';
 
-import type { ObjectResult, ScriptExecutionRequest } from '../../types/generated';
+import type {
+  ObjectResult,
+  ScriptExecutionRequest,
+} from '../../types/generated';
 
 // ----------------------------------------------------------------------
 // ScriptTest Service
@@ -20,12 +23,7 @@ export const SCRIPTTEST_ENDPOINTS = {
  * @param data - Request body
  * @returns Promise<ObjectResult>
  */
-export async function postapiScriptTestexecute(
-  data: ScriptExecutionRequest
-): Promise<ObjectResult> {
-  const response = await axiosInstance.post<ObjectResult>(
-    SCRIPTTEST_ENDPOINTS.postapiScriptTestexecute,
-    data
-  );
+export async function postapiScriptTestexecute(data: ScriptExecutionRequest): Promise<ObjectResult> {
+  const response = await axiosInstance.post<ObjectResult>(SCRIPTTEST_ENDPOINTS.postapiScriptTestexecute, data);
   return response.data;
 }

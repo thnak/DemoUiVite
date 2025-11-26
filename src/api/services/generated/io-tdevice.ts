@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   IoTDeviceEntity,
-  IoTDeviceEntityResult,
-  StringObjectKeyValuePair,
   IoTDeviceEntityBasePaginationResponse,
+  IoTDeviceEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -49,15 +49,8 @@ export async function getIoTDeviceById(id: string): Promise<IoTDeviceEntity> {
  * @param data - Request body
  * @returns Promise<IoTDeviceEntityBasePaginationResponse>
  */
-export async function getIoTDevicePage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<IoTDeviceEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<IoTDeviceEntityBasePaginationResponse>(
-    IOTDEVICE_ENDPOINTS.getIoTDevicePage,
-    data,
-    { params }
-  );
+export async function getIoTDevicePage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<IoTDeviceEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<IoTDeviceEntityBasePaginationResponse>(IOTDEVICE_ENDPOINTS.getIoTDevicePage, data, { params });
   return response.data;
 }
 
@@ -69,10 +62,7 @@ export async function getIoTDevicePage(
  * @returns Promise<IoTDeviceEntityResult>
  */
 export async function createIoTDevice(data: IoTDeviceEntity): Promise<IoTDeviceEntityResult> {
-  const response = await axiosInstance.post<IoTDeviceEntityResult>(
-    IOTDEVICE_ENDPOINTS.createIoTDevice,
-    data
-  );
+  const response = await axiosInstance.post<IoTDeviceEntityResult>(IOTDEVICE_ENDPOINTS.createIoTDevice, data);
   return response.data;
 }
 
@@ -83,10 +73,7 @@ export async function createIoTDevice(data: IoTDeviceEntity): Promise<IoTDeviceE
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateIoTDevice(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateIoTDevice(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/iotdevice/update/${id}`, data);
   return response.data;
 }
@@ -119,12 +106,7 @@ export async function generateNewIoTDeviceCode(): Promise<string> {
  * Searches Io TDevice entities by text across searchable fields.
  * @returns Promise<IoTDeviceEntity[]>
  */
-export async function searchIoTDevice(params?: {
-  searchText?: string;
-  maxResults?: number;
-}): Promise<IoTDeviceEntity[]> {
-  const response = await axiosInstance.get<IoTDeviceEntity[]>(IOTDEVICE_ENDPOINTS.searchIoTDevice, {
-    params,
-  });
+export async function searchIoTDevice(params?: { searchText?: string; maxResults?: number }): Promise<IoTDeviceEntity[]> {
+  const response = await axiosInstance.get<IoTDeviceEntity[]>(IOTDEVICE_ENDPOINTS.searchIoTDevice, { params });
   return response.data;
 }

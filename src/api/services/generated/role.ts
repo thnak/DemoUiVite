@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
-  RoleEntity,
   BooleanResult,
-  RoleEntityResult,
-  StringObjectKeyValuePair,
+  RoleEntity,
   RoleEntityBasePaginationResponse,
+  RoleEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getRoleById(id: string): Promise<RoleEntity> {
  * @param data - Request body
  * @returns Promise<RoleEntityBasePaginationResponse>
  */
-export async function getRolePage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<RoleEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<RoleEntityBasePaginationResponse>(
-    ROLE_ENDPOINTS.getRolePage,
-    data,
-    { params }
-  );
+export async function getRolePage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<RoleEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<RoleEntityBasePaginationResponse>(ROLE_ENDPOINTS.getRolePage, data, { params });
   return response.data;
 }
 
@@ -79,10 +72,7 @@ export async function createRole(data: RoleEntity): Promise<RoleEntityResult> {
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateRole(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateRole(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/role/update/${id}`, data);
   return response.data;
 }

@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createFileMetadata,
   deleteFileMetadata,
-  updateFileMetadata,
+  generateNewFileMetadataCode,
   getFileMetadataById,
   getFileMetadataPage,
-  generateNewFileMetadataCode,
+  updateFileMetadata,
 } from '../../services/generated/file-metadata';
 
 import type {
-  SortType,
   BooleanResult,
   FileMetadataEntity,
-  FileMetadataEntityResult,
-  StringObjectKeyValuePair,
   FileMetadataEntityBasePaginationResponse,
+  FileMetadataEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,20 +66,10 @@ export function useGenerateNewFileMetadataCode(
  * Get paginated list of File Metadata
  */
 export function useGetFileMetadataPage(
-  options?: Omit<
-    UseMutationOptions<
-      FileMetadataEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<FileMetadataEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getFileMetadataPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getFileMetadataPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -88,10 +78,7 @@ export function useGetFileMetadataPage(
  * Create a new File Metadata
  */
 export function useCreateFileMetadata(
-  options?: Omit<
-    UseMutationOptions<FileMetadataEntityResult, Error, { data: FileMetadataEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<FileMetadataEntityResult, Error, { data: FileMetadataEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: FileMetadataEntity }) => createFileMetadata(variables.data),
@@ -103,14 +90,10 @@ export function useCreateFileMetadata(
  * Update an existing File Metadata
  */
 export function useUpdateFileMetadata(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateFileMetadata(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateFileMetadata(variables.id, variables.data),
     ...options,
   });
 }

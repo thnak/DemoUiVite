@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createFilePermission,
   deleteFilePermission,
-  updateFilePermission,
+  generateNewFilePermissionCode,
   getFilePermissionById,
   getFilePermissionPage,
-  generateNewFilePermissionCode,
+  updateFilePermission,
 } from '../../services/generated/file-permission';
 
 import type {
-  SortType,
   BooleanResult,
   FilePermissionEntity,
-  StringObjectKeyValuePair,
-  FilePermissionEntityResult,
   FilePermissionEntityBasePaginationResponse,
+  FilePermissionEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,20 +66,10 @@ export function useGenerateNewFilePermissionCode(
  * Get paginated list of File Permission
  */
 export function useGetFilePermissionPage(
-  options?: Omit<
-    UseMutationOptions<
-      FilePermissionEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<FilePermissionEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getFilePermissionPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getFilePermissionPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -88,10 +78,7 @@ export function useGetFilePermissionPage(
  * Create a new File Permission
  */
 export function useCreateFilePermission(
-  options?: Omit<
-    UseMutationOptions<FilePermissionEntityResult, Error, { data: FilePermissionEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<FilePermissionEntityResult, Error, { data: FilePermissionEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: FilePermissionEntity }) => createFilePermission(variables.data),
@@ -103,14 +90,10 @@ export function useCreateFilePermission(
  * Update an existing File Permission
  */
 export function useUpdateFilePermission(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateFilePermission(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateFilePermission(variables.id, variables.data),
     ...options,
   });
 }

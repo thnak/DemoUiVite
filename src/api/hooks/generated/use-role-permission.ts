@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createRolePermission,
   deleteRolePermission,
-  updateRolePermission,
+  generateNewRolePermissionCode,
   getRolePermissionById,
   getRolePermissionPage,
-  generateNewRolePermissionCode,
+  updateRolePermission,
 } from '../../services/generated/role-permission';
 
 import type {
-  SortType,
   BooleanResult,
   RolePermissionEntity,
-  StringObjectKeyValuePair,
-  RolePermissionEntityResult,
   RolePermissionEntityBasePaginationResponse,
+  RolePermissionEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,20 +66,10 @@ export function useGenerateNewRolePermissionCode(
  * Get paginated list of Role Permission
  */
 export function useGetRolePermissionPage(
-  options?: Omit<
-    UseMutationOptions<
-      RolePermissionEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<RolePermissionEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getRolePermissionPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getRolePermissionPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -88,10 +78,7 @@ export function useGetRolePermissionPage(
  * Create a new Role Permission
  */
 export function useCreateRolePermission(
-  options?: Omit<
-    UseMutationOptions<RolePermissionEntityResult, Error, { data: RolePermissionEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<RolePermissionEntityResult, Error, { data: RolePermissionEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: RolePermissionEntity }) => createRolePermission(variables.data),
@@ -103,14 +90,10 @@ export function useCreateRolePermission(
  * Update an existing Role Permission
  */
 export function useUpdateRolePermission(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateRolePermission(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateRolePermission(variables.id, variables.data),
     ...options,
   });
 }

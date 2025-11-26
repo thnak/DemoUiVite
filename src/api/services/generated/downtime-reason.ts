@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   DowntimeReasonEntity,
-  StringObjectKeyValuePair,
-  DowntimeReasonEntityResult,
   DowntimeReasonEntityBasePaginationResponse,
+  DowntimeReasonEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -49,15 +49,8 @@ export async function getDowntimeReasonById(id: string): Promise<DowntimeReasonE
  * @param data - Request body
  * @returns Promise<DowntimeReasonEntityBasePaginationResponse>
  */
-export async function getDowntimeReasonPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<DowntimeReasonEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<DowntimeReasonEntityBasePaginationResponse>(
-    DOWNTIMEREASON_ENDPOINTS.getDowntimeReasonPage,
-    data,
-    { params }
-  );
+export async function getDowntimeReasonPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<DowntimeReasonEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<DowntimeReasonEntityBasePaginationResponse>(DOWNTIMEREASON_ENDPOINTS.getDowntimeReasonPage, data, { params });
   return response.data;
 }
 
@@ -68,13 +61,8 @@ export async function getDowntimeReasonPage(
  * @param data - Request body
  * @returns Promise<DowntimeReasonEntityResult>
  */
-export async function createDowntimeReason(
-  data: DowntimeReasonEntity
-): Promise<DowntimeReasonEntityResult> {
-  const response = await axiosInstance.post<DowntimeReasonEntityResult>(
-    DOWNTIMEREASON_ENDPOINTS.createDowntimeReason,
-    data
-  );
+export async function createDowntimeReason(data: DowntimeReasonEntity): Promise<DowntimeReasonEntityResult> {
+  const response = await axiosInstance.post<DowntimeReasonEntityResult>(DOWNTIMEREASON_ENDPOINTS.createDowntimeReason, data);
   return response.data;
 }
 
@@ -85,14 +73,8 @@ export async function createDowntimeReason(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateDowntimeReason(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/downtimereason/update/${id}`,
-    data
-  );
+export async function updateDowntimeReason(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/downtimereason/update/${id}`, data);
   return response.data;
 }
 
@@ -114,9 +96,7 @@ export async function deleteDowntimeReason(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewDowntimeReasonCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    DOWNTIMEREASON_ENDPOINTS.generateNewDowntimeReasonCode
-  );
+  const response = await axiosInstance.get<string>(DOWNTIMEREASON_ENDPOINTS.generateNewDowntimeReasonCode);
   return response.data;
 }
 
@@ -126,13 +106,7 @@ export async function generateNewDowntimeReasonCode(): Promise<string> {
  * Searches Downtime Reason entities by text across searchable fields.
  * @returns Promise<DowntimeReasonEntity[]>
  */
-export async function searchDowntimeReason(params?: {
-  searchText?: string;
-  maxResults?: number;
-}): Promise<DowntimeReasonEntity[]> {
-  const response = await axiosInstance.get<DowntimeReasonEntity[]>(
-    DOWNTIMEREASON_ENDPOINTS.searchDowntimeReason,
-    { params }
-  );
+export async function searchDowntimeReason(params?: { searchText?: string; maxResults?: number }): Promise<DowntimeReasonEntity[]> {
+  const response = await axiosInstance.get<DowntimeReasonEntity[]>(DOWNTIMEREASON_ENDPOINTS.searchDowntimeReason, { params });
   return response.data;
 }

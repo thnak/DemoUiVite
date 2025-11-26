@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createMachineOutputMapping,
   deleteMachineOutputMapping,
-  updateMachineOutputMapping,
+  generateNewMachineOutputMappingCode,
   getMachineOutputMappingById,
   getMachineOutputMappingPage,
-  generateNewMachineOutputMappingCode,
+  updateMachineOutputMapping,
 } from '../../services/generated/machine-output-mapping';
 
 import type {
-  SortType,
   BooleanResult,
   MachineOutputMapping,
-  StringObjectKeyValuePair,
-  MachineOutputMappingResult,
   MachineOutputMappingBasePaginationResponse,
+  MachineOutputMappingResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,12 +31,8 @@ import type {
  */
 export const machineOutputMappingKeys = {
   all: ['machineOutputMapping'] as const,
-  getMachineOutputMappingById: (id: string) =>
-    ['machineOutputMapping', 'getMachineOutputMappingById', id] as const,
-  generateNewMachineOutputMappingCode: [
-    'machineOutputMapping',
-    'generateNewMachineOutputMappingCode',
-  ] as const,
+  getMachineOutputMappingById: (id: string) => ['machineOutputMapping', 'getMachineOutputMappingById', id] as const,
+  generateNewMachineOutputMappingCode: ['machineOutputMapping', 'generateNewMachineOutputMappingCode'] as const,
 };
 
 /**
@@ -70,20 +66,10 @@ export function useGenerateNewMachineOutputMappingCode(
  * Get paginated list of Machine Output Mapping
  */
 export function useGetMachineOutputMappingPage(
-  options?: Omit<
-    UseMutationOptions<
-      MachineOutputMappingBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<MachineOutputMappingBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getMachineOutputMappingPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getMachineOutputMappingPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -92,14 +78,10 @@ export function useGetMachineOutputMappingPage(
  * Create a new Machine Output Mapping
  */
 export function useCreateMachineOutputMapping(
-  options?: Omit<
-    UseMutationOptions<MachineOutputMappingResult, Error, { data: MachineOutputMapping }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<MachineOutputMappingResult, Error, { data: MachineOutputMapping }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: MachineOutputMapping }) =>
-      createMachineOutputMapping(variables.data),
+    mutationFn: (variables: { data: MachineOutputMapping }) => createMachineOutputMapping(variables.data),
     ...options,
   });
 }
@@ -108,14 +90,10 @@ export function useCreateMachineOutputMapping(
  * Update an existing Machine Output Mapping
  */
 export function useUpdateMachineOutputMapping(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateMachineOutputMapping(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateMachineOutputMapping(variables.id, variables.data),
     ...options,
   });
 }

@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
-  UserDepartmentEntity,
+  SortType,
   StringObjectKeyValuePair,
-  UserDepartmentEntityResult,
+  UserDepartmentEntity,
   UserDepartmentEntityBasePaginationResponse,
+  UserDepartmentEntityResult,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getUserDepartmentById(id: string): Promise<UserDepartmentE
  * @param data - Request body
  * @returns Promise<UserDepartmentEntityBasePaginationResponse>
  */
-export async function getUserDepartmentPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<UserDepartmentEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<UserDepartmentEntityBasePaginationResponse>(
-    USERDEPARTMENT_ENDPOINTS.getUserDepartmentPage,
-    data,
-    { params }
-  );
+export async function getUserDepartmentPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<UserDepartmentEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<UserDepartmentEntityBasePaginationResponse>(USERDEPARTMENT_ENDPOINTS.getUserDepartmentPage, data, { params });
   return response.data;
 }
 
@@ -67,13 +60,8 @@ export async function getUserDepartmentPage(
  * @param data - Request body
  * @returns Promise<UserDepartmentEntityResult>
  */
-export async function createUserDepartment(
-  data: UserDepartmentEntity
-): Promise<UserDepartmentEntityResult> {
-  const response = await axiosInstance.post<UserDepartmentEntityResult>(
-    USERDEPARTMENT_ENDPOINTS.createUserDepartment,
-    data
-  );
+export async function createUserDepartment(data: UserDepartmentEntity): Promise<UserDepartmentEntityResult> {
+  const response = await axiosInstance.post<UserDepartmentEntityResult>(USERDEPARTMENT_ENDPOINTS.createUserDepartment, data);
   return response.data;
 }
 
@@ -84,14 +72,8 @@ export async function createUserDepartment(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateUserDepartment(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/userdepartment/update/${id}`,
-    data
-  );
+export async function updateUserDepartment(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/userdepartment/update/${id}`, data);
   return response.data;
 }
 
@@ -113,8 +95,6 @@ export async function deleteUserDepartment(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewUserDepartmentCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    USERDEPARTMENT_ENDPOINTS.generateNewUserDepartmentCode
-  );
+  const response = await axiosInstance.get<string>(USERDEPARTMENT_ENDPOINTS.generateNewUserDepartmentCode);
   return response.data;
 }

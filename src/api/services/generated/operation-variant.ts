@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   OperationVariantEntity,
-  StringObjectKeyValuePair,
-  OperationVariantEntityResult,
   OperationVariantEntityBasePaginationResponse,
+  OperationVariantEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getOperationVariantById(id: string): Promise<OperationVari
  * @param data - Request body
  * @returns Promise<OperationVariantEntityBasePaginationResponse>
  */
-export async function getOperationVariantPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<OperationVariantEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<OperationVariantEntityBasePaginationResponse>(
-    OPERATIONVARIANT_ENDPOINTS.getOperationVariantPage,
-    data,
-    { params }
-  );
+export async function getOperationVariantPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<OperationVariantEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<OperationVariantEntityBasePaginationResponse>(OPERATIONVARIANT_ENDPOINTS.getOperationVariantPage, data, { params });
   return response.data;
 }
 
@@ -67,13 +60,8 @@ export async function getOperationVariantPage(
  * @param data - Request body
  * @returns Promise<OperationVariantEntityResult>
  */
-export async function createOperationVariant(
-  data: OperationVariantEntity
-): Promise<OperationVariantEntityResult> {
-  const response = await axiosInstance.post<OperationVariantEntityResult>(
-    OPERATIONVARIANT_ENDPOINTS.createOperationVariant,
-    data
-  );
+export async function createOperationVariant(data: OperationVariantEntity): Promise<OperationVariantEntityResult> {
+  const response = await axiosInstance.post<OperationVariantEntityResult>(OPERATIONVARIANT_ENDPOINTS.createOperationVariant, data);
   return response.data;
 }
 
@@ -84,14 +72,8 @@ export async function createOperationVariant(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateOperationVariant(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/operationvariant/update/${id}`,
-    data
-  );
+export async function updateOperationVariant(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/operationvariant/update/${id}`, data);
   return response.data;
 }
 
@@ -113,8 +95,6 @@ export async function deleteOperationVariant(id: string): Promise<BooleanResult>
  * @returns Promise<string>
  */
 export async function generateNewOperationVariantCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    OPERATIONVARIANT_ENDPOINTS.generateNewOperationVariantCode
-  );
+  const response = await axiosInstance.get<string>(OPERATIONVARIANT_ENDPOINTS.generateNewOperationVariantCode);
   return response.data;
 }

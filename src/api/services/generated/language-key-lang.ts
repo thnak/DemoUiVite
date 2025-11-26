@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   LanguageKeyLangEntity,
-  StringObjectKeyValuePair,
-  LanguageKeyLangEntityResult,
   LanguageKeyLangEntityBasePaginationResponse,
+  LanguageKeyLangEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getLanguageKeyLangById(id: string): Promise<LanguageKeyLan
  * @param data - Request body
  * @returns Promise<LanguageKeyLangEntityBasePaginationResponse>
  */
-export async function getLanguageKeyLangPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<LanguageKeyLangEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<LanguageKeyLangEntityBasePaginationResponse>(
-    LANGUAGEKEYLANG_ENDPOINTS.getLanguageKeyLangPage,
-    data,
-    { params }
-  );
+export async function getLanguageKeyLangPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<LanguageKeyLangEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<LanguageKeyLangEntityBasePaginationResponse>(LANGUAGEKEYLANG_ENDPOINTS.getLanguageKeyLangPage, data, { params });
   return response.data;
 }
 
@@ -67,13 +60,8 @@ export async function getLanguageKeyLangPage(
  * @param data - Request body
  * @returns Promise<LanguageKeyLangEntityResult>
  */
-export async function createLanguageKeyLang(
-  data: LanguageKeyLangEntity
-): Promise<LanguageKeyLangEntityResult> {
-  const response = await axiosInstance.post<LanguageKeyLangEntityResult>(
-    LANGUAGEKEYLANG_ENDPOINTS.createLanguageKeyLang,
-    data
-  );
+export async function createLanguageKeyLang(data: LanguageKeyLangEntity): Promise<LanguageKeyLangEntityResult> {
+  const response = await axiosInstance.post<LanguageKeyLangEntityResult>(LANGUAGEKEYLANG_ENDPOINTS.createLanguageKeyLang, data);
   return response.data;
 }
 
@@ -84,14 +72,8 @@ export async function createLanguageKeyLang(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateLanguageKeyLang(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/languagekeylang/update/${id}`,
-    data
-  );
+export async function updateLanguageKeyLang(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/languagekeylang/update/${id}`, data);
   return response.data;
 }
 
@@ -113,8 +95,6 @@ export async function deleteLanguageKeyLang(id: string): Promise<BooleanResult> 
  * @returns Promise<string>
  */
 export async function generateNewLanguageKeyLangCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    LANGUAGEKEYLANG_ENDPOINTS.generateNewLanguageKeyLangCode
-  );
+  const response = await axiosInstance.get<string>(LANGUAGEKEYLANG_ENDPOINTS.generateNewLanguageKeyLangCode);
   return response.data;
 }

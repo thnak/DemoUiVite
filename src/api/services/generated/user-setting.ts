@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
-  UserSettingEntity,
-  UserSettingEntityResult,
+  SortType,
   StringObjectKeyValuePair,
+  UserSettingEntity,
   UserSettingEntityBasePaginationResponse,
+  UserSettingEntityResult,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getUserSettingById(id: string): Promise<UserSettingEntity>
  * @param data - Request body
  * @returns Promise<UserSettingEntityBasePaginationResponse>
  */
-export async function getUserSettingPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<UserSettingEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<UserSettingEntityBasePaginationResponse>(
-    USERSETTING_ENDPOINTS.getUserSettingPage,
-    data,
-    { params }
-  );
+export async function getUserSettingPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<UserSettingEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<UserSettingEntityBasePaginationResponse>(USERSETTING_ENDPOINTS.getUserSettingPage, data, { params });
   return response.data;
 }
 
@@ -68,10 +61,7 @@ export async function getUserSettingPage(
  * @returns Promise<UserSettingEntityResult>
  */
 export async function createUserSetting(data: UserSettingEntity): Promise<UserSettingEntityResult> {
-  const response = await axiosInstance.post<UserSettingEntityResult>(
-    USERSETTING_ENDPOINTS.createUserSetting,
-    data
-  );
+  const response = await axiosInstance.post<UserSettingEntityResult>(USERSETTING_ENDPOINTS.createUserSetting, data);
   return response.data;
 }
 
@@ -82,10 +72,7 @@ export async function createUserSetting(data: UserSettingEntity): Promise<UserSe
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateUserSetting(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateUserSetting(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/usersetting/update/${id}`, data);
   return response.data;
 }
@@ -108,8 +95,6 @@ export async function deleteUserSetting(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewUserSettingCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    USERSETTING_ENDPOINTS.generateNewUserSettingCode
-  );
+  const response = await axiosInstance.get<string>(USERSETTING_ENDPOINTS.generateNewUserSettingCode);
   return response.data;
 }

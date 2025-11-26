@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
-  StringObjectKeyValuePair,
   FolderLocationHistoryEntity,
-  FolderLocationHistoryEntityResult,
   FolderLocationHistoryEntityBasePaginationResponse,
+  FolderLocationHistoryEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -33,12 +33,8 @@ export const FOLDERLOCATIONHISTORY_ENDPOINTS = {
  * Retrieves a specific Folder Location History entity by its unique identifier.
  * @returns Promise<FolderLocationHistoryEntity>
  */
-export async function getFolderLocationHistoryById(
-  id: string
-): Promise<FolderLocationHistoryEntity> {
-  const response = await axiosInstance.get<FolderLocationHistoryEntity>(
-    `/api/folderlocationhistory/${id}`
-  );
+export async function getFolderLocationHistoryById(id: string): Promise<FolderLocationHistoryEntity> {
+  const response = await axiosInstance.get<FolderLocationHistoryEntity>(`/api/folderlocationhistory/${id}`);
   return response.data;
 }
 
@@ -52,15 +48,8 @@ export async function getFolderLocationHistoryById(
  * @param data - Request body
  * @returns Promise<FolderLocationHistoryEntityBasePaginationResponse>
  */
-export async function getFolderLocationHistoryPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<FolderLocationHistoryEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<FolderLocationHistoryEntityBasePaginationResponse>(
-    FOLDERLOCATIONHISTORY_ENDPOINTS.getFolderLocationHistoryPage,
-    data,
-    { params }
-  );
+export async function getFolderLocationHistoryPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<FolderLocationHistoryEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<FolderLocationHistoryEntityBasePaginationResponse>(FOLDERLOCATIONHISTORY_ENDPOINTS.getFolderLocationHistoryPage, data, { params });
   return response.data;
 }
 
@@ -71,13 +60,8 @@ export async function getFolderLocationHistoryPage(
  * @param data - Request body
  * @returns Promise<FolderLocationHistoryEntityResult>
  */
-export async function createFolderLocationHistory(
-  data: FolderLocationHistoryEntity
-): Promise<FolderLocationHistoryEntityResult> {
-  const response = await axiosInstance.post<FolderLocationHistoryEntityResult>(
-    FOLDERLOCATIONHISTORY_ENDPOINTS.createFolderLocationHistory,
-    data
-  );
+export async function createFolderLocationHistory(data: FolderLocationHistoryEntity): Promise<FolderLocationHistoryEntityResult> {
+  const response = await axiosInstance.post<FolderLocationHistoryEntityResult>(FOLDERLOCATIONHISTORY_ENDPOINTS.createFolderLocationHistory, data);
   return response.data;
 }
 
@@ -88,14 +72,8 @@ export async function createFolderLocationHistory(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateFolderLocationHistory(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/folderlocationhistory/update/${id}`,
-    data
-  );
+export async function updateFolderLocationHistory(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/folderlocationhistory/update/${id}`, data);
   return response.data;
 }
 
@@ -106,9 +84,7 @@ export async function updateFolderLocationHistory(
  * @returns Promise<BooleanResult>
  */
 export async function deleteFolderLocationHistory(id: string): Promise<BooleanResult> {
-  const response = await axiosInstance.delete<BooleanResult>(
-    `/api/folderlocationhistory/delete/${id}`
-  );
+  const response = await axiosInstance.delete<BooleanResult>(`/api/folderlocationhistory/delete/${id}`);
   return response.data;
 }
 
@@ -119,8 +95,6 @@ export async function deleteFolderLocationHistory(id: string): Promise<BooleanRe
  * @returns Promise<string>
  */
 export async function generateNewFolderLocationHistoryCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    FOLDERLOCATIONHISTORY_ENDPOINTS.generateNewFolderLocationHistoryCode
-  );
+  const response = await axiosInstance.get<string>(FOLDERLOCATIONHISTORY_ENDPOINTS.generateNewFolderLocationHistoryCode);
   return response.data;
 }

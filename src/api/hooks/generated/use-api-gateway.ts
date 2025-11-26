@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createApiGateway,
   deleteApiGateway,
-  updateApiGateway,
+  generateNewApiGatewayCode,
   getApiGatewayById,
   getApiGatewayPage,
-  generateNewApiGatewayCode,
+  updateApiGateway,
 } from '../../services/generated/api-gateway';
 
 import type {
-  SortType,
-  BooleanResult,
   ApiGatewayEntity,
-  ApiGatewayEntityResult,
-  StringObjectKeyValuePair,
   ApiGatewayEntityBasePaginationResponse,
+  ApiGatewayEntityResult,
+  BooleanResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,20 +66,10 @@ export function useGenerateNewApiGatewayCode(
  * Get paginated list of Api Gateway
  */
 export function useGetApiGatewayPage(
-  options?: Omit<
-    UseMutationOptions<
-      ApiGatewayEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<ApiGatewayEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getApiGatewayPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getApiGatewayPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -88,10 +78,7 @@ export function useGetApiGatewayPage(
  * Create a new Api Gateway
  */
 export function useCreateApiGateway(
-  options?: Omit<
-    UseMutationOptions<ApiGatewayEntityResult, Error, { data: ApiGatewayEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<ApiGatewayEntityResult, Error, { data: ApiGatewayEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: ApiGatewayEntity }) => createApiGateway(variables.data),
@@ -103,14 +90,10 @@ export function useCreateApiGateway(
  * Update an existing Api Gateway
  */
 export function useUpdateApiGateway(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateApiGateway(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateApiGateway(variables.id, variables.data),
     ...options,
   });
 }

@@ -25,10 +25,7 @@ export async function getapihlsfileNameplaylistm3u8(fileName: string): Promise<v
 /**
  * @returns Promise<void>
  */
-export async function getapihlsfileNamesegmentssegmentName(
-  fileName: string,
-  segmentName: string
-): Promise<void> {
+export async function getapihlsfileNamesegmentssegmentName(fileName: string, segmentName: string): Promise<void> {
   await axiosInstance.get(`/api/hls/${fileName}/segments/${segmentName}`);
 }
 

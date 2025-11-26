@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createAssemblyHashInfo,
   deleteAssemblyHashInfo,
-  updateAssemblyHashInfo,
+  generateNewAssemblyHashInfoCode,
   getAssemblyHashInfoById,
   getAssemblyHashInfoPage,
-  generateNewAssemblyHashInfoCode,
+  updateAssemblyHashInfo,
 } from '../../services/generated/assembly-hash-info';
 
 import type {
-  SortType,
-  BooleanResult,
   AssemblyHashInfoEntity,
-  StringObjectKeyValuePair,
-  AssemblyHashInfoEntityResult,
   AssemblyHashInfoEntityBasePaginationResponse,
+  AssemblyHashInfoEntityResult,
+  BooleanResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,8 +31,7 @@ import type {
  */
 export const assemblyHashInfoKeys = {
   all: ['assemblyHashInfo'] as const,
-  getAssemblyHashInfoById: (id: string) =>
-    ['assemblyHashInfo', 'getAssemblyHashInfoById', id] as const,
+  getAssemblyHashInfoById: (id: string) => ['assemblyHashInfo', 'getAssemblyHashInfoById', id] as const,
   generateNewAssemblyHashInfoCode: ['assemblyHashInfo', 'generateNewAssemblyHashInfoCode'] as const,
 };
 
@@ -67,20 +66,10 @@ export function useGenerateNewAssemblyHashInfoCode(
  * Get paginated list of Assembly Hash Info
  */
 export function useGetAssemblyHashInfoPage(
-  options?: Omit<
-    UseMutationOptions<
-      AssemblyHashInfoEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<AssemblyHashInfoEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getAssemblyHashInfoPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getAssemblyHashInfoPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -89,14 +78,10 @@ export function useGetAssemblyHashInfoPage(
  * Create a new Assembly Hash Info
  */
 export function useCreateAssemblyHashInfo(
-  options?: Omit<
-    UseMutationOptions<AssemblyHashInfoEntityResult, Error, { data: AssemblyHashInfoEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<AssemblyHashInfoEntityResult, Error, { data: AssemblyHashInfoEntity }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: AssemblyHashInfoEntity }) =>
-      createAssemblyHashInfo(variables.data),
+    mutationFn: (variables: { data: AssemblyHashInfoEntity }) => createAssemblyHashInfo(variables.data),
     ...options,
   });
 }
@@ -105,14 +90,10 @@ export function useCreateAssemblyHashInfo(
  * Update an existing Assembly Hash Info
  */
 export function useUpdateAssemblyHashInfo(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateAssemblyHashInfo(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateAssemblyHashInfo(variables.id, variables.data),
     ...options,
   });
 }

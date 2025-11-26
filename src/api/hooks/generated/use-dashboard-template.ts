@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDashboardTemplate,
   deleteDashboardTemplate,
-  updateDashboardTemplate,
+  generateNewDashboardTemplateCode,
   getDashboardTemplateById,
   getDashboardTemplatePage,
-  generateNewDashboardTemplateCode,
+  updateDashboardTemplate,
 } from '../../services/generated/dashboard-template';
 
 import type {
-  SortType,
   BooleanResult,
   DashboardTemplateEntity,
-  StringObjectKeyValuePair,
-  DashboardTemplateEntityResult,
   DashboardTemplateEntityBasePaginationResponse,
+  DashboardTemplateEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,12 +31,8 @@ import type {
  */
 export const dashboardTemplateKeys = {
   all: ['dashboardTemplate'] as const,
-  getDashboardTemplateById: (id: string) =>
-    ['dashboardTemplate', 'getDashboardTemplateById', id] as const,
-  generateNewDashboardTemplateCode: [
-    'dashboardTemplate',
-    'generateNewDashboardTemplateCode',
-  ] as const,
+  getDashboardTemplateById: (id: string) => ['dashboardTemplate', 'getDashboardTemplateById', id] as const,
+  generateNewDashboardTemplateCode: ['dashboardTemplate', 'generateNewDashboardTemplateCode'] as const,
 };
 
 /**
@@ -70,20 +66,10 @@ export function useGenerateNewDashboardTemplateCode(
  * Get paginated list of Dashboard Template
  */
 export function useGetDashboardTemplatePage(
-  options?: Omit<
-    UseMutationOptions<
-      DashboardTemplateEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<DashboardTemplateEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getDashboardTemplatePage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getDashboardTemplatePage(variables.data, variables.params),
     ...options,
   });
 }
@@ -92,14 +78,10 @@ export function useGetDashboardTemplatePage(
  * Create a new Dashboard Template
  */
 export function useCreateDashboardTemplate(
-  options?: Omit<
-    UseMutationOptions<DashboardTemplateEntityResult, Error, { data: DashboardTemplateEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<DashboardTemplateEntityResult, Error, { data: DashboardTemplateEntity }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: DashboardTemplateEntity }) =>
-      createDashboardTemplate(variables.data),
+    mutationFn: (variables: { data: DashboardTemplateEntity }) => createDashboardTemplate(variables.data),
     ...options,
   });
 }
@@ -108,14 +90,10 @@ export function useCreateDashboardTemplate(
  * Update an existing Dashboard Template
  */
 export function useUpdateDashboardTemplate(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateDashboardTemplate(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateDashboardTemplate(variables.id, variables.data),
     ...options,
   });
 }

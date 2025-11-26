@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
-  StringObjectKeyValuePair,
+  SortType,
   StationGroupStationMapping,
-  StationGroupStationMappingResult,
   StationGroupStationMappingBasePaginationResponse,
+  StationGroupStationMappingResult,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -33,12 +33,8 @@ export const STATIONGROUPSTATIONMAPPING_ENDPOINTS = {
  * Retrieves a specific Station Group Station Mapping entity by its unique identifier.
  * @returns Promise<StationGroupStationMapping>
  */
-export async function getStationGroupStationMappingById(
-  id: string
-): Promise<StationGroupStationMapping> {
-  const response = await axiosInstance.get<StationGroupStationMapping>(
-    `/api/stationgroupstationmapping/${id}`
-  );
+export async function getStationGroupStationMappingById(id: string): Promise<StationGroupStationMapping> {
+  const response = await axiosInstance.get<StationGroupStationMapping>(`/api/stationgroupstationmapping/${id}`);
   return response.data;
 }
 
@@ -52,15 +48,8 @@ export async function getStationGroupStationMappingById(
  * @param data - Request body
  * @returns Promise<StationGroupStationMappingBasePaginationResponse>
  */
-export async function getStationGroupStationMappingPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<StationGroupStationMappingBasePaginationResponse> {
-  const response = await axiosInstance.post<StationGroupStationMappingBasePaginationResponse>(
-    STATIONGROUPSTATIONMAPPING_ENDPOINTS.getStationGroupStationMappingPage,
-    data,
-    { params }
-  );
+export async function getStationGroupStationMappingPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<StationGroupStationMappingBasePaginationResponse> {
+  const response = await axiosInstance.post<StationGroupStationMappingBasePaginationResponse>(STATIONGROUPSTATIONMAPPING_ENDPOINTS.getStationGroupStationMappingPage, data, { params });
   return response.data;
 }
 
@@ -71,13 +60,8 @@ export async function getStationGroupStationMappingPage(
  * @param data - Request body
  * @returns Promise<StationGroupStationMappingResult>
  */
-export async function createStationGroupStationMapping(
-  data: StationGroupStationMapping
-): Promise<StationGroupStationMappingResult> {
-  const response = await axiosInstance.post<StationGroupStationMappingResult>(
-    STATIONGROUPSTATIONMAPPING_ENDPOINTS.createStationGroupStationMapping,
-    data
-  );
+export async function createStationGroupStationMapping(data: StationGroupStationMapping): Promise<StationGroupStationMappingResult> {
+  const response = await axiosInstance.post<StationGroupStationMappingResult>(STATIONGROUPSTATIONMAPPING_ENDPOINTS.createStationGroupStationMapping, data);
   return response.data;
 }
 
@@ -88,14 +72,8 @@ export async function createStationGroupStationMapping(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateStationGroupStationMapping(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/stationgroupstationmapping/update/${id}`,
-    data
-  );
+export async function updateStationGroupStationMapping(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/stationgroupstationmapping/update/${id}`, data);
   return response.data;
 }
 
@@ -106,9 +84,7 @@ export async function updateStationGroupStationMapping(
  * @returns Promise<BooleanResult>
  */
 export async function deleteStationGroupStationMapping(id: string): Promise<BooleanResult> {
-  const response = await axiosInstance.delete<BooleanResult>(
-    `/api/stationgroupstationmapping/delete/${id}`
-  );
+  const response = await axiosInstance.delete<BooleanResult>(`/api/stationgroupstationmapping/delete/${id}`);
   return response.data;
 }
 
@@ -119,8 +95,6 @@ export async function deleteStationGroupStationMapping(id: string): Promise<Bool
  * @returns Promise<string>
  */
 export async function generateNewStationGroupStationMappingCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    STATIONGROUPSTATIONMAPPING_ENDPOINTS.generateNewStationGroupStationMappingCode
-  );
+  const response = await axiosInstance.get<string>(STATIONGROUPSTATIONMAPPING_ENDPOINTS.generateNewStationGroupStationMappingCode);
   return response.data;
 }

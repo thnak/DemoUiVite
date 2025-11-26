@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   RolePermissionEntity,
-  StringObjectKeyValuePair,
-  RolePermissionEntityResult,
   RolePermissionEntityBasePaginationResponse,
+  RolePermissionEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getRolePermissionById(id: string): Promise<RolePermissionE
  * @param data - Request body
  * @returns Promise<RolePermissionEntityBasePaginationResponse>
  */
-export async function getRolePermissionPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<RolePermissionEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<RolePermissionEntityBasePaginationResponse>(
-    ROLEPERMISSION_ENDPOINTS.getRolePermissionPage,
-    data,
-    { params }
-  );
+export async function getRolePermissionPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<RolePermissionEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<RolePermissionEntityBasePaginationResponse>(ROLEPERMISSION_ENDPOINTS.getRolePermissionPage, data, { params });
   return response.data;
 }
 
@@ -67,13 +60,8 @@ export async function getRolePermissionPage(
  * @param data - Request body
  * @returns Promise<RolePermissionEntityResult>
  */
-export async function createRolePermission(
-  data: RolePermissionEntity
-): Promise<RolePermissionEntityResult> {
-  const response = await axiosInstance.post<RolePermissionEntityResult>(
-    ROLEPERMISSION_ENDPOINTS.createRolePermission,
-    data
-  );
+export async function createRolePermission(data: RolePermissionEntity): Promise<RolePermissionEntityResult> {
+  const response = await axiosInstance.post<RolePermissionEntityResult>(ROLEPERMISSION_ENDPOINTS.createRolePermission, data);
   return response.data;
 }
 
@@ -84,14 +72,8 @@ export async function createRolePermission(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateRolePermission(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/rolepermission/update/${id}`,
-    data
-  );
+export async function updateRolePermission(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/rolepermission/update/${id}`, data);
   return response.data;
 }
 
@@ -113,8 +95,6 @@ export async function deleteRolePermission(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewRolePermissionCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    ROLEPERMISSION_ENDPOINTS.generateNewRolePermissionCode
-  );
+  const response = await axiosInstance.get<string>(ROLEPERMISSION_ENDPOINTS.generateNewRolePermissionCode);
   return response.data;
 }

@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createFolderPermission,
   deleteFolderPermission,
-  updateFolderPermission,
+  generateNewFolderPermissionCode,
   getFolderPermissionById,
   getFolderPermissionPage,
-  generateNewFolderPermissionCode,
+  updateFolderPermission,
 } from '../../services/generated/folder-permission';
 
 import type {
-  SortType,
   BooleanResult,
   FolderPermissionEntity,
-  StringObjectKeyValuePair,
-  FolderPermissionEntityResult,
   FolderPermissionEntityBasePaginationResponse,
+  FolderPermissionEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,8 +31,7 @@ import type {
  */
 export const folderPermissionKeys = {
   all: ['folderPermission'] as const,
-  getFolderPermissionById: (id: string) =>
-    ['folderPermission', 'getFolderPermissionById', id] as const,
+  getFolderPermissionById: (id: string) => ['folderPermission', 'getFolderPermissionById', id] as const,
   generateNewFolderPermissionCode: ['folderPermission', 'generateNewFolderPermissionCode'] as const,
 };
 
@@ -67,20 +66,10 @@ export function useGenerateNewFolderPermissionCode(
  * Get paginated list of Folder Permission
  */
 export function useGetFolderPermissionPage(
-  options?: Omit<
-    UseMutationOptions<
-      FolderPermissionEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<FolderPermissionEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getFolderPermissionPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getFolderPermissionPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -89,14 +78,10 @@ export function useGetFolderPermissionPage(
  * Create a new Folder Permission
  */
 export function useCreateFolderPermission(
-  options?: Omit<
-    UseMutationOptions<FolderPermissionEntityResult, Error, { data: FolderPermissionEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<FolderPermissionEntityResult, Error, { data: FolderPermissionEntity }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: FolderPermissionEntity }) =>
-      createFolderPermission(variables.data),
+    mutationFn: (variables: { data: FolderPermissionEntity }) => createFolderPermission(variables.data),
     ...options,
   });
 }
@@ -105,14 +90,10 @@ export function useCreateFolderPermission(
  * Update an existing Folder Permission
  */
 export function useUpdateFolderPermission(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateFolderPermission(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateFolderPermission(variables.id, variables.data),
     ...options,
   });
 }

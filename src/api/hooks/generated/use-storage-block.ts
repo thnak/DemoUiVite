@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createStorageBlock,
   deleteStorageBlock,
-  updateStorageBlock,
+  generateNewStorageBlockCode,
   getStorageBlockById,
   getStorageBlockPage,
-  generateNewStorageBlockCode,
+  updateStorageBlock,
 } from '../../services/generated/storage-block';
 
 import type {
-  SortType,
   BooleanResult,
+  SortType,
   StorageBlockEntity,
+  StorageBlockEntityBasePaginationResponse,
   StorageBlockEntityResult,
   StringObjectKeyValuePair,
-  StorageBlockEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,20 +66,10 @@ export function useGenerateNewStorageBlockCode(
  * Get paginated list of Storage Block
  */
 export function useGetStorageBlockPage(
-  options?: Omit<
-    UseMutationOptions<
-      StorageBlockEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<StorageBlockEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getStorageBlockPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getStorageBlockPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -88,10 +78,7 @@ export function useGetStorageBlockPage(
  * Create a new Storage Block
  */
 export function useCreateStorageBlock(
-  options?: Omit<
-    UseMutationOptions<StorageBlockEntityResult, Error, { data: StorageBlockEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<StorageBlockEntityResult, Error, { data: StorageBlockEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: StorageBlockEntity }) => createStorageBlock(variables.data),
@@ -103,14 +90,10 @@ export function useCreateStorageBlock(
  * Update an existing Storage Block
  */
 export function useUpdateStorageBlock(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateStorageBlock(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateStorageBlock(variables.id, variables.data),
     ...options,
   });
 }

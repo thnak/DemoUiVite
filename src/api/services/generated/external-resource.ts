@@ -23,21 +23,15 @@ export const EXTERNALRESOURCE_ENDPOINTS = {
  * @returns Promise<unknown>
  */
 export async function postapiExternalResourceuploaduiresource(): Promise<unknown> {
-  const response = await axiosInstance.post<unknown>(
-    EXTERNALRESOURCE_ENDPOINTS.postapiExternalResourceuploaduiresource
-  );
+  const response = await axiosInstance.post<unknown>(EXTERNALRESOURCE_ENDPOINTS.postapiExternalResourceuploaduiresource);
   return response.data;
 }
 
 /**
  * @returns Promise<unknown>
  */
-export async function postapiExternalResourceuploadresourcefolder(
-  folder: string
-): Promise<unknown> {
-  const response = await axiosInstance.post<unknown>(
-    `/api/ExternalResource/upload-resource/${folder}`
-  );
+export async function postapiExternalResourceuploadresourcefolder(folder: string): Promise<unknown> {
+  const response = await axiosInstance.post<unknown>(`/api/ExternalResource/upload-resource/${folder}`);
   return response.data;
 }
 
@@ -45,9 +39,7 @@ export async function postapiExternalResourceuploadresourcefolder(
  * @returns Promise<File>
  */
 export async function getapiExternalResourcedownloadresourcefolder(folder: string): Promise<File> {
-  const response = await axiosInstance.get<File>(
-    `/api/ExternalResource/download-resource/${folder}`
-  );
+  const response = await axiosInstance.get<File>(`/api/ExternalResource/download-resource/${folder}`);
   return response.data;
 }
 
@@ -55,47 +47,30 @@ export async function getapiExternalResourcedownloadresourcefolder(folder: strin
  * @returns Promise<string[]>
  */
 export async function getapiExternalResourcelistresourcefolders(): Promise<string[]> {
-  const response = await axiosInstance.get<string[]>(
-    EXTERNALRESOURCE_ENDPOINTS.getapiExternalResourcelistresourcefolders
-  );
+  const response = await axiosInstance.get<string[]>(EXTERNALRESOURCE_ENDPOINTS.getapiExternalResourcelistresourcefolders);
   return response.data;
 }
 
 /**
  * @returns Promise<File>
  */
-export async function getapiExternalResourcerandomimage(params?: {
-  folder?: string;
-}): Promise<File> {
-  const response = await axiosInstance.get<File>(
-    EXTERNALRESOURCE_ENDPOINTS.getapiExternalResourcerandomimage,
-    { params }
-  );
+export async function getapiExternalResourcerandomimage(params?: { folder?: string }): Promise<File> {
+  const response = await axiosInstance.get<File>(EXTERNALRESOURCE_ENDPOINTS.getapiExternalResourcerandomimage, { params });
   return response.data;
 }
 
 /**
  * @returns Promise<File>
  */
-export async function getapiExternalResourcerandomvideo(params?: {
-  folder?: string;
-}): Promise<File> {
-  const response = await axiosInstance.get<File>(
-    EXTERNALRESOURCE_ENDPOINTS.getapiExternalResourcerandomvideo,
-    { params }
-  );
+export async function getapiExternalResourcerandomvideo(params?: { folder?: string }): Promise<File> {
+  const response = await axiosInstance.get<File>(EXTERNALRESOURCE_ENDPOINTS.getapiExternalResourcerandomvideo, { params });
   return response.data;
 }
 
 /**
  * @returns Promise<File>
  */
-export async function getapiExternalResourcerandommedia(params?: {
-  folder?: string;
-}): Promise<File> {
-  const response = await axiosInstance.get<File>(
-    EXTERNALRESOURCE_ENDPOINTS.getapiExternalResourcerandommedia,
-    { params }
-  );
+export async function getapiExternalResourcerandommedia(params?: { folder?: string }): Promise<File> {
+  const response = await axiosInstance.get<File>(EXTERNALRESOURCE_ENDPOINTS.getapiExternalResourcerandommedia, { params });
   return response.data;
 }

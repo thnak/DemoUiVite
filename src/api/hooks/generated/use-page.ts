@@ -5,33 +5,33 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createPage,
   deletePage,
-  getapiPage,
-  updatePage,
+  deleteapiPagebatch,
+  deleteapiPagebytags,
+  deleteapiPageid,
+  deleteapiPageinactive,
+  generateNewPageCode,
   getPageById,
   getPagePage,
-  postapiPage,
-  getapiPageid,
-  putapiPageid,
-  deleteapiPageid,
+  getapiPage,
   getapiPagebytags,
-  postapiPagebatch,
-  deleteapiPagebatch,
-  patchapiPageidtags,
-  deleteapiPagebytags,
-  generateNewPageCode,
+  getapiPageid,
   getapiPagepaginated,
   patchapiPageidorder,
-  deleteapiPageinactive,
+  patchapiPageidtags,
   patchapiPageidtoggleactive,
+  postapiPage,
+  postapiPagebatch,
+  putapiPageid,
+  updatePage,
 } from '../../services/generated/page';
 
 import type {
-  SortType,
-  PageEntity,
   BooleanResult,
-  PageEntityResult,
-  StringObjectKeyValuePair,
+  PageEntity,
   PageEntityBasePaginationResponse,
+  PageEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -140,20 +140,10 @@ export function useGetapiPagepaginated(
  * Get paginated list of Page
  */
 export function useGetPagePage(
-  options?: Omit<
-    UseMutationOptions<
-      PageEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<PageEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getPagePage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getPagePage(variables.data, variables.params),
     ...options,
   });
 }
@@ -174,14 +164,10 @@ export function useCreatePage(
  * Update an existing Page
  */
 export function useUpdatePage(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updatePage(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updatePage(variables.id, variables.data),
     ...options,
   });
 }
@@ -250,14 +236,10 @@ export function useDeleteapiPageid(
  * Updates an existing page entity.
  */
 export function usePutapiPageid(
-  options?: Omit<
-    UseMutationOptions<PageEntity, Error, { id: string; data: PageEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<PageEntity, Error, { id: string; data: PageEntity }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: PageEntity }) =>
-      putapiPageid(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: PageEntity }) => putapiPageid(variables.id, variables.data),
     ...options,
   });
 }
@@ -266,14 +248,10 @@ export function usePutapiPageid(
  * Deletes all pages with specified tags.
  */
 export function useDeleteapiPagebytags(
-  options?: Omit<
-    UseMutationOptions<void, Error, { params?: { tags?: string; confirm?: boolean } }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<void, Error, { params?: { tags?: string; confirm?: boolean } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { params?: { tags?: string; confirm?: boolean } }) =>
-      deleteapiPagebytags(variables.params),
+    mutationFn: (variables: { params?: { tags?: string; confirm?: boolean } }) => deleteapiPagebytags(variables.params),
     ...options,
   });
 }
@@ -285,8 +263,7 @@ export function useDeleteapiPageinactive(
   options?: Omit<UseMutationOptions<void, Error, { params?: { confirm?: boolean } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { params?: { confirm?: boolean } }) =>
-      deleteapiPageinactive(variables.params),
+    mutationFn: (variables: { params?: { confirm?: boolean } }) => deleteapiPageinactive(variables.params),
     ...options,
   });
 }
@@ -298,8 +275,7 @@ export function usePatchapiPageidorder(
   options?: Omit<UseMutationOptions<void, Error, { id: string; data: number }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: number }) =>
-      patchapiPageidorder(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: number }) => patchapiPageidorder(variables.id, variables.data),
     ...options,
   });
 }
@@ -323,8 +299,7 @@ export function usePatchapiPageidtags(
   options?: Omit<UseMutationOptions<void, Error, { id: string; data: string[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: string[] }) =>
-      patchapiPageidtags(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: string[] }) => patchapiPageidtags(variables.id, variables.data),
     ...options,
   });
 }

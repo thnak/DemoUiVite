@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   OperatorStationLogEntity,
-  StringObjectKeyValuePair,
-  OperatorStationLogEntityResult,
   OperatorStationLogEntityBasePaginationResponse,
+  OperatorStationLogEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -34,9 +34,7 @@ export const OPERATORSTATIONLOG_ENDPOINTS = {
  * @returns Promise<OperatorStationLogEntity>
  */
 export async function getOperatorStationLogById(id: string): Promise<OperatorStationLogEntity> {
-  const response = await axiosInstance.get<OperatorStationLogEntity>(
-    `/api/operatorstationlog/${id}`
-  );
+  const response = await axiosInstance.get<OperatorStationLogEntity>(`/api/operatorstationlog/${id}`);
   return response.data;
 }
 
@@ -50,15 +48,8 @@ export async function getOperatorStationLogById(id: string): Promise<OperatorSta
  * @param data - Request body
  * @returns Promise<OperatorStationLogEntityBasePaginationResponse>
  */
-export async function getOperatorStationLogPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<OperatorStationLogEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<OperatorStationLogEntityBasePaginationResponse>(
-    OPERATORSTATIONLOG_ENDPOINTS.getOperatorStationLogPage,
-    data,
-    { params }
-  );
+export async function getOperatorStationLogPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<OperatorStationLogEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<OperatorStationLogEntityBasePaginationResponse>(OPERATORSTATIONLOG_ENDPOINTS.getOperatorStationLogPage, data, { params });
   return response.data;
 }
 
@@ -69,13 +60,8 @@ export async function getOperatorStationLogPage(
  * @param data - Request body
  * @returns Promise<OperatorStationLogEntityResult>
  */
-export async function createOperatorStationLog(
-  data: OperatorStationLogEntity
-): Promise<OperatorStationLogEntityResult> {
-  const response = await axiosInstance.post<OperatorStationLogEntityResult>(
-    OPERATORSTATIONLOG_ENDPOINTS.createOperatorStationLog,
-    data
-  );
+export async function createOperatorStationLog(data: OperatorStationLogEntity): Promise<OperatorStationLogEntityResult> {
+  const response = await axiosInstance.post<OperatorStationLogEntityResult>(OPERATORSTATIONLOG_ENDPOINTS.createOperatorStationLog, data);
   return response.data;
 }
 
@@ -86,14 +72,8 @@ export async function createOperatorStationLog(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateOperatorStationLog(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/operatorstationlog/update/${id}`,
-    data
-  );
+export async function updateOperatorStationLog(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/operatorstationlog/update/${id}`, data);
   return response.data;
 }
 
@@ -104,9 +84,7 @@ export async function updateOperatorStationLog(
  * @returns Promise<BooleanResult>
  */
 export async function deleteOperatorStationLog(id: string): Promise<BooleanResult> {
-  const response = await axiosInstance.delete<BooleanResult>(
-    `/api/operatorstationlog/delete/${id}`
-  );
+  const response = await axiosInstance.delete<BooleanResult>(`/api/operatorstationlog/delete/${id}`);
   return response.data;
 }
 
@@ -117,8 +95,6 @@ export async function deleteOperatorStationLog(id: string): Promise<BooleanResul
  * @returns Promise<string>
  */
 export async function generateNewOperatorStationLogCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    OPERATORSTATIONLOG_ENDPOINTS.generateNewOperatorStationLogCode
-  );
+  const response = await axiosInstance.get<string>(OPERATORSTATIONLOG_ENDPOINTS.generateNewOperatorStationLogCode);
   return response.data;
 }

@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDefect,
   deleteDefect,
-  updateDefect,
+  generateNewDefectCode,
   getDefectById,
   getDefectPage,
-  generateNewDefectCode,
+  updateDefect,
 } from '../../services/generated/defect';
 
 import type {
-  SortType,
-  DefectEntity,
   BooleanResult,
-  DefectEntityResult,
-  StringObjectKeyValuePair,
+  DefectEntity,
   DefectEntityBasePaginationResponse,
+  DefectEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,20 +66,10 @@ export function useGenerateNewDefectCode(
  * Get paginated list of Defect
  */
 export function useGetDefectPage(
-  options?: Omit<
-    UseMutationOptions<
-      DefectEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<DefectEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getDefectPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getDefectPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -88,10 +78,7 @@ export function useGetDefectPage(
  * Create a new Defect
  */
 export function useCreateDefect(
-  options?: Omit<
-    UseMutationOptions<DefectEntityResult, Error, { data: DefectEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<DefectEntityResult, Error, { data: DefectEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: DefectEntity }) => createDefect(variables.data),
@@ -103,14 +90,10 @@ export function useCreateDefect(
  * Update an existing Defect
  */
 export function useUpdateDefect(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateDefect(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateDefect(variables.id, variables.data),
     ...options,
   });
 }

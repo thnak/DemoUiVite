@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createIoTSensor,
   deleteIoTSensor,
-  searchIoTSensor,
-  updateIoTSensor,
+  generateNewIoTSensorCode,
   getIoTSensorById,
   getIoTSensorPage,
-  generateNewIoTSensorCode,
+  searchIoTSensor,
+  updateIoTSensor,
 } from '../../services/generated/io-tsensor';
 
 import type {
-  SortType,
   BooleanResult,
   IoTSensorEntity,
-  IoTSensorEntityResult,
-  StringObjectKeyValuePair,
   IoTSensorEntityBasePaginationResponse,
+  IoTSensorEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -82,20 +82,10 @@ export function useSearchIoTSensor(
  * Get paginated list of Io TSensor
  */
 export function useGetIoTSensorPage(
-  options?: Omit<
-    UseMutationOptions<
-      IoTSensorEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<IoTSensorEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getIoTSensorPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getIoTSensorPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -104,10 +94,7 @@ export function useGetIoTSensorPage(
  * Create a new Io TSensor
  */
 export function useCreateIoTSensor(
-  options?: Omit<
-    UseMutationOptions<IoTSensorEntityResult, Error, { data: IoTSensorEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<IoTSensorEntityResult, Error, { data: IoTSensorEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: IoTSensorEntity }) => createIoTSensor(variables.data),
@@ -119,14 +106,10 @@ export function useCreateIoTSensor(
  * Update an existing Io TSensor
  */
 export function useUpdateIoTSensor(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateIoTSensor(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateIoTSensor(variables.id, variables.data),
     ...options,
   });
 }

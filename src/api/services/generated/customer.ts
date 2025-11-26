@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   CustomerEntity,
-  CustomerEntityResult,
-  StringObjectKeyValuePair,
   CustomerEntityBasePaginationResponse,
+  CustomerEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getCustomerById(id: string): Promise<CustomerEntity> {
  * @param data - Request body
  * @returns Promise<CustomerEntityBasePaginationResponse>
  */
-export async function getCustomerPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<CustomerEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<CustomerEntityBasePaginationResponse>(
-    CUSTOMER_ENDPOINTS.getCustomerPage,
-    data,
-    { params }
-  );
+export async function getCustomerPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<CustomerEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<CustomerEntityBasePaginationResponse>(CUSTOMER_ENDPOINTS.getCustomerPage, data, { params });
   return response.data;
 }
 
@@ -68,10 +61,7 @@ export async function getCustomerPage(
  * @returns Promise<CustomerEntityResult>
  */
 export async function createCustomer(data: CustomerEntity): Promise<CustomerEntityResult> {
-  const response = await axiosInstance.post<CustomerEntityResult>(
-    CUSTOMER_ENDPOINTS.createCustomer,
-    data
-  );
+  const response = await axiosInstance.post<CustomerEntityResult>(CUSTOMER_ENDPOINTS.createCustomer, data);
   return response.data;
 }
 
@@ -82,10 +72,7 @@ export async function createCustomer(data: CustomerEntity): Promise<CustomerEnti
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateCustomer(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateCustomer(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/customer/update/${id}`, data);
   return response.data;
 }

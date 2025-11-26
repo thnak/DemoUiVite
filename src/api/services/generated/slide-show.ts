@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   SlideShowEntity,
-  SlideShowEntityResult,
-  StringObjectKeyValuePair,
   SlideShowEntityBasePaginationResponse,
+  SlideShowEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getSlideShowById(id: string): Promise<SlideShowEntity> {
  * @param data - Request body
  * @returns Promise<SlideShowEntityBasePaginationResponse>
  */
-export async function getSlideShowPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<SlideShowEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<SlideShowEntityBasePaginationResponse>(
-    SLIDESHOW_ENDPOINTS.getSlideShowPage,
-    data,
-    { params }
-  );
+export async function getSlideShowPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<SlideShowEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<SlideShowEntityBasePaginationResponse>(SLIDESHOW_ENDPOINTS.getSlideShowPage, data, { params });
   return response.data;
 }
 
@@ -68,10 +61,7 @@ export async function getSlideShowPage(
  * @returns Promise<SlideShowEntityResult>
  */
 export async function createSlideShow(data: SlideShowEntity): Promise<SlideShowEntityResult> {
-  const response = await axiosInstance.post<SlideShowEntityResult>(
-    SLIDESHOW_ENDPOINTS.createSlideShow,
-    data
-  );
+  const response = await axiosInstance.post<SlideShowEntityResult>(SLIDESHOW_ENDPOINTS.createSlideShow, data);
   return response.data;
 }
 
@@ -82,10 +72,7 @@ export async function createSlideShow(data: SlideShowEntity): Promise<SlideShowE
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateSlideShow(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateSlideShow(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/slideshow/update/${id}`, data);
   return response.data;
 }

@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   FolderPermissionEntity,
-  StringObjectKeyValuePair,
-  FolderPermissionEntityResult,
   FolderPermissionEntityBasePaginationResponse,
+  FolderPermissionEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getFolderPermissionById(id: string): Promise<FolderPermiss
  * @param data - Request body
  * @returns Promise<FolderPermissionEntityBasePaginationResponse>
  */
-export async function getFolderPermissionPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<FolderPermissionEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<FolderPermissionEntityBasePaginationResponse>(
-    FOLDERPERMISSION_ENDPOINTS.getFolderPermissionPage,
-    data,
-    { params }
-  );
+export async function getFolderPermissionPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<FolderPermissionEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<FolderPermissionEntityBasePaginationResponse>(FOLDERPERMISSION_ENDPOINTS.getFolderPermissionPage, data, { params });
   return response.data;
 }
 
@@ -67,13 +60,8 @@ export async function getFolderPermissionPage(
  * @param data - Request body
  * @returns Promise<FolderPermissionEntityResult>
  */
-export async function createFolderPermission(
-  data: FolderPermissionEntity
-): Promise<FolderPermissionEntityResult> {
-  const response = await axiosInstance.post<FolderPermissionEntityResult>(
-    FOLDERPERMISSION_ENDPOINTS.createFolderPermission,
-    data
-  );
+export async function createFolderPermission(data: FolderPermissionEntity): Promise<FolderPermissionEntityResult> {
+  const response = await axiosInstance.post<FolderPermissionEntityResult>(FOLDERPERMISSION_ENDPOINTS.createFolderPermission, data);
   return response.data;
 }
 
@@ -84,14 +72,8 @@ export async function createFolderPermission(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateFolderPermission(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/folderpermission/update/${id}`,
-    data
-  );
+export async function updateFolderPermission(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/folderpermission/update/${id}`, data);
   return response.data;
 }
 
@@ -113,8 +95,6 @@ export async function deleteFolderPermission(id: string): Promise<BooleanResult>
  * @returns Promise<string>
  */
 export async function generateNewFolderPermissionCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    FOLDERPERMISSION_ENDPOINTS.generateNewFolderPermissionCode
-  );
+  const response = await axiosInstance.get<string>(FOLDERPERMISSION_ENDPOINTS.generateNewFolderPermissionCode);
   return response.data;
 }

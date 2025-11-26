@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
+  SortType,
   StationGroupEntity,
+  StationGroupEntityBasePaginationResponse,
   StationGroupEntityResult,
   StringObjectKeyValuePair,
-  StationGroupEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -49,15 +49,8 @@ export async function getStationGroupById(id: string): Promise<StationGroupEntit
  * @param data - Request body
  * @returns Promise<StationGroupEntityBasePaginationResponse>
  */
-export async function getStationGroupPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<StationGroupEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<StationGroupEntityBasePaginationResponse>(
-    STATIONGROUP_ENDPOINTS.getStationGroupPage,
-    data,
-    { params }
-  );
+export async function getStationGroupPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<StationGroupEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<StationGroupEntityBasePaginationResponse>(STATIONGROUP_ENDPOINTS.getStationGroupPage, data, { params });
   return response.data;
 }
 
@@ -68,13 +61,8 @@ export async function getStationGroupPage(
  * @param data - Request body
  * @returns Promise<StationGroupEntityResult>
  */
-export async function createStationGroup(
-  data: StationGroupEntity
-): Promise<StationGroupEntityResult> {
-  const response = await axiosInstance.post<StationGroupEntityResult>(
-    STATIONGROUP_ENDPOINTS.createStationGroup,
-    data
-  );
+export async function createStationGroup(data: StationGroupEntity): Promise<StationGroupEntityResult> {
+  const response = await axiosInstance.post<StationGroupEntityResult>(STATIONGROUP_ENDPOINTS.createStationGroup, data);
   return response.data;
 }
 
@@ -85,10 +73,7 @@ export async function createStationGroup(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateStationGroup(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateStationGroup(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/stationgroup/update/${id}`, data);
   return response.data;
 }
@@ -111,9 +96,7 @@ export async function deleteStationGroup(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewStationGroupCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    STATIONGROUP_ENDPOINTS.generateNewStationGroupCode
-  );
+  const response = await axiosInstance.get<string>(STATIONGROUP_ENDPOINTS.generateNewStationGroupCode);
   return response.data;
 }
 
@@ -123,13 +106,7 @@ export async function generateNewStationGroupCode(): Promise<string> {
  * Searches Station Group entities by text across searchable fields.
  * @returns Promise<StationGroupEntity[]>
  */
-export async function searchStationGroup(params?: {
-  searchText?: string;
-  maxResults?: number;
-}): Promise<StationGroupEntity[]> {
-  const response = await axiosInstance.get<StationGroupEntity[]>(
-    STATIONGROUP_ENDPOINTS.searchStationGroup,
-    { params }
-  );
+export async function searchStationGroup(params?: { searchText?: string; maxResults?: number }): Promise<StationGroupEntity[]> {
+  const response = await axiosInstance.get<StationGroupEntity[]>(STATIONGROUP_ENDPOINTS.searchStationGroup, { params });
   return response.data;
 }

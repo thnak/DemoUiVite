@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createIoTDeviceModel,
   deleteIoTDeviceModel,
-  searchIoTDeviceModel,
-  updateIoTDeviceModel,
+  generateNewIoTDeviceModelCode,
   getIoTDeviceModelById,
   getIoTDeviceModelPage,
-  generateNewIoTDeviceModelCode,
+  searchIoTDeviceModel,
+  updateIoTDeviceModel,
 } from '../../services/generated/io-tdevice-model';
 
 import type {
-  SortType,
   BooleanResult,
   IoTDeviceModelEntity,
-  StringObjectKeyValuePair,
-  IoTDeviceModelEntityResult,
   IoTDeviceModelEntityBasePaginationResponse,
+  IoTDeviceModelEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -82,20 +82,10 @@ export function useSearchIoTDeviceModel(
  * Get paginated list of Io TDevice Model
  */
 export function useGetIoTDeviceModelPage(
-  options?: Omit<
-    UseMutationOptions<
-      IoTDeviceModelEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<IoTDeviceModelEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getIoTDeviceModelPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getIoTDeviceModelPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -104,10 +94,7 @@ export function useGetIoTDeviceModelPage(
  * Create a new Io TDevice Model
  */
 export function useCreateIoTDeviceModel(
-  options?: Omit<
-    UseMutationOptions<IoTDeviceModelEntityResult, Error, { data: IoTDeviceModelEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<IoTDeviceModelEntityResult, Error, { data: IoTDeviceModelEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: IoTDeviceModelEntity }) => createIoTDeviceModel(variables.data),
@@ -119,14 +106,10 @@ export function useCreateIoTDeviceModel(
  * Update an existing Io TDevice Model
  */
 export function useUpdateIoTDeviceModel(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateIoTDeviceModel(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateIoTDeviceModel(variables.id, variables.data),
     ...options,
   });
 }

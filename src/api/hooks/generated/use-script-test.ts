@@ -1,10 +1,15 @@
-import type { UseMutationOptions } from '@tanstack/react-query';
+import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 
-import { useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
-import { postapiScriptTestexecute } from '../../services/generated/script-test';
+import {
+  postapiScriptTestexecute,
+} from '../../services/generated/script-test';
 
-import type { ObjectResult, ScriptExecutionRequest } from '../../types/generated';
+import type {
+  ObjectResult,
+  ScriptExecutionRequest,
+} from '../../types/generated';
 
 // ----------------------------------------------------------------------
 // ScriptTest Hooks
@@ -23,14 +28,10 @@ export const scriptTestKeys = {
  * Compiles and executes a C# script.
  */
 export function usePostapiScriptTestexecute(
-  options?: Omit<
-    UseMutationOptions<ObjectResult, Error, { data: ScriptExecutionRequest }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<ObjectResult, Error, { data: ScriptExecutionRequest }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: ScriptExecutionRequest }) =>
-      postapiScriptTestexecute(variables.data),
+    mutationFn: (variables: { data: ScriptExecutionRequest }) => postapiScriptTestexecute(variables.data),
     ...options,
   });
 }

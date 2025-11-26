@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createFirmwareVersion,
   deleteFirmwareVersion,
-  updateFirmwareVersion,
+  generateNewFirmwareVersionCode,
   getFirmwareVersionById,
   getFirmwareVersionPage,
-  generateNewFirmwareVersionCode,
+  updateFirmwareVersion,
 } from '../../services/generated/firmware-version';
 
 import type {
-  SortType,
   BooleanResult,
   FirmwareVersionEntity,
-  StringObjectKeyValuePair,
-  FirmwareVersionEntityResult,
   FirmwareVersionEntityBasePaginationResponse,
+  FirmwareVersionEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,8 +31,7 @@ import type {
  */
 export const firmwareVersionKeys = {
   all: ['firmwareVersion'] as const,
-  getFirmwareVersionById: (id: string) =>
-    ['firmwareVersion', 'getFirmwareVersionById', id] as const,
+  getFirmwareVersionById: (id: string) => ['firmwareVersion', 'getFirmwareVersionById', id] as const,
   generateNewFirmwareVersionCode: ['firmwareVersion', 'generateNewFirmwareVersionCode'] as const,
 };
 
@@ -67,20 +66,10 @@ export function useGenerateNewFirmwareVersionCode(
  * Get paginated list of Firmware Version
  */
 export function useGetFirmwareVersionPage(
-  options?: Omit<
-    UseMutationOptions<
-      FirmwareVersionEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<FirmwareVersionEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getFirmwareVersionPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getFirmwareVersionPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -89,14 +78,10 @@ export function useGetFirmwareVersionPage(
  * Create a new Firmware Version
  */
 export function useCreateFirmwareVersion(
-  options?: Omit<
-    UseMutationOptions<FirmwareVersionEntityResult, Error, { data: FirmwareVersionEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<FirmwareVersionEntityResult, Error, { data: FirmwareVersionEntity }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: FirmwareVersionEntity }) =>
-      createFirmwareVersion(variables.data),
+    mutationFn: (variables: { data: FirmwareVersionEntity }) => createFirmwareVersion(variables.data),
     ...options,
   });
 }
@@ -105,14 +90,10 @@ export function useCreateFirmwareVersion(
  * Update an existing Firmware Version
  */
 export function useUpdateFirmwareVersion(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateFirmwareVersion(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateFirmwareVersion(variables.id, variables.data),
     ...options,
   });
 }

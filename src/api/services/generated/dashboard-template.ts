@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   DashboardTemplateEntity,
-  StringObjectKeyValuePair,
-  DashboardTemplateEntityResult,
   DashboardTemplateEntityBasePaginationResponse,
+  DashboardTemplateEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getDashboardTemplateById(id: string): Promise<DashboardTem
  * @param data - Request body
  * @returns Promise<DashboardTemplateEntityBasePaginationResponse>
  */
-export async function getDashboardTemplatePage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<DashboardTemplateEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<DashboardTemplateEntityBasePaginationResponse>(
-    DASHBOARDTEMPLATE_ENDPOINTS.getDashboardTemplatePage,
-    data,
-    { params }
-  );
+export async function getDashboardTemplatePage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<DashboardTemplateEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<DashboardTemplateEntityBasePaginationResponse>(DASHBOARDTEMPLATE_ENDPOINTS.getDashboardTemplatePage, data, { params });
   return response.data;
 }
 
@@ -67,13 +60,8 @@ export async function getDashboardTemplatePage(
  * @param data - Request body
  * @returns Promise<DashboardTemplateEntityResult>
  */
-export async function createDashboardTemplate(
-  data: DashboardTemplateEntity
-): Promise<DashboardTemplateEntityResult> {
-  const response = await axiosInstance.post<DashboardTemplateEntityResult>(
-    DASHBOARDTEMPLATE_ENDPOINTS.createDashboardTemplate,
-    data
-  );
+export async function createDashboardTemplate(data: DashboardTemplateEntity): Promise<DashboardTemplateEntityResult> {
+  const response = await axiosInstance.post<DashboardTemplateEntityResult>(DASHBOARDTEMPLATE_ENDPOINTS.createDashboardTemplate, data);
   return response.data;
 }
 
@@ -84,14 +72,8 @@ export async function createDashboardTemplate(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateDashboardTemplate(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/dashboardtemplate/update/${id}`,
-    data
-  );
+export async function updateDashboardTemplate(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/dashboardtemplate/update/${id}`, data);
   return response.data;
 }
 
@@ -113,8 +95,6 @@ export async function deleteDashboardTemplate(id: string): Promise<BooleanResult
  * @returns Promise<string>
  */
 export async function generateNewDashboardTemplateCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    DASHBOARDTEMPLATE_ENDPOINTS.generateNewDashboardTemplateCode
-  );
+  const response = await axiosInstance.get<string>(DASHBOARDTEMPLATE_ENDPOINTS.generateNewDashboardTemplateCode);
   return response.data;
 }

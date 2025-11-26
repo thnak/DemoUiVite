@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDowntimeGroup,
   deleteDowntimeGroup,
-  searchDowntimeGroup,
-  updateDowntimeGroup,
+  generateNewDowntimeGroupCode,
   getDowntimeGroupById,
   getDowntimeGroupPage,
-  generateNewDowntimeGroupCode,
+  searchDowntimeGroup,
+  updateDowntimeGroup,
 } from '../../services/generated/downtime-group';
 
 import type {
-  SortType,
   BooleanResult,
   DowntimeGroupEntity,
-  StringObjectKeyValuePair,
-  DowntimeGroupEntityResult,
   DowntimeGroupEntityBasePaginationResponse,
+  DowntimeGroupEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -82,20 +82,10 @@ export function useSearchDowntimeGroup(
  * Get paginated list of Downtime Group
  */
 export function useGetDowntimeGroupPage(
-  options?: Omit<
-    UseMutationOptions<
-      DowntimeGroupEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<DowntimeGroupEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getDowntimeGroupPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getDowntimeGroupPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -104,10 +94,7 @@ export function useGetDowntimeGroupPage(
  * Create a new Downtime Group
  */
 export function useCreateDowntimeGroup(
-  options?: Omit<
-    UseMutationOptions<DowntimeGroupEntityResult, Error, { data: DowntimeGroupEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<DowntimeGroupEntityResult, Error, { data: DowntimeGroupEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: DowntimeGroupEntity }) => createDowntimeGroup(variables.data),
@@ -119,14 +106,10 @@ export function useCreateDowntimeGroup(
  * Update an existing Downtime Group
  */
 export function useUpdateDowntimeGroup(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateDowntimeGroup(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateDowntimeGroup(variables.id, variables.data),
     ...options,
   });
 }

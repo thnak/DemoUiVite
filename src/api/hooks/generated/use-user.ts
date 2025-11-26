@@ -5,37 +5,37 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createUser,
   deleteUser,
-  updateUser,
+  generateNewUserCode,
   getUserById,
   getUserPage,
-  generateNewUserCode,
-  postapiUsersettheme,
-  getapiUsersetculture,
-  getapiUsergetuserinfo,
-  getapiUsergetuserimage,
-  postapiUsersetdarkmode,
-  postapiUseruploadavatar,
-  postapiUseruploadbanner,
-  getapiUsergetusersetting,
-  postapiUserchangepassword,
-  postapiUserupdateuserinfo,
   getapiUsergetuseravatarfile,
   getapiUsergetuserbannerfile,
-  postapiUserupdateuserconfig,
+  getapiUsergetuserimage,
+  getapiUsergetuserinfo,
+  getapiUsergetusersetting,
+  getapiUsersetculture,
   postapiUserchangelockscreenpassword,
+  postapiUserchangepassword,
+  postapiUsersetdarkmode,
+  postapiUsersettheme,
+  postapiUserupdateuserconfig,
+  postapiUserupdateuserinfo,
+  postapiUseruploadavatar,
+  postapiUseruploadbanner,
+  updateUser,
 } from '../../services/generated/user';
 
 import type {
-  SortType,
-  UserEntity,
-  UserInfoDto,
   BooleanResult,
-  UserEntityResult,
-  ChangePasswordDto,
-  UpdateUserInfoDto,
-  StringObjectKeyValuePair,
   ChangeLockScreenPasswordDto,
+  ChangePasswordDto,
+  SortType,
+  StringObjectKeyValuePair,
+  UpdateUserInfoDto,
+  UserEntity,
   UserEntityBasePaginationResponse,
+  UserEntityResult,
+  UserInfoDto,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -53,10 +53,8 @@ export const userKeys = {
   generateNewUserCode: ['user', 'generateNewUserCode'] as const,
   getapiUsersetculture: ['user', 'getapiUsersetculture'] as const,
   getapiUsergetusersetting: ['user', 'getapiUsergetusersetting'] as const,
-  getapiUsergetuseravatarfile: (file: string) =>
-    ['user', 'getapiUsergetuseravatarfile', file] as const,
-  getapiUsergetuserbannerfile: (file: string) =>
-    ['user', 'getapiUsergetuserbannerfile', file] as const,
+  getapiUsergetuseravatarfile: (file: string) => ['user', 'getapiUsergetuseravatarfile', file] as const,
+  getapiUsergetuserbannerfile: (file: string) => ['user', 'getapiUsergetuserbannerfile', file] as const,
   getapiUsergetuserimage: ['user', 'getapiUsergetuserimage'] as const,
   getapiUsergetuserinfo: ['user', 'getapiUsergetuserinfo'] as const,
 };
@@ -168,20 +166,10 @@ export function useGetapiUsergetuserinfo(
  * Get paginated list of User
  */
 export function useGetUserPage(
-  options?: Omit<
-    UseMutationOptions<
-      UserEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<UserEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getUserPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getUserPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -202,14 +190,10 @@ export function useCreateUser(
  * Update an existing User
  */
 export function useUpdateUser(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateUser(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateUser(variables.id, variables.data),
     ...options,
   });
 }
@@ -232,8 +216,7 @@ export function usePostapiUsersettheme(
   options?: Omit<UseMutationOptions<void, Error, { params?: { theme?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { params?: { theme?: string } }) =>
-      postapiUsersettheme(variables.params),
+    mutationFn: (variables: { params?: { theme?: string } }) => postapiUsersettheme(variables.params),
     ...options,
   });
 }
@@ -244,8 +227,7 @@ export function usePostapiUsersetdarkmode(
   options?: Omit<UseMutationOptions<void, Error, { params?: { darkMode?: boolean } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { params?: { darkMode?: boolean } }) =>
-      postapiUsersetdarkmode(variables.params),
+    mutationFn: (variables: { params?: { darkMode?: boolean } }) => postapiUsersetdarkmode(variables.params),
     ...options,
   });
 }
@@ -276,14 +258,10 @@ export function usePostapiUseruploadbanner(
  * Updates user personal information
  */
 export function usePostapiUserupdateuserinfo(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { data: UpdateUserInfoDto }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { data: UpdateUserInfoDto }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: UpdateUserInfoDto }) =>
-      postapiUserupdateuserinfo(variables.data),
+    mutationFn: (variables: { data: UpdateUserInfoDto }) => postapiUserupdateuserinfo(variables.data),
     ...options,
   });
 }
@@ -292,14 +270,10 @@ export function usePostapiUserupdateuserinfo(
  * Changes the user's account password
  */
 export function usePostapiUserchangepassword(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { data: ChangePasswordDto }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { data: ChangePasswordDto }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: ChangePasswordDto }) =>
-      postapiUserchangepassword(variables.data),
+    mutationFn: (variables: { data: ChangePasswordDto }) => postapiUserchangepassword(variables.data),
     ...options,
   });
 }
@@ -308,14 +282,10 @@ export function usePostapiUserchangepassword(
  * Changes the user's lock screen password
  */
 export function usePostapiUserchangelockscreenpassword(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { data: ChangeLockScreenPasswordDto }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { data: ChangeLockScreenPasswordDto }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: ChangeLockScreenPasswordDto }) =>
-      postapiUserchangelockscreenpassword(variables.data),
+    mutationFn: (variables: { data: ChangeLockScreenPasswordDto }) => postapiUserchangelockscreenpassword(variables.data),
     ...options,
   });
 }
@@ -323,14 +293,10 @@ export function usePostapiUserchangelockscreenpassword(
 /**
  */
 export function usePostapiUserupdateuserconfig(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: StringObjectKeyValuePair[] }) =>
-      postapiUserupdateuserconfig(variables.data),
+    mutationFn: (variables: { data: StringObjectKeyValuePair[] }) => postapiUserupdateuserconfig(variables.data),
     ...options,
   });
 }

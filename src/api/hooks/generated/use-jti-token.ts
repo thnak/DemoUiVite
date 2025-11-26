@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createJtiToken,
   deleteJtiToken,
-  updateJtiToken,
+  generateNewJtiTokenCode,
   getJtiTokenById,
   getJtiTokenPage,
-  generateNewJtiTokenCode,
+  updateJtiToken,
 } from '../../services/generated/jti-token';
 
 import type {
-  SortType,
   BooleanResult,
   JtiTokenEntity,
-  JtiTokenEntityResult,
-  StringObjectKeyValuePair,
   JtiTokenEntityBasePaginationResponse,
+  JtiTokenEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,20 +66,10 @@ export function useGenerateNewJtiTokenCode(
  * Get paginated list of Jti Token
  */
 export function useGetJtiTokenPage(
-  options?: Omit<
-    UseMutationOptions<
-      JtiTokenEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<JtiTokenEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getJtiTokenPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getJtiTokenPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -88,10 +78,7 @@ export function useGetJtiTokenPage(
  * Create a new Jti Token
  */
 export function useCreateJtiToken(
-  options?: Omit<
-    UseMutationOptions<JtiTokenEntityResult, Error, { data: JtiTokenEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<JtiTokenEntityResult, Error, { data: JtiTokenEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: JtiTokenEntity }) => createJtiToken(variables.data),
@@ -103,14 +90,10 @@ export function useCreateJtiToken(
  * Update an existing Jti Token
  */
 export function useUpdateJtiToken(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateJtiToken(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateJtiToken(variables.id, variables.data),
     ...options,
   });
 }

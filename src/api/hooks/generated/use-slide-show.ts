@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createSlideShow,
   deleteSlideShow,
-  updateSlideShow,
+  generateNewSlideShowCode,
   getSlideShowById,
   getSlideShowPage,
-  generateNewSlideShowCode,
+  updateSlideShow,
 } from '../../services/generated/slide-show';
 
 import type {
-  SortType,
   BooleanResult,
   SlideShowEntity,
-  SlideShowEntityResult,
-  StringObjectKeyValuePair,
   SlideShowEntityBasePaginationResponse,
+  SlideShowEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,20 +66,10 @@ export function useGenerateNewSlideShowCode(
  * Get paginated list of Slide Show
  */
 export function useGetSlideShowPage(
-  options?: Omit<
-    UseMutationOptions<
-      SlideShowEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<SlideShowEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getSlideShowPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getSlideShowPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -88,10 +78,7 @@ export function useGetSlideShowPage(
  * Create a new Slide Show
  */
 export function useCreateSlideShow(
-  options?: Omit<
-    UseMutationOptions<SlideShowEntityResult, Error, { data: SlideShowEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<SlideShowEntityResult, Error, { data: SlideShowEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: SlideShowEntity }) => createSlideShow(variables.data),
@@ -103,14 +90,10 @@ export function useCreateSlideShow(
  * Update an existing Slide Show
  */
 export function useUpdateSlideShow(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateSlideShow(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateSlideShow(variables.id, variables.data),
     ...options,
   });
 }

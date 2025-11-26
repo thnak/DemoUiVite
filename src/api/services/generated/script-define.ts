@@ -1,14 +1,14 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
-  ObjectResult,
   BooleanResult,
   CreateRequest,
-  TryRunMetricRequest,
+  ObjectResult,
   ScriptDefinitionEntity,
-  StringObjectKeyValuePair,
   ScriptDefinitionEntityPaginationQuery,
+  SortType,
+  StringObjectKeyValuePair,
+  TryRunMetricRequest,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -25,8 +25,7 @@ export const SCRIPTDEFINE_ENDPOINTS = {
   postapiScriptDefinerecheckscriptdefineid: '/api/ScriptDefine/re-check-script-define/{id}',
   putapiScriptDefinedeletescriptdefinename: '/api/ScriptDefine/delete-script-define/{name}',
   postapiScriptDefinetryrunscript: '/api/ScriptDefine/try-run-script',
-  postapiScriptDefinetryrunscriptvariantscriptId:
-    '/api/ScriptDefine/try-run-script-variant/{scriptId}',
+  postapiScriptDefinetryrunscriptvariantscriptId: '/api/ScriptDefine/try-run-script-variant/{scriptId}',
   getapiScriptDefinegetscriptdefinitionid: '/api/ScriptDefine/get-script-definition/{id}',
   postapiScriptDefinegetscriptdefinitions: '/api/ScriptDefine/get-script-definitions',
   postapiScriptDefinesearchscriptdefinitions: '/api/ScriptDefine/search-script-definitions',
@@ -41,10 +40,7 @@ export const SCRIPTDEFINE_ENDPOINTS = {
  * @returns Promise<BooleanResult>
  */
 export async function postapiScriptDefinecreate(data: CreateRequest): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    SCRIPTDEFINE_ENDPOINTS.postapiScriptDefinecreate,
-    data
-  );
+  const response = await axiosInstance.post<BooleanResult>(SCRIPTDEFINE_ENDPOINTS.postapiScriptDefinecreate, data);
   return response.data;
 }
 
@@ -52,21 +48,15 @@ export async function postapiScriptDefinecreate(data: CreateRequest): Promise<Bo
  * @returns Promise<BooleanResult>
  */
 export async function postapiScriptDefinerecheckscriptdefineid(id: string): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/ScriptDefine/re-check-script-define/${id}`
-  );
+  const response = await axiosInstance.post<BooleanResult>(`/api/ScriptDefine/re-check-script-define/${id}`);
   return response.data;
 }
 
 /**
  * @returns Promise<BooleanResult>
  */
-export async function putapiScriptDefinedeletescriptdefinename(
-  name: string
-): Promise<BooleanResult> {
-  const response = await axiosInstance.put<BooleanResult>(
-    `/api/ScriptDefine/delete-script-define/${name}`
-  );
+export async function putapiScriptDefinedeletescriptdefinename(name: string): Promise<BooleanResult> {
+  const response = await axiosInstance.put<BooleanResult>(`/api/ScriptDefine/delete-script-define/${name}`);
   return response.data;
 }
 
@@ -74,13 +64,8 @@ export async function putapiScriptDefinedeletescriptdefinename(
  * @param data - Request body
  * @returns Promise<ObjectResult>
  */
-export async function postapiScriptDefinetryrunscript(
-  data: TryRunMetricRequest
-): Promise<ObjectResult> {
-  const response = await axiosInstance.post<ObjectResult>(
-    SCRIPTDEFINE_ENDPOINTS.postapiScriptDefinetryrunscript,
-    data
-  );
+export async function postapiScriptDefinetryrunscript(data: TryRunMetricRequest): Promise<ObjectResult> {
+  const response = await axiosInstance.post<ObjectResult>(SCRIPTDEFINE_ENDPOINTS.postapiScriptDefinetryrunscript, data);
   return response.data;
 }
 
@@ -88,26 +73,16 @@ export async function postapiScriptDefinetryrunscript(
  * @param data - Request body
  * @returns Promise<ObjectResult>
  */
-export async function postapiScriptDefinetryrunscriptvariantscriptId(
-  scriptId: string,
-  data: StringObjectKeyValuePair[]
-): Promise<ObjectResult> {
-  const response = await axiosInstance.post<ObjectResult>(
-    `/api/ScriptDefine/try-run-script-variant/${scriptId}`,
-    data
-  );
+export async function postapiScriptDefinetryrunscriptvariantscriptId(scriptId: string, data: StringObjectKeyValuePair[]): Promise<ObjectResult> {
+  const response = await axiosInstance.post<ObjectResult>(`/api/ScriptDefine/try-run-script-variant/${scriptId}`, data);
   return response.data;
 }
 
 /**
  * @returns Promise<ScriptDefinitionEntity>
  */
-export async function getapiScriptDefinegetscriptdefinitionid(
-  id: string
-): Promise<ScriptDefinitionEntity> {
-  const response = await axiosInstance.get<ScriptDefinitionEntity>(
-    `/api/ScriptDefine/get-script-definition/${id}`
-  );
+export async function getapiScriptDefinegetscriptdefinitionid(id: string): Promise<ScriptDefinitionEntity> {
+  const response = await axiosInstance.get<ScriptDefinitionEntity>(`/api/ScriptDefine/get-script-definition/${id}`);
   return response.data;
 }
 
@@ -118,22 +93,8 @@ export async function getapiScriptDefinegetscriptdefinitionid(
  * @param data - Request body
  * @returns Promise<ScriptDefinitionEntityPaginationQuery>
  */
-export async function postapiScriptDefinegetscriptdefinitions(
-  data: SortType[],
-  params?: {
-    search?: string;
-    fromTime?: string;
-    toTime?: string;
-    pageNumber?: number;
-    pageSize?: number;
-    searchTerm?: string;
-  }
-): Promise<ScriptDefinitionEntityPaginationQuery> {
-  const response = await axiosInstance.post<ScriptDefinitionEntityPaginationQuery>(
-    SCRIPTDEFINE_ENDPOINTS.postapiScriptDefinegetscriptdefinitions,
-    data,
-    { params }
-  );
+export async function postapiScriptDefinegetscriptdefinitions(data: SortType[], params?: { search?: string; fromTime?: string; toTime?: string; pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<ScriptDefinitionEntityPaginationQuery> {
+  const response = await axiosInstance.post<ScriptDefinitionEntityPaginationQuery>(SCRIPTDEFINE_ENDPOINTS.postapiScriptDefinegetscriptdefinitions, data, { params });
   return response.data;
 }
 
@@ -144,15 +105,8 @@ export async function postapiScriptDefinegetscriptdefinitions(
  * @param data - Request body
  * @returns Promise<ScriptDefinitionEntityPaginationQuery>
  */
-export async function postapiScriptDefinesearchscriptdefinitions(
-  data: SortType[],
-  params?: { search?: string; pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<ScriptDefinitionEntityPaginationQuery> {
-  const response = await axiosInstance.post<ScriptDefinitionEntityPaginationQuery>(
-    SCRIPTDEFINE_ENDPOINTS.postapiScriptDefinesearchscriptdefinitions,
-    data,
-    { params }
-  );
+export async function postapiScriptDefinesearchscriptdefinitions(data: SortType[], params?: { search?: string; pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<ScriptDefinitionEntityPaginationQuery> {
+  const response = await axiosInstance.post<ScriptDefinitionEntityPaginationQuery>(SCRIPTDEFINE_ENDPOINTS.postapiScriptDefinesearchscriptdefinitions, data, { params });
   return response.data;
 }
 
@@ -160,9 +114,7 @@ export async function postapiScriptDefinesearchscriptdefinitions(
  * @returns Promise<ScriptDefinitionEntityPaginationQuery>
  */
 export async function postapiScriptDefinesearchscriptdefinebytype(): Promise<ScriptDefinitionEntityPaginationQuery> {
-  const response = await axiosInstance.post<ScriptDefinitionEntityPaginationQuery>(
-    SCRIPTDEFINE_ENDPOINTS.postapiScriptDefinesearchscriptdefinebytype
-  );
+  const response = await axiosInstance.post<ScriptDefinitionEntityPaginationQuery>(SCRIPTDEFINE_ENDPOINTS.postapiScriptDefinesearchscriptdefinebytype);
   return response.data;
 }
 
@@ -170,14 +122,8 @@ export async function postapiScriptDefinesearchscriptdefinebytype(): Promise<Scr
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function putapiScriptDefineupdatescriptdefineid(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.put<BooleanResult>(
-    `/api/ScriptDefine/update-script-define/${id}`,
-    data
-  );
+export async function putapiScriptDefineupdatescriptdefineid(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.put<BooleanResult>(`/api/ScriptDefine/update-script-define/${id}`, data);
   return response.data;
 }
 
@@ -185,9 +131,7 @@ export async function putapiScriptDefineupdatescriptdefineid(
  * @returns Promise<BooleanResult>
  */
 export async function getapiScriptDefineupdateenablestateid(id: string): Promise<BooleanResult> {
-  const response = await axiosInstance.get<BooleanResult>(
-    `/api/ScriptDefine/update-enable-state/${id}`
-  );
+  const response = await axiosInstance.get<BooleanResult>(`/api/ScriptDefine/update-enable-state/${id}`);
   return response.data;
 }
 

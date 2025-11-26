@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
-  BooleanResult,
   BomHeaderEntity,
-  BomHeaderEntityResult,
-  StringObjectKeyValuePair,
   BomHeaderEntityBasePaginationResponse,
+  BomHeaderEntityResult,
+  BooleanResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getBomHeaderById(id: string): Promise<BomHeaderEntity> {
  * @param data - Request body
  * @returns Promise<BomHeaderEntityBasePaginationResponse>
  */
-export async function getBomHeaderPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<BomHeaderEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<BomHeaderEntityBasePaginationResponse>(
-    BOMHEADER_ENDPOINTS.getBomHeaderPage,
-    data,
-    { params }
-  );
+export async function getBomHeaderPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<BomHeaderEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<BomHeaderEntityBasePaginationResponse>(BOMHEADER_ENDPOINTS.getBomHeaderPage, data, { params });
   return response.data;
 }
 
@@ -68,10 +61,7 @@ export async function getBomHeaderPage(
  * @returns Promise<BomHeaderEntityResult>
  */
 export async function createBomHeader(data: BomHeaderEntity): Promise<BomHeaderEntityResult> {
-  const response = await axiosInstance.post<BomHeaderEntityResult>(
-    BOMHEADER_ENDPOINTS.createBomHeader,
-    data
-  );
+  const response = await axiosInstance.post<BomHeaderEntityResult>(BOMHEADER_ENDPOINTS.createBomHeader, data);
   return response.data;
 }
 
@@ -82,10 +72,7 @@ export async function createBomHeader(data: BomHeaderEntity): Promise<BomHeaderE
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateBomHeader(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateBomHeader(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/bomheader/update/${id}`, data);
   return response.data;
 }

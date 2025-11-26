@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createAdaptiveRuleConfig,
   deleteAdaptiveRuleConfig,
-  updateAdaptiveRuleConfig,
+  generateNewAdaptiveRuleConfigCode,
   getAdaptiveRuleConfigById,
   getAdaptiveRuleConfigPage,
-  generateNewAdaptiveRuleConfigCode,
+  updateAdaptiveRuleConfig,
 } from '../../services/generated/adaptive-rule-config';
 
 import type {
-  SortType,
-  BooleanResult,
   AdaptiveRuleConfigEntity,
-  StringObjectKeyValuePair,
-  AdaptiveRuleConfigEntityResult,
   AdaptiveRuleConfigEntityBasePaginationResponse,
+  AdaptiveRuleConfigEntityResult,
+  BooleanResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,12 +31,8 @@ import type {
  */
 export const adaptiveRuleConfigKeys = {
   all: ['adaptiveRuleConfig'] as const,
-  getAdaptiveRuleConfigById: (id: string) =>
-    ['adaptiveRuleConfig', 'getAdaptiveRuleConfigById', id] as const,
-  generateNewAdaptiveRuleConfigCode: [
-    'adaptiveRuleConfig',
-    'generateNewAdaptiveRuleConfigCode',
-  ] as const,
+  getAdaptiveRuleConfigById: (id: string) => ['adaptiveRuleConfig', 'getAdaptiveRuleConfigById', id] as const,
+  generateNewAdaptiveRuleConfigCode: ['adaptiveRuleConfig', 'generateNewAdaptiveRuleConfigCode'] as const,
 };
 
 /**
@@ -70,20 +66,10 @@ export function useGenerateNewAdaptiveRuleConfigCode(
  * Get paginated list of Adaptive Rule Config
  */
 export function useGetAdaptiveRuleConfigPage(
-  options?: Omit<
-    UseMutationOptions<
-      AdaptiveRuleConfigEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<AdaptiveRuleConfigEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getAdaptiveRuleConfigPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getAdaptiveRuleConfigPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -92,14 +78,10 @@ export function useGetAdaptiveRuleConfigPage(
  * Create a new Adaptive Rule Config
  */
 export function useCreateAdaptiveRuleConfig(
-  options?: Omit<
-    UseMutationOptions<AdaptiveRuleConfigEntityResult, Error, { data: AdaptiveRuleConfigEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<AdaptiveRuleConfigEntityResult, Error, { data: AdaptiveRuleConfigEntity }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: AdaptiveRuleConfigEntity }) =>
-      createAdaptiveRuleConfig(variables.data),
+    mutationFn: (variables: { data: AdaptiveRuleConfigEntity }) => createAdaptiveRuleConfig(variables.data),
     ...options,
   });
 }
@@ -108,14 +90,10 @@ export function useCreateAdaptiveRuleConfig(
  * Update an existing Adaptive Rule Config
  */
 export function useUpdateAdaptiveRuleConfig(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateAdaptiveRuleConfig(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateAdaptiveRuleConfig(variables.id, variables.data),
     ...options,
   });
 }

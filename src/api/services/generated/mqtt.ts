@@ -1,10 +1,10 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
-  MqttControllerGetTemplateResponse,
   MqttControllerDisconnectClientRequest,
   MqttControllerGetClientsResponsePaginationQuery,
+  MqttControllerGetTemplateResponse,
+  SortType,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -26,9 +26,7 @@ export const MQTT_ENDPOINTS = {
  * @param data - Request body
  * @returns Promise<void>
  */
-export async function getapiMqttdisconnectclient(
-  data: MqttControllerDisconnectClientRequest
-): Promise<void> {
+export async function getapiMqttdisconnectclient(data: MqttControllerDisconnectClientRequest): Promise<void> {
   await axiosInstance.get(MQTT_ENDPOINTS.getapiMqttdisconnectclient, { data });
 }
 
@@ -39,15 +37,8 @@ export async function getapiMqttdisconnectclient(
  * @param data - Request body
  * @returns Promise<MqttControllerGetClientsResponsePaginationQuery>
  */
-export async function postapiMqttgetclients(
-  data: SortType[],
-  params?: { search?: string; pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<MqttControllerGetClientsResponsePaginationQuery> {
-  const response = await axiosInstance.post<MqttControllerGetClientsResponsePaginationQuery>(
-    MQTT_ENDPOINTS.postapiMqttgetclients,
-    data,
-    { params }
-  );
+export async function postapiMqttgetclients(data: SortType[], params?: { search?: string; pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<MqttControllerGetClientsResponsePaginationQuery> {
+  const response = await axiosInstance.post<MqttControllerGetClientsResponsePaginationQuery>(MQTT_ENDPOINTS.postapiMqttgetclients, data, { params });
   return response.data;
 }
 
@@ -55,8 +46,6 @@ export async function postapiMqttgetclients(
  * @returns Promise<MqttControllerGetTemplateResponse[]>
  */
 export async function getapiMqttgettemplateanddocs(): Promise<MqttControllerGetTemplateResponse[]> {
-  const response = await axiosInstance.get<MqttControllerGetTemplateResponse[]>(
-    MQTT_ENDPOINTS.getapiMqttgettemplateanddocs
-  );
+  const response = await axiosInstance.get<MqttControllerGetTemplateResponse[]>(MQTT_ENDPOINTS.getapiMqttgettemplateanddocs);
   return response.data;
 }

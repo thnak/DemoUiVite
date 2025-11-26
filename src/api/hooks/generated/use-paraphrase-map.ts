@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createParaphraseMap,
   deleteParaphraseMap,
-  updateParaphraseMap,
+  generateNewParaphraseMapCode,
   getParaphraseMapById,
   getParaphraseMapPage,
-  generateNewParaphraseMapCode,
+  updateParaphraseMap,
 } from '../../services/generated/paraphrase-map';
 
 import type {
-  SortType,
   BooleanResult,
   ParaphraseMapEntity,
-  StringObjectKeyValuePair,
-  ParaphraseMapEntityResult,
   ParaphraseMapEntityBasePaginationResponse,
+  ParaphraseMapEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,20 +66,10 @@ export function useGenerateNewParaphraseMapCode(
  * Get paginated list of Paraphrase Map
  */
 export function useGetParaphraseMapPage(
-  options?: Omit<
-    UseMutationOptions<
-      ParaphraseMapEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<ParaphraseMapEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getParaphraseMapPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getParaphraseMapPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -88,10 +78,7 @@ export function useGetParaphraseMapPage(
  * Create a new Paraphrase Map
  */
 export function useCreateParaphraseMap(
-  options?: Omit<
-    UseMutationOptions<ParaphraseMapEntityResult, Error, { data: ParaphraseMapEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<ParaphraseMapEntityResult, Error, { data: ParaphraseMapEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: ParaphraseMapEntity }) => createParaphraseMap(variables.data),
@@ -103,14 +90,10 @@ export function useCreateParaphraseMap(
  * Update an existing Paraphrase Map
  */
 export function useUpdateParaphraseMap(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateParaphraseMap(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateParaphraseMap(variables.id, variables.data),
     ...options,
   });
 }

@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createStationGroup,
   deleteStationGroup,
-  searchStationGroup,
-  updateStationGroup,
+  generateNewStationGroupCode,
   getStationGroupById,
   getStationGroupPage,
-  generateNewStationGroupCode,
+  searchStationGroup,
+  updateStationGroup,
 } from '../../services/generated/station-group';
 
 import type {
-  SortType,
   BooleanResult,
+  SortType,
   StationGroupEntity,
+  StationGroupEntityBasePaginationResponse,
   StationGroupEntityResult,
   StringObjectKeyValuePair,
-  StationGroupEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -82,20 +82,10 @@ export function useSearchStationGroup(
  * Get paginated list of Station Group
  */
 export function useGetStationGroupPage(
-  options?: Omit<
-    UseMutationOptions<
-      StationGroupEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<StationGroupEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getStationGroupPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getStationGroupPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -104,10 +94,7 @@ export function useGetStationGroupPage(
  * Create a new Station Group
  */
 export function useCreateStationGroup(
-  options?: Omit<
-    UseMutationOptions<StationGroupEntityResult, Error, { data: StationGroupEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<StationGroupEntityResult, Error, { data: StationGroupEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: StationGroupEntity }) => createStationGroup(variables.data),
@@ -119,14 +106,10 @@ export function useCreateStationGroup(
  * Update an existing Station Group
  */
 export function useUpdateStationGroup(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateStationGroup(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateStationGroup(variables.id, variables.data),
     ...options,
   });
 }

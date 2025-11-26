@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
+  SortType,
   StringObjectKeyValuePair,
   SystemErrorReportCommentEntity,
-  SystemErrorReportCommentEntityResult,
   SystemErrorReportCommentEntityBasePaginationResponse,
+  SystemErrorReportCommentEntityResult,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -33,12 +33,8 @@ export const SYSTEMERRORREPORTCOMMENT_ENDPOINTS = {
  * Retrieves a specific System Error Report Comment entity by its unique identifier.
  * @returns Promise<SystemErrorReportCommentEntity>
  */
-export async function getSystemErrorReportCommentById(
-  id: string
-): Promise<SystemErrorReportCommentEntity> {
-  const response = await axiosInstance.get<SystemErrorReportCommentEntity>(
-    `/api/systemerrorreportcomment/${id}`
-  );
+export async function getSystemErrorReportCommentById(id: string): Promise<SystemErrorReportCommentEntity> {
+  const response = await axiosInstance.get<SystemErrorReportCommentEntity>(`/api/systemerrorreportcomment/${id}`);
   return response.data;
 }
 
@@ -52,15 +48,8 @@ export async function getSystemErrorReportCommentById(
  * @param data - Request body
  * @returns Promise<SystemErrorReportCommentEntityBasePaginationResponse>
  */
-export async function getSystemErrorReportCommentPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<SystemErrorReportCommentEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<SystemErrorReportCommentEntityBasePaginationResponse>(
-    SYSTEMERRORREPORTCOMMENT_ENDPOINTS.getSystemErrorReportCommentPage,
-    data,
-    { params }
-  );
+export async function getSystemErrorReportCommentPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<SystemErrorReportCommentEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<SystemErrorReportCommentEntityBasePaginationResponse>(SYSTEMERRORREPORTCOMMENT_ENDPOINTS.getSystemErrorReportCommentPage, data, { params });
   return response.data;
 }
 
@@ -71,13 +60,8 @@ export async function getSystemErrorReportCommentPage(
  * @param data - Request body
  * @returns Promise<SystemErrorReportCommentEntityResult>
  */
-export async function createSystemErrorReportComment(
-  data: SystemErrorReportCommentEntity
-): Promise<SystemErrorReportCommentEntityResult> {
-  const response = await axiosInstance.post<SystemErrorReportCommentEntityResult>(
-    SYSTEMERRORREPORTCOMMENT_ENDPOINTS.createSystemErrorReportComment,
-    data
-  );
+export async function createSystemErrorReportComment(data: SystemErrorReportCommentEntity): Promise<SystemErrorReportCommentEntityResult> {
+  const response = await axiosInstance.post<SystemErrorReportCommentEntityResult>(SYSTEMERRORREPORTCOMMENT_ENDPOINTS.createSystemErrorReportComment, data);
   return response.data;
 }
 
@@ -88,14 +72,8 @@ export async function createSystemErrorReportComment(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateSystemErrorReportComment(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/systemerrorreportcomment/update/${id}`,
-    data
-  );
+export async function updateSystemErrorReportComment(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/systemerrorreportcomment/update/${id}`, data);
   return response.data;
 }
 
@@ -106,9 +84,7 @@ export async function updateSystemErrorReportComment(
  * @returns Promise<BooleanResult>
  */
 export async function deleteSystemErrorReportComment(id: string): Promise<BooleanResult> {
-  const response = await axiosInstance.delete<BooleanResult>(
-    `/api/systemerrorreportcomment/delete/${id}`
-  );
+  const response = await axiosInstance.delete<BooleanResult>(`/api/systemerrorreportcomment/delete/${id}`);
   return response.data;
 }
 
@@ -119,8 +95,6 @@ export async function deleteSystemErrorReportComment(id: string): Promise<Boolea
  * @returns Promise<string>
  */
 export async function generateNewSystemErrorReportCommentCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    SYSTEMERRORREPORTCOMMENT_ENDPOINTS.generateNewSystemErrorReportCommentCode
-  );
+  const response = await axiosInstance.get<string>(SYSTEMERRORREPORTCOMMENT_ENDPOINTS.generateNewSystemErrorReportCommentCode);
   return response.data;
 }

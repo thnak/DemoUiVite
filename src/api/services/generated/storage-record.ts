@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
+  SortType,
   StorageRecordEntity,
-  StringObjectKeyValuePair,
-  StorageRecordEntityResult,
   StorageRecordEntityBasePaginationResponse,
+  StorageRecordEntityResult,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getStorageRecordById(id: string): Promise<StorageRecordEnt
  * @param data - Request body
  * @returns Promise<StorageRecordEntityBasePaginationResponse>
  */
-export async function getStorageRecordPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<StorageRecordEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<StorageRecordEntityBasePaginationResponse>(
-    STORAGERECORD_ENDPOINTS.getStorageRecordPage,
-    data,
-    { params }
-  );
+export async function getStorageRecordPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<StorageRecordEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<StorageRecordEntityBasePaginationResponse>(STORAGERECORD_ENDPOINTS.getStorageRecordPage, data, { params });
   return response.data;
 }
 
@@ -67,13 +60,8 @@ export async function getStorageRecordPage(
  * @param data - Request body
  * @returns Promise<StorageRecordEntityResult>
  */
-export async function createStorageRecord(
-  data: StorageRecordEntity
-): Promise<StorageRecordEntityResult> {
-  const response = await axiosInstance.post<StorageRecordEntityResult>(
-    STORAGERECORD_ENDPOINTS.createStorageRecord,
-    data
-  );
+export async function createStorageRecord(data: StorageRecordEntity): Promise<StorageRecordEntityResult> {
+  const response = await axiosInstance.post<StorageRecordEntityResult>(STORAGERECORD_ENDPOINTS.createStorageRecord, data);
   return response.data;
 }
 
@@ -84,10 +72,7 @@ export async function createStorageRecord(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateStorageRecord(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
+export async function updateStorageRecord(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
   const response = await axiosInstance.post<BooleanResult>(`/api/storagerecord/update/${id}`, data);
   return response.data;
 }
@@ -110,8 +95,6 @@ export async function deleteStorageRecord(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewStorageRecordCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    STORAGERECORD_ENDPOINTS.generateNewStorageRecordCode
-  );
+  const response = await axiosInstance.get<string>(STORAGERECORD_ENDPOINTS.generateNewStorageRecordCode);
   return response.data;
 }

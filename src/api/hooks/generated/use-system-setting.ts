@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createSystemSetting,
   deleteSystemSetting,
-  updateSystemSetting,
+  generateNewSystemSettingCode,
   getSystemSettingById,
   getSystemSettingPage,
-  generateNewSystemSettingCode,
+  updateSystemSetting,
 } from '../../services/generated/system-setting';
 
 import type {
-  SortType,
   BooleanResult,
-  SystemSettingEntity,
+  SortType,
   StringObjectKeyValuePair,
-  SystemSettingEntityResult,
+  SystemSettingEntity,
   SystemSettingEntityBasePaginationResponse,
+  SystemSettingEntityResult,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,20 +66,10 @@ export function useGenerateNewSystemSettingCode(
  * Get paginated list of System Setting
  */
 export function useGetSystemSettingPage(
-  options?: Omit<
-    UseMutationOptions<
-      SystemSettingEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<SystemSettingEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getSystemSettingPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getSystemSettingPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -88,10 +78,7 @@ export function useGetSystemSettingPage(
  * Create a new System Setting
  */
 export function useCreateSystemSetting(
-  options?: Omit<
-    UseMutationOptions<SystemSettingEntityResult, Error, { data: SystemSettingEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<SystemSettingEntityResult, Error, { data: SystemSettingEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: SystemSettingEntity }) => createSystemSetting(variables.data),
@@ -103,14 +90,10 @@ export function useCreateSystemSetting(
  * Update an existing System Setting
  */
 export function useUpdateSystemSetting(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateSystemSetting(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateSystemSetting(variables.id, variables.data),
     ...options,
   });
 }

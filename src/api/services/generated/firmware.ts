@@ -1,10 +1,10 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   GetAllFirmwareVersionsResponse,
   GetAllFirmwareVersionsResponsePaginationQuery,
+  SortType,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -28,9 +28,7 @@ export const FIRMWARE_ENDPOINTS = {
  * @returns Promise<BooleanResult>
  */
 export async function postapiFirmwarecraftnewrelease(): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    FIRMWARE_ENDPOINTS.postapiFirmwarecraftnewrelease
-  );
+  const response = await axiosInstance.post<BooleanResult>(FIRMWARE_ENDPOINTS.postapiFirmwarecraftnewrelease);
   return response.data;
 }
 
@@ -38,9 +36,7 @@ export async function postapiFirmwarecraftnewrelease(): Promise<BooleanResult> {
  * @returns Promise<GetAllFirmwareVersionsResponse>
  */
 export async function getapiFirmwaregetid(id: string): Promise<GetAllFirmwareVersionsResponse> {
-  const response = await axiosInstance.get<GetAllFirmwareVersionsResponse>(
-    `/api/Firmware/get/${id}`
-  );
+  const response = await axiosInstance.get<GetAllFirmwareVersionsResponse>(`/api/Firmware/get/${id}`);
   return response.data;
 }
 
@@ -58,15 +54,8 @@ export async function getapiFirmwaredownloadid(id: string): Promise<void> {
  * @param data - Request body
  * @returns Promise<GetAllFirmwareVersionsResponsePaginationQuery>
  */
-export async function postapiFirmwaregetlatestfirmwareversion(
-  data: SortType[],
-  params?: { ModelTypeId?: string; pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<GetAllFirmwareVersionsResponsePaginationQuery> {
-  const response = await axiosInstance.post<GetAllFirmwareVersionsResponsePaginationQuery>(
-    FIRMWARE_ENDPOINTS.postapiFirmwaregetlatestfirmwareversion,
-    data,
-    { params }
-  );
+export async function postapiFirmwaregetlatestfirmwareversion(data: SortType[], params?: { ModelTypeId?: string; pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<GetAllFirmwareVersionsResponsePaginationQuery> {
+  const response = await axiosInstance.post<GetAllFirmwareVersionsResponsePaginationQuery>(FIRMWARE_ENDPOINTS.postapiFirmwaregetlatestfirmwareversion, data, { params });
   return response.data;
 }
 
@@ -74,10 +63,6 @@ export async function postapiFirmwaregetlatestfirmwareversion(
  * @returns Promise<BooleanResult>
  */
 export async function postapiFirmwarepublish(params?: { id?: string }): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    FIRMWARE_ENDPOINTS.postapiFirmwarepublish,
-    null,
-    { params }
-  );
+  const response = await axiosInstance.post<BooleanResult>(FIRMWARE_ENDPOINTS.postapiFirmwarepublish, null, { params });
   return response.data;
 }

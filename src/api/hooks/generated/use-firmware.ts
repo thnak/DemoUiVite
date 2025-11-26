@@ -3,18 +3,18 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
-  getapiFirmwaregetid,
-  postapiFirmwarepublish,
   getapiFirmwaredownloadid,
+  getapiFirmwaregetid,
   postapiFirmwarecraftnewrelease,
   postapiFirmwaregetlatestfirmwareversion,
+  postapiFirmwarepublish,
 } from '../../services/generated/firmware';
 
 import type {
-  SortType,
   BooleanResult,
   GetAllFirmwareVersionsResponse,
   GetAllFirmwareVersionsResponsePaginationQuery,
+  SortType,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -72,33 +72,10 @@ export function usePostapiFirmwarecraftnewrelease(
 /**
  */
 export function usePostapiFirmwaregetlatestfirmwareversion(
-  options?: Omit<
-    UseMutationOptions<
-      GetAllFirmwareVersionsResponsePaginationQuery,
-      Error,
-      {
-        data: SortType[];
-        params?: {
-          ModelTypeId?: string;
-          pageNumber?: number;
-          pageSize?: number;
-          searchTerm?: string;
-        };
-      }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<GetAllFirmwareVersionsResponsePaginationQuery, Error, { data: SortType[]; params?: { ModelTypeId?: string; pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: {
-        ModelTypeId?: string;
-        pageNumber?: number;
-        pageSize?: number;
-        searchTerm?: string;
-      };
-    }) => postapiFirmwaregetlatestfirmwareversion(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { ModelTypeId?: string; pageNumber?: number; pageSize?: number; searchTerm?: string } }) => postapiFirmwaregetlatestfirmwareversion(variables.data, variables.params),
     ...options,
   });
 }
@@ -106,14 +83,10 @@ export function usePostapiFirmwaregetlatestfirmwareversion(
 /**
  */
 export function usePostapiFirmwarepublish(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { params?: { id?: string } }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { params?: { id?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { params?: { id?: string } }) =>
-      postapiFirmwarepublish(variables.params),
+    mutationFn: (variables: { params?: { id?: string } }) => postapiFirmwarepublish(variables.params),
     ...options,
   });
 }

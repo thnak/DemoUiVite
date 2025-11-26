@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createMachineGroup,
   deleteMachineGroup,
-  searchMachineGroup,
-  updateMachineGroup,
+  generateNewMachineGroupCode,
   getMachineGroupById,
   getMachineGroupPage,
-  generateNewMachineGroupCode,
+  searchMachineGroup,
+  updateMachineGroup,
 } from '../../services/generated/machine-group';
 
 import type {
-  SortType,
   BooleanResult,
   MachineGroupEntity,
-  MachineGroupEntityResult,
-  StringObjectKeyValuePair,
   MachineGroupEntityBasePaginationResponse,
+  MachineGroupEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -82,20 +82,10 @@ export function useSearchMachineGroup(
  * Get paginated list of Machine Group
  */
 export function useGetMachineGroupPage(
-  options?: Omit<
-    UseMutationOptions<
-      MachineGroupEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<MachineGroupEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getMachineGroupPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getMachineGroupPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -104,10 +94,7 @@ export function useGetMachineGroupPage(
  * Create a new Machine Group
  */
 export function useCreateMachineGroup(
-  options?: Omit<
-    UseMutationOptions<MachineGroupEntityResult, Error, { data: MachineGroupEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<MachineGroupEntityResult, Error, { data: MachineGroupEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: MachineGroupEntity }) => createMachineGroup(variables.data),
@@ -119,14 +106,10 @@ export function useCreateMachineGroup(
  * Update an existing Machine Group
  */
 export function useUpdateMachineGroup(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateMachineGroup(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateMachineGroup(variables.id, variables.data),
     ...options,
   });
 }

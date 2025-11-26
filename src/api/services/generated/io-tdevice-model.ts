@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   IoTDeviceModelEntity,
-  StringObjectKeyValuePair,
-  IoTDeviceModelEntityResult,
   IoTDeviceModelEntityBasePaginationResponse,
+  IoTDeviceModelEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -49,15 +49,8 @@ export async function getIoTDeviceModelById(id: string): Promise<IoTDeviceModelE
  * @param data - Request body
  * @returns Promise<IoTDeviceModelEntityBasePaginationResponse>
  */
-export async function getIoTDeviceModelPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<IoTDeviceModelEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<IoTDeviceModelEntityBasePaginationResponse>(
-    IOTDEVICEMODEL_ENDPOINTS.getIoTDeviceModelPage,
-    data,
-    { params }
-  );
+export async function getIoTDeviceModelPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<IoTDeviceModelEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<IoTDeviceModelEntityBasePaginationResponse>(IOTDEVICEMODEL_ENDPOINTS.getIoTDeviceModelPage, data, { params });
   return response.data;
 }
 
@@ -68,13 +61,8 @@ export async function getIoTDeviceModelPage(
  * @param data - Request body
  * @returns Promise<IoTDeviceModelEntityResult>
  */
-export async function createIoTDeviceModel(
-  data: IoTDeviceModelEntity
-): Promise<IoTDeviceModelEntityResult> {
-  const response = await axiosInstance.post<IoTDeviceModelEntityResult>(
-    IOTDEVICEMODEL_ENDPOINTS.createIoTDeviceModel,
-    data
-  );
+export async function createIoTDeviceModel(data: IoTDeviceModelEntity): Promise<IoTDeviceModelEntityResult> {
+  const response = await axiosInstance.post<IoTDeviceModelEntityResult>(IOTDEVICEMODEL_ENDPOINTS.createIoTDeviceModel, data);
   return response.data;
 }
 
@@ -85,14 +73,8 @@ export async function createIoTDeviceModel(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateIoTDeviceModel(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/iotdevicemodel/update/${id}`,
-    data
-  );
+export async function updateIoTDeviceModel(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/iotdevicemodel/update/${id}`, data);
   return response.data;
 }
 
@@ -114,9 +96,7 @@ export async function deleteIoTDeviceModel(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewIoTDeviceModelCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    IOTDEVICEMODEL_ENDPOINTS.generateNewIoTDeviceModelCode
-  );
+  const response = await axiosInstance.get<string>(IOTDEVICEMODEL_ENDPOINTS.generateNewIoTDeviceModelCode);
   return response.data;
 }
 
@@ -126,13 +106,7 @@ export async function generateNewIoTDeviceModelCode(): Promise<string> {
  * Searches Io TDevice Model entities by text across searchable fields.
  * @returns Promise<IoTDeviceModelEntity[]>
  */
-export async function searchIoTDeviceModel(params?: {
-  searchText?: string;
-  maxResults?: number;
-}): Promise<IoTDeviceModelEntity[]> {
-  const response = await axiosInstance.get<IoTDeviceModelEntity[]>(
-    IOTDEVICEMODEL_ENDPOINTS.searchIoTDeviceModel,
-    { params }
-  );
+export async function searchIoTDeviceModel(params?: { searchText?: string; maxResults?: number }): Promise<IoTDeviceModelEntity[]> {
+  const response = await axiosInstance.get<IoTDeviceModelEntity[]>(IOTDEVICEMODEL_ENDPOINTS.searchIoTDeviceModel, { params });
   return response.data;
 }

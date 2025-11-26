@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createStorageRecord,
   deleteStorageRecord,
-  updateStorageRecord,
+  generateNewStorageRecordCode,
   getStorageRecordById,
   getStorageRecordPage,
-  generateNewStorageRecordCode,
+  updateStorageRecord,
 } from '../../services/generated/storage-record';
 
 import type {
-  SortType,
   BooleanResult,
+  SortType,
   StorageRecordEntity,
-  StringObjectKeyValuePair,
-  StorageRecordEntityResult,
   StorageRecordEntityBasePaginationResponse,
+  StorageRecordEntityResult,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -66,20 +66,10 @@ export function useGenerateNewStorageRecordCode(
  * Get paginated list of Storage Record
  */
 export function useGetStorageRecordPage(
-  options?: Omit<
-    UseMutationOptions<
-      StorageRecordEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<StorageRecordEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getStorageRecordPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getStorageRecordPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -88,10 +78,7 @@ export function useGetStorageRecordPage(
  * Create a new Storage Record
  */
 export function useCreateStorageRecord(
-  options?: Omit<
-    UseMutationOptions<StorageRecordEntityResult, Error, { data: StorageRecordEntity }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<StorageRecordEntityResult, Error, { data: StorageRecordEntity }>, 'mutationFn'>
 ) {
   return useMutation({
     mutationFn: (variables: { data: StorageRecordEntity }) => createStorageRecord(variables.data),
@@ -103,14 +90,10 @@ export function useCreateStorageRecord(
  * Update an existing Storage Record
  */
 export function useUpdateStorageRecord(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateStorageRecord(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateStorageRecord(variables.id, variables.data),
     ...options,
   });
 }

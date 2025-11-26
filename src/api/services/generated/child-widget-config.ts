@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   ChildWidgetConfigEntity,
-  StringObjectKeyValuePair,
-  ChildWidgetConfigEntityResult,
   ChildWidgetConfigEntityBasePaginationResponse,
+  ChildWidgetConfigEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getChildWidgetConfigById(id: string): Promise<ChildWidgetC
  * @param data - Request body
  * @returns Promise<ChildWidgetConfigEntityBasePaginationResponse>
  */
-export async function getChildWidgetConfigPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<ChildWidgetConfigEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<ChildWidgetConfigEntityBasePaginationResponse>(
-    CHILDWIDGETCONFIG_ENDPOINTS.getChildWidgetConfigPage,
-    data,
-    { params }
-  );
+export async function getChildWidgetConfigPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<ChildWidgetConfigEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<ChildWidgetConfigEntityBasePaginationResponse>(CHILDWIDGETCONFIG_ENDPOINTS.getChildWidgetConfigPage, data, { params });
   return response.data;
 }
 
@@ -67,13 +60,8 @@ export async function getChildWidgetConfigPage(
  * @param data - Request body
  * @returns Promise<ChildWidgetConfigEntityResult>
  */
-export async function createChildWidgetConfig(
-  data: ChildWidgetConfigEntity
-): Promise<ChildWidgetConfigEntityResult> {
-  const response = await axiosInstance.post<ChildWidgetConfigEntityResult>(
-    CHILDWIDGETCONFIG_ENDPOINTS.createChildWidgetConfig,
-    data
-  );
+export async function createChildWidgetConfig(data: ChildWidgetConfigEntity): Promise<ChildWidgetConfigEntityResult> {
+  const response = await axiosInstance.post<ChildWidgetConfigEntityResult>(CHILDWIDGETCONFIG_ENDPOINTS.createChildWidgetConfig, data);
   return response.data;
 }
 
@@ -84,14 +72,8 @@ export async function createChildWidgetConfig(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateChildWidgetConfig(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/childwidgetconfig/update/${id}`,
-    data
-  );
+export async function updateChildWidgetConfig(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/childwidgetconfig/update/${id}`, data);
   return response.data;
 }
 
@@ -113,8 +95,6 @@ export async function deleteChildWidgetConfig(id: string): Promise<BooleanResult
  * @returns Promise<string>
  */
 export async function generateNewChildWidgetConfigCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    CHILDWIDGETCONFIG_ENDPOINTS.generateNewChildWidgetConfigCode
-  );
+  const response = await axiosInstance.get<string>(CHILDWIDGETCONFIG_ENDPOINTS.generateNewChildWidgetConfigCode);
   return response.data;
 }

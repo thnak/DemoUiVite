@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createFolderLocationHistory,
   deleteFolderLocationHistory,
-  updateFolderLocationHistory,
+  generateNewFolderLocationHistoryCode,
   getFolderLocationHistoryById,
   getFolderLocationHistoryPage,
-  generateNewFolderLocationHistoryCode,
+  updateFolderLocationHistory,
 } from '../../services/generated/folder-location-history';
 
 import type {
-  SortType,
   BooleanResult,
-  StringObjectKeyValuePair,
   FolderLocationHistoryEntity,
-  FolderLocationHistoryEntityResult,
   FolderLocationHistoryEntityBasePaginationResponse,
+  FolderLocationHistoryEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -31,12 +31,8 @@ import type {
  */
 export const folderLocationHistoryKeys = {
   all: ['folderLocationHistory'] as const,
-  getFolderLocationHistoryById: (id: string) =>
-    ['folderLocationHistory', 'getFolderLocationHistoryById', id] as const,
-  generateNewFolderLocationHistoryCode: [
-    'folderLocationHistory',
-    'generateNewFolderLocationHistoryCode',
-  ] as const,
+  getFolderLocationHistoryById: (id: string) => ['folderLocationHistory', 'getFolderLocationHistoryById', id] as const,
+  generateNewFolderLocationHistoryCode: ['folderLocationHistory', 'generateNewFolderLocationHistoryCode'] as const,
 };
 
 /**
@@ -70,20 +66,10 @@ export function useGenerateNewFolderLocationHistoryCode(
  * Get paginated list of Folder Location History
  */
 export function useGetFolderLocationHistoryPage(
-  options?: Omit<
-    UseMutationOptions<
-      FolderLocationHistoryEntityBasePaginationResponse,
-      Error,
-      { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<FolderLocationHistoryEntityBasePaginationResponse, Error, { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: {
-      data: SortType[];
-      params?: { pageNumber?: number; pageSize?: number; searchTerm?: string };
-    }) => getFolderLocationHistoryPage(variables.data, variables.params),
+    mutationFn: (variables: { data: SortType[]; params?: { pageNumber?: number; pageSize?: number; searchTerm?: string } }) => getFolderLocationHistoryPage(variables.data, variables.params),
     ...options,
   });
 }
@@ -92,18 +78,10 @@ export function useGetFolderLocationHistoryPage(
  * Create a new Folder Location History
  */
 export function useCreateFolderLocationHistory(
-  options?: Omit<
-    UseMutationOptions<
-      FolderLocationHistoryEntityResult,
-      Error,
-      { data: FolderLocationHistoryEntity }
-    >,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<FolderLocationHistoryEntityResult, Error, { data: FolderLocationHistoryEntity }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { data: FolderLocationHistoryEntity }) =>
-      createFolderLocationHistory(variables.data),
+    mutationFn: (variables: { data: FolderLocationHistoryEntity }) => createFolderLocationHistory(variables.data),
     ...options,
   });
 }
@@ -112,14 +90,10 @@ export function useCreateFolderLocationHistory(
  * Update an existing Folder Location History
  */
 export function useUpdateFolderLocationHistory(
-  options?: Omit<
-    UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>,
-    'mutationFn'
-  >
+  options?: Omit<UseMutationOptions<BooleanResult, Error, { id: string; data: StringObjectKeyValuePair[] }>, 'mutationFn'>
 ) {
   return useMutation({
-    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) =>
-      updateFolderLocationHistory(variables.id, variables.data),
+    mutationFn: (variables: { id: string; data: StringObjectKeyValuePair[] }) => updateFolderLocationHistory(variables.id, variables.data),
     ...options,
   });
 }

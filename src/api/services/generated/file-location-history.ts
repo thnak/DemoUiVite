@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
-  StringObjectKeyValuePair,
   FileLocationHistoryEntity,
-  FileLocationHistoryEntityResult,
   FileLocationHistoryEntityBasePaginationResponse,
+  FileLocationHistoryEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -34,9 +34,7 @@ export const FILELOCATIONHISTORY_ENDPOINTS = {
  * @returns Promise<FileLocationHistoryEntity>
  */
 export async function getFileLocationHistoryById(id: string): Promise<FileLocationHistoryEntity> {
-  const response = await axiosInstance.get<FileLocationHistoryEntity>(
-    `/api/filelocationhistory/${id}`
-  );
+  const response = await axiosInstance.get<FileLocationHistoryEntity>(`/api/filelocationhistory/${id}`);
   return response.data;
 }
 
@@ -50,15 +48,8 @@ export async function getFileLocationHistoryById(id: string): Promise<FileLocati
  * @param data - Request body
  * @returns Promise<FileLocationHistoryEntityBasePaginationResponse>
  */
-export async function getFileLocationHistoryPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<FileLocationHistoryEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<FileLocationHistoryEntityBasePaginationResponse>(
-    FILELOCATIONHISTORY_ENDPOINTS.getFileLocationHistoryPage,
-    data,
-    { params }
-  );
+export async function getFileLocationHistoryPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<FileLocationHistoryEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<FileLocationHistoryEntityBasePaginationResponse>(FILELOCATIONHISTORY_ENDPOINTS.getFileLocationHistoryPage, data, { params });
   return response.data;
 }
 
@@ -69,13 +60,8 @@ export async function getFileLocationHistoryPage(
  * @param data - Request body
  * @returns Promise<FileLocationHistoryEntityResult>
  */
-export async function createFileLocationHistory(
-  data: FileLocationHistoryEntity
-): Promise<FileLocationHistoryEntityResult> {
-  const response = await axiosInstance.post<FileLocationHistoryEntityResult>(
-    FILELOCATIONHISTORY_ENDPOINTS.createFileLocationHistory,
-    data
-  );
+export async function createFileLocationHistory(data: FileLocationHistoryEntity): Promise<FileLocationHistoryEntityResult> {
+  const response = await axiosInstance.post<FileLocationHistoryEntityResult>(FILELOCATIONHISTORY_ENDPOINTS.createFileLocationHistory, data);
   return response.data;
 }
 
@@ -86,14 +72,8 @@ export async function createFileLocationHistory(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateFileLocationHistory(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/filelocationhistory/update/${id}`,
-    data
-  );
+export async function updateFileLocationHistory(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/filelocationhistory/update/${id}`, data);
   return response.data;
 }
 
@@ -104,9 +84,7 @@ export async function updateFileLocationHistory(
  * @returns Promise<BooleanResult>
  */
 export async function deleteFileLocationHistory(id: string): Promise<BooleanResult> {
-  const response = await axiosInstance.delete<BooleanResult>(
-    `/api/filelocationhistory/delete/${id}`
-  );
+  const response = await axiosInstance.delete<BooleanResult>(`/api/filelocationhistory/delete/${id}`);
   return response.data;
 }
 
@@ -117,8 +95,6 @@ export async function deleteFileLocationHistory(id: string): Promise<BooleanResu
  * @returns Promise<string>
  */
 export async function generateNewFileLocationHistoryCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    FILELOCATIONHISTORY_ENDPOINTS.generateNewFileLocationHistoryCode
-  );
+  const response = await axiosInstance.get<string>(FILELOCATIONHISTORY_ENDPOINTS.generateNewFileLocationHistoryCode);
   return response.data;
 }

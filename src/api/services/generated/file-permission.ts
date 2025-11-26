@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   FilePermissionEntity,
-  StringObjectKeyValuePair,
-  FilePermissionEntityResult,
   FilePermissionEntityBasePaginationResponse,
+  FilePermissionEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -48,15 +48,8 @@ export async function getFilePermissionById(id: string): Promise<FilePermissionE
  * @param data - Request body
  * @returns Promise<FilePermissionEntityBasePaginationResponse>
  */
-export async function getFilePermissionPage(
-  data: SortType[],
-  params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }
-): Promise<FilePermissionEntityBasePaginationResponse> {
-  const response = await axiosInstance.post<FilePermissionEntityBasePaginationResponse>(
-    FILEPERMISSION_ENDPOINTS.getFilePermissionPage,
-    data,
-    { params }
-  );
+export async function getFilePermissionPage(data: SortType[], params?: { pageNumber?: number; pageSize?: number; searchTerm?: string }): Promise<FilePermissionEntityBasePaginationResponse> {
+  const response = await axiosInstance.post<FilePermissionEntityBasePaginationResponse>(FILEPERMISSION_ENDPOINTS.getFilePermissionPage, data, { params });
   return response.data;
 }
 
@@ -67,13 +60,8 @@ export async function getFilePermissionPage(
  * @param data - Request body
  * @returns Promise<FilePermissionEntityResult>
  */
-export async function createFilePermission(
-  data: FilePermissionEntity
-): Promise<FilePermissionEntityResult> {
-  const response = await axiosInstance.post<FilePermissionEntityResult>(
-    FILEPERMISSION_ENDPOINTS.createFilePermission,
-    data
-  );
+export async function createFilePermission(data: FilePermissionEntity): Promise<FilePermissionEntityResult> {
+  const response = await axiosInstance.post<FilePermissionEntityResult>(FILEPERMISSION_ENDPOINTS.createFilePermission, data);
   return response.data;
 }
 
@@ -84,14 +72,8 @@ export async function createFilePermission(
  * @param data - Request body
  * @returns Promise<BooleanResult>
  */
-export async function updateFilePermission(
-  id: string,
-  data: StringObjectKeyValuePair[]
-): Promise<BooleanResult> {
-  const response = await axiosInstance.post<BooleanResult>(
-    `/api/filepermission/update/${id}`,
-    data
-  );
+export async function updateFilePermission(id: string, data: StringObjectKeyValuePair[]): Promise<BooleanResult> {
+  const response = await axiosInstance.post<BooleanResult>(`/api/filepermission/update/${id}`, data);
   return response.data;
 }
 
@@ -113,8 +95,6 @@ export async function deleteFilePermission(id: string): Promise<BooleanResult> {
  * @returns Promise<string>
  */
 export async function generateNewFilePermissionCode(): Promise<string> {
-  const response = await axiosInstance.get<string>(
-    FILEPERMISSION_ENDPOINTS.generateNewFilePermissionCode
-  );
+  const response = await axiosInstance.get<string>(FILEPERMISSION_ENDPOINTS.generateNewFilePermissionCode);
   return response.data;
 }
