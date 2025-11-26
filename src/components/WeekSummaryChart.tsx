@@ -79,6 +79,7 @@ export function WeekSummaryChart({ summary, title = 'Weekly Summary' }: WeekSumm
             { name: 'Break Hours', data: breakHours },
           ]}
           options={chartOptions}
+          slotProps={{ loading: { p: 2.5 } }}
           sx={{ height: 300 }}
         />
       </Box>
