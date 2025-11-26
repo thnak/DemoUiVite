@@ -6,7 +6,7 @@ import type {
   ShiftDefinitionFormData,
 } from 'src/types/shift';
 
-import { Fragment, useState, useCallback } from 'react';
+import React, { Fragment, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -649,13 +649,13 @@ export function ShiftTemplateForm({
             <Box sx={{ overflowX: 'auto' }}>
               <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: 1, minWidth: 700 }}>
                 {/* Header Row */}
-                <Box sx={{ p: 1, fontWeight: 'bold', bgcolor: 'grey.100', borderRadius: 1 }}>
+                <Box sx={{ p: 1, fontWeight: 'bold', borderRadius: 1 }}>
                   Shift
                 </Box>
                 {DAYS_OF_WEEK.map((day) => (
                   <Box
                     key={day}
-                    sx={{ p: 1, fontWeight: 'bold', bgcolor: 'grey.100', borderRadius: 1, textAlign: 'center' }}
+                    sx={{ p: 1, fontWeight: 'bold', borderRadius: 1, textAlign: 'center' }}
                   >
                     {DAY_LABELS[day].slice(0, 3)}
                   </Box>
@@ -664,7 +664,7 @@ export function ShiftTemplateForm({
                 {/* Data Rows */}
                 {formData.definitions.map((def) => (
                   <Fragment key={def.id}>
-                    <Box key={`${def.id}-name`} sx={{ p: 1, bgcolor: 'grey.50', borderRadius: 1 }}>
+                    <Box key={`${def.id}-name`} sx={{ p: 1, borderRadius: 1 }}>
                       <Typography variant="body2" noWrap>
                         {def.name}
                       </Typography>

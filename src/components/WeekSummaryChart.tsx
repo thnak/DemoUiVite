@@ -42,6 +42,8 @@ export function WeekSummaryChart({ summary, title = 'Weekly Summary' }: WeekSumm
       y: {
         formatter: (value: number) => `${value} hours`,
       },
+      intersect: false,
+      shared: true
     },
     legend: {
       show: true,
