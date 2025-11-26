@@ -84,6 +84,11 @@ export function useNavData(): NavData {
           icon: icon('ic-cart'),
         },
         {
+          title: t('nav.downtimeReport'),
+          path: '/downtime-report',
+          icon: icon('ic-analytics'),
+        },
+        {
           title: t('nav.blog'),
           path: '/blog',
           icon: icon('ic-blog'),
@@ -167,6 +172,11 @@ export const navData: NavData = [
         title: 'Machine',
         path: '/machines',
         icon: icon('ic-cart'),
+      },
+      {
+        title: 'Downtime Report',
+        path: '/downtime-report',
+        icon: icon('ic-analytics'),
       },
       {
         title: 'Blog',

@@ -603,3 +603,465 @@ export function getMachineOEEHistory(
   }
   return years;
 }
+
+// ----------------------------------------------------------------------
+// Downtime Report Data Types and Generators
+// ----------------------------------------------------------------------
+
+export type DowntimeReasonCategory =
+  | 'Material Issue'
+  | 'Human Resource'
+  | 'Technical'
+  | 'Planned Maintenance'
+  | 'Quality Issue'
+  | 'External'
+  | 'Setup/Changeover'
+  | 'Utilities';
+
+export type DowntimeEvent = {
+  id: string;
+  machineId: string;
+  machineName: string;
+  productId: string;
+  productName: string;
+  reason: string;
+  reasonCategory: DowntimeReasonCategory;
+  startTime: Date;
+  endTime: Date;
+  durationMinutes: number;
+  isPlanned: boolean;
+};
+
+export type DailyDowntimeData = {
+  date: string;
+  dayOfWeek: string;
+  dayNumber: number;
+  totalRuntimeMinutes: number;
+  totalUptimeMinutes: number;
+  totalDowntimeMinutes: number;
+  breakTimeMinutes: number;
+  downtimeByReason: Record<DowntimeReasonCategory, number>;
+  downtimeEvents: DowntimeEvent[];
+};
+
+export type MonthlyDowntimeData = {
+  month: string;
+  monthNumber: number;
+  totalRuntimeMinutes: number;
+  totalUptimeMinutes: number;
+  totalDowntimeMinutes: number;
+  breakTimeMinutes: number;
+  downtimeByReason: Record<DowntimeReasonCategory, number>;
+  dailyData: DailyDowntimeData[];
+};
+
+export type MachineDowntimeSummary = {
+  machineId: string;
+  machineName: string;
+  totalRuntimeMinutes: number;
+  totalUptimeMinutes: number;
+  totalDowntimeMinutes: number;
+  totalDowntimeEvents: number;
+  topReasons: { reason: DowntimeReasonCategory; minutes: number; count: number }[];
+};
+
+export type ProductDowntimeSummary = {
+  productId: string;
+  productName: string;
+  totalDowntimeMinutes: number;
+  totalDowntimeEvents: number;
+  topReasons: { reason: DowntimeReasonCategory; minutes: number; count: number }[];
+};
+
+export type DowntimeReportData = {
+  year: number;
+  totalRuntimeMinutes: number;
+  totalUptimeMinutes: number;
+  totalDowntimeMinutes: number;
+  totalBreakTimeMinutes: number;
+  downtimeByReason: Record<DowntimeReasonCategory, number>;
+  monthlyData: MonthlyDowntimeData[];
+  machinesSummary: MachineDowntimeSummary[];
+  productsSummary: ProductDowntimeSummary[];
+};
+
+const DOWNTIME_REASON_CATEGORIES: DowntimeReasonCategory[] = [
+  'Material Issue',
+  'Human Resource',
+  'Technical',
+  'Planned Maintenance',
+  'Quality Issue',
+  'External',
+  'Setup/Changeover',
+  'Utilities',
+];
+
+const DOWNTIME_REASONS_BY_CATEGORY: Record<DowntimeReasonCategory, string[]> = {
+  'Material Issue': [
+    'Raw material shortage',
+    'Material quality defect',
+    'Wrong material delivered',
+    'Material handling issue',
+  ],
+  'Human Resource': [
+    'Operator absence',
+    'Operator training',
+    'Shift handover',
+    'Labor shortage',
+    'Skill mismatch',
+  ],
+  Technical: [
+    'Motor failure',
+    'Sensor malfunction',
+    'PLC error',
+    'Hydraulic leak',
+    'Electrical fault',
+    'Software crash',
+    'Belt broken',
+    'Bearing failure',
+  ],
+  'Planned Maintenance': [
+    'Scheduled maintenance',
+    'Preventive maintenance',
+    'Calibration',
+    'Lubrication',
+    'Inspection',
+  ],
+  'Quality Issue': [
+    'Quality inspection',
+    'Product rejection',
+    'Rework required',
+    'Quality control check',
+  ],
+  External: ['Power outage', 'Network failure', 'Weather conditions', 'Supplier delay'],
+  'Setup/Changeover': [
+    'Product changeover',
+    'Tool change',
+    'Mold change',
+    'Setup adjustment',
+    'Line reconfiguration',
+  ],
+  Utilities: ['Compressed air failure', 'Cooling system issue', 'Steam supply issue', 'Water supply issue'],
+};
+
+function generateDowntimeEvent(
+  seed: number,
+  machineId: string,
+  machineName: string,
+  baseDate: Date
+): DowntimeEvent {
+  const categoryIndex = Math.floor(seededRandom(seed) * DOWNTIME_REASON_CATEGORIES.length);
+  const category = DOWNTIME_REASON_CATEGORIES[categoryIndex];
+  const reasons = DOWNTIME_REASONS_BY_CATEGORY[category];
+  const reasonIndex = Math.floor(seededRandom(seed + 1) * reasons.length);
+  const reason = reasons[reasonIndex];
+
+  const productIndex = Math.floor(seededRandom(seed + 2) * PRODUCT_NAMES_FOR_OEE.length);
+  const productName = PRODUCT_NAMES_FOR_OEE[productIndex];
+
+  const isPlanned = category === 'Planned Maintenance' || category === 'Setup/Changeover';
+  const durationMinutes = Math.floor(
+    (isPlanned ? 15 : 5) + seededRandom(seed + 3) * (isPlanned ? 120 : 180)
+  );
+
+  const startHour = 6 + Math.floor(seededRandom(seed + 4) * 16); // 6 AM to 10 PM
+  const startMinute = Math.floor(seededRandom(seed + 5) * 60);
+
+  const startTime = new Date(baseDate);
+  startTime.setHours(startHour, startMinute, 0, 0);
+
+  const endTime = new Date(startTime);
+  endTime.setMinutes(endTime.getMinutes() + durationMinutes);
+
+  return {
+    id: `dt-${seed}`,
+    machineId,
+    machineName,
+    productId: `prod-${productIndex}`,
+    productName,
+    reason,
+    reasonCategory: category,
+    startTime,
+    endTime,
+    durationMinutes,
+    isPlanned,
+  };
+}
+
+function generateDailyDowntimeData(seed: number, date: Date, dayNumber: number): DailyDowntimeData {
+  const dayOfWeekIndex = date.getDay();
+  const isWeekend = dayOfWeekIndex === 0 || dayOfWeekIndex === 6;
+
+  // Factory operates 16 hours per day (6 AM - 10 PM), less on weekends
+  const plannedRuntimeMinutes = isWeekend ? 480 : 960; // 8 hours weekends, 16 hours weekdays
+  const breakTimeMinutes = isWeekend ? 60 : 120;
+
+  // Generate 2-8 downtime events per day
+  const numEvents = 2 + Math.floor(seededRandom(seed) * 7);
+  const downtimeEvents: DowntimeEvent[] = [];
+
+  // Pick machines for this day
+  for (let i = 0; i < numEvents; i++) {
+    const machineIndex = Math.floor(seededRandom(seed + i * 10) * _machines.length);
+    const machine = _machines[machineIndex];
+    const event = generateDowntimeEvent(seed + i * 100, machine.id, machine.name, date);
+    downtimeEvents.push(event);
+  }
+
+  // Aggregate downtime by reason
+  const downtimeByReason: Record<DowntimeReasonCategory, number> = {
+    'Material Issue': 0,
+    'Human Resource': 0,
+    Technical: 0,
+    'Planned Maintenance': 0,
+    'Quality Issue': 0,
+    External: 0,
+    'Setup/Changeover': 0,
+    Utilities: 0,
+  };
+
+  let totalDowntimeMinutes = 0;
+  for (const event of downtimeEvents) {
+    downtimeByReason[event.reasonCategory] += event.durationMinutes;
+    totalDowntimeMinutes += event.durationMinutes;
+  }
+
+  // Cap downtime to available runtime
+  totalDowntimeMinutes = Math.min(totalDowntimeMinutes, plannedRuntimeMinutes - breakTimeMinutes);
+  const totalUptimeMinutes = plannedRuntimeMinutes - breakTimeMinutes - totalDowntimeMinutes;
+
+  return {
+    date: date.toISOString().split('T')[0],
+    dayOfWeek: DAYS_OF_WEEK[dayOfWeekIndex === 0 ? 6 : dayOfWeekIndex - 1],
+    dayNumber,
+    totalRuntimeMinutes: plannedRuntimeMinutes,
+    totalUptimeMinutes,
+    totalDowntimeMinutes,
+    breakTimeMinutes,
+    downtimeByReason,
+    downtimeEvents,
+  };
+}
+
+function generateMonthlyDowntimeData(
+  seed: number,
+  year: number,
+  monthIndex: number
+): MonthlyDowntimeData {
+  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+  const dailyData: DailyDowntimeData[] = [];
+
+  let monthlyRuntime = 0;
+  let monthlyUptime = 0;
+  let monthlyDowntime = 0;
+  let monthlyBreakTime = 0;
+  const monthlyDowntimeByReason: Record<DowntimeReasonCategory, number> = {
+    'Material Issue': 0,
+    'Human Resource': 0,
+    Technical: 0,
+    'Planned Maintenance': 0,
+    'Quality Issue': 0,
+    External: 0,
+    'Setup/Changeover': 0,
+    Utilities: 0,
+  };
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(year, monthIndex, day);
+    const daySeed = seed + day * 1000;
+    const dayData = generateDailyDowntimeData(daySeed, date, day);
+
+    dailyData.push(dayData);
+    monthlyRuntime += dayData.totalRuntimeMinutes;
+    monthlyUptime += dayData.totalUptimeMinutes;
+    monthlyDowntime += dayData.totalDowntimeMinutes;
+    monthlyBreakTime += dayData.breakTimeMinutes;
+
+    for (const category of DOWNTIME_REASON_CATEGORIES) {
+      monthlyDowntimeByReason[category] += dayData.downtimeByReason[category];
+    }
+  }
+
+  return {
+    month: MONTHS[monthIndex],
+    monthNumber: monthIndex + 1,
+    totalRuntimeMinutes: monthlyRuntime,
+    totalUptimeMinutes: monthlyUptime,
+    totalDowntimeMinutes: monthlyDowntime,
+    breakTimeMinutes: monthlyBreakTime,
+    downtimeByReason: monthlyDowntimeByReason,
+    dailyData,
+  };
+}
+
+function calculateMachinesSummary(monthlyData: MonthlyDowntimeData[]): MachineDowntimeSummary[] {
+  const machineMap = new Map<
+    string,
+    {
+      name: string;
+      events: DowntimeEvent[];
+      totalDowntime: number;
+    }
+  >();
+
+  // Aggregate events by machine
+  for (const month of monthlyData) {
+    for (const day of month.dailyData) {
+      for (const event of day.downtimeEvents) {
+        const existing = machineMap.get(event.machineId);
+        if (existing) {
+          existing.events.push(event);
+          existing.totalDowntime += event.durationMinutes;
+        } else {
+          machineMap.set(event.machineId, {
+            name: event.machineName,
+            events: [event],
+            totalDowntime: event.durationMinutes,
+          });
+        }
+      }
+    }
+  }
+
+  // Calculate summaries
+  const summaries: MachineDowntimeSummary[] = [];
+  for (const [machineId, data] of machineMap) {
+    // Count reasons
+    const reasonCounts = new Map<DowntimeReasonCategory, { minutes: number; count: number }>();
+    for (const event of data.events) {
+      const existing = reasonCounts.get(event.reasonCategory);
+      if (existing) {
+        existing.minutes += event.durationMinutes;
+        existing.count += 1;
+      } else {
+        reasonCounts.set(event.reasonCategory, { minutes: event.durationMinutes, count: 1 });
+      }
+    }
+
+    // Sort by minutes descending
+    const topReasons = Array.from(reasonCounts.entries())
+      .map(([reason, stats]) => ({ reason, ...stats }))
+      .sort((a, b) => b.minutes - a.minutes)
+      .slice(0, 5);
+
+    // Estimate runtime (assuming 16 hrs/day * 30 days * 12 months)
+    const estimatedRuntime = 16 * 60 * 30 * 12;
+
+    summaries.push({
+      machineId,
+      machineName: data.name,
+      totalRuntimeMinutes: estimatedRuntime,
+      totalUptimeMinutes: estimatedRuntime - data.totalDowntime,
+      totalDowntimeMinutes: data.totalDowntime,
+      totalDowntimeEvents: data.events.length,
+      topReasons,
+    });
+  }
+
+  return summaries.sort((a, b) => b.totalDowntimeMinutes - a.totalDowntimeMinutes);
+}
+
+function calculateProductsSummary(monthlyData: MonthlyDowntimeData[]): ProductDowntimeSummary[] {
+  const productMap = new Map<
+    string,
+    {
+      name: string;
+      events: DowntimeEvent[];
+      totalDowntime: number;
+    }
+  >();
+
+  for (const month of monthlyData) {
+    for (const day of month.dailyData) {
+      for (const event of day.downtimeEvents) {
+        const existing = productMap.get(event.productId);
+        if (existing) {
+          existing.events.push(event);
+          existing.totalDowntime += event.durationMinutes;
+        } else {
+          productMap.set(event.productId, {
+            name: event.productName,
+            events: [event],
+            totalDowntime: event.durationMinutes,
+          });
+        }
+      }
+    }
+  }
+
+  const summaries: ProductDowntimeSummary[] = [];
+  for (const [productId, data] of productMap) {
+    const reasonCounts = new Map<DowntimeReasonCategory, { minutes: number; count: number }>();
+    for (const event of data.events) {
+      const existing = reasonCounts.get(event.reasonCategory);
+      if (existing) {
+        existing.minutes += event.durationMinutes;
+        existing.count += 1;
+      } else {
+        reasonCounts.set(event.reasonCategory, { minutes: event.durationMinutes, count: 1 });
+      }
+    }
+
+    const topReasons = Array.from(reasonCounts.entries())
+      .map(([reason, stats]) => ({ reason, ...stats }))
+      .sort((a, b) => b.minutes - a.minutes)
+      .slice(0, 5);
+
+    summaries.push({
+      productId,
+      productName: data.name,
+      totalDowntimeMinutes: data.totalDowntime,
+      totalDowntimeEvents: data.events.length,
+      topReasons,
+    });
+  }
+
+  return summaries.sort((a, b) => b.totalDowntimeMinutes - a.totalDowntimeMinutes);
+}
+
+export function generateDowntimeReportData(year: number): DowntimeReportData {
+  const seed = year * 1000;
+  const monthlyData: MonthlyDowntimeData[] = [];
+
+  let totalRuntime = 0;
+  let totalUptime = 0;
+  let totalDowntime = 0;
+  let totalBreakTime = 0;
+  const totalDowntimeByReason: Record<DowntimeReasonCategory, number> = {
+    'Material Issue': 0,
+    'Human Resource': 0,
+    Technical: 0,
+    'Planned Maintenance': 0,
+    'Quality Issue': 0,
+    External: 0,
+    'Setup/Changeover': 0,
+    Utilities: 0,
+  };
+
+  for (let month = 0; month < 12; month++) {
+    const monthSeed = seed + month * 10000;
+    const monthData = generateMonthlyDowntimeData(monthSeed, year, month);
+
+    monthlyData.push(monthData);
+    totalRuntime += monthData.totalRuntimeMinutes;
+    totalUptime += monthData.totalUptimeMinutes;
+    totalDowntime += monthData.totalDowntimeMinutes;
+    totalBreakTime += monthData.breakTimeMinutes;
+
+    for (const category of DOWNTIME_REASON_CATEGORIES) {
+      totalDowntimeByReason[category] += monthData.downtimeByReason[category];
+    }
+  }
+
+  return {
+    year,
+    totalRuntimeMinutes: totalRuntime,
+    totalUptimeMinutes: totalUptime,
+    totalDowntimeMinutes: totalDowntime,
+    totalBreakTimeMinutes: totalBreakTime,
+    downtimeByReason: totalDowntimeByReason,
+    monthlyData,
+    machinesSummary: calculateMachinesSummary(monthlyData),
+    productsSummary: calculateProductsSummary(monthlyData),
+  };
+}
