@@ -1,0 +1,42 @@
+{
+  "nav": {
+    "overview": "Overview",
+    "dashboard": "Dashboard",
+    "management": "Management",
+    "user": "User",
+    "area": "Area",
+    "product": "Product",
+    "workingParameter": "Working Parameter",
+    "stopMachineReason": "Stop Machine Reason",
+    "productGroup": "Product Group",
+    "machine": "Machine",
+    "blog": "Blog",
+    "other": "Other",
+    "signIn": "Sign in",
+    "notFound": "Not found"
+  },
+  "account": {
+    "home": "Home",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "welcome": "Hi, Welcome back 👋",
+    "weeklySales": "Weekly sales",
+    "newUsers": "New users",
+    "purchaseOrders": "Purchase orders",
+    "messages": "Messages",
+    "currentVisits": "Current visits",
+    "websiteVisits": "Website visits",
+    "conversionRates": "Conversion rates",
+    "currentSubject": "Current subject",
+    "news": "News",
+    "orderTimeline": "Order timeline",
+    "trafficBySite": "Traffic by site",
+    "tasks": "Tasks"
+  },
+  "common": {
+    "search": "Search",
+    "logout": "Logout"
+  }
+}

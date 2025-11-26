@@ -1,6 +1,7 @@
 import type { IconButtonProps } from '@mui/material/IconButton';
 
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { usePopover } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
@@ -21,18 +22,17 @@ export type LanguagePopoverProps = IconButtonProps & {
 
 export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProps) {
   const { open, anchorEl, onClose, onOpen } = usePopover();
-
-  const [locale, setLocale] = useState(data[0].value);
+  const { i18n } = useTranslation();
 
   const handleChangeLang = useCallback(
     (newLang: string) => {
-      setLocale(newLang);
+      i18n.changeLanguage(newLang);
       onClose();
     },
-    [onClose]
+    [i18n, onClose]
   );
 
-  const currentLang = data.find((lang) => lang.value === locale);
+  const currentLang = data.find((lang) => lang.value === i18n.language) || data[0];
 
   const renderFlag = (label?: string, icon?: string) => (
     <Box
