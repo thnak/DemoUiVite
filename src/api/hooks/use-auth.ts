@@ -7,7 +7,7 @@ import {
   refreshToken,
   generateToken,
   revokeAllTokens,
-} from '../services/auth';
+} from '../services';
 
 import type {
   RefreshTokenRequest,
