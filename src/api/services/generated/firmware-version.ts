@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   FirmwareVersionEntity,
-  StringObjectKeyValuePair,
-  FirmwareVersionEntityResult,
   FirmwareVersionEntityBasePaginationResponse,
+  FirmwareVersionEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

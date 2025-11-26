@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDowntimeGroup,
   deleteDowntimeGroup,
-  searchDowntimeGroup,
-  updateDowntimeGroup,
+  generateNewDowntimeGroupCode,
   getDowntimeGroupById,
   getDowntimeGroupPage,
-  generateNewDowntimeGroupCode,
+  searchDowntimeGroup,
+  updateDowntimeGroup,
 } from '../../services/generated/downtime-group';
 
 import type {
-  SortType,
   BooleanResult,
   DowntimeGroupEntity,
-  StringObjectKeyValuePair,
-  DowntimeGroupEntityResult,
   DowntimeGroupEntityBasePaginationResponse,
+  DowntimeGroupEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

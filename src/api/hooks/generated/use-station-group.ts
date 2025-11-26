@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createStationGroup,
   deleteStationGroup,
-  searchStationGroup,
-  updateStationGroup,
+  generateNewStationGroupCode,
   getStationGroupById,
   getStationGroupPage,
-  generateNewStationGroupCode,
+  searchStationGroup,
+  updateStationGroup,
 } from '../../services/generated/station-group';
 
 import type {
-  SortType,
   BooleanResult,
+  SortType,
   StationGroupEntity,
+  StationGroupEntityBasePaginationResponse,
   StationGroupEntityResult,
   StringObjectKeyValuePair,
-  StationGroupEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

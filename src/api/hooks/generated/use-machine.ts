@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createMachine,
   deleteMachine,
-  searchMachine,
-  updateMachine,
+  generateNewMachineCode,
   getMachineById,
   getMachinePage,
-  generateNewMachineCode,
+  searchMachine,
+  updateMachine,
 } from '../../services/generated/machine';
 
 import type {
-  SortType,
   BooleanResult,
   MachineEntity,
-  MachineEntityResult,
-  StringObjectKeyValuePair,
   MachineEntityBasePaginationResponse,
+  MachineEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

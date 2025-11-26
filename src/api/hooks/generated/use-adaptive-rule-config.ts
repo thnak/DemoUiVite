@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createAdaptiveRuleConfig,
   deleteAdaptiveRuleConfig,
-  updateAdaptiveRuleConfig,
+  generateNewAdaptiveRuleConfigCode,
   getAdaptiveRuleConfigById,
   getAdaptiveRuleConfigPage,
-  generateNewAdaptiveRuleConfigCode,
+  updateAdaptiveRuleConfig,
 } from '../../services/generated/adaptive-rule-config';
 
 import type {
-  SortType,
-  BooleanResult,
   AdaptiveRuleConfigEntity,
-  StringObjectKeyValuePair,
-  AdaptiveRuleConfigEntityResult,
   AdaptiveRuleConfigEntityBasePaginationResponse,
+  AdaptiveRuleConfigEntityResult,
+  BooleanResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

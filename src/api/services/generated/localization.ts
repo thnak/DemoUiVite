@@ -1,8 +1,8 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   LocalizeAppLangDtoBasePaginationResponse,
+  SortType,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

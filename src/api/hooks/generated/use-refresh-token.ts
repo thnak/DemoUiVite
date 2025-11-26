@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createRefreshToken,
   deleteRefreshToken,
-  updateRefreshToken,
+  generateNewRefreshTokenCode,
   getRefreshTokenById,
   getRefreshTokenPage,
-  generateNewRefreshTokenCode,
+  updateRefreshToken,
 } from '../../services/generated/refresh-token';
 
 import type {
-  SortType,
   BooleanResult,
   RefreshTokenEntity,
-  RefreshTokenEntityResult,
-  StringObjectKeyValuePair,
   RefreshTokenEntityBasePaginationResponse,
+  RefreshTokenEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

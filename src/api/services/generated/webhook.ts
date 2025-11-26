@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
-  WebhookEntity,
-  WebhookEntityResult,
+  SortType,
   StringObjectKeyValuePair,
+  WebhookEntity,
   WebhookEntityBasePaginationResponse,
+  WebhookEntityResult,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

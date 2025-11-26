@@ -1,6 +1,6 @@
-import type { UseMutationOptions } from '@tanstack/react-query';
+import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 
-import { useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
   postapiScriptTestexecute,

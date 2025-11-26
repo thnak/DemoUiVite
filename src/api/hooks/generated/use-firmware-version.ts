@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createFirmwareVersion,
   deleteFirmwareVersion,
-  updateFirmwareVersion,
+  generateNewFirmwareVersionCode,
   getFirmwareVersionById,
   getFirmwareVersionPage,
-  generateNewFirmwareVersionCode,
+  updateFirmwareVersion,
 } from '../../services/generated/firmware-version';
 
 import type {
-  SortType,
   BooleanResult,
   FirmwareVersionEntity,
-  StringObjectKeyValuePair,
-  FirmwareVersionEntityResult,
   FirmwareVersionEntityBasePaginationResponse,
+  FirmwareVersionEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

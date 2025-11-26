@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
-  UserLoginInfoPocoEntity,
+  SortType,
   StringObjectKeyValuePair,
-  UserLoginInfoPocoEntityResult,
+  UserLoginInfoPocoEntity,
   UserLoginInfoPocoEntityBasePaginationResponse,
+  UserLoginInfoPocoEntityResult,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

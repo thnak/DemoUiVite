@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createCalendar,
   deleteCalendar,
-  updateCalendar,
+  generateNewCalendarCode,
   getCalendarById,
   getCalendarPage,
-  generateNewCalendarCode,
+  updateCalendar,
 } from '../../services/generated/calendar';
 
 import type {
-  SortType,
   BooleanResult,
   CalendarEntity,
-  CalendarEntityResult,
-  StringObjectKeyValuePair,
   CalendarEntityBasePaginationResponse,
+  CalendarEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createLocation,
   deleteLocation,
-  searchLocation,
-  updateLocation,
+  generateNewLocationCode,
   getLocationById,
   getLocationPage,
-  generateNewLocationCode,
+  searchLocation,
+  updateLocation,
 } from '../../services/generated/location';
 
 import type {
-  SortType,
   BooleanResult,
   LocationEntity,
-  LocationEntityResult,
-  StringObjectKeyValuePair,
   LocationEntityBasePaginationResponse,
+  LocationEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

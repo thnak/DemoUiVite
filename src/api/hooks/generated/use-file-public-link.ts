@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createFilePublicLink,
   deleteFilePublicLink,
-  updateFilePublicLink,
+  generateNewFilePublicLinkCode,
   getFilePublicLinkById,
   getFilePublicLinkPage,
-  generateNewFilePublicLinkCode,
+  updateFilePublicLink,
 } from '../../services/generated/file-public-link';
 
 import type {
-  SortType,
   BooleanResult,
   FilePublicLinkEntity,
-  StringObjectKeyValuePair,
-  FilePublicLinkEntityResult,
   FilePublicLinkEntityBasePaginationResponse,
+  FilePublicLinkEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

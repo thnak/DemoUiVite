@@ -3,16 +3,16 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
-  postapiMqttgetclients,
   getapiMqttdisconnectclient,
   getapiMqttgettemplateanddocs,
+  postapiMqttgetclients,
 } from '../../services/generated/mqtt';
 
 import type {
-  SortType,
-  MqttControllerGetTemplateResponse,
   MqttControllerDisconnectClientRequest,
   MqttControllerGetClientsResponsePaginationQuery,
+  MqttControllerGetTemplateResponse,
+  SortType,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

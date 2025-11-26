@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDefect,
   deleteDefect,
-  updateDefect,
+  generateNewDefectCode,
   getDefectById,
   getDefectPage,
-  generateNewDefectCode,
+  updateDefect,
 } from '../../services/generated/defect';
 
 import type {
-  SortType,
-  DefectEntity,
   BooleanResult,
-  DefectEntityResult,
-  StringObjectKeyValuePair,
+  DefectEntity,
   DefectEntityBasePaginationResponse,
+  DefectEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

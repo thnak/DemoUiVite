@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createWarehouse,
   deleteWarehouse,
-  updateWarehouse,
+  generateNewWarehouseCode,
   getWarehouseById,
   getWarehousePage,
-  generateNewWarehouseCode,
+  updateWarehouse,
 } from '../../services/generated/warehouse';
 
 import type {
-  SortType,
   BooleanResult,
-  WarehouseEntity,
-  WarehouseEntityResult,
+  SortType,
   StringObjectKeyValuePair,
+  WarehouseEntity,
   WarehouseEntityBasePaginationResponse,
+  WarehouseEntityResult,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

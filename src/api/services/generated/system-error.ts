@@ -2,8 +2,8 @@ import axiosInstance from '../../axios-instance';
 
 import type {
   BooleanResult,
-  SystemErrorReportStatus,
   SystemErrorReportDtoListResult,
+  SystemErrorReportStatus,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createFolderInfo,
   deleteFolderInfo,
-  updateFolderInfo,
+  generateNewFolderInfoCode,
   getFolderInfoById,
   getFolderInfoPage,
-  generateNewFolderInfoCode,
+  updateFolderInfo,
 } from '../../services/generated/folder-info';
 
 import type {
-  SortType,
   BooleanResult,
   FolderInfoEntity,
-  FolderInfoEntityResult,
-  StringObjectKeyValuePair,
   FolderInfoEntityBasePaginationResponse,
+  FolderInfoEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

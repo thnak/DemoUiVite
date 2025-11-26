@@ -3,20 +3,20 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
-  getapiQuartzJoball,
-  getapiQuartzJobsummary,
-  getapiQuartzJobexecuting,
-  getapiQuartzJobcollections,
   deleteapiQuartzJobcollections,
-  getapiQuartzJobgroupgroupName,
   deleteapiQuartzJobcollectionscollectionName,
+  getapiQuartzJoball,
+  getapiQuartzJobcollections,
+  getapiQuartzJobexecuting,
+  getapiQuartzJobgroupgroupName,
+  getapiQuartzJobsummary,
 } from '../../services/generated/quartz-job';
 
 import type {
-  QuartzJobDto,
-  QuartzCollectionDto,
-  QuartzJobSummaryDto,
   QuartzCollectionCleanupResultDto,
+  QuartzCollectionDto,
+  QuartzJobDto,
+  QuartzJobSummaryDto,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

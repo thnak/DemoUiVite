@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   ChildWidgetConfigEntity,
-  StringObjectKeyValuePair,
-  ChildWidgetConfigEntityResult,
   ChildWidgetConfigEntityBasePaginationResponse,
+  ChildWidgetConfigEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

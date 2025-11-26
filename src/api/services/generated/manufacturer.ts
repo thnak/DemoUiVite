@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   ManufacturerEntity,
-  ManufacturerEntityResult,
-  StringObjectKeyValuePair,
   ManufacturerEntityBasePaginationResponse,
+  ManufacturerEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

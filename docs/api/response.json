@@ -22086,6 +22086,7 @@
           {
             "name": "SensorId",
             "in": "query",
+            "description": "MongoDB ObjectId represented as a 24-character hexadecimal string",
             "schema": {
               "$ref": "#/components/schemas/ObjectId"
             }
@@ -22093,6 +22094,7 @@
           {
             "name": "DeviceId",
             "in": "query",
+            "description": "MongoDB ObjectId represented as a 24-character hexadecimal string",
             "schema": {
               "$ref": "#/components/schemas/ObjectId"
             }
@@ -40840,20 +40842,9 @@
         "additionalProperties": false
       },
       "ObjectId": {
-        "type": "object",
-        "properties": {
-          "timestamp": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "creationTime": {
-            "type": "string",
-            "format": "date-time",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
+        "type": "string",
+        "additionalProperties": false,
+        "description": "MongoDB ObjectId represented as a 24-character hexadecimal string"
       },
       "ObjectResult": {
         "type": "object",

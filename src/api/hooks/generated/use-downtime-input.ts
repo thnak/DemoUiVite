@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDowntimeInput,
   deleteDowntimeInput,
-  updateDowntimeInput,
+  generateNewDowntimeInputCode,
   getDowntimeInputById,
   getDowntimeInputPage,
-  generateNewDowntimeInputCode,
+  updateDowntimeInput,
 } from '../../services/generated/downtime-input';
 
 import type {
-  SortType,
   BooleanResult,
   DowntimeInput,
-  DowntimeInputResult,
-  StringObjectKeyValuePair,
   DowntimeInputBasePaginationResponse,
+  DowntimeInputResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

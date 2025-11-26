@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  ObjectId,
-  SortType,
   BooleanResult,
+  GetRecordResponsePaginationQuery,
   IoTSensorType,
   IotRecordModel,
-  GetRecordResponsePaginationQuery,
+  ObjectId,
+  SortType,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
@@ -42,6 +42,8 @@ export async function getapiRecordsumvalue(params?: { sensor?: string; startDate
 }
 
 /**
+ * @param SensorId - MongoDB ObjectId represented as a 24-character hexadecimal string
+ * @param DeviceId - MongoDB ObjectId represented as a 24-character hexadecimal string
  * @param pageNumber - Page number, starting from 0.
  * @param pageSize - Number of items per page.
  * @param searchTerm - Search term for filtering results.

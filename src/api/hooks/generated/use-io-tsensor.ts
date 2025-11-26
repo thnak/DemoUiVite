@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createIoTSensor,
   deleteIoTSensor,
-  searchIoTSensor,
-  updateIoTSensor,
+  generateNewIoTSensorCode,
   getIoTSensorById,
   getIoTSensorPage,
-  generateNewIoTSensorCode,
+  searchIoTSensor,
+  updateIoTSensor,
 } from '../../services/generated/io-tsensor';
 
 import type {
-  SortType,
   BooleanResult,
   IoTSensorEntity,
-  IoTSensorEntityResult,
-  StringObjectKeyValuePair,
   IoTSensorEntityBasePaginationResponse,
+  IoTSensorEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

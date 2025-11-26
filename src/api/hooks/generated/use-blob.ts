@@ -3,8 +3,8 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
-  postapiBlobUploadFile,
   getapiBlobDownloadFile,
+  postapiBlobUploadFile,
 } from '../../services/generated/blob';
 
 // ----------------------------------------------------------------------

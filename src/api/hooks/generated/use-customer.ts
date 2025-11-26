@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createCustomer,
   deleteCustomer,
-  updateCustomer,
+  generateNewCustomerCode,
   getCustomerById,
   getCustomerPage,
-  generateNewCustomerCode,
+  updateCustomer,
 } from '../../services/generated/customer';
 
 import type {
-  SortType,
   BooleanResult,
   CustomerEntity,
-  CustomerEntityResult,
-  StringObjectKeyValuePair,
   CustomerEntityBasePaginationResponse,
+  CustomerEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

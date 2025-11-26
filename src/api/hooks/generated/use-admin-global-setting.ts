@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createAdminGlobalSetting,
   deleteAdminGlobalSetting,
-  updateAdminGlobalSetting,
+  generateNewAdminGlobalSettingCode,
   getAdminGlobalSettingById,
   getAdminGlobalSettingPage,
-  generateNewAdminGlobalSettingCode,
+  updateAdminGlobalSetting,
 } from '../../services/generated/admin-global-setting';
 
 import type {
-  SortType,
-  BooleanResult,
   AdminGlobalSettingEntity,
-  StringObjectKeyValuePair,
-  AdminGlobalSettingEntityResult,
   AdminGlobalSettingEntityBasePaginationResponse,
+  AdminGlobalSettingEntityResult,
+  BooleanResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

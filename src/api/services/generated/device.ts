@@ -1,24 +1,24 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
-  SensorDto,
-  DataSource,
   BooleanResult,
-  IoTDeviceType,
-  IoTSensorType,
-  IoTDeviceEntity,
-  IoTDeviceStatus,
-  IoTSensorEntity,
-  RequestToCreateDto,
+  DataSource,
+  GetDeviceLogsResponsePaginationQuery,
   GetSensorEntityByIdDto,
-  SensorDtoPaginationQuery,
-  StringObjectKeyValuePair,
+  IoTDeviceEntity,
   IoTDeviceEntityEntityLogEntity,
   IoTDeviceEntityPaginationQuery,
+  IoTDeviceStatus,
+  IoTDeviceType,
+  IoTSensorEntity,
   IoTSensorEntityPaginationQuery,
+  IoTSensorType,
+  RequestToCreateDto,
   SensorDeviceDtoPaginationQuery,
-  GetDeviceLogsResponsePaginationQuery,
+  SensorDto,
+  SensorDtoPaginationQuery,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

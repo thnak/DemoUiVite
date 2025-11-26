@@ -3,18 +3,18 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
-  getapiFirmwaregetid,
-  postapiFirmwarepublish,
   getapiFirmwaredownloadid,
+  getapiFirmwaregetid,
   postapiFirmwarecraftnewrelease,
   postapiFirmwaregetlatestfirmwareversion,
+  postapiFirmwarepublish,
 } from '../../services/generated/firmware';
 
 import type {
-  SortType,
   BooleanResult,
   GetAllFirmwareVersionsResponse,
   GetAllFirmwareVersionsResponsePaginationQuery,
+  SortType,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

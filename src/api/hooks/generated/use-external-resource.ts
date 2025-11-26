@@ -3,13 +3,13 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
+  getapiExternalResourcedownloadresourcefolder,
+  getapiExternalResourcelistresourcefolders,
   getapiExternalResourcerandomimage,
   getapiExternalResourcerandommedia,
   getapiExternalResourcerandomvideo,
-  postapiExternalResourceuploaduiresource,
-  getapiExternalResourcelistresourcefolders,
   postapiExternalResourceuploadresourcefolder,
-  getapiExternalResourcedownloadresourcefolder,
+  postapiExternalResourceuploaduiresource,
 } from '../../services/generated/external-resource';
 
 // ----------------------------------------------------------------------

@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createMachineGroupMachineMapping,
   deleteMachineGroupMachineMapping,
-  updateMachineGroupMachineMapping,
+  generateNewMachineGroupMachineMappingCode,
   getMachineGroupMachineMappingById,
   getMachineGroupMachineMappingPage,
-  generateNewMachineGroupMachineMappingCode,
+  updateMachineGroupMachineMapping,
 } from '../../services/generated/machine-group-machine-mapping';
 
 import type {
-  SortType,
   BooleanResult,
-  StringObjectKeyValuePair,
   MachineGroupMachineMapping,
-  MachineGroupMachineMappingResult,
   MachineGroupMachineMappingBasePaginationResponse,
+  MachineGroupMachineMappingResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

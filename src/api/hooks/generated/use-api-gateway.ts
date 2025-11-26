@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createApiGateway,
   deleteApiGateway,
-  updateApiGateway,
+  generateNewApiGatewayCode,
   getApiGatewayById,
   getApiGatewayPage,
-  generateNewApiGatewayCode,
+  updateApiGateway,
 } from '../../services/generated/api-gateway';
 
 import type {
-  SortType,
-  BooleanResult,
   ApiGatewayEntity,
-  ApiGatewayEntityResult,
-  StringObjectKeyValuePair,
   ApiGatewayEntityBasePaginationResponse,
+  ApiGatewayEntityResult,
+  BooleanResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createMemorySchema,
   deleteMemorySchema,
-  updateMemorySchema,
+  generateNewMemorySchemaCode,
   getMemorySchemaById,
   getMemorySchemaPage,
-  generateNewMemorySchemaCode,
+  updateMemorySchema,
 } from '../../services/generated/memory-schema';
 
 import type {
-  SortType,
   BooleanResult,
   MemorySchemaEntity,
-  MemorySchemaEntityResult,
-  StringObjectKeyValuePair,
   MemorySchemaEntityBasePaginationResponse,
+  MemorySchemaEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

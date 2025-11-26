@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
   IoTSensorEntity,
-  IoTSensorEntityResult,
-  StringObjectKeyValuePair,
   IoTSensorEntityBasePaginationResponse,
+  IoTSensorEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createStationGroupStationMapping,
   deleteStationGroupStationMapping,
-  updateStationGroupStationMapping,
+  generateNewStationGroupStationMappingCode,
   getStationGroupStationMappingById,
   getStationGroupStationMappingPage,
-  generateNewStationGroupStationMappingCode,
+  updateStationGroupStationMapping,
 } from '../../services/generated/station-group-station-mapping';
 
 import type {
-  SortType,
   BooleanResult,
-  StringObjectKeyValuePair,
+  SortType,
   StationGroupStationMapping,
-  StationGroupStationMappingResult,
   StationGroupStationMappingBasePaginationResponse,
+  StationGroupStationMappingResult,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDataProtectionKey,
   deleteDataProtectionKey,
-  updateDataProtectionKey,
+  generateNewDataProtectionKeyCode,
   getDataProtectionKeyById,
   getDataProtectionKeyPage,
-  generateNewDataProtectionKeyCode,
+  updateDataProtectionKey,
 } from '../../services/generated/data-protection-key';
 
 import type {
-  SortType,
   BooleanResult,
   DataProtectionKeyEntity,
-  StringObjectKeyValuePair,
-  DataProtectionKeyEntityResult,
   DataProtectionKeyEntityBasePaginationResponse,
+  DataProtectionKeyEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createOneTimeLoginToken,
   deleteOneTimeLoginToken,
-  updateOneTimeLoginToken,
+  generateNewOneTimeLoginTokenCode,
   getOneTimeLoginTokenById,
   getOneTimeLoginTokenPage,
-  generateNewOneTimeLoginTokenCode,
+  updateOneTimeLoginToken,
 } from '../../services/generated/one-time-login-token';
 
 import type {
-  SortType,
   BooleanResult,
   OneTimeLoginTokenEntity,
-  StringObjectKeyValuePair,
-  OneTimeLoginTokenEntityResult,
   OneTimeLoginTokenEntityBasePaginationResponse,
+  OneTimeLoginTokenEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

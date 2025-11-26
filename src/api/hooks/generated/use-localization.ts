@@ -4,15 +4,15 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
   getapitranslationsbatch,
-  postapitranslationsupload,
   getapitranslationsdownload,
   getapitranslationslangCode,
   postapitranslationsgetlang,
+  postapitranslationsupload,
 } from '../../services/generated/localization';
 
 import type {
-  SortType,
   LocalizeAppLangDtoBasePaginationResponse,
+  SortType,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

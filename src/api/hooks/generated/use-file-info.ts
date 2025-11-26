@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createFileInfo,
   deleteFileInfo,
-  updateFileInfo,
+  generateNewFileInfoCode,
   getFileInfoById,
   getFileInfoPage,
-  generateNewFileInfoCode,
+  updateFileInfo,
 } from '../../services/generated/file-info';
 
 import type {
-  SortType,
   BooleanResult,
   FileInfoEntity,
-  FileInfoEntityResult,
-  StringObjectKeyValuePair,
   FileInfoEntityBasePaginationResponse,
+  FileInfoEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

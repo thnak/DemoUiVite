@@ -2733,10 +2733,10 @@ export type NotificationSettings = {
   escalationChain?: EscalationStep[] | null;
 };
 
-export type ObjectId = {
-  timestamp?: number;
-  creationTime?: string;
-};
+/**
+ * MongoDB ObjectId represented as a 24-character hexadecimal string
+ */
+export type ObjectId = string;
 
 /**
  * Represents the result of an operation, containing a value, success status, message, and error type.

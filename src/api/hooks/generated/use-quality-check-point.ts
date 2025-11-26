@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createQualityCheckPoint,
   deleteQualityCheckPoint,
-  updateQualityCheckPoint,
+  generateNewQualityCheckPointCode,
   getQualityCheckPointById,
   getQualityCheckPointPage,
-  generateNewQualityCheckPointCode,
+  updateQualityCheckPoint,
 } from '../../services/generated/quality-check-point';
 
 import type {
-  SortType,
   BooleanResult,
   QualityCheckPointEntity,
-  StringObjectKeyValuePair,
-  QualityCheckPointEntityResult,
   QualityCheckPointEntityBasePaginationResponse,
+  QualityCheckPointEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

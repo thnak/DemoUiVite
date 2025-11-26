@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createShiftTemplate,
   deleteShiftTemplate,
-  searchShiftTemplate,
-  updateShiftTemplate,
+  generateNewShiftTemplateCode,
   getShiftTemplateById,
   getShiftTemplatePage,
-  generateNewShiftTemplateCode,
+  searchShiftTemplate,
+  updateShiftTemplate,
 } from '../../services/generated/shift-template';
 
 import type {
-  SortType,
   BooleanResult,
   ShiftTemplateEntity,
-  StringObjectKeyValuePair,
-  ShiftTemplateEntityResult,
   ShiftTemplateEntityBasePaginationResponse,
+  ShiftTemplateEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

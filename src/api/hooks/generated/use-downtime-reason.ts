@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDowntimeReason,
   deleteDowntimeReason,
-  searchDowntimeReason,
-  updateDowntimeReason,
+  generateNewDowntimeReasonCode,
   getDowntimeReasonById,
   getDowntimeReasonPage,
-  generateNewDowntimeReasonCode,
+  searchDowntimeReason,
+  updateDowntimeReason,
 } from '../../services/generated/downtime-reason';
 
 import type {
-  SortType,
   BooleanResult,
   DowntimeReasonEntity,
-  StringObjectKeyValuePair,
-  DowntimeReasonEntityResult,
   DowntimeReasonEntityBasePaginationResponse,
+  DowntimeReasonEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

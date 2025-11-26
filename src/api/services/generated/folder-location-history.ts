@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
   BooleanResult,
-  StringObjectKeyValuePair,
   FolderLocationHistoryEntity,
-  FolderLocationHistoryEntityResult,
   FolderLocationHistoryEntityBasePaginationResponse,
+  FolderLocationHistoryEntityResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

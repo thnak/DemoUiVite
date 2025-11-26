@@ -1,16 +1,16 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
-  UserEntity,
-  UserInfoDto,
   BooleanResult,
-  UserEntityResult,
-  ChangePasswordDto,
-  UpdateUserInfoDto,
-  StringObjectKeyValuePair,
   ChangeLockScreenPasswordDto,
+  ChangePasswordDto,
+  SortType,
+  StringObjectKeyValuePair,
+  UpdateUserInfoDto,
+  UserEntity,
   UserEntityBasePaginationResponse,
+  UserEntityResult,
+  UserInfoDto,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

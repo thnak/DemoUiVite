@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  SortType,
-  FileVersions,
   BooleanResult,
-  FileVersionsResult,
-  StringObjectKeyValuePair,
+  FileVersions,
   FileVersionsBasePaginationResponse,
+  FileVersionsResult,
+  SortType,
+  StringObjectKeyValuePair,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

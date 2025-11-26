@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createUserPasskey,
   deleteUserPasskey,
-  updateUserPasskey,
+  generateNewUserPasskeyCode,
   getUserPasskeyById,
   getUserPasskeyPage,
-  generateNewUserPasskeyCode,
+  updateUserPasskey,
 } from '../../services/generated/user-passkey';
 
 import type {
-  SortType,
   BooleanResult,
-  UserPasskeyEntity,
-  UserPasskeyEntityResult,
+  SortType,
   StringObjectKeyValuePair,
+  UserPasskeyEntity,
   UserPasskeyEntityBasePaginationResponse,
+  UserPasskeyEntityResult,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
