@@ -165,9 +165,10 @@ type ProfilePostProps = {
     comments: PostComment[];
     postedAt: string;
   };
+  currentUserAvatarUrl?: string;
 };
 
-export function ProfilePost({ post }: ProfilePostProps) {
+export function ProfilePost({ post, currentUserAvatarUrl }: ProfilePostProps) {
   return (
     <Card sx={{ p: 3, mb: 3 }}>
       {/* Author Header */}
@@ -283,7 +284,7 @@ export function ProfilePost({ post }: ProfilePostProps) {
 
       {/* Comment Input */}
       <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-        <Avatar src="/assets/images/avatar/avatar-25.webp" sx={{ width: 32, height: 32 }} />
+        <Avatar src={currentUserAvatarUrl} sx={{ width: 32, height: 32 }} />
         <TextField
           fullWidth
           size="small"

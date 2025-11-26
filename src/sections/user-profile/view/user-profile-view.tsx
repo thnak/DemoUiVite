@@ -203,7 +203,7 @@ export function UserProfileView({ profile, followers, friends, gallery, posts }:
           <Grid size={{ xs: 12, md: 8 }}>
             <ProfilePostInput avatarUrl={profile.avatarUrl} />
             {posts.map((post) => (
-              <ProfilePost key={post.id} post={post} />
+              <ProfilePost key={post.id} post={post} currentUserAvatarUrl={profile.avatarUrl} />
             ))}
           </Grid>
         </Grid>
