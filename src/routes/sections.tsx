@@ -31,6 +31,7 @@ export const MachineListPage = lazy(() => import('src/pages/machine-list'));
 export const MachineOEEPage = lazy(() => import('src/pages/machine-oee'));
 export const DemoDashboardPage = lazy(() => import('src/pages/demo/dashboard'));
 export const FileDashboardPage = lazy(() => import('src/pages/demo/file-dashboard'));
+export const DowntimeReportPage = lazy(() => import('src/pages/downtime-report'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -77,6 +78,7 @@ export const routesSection: RouteObject[] = [
       { path: 'product-groups', element: <ProductGroupListPage /> },
       { path: 'machines', element: <MachineListPage /> },
       { path: 'machines/:id/oee', element: <MachineOEEPage /> },
+      { path: 'downtime-report', element: <DowntimeReportPage /> },
       { path: 'blog', element: <BlogPage /> },
       { path: 'demo/dashboard', element: <DemoDashboardPage /> },
       { path: 'demo/file-dashboard', element: <FileDashboardPage /> },
