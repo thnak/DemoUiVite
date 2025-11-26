@@ -68,12 +68,14 @@ export function ShiftTemplateForm({
   );
 
   // Normal mode shared state: days and breaks that apply to all shifts
-  const [sharedDays, setSharedDays] = useState<DayOfWeek[]>(
-    initialData?.definitions[0]?.days || ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
-  );
-  const [sharedBreaks, setSharedBreaks] = useState<ShiftBreakFormData[]>(
-    initialData?.definitions[0]?.breaks || []
-  );
+  const [sharedDays, setSharedDays] = useState<DayOfWeek[]>(() => {
+    const firstDef = initialData?.definitions?.[0];
+    return firstDef?.days ?? ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+  });
+  const [sharedBreaks, setSharedBreaks] = useState<ShiftBreakFormData[]>(() => {
+    const firstDef = initialData?.definitions?.[0];
+    return firstDef?.breaks ?? [];
+  });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
