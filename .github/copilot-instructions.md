@@ -93,9 +93,108 @@ Common issues and solutions.
 | API spec | `docs/api/` | `openapi.json` |
 | API reference | `docs/api/` | `endpoints.md` |
 
+## Theme System Guidelines
+
+This project uses a centralized theme system with `ThemeProvider` that supports light and dark modes. **All styling must use theme tokens** to ensure proper visual appearance in both modes.
+
+### Mandatory Rules
+
+1. **Never use hardcoded color values** - Always use theme palette tokens
+2. **Never use static grey values** like `grey.800`, `#1C252E`, or similar - These break dark mode
+3. **Always use semantic theme tokens** that adapt to the current color scheme
+
+### ❌ Bad Examples (Do NOT do this)
+
+```tsx
+// WRONG: Hardcoded grey value - too dark in dark mode
+<Box sx={{ bgcolor: 'grey.800' }} />
+
+// WRONG: Hardcoded hex color
+<Box sx={{ bgcolor: '#1C252E' }} />
+
+// WRONG: Static color that doesn't adapt to theme
+<Typography sx={{ color: '#454F5B' }} />
+```
+
+### ✅ Good Examples (Do this instead)
+
+```tsx
+// CORRECT: Use semantic background tokens
+<Box sx={{ bgcolor: 'background.paper' }} />
+<Box sx={{ bgcolor: 'background.default' }} />
+<Box sx={{ bgcolor: 'background.neutral' }} />
+
+// CORRECT: Use text palette tokens
+<Typography sx={{ color: 'text.primary' }} />
+<Typography sx={{ color: 'text.secondary' }} />
+
+// CORRECT: Use action tokens for interactive states
+<Box sx={{ bgcolor: 'action.hover' }} />
+<Box sx={{ bgcolor: 'action.selected' }} />
+
+// CORRECT: Use theme callback for complex styling
+<Box sx={(theme) => ({ 
+  bgcolor: theme.palette.background.paper,
+  borderColor: theme.palette.divider 
+})} />
+```
+
+### Available Theme Tokens
+
+| Token | Purpose | Use Case |
+|-------|---------|----------|
+| `background.paper` | Surface backgrounds | Cards, modals, dropdowns |
+| `background.default` | Page backgrounds | Main content area |
+| `background.neutral` | Subtle backgrounds | Section dividers, highlights |
+| `text.primary` | Main text | Headings, body text |
+| `text.secondary` | Secondary text | Captions, labels |
+| `text.disabled` | Disabled text | Inactive elements |
+| `divider` | Border/divider color | Separators, borders |
+| `action.hover` | Hover states | Interactive element hover |
+| `action.selected` | Selected states | Selected items |
+
+### Using Theme Mode
+
+Access the current theme mode using the `useThemeMode` hook:
+
+```tsx
+import { useThemeMode } from 'src/theme';
+
+function MyComponent() {
+  const { mode, resolvedMode, setMode } = useThemeMode();
+  
+  // resolvedMode is always 'light' or 'dark'
+  // mode can be 'light', 'dark', or 'system'
+  
+  return (
+    <Button onClick={() => setMode('dark')}>
+      Switch to Dark Mode
+    </Button>
+  );
+}
+```
+
+### Color Palette Usage
+
+For semantic colors, use the palette tokens:
+
+```tsx
+// Primary, secondary, info, success, warning, error colors
+<Button color="primary" />
+<Alert severity="success" />
+
+// With sx prop
+<Box sx={{ 
+  color: 'primary.main',
+  bgcolor: 'primary.lighter',
+  borderColor: 'primary.dark'
+}} />
+```
+
 ## Important Notes
 
 - This is a **client-side only** UI project - no server-side documentation needed
 - Documentation should be beginner-friendly when possible
 - Include code examples for technical documentation
 - Keep documentation up to date when making code changes
+- **Always follow the theme system guidelines** to ensure dark mode compatibility
