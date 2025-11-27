@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createChildWidgetConfig,
   deleteChildWidgetConfig,
-  generateNewChildWidgetConfigCode,
+  updateChildWidgetConfig,
   getChildWidgetConfigById,
   getChildWidgetConfigPage,
-  updateChildWidgetConfig,
+  generateNewChildWidgetConfigCode,
 } from '../../services/generated/child-widget-config';
 
 import type {
+  SortType,
   BooleanResult,
   ChildWidgetConfigEntity,
-  ChildWidgetConfigEntityBasePaginationResponse,
-  ChildWidgetConfigEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  ChildWidgetConfigEntityResult,
+  ChildWidgetConfigEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

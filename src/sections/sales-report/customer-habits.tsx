@@ -3,25 +3,25 @@ import type { ChartOptions } from 'src/components/chart';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import Typography from '@mui/material/Typography';
+import MenuItem from '@mui/material/MenuItem';
 import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
 import { fNumber, fShortenNumber } from 'src/utils/format-number';
 
 import { Chart, useChart } from 'src/components/chart';
 
-import type { CustomerHabbitsMonthlyData, CustomerHabbitsSummary } from './sales-report-data';
+import type { CustomerHabitsSummary, CustomerHabitsMonthlyData } from './sales-report-data';
 
 // ----------------------------------------------------------------------
 
-type CustomerHabbitsProps = CardProps & {
-  data: CustomerHabbitsMonthlyData[];
-  summary: CustomerHabbitsSummary;
+type CustomerHabitsProps = CardProps & {
+  data: CustomerHabitsMonthlyData[];
+  summary: CustomerHabitsSummary;
 };
 
-export function CustomerHabbits({ data, summary, sx, ...other }: CustomerHabbitsProps) {
+export function CustomerHabits({ data, summary, sx, ...other }: CustomerHabitsProps) {
   const theme = useTheme();
 
   const categories = data.map((item) => item.month);
@@ -87,9 +87,9 @@ export function CustomerHabbits({ data, summary, sx, ...other }: CustomerHabbits
       {/* Header */}
       <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
         <Box>
-          <Typography variant="h6">Customer Habbits</Typography>
+          <Typography variant="h6">Customer Habits</Typography>
           <Typography variant="body2" color="text.secondary">
-            Track your customer habbits
+            Track your customer habits
           </Typography>
         </Box>
         <Select

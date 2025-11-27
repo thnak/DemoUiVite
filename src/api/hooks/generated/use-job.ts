@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createJob,
   deleteJob,
-  generateNewJobCode,
+  updateJob,
   getJobById,
   getJobPage,
-  updateJob,
+  generateNewJobCode,
 } from '../../services/generated/job';
 
 import type {
-  BooleanResult,
-  JobEntity,
-  JobEntityBasePaginationResponse,
-  JobEntityResult,
   SortType,
+  JobEntity,
+  BooleanResult,
+  JobEntityResult,
   StringObjectKeyValuePair,
+  JobEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

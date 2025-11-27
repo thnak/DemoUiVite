@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createIoTDeviceModel,
   deleteIoTDeviceModel,
-  generateNewIoTDeviceModelCode,
-  getIoTDeviceModelById,
-  getIoTDeviceModelPage,
   searchIoTDeviceModel,
   updateIoTDeviceModel,
+  getIoTDeviceModelById,
+  getIoTDeviceModelPage,
+  generateNewIoTDeviceModelCode,
 } from '../../services/generated/io-tdevice-model';
 
 import type {
+  SortType,
   BooleanResult,
   IoTDeviceModelEntity,
-  IoTDeviceModelEntityBasePaginationResponse,
-  IoTDeviceModelEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  IoTDeviceModelEntityResult,
+  IoTDeviceModelEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

@@ -3,10 +3,10 @@ import type { ChartOptions } from 'src/components/chart';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import Typography from '@mui/material/Typography';
+import MenuItem from '@mui/material/MenuItem';
 import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
 import { fNumber, fPercent, fShortenNumber } from 'src/utils/format-number';
 

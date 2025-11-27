@@ -1,15 +1,15 @@
-import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
+import type { UseMutationOptions } from '@tanstack/react-query';
 
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import {
-  postAccountLogout,
-  postAccountManageDownloadPersonalData,
-  postAccountManageLinkExternalLogin,
-  postAccountPasskeyCreationOptions,
-  postAccountPasskeyRequestOptions,
-  postAccountPerformExternalLogin,
   postshutdown,
+  postAccountLogout,
+  postAccountPerformExternalLogin,
+  postAccountPasskeyRequestOptions,
+  postAccountPasskeyCreationOptions,
+  postAccountManageLinkExternalLogin,
+  postAccountManageDownloadPersonalData,
 } from '../../services/generated/vault-force';
 
 // ----------------------------------------------------------------------

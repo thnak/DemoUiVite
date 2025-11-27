@@ -29,14 +29,14 @@ export interface ProductStatisticData {
   categories: ProductCategoryData[];
 }
 
-// Types for Customer Habbits chart
-export interface CustomerHabbitsMonthlyData {
+// Types for Customer Habits chart
+export interface CustomerHabitsMonthlyData {
   month: string;
   seenProduct: number;
   sales: number;
 }
 
-export interface CustomerHabbitsSummary {
+export interface CustomerHabitsSummary {
   seenProductTotal: number;
   salesTotal: number;
 }
@@ -125,7 +125,7 @@ export const productStatisticData: ProductStatisticData = {
   ],
 };
 
-export const customerHabbitsData: CustomerHabbitsMonthlyData[] = [
+export const customerHabitsData: CustomerHabitsMonthlyData[] = [
   { month: 'Jan', seenProduct: 10000, sales: 8000 },
   { month: 'Feb', seenProduct: 15000, sales: 12000 },
   { month: 'Mar', seenProduct: 30000, sales: 25000 },
@@ -135,7 +135,7 @@ export const customerHabbitsData: CustomerHabbitsMonthlyData[] = [
   { month: 'Jul', seenProduct: 45000, sales: 40000 },
 ];
 
-export const customerHabbitsSummary: CustomerHabbitsSummary = {
+export const customerHabitsSummary: CustomerHabitsSummary = {
   seenProductTotal: 43787,
   salesTotal: 39784,
 };

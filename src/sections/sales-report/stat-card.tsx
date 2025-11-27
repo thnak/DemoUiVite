@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 
-import { fCurrency, fPercent, fShortenNumber } from 'src/utils/format-number';
+import { fPercent, fCurrency, fShortenNumber } from 'src/utils/format-number';
 
 import { Iconify, type IconifyName } from 'src/components/iconify';
 

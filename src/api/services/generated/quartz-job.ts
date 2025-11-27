@@ -1,10 +1,10 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  QuartzCollectionCleanupResultDto,
-  QuartzCollectionDto,
   QuartzJobDto,
+  QuartzCollectionDto,
   QuartzJobSummaryDto,
+  QuartzCollectionCleanupResultDto,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

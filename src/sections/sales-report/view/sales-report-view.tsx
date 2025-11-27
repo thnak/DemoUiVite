@@ -5,14 +5,14 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { StatCard } from '../stat-card';
 import { CustomerGrowth } from '../customer-growth';
-import { CustomerHabbits } from '../customer-habbits';
+import { CustomerHabits } from '../customer-habits';
 import { ProductStatistic } from '../product-statistic';
 import {
   statCardsData,
   customerGrowthData,
-  customerHabbitsData,
+  customerHabitsData,
   productStatisticData,
-  customerHabbitsSummary,
+  customerHabitsSummary,
 } from '../sales-report-data';
 
 // ----------------------------------------------------------------------
@@ -41,9 +41,9 @@ export function SalesReportView() {
           <ProductStatistic data={productStatisticData} />
         </Grid>
 
-        {/* Customer Habbits - bottom left */}
+        {/* Customer Habits - bottom left */}
         <Grid size={{ xs: 12, lg: 8 }}>
-          <CustomerHabbits data={customerHabbitsData} summary={customerHabbitsSummary} />
+          <CustomerHabits data={customerHabitsData} summary={customerHabitsSummary} />
         </Grid>
 
         {/* Customer Growth - bottom right */}

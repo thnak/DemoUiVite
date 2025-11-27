@@ -1,10 +1,10 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
+  MqttControllerGetTemplateResponse,
   MqttControllerDisconnectClientRequest,
   MqttControllerGetClientsResponsePaginationQuery,
-  MqttControllerGetTemplateResponse,
-  SortType,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

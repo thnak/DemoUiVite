@@ -3,10 +3,9 @@ import type { ChartOptions } from 'src/components/chart';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
 
 import { fNumber, fShortenNumber } from 'src/utils/format-number';
 
@@ -21,8 +20,6 @@ type CustomerGrowthProps = CardProps & {
 };
 
 export function CustomerGrowth({ data, sx, ...other }: CustomerGrowthProps) {
-  const theme = useTheme();
-
   const chartColors = data.countries.map((c) => c.color);
   const chartSeries = data.countries.map((c) => c.value);
 

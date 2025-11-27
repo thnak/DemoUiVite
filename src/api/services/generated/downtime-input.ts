@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   DowntimeInput,
-  DowntimeInputBasePaginationResponse,
   DowntimeInputResult,
-  SortType,
   StringObjectKeyValuePair,
+  DowntimeInputBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
