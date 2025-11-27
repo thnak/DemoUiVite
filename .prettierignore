@@ -9,3 +9,8 @@ public/*
 yarn.lock
 package-lock.json
 jsconfig.json
+
+# Auto-generated API files
+src/api/services/generated/*
+src/api/hooks/generated/*
+src/api/types/generated.ts
