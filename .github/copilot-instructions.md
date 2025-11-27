@@ -191,6 +191,58 @@ For semantic colors, use the palette tokens:
 }} />
 ```
 
+## API Time Duration Standards
+
+All time duration values in API calls **MUST** use the ISO 8601 duration format. This is a mandatory standard with no exceptions.
+
+### ISO 8601 Duration Format
+
+The format follows the pattern: `PnYnMnDTnHnMnS`
+
+| Component | Description | Example |
+|-----------|-------------|---------|
+| `P` | Duration designator (required prefix) | `P` |
+| `nY` | Number of years | `P1Y` (1 year) |
+| `nM` | Number of months | `P2M` (2 months) |
+| `nD` | Number of days | `P10D` (10 days) |
+| `T` | Time designator (required before time components) | `PT` |
+| `nH` | Number of hours | `PT2H` (2 hours) |
+| `nM` | Number of minutes | `PT30M` (30 minutes) |
+| `nS` | Number of seconds | `PT45S` (45 seconds) |
+
+### ✅ Correct Examples
+
+```typescript
+// API request with duration
+const request = {
+  timeout: "PT30S",        // 30 seconds
+  cacheDuration: "PT1H",   // 1 hour
+  retentionPeriod: "P30D", // 30 days
+  sessionExpiry: "PT15M",  // 15 minutes
+  tokenLifetime: "P1DT12H" // 1 day and 12 hours
+};
+```
+
+### ❌ Incorrect Examples (Do NOT use)
+
+```typescript
+// WRONG: Using milliseconds
+const request = { timeout: 30000 };
+
+// WRONG: Using seconds as plain numbers
+const request = { timeout: 30 };
+
+// WRONG: Using string formats that are not ISO 8601
+const request = { timeout: "30s", duration: "1 hour" };
+```
+
+### Why ISO 8601?
+
+1. **Unambiguous** - No confusion between units (seconds vs milliseconds)
+2. **Human-readable** - Easy to understand at a glance
+3. **Standard** - Internationally recognized format
+4. **Consistent** - Same format across all API endpoints
+
 ## Important Notes
 
 - This is a **client-side only** UI project - no server-side documentation needed
