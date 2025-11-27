@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDefectGroup,
   deleteDefectGroup,
-  generateNewDefectGroupCode,
-  getDefectGroupById,
-  getDefectGroupPage,
   searchDefectGroup,
   updateDefectGroup,
+  getDefectGroupById,
+  getDefectGroupPage,
+  generateNewDefectGroupCode,
 } from '../../services/generated/defect-group';
 
 import type {
+  SortType,
   BooleanResult,
   DefectGroupEntity,
-  DefectGroupEntityBasePaginationResponse,
   DefectGroupEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  DefectGroupEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

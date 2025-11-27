@@ -5,28 +5,28 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createScriptVariant,
   deleteScriptVariant,
-  generateNewScriptVariantCode,
+  searchScriptVariant,
+  updateScriptVariant,
   getScriptVariantById,
   getScriptVariantPage,
   getapiScriptVariantgetid,
-  getapiScriptVariantgetscriptbyresponsetype,
   postapiScriptVariantcreate,
-  postapiScriptVariantgetscripts,
+  generateNewScriptVariantCode,
   postapiScriptVariantupdateid,
   putapiScriptVariantdeletename,
-  searchScriptVariant,
-  updateScriptVariant,
+  postapiScriptVariantgetscripts,
+  getapiScriptVariantgetscriptbyresponsetype,
 } from '../../services/generated/script-variant';
 
 import type {
+  SortType,
   BooleanResult,
   ScriptVariantDto,
   ScriptVariantEntity,
-  ScriptVariantEntityBasePaginationResponse,
-  ScriptVariantEntityPaginationQuery,
-  ScriptVariantEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  ScriptVariantEntityResult,
+  ScriptVariantEntityPaginationQuery,
+  ScriptVariantEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

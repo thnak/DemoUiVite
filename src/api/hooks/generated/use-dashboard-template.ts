@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDashboardTemplate,
   deleteDashboardTemplate,
-  generateNewDashboardTemplateCode,
+  updateDashboardTemplate,
   getDashboardTemplateById,
   getDashboardTemplatePage,
-  updateDashboardTemplate,
+  generateNewDashboardTemplateCode,
 } from '../../services/generated/dashboard-template';
 
 import type {
+  SortType,
   BooleanResult,
   DashboardTemplateEntity,
-  DashboardTemplateEntityBasePaginationResponse,
-  DashboardTemplateEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  DashboardTemplateEntityResult,
+  DashboardTemplateEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

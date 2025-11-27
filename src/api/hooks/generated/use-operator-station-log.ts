@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createOperatorStationLog,
   deleteOperatorStationLog,
-  generateNewOperatorStationLogCode,
+  updateOperatorStationLog,
   getOperatorStationLogById,
   getOperatorStationLogPage,
-  updateOperatorStationLog,
+  generateNewOperatorStationLogCode,
 } from '../../services/generated/operator-station-log';
 
 import type {
+  SortType,
   BooleanResult,
   OperatorStationLogEntity,
-  OperatorStationLogEntityBasePaginationResponse,
-  OperatorStationLogEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  OperatorStationLogEntityResult,
+  OperatorStationLogEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

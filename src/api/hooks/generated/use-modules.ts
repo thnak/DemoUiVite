@@ -3,9 +3,9 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
-  getapiModulesgetmoduleicons,
-  getapiModulesgetmodules,
   postapiModulesupload,
+  getapiModulesgetmodules,
+  getapiModulesgetmoduleicons,
 } from '../../services/generated/modules';
 
 // ----------------------------------------------------------------------

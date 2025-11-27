@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createSystemErrorReportComment,
   deleteSystemErrorReportComment,
-  generateNewSystemErrorReportCommentCode,
+  updateSystemErrorReportComment,
   getSystemErrorReportCommentById,
   getSystemErrorReportCommentPage,
-  updateSystemErrorReportComment,
+  generateNewSystemErrorReportCommentCode,
 } from '../../services/generated/system-error-report-comment';
 
 import type {
-  BooleanResult,
   SortType,
+  BooleanResult,
   StringObjectKeyValuePair,
   SystemErrorReportCommentEntity,
-  SystemErrorReportCommentEntityBasePaginationResponse,
   SystemErrorReportCommentEntityResult,
+  SystemErrorReportCommentEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

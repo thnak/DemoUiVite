@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createWebhook,
   deleteWebhook,
-  generateNewWebhookCode,
-  getWebhookById,
-  getWebhookPage,
   searchWebhook,
   updateWebhook,
+  getWebhookById,
+  getWebhookPage,
+  generateNewWebhookCode,
 } from '../../services/generated/webhook';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   WebhookEntity,
-  WebhookEntityBasePaginationResponse,
   WebhookEntityResult,
+  StringObjectKeyValuePair,
+  WebhookEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
