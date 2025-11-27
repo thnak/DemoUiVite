@@ -38,6 +38,11 @@ export function useNavData(): NavData {
           path: '/demo/dashboard',
           icon: icon('ic-cart'),
         },
+        {
+          title: 'Report Portal',
+          path: '/demo/report-portal',
+          icon: icon('ic-analytics'),
+        },
       ],
     },
     {
@@ -127,6 +132,11 @@ export const navData: NavData = [
         title: 'Demo Dashboard',
         path: '/demo/dashboard',
         icon: icon('ic-cart'),
+      },
+      {
+        title: 'Report Portal',
+        path: '/demo/report-portal',
+        icon: icon('ic-analytics'),
       },
     ],
   },
