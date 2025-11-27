@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createWorkingParameter,
   deleteWorkingParameter,
-  generateNewWorkingParameterCode,
+  updateWorkingParameter,
   getWorkingParameterById,
   getWorkingParameterPage,
-  updateWorkingParameter,
+  generateNewWorkingParameterCode,
 } from '../../services/generated/working-parameter';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   WorkingParameterEntity,
-  WorkingParameterEntityBasePaginationResponse,
+  StringObjectKeyValuePair,
   WorkingParameterEntityResult,
+  WorkingParameterEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

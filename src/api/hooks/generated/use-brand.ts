@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createBrand,
   deleteBrand,
-  generateNewBrandCode,
+  updateBrand,
   getBrandById,
   getBrandPage,
-  updateBrand,
+  generateNewBrandCode,
 } from '../../services/generated/brand';
 
 import type {
-  BooleanResult,
-  BrandEntity,
-  BrandEntityBasePaginationResponse,
-  BrandEntityResult,
   SortType,
+  BrandEntity,
+  BooleanResult,
+  BrandEntityResult,
   StringObjectKeyValuePair,
+  BrandEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

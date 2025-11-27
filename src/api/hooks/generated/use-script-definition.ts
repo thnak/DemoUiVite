@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createScriptDefinition,
   deleteScriptDefinition,
-  generateNewScriptDefinitionCode,
-  getScriptDefinitionById,
-  getScriptDefinitionPage,
   searchScriptDefinition,
   updateScriptDefinition,
+  getScriptDefinitionById,
+  getScriptDefinitionPage,
+  generateNewScriptDefinitionCode,
 } from '../../services/generated/script-definition';
 
 import type {
+  SortType,
   BooleanResult,
   ScriptDefinitionEntity,
-  ScriptDefinitionEntityBasePaginationResponse,
-  ScriptDefinitionEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  ScriptDefinitionEntityResult,
+  ScriptDefinitionEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

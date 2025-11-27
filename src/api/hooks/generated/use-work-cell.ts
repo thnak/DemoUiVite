@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createWorkCell,
   deleteWorkCell,
-  generateNewWorkCellCode,
+  updateWorkCell,
   getWorkCellById,
   getWorkCellPage,
-  updateWorkCell,
+  generateNewWorkCellCode,
 } from '../../services/generated/work-cell';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   WorkCellEntity,
-  WorkCellEntityBasePaginationResponse,
   WorkCellEntityResult,
+  StringObjectKeyValuePair,
+  WorkCellEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

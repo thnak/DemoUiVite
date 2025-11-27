@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDepartment,
   deleteDepartment,
-  generateNewDepartmentCode,
-  getDepartmentById,
-  getDepartmentPage,
   searchDepartment,
   updateDepartment,
+  getDepartmentById,
+  getDepartmentPage,
+  generateNewDepartmentCode,
 } from '../../services/generated/department';
 
 import type {
+  SortType,
   BooleanResult,
   DepartmentEntity,
-  DepartmentEntityBasePaginationResponse,
   DepartmentEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  DepartmentEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

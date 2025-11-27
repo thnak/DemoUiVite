@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createRolePermission,
   deleteRolePermission,
-  generateNewRolePermissionCode,
+  updateRolePermission,
   getRolePermissionById,
   getRolePermissionPage,
-  updateRolePermission,
+  generateNewRolePermissionCode,
 } from '../../services/generated/role-permission';
 
 import type {
+  SortType,
   BooleanResult,
   RolePermissionEntity,
-  RolePermissionEntityBasePaginationResponse,
-  RolePermissionEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  RolePermissionEntityResult,
+  RolePermissionEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

@@ -32,6 +32,7 @@ export const MachineListPage = lazy(() => import('src/pages/machine-list'));
 export const MachineOEEPage = lazy(() => import('src/pages/machine-oee'));
 export const DemoDashboardPage = lazy(() => import('src/pages/demo/dashboard'));
 export const FileDashboardPage = lazy(() => import('src/pages/demo/file-dashboard'));
+export const SalesReportPage = lazy(() => import('src/pages/sales-report'));
 export const DowntimeReportPage = lazy(() => import('src/pages/downtime-report'));
 export const ShiftTemplatesPage = lazy(() => import('src/pages/shift-templates'));
 export const ShiftTemplateCreatePage = lazy(() => import('src/pages/shift-template-create'));
@@ -90,6 +91,7 @@ export const routesSection: RouteObject[] = [
       { path: 'blog', element: <BlogPage /> },
       { path: 'demo/dashboard', element: <DemoDashboardPage /> },
       { path: 'demo/file-dashboard', element: <FileDashboardPage /> },
+      { path: 'sales-report', element: <SalesReportPage /> },
     ],
   },
   {

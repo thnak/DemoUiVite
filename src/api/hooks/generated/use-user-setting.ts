@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createUserSetting,
   deleteUserSetting,
-  generateNewUserSettingCode,
+  updateUserSetting,
   getUserSettingById,
   getUserSettingPage,
-  updateUserSetting,
+  generateNewUserSettingCode,
 } from '../../services/generated/user-setting';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   UserSettingEntity,
-  UserSettingEntityBasePaginationResponse,
   UserSettingEntityResult,
+  StringObjectKeyValuePair,
+  UserSettingEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

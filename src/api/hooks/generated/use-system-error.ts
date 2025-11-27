@@ -9,8 +9,8 @@ import {
 
 import type {
   BooleanResult,
-  SystemErrorReportDtoListResult,
   SystemErrorReportStatus,
+  SystemErrorReportDtoListResult,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
