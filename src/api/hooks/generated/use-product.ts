@@ -5,20 +5,20 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createProduct,
   deleteProduct,
-  generateNewProductCode,
-  getProductById,
-  getProductPage,
   searchProduct,
   updateProduct,
+  getProductById,
+  getProductPage,
+  generateNewProductCode,
 } from '../../services/generated/product';
 
 import type {
+  SortType,
   BooleanResult,
   ProductEntity,
-  ProductEntityBasePaginationResponse,
   ProductEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  ProductEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

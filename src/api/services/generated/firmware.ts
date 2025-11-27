@@ -1,10 +1,10 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   GetAllFirmwareVersionsResponse,
   GetAllFirmwareVersionsResponsePaginationQuery,
-  SortType,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

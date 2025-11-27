@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createFolderPermission,
   deleteFolderPermission,
-  generateNewFolderPermissionCode,
+  updateFolderPermission,
   getFolderPermissionById,
   getFolderPermissionPage,
-  updateFolderPermission,
+  generateNewFolderPermissionCode,
 } from '../../services/generated/folder-permission';
 
 import type {
+  SortType,
   BooleanResult,
   FolderPermissionEntity,
-  FolderPermissionEntityBasePaginationResponse,
-  FolderPermissionEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  FolderPermissionEntityResult,
+  FolderPermissionEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

@@ -1,18 +1,18 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
-  DashboardCombineDto,
-  DashboardCombineDtoResult,
-  DashboardTemplateEntity,
-  DashboardTemplateEntityPaginationQuery,
-  ScriptDefinitionEntityResult,
-  ScriptVariantEntityResult,
-  SelectScriptRequest,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   WidgetConfigEntity,
+  DashboardCombineDto,
+  SelectScriptRequest,
+  DashboardTemplateEntity,
+  StringObjectKeyValuePair,
+  DashboardCombineDtoResult,
+  ScriptVariantEntityResult,
+  ScriptDefinitionEntityResult,
   WidgetConfigEntityPaginationQuery,
+  DashboardTemplateEntityPaginationQuery,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createDocument,
   deleteDocument,
-  generateNewDocumentCode,
+  updateDocument,
   getDocumentById,
   getDocumentPage,
-  updateDocument,
+  generateNewDocumentCode,
 } from '../../services/generated/document';
 
 import type {
+  SortType,
   BooleanResult,
   DocumentEntity,
-  DocumentEntityBasePaginationResponse,
   DocumentEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  DocumentEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

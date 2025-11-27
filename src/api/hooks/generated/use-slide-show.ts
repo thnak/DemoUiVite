@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createSlideShow,
   deleteSlideShow,
-  generateNewSlideShowCode,
+  updateSlideShow,
   getSlideShowById,
   getSlideShowPage,
-  updateSlideShow,
+  generateNewSlideShowCode,
 } from '../../services/generated/slide-show';
 
 import type {
+  SortType,
   BooleanResult,
   SlideShowEntity,
-  SlideShowEntityBasePaginationResponse,
   SlideShowEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  SlideShowEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

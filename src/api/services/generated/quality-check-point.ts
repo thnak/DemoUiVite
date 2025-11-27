@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   QualityCheckPointEntity,
-  QualityCheckPointEntityBasePaginationResponse,
-  QualityCheckPointEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  QualityCheckPointEntityResult,
+  QualityCheckPointEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

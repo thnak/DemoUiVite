@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createCategory,
   deleteCategory,
-  generateNewCategoryCode,
+  updateCategory,
   getCategoryById,
   getCategoryPage,
-  updateCategory,
+  generateNewCategoryCode,
 } from '../../services/generated/category';
 
 import type {
+  SortType,
   BooleanResult,
   CategoryEntity,
-  CategoryEntityBasePaginationResponse,
   CategoryEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  CategoryEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

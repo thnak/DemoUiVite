@@ -5,21 +5,21 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createOperation,
   deleteOperation,
-  generateNewOperationCode,
-  getOperationById,
-  getOperationPage,
-  getapiOperationsearchbycode,
   searchOperation,
   updateOperation,
+  getOperationById,
+  getOperationPage,
+  generateNewOperationCode,
+  getapiOperationsearchbycode,
 } from '../../services/generated/operation';
 
 import type {
+  SortType,
   BooleanResult,
   OperationEntity,
-  OperationEntityBasePaginationResponse,
   OperationEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  OperationEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

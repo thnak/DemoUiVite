@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createParaphraseMap,
   deleteParaphraseMap,
-  generateNewParaphraseMapCode,
+  updateParaphraseMap,
   getParaphraseMapById,
   getParaphraseMapPage,
-  updateParaphraseMap,
+  generateNewParaphraseMapCode,
 } from '../../services/generated/paraphrase-map';
 
 import type {
+  SortType,
   BooleanResult,
   ParaphraseMapEntity,
-  ParaphraseMapEntityBasePaginationResponse,
-  ParaphraseMapEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  ParaphraseMapEntityResult,
+  ParaphraseMapEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
