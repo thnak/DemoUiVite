@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createMachineType,
   deleteMachineType,
-  generateNewMachineTypeCode,
+  updateMachineType,
   getMachineTypeById,
   getMachineTypePage,
-  updateMachineType,
+  generateNewMachineTypeCode,
 } from '../../services/generated/machine-type';
 
 import type {
+  SortType,
   BooleanResult,
   MachineTypeEntity,
-  MachineTypeEntityBasePaginationResponse,
   MachineTypeEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  MachineTypeEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  BooleanResult,
-  MongoBlob,
-  MongoBlobBasePaginationResponse,
-  MongoBlobResult,
   SortType,
+  MongoBlob,
+  BooleanResult,
+  MongoBlobResult,
   StringObjectKeyValuePair,
+  MongoBlobBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

@@ -3,12 +3,12 @@ import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import {
-  getapiChildWidgetgetallfromparentparentId,
   getapiChildWidgetgetid,
   postapiChildWidgetcreate,
-  postapiChildWidgetselectscriptid,
-  postapiChildWidgetupdateid,
   putapiChildWidgetdeleteid,
+  postapiChildWidgetupdateid,
+  postapiChildWidgetselectscriptid,
+  getapiChildWidgetgetallfromparentparentId,
 } from '../../services/generated/child-widget';
 
 import type {

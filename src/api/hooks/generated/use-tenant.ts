@@ -1,18 +1,18 @@
-import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
+import type { UseMutationOptions } from '@tanstack/react-query';
 
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import {
-  deleteapiTenantdeleteid,
-  postapiTenantcreate,
-  postapiTenantgetalltenants,
   putapiTenantupdate,
+  postapiTenantcreate,
+  deleteapiTenantdeleteid,
+  postapiTenantgetalltenants,
 } from '../../services/generated/tenant';
 
 import type {
-  CreateNewTenantRequest,
   SortType,
   UpdateTenantRequest,
+  CreateNewTenantRequest,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

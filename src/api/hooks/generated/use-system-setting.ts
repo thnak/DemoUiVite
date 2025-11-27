@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createSystemSetting,
   deleteSystemSetting,
-  generateNewSystemSettingCode,
+  updateSystemSetting,
   getSystemSettingById,
   getSystemSettingPage,
-  updateSystemSetting,
+  generateNewSystemSettingCode,
 } from '../../services/generated/system-setting';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   SystemSettingEntity,
-  SystemSettingEntityBasePaginationResponse,
+  StringObjectKeyValuePair,
   SystemSettingEntityResult,
+  SystemSettingEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

@@ -36,6 +36,8 @@ export const DowntimeReportPage = lazy(() => import('src/pages/downtime-report')
 export const ShiftTemplatesPage = lazy(() => import('src/pages/shift-templates'));
 export const ShiftTemplateCreatePage = lazy(() => import('src/pages/shift-template-create'));
 export const ShiftTemplateEditPage = lazy(() => import('src/pages/shift-template-edit'));
+export const DashboardBuilderPage = lazy(() => import('src/pages/dashboard-builder'));
+export const DashboardBuilderEditPage = lazy(() => import('src/pages/dashboard-builder-edit'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -90,6 +92,9 @@ export const routesSection: RouteObject[] = [
       { path: 'blog', element: <BlogPage /> },
       { path: 'demo/dashboard', element: <DemoDashboardPage /> },
       { path: 'demo/file-dashboard', element: <FileDashboardPage /> },
+      { path: 'dashboard-builder', element: <DashboardBuilderPage /> },
+      { path: 'dashboard-builder/new', element: <DashboardBuilderEditPage /> },
+      { path: 'dashboard-builder/:id', element: <DashboardBuilderEditPage /> },
     ],
   },
   {

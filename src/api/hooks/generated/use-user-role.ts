@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createUserRole,
   deleteUserRole,
-  generateNewUserRoleCode,
+  updateUserRole,
   getUserRoleById,
   getUserRolePage,
-  updateUserRole,
+  generateNewUserRoleCode,
 } from '../../services/generated/user-role';
 
 import type {
-  BooleanResult,
   SortType,
-  StringObjectKeyValuePair,
+  BooleanResult,
   UserRoleEntity,
-  UserRoleEntityBasePaginationResponse,
   UserRoleEntityResult,
+  StringObjectKeyValuePair,
+  UserRoleEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createStop,
   deleteStop,
-  generateNewStopCode,
+  updateStop,
   getStopById,
   getStopPage,
-  updateStop,
+  generateNewStopCode,
 } from '../../services/generated/stop';
 
 import type {
-  BooleanResult,
   SortType,
   StopEntity,
-  StopEntityBasePaginationResponse,
+  BooleanResult,
   StopEntityResult,
   StringObjectKeyValuePair,
+  StopEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

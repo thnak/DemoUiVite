@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createRouting,
   deleteRouting,
-  generateNewRoutingCode,
+  updateRouting,
   getRoutingById,
   getRoutingPage,
-  updateRouting,
+  generateNewRoutingCode,
 } from '../../services/generated/routing';
 
 import type {
+  SortType,
   BooleanResult,
   RoutingEntity,
-  RoutingEntityBasePaginationResponse,
   RoutingEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  RoutingEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

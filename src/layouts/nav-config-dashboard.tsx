@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { Label } from 'src/components/label';
+import { Iconify } from 'src/components/iconify';
 import { SvgColor } from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -37,6 +38,11 @@ export function useNavData(): NavData {
           title: 'Demo Dashboard',
           path: '/demo/dashboard',
           icon: icon('ic-cart'),
+        },
+        {
+          title: 'Dashboard Builder',
+          path: '/dashboard-builder',
+          icon: <Iconify icon="mdi:view-dashboard-edit" width={24} />,
         },
       ],
     },
@@ -127,6 +133,11 @@ export const navData: NavData = [
         title: 'Demo Dashboard',
         path: '/demo/dashboard',
         icon: icon('ic-cart'),
+      },
+      {
+        title: 'Dashboard Builder',
+        path: '/dashboard-builder',
+        icon: <Iconify icon="mdi:view-dashboard-edit" width={24} />,
       },
     ],
   },
