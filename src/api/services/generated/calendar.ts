@@ -1,12 +1,12 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
+  SortType,
   BooleanResult,
   CalendarEntity,
-  CalendarEntityBasePaginationResponse,
   CalendarEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  CalendarEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

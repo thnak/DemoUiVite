@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createJtiToken,
   deleteJtiToken,
-  generateNewJtiTokenCode,
+  updateJtiToken,
   getJtiTokenById,
   getJtiTokenPage,
-  updateJtiToken,
+  generateNewJtiTokenCode,
 } from '../../services/generated/jti-token';
 
 import type {
+  SortType,
   BooleanResult,
   JtiTokenEntity,
-  JtiTokenEntityBasePaginationResponse,
   JtiTokenEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  JtiTokenEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

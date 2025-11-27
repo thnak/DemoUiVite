@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createOperationVariant,
   deleteOperationVariant,
-  generateNewOperationVariantCode,
+  updateOperationVariant,
   getOperationVariantById,
   getOperationVariantPage,
-  updateOperationVariant,
+  generateNewOperationVariantCode,
 } from '../../services/generated/operation-variant';
 
 import type {
+  SortType,
   BooleanResult,
   OperationVariantEntity,
-  OperationVariantEntityBasePaginationResponse,
-  OperationVariantEntityResult,
-  SortType,
   StringObjectKeyValuePair,
+  OperationVariantEntityResult,
+  OperationVariantEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

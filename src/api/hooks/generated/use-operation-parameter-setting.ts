@@ -5,19 +5,19 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   createOperationParameterSetting,
   deleteOperationParameterSetting,
-  generateNewOperationParameterSettingCode,
+  updateOperationParameterSetting,
   getOperationParameterSettingById,
   getOperationParameterSettingPage,
-  updateOperationParameterSetting,
+  generateNewOperationParameterSettingCode,
 } from '../../services/generated/operation-parameter-setting';
 
 import type {
-  BooleanResult,
-  OperationParameterSettingEntity,
-  OperationParameterSettingEntityBasePaginationResponse,
-  OperationParameterSettingEntityResult,
   SortType,
+  BooleanResult,
   StringObjectKeyValuePair,
+  OperationParameterSettingEntity,
+  OperationParameterSettingEntityResult,
+  OperationParameterSettingEntityBasePaginationResponse,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------

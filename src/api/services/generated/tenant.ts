@@ -1,9 +1,9 @@
 import axiosInstance from '../../axios-instance';
 
 import type {
-  CreateNewTenantRequest,
   SortType,
   UpdateTenantRequest,
+  CreateNewTenantRequest,
 } from '../../types/generated';
 
 // ----------------------------------------------------------------------
