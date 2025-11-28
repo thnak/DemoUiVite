@@ -1,3 +1,5 @@
+import type { IconifyName } from 'src/components/iconify/register-icons';
+
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Card from '@mui/material/Card';
@@ -18,7 +20,13 @@ import DialogActions from '@mui/material/DialogActions';
 
 import { Iconify } from 'src/components/iconify';
 
-import type { WidgetType, WidgetItem, WidgetConfig } from './types';
+import type {
+  WidgetType,
+  WidgetItem,
+  WidgetConfig,
+  TextWidgetConfig,
+  ImageWidgetConfig,
+} from './types';
 
 // ----------------------------------------------------------------------
 
@@ -69,8 +77,8 @@ export const COOKING_BOOK: MergeRecipe[] = [
     transform: (primary, secondary) => ({
       type: 'text-image',
       config: {
-        text: primary.config as { content: string; variant?: string; align?: string },
-        image: secondary.config as { src: string; alt: string; objectFit?: string },
+        text: primary.config as TextWidgetConfig,
+        image: secondary.config as ImageWidgetConfig,
         layout: 'text-left' as const,
       },
     }),
@@ -86,8 +94,8 @@ export const COOKING_BOOK: MergeRecipe[] = [
     transform: (primary, secondary) => ({
       type: 'text-image',
       config: {
-        text: secondary.config as { content: string; variant?: string; align?: string },
-        image: primary.config as { src: string; alt: string; objectFit?: string },
+        text: secondary.config as TextWidgetConfig,
+        image: primary.config as ImageWidgetConfig,
         layout: 'text-right' as const,
       },
     }),
@@ -102,17 +110,21 @@ export const COOKING_BOOK: MergeRecipe[] = [
     resultType: 'image-blur',
     icon: 'mdi:image-filter-drama',
     transform: (primary, secondary) => {
-      const imageConfig = primary.config as { src: string; alt: string };
-      const textConfig = secondary.config as { content: string; variant?: string; align?: string };
+      const imageConfig = primary.config as ImageWidgetConfig;
+      const textConfig = secondary.config as TextWidgetConfig;
+      // Map subtitle variants to body variants for image-blur
+      const variant = textConfig.variant;
+      const mappedVariant =
+        variant === 'subtitle1' || variant === 'subtitle2' ? 'body1' : (variant ?? 'h4');
       return {
-        type: 'image-blur',
+        type: 'image-blur' as const,
         config: {
           src: imageConfig.src,
           alt: imageConfig.alt,
           blurLevel: 4,
           text: textConfig.content,
-          textVariant: (textConfig.variant as 'h4') ?? 'h4',
-          textAlign: (textConfig.align as 'center') ?? 'center',
+          textVariant: mappedVariant,
+          textAlign: textConfig.align ?? 'center',
         },
       };
     },
@@ -127,17 +139,21 @@ export const COOKING_BOOK: MergeRecipe[] = [
     resultType: 'image-blur',
     icon: 'mdi:image-filter-drama',
     transform: (primary, secondary) => {
-      const textConfig = primary.config as { content: string; variant?: string; align?: string };
-      const imageConfig = secondary.config as { src: string; alt: string };
+      const textConfig = primary.config as TextWidgetConfig;
+      const imageConfig = secondary.config as ImageWidgetConfig;
+      // Map subtitle variants to body variants for image-blur
+      const variant = textConfig.variant;
+      const mappedVariant =
+        variant === 'subtitle1' || variant === 'subtitle2' ? 'body1' : (variant ?? 'h4');
       return {
-        type: 'image-blur',
+        type: 'image-blur' as const,
         config: {
           src: imageConfig.src,
           alt: imageConfig.alt,
           blurLevel: 4,
           text: textConfig.content,
-          textVariant: (textConfig.variant as 'h4') ?? 'h4',
-          textAlign: (textConfig.align as 'center') ?? 'center',
+          textVariant: mappedVariant,
+          textAlign: textConfig.align ?? 'center',
         },
       };
     },
@@ -192,7 +208,7 @@ export function canBeSecondary(widgetType: WidgetType): boolean {
 // ----------------------------------------------------------------------
 
 // Widget type icons for visual display
-const WIDGET_TYPE_ICONS: Record<WidgetType, string> = {
+const WIDGET_TYPE_ICONS: Record<WidgetType, IconifyName> = {
   chart: 'mdi:chart-box-outline',
   text: 'mdi:format-header-1',
   image: 'mdi:image-outline',
