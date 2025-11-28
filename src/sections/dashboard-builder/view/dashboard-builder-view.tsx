@@ -33,8 +33,16 @@ import { BREAKPOINT_CONFIGS } from '../types';
 import { WidgetTemplatesDrawer } from '../widget-templates-drawer';
 import { renderWidget, getRegisteredWidgets } from '../widget-registry';
 import { generateId, saveDashboard, getDashboardById } from '../storage';
+import {
+  findMergeRecipe,
+  CookingBookDrawer,
+  MergeHistoryDrawer,
+  MergePreviewDialog,
+  MergeDropZoneIndicator,
+} from '../cooking-book';
 
 import type { WidgetTemplate } from '../widget-templates-drawer';
+import type { MergeRecipe, MergeHistoryEntry } from '../cooking-book';
 import type {
   WidgetItem,
   WidgetType,
@@ -64,6 +72,7 @@ const KEYBOARD_SHORTCUTS = [
   { key: 'Ctrl+N', description: 'Add new widget' },
   { key: 'Ctrl+E', description: 'Export as JSON' },
   { key: 'Ctrl+I', description: 'Import from JSON' },
+  { key: 'Ctrl+M', description: 'Open Cooking Book' },
   { key: '?', description: 'Show shortcuts' },
 ] as const;
 
@@ -172,6 +181,20 @@ export function DashboardBuilderView() {
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [importJson, setImportJson] = useState('');
   const [templatesDrawerOpen, setTemplatesDrawerOpen] = useState(false);
+  
+  // Cooking Book (Widget Merge) state
+  const [cookingBookOpen, setCookingBookOpen] = useState(false);
+  const [mergeHistoryOpen, setMergeHistoryOpen] = useState(false);
+  const [mergeHistory, setMergeHistory] = useState<MergeHistoryEntry[]>([]);
+  const [mergePreviewOpen, setMergePreviewOpen] = useState(false);
+  const [pendingMerge, setPendingMerge] = useState<{
+    recipe: MergeRecipe | null;
+    primaryWidget: WidgetItem | null;
+    secondaryWidget: WidgetItem | null;
+  }>({ recipe: null, primaryWidget: null, secondaryWidget: null });
+  const [draggedWidgetId, setDraggedWidgetId] = useState<string | null>(null);
+  const [dropTargetId, setDropTargetId] = useState<string | null>(null);
+  
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -367,6 +390,192 @@ export function DashboardBuilderView() {
     }
   }, [importJson]);
 
+  // Handle widget drag start for merging
+  const handleWidgetDragStart = useCallback((widgetId: string) => {
+    setDraggedWidgetId(widgetId);
+  }, []);
+
+  // Handle widget drag over for merging
+  const handleWidgetDragOver = useCallback(
+    (targetWidgetId: string) => {
+      if (!draggedWidgetId || draggedWidgetId === targetWidgetId) {
+        setDropTargetId(null);
+        return;
+      }
+      setDropTargetId(targetWidgetId);
+    },
+    [draggedWidgetId]
+  );
+
+  // Handle widget drop for merging
+  const handleWidgetDrop = useCallback(
+    (targetWidgetId: string) => {
+      if (!draggedWidgetId || draggedWidgetId === targetWidgetId) {
+        setDraggedWidgetId(null);
+        setDropTargetId(null);
+        return;
+      }
+
+      const primaryWidget = widgets.find((w) => w.id === targetWidgetId);
+      const secondaryWidget = widgets.find((w) => w.id === draggedWidgetId);
+
+      if (!primaryWidget || !secondaryWidget) {
+        setDraggedWidgetId(null);
+        setDropTargetId(null);
+        return;
+      }
+
+      // Find a matching recipe
+      const recipe = findMergeRecipe(
+        primaryWidget.widgetConfig.type,
+        secondaryWidget.widgetConfig.type
+      );
+
+      if (recipe) {
+        // Show merge preview dialog
+        setPendingMerge({ recipe, primaryWidget, secondaryWidget });
+        setMergePreviewOpen(true);
+      } else {
+        setSnackbar({
+          open: true,
+          message: `Cannot merge ${primaryWidget.widgetConfig.type} with ${secondaryWidget.widgetConfig.type}. Check the Cooking Book for valid recipes.`,
+          severity: 'error',
+        });
+      }
+
+      setDraggedWidgetId(null);
+      setDropTargetId(null);
+    },
+    [draggedWidgetId, widgets]
+  );
+
+  // Confirm widget merge
+  const handleConfirmMerge = useCallback(() => {
+    const { recipe, primaryWidget, secondaryWidget } = pendingMerge;
+    if (!recipe || !primaryWidget || !secondaryWidget) return;
+
+    // Create merged widget using recipe transform
+    const mergedConfig = recipe.transform(
+      primaryWidget.widgetConfig,
+      secondaryWidget.widgetConfig
+    );
+
+    const mergedWidget: WidgetItem = {
+      id: generateId(),
+      widgetConfig: mergedConfig,
+    };
+
+    // Add to merge history for undo
+    const historyEntry: MergeHistoryEntry = {
+      id: generateId(),
+      timestamp: Date.now(),
+      recipeName: recipe.name,
+      originalPrimaryWidget: primaryWidget,
+      originalSecondaryWidget: secondaryWidget,
+      resultWidget: mergedWidget,
+    };
+
+    setMergeHistory((prev) => [historyEntry, ...prev]);
+
+    // Update widgets: remove both originals, add merged
+    setWidgets((prev) => {
+      const filtered = prev.filter(
+        (w) => w.id !== primaryWidget.id && w.id !== secondaryWidget.id
+      );
+      return [...filtered, mergedWidget];
+    });
+
+    // Update layouts: keep primary widget's position, remove secondary
+    setLayouts((prevLayouts) => {
+      const newLayouts: Layouts = {};
+      Object.keys(prevLayouts).forEach((bp) => {
+        const primaryLayout = prevLayouts[bp].find((l) => l.i === primaryWidget.id);
+        const filteredLayouts = prevLayouts[bp].filter(
+          (l) => l.i !== primaryWidget.id && l.i !== secondaryWidget.id
+        );
+        if (primaryLayout) {
+          newLayouts[bp] = [...filteredLayouts, { ...primaryLayout, i: mergedWidget.id }];
+        } else {
+          newLayouts[bp] = filteredLayouts;
+        }
+      });
+      return newLayouts;
+    });
+
+    setMergePreviewOpen(false);
+    setPendingMerge({ recipe: null, primaryWidget: null, secondaryWidget: null });
+    setSnackbar({
+      open: true,
+      message: `Successfully merged widgets: ${recipe.name}`,
+      severity: 'success',
+    });
+  }, [pendingMerge]);
+
+  // Undo a merge
+  const handleUndoMerge = useCallback((entry: MergeHistoryEntry) => {
+    // Remove merged widget, restore originals
+    setWidgets((prev) => {
+      const filtered = prev.filter((w) => w.id !== entry.resultWidget.id);
+      return [...filtered, entry.originalPrimaryWidget, entry.originalSecondaryWidget];
+    });
+
+    // Restore layouts
+    setLayouts((prevLayouts) => {
+      const newLayouts: Layouts = {};
+      Object.keys(prevLayouts).forEach((bp) => {
+        const mergedLayout = prevLayouts[bp].find((l) => l.i === entry.resultWidget.id);
+        const filteredLayouts = prevLayouts[bp].filter((l) => l.i !== entry.resultWidget.id);
+
+        const restoredLayouts = [
+          ...filteredLayouts,
+          mergedLayout
+            ? { ...mergedLayout, i: entry.originalPrimaryWidget.id }
+            : {
+                i: entry.originalPrimaryWidget.id,
+                x: 0,
+                y: Infinity,
+                w: 4,
+                h: 4,
+                minW: 2,
+                minH: 2,
+              },
+          {
+            i: entry.originalSecondaryWidget.id,
+            x: 4,
+            y: Infinity,
+            w: 4,
+            h: 4,
+            minW: 2,
+            minH: 2,
+          },
+        ];
+        newLayouts[bp] = restoredLayouts;
+      });
+      return newLayouts;
+    });
+
+    // Remove from history
+    setMergeHistory((prev) => prev.filter((h) => h.id !== entry.id));
+
+    setSnackbar({
+      open: true,
+      message: 'Merge undone - original widgets restored',
+      severity: 'success',
+    });
+  }, []);
+
+  // Get current drop recipe for visual feedback
+  const currentDropRecipe = useMemo(() => {
+    if (!draggedWidgetId || !dropTargetId) return null;
+    const primaryWidget = widgets.find((w) => w.id === dropTargetId);
+    const secondaryWidget = widgets.find((w) => w.id === draggedWidgetId);
+    if (!primaryWidget || !secondaryWidget) return null;
+    return findMergeRecipe(
+      primaryWidget.widgetConfig.type,
+      secondaryWidget.widgetConfig.type
+    );
+  }, [draggedWidgetId, dropTargetId, widgets]);
+
   // Keyboard shortcuts handler
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -393,6 +602,11 @@ export function DashboardBuilderView() {
       // ?: Show shortcuts
       if (event.key === '?' && !event.ctrlKey && !event.altKey) {
         setShortcutsDialogOpen(true);
+      }
+      // Ctrl+M: Open Cooking Book
+      if (event.ctrlKey && event.key === 'm') {
+        event.preventDefault();
+        setCookingBookOpen(true);
       }
     };
 
@@ -482,6 +696,18 @@ export function DashboardBuilderView() {
           <Tooltip title="Keyboard shortcuts (?)">
             <IconButton onClick={() => setShortcutsDialogOpen(true)}>
               <Iconify icon="mdi:keyboard" />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Cooking Book - Merge Widgets (Ctrl+M)">
+            <IconButton onClick={() => setCookingBookOpen(true)}>
+              <Iconify icon="mdi:chef-hat" />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Merge History">
+            <IconButton onClick={() => setMergeHistoryOpen(true)}>
+              <Iconify icon="mdi:history" />
             </IconButton>
           </Tooltip>
 
@@ -576,7 +802,33 @@ export function DashboardBuilderView() {
           >
             {widgets.map((widget) => (
               <Box key={widget.id} sx={{ height: '100%' }}>
-                <Box sx={{ position: 'relative', height: '100%' }}>
+                <Box
+                  sx={{ position: 'relative', height: '100%' }}
+                  draggable
+                  onDragStart={() => handleWidgetDragStart(widget.id)}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    handleWidgetDragOver(widget.id);
+                  }}
+                  onDragLeave={() => setDropTargetId(null)}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    handleWidgetDrop(widget.id);
+                  }}
+                  onDragEnd={() => {
+                    setDraggedWidgetId(null);
+                    setDropTargetId(null);
+                  }}
+                >
+                  {/* Merge drop zone indicator */}
+                  {dropTargetId === widget.id && draggedWidgetId && (
+                    <MergeDropZoneIndicator
+                      isOver
+                      canDrop={!!currentDropRecipe}
+                      recipe={currentDropRecipe}
+                    />
+                  )}
+
                   {/* Widget controls */}
                   <Stack
                     direction="row"
@@ -592,6 +844,14 @@ export function DashboardBuilderView() {
                       pointerEvents: 'auto', // ensure controls are clickable
                     }}
                   >
+                    <Tooltip title="Drag to merge with another widget">
+                      <IconButton
+                        size="small"
+                        sx={{ cursor: 'grab' }}
+                      >
+                        <Iconify icon="mdi:merge" width={18} />
+                      </IconButton>
+                    </Tooltip>
                     <Tooltip title="Edit widget">
                       <IconButton size="small" onClick={() => setEditWidgetId(widget.id)}>
                         <Iconify icon="mdi:pencil" width={18} />
@@ -787,6 +1047,33 @@ export function DashboardBuilderView() {
         open={templatesDrawerOpen}
         onClose={() => setTemplatesDrawerOpen(false)}
         onSelectTemplate={handleAddWidgetFromTemplate}
+      />
+
+      {/* Cooking Book Drawer */}
+      <CookingBookDrawer
+        open={cookingBookOpen}
+        onClose={() => setCookingBookOpen(false)}
+      />
+
+      {/* Merge History Drawer */}
+      <MergeHistoryDrawer
+        open={mergeHistoryOpen}
+        onClose={() => setMergeHistoryOpen(false)}
+        history={mergeHistory}
+        onUndo={handleUndoMerge}
+      />
+
+      {/* Merge Preview Dialog */}
+      <MergePreviewDialog
+        open={mergePreviewOpen}
+        onClose={() => {
+          setMergePreviewOpen(false);
+          setPendingMerge({ recipe: null, primaryWidget: null, secondaryWidget: null });
+        }}
+        onConfirm={handleConfirmMerge}
+        recipe={pendingMerge.recipe}
+        primaryWidget={pendingMerge.primaryWidget}
+        secondaryWidget={pendingMerge.secondaryWidget}
       />
 
       {/* Snackbar */}

@@ -344,4 +344,28 @@ export default {
   'mdi:chart-box-outline': {
     body: '<path fill="currentColor" d="M9 17H7v-7h2m4 7h-2V7h2m4 10h-2v-4h2m2 6H5V5h14M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2"/>',
   },
+  'mdi:chef-hat': {
+    body: '<path fill="currentColor" d="M12.5 1.5c-1.77 0-3.33.77-4.39 2C7.63 3.63 7.06 4 6.5 4A4.5 4.5 0 0 0 2 8.5c0 1.28.53 2.43 1.38 3.26l.53.5V21h16.18v-8.74l.53-.5A4.46 4.46 0 0 0 22 8.5A4.5 4.5 0 0 0 17.5 4c-.56 0-1.13-.37-1.61-.5c-1.06-1.23-2.62-2-4.39-2"/>',
+  },
+  'mdi:merge': {
+    body: '<path fill="currentColor" d="M8 16H4l6 6l6-6h-4V4H8zm8-12v4h4l-6-6l-6 6h4v8h4z"/>',
+  },
+  'mdi:history': {
+    body: '<path fill="currentColor" d="M13.5 8H12v5l4.28 2.54l.72-1.21l-3.5-2.08V8M13 3a9 9 0 0 0-9 9H1l3.96 4.03L9 12H6a7 7 0 0 1 7-7a7 7 0 0 1 7 7a7 7 0 0 1-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.9 8.9 0 0 0 13 21a9 9 0 0 0 9-9a9 9 0 0 0-9-9"/>',
+  },
+  'mdi:undo': {
+    body: '<path fill="currentColor" d="M12.5 8c-2.65 0-5.05 1-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88c3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8"/>',
+  },
+  'mdi:cancel': {
+    body: '<path fill="currentColor" d="M12 2C17.5 2 22 6.5 22 12S17.5 22 12 22S2 17.5 2 12S6.5 2 12 2M12 4C10.1 4 8.4 4.6 7.1 5.7L18.3 16.9C19.3 15.5 20 13.8 20 12C20 7.6 16.4 4 12 4M16.9 18.3L5.7 7.1C4.6 8.4 4 10.1 4 12C4 16.4 7.6 20 12 20C13.9 20 15.6 19.4 16.9 18.3"/>',
+  },
+  'mdi:arrow-right-thick': {
+    body: '<path fill="currentColor" d="M4 10v4h9l-3.5 3.5l2.42 2.42L19.84 12l-7.92-7.92L9.5 6.5L13 10z"/>',
+  },
+  'mdi:arrow-right-bold': {
+    body: '<path fill="currentColor" d="M4 15V9h8V4.16L19.84 12L12 19.84V15z"/>',
+  },
+  'mdi:plus-circle': {
+    body: '<path fill="currentColor" d="M17 13h-4v4h-2v-4H7v-2h4V7h2v4h4m-5-9A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2"/>',
+  },
 };
