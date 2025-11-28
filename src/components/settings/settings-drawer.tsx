@@ -52,6 +52,14 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
     resetSettings();
   };
 
+  const handleToggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
   return (
     <Drawer
       anchor="right"
@@ -81,7 +89,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
           <Tooltip title="Toggle fullscreen">
-            <IconButton size="small">
+            <IconButton size="small" onClick={handleToggleFullscreen}>
               <Iconify icon="solar:full-screen-square-bold" width={20} />
             </IconButton>
           </Tooltip>

@@ -6,18 +6,7 @@ export type NavLayoutValue = 'vertical' | 'horizontal' | 'mini';
 export type NavColorValue = 'integrate' | 'apparent';
 export type FontFamilyValue = 'Public Sans' | 'Inter' | 'DM Sans' | 'Nunito Sans';
 
-export type ColorPresetValue =
-  | 'default'
-  | 'cyan'
-  | 'purple'
-  | 'blue'
-  | 'orange'
-  | 'red'
-  | 'preset1'
-  | 'preset2'
-  | 'preset3'
-  | 'preset4'
-  | 'preset5';
+export type ColorPresetValue = 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red';
 
 export type SettingsState = {
   contrast: boolean;
