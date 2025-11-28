@@ -1,10 +1,12 @@
-import type { ShiftTemplate } from 'src/types/shift';
+import type { DayOfWeek, ShiftDefinition, ShiftTemplateEntity } from 'src/api/types/generated';
 
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Chip from '@mui/material/Chip';
 import Table from '@mui/material/Table';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
@@ -15,45 +17,165 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { RouterLink } from 'src/routes/components';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { shiftTemplateService } from 'src/services/shiftTemplateService';
+import { deleteShiftTemplate, getShiftTemplatePage } from 'src/api/services/generated/shift-template';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
 // ----------------------------------------------------------------------
 
+// Day abbreviations for chips
+const DAY_ABBREVIATIONS: Record<DayOfWeek, string> = {
+  sunday: 'Sun',
+  monday: 'Mon',
+  tuesday: 'Tue',
+  wednesday: 'Wed',
+  thursday: 'Thu',
+  friday: 'Fri',
+  saturday: 'Sat',
+};
+
+// Parse ISO 8601 duration to minutes (e.g., "PT8H30M" -> 510)
+function parseDurationToMinutes(duration: string | undefined): number {
+  if (!duration) return 0;
+  
+  let minutes = 0;
+  const hourMatch = duration.match(/(\d+)H/);
+  const minuteMatch = duration.match(/(\d+)M/);
+  
+  if (hourMatch) {
+    minutes += parseInt(hourMatch[1], 10) * 60;
+  }
+  if (minuteMatch) {
+    minutes += parseInt(minuteMatch[1], 10);
+  }
+  
+  return minutes;
+}
+
+// Calculate total working time from shift definitions
+function calculateTotalWorkingTime(shifts: ShiftDefinition[] | null | undefined): string {
+  if (!shifts || shifts.length === 0) return '0h';
+  
+  let totalMinutes = 0;
+  
+  for (const shift of shifts) {
+    const startMinutes = parseDurationToMinutes(shift.startTime);
+    let endMinutes = parseDurationToMinutes(shift.endTime);
+    
+    // Handle overnight shifts
+    if (endMinutes <= startMinutes) {
+      endMinutes += 24 * 60;
+    }
+    
+    const shiftDuration = endMinutes - startMinutes;
+    
+    // Subtract break times
+    let breakMinutes = 0;
+    if (shift.breakDefinitions) {
+      for (const breakDef of shift.breakDefinitions) {
+        const breakStart = parseDurationToMinutes(breakDef.startTime);
+        let breakEnd = parseDurationToMinutes(breakDef.endTime);
+        if (breakEnd <= breakStart) {
+          breakEnd += 24 * 60;
+        }
+        breakMinutes += breakEnd - breakStart;
+      }
+    }
+    
+    totalMinutes += shiftDuration - breakMinutes;
+  }
+  
+  const hours = Math.floor(totalMinutes / 60);
+  const mins = totalMinutes % 60;
+  
+  if (mins === 0) {
+    return `${hours}h`;
+  }
+  return `${hours}h ${mins}m`;
+}
+
+// Get unique work days from shift definitions
+function getWorkDays(shifts: ShiftDefinition[] | null | undefined): DayOfWeek[] {
+  if (!shifts || shifts.length === 0) return [];
+  
+  const daysSet = new Set<DayOfWeek>();
+  for (const shift of shifts) {
+    if (shift.applicableDay) {
+      daysSet.add(shift.applicableDay);
+    }
+  }
+  
+  // Sort days in order from Sunday to Saturday
+  const dayOrder: DayOfWeek[] = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  return dayOrder.filter((day) => daysSet.has(day));
+}
+
+// ----------------------------------------------------------------------
+
 export function ShiftTemplateView() {
-  const [templates, setTemplates] = useState<ShiftTemplate[]>(() => shiftTemplateService.getAll());
+  const [templates, setTemplates] = useState<ShiftTemplateEntity[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selected, setSelected] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleRefresh = useCallback(() => {
-    setTemplates(shiftTemplateService.getAll());
-    setSelected([]);
-  }, []);
+  const fetchTemplates = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await getShiftTemplatePage([], {
+        pageNumber: page,
+        pageSize: rowsPerPage,
+      });
+      setTemplates(response.items || []);
+      setTotalItems(response.totalItems || 0);
+    } catch (err) {
+      setError('Failed to load shift templates');
+      console.error('Error fetching shift templates:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, rowsPerPage]);
+
+  useEffect(() => {
+    fetchTemplates();
+  }, [fetchTemplates]);
 
   const handleDelete = useCallback(
-    (id: string) => {
-      shiftTemplateService.delete(id);
-      handleRefresh();
+    async (id: string) => {
+      try {
+        await deleteShiftTemplate(id);
+        fetchTemplates();
+        setSelected((prev) => prev.filter((i) => i !== id));
+      } catch (err) {
+        console.error('Error deleting shift template:', err);
+      }
     },
-    [handleRefresh]
+    [fetchTemplates]
   );
 
-  const handleDeleteSelected = useCallback(() => {
-    shiftTemplateService.deleteMultiple(selected);
-    handleRefresh();
-  }, [selected, handleRefresh]);
+  const handleDeleteSelected = useCallback(async () => {
+    try {
+      await Promise.all(selected.map((id) => deleteShiftTemplate(id)));
+      fetchTemplates();
+      setSelected([]);
+    } catch (err) {
+      console.error('Error deleting shift templates:', err);
+    }
+  }, [selected, fetchTemplates]);
 
   const handleSelectAll = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.checked) {
-        setSelected(templates.map((t) => t.id));
+        setSelected(templates.map((t) => t.id?.toString() || '').filter(Boolean));
       } else {
         setSelected([]);
       }
@@ -73,8 +195,6 @@ export function ShiftTemplateView() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   }, []);
-
-  const paginatedTemplates = templates.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
     <DashboardContent>
@@ -151,16 +271,32 @@ export function ShiftTemplateView() {
                   </TableCell>
                   <TableCell>Code</TableCell>
                   <TableCell>Name</TableCell>
-                  <TableCell>Week Type</TableCell>
-                  <TableCell>Pattern</TableCell>
-                  <TableCell>Shifts</TableCell>
+                  <TableCell>Work Days</TableCell>
+                  <TableCell>Total Working Time</TableCell>
                   <TableCell align="right">Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedTemplates.length === 0 ? (
+                {loading ? (
                   <TableRow>
-                    <TableCell colSpan={7} align="center" sx={{ py: 10 }}>
+                    <TableCell colSpan={6} align="center" sx={{ py: 10 }}>
+                      <CircularProgress />
+                    </TableCell>
+                  </TableRow>
+                ) : error ? (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center" sx={{ py: 10 }}>
+                      <Typography variant="body1" color="error">
+                        {error}
+                      </Typography>
+                      <Button onClick={fetchTemplates} sx={{ mt: 2 }}>
+                        Retry
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ) : templates.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center" sx={{ py: 10 }}>
                       <Typography variant="body1" color="text.secondary">
                         No shift templates found
                       </Typography>
@@ -170,47 +306,70 @@ export function ShiftTemplateView() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  paginatedTemplates.map((template) => (
-                    <TableRow
-                      key={template.id}
-                      hover
-                      selected={selected.includes(template.id)}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={selected.includes(template.id)}
-                          onChange={() => handleSelectOne(template.id)}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" fontWeight="medium">
-                          {template.code}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>{template.name}</TableCell>
-                      <TableCell>
-                        {template.weekType === '5-day' ? '5-Day' : '7-Day'}
-                      </TableCell>
-                      <TableCell>
-                        {template.shiftPattern === '2-shifts' ? '2 Shifts' : '3 Shifts'}
-                      </TableCell>
-                      <TableCell>{template.definitions.length}</TableCell>
-                      <TableCell align="right">
-                        <IconButton
-                          component={RouterLink}
-                          href={`/shift-templates/${template.id}/edit`}
-                        >
-                          <Iconify icon="solar:pen-bold" />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          onClick={() => handleDelete(template.id)}
-                        >
-                          <Iconify icon="solar:trash-bin-trash-bold" />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))
+                  templates.map((template) => {
+                    const templateId = template.id?.toString() || '';
+                    const workDays = getWorkDays(template.shifts);
+                    const totalWorkingTime = calculateTotalWorkingTime(template.shifts);
+                    
+                    return (
+                      <TableRow
+                        key={templateId}
+                        hover
+                        selected={selected.includes(templateId)}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={selected.includes(templateId)}
+                            onChange={() => handleSelectOne(templateId)}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2" fontWeight="medium">
+                            {template.code}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>{template.name}</TableCell>
+                        <TableCell>
+                          <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+                            {workDays.length > 0 ? (
+                              workDays.map((day) => (
+                                <Chip
+                                  key={day}
+                                  label={DAY_ABBREVIATIONS[day]}
+                                  size="small"
+                                  color="primary"
+                                  variant="outlined"
+                                />
+                              ))
+                            ) : (
+                              <Typography variant="body2" color="text.disabled">
+                                No days set
+                              </Typography>
+                            )}
+                          </Stack>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">
+                            {totalWorkingTime}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="right">
+                          <IconButton
+                            component={RouterLink}
+                            href={`/shift-templates/${templateId}/edit`}
+                          >
+                            <Iconify icon="solar:pen-bold" />
+                          </IconButton>
+                          <IconButton
+                            color="error"
+                            onClick={() => handleDelete(templateId)}
+                          >
+                            <Iconify icon="solar:trash-bin-trash-bold" />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
                 )}
               </TableBody>
             </Table>
@@ -220,7 +379,7 @@ export function ShiftTemplateView() {
         <TablePagination
           component="div"
           page={page}
-          count={templates.length}
+          count={totalItems}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}
