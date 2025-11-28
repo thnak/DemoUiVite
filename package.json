@@ -6,9 +6,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "npm run generate:api && vite",
     "start": "vite preview",
-    "build": "tsc && vite build",
+    "build": "npm run generate:api && tsc && vite build",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
     "fm:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
