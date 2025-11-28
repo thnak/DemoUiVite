@@ -171,7 +171,7 @@ export function DashboardBuilderView() {
             w: Math.min(4, BREAKPOINT_CONFIGS[bp].cols),
             h: 4,
             minW: 2,
-            minH: 2,
+            minH: 1,
           };
           newLayouts[bp] = [...existing, newItem];
         });

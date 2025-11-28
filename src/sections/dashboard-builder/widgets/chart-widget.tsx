@@ -31,7 +31,7 @@ export function ChartWidget({ config, sx, ...other }: ChartWidgetProps) {
 
   const chartSx = isNonAxisChart
     ? { height: 'calc(100% - 72px)', mx: 'auto' }
-    : { height: 'calc(100% - 72px)' };
+    : { height: 'calc(100% - 0px)' };
 
   return (
     <Card
