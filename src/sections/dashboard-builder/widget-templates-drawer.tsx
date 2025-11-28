@@ -1,3 +1,6 @@
+
+import type { IconifyName } from 'src/components/iconify/register-icons';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -13,7 +16,7 @@ import { renderWidget } from './widget-registry';
 
 import type { ChartType, WidgetType, ChartWidgetConfig } from './types';
 
-// ----------------------------------------------------------------------
+// ------
 
 // Widget template with visual preview configuration
 interface WidgetTemplate {
@@ -22,7 +25,7 @@ interface WidgetTemplate {
   description: string;
   type: WidgetType;
   category: string;
-  icon: string;
+  icon: IconifyName;
   previewConfig: unknown;
 }
 
@@ -30,7 +33,7 @@ interface WidgetTemplate {
 interface TemplateCategory {
   id: string;
   name: string;
-  icon: string;
+  icon: IconifyName;
   templates: WidgetTemplate[];
 }
 
@@ -385,7 +388,7 @@ export function WidgetTemplatesDrawer({ open, onClose, onSelectTemplate }: Widge
 
   return (
     <Drawer
-      anchor="left"
+      anchor="right"
       open={open}
       onClose={onClose}
       PaperProps={{

@@ -172,7 +172,11 @@ export function DashboardBuilderView() {
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [importJson, setImportJson] = useState('');
   const [templatesDrawerOpen, setTemplatesDrawerOpen] = useState(false);
-  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: 'success' | 'error';
+  }>({
     open: false,
     message: '',
     severity: 'success',
@@ -192,12 +196,9 @@ export function DashboardBuilderView() {
   }, [id]);
 
   // Handle layout changes
-  const handleLayoutChange = useCallback(
-    (_currentLayout: Layout[], allLayouts: Layouts) => {
-      setLayouts(allLayouts);
-    },
-    []
-  );
+  const handleLayoutChange = useCallback((_currentLayout: Layout[], allLayouts: Layouts) => {
+    setLayouts(allLayouts);
+  }, []);
 
   // Handle breakpoint change
   const handleBreakpointChange = useCallback((newBreakpoint: string) => {
@@ -225,7 +226,7 @@ export function DashboardBuilderView() {
             w: Math.min(4, BREAKPOINT_CONFIGS[bp].cols),
             h: 4,
             minW: 2,
-            minH: 2,
+            minH: 1,
           };
           newLayouts[bp] = [...existing, newItem];
         });
@@ -358,7 +359,11 @@ export function DashboardBuilderView() {
       setImportJson('');
       setSnackbar({ open: true, message: 'Dashboard imported successfully!', severity: 'success' });
     } catch {
-      setSnackbar({ open: true, message: 'Invalid JSON format. Please check your input.', severity: 'error' });
+      setSnackbar({
+        open: true,
+        message: 'Invalid JSON format. Please check your input.',
+        severity: 'error',
+      });
     }
   }, [importJson]);
 
@@ -540,7 +545,11 @@ export function DashboardBuilderView() {
               gap: 2,
             }}
           >
-            <Iconify icon="mdi:view-dashboard-outline" width={64} sx={{ color: 'text.secondary' }} />
+            <Iconify
+              icon="mdi:view-dashboard-outline"
+              width={64}
+              sx={{ color: 'text.secondary' }}
+            />
             <Typography variant="h6" color="text.secondary">
               No widgets yet
             </Typography>
@@ -574,12 +583,13 @@ export function DashboardBuilderView() {
                     spacing={0.5}
                     sx={{
                       position: 'absolute',
-                      top: 8,
+                      top: -24,
                       right: 8,
-                      zIndex: 10,
+                      zIndex: 20, // increase zIndex
                       bgcolor: 'background.paper',
                       borderRadius: 1,
                       boxShadow: 1,
+                      pointerEvents: 'auto', // ensure controls are clickable
                     }}
                   >
                     <Tooltip title="Edit widget">
@@ -645,7 +655,12 @@ export function DashboardBuilderView() {
       </Dialog>
 
       {/* Save Dialog */}
-      <Dialog open={saveDialogOpen} onClose={() => setSaveDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={saveDialogOpen}
+        onClose={() => setSaveDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Save Dashboard</DialogTitle>
         <DialogContent>
           <Stack spacing={3} sx={{ pt: 2 }}>
@@ -675,12 +690,7 @@ export function DashboardBuilderView() {
       </Dialog>
 
       {/* Edit Widget Dialog - Placeholder for future implementation */}
-      <Dialog
-        open={!!editWidgetId}
-        onClose={() => setEditWidgetId(null)}
-        maxWidth="md"
-        fullWidth
-      >
+      <Dialog open={!!editWidgetId} onClose={() => setEditWidgetId(null)} maxWidth="md" fullWidth>
         <DialogTitle>Edit Widget</DialogTitle>
         <DialogContent>
           <WidgetEditor
@@ -841,7 +851,10 @@ function WidgetEditor({ widget, onSave }: WidgetEditorProps) {
               onChange={(e) =>
                 setConfig({
                   ...config,
-                  config: { ...config.config, variant: e.target.value as typeof config.config.variant },
+                  config: {
+                    ...config.config,
+                    variant: e.target.value as typeof config.config.variant,
+                  },
                 })
               }
             >
@@ -913,7 +926,10 @@ function WidgetEditor({ widget, onSave }: WidgetEditorProps) {
               onChange={(e) =>
                 setConfig({
                   ...config,
-                  config: { ...config.config, objectFit: e.target.value as typeof config.config.objectFit },
+                  config: {
+                    ...config.config,
+                    objectFit: e.target.value as typeof config.config.objectFit,
+                  },
                 })
               }
             >
@@ -950,7 +966,10 @@ function WidgetEditor({ widget, onSave }: WidgetEditorProps) {
               onChange={(e) =>
                 setConfig({
                   ...config,
-                  config: { ...config.config, chartType: e.target.value as typeof config.config.chartType },
+                  config: {
+                    ...config.config,
+                    chartType: e.target.value as typeof config.config.chartType,
+                  },
                 })
               }
             >
@@ -1010,7 +1029,10 @@ function WidgetEditor({ widget, onSave }: WidgetEditorProps) {
               onChange={(e) =>
                 setConfig({
                   ...config,
-                  config: { ...config.config, layout: e.target.value as typeof config.config.layout },
+                  config: {
+                    ...config.config,
+                    layout: e.target.value as typeof config.config.layout,
+                  },
                 })
               }
             >
