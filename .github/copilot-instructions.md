@@ -191,6 +191,8 @@ For semantic colors, use the palette tokens:
 }} />
 ```
 
+## NOTE: this project using api service generator make sure called npm run generate:api before run build/dev
+
 ## API Time Duration Standards
 
 All time duration values in API calls **MUST** use the ISO 8601 duration format. This is a mandatory standard with no exceptions.
