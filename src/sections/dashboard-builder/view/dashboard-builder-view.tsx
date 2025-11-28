@@ -8,6 +8,7 @@ import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
@@ -38,7 +39,6 @@ import {
   CookingBookDrawer,
   MergeHistoryDrawer,
   MergePreviewDialog,
-  MergeDropZoneIndicator,
 } from '../cooking-book';
 
 import type { WidgetTemplate } from '../widget-templates-drawer';
@@ -192,8 +192,9 @@ export function DashboardBuilderView() {
     primaryWidget: WidgetItem | null;
     secondaryWidget: WidgetItem | null;
   }>({ recipe: null, primaryWidget: null, secondaryWidget: null });
-  const [draggedWidgetId, setDraggedWidgetId] = useState<string | null>(null);
-  const [dropTargetId, setDropTargetId] = useState<string | null>(null);
+  // Click-to-merge state (replacing drag-drop)
+  const [mergeSelectOpen, setMergeSelectOpen] = useState(false);
+  const [mergeSourceWidget, setMergeSourceWidget] = useState<WidgetItem | null>(null);
   
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
@@ -390,63 +391,70 @@ export function DashboardBuilderView() {
     }
   }, [importJson]);
 
-  // Handle widget drag start for merging
-  const handleWidgetDragStart = useCallback((widgetId: string) => {
-    setDraggedWidgetId(widgetId);
+  // Handle merge button click - open merge target selection dialog
+  const handleMergeClick = useCallback((widget: WidgetItem) => {
+    setMergeSourceWidget(widget);
+    setMergeSelectOpen(true);
   }, []);
 
-  // Handle widget drag over for merging
-  const handleWidgetDragOver = useCallback(
-    (targetWidgetId: string) => {
-      if (!draggedWidgetId || draggedWidgetId === targetWidgetId) {
-        setDropTargetId(null);
-        return;
+  // Handle selecting a merge target from the dialog
+  const handleSelectMergeTarget = useCallback(
+    (targetWidget: WidgetItem, recipe: MergeRecipe) => {
+      if (!mergeSourceWidget) return;
+      
+      // Determine primary and secondary based on recipe
+      let primaryWidget: WidgetItem;
+      let secondaryWidget: WidgetItem;
+      
+      if (recipe.primaryIngredient === mergeSourceWidget.widgetConfig.type) {
+        primaryWidget = mergeSourceWidget;
+        secondaryWidget = targetWidget;
+      } else {
+        primaryWidget = targetWidget;
+        secondaryWidget = mergeSourceWidget;
       }
-      setDropTargetId(targetWidgetId);
+      
+      // Show merge preview dialog
+      setPendingMerge({ recipe, primaryWidget, secondaryWidget });
+      setMergeSelectOpen(false);
+      setMergePreviewOpen(true);
     },
-    [draggedWidgetId]
+    [mergeSourceWidget]
   );
 
-  // Handle widget drop for merging
-  const handleWidgetDrop = useCallback(
-    (targetWidgetId: string) => {
-      if (!draggedWidgetId || draggedWidgetId === targetWidgetId) {
-        setDraggedWidgetId(null);
-        setDropTargetId(null);
-        return;
-      }
+  // Get available merge options for a widget
+  const getAvailableMergeOptions = useCallback(
+    (sourceWidget: WidgetItem) => {
+      const options: Array<{
+        targetWidget: WidgetItem;
+        recipe: MergeRecipe;
+      }> = [];
 
-      const primaryWidget = widgets.find((w) => w.id === targetWidgetId);
-      const secondaryWidget = widgets.find((w) => w.id === draggedWidgetId);
+      widgets.forEach((targetWidget) => {
+        if (targetWidget.id === sourceWidget.id) return;
 
-      if (!primaryWidget || !secondaryWidget) {
-        setDraggedWidgetId(null);
-        setDropTargetId(null);
-        return;
-      }
+        // Check if source can be primary
+        const recipeAsPrimary = findMergeRecipe(
+          sourceWidget.widgetConfig.type,
+          targetWidget.widgetConfig.type
+        );
+        if (recipeAsPrimary) {
+          options.push({ targetWidget, recipe: recipeAsPrimary });
+        }
 
-      // Find a matching recipe
-      const recipe = findMergeRecipe(
-        primaryWidget.widgetConfig.type,
-        secondaryWidget.widgetConfig.type
-      );
+        // Check if source can be secondary
+        const recipeAsSecondary = findMergeRecipe(
+          targetWidget.widgetConfig.type,
+          sourceWidget.widgetConfig.type
+        );
+        if (recipeAsSecondary && recipeAsSecondary.id !== recipeAsPrimary?.id) {
+          options.push({ targetWidget, recipe: recipeAsSecondary });
+        }
+      });
 
-      if (recipe) {
-        // Show merge preview dialog
-        setPendingMerge({ recipe, primaryWidget, secondaryWidget });
-        setMergePreviewOpen(true);
-      } else {
-        setSnackbar({
-          open: true,
-          message: `Cannot merge ${primaryWidget.widgetConfig.type} with ${secondaryWidget.widgetConfig.type}. Check the Cooking Book for valid recipes.`,
-          severity: 'error',
-        });
-      }
-
-      setDraggedWidgetId(null);
-      setDropTargetId(null);
+      return options;
     },
-    [draggedWidgetId, widgets]
+    [widgets]
   );
 
   // Confirm widget merge
@@ -563,18 +571,6 @@ export function DashboardBuilderView() {
       severity: 'success',
     });
   }, []);
-
-  // Get current drop recipe for visual feedback
-  const currentDropRecipe = useMemo(() => {
-    if (!draggedWidgetId || !dropTargetId) return null;
-    const primaryWidget = widgets.find((w) => w.id === dropTargetId);
-    const secondaryWidget = widgets.find((w) => w.id === draggedWidgetId);
-    if (!primaryWidget || !secondaryWidget) return null;
-    return findMergeRecipe(
-      primaryWidget.widgetConfig.type,
-      secondaryWidget.widgetConfig.type
-    );
-  }, [draggedWidgetId, dropTargetId, widgets]);
 
   // Keyboard shortcuts handler
   useEffect(() => {
@@ -804,31 +800,7 @@ export function DashboardBuilderView() {
               <Box key={widget.id} sx={{ height: '100%' }}>
                 <Box
                   sx={{ position: 'relative', height: '100%' }}
-                  draggable
-                  onDragStart={() => handleWidgetDragStart(widget.id)}
-                  onDragOver={(e) => {
-                    e.preventDefault();
-                    handleWidgetDragOver(widget.id);
-                  }}
-                  onDragLeave={() => setDropTargetId(null)}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    handleWidgetDrop(widget.id);
-                  }}
-                  onDragEnd={() => {
-                    setDraggedWidgetId(null);
-                    setDropTargetId(null);
-                  }}
                 >
-                  {/* Merge drop zone indicator */}
-                  {dropTargetId === widget.id && draggedWidgetId && (
-                    <MergeDropZoneIndicator
-                      isOver
-                      canDrop={!!currentDropRecipe}
-                      recipe={currentDropRecipe}
-                    />
-                  )}
-
                   {/* Widget controls */}
                   <Stack
                     direction="row"
@@ -837,17 +809,17 @@ export function DashboardBuilderView() {
                       position: 'absolute',
                       top: -24,
                       right: 8,
-                      zIndex: 20, // increase zIndex
+                      zIndex: 20,
                       bgcolor: 'background.paper',
                       borderRadius: 1,
                       boxShadow: 1,
-                      pointerEvents: 'auto', // ensure controls are clickable
+                      pointerEvents: 'auto',
                     }}
                   >
-                    <Tooltip title="Drag to merge with another widget">
+                    <Tooltip title="Merge with another widget">
                       <IconButton
                         size="small"
-                        sx={{ cursor: 'grab' }}
+                        onClick={() => handleMergeClick(widget)}
                       >
                         <Iconify icon="mdi:merge" width={18} />
                       </IconButton>
@@ -1062,6 +1034,130 @@ export function DashboardBuilderView() {
         history={mergeHistory}
         onUndo={handleUndoMerge}
       />
+
+      {/* Merge Target Selection Dialog */}
+      <Dialog
+        open={mergeSelectOpen}
+        onClose={() => {
+          setMergeSelectOpen(false);
+          setMergeSourceWidget(null);
+        }}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Iconify icon="mdi:chef-hat" width={24} />
+            <span>Select Merge Target</span>
+          </Stack>
+        </DialogTitle>
+        <DialogContent>
+          {mergeSourceWidget && (
+            <Stack spacing={2} sx={{ pt: 1 }}>
+              <Alert severity="info">
+                Select a widget to merge with your{' '}
+                <strong>
+                  {mergeSourceWidget.widgetConfig.type.charAt(0).toUpperCase() +
+                    mergeSourceWidget.widgetConfig.type.slice(1)}
+                </strong>{' '}
+                widget
+              </Alert>
+
+              {getAvailableMergeOptions(mergeSourceWidget).length === 0 ? (
+                <Box sx={{ py: 4, textAlign: 'center' }}>
+                  <Iconify
+                    icon="mdi:chef-hat"
+                    width={48}
+                    sx={{ color: 'text.disabled', mb: 2 }}
+                  />
+                  <Typography variant="body1" color="text.secondary">
+                    No compatible widgets to merge with
+                  </Typography>
+                  <Typography variant="caption" color="text.disabled">
+                    Add more widgets or check the Cooking Book for valid recipes
+                  </Typography>
+                </Box>
+              ) : (
+                <Stack spacing={1.5}>
+                  {getAvailableMergeOptions(mergeSourceWidget).map(({ targetWidget, recipe }) => (
+                    <Card
+                      key={`${targetWidget.id}-${recipe.id}`}
+                      sx={{
+                        p: 2,
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        border: '2px solid transparent',
+                        '&:hover': {
+                          borderColor: 'primary.main',
+                          bgcolor: 'action.hover',
+                        },
+                      }}
+                      onClick={() => handleSelectMergeTarget(targetWidget, recipe)}
+                    >
+                      <Stack spacing={1}>
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                          <Box
+                            sx={{
+                              p: 0.75,
+                              bgcolor: 'primary.lighter',
+                              borderRadius: 1,
+                              display: 'flex',
+                            }}
+                          >
+                            <Iconify
+                              icon={
+                                targetWidget.widgetConfig.type === 'chart'
+                                  ? 'mdi:chart-box-outline'
+                                  : targetWidget.widgetConfig.type === 'text'
+                                    ? 'mdi:format-header-1'
+                                    : targetWidget.widgetConfig.type === 'image'
+                                      ? 'mdi:image-outline'
+                                      : targetWidget.widgetConfig.type === 'table'
+                                        ? 'mdi:table-large'
+                                        : 'mdi:widgets-outline'
+                              }
+                              width={20}
+                            />
+                          </Box>
+                          <Typography variant="subtitle2">
+                            {targetWidget.widgetConfig.type.charAt(0).toUpperCase() +
+                              targetWidget.widgetConfig.type.slice(1)}{' '}
+                            Widget
+                          </Typography>
+                          <Iconify
+                            icon="mdi:arrow-right"
+                            width={16}
+                            sx={{ color: 'text.secondary' }}
+                          />
+                          <Chip
+                            size="small"
+                            label={recipe.resultType}
+                            color="success"
+                            variant="outlined"
+                          />
+                        </Stack>
+                        <Typography variant="caption" color="text.secondary">
+                          {recipe.name}
+                        </Typography>
+                      </Stack>
+                    </Card>
+                  ))}
+                </Stack>
+              )}
+            </Stack>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setMergeSelectOpen(false);
+              setMergeSourceWidget(null);
+            }}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Merge Preview Dialog */}
       <MergePreviewDialog
