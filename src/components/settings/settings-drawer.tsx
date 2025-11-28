@@ -140,7 +140,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
               icon="solar:code-square-bold"
               checked={settings.compact}
               onChange={() => updateSettings('compact', !settings.compact)}
-              info="Dashboard only"
+              info="Dashboard only and available at large resolutions > 1600px (xl)"
             />
           </Stack>
 
