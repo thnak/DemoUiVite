@@ -8,6 +8,8 @@ import { usePathname } from 'src/routes/hooks';
 import { queryClient } from 'src/api';
 import { ThemeProvider } from 'src/theme/theme-provider';
 
+import { SettingsProvider } from 'src/components/settings';
+
 // ----------------------------------------------------------------------
 
 type AppProps = {
@@ -19,7 +21,9 @@ export default function App({ children }: AppProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>{children}</ThemeProvider>
+      <SettingsProvider>
+        <ThemeProvider>{children}</ThemeProvider>
+      </SettingsProvider>
     </QueryClientProvider>
   );
 }

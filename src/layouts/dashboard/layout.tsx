@@ -9,6 +9,8 @@ import { useTheme } from '@mui/material/styles';
 
 import { _langs, _notifications } from 'src/_mock';
 
+import { useSettings, SettingsButton } from 'src/components/settings';
+
 import { NavMobile, NavDesktop } from './nav';
 import { layoutClasses } from '../core/classes';
 import { _account } from '../nav-config-account';
@@ -50,13 +52,16 @@ export function DashboardLayout({
 }: DashboardLayoutProps) {
   const theme = useTheme();
   const navData = useNavData();
+  const { settings } = useSettings();
 
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
 
   const renderHeader = () => {
     const headerSlotProps: HeaderSectionProps['slotProps'] = {
       container: {
-        maxWidth: false,
+        // When compact is disabled, use maxWidth=false to fill available space
+        // When compact is enabled, use 'xl' (1600px) maxWidth
+        maxWidth: settings.compact ? 'xl' : false,
       },
     };
 
@@ -89,6 +94,9 @@ export function DashboardLayout({
 
           {/** @slot Notifications popover */}
           <NotificationsPopover data={_notifications} />
+
+          {/** @slot Settings drawer */}
+          <SettingsButton />
 
           {/** @slot Account drawer */}
           <AccountPopover data={_account} />
