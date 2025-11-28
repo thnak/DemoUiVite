@@ -30,9 +30,11 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 
 import { BREAKPOINT_CONFIGS } from '../types';
+import { WidgetTemplatesDrawer } from '../widget-templates-drawer';
 import { renderWidget, getRegisteredWidgets } from '../widget-registry';
 import { generateId, saveDashboard, getDashboardById } from '../storage';
 
+import type { WidgetTemplate } from '../widget-templates-drawer';
 import type {
   WidgetItem,
   WidgetType,
@@ -169,6 +171,7 @@ export function DashboardBuilderView() {
   const [shortcutsDialogOpen, setShortcutsDialogOpen] = useState(false);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [importJson, setImportJson] = useState('');
+  const [templatesDrawerOpen, setTemplatesDrawerOpen] = useState(false);
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
     open: false,
     message: '',
@@ -232,6 +235,43 @@ export function DashboardBuilderView() {
     });
 
     setAddWidgetOpen(false);
+  }, []);
+
+  // Add widget from template
+  const handleAddWidgetFromTemplate = useCallback((template: WidgetTemplate) => {
+    const newWidget: WidgetItem = {
+      id: generateId(),
+      widgetConfig: { type: template.type, config: template.previewConfig } as WidgetConfig,
+    };
+
+    setWidgets((prev) => {
+      const updated = [...prev, newWidget];
+      // Update layouts for the new widget
+      setLayouts((prevLayouts) => {
+        const newLayouts: Layouts = {};
+        Object.keys(BREAKPOINT_CONFIGS).forEach((bp) => {
+          const existing = prevLayouts[bp] ?? [];
+          const newItem: Layout = {
+            i: newWidget.id,
+            x: 0,
+            y: Infinity, // Place at bottom
+            w: Math.min(4, BREAKPOINT_CONFIGS[bp].cols),
+            h: 4,
+            minW: 2,
+            minH: 2,
+          };
+          newLayouts[bp] = [...existing, newItem];
+        });
+        return newLayouts;
+      });
+      return updated;
+    });
+
+    setSnackbar({
+      open: true,
+      message: `Added "${template.name}" widget`,
+      severity: 'success',
+    });
   }, []);
 
   // Remove a widget
@@ -449,6 +489,12 @@ export function DashboardBuilderView() {
           <Tooltip title="Import from JSON (Ctrl+I)">
             <IconButton onClick={() => setImportDialogOpen(true)}>
               <Iconify icon="mdi:import" />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Widget Templates">
+            <IconButton onClick={() => setTemplatesDrawerOpen(true)}>
+              <Iconify icon="mdi:widgets-outline" />
             </IconButton>
           </Tooltip>
 
@@ -725,6 +771,13 @@ export function DashboardBuilderView() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Widget Templates Drawer */}
+      <WidgetTemplatesDrawer
+        open={templatesDrawerOpen}
+        onClose={() => setTemplatesDrawerOpen(false)}
+        onSelectTemplate={handleAddWidgetFromTemplate}
+      />
 
       {/* Snackbar */}
       <Snackbar
