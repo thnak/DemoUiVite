@@ -9,6 +9,8 @@ import { useTheme } from '@mui/material/styles';
 
 import { _langs, _notifications } from 'src/_mock';
 
+import { SettingsButton } from 'src/components/settings';
+
 import { NavMobile, NavDesktop } from './nav';
 import { layoutClasses } from '../core/classes';
 import { _account } from '../nav-config-account';
@@ -89,6 +91,9 @@ export function DashboardLayout({
 
           {/** @slot Notifications popover */}
           <NotificationsPopover data={_notifications} />
+
+          {/** @slot Settings drawer */}
+          <SettingsButton />
 
           {/** @slot Account drawer */}
           <AccountPopover data={_account} />
