@@ -3,9 +3,9 @@ import type { ChartOptions } from 'src/components/chart';
 
 // ----------------------------------------------------------------------
 
-export type WidgetType = 'chart' | 'text' | 'image' | 'text-image';
+export type WidgetType = 'chart' | 'text' | 'image' | 'text-image' | 'table' | 'image-blur';
 
-export type ChartType = 'line' | 'bar' | 'pie' | 'donut' | 'area' | 'radialBar';
+export type ChartType = 'line' | 'bar' | 'pie' | 'donut' | 'area' | 'radialBar' | 'scatter';
 
 // Chart widget configuration
 export interface ChartWidgetConfig {
@@ -37,12 +37,33 @@ export interface TextImageWidgetConfig {
   layout: 'text-left' | 'text-right' | 'text-top' | 'text-bottom';
 }
 
+// Table widget configuration
+export interface TableWidgetConfig {
+  title?: string;
+  headers: string[];
+  rows: string[][];
+  striped?: boolean;
+  compact?: boolean;
+}
+
+// Image blur with text overlay widget configuration
+export interface ImageBlurWidgetConfig {
+  src: string;
+  alt: string;
+  blurLevel?: number; // 0-20, default 4
+  text: string;
+  textVariant?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body1' | 'body2';
+  textAlign?: 'left' | 'center' | 'right';
+}
+
 // Widget configuration union type
 export type WidgetConfig =
   | { type: 'chart'; config: ChartWidgetConfig }
   | { type: 'text'; config: TextWidgetConfig }
   | { type: 'image'; config: ImageWidgetConfig }
-  | { type: 'text-image'; config: TextImageWidgetConfig };
+  | { type: 'text-image'; config: TextImageWidgetConfig }
+  | { type: 'table'; config: TableWidgetConfig }
+  | { type: 'image-blur'; config: ImageBlurWidgetConfig };
 
 // Widget item with layout information
 export interface WidgetItem {
@@ -83,6 +104,8 @@ export const MERGE_COMPATIBLE: Record<WidgetType, WidgetType[]> = {
   image: ['text'],
   chart: [],
   'text-image': [],
+  table: [],
+  'image-blur': [],
 };
 
 // Check if two widget types can be merged

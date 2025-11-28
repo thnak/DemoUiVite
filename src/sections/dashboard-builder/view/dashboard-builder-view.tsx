@@ -39,11 +39,31 @@ import type {
   WidgetConfig,
   DashboardState,
   ChartWidgetConfig,
+  TableWidgetConfig,
+  ImageBlurWidgetConfig,
 } from '../types';
 
 // ----------------------------------------------------------------------
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
+
+// Virtual breakpoint presets for preview
+const VIRTUAL_BREAKPOINTS = [
+  { key: 'auto', label: 'Auto (Responsive)', width: null, icon: 'mdi:responsive' },
+  { key: 'lg', label: 'Desktop (1200px)', width: 1200, icon: 'mdi:monitor' },
+  { key: 'md', label: 'Tablet (996px)', width: 996, icon: 'mdi:tablet' },
+  { key: 'sm', label: 'Small Tablet (768px)', width: 768, icon: 'mdi:tablet' },
+  { key: 'xs', label: 'Mobile (480px)', width: 480, icon: 'mdi:cellphone' },
+] as const;
+
+// Keyboard shortcuts
+const KEYBOARD_SHORTCUTS = [
+  { key: 'Ctrl+S', description: 'Save dashboard' },
+  { key: 'Ctrl+N', description: 'Add new widget' },
+  { key: 'Ctrl+E', description: 'Export as JSON' },
+  { key: 'Ctrl+I', description: 'Import from JSON' },
+  { key: '?', description: 'Show shortcuts' },
+] as const;
 
 // Default sample data for new widgets
 const getDefaultWidgetConfig = (type: WidgetType): WidgetConfig => {
@@ -93,6 +113,33 @@ const getDefaultWidgetConfig = (type: WidgetType): WidgetConfig => {
           layout: 'text-left',
         },
       };
+    case 'table':
+      return {
+        type: 'table',
+        config: {
+          title: 'Sample Table',
+          headers: ['Name', 'Value', 'Status'],
+          rows: [
+            ['Item 1', '100', 'Active'],
+            ['Item 2', '200', 'Pending'],
+            ['Item 3', '300', 'Complete'],
+          ],
+          striped: true,
+          compact: false,
+        } as TableWidgetConfig,
+      };
+    case 'image-blur':
+      return {
+        type: 'image-blur',
+        config: {
+          src: '/assets/images/cover/cover-3.webp',
+          alt: 'Background image',
+          blurLevel: 4,
+          text: 'Your overlay text here',
+          textVariant: 'h4',
+          textAlign: 'center',
+        } as ImageBlurWidgetConfig,
+      };
     default:
       return {
         type: 'text',
@@ -118,6 +165,10 @@ export function DashboardBuilderView() {
   const [addWidgetOpen, setAddWidgetOpen] = useState(false);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [editWidgetId, setEditWidgetId] = useState<string | null>(null);
+  const [virtualBreakpoint, setVirtualBreakpoint] = useState<string>('auto');
+  const [shortcutsDialogOpen, setShortcutsDialogOpen] = useState(false);
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [importJson, setImportJson] = useState('');
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
     open: false,
     message: '',
@@ -222,6 +273,94 @@ export function DashboardBuilderView() {
     }
   }, [id, dashboardName, dashboardDescription, widgets, layouts, navigate]);
 
+  // Export dashboard as JSON
+  const handleExport = useCallback(() => {
+    const dashboardId = id ?? generateId();
+    const dashboard: DashboardState = {
+      id: dashboardId,
+      name: dashboardName,
+      description: dashboardDescription,
+      widgets,
+      layouts,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    const jsonString = JSON.stringify(dashboard, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${dashboardName.replace(/\s+/g, '-').toLowerCase()}-dashboard.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    setSnackbar({ open: true, message: 'Dashboard exported successfully!', severity: 'success' });
+  }, [id, dashboardName, dashboardDescription, widgets, layouts]);
+
+  // Import dashboard from JSON
+  const handleImport = useCallback(() => {
+    try {
+      const dashboard = JSON.parse(importJson) as DashboardState;
+
+      if (!dashboard.widgets || !dashboard.layouts) {
+        throw new Error('Invalid dashboard format');
+      }
+
+      setDashboardName(dashboard.name ?? 'Imported Dashboard');
+      setDashboardDescription(dashboard.description ?? '');
+      setWidgets(dashboard.widgets);
+      setLayouts(dashboard.layouts);
+      setImportDialogOpen(false);
+      setImportJson('');
+      setSnackbar({ open: true, message: 'Dashboard imported successfully!', severity: 'success' });
+    } catch {
+      setSnackbar({ open: true, message: 'Invalid JSON format. Please check your input.', severity: 'error' });
+    }
+  }, [importJson]);
+
+  // Keyboard shortcuts handler
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Ctrl+S: Save
+      if (event.ctrlKey && event.key === 's') {
+        event.preventDefault();
+        setSaveDialogOpen(true);
+      }
+      // Ctrl+N: Add widget
+      if (event.ctrlKey && event.key === 'n') {
+        event.preventDefault();
+        setAddWidgetOpen(true);
+      }
+      // Ctrl+E: Export
+      if (event.ctrlKey && event.key === 'e') {
+        event.preventDefault();
+        handleExport();
+      }
+      // Ctrl+I: Import
+      if (event.ctrlKey && event.key === 'i') {
+        event.preventDefault();
+        setImportDialogOpen(true);
+      }
+      // ?: Show shortcuts
+      if (event.key === '?' && !event.ctrlKey && !event.altKey) {
+        setShortcutsDialogOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleExport]);
+
+  // Get virtual breakpoint width
+  const virtualWidth = useMemo(() => {
+    const preset = VIRTUAL_BREAKPOINTS.find((bp) => bp.key === virtualBreakpoint);
+    return preset?.width ?? null;
+  }, [virtualBreakpoint]);
+
   // Get breakpoint columns
   const breakpointCols = useMemo(
     () =>
@@ -263,10 +402,56 @@ export function DashboardBuilderView() {
           <Typography variant="h4">{id ? 'Edit Dashboard' : 'Create Dashboard'}</Typography>
           <Typography variant="body2" color="text.secondary">
             Current breakpoint: {BREAKPOINT_CONFIGS[currentBreakpoint]?.name ?? currentBreakpoint}
+            {virtualWidth && ` • Preview: ${virtualWidth}px`}
           </Typography>
         </Box>
 
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+          {/* Virtual Breakpoint Switcher */}
+          <FormControl size="small" sx={{ minWidth: 140 }}>
+            <Select
+              value={virtualBreakpoint}
+              onChange={(e) => setVirtualBreakpoint(e.target.value)}
+              displayEmpty
+              renderValue={(value) => {
+                const preset = VIRTUAL_BREAKPOINTS.find((bp) => bp.key === value);
+                return (
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <Iconify icon={preset?.icon ?? 'mdi:responsive'} width={18} />
+                    <span>{preset?.label.split(' ')[0] ?? 'Auto'}</span>
+                  </Stack>
+                );
+              }}
+            >
+              {VIRTUAL_BREAKPOINTS.map((bp) => (
+                <MenuItem key={bp.key} value={bp.key}>
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <Iconify icon={bp.icon} width={18} />
+                    <span>{bp.label}</span>
+                  </Stack>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Tooltip title="Keyboard shortcuts (?)">
+            <IconButton onClick={() => setShortcutsDialogOpen(true)}>
+              <Iconify icon="mdi:keyboard" />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Export as JSON (Ctrl+E)">
+            <IconButton onClick={handleExport}>
+              <Iconify icon="mdi:export" />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Import from JSON (Ctrl+I)">
+            <IconButton onClick={() => setImportDialogOpen(true)}>
+              <Iconify icon="mdi:import" />
+            </IconButton>
+          </Tooltip>
+
           <Button
             variant="outlined"
             startIcon={<Iconify icon="mdi:content-save" />}
@@ -291,6 +476,11 @@ export function DashboardBuilderView() {
           bgcolor: 'background.neutral',
           borderRadius: 2,
           p: 2,
+          ...(virtualWidth && {
+            maxWidth: virtualWidth,
+            mx: 'auto',
+            transition: 'max-width 0.3s ease',
+          }),
         }}
       >
         {widgets.length === 0 ? (
@@ -459,6 +649,80 @@ export function DashboardBuilderView() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setEditWidgetId(null)}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Keyboard Shortcuts Dialog */}
+      <Dialog
+        open={shortcutsDialogOpen}
+        onClose={() => setShortcutsDialogOpen(false)}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle>Keyboard Shortcuts</DialogTitle>
+        <DialogContent>
+          <Stack spacing={1.5} sx={{ pt: 1 }}>
+            {KEYBOARD_SHORTCUTS.map((shortcut) => (
+              <Stack
+                key={shortcut.key}
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Typography variant="body2">{shortcut.description}</Typography>
+                <Box
+                  component="kbd"
+                  sx={{
+                    px: 1,
+                    py: 0.5,
+                    borderRadius: 0.5,
+                    bgcolor: 'action.hover',
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    fontFamily: 'monospace',
+                    fontSize: '0.75rem',
+                  }}
+                >
+                  {shortcut.key}
+                </Box>
+              </Stack>
+            ))}
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShortcutsDialogOpen(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Import Dialog */}
+      <Dialog
+        open={importDialogOpen}
+        onClose={() => setImportDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Import Dashboard from JSON</DialogTitle>
+        <DialogContent>
+          <Stack spacing={2} sx={{ pt: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              Paste the JSON content of a previously exported dashboard below:
+            </Typography>
+            <TextField
+              label="JSON Content"
+              value={importJson}
+              onChange={(e) => setImportJson(e.target.value)}
+              fullWidth
+              multiline
+              rows={10}
+              placeholder='{"name": "My Dashboard", "widgets": [...], "layouts": {...}}'
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setImportDialogOpen(false)}>Cancel</Button>
+          <Button variant="contained" onClick={handleImport} disabled={!importJson.trim()}>
+            Import
+          </Button>
         </DialogActions>
       </Dialog>
 
@@ -643,6 +907,7 @@ function WidgetEditor({ widget, onSave }: WidgetEditorProps) {
               <MenuItem value="pie">Pie</MenuItem>
               <MenuItem value="donut">Donut</MenuItem>
               <MenuItem value="radialBar">Radial Bar</MenuItem>
+              <MenuItem value="scatter">Scatter</MenuItem>
             </Select>
           </FormControl>
           <Button variant="contained" onClick={handleSave}>
@@ -700,6 +965,198 @@ function WidgetEditor({ widget, onSave }: WidgetEditorProps) {
               <MenuItem value="text-right">Text Right</MenuItem>
               <MenuItem value="text-top">Text Top</MenuItem>
               <MenuItem value="text-bottom">Text Bottom</MenuItem>
+            </Select>
+          </FormControl>
+          <Button variant="contained" onClick={handleSave}>
+            Apply Changes
+          </Button>
+        </Stack>
+      );
+
+    case 'table':
+      return (
+        <Stack spacing={3} sx={{ pt: 2 }}>
+          <TextField
+            label="Table Title"
+            value={config.config.title ?? ''}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: { ...config.config, title: e.target.value },
+              })
+            }
+            fullWidth
+          />
+          <TextField
+            label="Headers (comma-separated)"
+            value={config.config.headers.join(', ')}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: {
+                  ...config.config,
+                  headers: e.target.value.split(',').map((h) => h.trim()),
+                },
+              })
+            }
+            fullWidth
+            helperText="Enter column headers separated by commas"
+          />
+          <TextField
+            label="Rows (one per line, comma-separated values)"
+            value={config.config.rows.map((row) => row.join(', ')).join('\n')}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: {
+                  ...config.config,
+                  rows: e.target.value
+                    .split('\n')
+                    .filter((line) => line.trim())
+                    .map((line) => line.split(',').map((cell) => cell.trim())),
+                },
+              })
+            }
+            fullWidth
+            multiline
+            rows={5}
+            helperText="Enter one row per line, with values separated by commas"
+          />
+          <FormControl fullWidth>
+            <InputLabel>Striped Rows</InputLabel>
+            <Select
+              value={config.config.striped ? 'yes' : 'no'}
+              label="Striped Rows"
+              onChange={(e) =>
+                setConfig({
+                  ...config,
+                  config: { ...config.config, striped: e.target.value === 'yes' },
+                })
+              }
+            >
+              <MenuItem value="yes">Yes</MenuItem>
+              <MenuItem value="no">No</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel>Compact Mode</InputLabel>
+            <Select
+              value={config.config.compact ? 'yes' : 'no'}
+              label="Compact Mode"
+              onChange={(e) =>
+                setConfig({
+                  ...config,
+                  config: { ...config.config, compact: e.target.value === 'yes' },
+                })
+              }
+            >
+              <MenuItem value="yes">Yes</MenuItem>
+              <MenuItem value="no">No</MenuItem>
+            </Select>
+          </FormControl>
+          <Button variant="contained" onClick={handleSave}>
+            Apply Changes
+          </Button>
+        </Stack>
+      );
+
+    case 'image-blur':
+      return (
+        <Stack spacing={3} sx={{ pt: 2 }}>
+          <TextField
+            label="Image URL"
+            value={config.config.src}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: { ...config.config, src: e.target.value },
+              })
+            }
+            fullWidth
+          />
+          <TextField
+            label="Alt Text"
+            value={config.config.alt}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: { ...config.config, alt: e.target.value },
+              })
+            }
+            fullWidth
+          />
+          <TextField
+            label="Overlay Text"
+            value={config.config.text}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: { ...config.config, text: e.target.value },
+              })
+            }
+            fullWidth
+            multiline
+            rows={2}
+          />
+          <TextField
+            label="Blur Level (0-20)"
+            type="number"
+            value={config.config.blurLevel ?? 4}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: {
+                  ...config.config,
+                  blurLevel: Math.max(0, Math.min(20, Number(e.target.value))),
+                },
+              })
+            }
+            fullWidth
+            slotProps={{ htmlInput: { min: 0, max: 20 } }}
+          />
+          <FormControl fullWidth>
+            <InputLabel>Text Variant</InputLabel>
+            <Select
+              value={config.config.textVariant ?? 'h4'}
+              label="Text Variant"
+              onChange={(e) =>
+                setConfig({
+                  ...config,
+                  config: {
+                    ...config.config,
+                    textVariant: e.target.value as typeof config.config.textVariant,
+                  },
+                })
+              }
+            >
+              <MenuItem value="h1">Heading 1</MenuItem>
+              <MenuItem value="h2">Heading 2</MenuItem>
+              <MenuItem value="h3">Heading 3</MenuItem>
+              <MenuItem value="h4">Heading 4</MenuItem>
+              <MenuItem value="h5">Heading 5</MenuItem>
+              <MenuItem value="h6">Heading 6</MenuItem>
+              <MenuItem value="body1">Body 1</MenuItem>
+              <MenuItem value="body2">Body 2</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel>Text Alignment</InputLabel>
+            <Select
+              value={config.config.textAlign ?? 'center'}
+              label="Text Alignment"
+              onChange={(e) =>
+                setConfig({
+                  ...config,
+                  config: {
+                    ...config.config,
+                    textAlign: e.target.value as typeof config.config.textAlign,
+                  },
+                })
+              }
+            >
+              <MenuItem value="left">Left</MenuItem>
+              <MenuItem value="center">Center</MenuItem>
+              <MenuItem value="right">Right</MenuItem>
             </Select>
           </FormControl>
           <Button variant="contained" onClick={handleSave}>

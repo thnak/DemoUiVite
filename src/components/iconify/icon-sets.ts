@@ -263,4 +263,31 @@ export default {
   'mdi:link': {
     body: '<path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7a5 5 0 0 0-5 5a5 5 0 0 0 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1M8 13h8v-2H8zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4a5 5 0 0 0 5-5a5 5 0 0 0-5-5"/>',
   },
+  'mdi:table': {
+    body: '<path fill="currentColor" d="M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m0 4v4h6V8zm8 0v4h6V8zm-8 6v4h6v-4zm8 0v4h6v-4z"/>',
+  },
+  'mdi:image-filter-drama': {
+    body: '<path fill="currentColor" d="M19 18H6a4 4 0 0 1-4-4a4 4 0 0 1 4-4h.71A7 7 0 0 1 13 5a7 7 0 0 1 7 7c0 .34-.03.67-.08 1H19a3 3 0 0 1 3 3a3 3 0 0 1-3 3m-1.28-6A5 5 0 0 0 13 7a5 5 0 0 0-5 4.16A2 2 0 0 0 6 13a2 2 0 0 0 0 4h12.5a1.5 1.5 0 0 0 1.5-1.5a1.5 1.5 0 0 0-1.5-1.5z"/>',
+  },
+  'mdi:responsive': {
+    body: '<path fill="currentColor" d="M4 6v10h5v-4a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v4h2V6zm-2-.5C2 4.67 2.67 4 3.5 4h17c.83 0 1.5.67 1.5 1.5v11c0 .83-.67 1.5-1.5 1.5H18v1c0 .55-.45 1-1 1h-1c-.55 0-1-.45-1-1v-1h-4v1c0 .55-.45 1-1 1H9c-.55 0-1-.45-1-1v-1H3.5c-.83 0-1.5-.67-1.5-1.5zM11 12v6h5v-6z"/>',
+  },
+  'mdi:monitor': {
+    body: '<path fill="currentColor" d="M21 16H3V4h18m0-2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v2H8v2h8v-2h-2v-2h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2"/>',
+  },
+  'mdi:tablet': {
+    body: '<path fill="currentColor" d="M19 19H5V5h14m0-4H5a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2m-7 19a1 1 0 0 1-1-1a1 1 0 0 1 1-1a1 1 0 0 1 1 1a1 1 0 0 1-1 1"/>',
+  },
+  'mdi:cellphone': {
+    body: '<path fill="currentColor" d="M17 19H7V5h10m0-4H7c-1.11 0-2 .89-2 2v18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2"/>',
+  },
+  'mdi:keyboard': {
+    body: '<path fill="currentColor" d="M19 10h-2V8h2m0 5h-2v-2h2m-3-3h-2V8h2m0 5h-2v-2h2m0 5H8v-2h8m-9-6H5V8h2m0 5H5v-2h2m1-3h2V8H8m0 5h2v-2H8m10 8H6V6h12m0-4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2"/>',
+  },
+  'mdi:export': {
+    body: '<path fill="currentColor" d="M23 12L19 8v3h-8v2h8v3m-1 5H6a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h8l6 6v3h-2V9h-5V4H6v14h16v2h-2a2 2 0 0 1 2 2"/>',
+  },
+  'mdi:import': {
+    body: '<path fill="currentColor" d="M14 12l-4 4v-3H2v-2h8V8l4 4m4-7H6c-1.11 0-2 .89-2 2v3h2V5h8v5h5v10H6v-3H4v3c0 1.11.89 2 2 2h12c1.11 0 2-.89 2-2V9l-6-6"/>',
+  },
 };

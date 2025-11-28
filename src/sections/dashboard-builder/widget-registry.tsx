@@ -1,7 +1,14 @@
 import type { CardProps } from '@mui/material/Card';
 import type { IconifyName } from 'src/components/iconify/register-icons';
 
-import { TextWidget, ChartWidget, ImageWidget, TextImageWidget } from './widgets';
+import {
+  TextWidget,
+  ChartWidget,
+  ImageWidget,
+  TableWidget,
+  TextImageWidget,
+  ImageBlurWidget,
+} from './widgets';
 
 import type { WidgetType, WidgetConfig } from './types';
 
@@ -59,6 +66,26 @@ const builtInWidgets: Map<WidgetType, WidgetRegistryEntry> = new Map([
       description: 'Combined text and image widget',
       renderer: TextImageWidget as WidgetRenderer<unknown>,
       icon: 'mdi:image-text',
+    },
+  ],
+  [
+    'table',
+    {
+      type: 'table',
+      name: 'Table',
+      description: 'Display tabular data with optional striping and compact mode',
+      renderer: TableWidget as WidgetRenderer<unknown>,
+      icon: 'mdi:table',
+    },
+  ],
+  [
+    'image-blur',
+    {
+      type: 'image-blur',
+      name: 'Image with Text Overlay',
+      description: 'Blurred background image with text overlay',
+      renderer: ImageBlurWidget as WidgetRenderer<unknown>,
+      icon: 'mdi:image-filter-drama',
     },
   ],
 ]);
