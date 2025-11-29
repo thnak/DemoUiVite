@@ -47,10 +47,12 @@ import type {
   WidgetItem,
   WidgetType,
   WidgetConfig,
+  CutoutShape,
   DashboardState,
   ChartWidgetConfig,
   TableWidgetConfig,
   ImageBlurWidgetConfig,
+  ImageCutoutWidgetConfig,
 } from '../types';
 
 // ----------------------------------------------------------------------
@@ -150,6 +152,18 @@ const getDefaultWidgetConfig = (type: WidgetType): WidgetConfig => {
           textVariant: 'h4',
           textAlign: 'center',
         } as ImageBlurWidgetConfig,
+      };
+    case 'image-cutout':
+      return {
+        type: 'image-cutout',
+        config: {
+          src: '/assets/images/avatar/avatar-1.webp',
+          alt: 'Cutout image',
+          shape: 'circle',
+          backgroundColor: 'transparent',
+          borderWidth: 0,
+          borderColor: 'primary.main',
+        } as ImageCutoutWidgetConfig,
       };
     default:
       return {
@@ -1617,6 +1631,98 @@ function WidgetEditor({ widget, onSave }: WidgetEditorProps) {
               <MenuItem value="right">Right</MenuItem>
             </Select>
           </FormControl>
+          <Button variant="contained" onClick={handleSave}>
+            Apply Changes
+          </Button>
+        </Stack>
+      );
+
+    case 'image-cutout':
+      return (
+        <Stack spacing={3} sx={{ pt: 2 }}>
+          <TextField
+            label="Image URL"
+            value={config.config.src}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: { ...config.config, src: e.target.value },
+              })
+            }
+            fullWidth
+          />
+          <TextField
+            label="Alt Text"
+            value={config.config.alt}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: { ...config.config, alt: e.target.value },
+              })
+            }
+            fullWidth
+          />
+          <FormControl fullWidth>
+            <InputLabel>Shape</InputLabel>
+            <Select
+              value={config.config.shape}
+              label="Shape"
+              onChange={(e) =>
+                setConfig({
+                  ...config,
+                  config: { ...config.config, shape: e.target.value as CutoutShape },
+                })
+              }
+            >
+              <MenuItem value="circle">⬤ Circle</MenuItem>
+              <MenuItem value="ellipse">⬮ Ellipse</MenuItem>
+              <MenuItem value="hexagon">⬡ Hexagon</MenuItem>
+              <MenuItem value="star">★ Star</MenuItem>
+              <MenuItem value="heart">♥ Heart</MenuItem>
+              <MenuItem value="diamond">◆ Diamond</MenuItem>
+              <MenuItem value="rounded-square">▢ Rounded Square</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            label="Background Color"
+            value={config.config.backgroundColor ?? 'transparent'}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: { ...config.config, backgroundColor: e.target.value },
+              })
+            }
+            fullWidth
+            placeholder="transparent, #fff, rgba(0,0,0,0.1)"
+          />
+          <TextField
+            label="Border Width"
+            type="number"
+            value={config.config.borderWidth ?? 0}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: {
+                  ...config.config,
+                  borderWidth: Math.max(0, Number(e.target.value)),
+                },
+              })
+            }
+            fullWidth
+            slotProps={{ htmlInput: { min: 0, max: 20 } }}
+          />
+          <TextField
+            label="Border Color"
+            value={config.config.borderColor ?? 'primary.main'}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: { ...config.config, borderColor: e.target.value },
+              })
+            }
+            fullWidth
+            placeholder="primary.main, #333, blue"
+          />
           <Button variant="contained" onClick={handleSave}>
             Apply Changes
           </Button>

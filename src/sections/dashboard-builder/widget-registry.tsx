@@ -8,6 +8,7 @@ import {
   TableWidget,
   TextImageWidget,
   ImageBlurWidget,
+  ImageCutoutWidget,
 } from './widgets';
 
 import type { WidgetType, WidgetConfig } from './types';
@@ -86,6 +87,16 @@ const builtInWidgets: Map<WidgetType, WidgetRegistryEntry> = new Map([
       description: 'Blurred background image with text overlay',
       renderer: ImageBlurWidget as WidgetRenderer<unknown>,
       icon: 'mdi:image-filter-drama',
+    },
+  ],
+  [
+    'image-cutout',
+    {
+      type: 'image-cutout',
+      name: 'Image Cutout',
+      description: 'Image with shape mask (circle, star, heart, etc.)',
+      renderer: ImageCutoutWidget as WidgetRenderer<unknown>,
+      icon: 'mdi:shape',
     },
   ],
 ]);

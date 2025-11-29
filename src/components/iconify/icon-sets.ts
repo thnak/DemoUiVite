@@ -371,4 +371,7 @@ export default {
   'mdi:arrow-right': {
     body: '<path fill="currentColor" d="M4 11v2h12l-5.5 5.5l1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5L16 11z"/>',
   },
+  'mdi:shape': {
+    body: '<path fill="currentColor" d="M11 13.5v8H3v-8zm10 0v8h-8v-8zM10 15H4.5v5.5H10zm9.5 0H15v5.5h4.5zM6.5 2L12 11H1zm0 3.84L3.5 9.5h6zM18 2a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 1.5A2.5 2.5 0 0 0 15.5 6A2.5 2.5 0 0 0 18 8.5A2.5 2.5 0 0 0 20.5 6A2.5 2.5 0 0 0 18 3.5"/>',
+  },
 };

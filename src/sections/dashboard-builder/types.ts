@@ -3,7 +3,7 @@ import type { ChartOptions } from 'src/components/chart';
 
 // ----------------------------------------------------------------------
 
-export type WidgetType = 'chart' | 'text' | 'image' | 'text-image' | 'table' | 'image-blur';
+export type WidgetType = 'chart' | 'text' | 'image' | 'text-image' | 'table' | 'image-blur' | 'image-cutout';
 
 export type ChartType = 'line' | 'bar' | 'pie' | 'donut' | 'area' | 'radialBar' | 'scatter';
 
@@ -56,6 +56,18 @@ export interface ImageBlurWidgetConfig {
   textAlign?: 'left' | 'center' | 'right';
 }
 
+// Image cutout widget configuration - displays image with shape mask
+export type CutoutShape = 'circle' | 'ellipse' | 'hexagon' | 'star' | 'heart' | 'diamond' | 'rounded-square';
+
+export interface ImageCutoutWidgetConfig {
+  src: string;
+  alt: string;
+  shape: CutoutShape;
+  backgroundColor?: string; // Background color behind cutout
+  borderWidth?: number; // Optional border around shape
+  borderColor?: string;
+}
+
 // Widget configuration union type
 export type WidgetConfig =
   | { type: 'chart'; config: ChartWidgetConfig }
@@ -63,7 +75,8 @@ export type WidgetConfig =
   | { type: 'image'; config: ImageWidgetConfig }
   | { type: 'text-image'; config: TextImageWidgetConfig }
   | { type: 'table'; config: TableWidgetConfig }
-  | { type: 'image-blur'; config: ImageBlurWidgetConfig };
+  | { type: 'image-blur'; config: ImageBlurWidgetConfig }
+  | { type: 'image-cutout'; config: ImageCutoutWidgetConfig };
 
 // Widget item with layout information
 export interface WidgetItem {
