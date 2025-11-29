@@ -8,6 +8,7 @@ import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
@@ -30,20 +31,52 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 
 import { BREAKPOINT_CONFIGS } from '../types';
+import { WidgetTemplatesDrawer } from '../widget-templates-drawer';
 import { renderWidget, getRegisteredWidgets } from '../widget-registry';
 import { generateId, saveDashboard, getDashboardById } from '../storage';
+import {
+  findMergeRecipe,
+  CookingBookDrawer,
+  MergeHistoryDrawer,
+  MergePreviewDialog,
+} from '../cooking-book';
 
+import type { WidgetTemplate } from '../widget-templates-drawer';
+import type { MergeRecipe, MergeHistoryEntry } from '../cooking-book';
 import type {
   WidgetItem,
   WidgetType,
+  CutoutShape,
   WidgetConfig,
   DashboardState,
   ChartWidgetConfig,
+  TableWidgetConfig,
+  ImageBlurWidgetConfig,
+  ImageCutoutWidgetConfig,
 } from '../types';
 
 // ----------------------------------------------------------------------
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
+
+// Virtual breakpoint presets for preview
+const VIRTUAL_BREAKPOINTS = [
+  { key: 'auto', label: 'Auto (Responsive)', width: null, icon: 'mdi:responsive' },
+  { key: 'lg', label: 'Desktop (1200px)', width: 1200, icon: 'mdi:monitor' },
+  { key: 'md', label: 'Tablet (996px)', width: 996, icon: 'mdi:tablet' },
+  { key: 'sm', label: 'Small Tablet (768px)', width: 768, icon: 'mdi:tablet' },
+  { key: 'xs', label: 'Mobile (480px)', width: 480, icon: 'mdi:cellphone' },
+] as const;
+
+// Keyboard shortcuts
+const KEYBOARD_SHORTCUTS = [
+  { key: 'Ctrl+S', description: 'Save dashboard' },
+  { key: 'Ctrl+N', description: 'Add new widget' },
+  { key: 'Ctrl+E', description: 'Export as JSON' },
+  { key: 'Ctrl+I', description: 'Import from JSON' },
+  { key: 'Ctrl+M', description: 'Open Cooking Book' },
+  { key: '?', description: 'Show shortcuts' },
+] as const;
 
 // Default sample data for new widgets
 const getDefaultWidgetConfig = (type: WidgetType): WidgetConfig => {
@@ -93,6 +126,45 @@ const getDefaultWidgetConfig = (type: WidgetType): WidgetConfig => {
           layout: 'text-left',
         },
       };
+    case 'table':
+      return {
+        type: 'table',
+        config: {
+          title: 'Sample Table',
+          headers: ['Name', 'Value', 'Status'],
+          rows: [
+            ['Item 1', '100', 'Active'],
+            ['Item 2', '200', 'Pending'],
+            ['Item 3', '300', 'Complete'],
+          ],
+          striped: true,
+          compact: false,
+        } as TableWidgetConfig,
+      };
+    case 'image-blur':
+      return {
+        type: 'image-blur',
+        config: {
+          src: '/assets/images/cover/cover-3.webp',
+          alt: 'Background image',
+          blurLevel: 4,
+          text: 'Your overlay text here',
+          textVariant: 'h4',
+          textAlign: 'center',
+        } as ImageBlurWidgetConfig,
+      };
+    case 'image-cutout':
+      return {
+        type: 'image-cutout',
+        config: {
+          src: '/assets/images/avatar/avatar-1.webp',
+          alt: 'Cutout image',
+          shape: 'circle',
+          backgroundColor: 'transparent',
+          borderWidth: 0,
+          borderColor: 'primary.main',
+        } as ImageCutoutWidgetConfig,
+      };
     default:
       return {
         type: 'text',
@@ -118,7 +190,31 @@ export function DashboardBuilderView() {
   const [addWidgetOpen, setAddWidgetOpen] = useState(false);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [editWidgetId, setEditWidgetId] = useState<string | null>(null);
-  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
+  const [virtualBreakpoint, setVirtualBreakpoint] = useState<string>('auto');
+  const [shortcutsDialogOpen, setShortcutsDialogOpen] = useState(false);
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [importJson, setImportJson] = useState('');
+  const [templatesDrawerOpen, setTemplatesDrawerOpen] = useState(false);
+  
+  // Cooking Book (Widget Merge) state
+  const [cookingBookOpen, setCookingBookOpen] = useState(false);
+  const [mergeHistoryOpen, setMergeHistoryOpen] = useState(false);
+  const [mergeHistory, setMergeHistory] = useState<MergeHistoryEntry[]>([]);
+  const [mergePreviewOpen, setMergePreviewOpen] = useState(false);
+  const [pendingMerge, setPendingMerge] = useState<{
+    recipe: MergeRecipe | null;
+    primaryWidget: WidgetItem | null;
+    secondaryWidget: WidgetItem | null;
+  }>({ recipe: null, primaryWidget: null, secondaryWidget: null });
+  // Click-to-merge state (replacing drag-drop)
+  const [mergeSelectOpen, setMergeSelectOpen] = useState(false);
+  const [mergeSourceWidget, setMergeSourceWidget] = useState<WidgetItem | null>(null);
+  
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: 'success' | 'error';
+  }>({
     open: false,
     message: '',
     severity: 'success',
@@ -138,12 +234,9 @@ export function DashboardBuilderView() {
   }, [id]);
 
   // Handle layout changes
-  const handleLayoutChange = useCallback(
-    (_currentLayout: Layout[], allLayouts: Layouts) => {
-      setLayouts(allLayouts);
-    },
-    []
-  );
+  const handleLayoutChange = useCallback((_currentLayout: Layout[], allLayouts: Layouts) => {
+    setLayouts(allLayouts);
+  }, []);
 
   // Handle breakpoint change
   const handleBreakpointChange = useCallback((newBreakpoint: string) => {
@@ -181,6 +274,43 @@ export function DashboardBuilderView() {
     });
 
     setAddWidgetOpen(false);
+  }, []);
+
+  // Add widget from template
+  const handleAddWidgetFromTemplate = useCallback((template: WidgetTemplate) => {
+    const newWidget: WidgetItem = {
+      id: generateId(),
+      widgetConfig: { type: template.type, config: template.previewConfig } as WidgetConfig,
+    };
+
+    setWidgets((prev) => {
+      const updated = [...prev, newWidget];
+      // Update layouts for the new widget
+      setLayouts((prevLayouts) => {
+        const newLayouts: Layouts = {};
+        Object.keys(BREAKPOINT_CONFIGS).forEach((bp) => {
+          const existing = prevLayouts[bp] ?? [];
+          const newItem: Layout = {
+            i: newWidget.id,
+            x: 0,
+            y: Infinity, // Place at bottom
+            w: Math.min(4, BREAKPOINT_CONFIGS[bp].cols),
+            h: 4,
+            minW: 2,
+            minH: 1,
+          };
+          newLayouts[bp] = [...existing, newItem];
+        });
+        return newLayouts;
+      });
+      return updated;
+    });
+
+    setSnackbar({
+      open: true,
+      message: `Added "${template.name}" widget`,
+      severity: 'success',
+    });
   }, []);
 
   // Remove a widget
@@ -221,6 +351,284 @@ export function DashboardBuilderView() {
       setSnackbar({ open: true, message: 'Failed to save dashboard', severity: 'error' });
     }
   }, [id, dashboardName, dashboardDescription, widgets, layouts, navigate]);
+
+  // Export dashboard as JSON
+  const handleExport = useCallback(() => {
+    const dashboardId = id ?? generateId();
+    const dashboard: DashboardState = {
+      id: dashboardId,
+      name: dashboardName,
+      description: dashboardDescription,
+      widgets,
+      layouts,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    const jsonString = JSON.stringify(dashboard, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${dashboardName.replace(/\s+/g, '-').toLowerCase()}-dashboard.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    setSnackbar({ open: true, message: 'Dashboard exported successfully!', severity: 'success' });
+  }, [id, dashboardName, dashboardDescription, widgets, layouts]);
+
+  // Import dashboard from JSON
+  const handleImport = useCallback(() => {
+    try {
+      const dashboard = JSON.parse(importJson) as DashboardState;
+
+      if (!dashboard.widgets || !dashboard.layouts) {
+        throw new Error('Invalid dashboard format');
+      }
+
+      setDashboardName(dashboard.name ?? 'Imported Dashboard');
+      setDashboardDescription(dashboard.description ?? '');
+      setWidgets(dashboard.widgets);
+      setLayouts(dashboard.layouts);
+      setImportDialogOpen(false);
+      setImportJson('');
+      setSnackbar({ open: true, message: 'Dashboard imported successfully!', severity: 'success' });
+    } catch {
+      setSnackbar({
+        open: true,
+        message: 'Invalid JSON format. Please check your input.',
+        severity: 'error',
+      });
+    }
+  }, [importJson]);
+
+  // Handle merge button click - open merge target selection dialog
+  const handleMergeClick = useCallback((widget: WidgetItem) => {
+    setMergeSourceWidget(widget);
+    setMergeSelectOpen(true);
+  }, []);
+
+  // Handle selecting a merge target from the dialog
+  const handleSelectMergeTarget = useCallback(
+    (targetWidget: WidgetItem, recipe: MergeRecipe) => {
+      if (!mergeSourceWidget) return;
+      
+      // Determine primary and secondary based on recipe
+      let primaryWidget: WidgetItem;
+      let secondaryWidget: WidgetItem;
+      
+      if (recipe.primaryIngredient === mergeSourceWidget.widgetConfig.type) {
+        primaryWidget = mergeSourceWidget;
+        secondaryWidget = targetWidget;
+      } else {
+        primaryWidget = targetWidget;
+        secondaryWidget = mergeSourceWidget;
+      }
+      
+      // Show merge preview dialog
+      setPendingMerge({ recipe, primaryWidget, secondaryWidget });
+      setMergeSelectOpen(false);
+      setMergePreviewOpen(true);
+    },
+    [mergeSourceWidget]
+  );
+
+  // Get available merge options for a widget
+  const getAvailableMergeOptions = useCallback(
+    (sourceWidget: WidgetItem) => {
+      const options: Array<{
+        targetWidget: WidgetItem;
+        recipe: MergeRecipe;
+      }> = [];
+
+      widgets.forEach((targetWidget) => {
+        if (targetWidget.id === sourceWidget.id) return;
+
+        // Check if source can be primary
+        const recipeAsPrimary = findMergeRecipe(
+          sourceWidget.widgetConfig.type,
+          targetWidget.widgetConfig.type
+        );
+        if (recipeAsPrimary) {
+          options.push({ targetWidget, recipe: recipeAsPrimary });
+        }
+
+        // Check if source can be secondary
+        const recipeAsSecondary = findMergeRecipe(
+          targetWidget.widgetConfig.type,
+          sourceWidget.widgetConfig.type
+        );
+        if (recipeAsSecondary && recipeAsSecondary.id !== recipeAsPrimary?.id) {
+          options.push({ targetWidget, recipe: recipeAsSecondary });
+        }
+      });
+
+      return options;
+    },
+    [widgets]
+  );
+
+  // Confirm widget merge
+  const handleConfirmMerge = useCallback(() => {
+    const { recipe, primaryWidget, secondaryWidget } = pendingMerge;
+    if (!recipe || !primaryWidget || !secondaryWidget) return;
+
+    // Create merged widget using recipe transform
+    const mergedConfig = recipe.transform(
+      primaryWidget.widgetConfig,
+      secondaryWidget.widgetConfig
+    );
+
+    const mergedWidget: WidgetItem = {
+      id: generateId(),
+      widgetConfig: mergedConfig,
+    };
+
+    // Add to merge history for undo
+    const historyEntry: MergeHistoryEntry = {
+      id: generateId(),
+      timestamp: Date.now(),
+      recipeName: recipe.name,
+      originalPrimaryWidget: primaryWidget,
+      originalSecondaryWidget: secondaryWidget,
+      resultWidget: mergedWidget,
+    };
+
+    setMergeHistory((prev) => [historyEntry, ...prev]);
+
+    // Update widgets: remove both originals, add merged
+    setWidgets((prev) => {
+      const filtered = prev.filter(
+        (w) => w.id !== primaryWidget.id && w.id !== secondaryWidget.id
+      );
+      return [...filtered, mergedWidget];
+    });
+
+    // Update layouts: keep primary widget's position, remove secondary
+    setLayouts((prevLayouts) => {
+      const newLayouts: Layouts = {};
+      Object.keys(prevLayouts).forEach((bp) => {
+        const primaryLayout = prevLayouts[bp].find((l) => l.i === primaryWidget.id);
+        const filteredLayouts = prevLayouts[bp].filter(
+          (l) => l.i !== primaryWidget.id && l.i !== secondaryWidget.id
+        );
+        if (primaryLayout) {
+          newLayouts[bp] = [...filteredLayouts, { ...primaryLayout, i: mergedWidget.id }];
+        } else {
+          newLayouts[bp] = filteredLayouts;
+        }
+      });
+      return newLayouts;
+    });
+
+    setMergePreviewOpen(false);
+    setPendingMerge({ recipe: null, primaryWidget: null, secondaryWidget: null });
+    setSnackbar({
+      open: true,
+      message: `Successfully merged widgets: ${recipe.name}`,
+      severity: 'success',
+    });
+  }, [pendingMerge]);
+
+  // Undo a merge
+  const handleUndoMerge = useCallback((entry: MergeHistoryEntry) => {
+    // Remove merged widget, restore originals
+    setWidgets((prev) => {
+      const filtered = prev.filter((w) => w.id !== entry.resultWidget.id);
+      return [...filtered, entry.originalPrimaryWidget, entry.originalSecondaryWidget];
+    });
+
+    // Restore layouts
+    setLayouts((prevLayouts) => {
+      const newLayouts: Layouts = {};
+      Object.keys(prevLayouts).forEach((bp) => {
+        const mergedLayout = prevLayouts[bp].find((l) => l.i === entry.resultWidget.id);
+        const filteredLayouts = prevLayouts[bp].filter((l) => l.i !== entry.resultWidget.id);
+
+        const restoredLayouts = [
+          ...filteredLayouts,
+          mergedLayout
+            ? { ...mergedLayout, i: entry.originalPrimaryWidget.id }
+            : {
+                i: entry.originalPrimaryWidget.id,
+                x: 0,
+                y: Infinity,
+                w: 4,
+                h: 4,
+                minW: 2,
+                minH: 2,
+              },
+          {
+            i: entry.originalSecondaryWidget.id,
+            x: 4,
+            y: Infinity,
+            w: 4,
+            h: 4,
+            minW: 2,
+            minH: 2,
+          },
+        ];
+        newLayouts[bp] = restoredLayouts;
+      });
+      return newLayouts;
+    });
+
+    // Remove from history
+    setMergeHistory((prev) => prev.filter((h) => h.id !== entry.id));
+
+    setSnackbar({
+      open: true,
+      message: 'Merge undone - original widgets restored',
+      severity: 'success',
+    });
+  }, []);
+
+  // Keyboard shortcuts handler
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Ctrl+S: Save
+      if (event.ctrlKey && event.key === 's') {
+        event.preventDefault();
+        setSaveDialogOpen(true);
+      }
+      // Ctrl+N: Add widget
+      if (event.ctrlKey && event.key === 'n') {
+        event.preventDefault();
+        setAddWidgetOpen(true);
+      }
+      // Ctrl+E: Export
+      if (event.ctrlKey && event.key === 'e') {
+        event.preventDefault();
+        handleExport();
+      }
+      // Ctrl+I: Import
+      if (event.ctrlKey && event.key === 'i') {
+        event.preventDefault();
+        setImportDialogOpen(true);
+      }
+      // ?: Show shortcuts
+      if (event.key === '?' && !event.ctrlKey && !event.altKey) {
+        setShortcutsDialogOpen(true);
+      }
+      // Ctrl+M: Open Cooking Book
+      if (event.ctrlKey && event.key === 'm') {
+        event.preventDefault();
+        setCookingBookOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleExport]);
+
+  // Get virtual breakpoint width
+  const virtualWidth = useMemo(() => {
+    const preset = VIRTUAL_BREAKPOINTS.find((bp) => bp.key === virtualBreakpoint);
+    return preset?.width ?? null;
+  }, [virtualBreakpoint]);
 
   // Get breakpoint columns
   const breakpointCols = useMemo(
@@ -263,10 +671,74 @@ export function DashboardBuilderView() {
           <Typography variant="h4">{id ? 'Edit Dashboard' : 'Create Dashboard'}</Typography>
           <Typography variant="body2" color="text.secondary">
             Current breakpoint: {BREAKPOINT_CONFIGS[currentBreakpoint]?.name ?? currentBreakpoint}
+            {virtualWidth && ` • Preview: ${virtualWidth}px`}
           </Typography>
         </Box>
 
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+          {/* Virtual Breakpoint Switcher */}
+          <FormControl size="small" sx={{ minWidth: 140 }}>
+            <Select
+              value={virtualBreakpoint}
+              onChange={(e) => setVirtualBreakpoint(e.target.value)}
+              displayEmpty
+              renderValue={(value) => {
+                const preset = VIRTUAL_BREAKPOINTS.find((bp) => bp.key === value);
+                return (
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <Iconify icon={preset?.icon ?? 'mdi:responsive'} width={18} />
+                    <span>{preset?.label.split(' ')[0] ?? 'Auto'}</span>
+                  </Stack>
+                );
+              }}
+            >
+              {VIRTUAL_BREAKPOINTS.map((bp) => (
+                <MenuItem key={bp.key} value={bp.key}>
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <Iconify icon={bp.icon} width={18} />
+                    <span>{bp.label}</span>
+                  </Stack>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Tooltip title="Keyboard shortcuts (?)">
+            <IconButton onClick={() => setShortcutsDialogOpen(true)}>
+              <Iconify icon="mdi:keyboard" />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Cooking Book - Merge Widgets (Ctrl+M)">
+            <IconButton onClick={() => setCookingBookOpen(true)}>
+              <Iconify icon="mdi:chef-hat" />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Merge History">
+            <IconButton onClick={() => setMergeHistoryOpen(true)}>
+              <Iconify icon="mdi:history" />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Export as JSON (Ctrl+E)">
+            <IconButton onClick={handleExport}>
+              <Iconify icon="mdi:export" />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Import from JSON (Ctrl+I)">
+            <IconButton onClick={() => setImportDialogOpen(true)}>
+              <Iconify icon="mdi:import" />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Widget Templates">
+            <IconButton onClick={() => setTemplatesDrawerOpen(true)}>
+              <Iconify icon="mdi:widgets-outline" />
+            </IconButton>
+          </Tooltip>
+
           <Button
             variant="outlined"
             startIcon={<Iconify icon="mdi:content-save" />}
@@ -291,6 +763,11 @@ export function DashboardBuilderView() {
           bgcolor: 'background.neutral',
           borderRadius: 2,
           p: 2,
+          ...(virtualWidth && {
+            maxWidth: virtualWidth,
+            mx: 'auto',
+            transition: 'max-width 0.3s ease',
+          }),
         }}
       >
         {widgets.length === 0 ? (
@@ -304,7 +781,11 @@ export function DashboardBuilderView() {
               gap: 2,
             }}
           >
-            <Iconify icon="mdi:view-dashboard-outline" width={64} sx={{ color: 'text.secondary' }} />
+            <Iconify
+              icon="mdi:view-dashboard-outline"
+              width={64}
+              sx={{ color: 'text.secondary' }}
+            />
             <Typography variant="h6" color="text.secondary">
               No widgets yet
             </Typography>
@@ -331,21 +812,32 @@ export function DashboardBuilderView() {
           >
             {widgets.map((widget) => (
               <Box key={widget.id} sx={{ height: '100%' }}>
-                <Box sx={{ position: 'relative', height: '100%' }}>
+                <Box
+                  sx={{ position: 'relative', height: '100%' }}
+                >
                   {/* Widget controls */}
                   <Stack
                     direction="row"
                     spacing={0.5}
                     sx={{
                       position: 'absolute',
-                      top: 8,
+                      top: -24,
                       right: 8,
-                      zIndex: 10,
+                      zIndex: 20,
                       bgcolor: 'background.paper',
                       borderRadius: 1,
                       boxShadow: 1,
+                      pointerEvents: 'auto',
                     }}
                   >
+                    <Tooltip title="Merge with another widget">
+                      <IconButton
+                        size="small"
+                        onClick={() => handleMergeClick(widget)}
+                      >
+                        <Iconify icon="mdi:merge" width={18} />
+                      </IconButton>
+                    </Tooltip>
                     <Tooltip title="Edit widget">
                       <IconButton size="small" onClick={() => setEditWidgetId(widget.id)}>
                         <Iconify icon="mdi:pencil" width={18} />
@@ -409,7 +901,12 @@ export function DashboardBuilderView() {
       </Dialog>
 
       {/* Save Dialog */}
-      <Dialog open={saveDialogOpen} onClose={() => setSaveDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={saveDialogOpen}
+        onClose={() => setSaveDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Save Dashboard</DialogTitle>
         <DialogContent>
           <Stack spacing={3} sx={{ pt: 2 }}>
@@ -439,12 +936,7 @@ export function DashboardBuilderView() {
       </Dialog>
 
       {/* Edit Widget Dialog - Placeholder for future implementation */}
-      <Dialog
-        open={!!editWidgetId}
-        onClose={() => setEditWidgetId(null)}
-        maxWidth="md"
-        fullWidth
-      >
+      <Dialog open={!!editWidgetId} onClose={() => setEditWidgetId(null)} maxWidth="md" fullWidth>
         <DialogTitle>Edit Widget</DialogTitle>
         <DialogContent>
           <WidgetEditor
@@ -461,6 +953,238 @@ export function DashboardBuilderView() {
           <Button onClick={() => setEditWidgetId(null)}>Cancel</Button>
         </DialogActions>
       </Dialog>
+
+      {/* Keyboard Shortcuts Dialog */}
+      <Dialog
+        open={shortcutsDialogOpen}
+        onClose={() => setShortcutsDialogOpen(false)}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle>Keyboard Shortcuts</DialogTitle>
+        <DialogContent>
+          <Stack spacing={1.5} sx={{ pt: 1 }}>
+            {KEYBOARD_SHORTCUTS.map((shortcut) => (
+              <Stack
+                key={shortcut.key}
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Typography variant="body2">{shortcut.description}</Typography>
+                <Box
+                  component="kbd"
+                  sx={{
+                    px: 1,
+                    py: 0.5,
+                    borderRadius: 0.5,
+                    bgcolor: 'action.hover',
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    fontFamily: 'monospace',
+                    fontSize: '0.75rem',
+                  }}
+                >
+                  {shortcut.key}
+                </Box>
+              </Stack>
+            ))}
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShortcutsDialogOpen(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Import Dialog */}
+      <Dialog
+        open={importDialogOpen}
+        onClose={() => setImportDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Import Dashboard from JSON</DialogTitle>
+        <DialogContent>
+          <Stack spacing={2} sx={{ pt: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              Paste the JSON content of a previously exported dashboard below:
+            </Typography>
+            <TextField
+              label="JSON Content"
+              value={importJson}
+              onChange={(e) => setImportJson(e.target.value)}
+              fullWidth
+              multiline
+              rows={10}
+              placeholder='{"name": "My Dashboard", "widgets": [...], "layouts": {...}}'
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setImportDialogOpen(false)}>Cancel</Button>
+          <Button variant="contained" onClick={handleImport} disabled={!importJson.trim()}>
+            Import
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Widget Templates Drawer */}
+      <WidgetTemplatesDrawer
+        open={templatesDrawerOpen}
+        onClose={() => setTemplatesDrawerOpen(false)}
+        onSelectTemplate={handleAddWidgetFromTemplate}
+      />
+
+      {/* Cooking Book Drawer */}
+      <CookingBookDrawer
+        open={cookingBookOpen}
+        onClose={() => setCookingBookOpen(false)}
+      />
+
+      {/* Merge History Drawer */}
+      <MergeHistoryDrawer
+        open={mergeHistoryOpen}
+        onClose={() => setMergeHistoryOpen(false)}
+        history={mergeHistory}
+        onUndo={handleUndoMerge}
+      />
+
+      {/* Merge Target Selection Dialog */}
+      <Dialog
+        open={mergeSelectOpen}
+        onClose={() => {
+          setMergeSelectOpen(false);
+          setMergeSourceWidget(null);
+        }}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Iconify icon="mdi:chef-hat" width={24} />
+            <span>Select Merge Target</span>
+          </Stack>
+        </DialogTitle>
+        <DialogContent>
+          {mergeSourceWidget && (
+            <Stack spacing={2} sx={{ pt: 1 }}>
+              <Alert severity="info">
+                Select a widget to merge with your{' '}
+                <strong>
+                  {mergeSourceWidget.widgetConfig.type.charAt(0).toUpperCase() +
+                    mergeSourceWidget.widgetConfig.type.slice(1)}
+                </strong>{' '}
+                widget
+              </Alert>
+
+              {getAvailableMergeOptions(mergeSourceWidget).length === 0 ? (
+                <Box sx={{ py: 4, textAlign: 'center' }}>
+                  <Iconify
+                    icon="mdi:chef-hat"
+                    width={48}
+                    sx={{ color: 'text.disabled', mb: 2 }}
+                  />
+                  <Typography variant="body1" color="text.secondary">
+                    No compatible widgets to merge with
+                  </Typography>
+                  <Typography variant="caption" color="text.disabled">
+                    Add more widgets or check the Cooking Book for valid recipes
+                  </Typography>
+                </Box>
+              ) : (
+                <Stack spacing={1.5}>
+                  {getAvailableMergeOptions(mergeSourceWidget).map(({ targetWidget, recipe }) => (
+                    <Card
+                      key={`${targetWidget.id}-${recipe.id}`}
+                      sx={{
+                        p: 2,
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        border: '2px solid transparent',
+                        '&:hover': {
+                          borderColor: 'primary.main',
+                          bgcolor: 'action.hover',
+                        },
+                      }}
+                      onClick={() => handleSelectMergeTarget(targetWidget, recipe)}
+                    >
+                      <Stack spacing={1}>
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                          <Box
+                            sx={{
+                              p: 0.75,
+                              bgcolor: 'primary.lighter',
+                              borderRadius: 1,
+                              display: 'flex',
+                            }}
+                          >
+                            <Iconify
+                              icon={
+                                targetWidget.widgetConfig.type === 'chart'
+                                  ? 'mdi:chart-box-outline'
+                                  : targetWidget.widgetConfig.type === 'text'
+                                    ? 'mdi:format-header-1'
+                                    : targetWidget.widgetConfig.type === 'image'
+                                      ? 'mdi:image-outline'
+                                      : targetWidget.widgetConfig.type === 'table'
+                                        ? 'mdi:table-large'
+                                        : 'mdi:widgets-outline'
+                              }
+                              width={20}
+                            />
+                          </Box>
+                          <Typography variant="subtitle2">
+                            {targetWidget.widgetConfig.type.charAt(0).toUpperCase() +
+                              targetWidget.widgetConfig.type.slice(1)}{' '}
+                            Widget
+                          </Typography>
+                          <Iconify
+                            icon="mdi:arrow-right"
+                            width={16}
+                            sx={{ color: 'text.secondary' }}
+                          />
+                          <Chip
+                            size="small"
+                            label={recipe.resultType}
+                            color="success"
+                            variant="outlined"
+                          />
+                        </Stack>
+                        <Typography variant="caption" color="text.secondary">
+                          {recipe.name}
+                        </Typography>
+                      </Stack>
+                    </Card>
+                  ))}
+                </Stack>
+              )}
+            </Stack>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setMergeSelectOpen(false);
+              setMergeSourceWidget(null);
+            }}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Merge Preview Dialog */}
+      <MergePreviewDialog
+        open={mergePreviewOpen}
+        onClose={() => {
+          setMergePreviewOpen(false);
+          setPendingMerge({ recipe: null, primaryWidget: null, secondaryWidget: null });
+        }}
+        onConfirm={handleConfirmMerge}
+        recipe={pendingMerge.recipe}
+        primaryWidget={pendingMerge.primaryWidget}
+        secondaryWidget={pendingMerge.secondaryWidget}
+      />
 
       {/* Snackbar */}
       <Snackbar
@@ -524,7 +1248,10 @@ function WidgetEditor({ widget, onSave }: WidgetEditorProps) {
               onChange={(e) =>
                 setConfig({
                   ...config,
-                  config: { ...config.config, variant: e.target.value as typeof config.config.variant },
+                  config: {
+                    ...config.config,
+                    variant: e.target.value as typeof config.config.variant,
+                  },
                 })
               }
             >
@@ -596,7 +1323,10 @@ function WidgetEditor({ widget, onSave }: WidgetEditorProps) {
               onChange={(e) =>
                 setConfig({
                   ...config,
-                  config: { ...config.config, objectFit: e.target.value as typeof config.config.objectFit },
+                  config: {
+                    ...config.config,
+                    objectFit: e.target.value as typeof config.config.objectFit,
+                  },
                 })
               }
             >
@@ -633,7 +1363,10 @@ function WidgetEditor({ widget, onSave }: WidgetEditorProps) {
               onChange={(e) =>
                 setConfig({
                   ...config,
-                  config: { ...config.config, chartType: e.target.value as typeof config.config.chartType },
+                  config: {
+                    ...config.config,
+                    chartType: e.target.value as typeof config.config.chartType,
+                  },
                 })
               }
             >
@@ -643,6 +1376,7 @@ function WidgetEditor({ widget, onSave }: WidgetEditorProps) {
               <MenuItem value="pie">Pie</MenuItem>
               <MenuItem value="donut">Donut</MenuItem>
               <MenuItem value="radialBar">Radial Bar</MenuItem>
+              <MenuItem value="scatter">Scatter</MenuItem>
             </Select>
           </FormControl>
           <Button variant="contained" onClick={handleSave}>
@@ -692,7 +1426,10 @@ function WidgetEditor({ widget, onSave }: WidgetEditorProps) {
               onChange={(e) =>
                 setConfig({
                   ...config,
-                  config: { ...config.config, layout: e.target.value as typeof config.config.layout },
+                  config: {
+                    ...config.config,
+                    layout: e.target.value as typeof config.config.layout,
+                  },
                 })
               }
             >
@@ -702,6 +1439,290 @@ function WidgetEditor({ widget, onSave }: WidgetEditorProps) {
               <MenuItem value="text-bottom">Text Bottom</MenuItem>
             </Select>
           </FormControl>
+          <Button variant="contained" onClick={handleSave}>
+            Apply Changes
+          </Button>
+        </Stack>
+      );
+
+    case 'table':
+      return (
+        <Stack spacing={3} sx={{ pt: 2 }}>
+          <TextField
+            label="Table Title"
+            value={config.config.title ?? ''}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: { ...config.config, title: e.target.value },
+              })
+            }
+            fullWidth
+          />
+          <TextField
+            label="Headers (comma-separated)"
+            value={config.config.headers.join(', ')}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: {
+                  ...config.config,
+                  headers: e.target.value.split(',').map((h) => h.trim()),
+                },
+              })
+            }
+            fullWidth
+            helperText="Enter column headers separated by commas"
+          />
+          <TextField
+            label="Rows (one per line, comma-separated values)"
+            value={config.config.rows.map((row) => row.join(', ')).join('\n')}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: {
+                  ...config.config,
+                  rows: e.target.value
+                    .split('\n')
+                    .filter((line) => line.trim())
+                    .map((line) => line.split(',').map((cell) => cell.trim())),
+                },
+              })
+            }
+            fullWidth
+            multiline
+            rows={5}
+            helperText="Enter one row per line, with values separated by commas"
+          />
+          <FormControl fullWidth>
+            <InputLabel>Striped Rows</InputLabel>
+            <Select
+              value={config.config.striped ? 'yes' : 'no'}
+              label="Striped Rows"
+              onChange={(e) =>
+                setConfig({
+                  ...config,
+                  config: { ...config.config, striped: e.target.value === 'yes' },
+                })
+              }
+            >
+              <MenuItem value="yes">Yes</MenuItem>
+              <MenuItem value="no">No</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel>Compact Mode</InputLabel>
+            <Select
+              value={config.config.compact ? 'yes' : 'no'}
+              label="Compact Mode"
+              onChange={(e) =>
+                setConfig({
+                  ...config,
+                  config: { ...config.config, compact: e.target.value === 'yes' },
+                })
+              }
+            >
+              <MenuItem value="yes">Yes</MenuItem>
+              <MenuItem value="no">No</MenuItem>
+            </Select>
+          </FormControl>
+          <Button variant="contained" onClick={handleSave}>
+            Apply Changes
+          </Button>
+        </Stack>
+      );
+
+    case 'image-blur':
+      return (
+        <Stack spacing={3} sx={{ pt: 2 }}>
+          <TextField
+            label="Image URL"
+            value={config.config.src}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: { ...config.config, src: e.target.value },
+              })
+            }
+            fullWidth
+          />
+          <TextField
+            label="Alt Text"
+            value={config.config.alt}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: { ...config.config, alt: e.target.value },
+              })
+            }
+            fullWidth
+          />
+          <TextField
+            label="Overlay Text"
+            value={config.config.text}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: { ...config.config, text: e.target.value },
+              })
+            }
+            fullWidth
+            multiline
+            rows={2}
+          />
+          <TextField
+            label="Blur Level (0-20)"
+            type="number"
+            value={config.config.blurLevel ?? 4}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: {
+                  ...config.config,
+                  blurLevel: Math.max(0, Math.min(20, Number(e.target.value))),
+                },
+              })
+            }
+            fullWidth
+            slotProps={{ htmlInput: { min: 0, max: 20 } }}
+          />
+          <FormControl fullWidth>
+            <InputLabel>Text Variant</InputLabel>
+            <Select
+              value={config.config.textVariant ?? 'h4'}
+              label="Text Variant"
+              onChange={(e) =>
+                setConfig({
+                  ...config,
+                  config: {
+                    ...config.config,
+                    textVariant: e.target.value as typeof config.config.textVariant,
+                  },
+                })
+              }
+            >
+              <MenuItem value="h1">Heading 1</MenuItem>
+              <MenuItem value="h2">Heading 2</MenuItem>
+              <MenuItem value="h3">Heading 3</MenuItem>
+              <MenuItem value="h4">Heading 4</MenuItem>
+              <MenuItem value="h5">Heading 5</MenuItem>
+              <MenuItem value="h6">Heading 6</MenuItem>
+              <MenuItem value="body1">Body 1</MenuItem>
+              <MenuItem value="body2">Body 2</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel>Text Alignment</InputLabel>
+            <Select
+              value={config.config.textAlign ?? 'center'}
+              label="Text Alignment"
+              onChange={(e) =>
+                setConfig({
+                  ...config,
+                  config: {
+                    ...config.config,
+                    textAlign: e.target.value as typeof config.config.textAlign,
+                  },
+                })
+              }
+            >
+              <MenuItem value="left">Left</MenuItem>
+              <MenuItem value="center">Center</MenuItem>
+              <MenuItem value="right">Right</MenuItem>
+            </Select>
+          </FormControl>
+          <Button variant="contained" onClick={handleSave}>
+            Apply Changes
+          </Button>
+        </Stack>
+      );
+
+    case 'image-cutout':
+      return (
+        <Stack spacing={3} sx={{ pt: 2 }}>
+          <TextField
+            label="Image URL"
+            value={config.config.src}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: { ...config.config, src: e.target.value },
+              })
+            }
+            fullWidth
+          />
+          <TextField
+            label="Alt Text"
+            value={config.config.alt}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: { ...config.config, alt: e.target.value },
+              })
+            }
+            fullWidth
+          />
+          <FormControl fullWidth>
+            <InputLabel>Shape</InputLabel>
+            <Select
+              value={config.config.shape}
+              label="Shape"
+              onChange={(e) =>
+                setConfig({
+                  ...config,
+                  config: { ...config.config, shape: e.target.value as CutoutShape },
+                })
+              }
+            >
+              <MenuItem value="circle">⬤ Circle</MenuItem>
+              <MenuItem value="ellipse">⬮ Ellipse</MenuItem>
+              <MenuItem value="hexagon">⬡ Hexagon</MenuItem>
+              <MenuItem value="star">★ Star</MenuItem>
+              <MenuItem value="heart">♥ Heart</MenuItem>
+              <MenuItem value="diamond">◆ Diamond</MenuItem>
+              <MenuItem value="rounded-square">▢ Rounded Square</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            label="Background Color"
+            value={config.config.backgroundColor ?? 'transparent'}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: { ...config.config, backgroundColor: e.target.value },
+              })
+            }
+            fullWidth
+            placeholder="transparent, #fff, rgba(0,0,0,0.1)"
+          />
+          <TextField
+            label="Border Width"
+            type="number"
+            value={config.config.borderWidth ?? 0}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: {
+                  ...config.config,
+                  borderWidth: Math.max(0, Number(e.target.value)),
+                },
+              })
+            }
+            fullWidth
+            slotProps={{ htmlInput: { min: 0, max: 20 } }}
+          />
+          <TextField
+            label="Border Color"
+            value={config.config.borderColor ?? 'primary.main'}
+            onChange={(e) =>
+              setConfig({
+                ...config,
+                config: { ...config.config, borderColor: e.target.value },
+              })
+            }
+            fullWidth
+            placeholder="primary.main, #333, blue"
+          />
           <Button variant="contained" onClick={handleSave}>
             Apply Changes
           </Button>

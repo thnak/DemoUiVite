@@ -263,4 +263,115 @@ export default {
   'mdi:link': {
     body: '<path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7a5 5 0 0 0-5 5a5 5 0 0 0 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1M8 13h8v-2H8zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4a5 5 0 0 0 5-5a5 5 0 0 0-5-5"/>',
   },
+  'mdi:table': {
+    body: '<path fill="currentColor" d="M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m0 4v4h6V8zm8 0v4h6V8zm-8 6v4h6v-4zm8 0v4h6v-4z"/>',
+  },
+  'mdi:image-filter-drama': {
+    body: '<path fill="currentColor" d="M19 18H6a4 4 0 0 1-4-4a4 4 0 0 1 4-4h.71A7 7 0 0 1 13 5a7 7 0 0 1 7 7c0 .34-.03.67-.08 1H19a3 3 0 0 1 3 3a3 3 0 0 1-3 3m-1.28-6A5 5 0 0 0 13 7a5 5 0 0 0-5 4.16A2 2 0 0 0 6 13a2 2 0 0 0 0 4h12.5a1.5 1.5 0 0 0 1.5-1.5a1.5 1.5 0 0 0-1.5-1.5z"/>',
+  },
+  'mdi:responsive': {
+    body: '<path fill="currentColor" d="M4 6v10h5v-4a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v4h2V6zm-2-.5C2 4.67 2.67 4 3.5 4h17c.83 0 1.5.67 1.5 1.5v11c0 .83-.67 1.5-1.5 1.5H18v1c0 .55-.45 1-1 1h-1c-.55 0-1-.45-1-1v-1h-4v1c0 .55-.45 1-1 1H9c-.55 0-1-.45-1-1v-1H3.5c-.83 0-1.5-.67-1.5-1.5zM11 12v6h5v-6z"/>',
+  },
+  'mdi:monitor': {
+    body: '<path fill="currentColor" d="M21 16H3V4h18m0-2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v2H8v2h8v-2h-2v-2h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2"/>',
+  },
+  'mdi:tablet': {
+    body: '<path fill="currentColor" d="M19 19H5V5h14m0-4H5a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2m-7 19a1 1 0 0 1-1-1a1 1 0 0 1 1-1a1 1 0 0 1 1 1a1 1 0 0 1-1 1"/>',
+  },
+  'mdi:cellphone': {
+    body: '<path fill="currentColor" d="M17 19H7V5h10m0-4H7c-1.11 0-2 .89-2 2v18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2"/>',
+  },
+  'mdi:keyboard': {
+    body: '<path fill="currentColor" d="M19 10h-2V8h2m0 5h-2v-2h2m-3-3h-2V8h2m0 5h-2v-2h2m0 5H8v-2h8m-9-6H5V8h2m0 5H5v-2h2m1-3h2V8H8m0 5h2v-2H8m10 8H6V6h12m0-4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2"/>',
+  },
+  'mdi:export': {
+    body: '<path fill="currentColor" d="M23 12L19 8v3h-8v2h8v3m-1 5H6a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h8l6 6v3h-2V9h-5V4H6v14h16v2h-2a2 2 0 0 1 2 2"/>',
+  },
+  'mdi:import': {
+    body: '<path fill="currentColor" d="M14 12l-4 4v-3H2v-2h8V8l4 4m4-7H6c-1.11 0-2 .89-2 2v3h2V5h8v5h5v10H6v-3H4v3c0 1.11.89 2 2 2h12c1.11 0 2-.89 2-2V9l-6-6"/>',
+  },
+  'mdi:widgets-outline': {
+    body: '<path fill="currentColor" d="M16 5v6h6V5zm4 4h-2V7h2zM2 11h6V5H2zm2-4h2v2H4zm12 13h6v-6h-6zm2-4h2v2h-2zM2 19h6v-6H2zm2-4h2v2H4z"/>',
+  },
+  'mdi:close': {
+    body: '<path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"/>',
+  },
+  'mdi:chart-bar': {
+    body: '<path fill="currentColor" d="M22 21H2V3h2v16h2v-9h4v9h2V6h4v13h2v-5h4z"/>',
+  },
+  'mdi:chart-areaspline': {
+    body: '<path fill="currentColor" d="M17.45 15.18L22 7.31V21H2V3h2v12.54L9.5 6L16 9.78z"/>',
+  },
+  'mdi:chart-pie': {
+    body: '<path fill="currentColor" d="M11 2v20c-5.07-.5-9-4.79-9-10s3.93-9.5 9-10m2.03 0v8.99H22c-.47-4.74-4.24-8.52-8.97-8.99m0 11.01V22c4.74-.47 8.5-4.25 8.97-8.99z"/>',
+  },
+  'mdi:chart-donut': {
+    body: '<path fill="currentColor" d="M13 2.03v2.02c4.39.54 7.5 4.53 6.96 8.92c-.46 3.64-3.32 6.53-6.96 6.96v2c5.5-.55 9.5-5.43 8.95-10.93c-.45-4.75-4.22-8.5-8.95-8.97m-2 0c-1.95.19-3.81.94-5.33 2.2L7.1 5.74c1.12-.9 2.47-1.48 3.9-1.68zM4.26 5.67A9.885 9.885 0 0 0 2.05 11h2c.19-1.42.75-2.77 1.64-3.9zM2.06 13c.2 1.96.97 3.81 2.21 5.33l1.42-1.43A8.002 8.002 0 0 1 4.06 13zm3.64 6.56c1.53 1.27 3.39 2.04 5.34 2.23v-2.02c-1.43-.2-2.79-.78-3.91-1.64z"/>',
+  },
+  'mdi:chart-arc': {
+    body: '<path fill="currentColor" d="M16.18 19.6L14.17 16c-1.82.98-4.11.54-5.44-1.11c-1.33-1.66-1.27-4.02.14-5.6s3.84-1.96 5.72-1c1.5.77 2.5 2.29 2.6 3.95l4.05 1.15A9.007 9.007 0 0 0 12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c1.76 0 3.4-.51 4.79-1.39l-.61-1.01"/>',
+  },
+  'mdi:chart-scatter-plot': {
+    body: '<path fill="currentColor" d="M2 2h2v18h18v2H2zm5 15a2 2 0 0 1-2-2a2 2 0 0 1 2-2a2 2 0 0 1 2 2a2 2 0 0 1-2 2m4-4a2 2 0 0 1-2-2a2 2 0 0 1 2-2a2 2 0 0 1 2 2a2 2 0 0 1-2 2m7-4a2 2 0 0 1-2-2a2 2 0 0 1 2-2a2 2 0 0 1 2 2a2 2 0 0 1-2 2m-3 8a2 2 0 0 1-2-2a2 2 0 0 1 2-2a2 2 0 0 1 2 2a2 2 0 0 1-2 2"/>',
+  },
+  'mdi:format-header-1': {
+    body: '<path fill="currentColor" d="M3 4h2v6h4V4h2v14H9v-6H5v6H3zm11 14v-2h2V6.31l-2.5 1.44V5.44L16 4h2v12h2v2z"/>',
+  },
+  'mdi:format-paragraph': {
+    body: '<path fill="currentColor" d="M13 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4h-2v6H9V4zm0 6a2 2 0 0 0 2-2a2 2 0 0 0-2-2h-2v4z"/>',
+  },
+  'mdi:image-outline': {
+    body: '<path fill="currentColor" d="M19 5v14H5V5zm0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-4.86 8.86l-3 3.87L9 13.14L6 17h12z"/>',
+  },
+  'mdi:image-multiple-outline': {
+    body: '<path fill="currentColor" d="M21 17H7V3h14m0-2H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2m-5.04 9.96l-2.5 3.23l-1.77-2.19L9 15h12zM3 5H1v16a2 2 0 0 0 2 2h16v-2H3z"/>',
+  },
+  'mdi:view-grid-plus-outline': {
+    body: '<path fill="currentColor" d="M3 11h8V3H3m2-2h4v6H5M3 21h8v-8H3m2-2h4v4H5m8-12v8h8V3m-2 6h-4V5h4m4 8h-2v3h-3v2h3v3h2v-3h3v-2h-3z"/>',
+  },
+  'mdi:page-layout-sidebar-left': {
+    body: '<path fill="currentColor" d="M21 3H3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2M9 19H5V5h4z"/>',
+  },
+  'mdi:page-layout-sidebar-right': {
+    body: '<path fill="currentColor" d="M21 3H3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2m0 16h-4V5h4z"/>',
+  },
+  'mdi:table-row': {
+    body: '<path fill="currentColor" d="M22 14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2m-2-4H4v4h4v-4h4v4h4v-4h4z"/>',
+  },
+  'mdi:table-large': {
+    body: '<path fill="currentColor" d="M4 3h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2m0 4v4h6V7zm8 0v4h6V7zm-8 6v4h6v-4zm8 0v4h6v-4z"/>',
+  },
+  'mdi:chart-box-outline': {
+    body: '<path fill="currentColor" d="M9 17H7v-7h2m4 7h-2V7h2m4 10h-2v-4h2m2 6H5V5h14M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2"/>',
+  },
+  'mdi:chef-hat': {
+    body: '<path fill="currentColor" d="M12.5 1.5c-1.77 0-3.33.77-4.39 2C7.63 3.63 7.06 4 6.5 4A4.5 4.5 0 0 0 2 8.5c0 1.28.53 2.43 1.38 3.26l.53.5V21h16.18v-8.74l.53-.5A4.46 4.46 0 0 0 22 8.5A4.5 4.5 0 0 0 17.5 4c-.56 0-1.13-.37-1.61-.5c-1.06-1.23-2.62-2-4.39-2"/>',
+  },
+  'mdi:merge': {
+    body: '<path fill="currentColor" d="M8 16H4l6 6l6-6h-4V4H8zm8-12v4h4l-6-6l-6 6h4v8h4z"/>',
+  },
+  'mdi:history': {
+    body: '<path fill="currentColor" d="M13.5 8H12v5l4.28 2.54l.72-1.21l-3.5-2.08V8M13 3a9 9 0 0 0-9 9H1l3.96 4.03L9 12H6a7 7 0 0 1 7-7a7 7 0 0 1 7 7a7 7 0 0 1-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.9 8.9 0 0 0 13 21a9 9 0 0 0 9-9a9 9 0 0 0-9-9"/>',
+  },
+  'mdi:undo': {
+    body: '<path fill="currentColor" d="M12.5 8c-2.65 0-5.05 1-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88c3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8"/>',
+  },
+  'mdi:cancel': {
+    body: '<path fill="currentColor" d="M12 2C17.5 2 22 6.5 22 12S17.5 22 12 22S2 17.5 2 12S6.5 2 12 2M12 4C10.1 4 8.4 4.6 7.1 5.7L18.3 16.9C19.3 15.5 20 13.8 20 12C20 7.6 16.4 4 12 4M16.9 18.3L5.7 7.1C4.6 8.4 4 10.1 4 12C4 16.4 7.6 20 12 20C13.9 20 15.6 19.4 16.9 18.3"/>',
+  },
+  'mdi:arrow-right-thick': {
+    body: '<path fill="currentColor" d="M4 10v4h9l-3.5 3.5l2.42 2.42L19.84 12l-7.92-7.92L9.5 6.5L13 10z"/>',
+  },
+  'mdi:arrow-right-bold': {
+    body: '<path fill="currentColor" d="M4 15V9h8V4.16L19.84 12L12 19.84V15z"/>',
+  },
+  'mdi:plus-circle': {
+    body: '<path fill="currentColor" d="M17 13h-4v4h-2v-4H7v-2h4V7h2v4h4m-5-9A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2"/>',
+  },
+  'mdi:arrow-right': {
+    body: '<path fill="currentColor" d="M4 11v2h12l-5.5 5.5l1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5L16 11z"/>',
+  },
+  'mdi:shape': {
+    body: '<path fill="currentColor" d="M11 13.5v8H3v-8zm10 0v8h-8v-8zM10 15H4.5v5.5H10zm9.5 0H15v5.5h4.5zM6.5 2L12 11H1zm0 3.84L3.5 9.5h6zM18 2a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 1.5A2.5 2.5 0 0 0 15.5 6A2.5 2.5 0 0 0 18 8.5A2.5 2.5 0 0 0 20.5 6A2.5 2.5 0 0 0 18 3.5"/>',
+  },
 };

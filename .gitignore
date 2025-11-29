@@ -43,3 +43,10 @@ knip.jsonc
 src/api/services/generated/
 src/api/hooks/generated/
 src/api/types/generated.ts
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

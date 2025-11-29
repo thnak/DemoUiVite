@@ -30,8 +30,8 @@ export function ChartWidget({ config, sx, ...other }: ChartWidgetProps) {
   const isNonAxisChart = ['pie', 'donut', 'radialBar'].includes(config.chartType);
 
   const chartSx = isNonAxisChart
-    ? { height: 'calc(100% - 72px)', mx: 'auto' }
-    : { height: 'calc(100% - 0px)' };
+    ? { height: '100%', mx: 'auto' }
+    : { height: '100%' };
 
   return (
     <Card
