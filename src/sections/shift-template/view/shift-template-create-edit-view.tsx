@@ -133,7 +133,7 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
                 id: generateId(),
                 startTime: parseDurationToTime(b.startTime),
                 endTime: parseDurationToTime(b.endTime),
-                name: b.description,
+                name: b.description ?? undefined,
               })),
               days,
             }));
