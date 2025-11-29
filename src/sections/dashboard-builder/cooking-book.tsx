@@ -209,21 +209,23 @@ export function canBeSecondary(widgetType: WidgetType): boolean {
 
 // Widget type icons for visual display
 const WIDGET_TYPE_ICONS: Record<WidgetType, IconifyName> = {
+  "image-cutout": 'mdi:image-filter-drama',
   chart: 'mdi:chart-box-outline',
   text: 'mdi:format-header-1',
   image: 'mdi:image-outline',
   'text-image': 'mdi:page-layout-sidebar-left',
   table: 'mdi:table-large',
-  'image-blur': 'mdi:image-filter-drama',
+  'image-blur': 'mdi:image-filter-drama'
 };
 
 const WIDGET_TYPE_NAMES: Record<WidgetType, string> = {
+  "image-cutout": '',
   chart: 'Chart',
   text: 'Text',
   image: 'Image',
   'text-image': 'Text + Image',
   table: 'Table',
-  'image-blur': 'Image Overlay',
+  'image-blur': 'Image Overlay'
 };
 
 // ----------------------------------------------------------------------

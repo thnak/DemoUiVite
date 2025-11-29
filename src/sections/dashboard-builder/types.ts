@@ -113,12 +113,13 @@ export const BREAKPOINT_CONFIGS: Record<string, BreakpointConfig> = {
 
 // Widget merge compatibility matrix
 export const MERGE_COMPATIBLE: Record<WidgetType, WidgetType[]> = {
+  "image-cutout": [],
   text: ['image'],
   image: ['text'],
   chart: [],
   'text-image': [],
   table: [],
-  'image-blur': [],
+  'image-blur': []
 };
 
 // Check if two widget types can be merged

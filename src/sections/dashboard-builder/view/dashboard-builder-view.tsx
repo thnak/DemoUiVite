@@ -46,8 +46,8 @@ import type { MergeRecipe, MergeHistoryEntry } from '../cooking-book';
 import type {
   WidgetItem,
   WidgetType,
-  WidgetConfig,
   CutoutShape,
+  WidgetConfig,
   DashboardState,
   ChartWidgetConfig,
   TableWidgetConfig,

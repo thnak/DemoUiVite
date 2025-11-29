@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 
-import type { ImageCutoutWidgetConfig, CutoutShape } from '../types';
+import type { CutoutShape, ImageCutoutWidgetConfig } from '../types';
 
 // ----------------------------------------------------------------------
 
