@@ -211,6 +211,7 @@ Check the terminal for specific error messages. Common fixes:
 ## Next Steps
 
 - Explore the demo dashboard at `/demo/dashboard`
+- Read the [Development Guide](./development.md) for debugging and IDE setup
 - Read the [i18n documentation](./i18n.md) to understand translations
 - Check out [MUI docs](https://mui.com/) for component references
 - Review existing pages in `src/pages/` for examples

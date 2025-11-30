@@ -57,6 +57,7 @@ The development server runs at `http://localhost:3039`.
 All documentation is located in the [`docs/`](./docs/) folder:
 
 - **[Quickstart Guide](./docs/guides/quickstart.md)** - Get started with the project
+- **[Development Guide](./docs/guides/development.md)** - Debugging, environment variables, and IDE setup (VS Code & WebStorm)
 - **[Internationalization (i18n)](./docs/guides/i18n.md)** - Multi-language support documentation
 - **[API Services](./docs/guides/api-usage.md)** - Auto-generated API services and React Query hooks
 
