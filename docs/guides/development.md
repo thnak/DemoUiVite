@@ -107,9 +107,6 @@ Create or update `.vscode/launch.json`:
       "request": "launch",
       "url": "http://localhost:3039",
       "webRoot": "${workspaceFolder}/src",
-      "sourceMapPathOverrides": {
-        "webpack:///src/*": "${webRoot}/*"
-      },
       "preLaunchTask": "npm: dev"
     },
     {
@@ -420,7 +417,7 @@ resolve: {
 1. Verify `docs/api/response.json` exists and is valid JSON
 2. Check the OpenAPI spec format:
    ```bash
-   cat docs/api/response.json | npx jsonlint
+   npx jsonlint docs/api/response.json
    ```
 3. Regenerate API services:
    ```bash
