@@ -1,6 +1,6 @@
 import type { DayOfWeek, ShiftDefinition, ShiftTemplateEntity } from 'src/api/types/generated';
 
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -22,7 +22,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { RouterLink } from 'src/routes/components';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { deleteShiftTemplate, getShiftTemplatePage } from 'src/api/services/generated/shift-template';
+import {
+  deleteShiftTemplate,
+  getShiftTemplatePage,
+} from 'src/api/services/generated/shift-template';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -43,38 +46,38 @@ const DAY_ABBREVIATIONS: Record<DayOfWeek, string> = {
 // Parse ISO 8601 duration to minutes (e.g., "PT8H30M" -> 510)
 function parseDurationToMinutes(duration: string | undefined): number {
   if (!duration) return 0;
-  
+
   let minutes = 0;
   const hourMatch = duration.match(/(\d+)H/);
   const minuteMatch = duration.match(/(\d+)M/);
-  
+
   if (hourMatch) {
     minutes += parseInt(hourMatch[1], 10) * 60;
   }
   if (minuteMatch) {
     minutes += parseInt(minuteMatch[1], 10);
   }
-  
+
   return minutes;
 }
 
 // Calculate total working time from shift definitions
 function calculateTotalWorkingTime(shifts: ShiftDefinition[] | null | undefined): string {
   if (!shifts || shifts.length === 0) return '0h';
-  
+
   let totalMinutes = 0;
-  
+
   for (const shift of shifts) {
     const startMinutes = parseDurationToMinutes(shift.startTime);
     let endMinutes = parseDurationToMinutes(shift.endTime);
-    
+
     // Handle overnight shifts
     if (endMinutes <= startMinutes) {
       endMinutes += 24 * 60;
     }
-    
+
     const shiftDuration = endMinutes - startMinutes;
-    
+
     // Subtract break times
     let breakMinutes = 0;
     if (shift.breakDefinitions) {
@@ -87,13 +90,13 @@ function calculateTotalWorkingTime(shifts: ShiftDefinition[] | null | undefined)
         breakMinutes += breakEnd - breakStart;
       }
     }
-    
+
     totalMinutes += shiftDuration - breakMinutes;
   }
-  
+
   const hours = Math.floor(totalMinutes / 60);
   const mins = totalMinutes % 60;
-  
+
   if (mins === 0) {
     return `${hours}h`;
   }
@@ -103,16 +106,24 @@ function calculateTotalWorkingTime(shifts: ShiftDefinition[] | null | undefined)
 // Get unique work days from shift definitions
 function getWorkDays(shifts: ShiftDefinition[] | null | undefined): DayOfWeek[] {
   if (!shifts || shifts.length === 0) return [];
-  
+
   const daysSet = new Set<DayOfWeek>();
   for (const shift of shifts) {
     if (shift.applicableDay) {
       daysSet.add(shift.applicableDay);
     }
   }
-  
+
   // Sort days in order from Sunday to Saturday
-  const dayOrder: DayOfWeek[] = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  const dayOrder: DayOfWeek[] = [
+    'sunday',
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+  ];
   return dayOrder.filter((day) => daysSet.has(day));
 }
 
@@ -146,14 +157,14 @@ export function ShiftTemplateView() {
   }, [page, rowsPerPage]);
 
   useEffect(() => {
-    fetchTemplates();
+    fetchTemplates().then(_ => {});
   }, [fetchTemplates]);
 
   const handleDelete = useCallback(
     async (id: string) => {
       try {
         await deleteShiftTemplate(id);
-        fetchTemplates();
+        await fetchTemplates();
         setSelected((prev) => prev.filter((i) => i !== id));
       } catch (err) {
         console.error('Error deleting shift template:', err);
@@ -165,7 +176,7 @@ export function ShiftTemplateView() {
   const handleDeleteSelected = useCallback(async () => {
     try {
       await Promise.all(selected.map((id) => deleteShiftTemplate(id)));
-      fetchTemplates();
+      await fetchTemplates();
       setSelected([]);
     } catch (err) {
       console.error('Error deleting shift templates:', err);
@@ -251,7 +262,11 @@ export function ShiftTemplateView() {
             }}
           >
             <Typography>{selected.length} selected</Typography>
-            <Button color="error" onClick={handleDeleteSelected} startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}>
+            <Button
+              color="error"
+              onClick={handleDeleteSelected}
+              startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+            >
               Delete Selected
             </Button>
           </Box>
@@ -310,13 +325,9 @@ export function ShiftTemplateView() {
                     const templateId = template.id?.toString() || '';
                     const workDays = getWorkDays(template.shifts);
                     const totalWorkingTime = calculateTotalWorkingTime(template.shifts);
-                    
+
                     return (
-                      <TableRow
-                        key={templateId}
-                        hover
-                        selected={selected.includes(templateId)}
-                      >
+                      <TableRow key={templateId} hover selected={selected.includes(templateId)}>
                         <TableCell padding="checkbox">
                           <Checkbox
                             checked={selected.includes(templateId)}
@@ -349,9 +360,7 @@ export function ShiftTemplateView() {
                           </Stack>
                         </TableCell>
                         <TableCell>
-                          <Typography variant="body2">
-                            {totalWorkingTime}
-                          </Typography>
+                          <Typography variant="body2">{totalWorkingTime}</Typography>
                         </TableCell>
                         <TableCell align="right">
                           <IconButton
@@ -360,10 +369,7 @@ export function ShiftTemplateView() {
                           >
                             <Iconify icon="solar:pen-bold" />
                           </IconButton>
-                          <IconButton
-                            color="error"
-                            onClick={() => handleDelete(templateId)}
-                          >
+                          <IconButton color="error" onClick={() => handleDelete(templateId)}>
                             <Iconify icon="solar:trash-bin-trash-bold" />
                           </IconButton>
                         </TableCell>
