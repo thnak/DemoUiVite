@@ -84,12 +84,11 @@ interface ImportMetaEnv {
   readonly VITE_ENABLE_ANALYTICS: string;
   readonly VITE_DEBUG_MODE: string;
   readonly VITE_APP_NAME: string;
-}
-
-interface ImportMeta {
-  readonly env: ImportMetaEnv;
+  // Add more custom environment variables here
 }
 ```
+
+> **Note:** Vite's built-in types already include the `ImportMeta` interface with `env` property. You only need to extend `ImportMetaEnv` with your custom variables.
 
 ## Debugging with VS Code
 
@@ -380,7 +379,7 @@ For Apache (`.htaccess`):
 
 **Solution:**
 
-1. Check `vite.config.ts` has the correct alias:
+1. Check `vite.config.ts` has the correct alias configuration. This project uses a regex-based pattern to support `src/...` imports:
 
 ```typescript
 resolve: {
@@ -393,18 +392,9 @@ resolve: {
 },
 ```
 
-2. Ensure `tsconfig.json` has matching paths:
+> **Note:** The regex pattern `^src(.+)` captures any import starting with `src` (like `src/components/Button`) and rewrites it to the actual filesystem path.
 
-```json
-{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "src/*": ["src/*"]
-    }
-  }
-}
-```
+2. This project's `tsconfig.json` uses `"baseUrl": "."` which allows TypeScript to resolve modules relative to the project root. No additional `paths` configuration is needed as Vite handles the path resolution.
 
 ### Issue 4: API Service Generation Fails
 
@@ -415,9 +405,9 @@ resolve: {
 **Solution:**
 
 1. Verify `docs/api/response.json` exists and is valid JSON
-2. Check the OpenAPI spec format:
+2. Check the OpenAPI spec format using Node.js:
    ```bash
-   npx jsonlint docs/api/response.json
+   node -e "JSON.parse(require('fs').readFileSync('docs/api/response.json', 'utf8')); console.log('Valid JSON')"
    ```
 3. Regenerate API services:
    ```bash
