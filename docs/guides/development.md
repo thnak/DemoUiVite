@@ -79,6 +79,7 @@ Add type definitions for your environment variables in `src/vite-env.d.ts`:
 ```typescript
 /// <reference types="vite/client" />
 
+// Extend ImportMetaEnv with your custom environment variables
 interface ImportMetaEnv {
   readonly VITE_API_BASE_URL: string;
   readonly VITE_ENABLE_ANALYTICS: string;
@@ -88,7 +89,7 @@ interface ImportMetaEnv {
 }
 ```
 
-> **Note:** Vite's built-in types already include the `ImportMeta` interface with `env` property. You only need to extend `ImportMetaEnv` with your custom variables.
+> **Note:** TypeScript uses declaration merging, so your custom `ImportMetaEnv` interface will extend Vite's built-in interface automatically. Vite's types already define the `ImportMeta` interface with the `env` property.
 
 ## Debugging with VS Code
 
@@ -407,7 +408,7 @@ resolve: {
 1. Verify `docs/api/response.json` exists and is valid JSON
 2. Check the OpenAPI spec format using Node.js:
    ```bash
-   node -e "JSON.parse(require('fs').readFileSync('docs/api/response.json', 'utf8')); console.log('Valid JSON')"
+   node -e "try { JSON.parse(require('fs').readFileSync('docs/api/response.json', 'utf8')); console.log('✅ Valid JSON'); } catch (e) { console.error('❌ Invalid JSON:', e.message); process.exit(1); }"
    ```
 3. Regenerate API services:
    ```bash
@@ -487,8 +488,10 @@ Use React DevTools Profiler:
 ### Useful Console Commands
 
 ```javascript
-// Check current environment
-console.log(import.meta.env);
+// Check current environment (development only - don't use in production)
+console.log(import.meta.env.MODE);         // 'development' or 'production'
+console.log(import.meta.env.DEV);          // true in development
+console.log(import.meta.env.VITE_APP_NAME); // Access specific variable
 
 // Get current route
 console.log(window.location.pathname);
@@ -496,6 +499,8 @@ console.log(window.location.pathname);
 // Access React Query cache (in DevTools console)
 window.__REACT_QUERY_DEVTOOLS__ // if devtools installed
 ```
+
+> **Warning:** Avoid logging `import.meta.env` object directly in production as it may expose sensitive configuration values.
 
 ### VS Code Keyboard Shortcuts
 
