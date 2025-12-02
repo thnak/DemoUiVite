@@ -14,4 +14,10 @@ export { queryClient } from './query-client';
 export { default as axiosInstance } from './axios-instance';
 
 // API Configuration
-export { apiConfig, getApiBaseUrl, setApiBaseUrl } from './config';
+export {
+  apiConfig,
+  getApiBaseUrl,
+  setApiBaseUrl,
+  clearApiBaseUrl,
+  setApiBaseUrlPersistent,
+} from './config';
