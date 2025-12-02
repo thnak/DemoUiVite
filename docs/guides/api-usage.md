@@ -214,29 +214,76 @@ function InvalidateCache() {
 
 ## API Configuration
 
-### Setting Base URL
+### Base URL Priority
 
-The API base URL is automatically configured based on the environment:
+The API base URL is determined using the following priority (highest to lowest):
 
-- **Development**: Uses `VITE_API_BASE_URL` environment variable or current origin
-- **Production**: Uses current origin
+1. **localStorage** - `API_BASE_URL` key (persists across browser sessions)
+2. **window config** - `window.__APP_CONFIG__.apiBaseUrl` (runtime injection)
+3. **Vite environment** - `VITE_API_BASE_URL` (set at build time)
+4. **Origin fallback** - `window.location.origin`
 
-You can override the base URL at runtime:
+### Debug in Chrome DevTools
+
+The easiest way to configure the API URL when debugging in Chrome:
+
+1. Open Chrome DevTools (F12)
+2. Go to the Console tab
+3. Set the API URL:
+
+```javascript
+localStorage.setItem('API_BASE_URL', 'http://localhost:5000');
+```
+
+4. Reload the page
+
+To remove the override:
+
+```javascript
+localStorage.removeItem('API_BASE_URL');
+```
+
+### Setting Base URL Programmatically
+
+You can also set the base URL in your code:
 
 ```tsx
-import { setApiBaseUrl } from 'src/api';
+import { setApiBaseUrl, setApiBaseUrlPersistent, clearApiBaseUrl } from 'src/api';
 
-// Switch to a different backend server
+// Temporary change (lost on page reload)
 setApiBaseUrl('http://localhost:5000');
+
+// Persistent change (saved to localStorage)
+setApiBaseUrlPersistent('http://localhost:5000');
+
+// Clear persistent setting (reverts to default priority)
+clearApiBaseUrl();
 ```
+
+### Runtime Configuration via Window Config
+
+For deployment scenarios where you need to inject configuration at runtime:
+
+```html
+<!-- In index.html before your app script -->
+<script>
+  window.__APP_CONFIG__ = {
+    apiBaseUrl: 'https://api.example.com'
+  };
+</script>
+```
+
+Or create a `public/config.js` file that sets `window.__APP_CONFIG__`.
 
 ### Environment Variables
 
-Create a `.env.local` file for development:
+You can still use environment variables by creating a `.env.local` file:
 
 ```env
 VITE_API_BASE_URL=http://localhost:5000
 ```
+
+Note: Environment variables are baked in at build time and cannot be changed without rebuilding.
 
 ## Error Handling
 
