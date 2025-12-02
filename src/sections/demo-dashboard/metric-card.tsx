@@ -12,6 +12,8 @@ import { fNumber, fPercent, fShortenNumber } from 'src/utils/format-number';
 import { Iconify } from 'src/components/iconify';
 import { Chart, useChart } from 'src/components/chart';
 
+import { SvgColor } from '../../components/svg-color';
+
 import type { MetricData } from './demo-dashboard-data';
 
 // ----------------------------------------------------------------------
@@ -109,6 +111,20 @@ export function MetricCard({ metric, sx, ...other }: MetricCardProps) {
           sx={{ width: 84, height: 56 }}
         />
       </Box>
+
+      <SvgColor
+        src="/assets/background/shape-square.svg"
+        sx={{
+          top: 0,
+          left: -20,
+          width: 240,
+          zIndex: -1,
+          height: 240,
+          opacity: 0.24,
+          position: 'absolute',
+          color: `${varAlpha(theme.vars.palette[metric.color].lighterChannel, 0.8)}.main`,
+        }}
+      />
     </Card>
   );
 }

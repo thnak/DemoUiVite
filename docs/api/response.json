@@ -1802,7 +1802,7 @@
           "Auth"
         ],
         "summary": "Generate a one-time use QR code token for authenticated user",
-        "description": "This endpoint generates a secure one-time use token that can be encoded in a QR code.\r\nThe token expires after 2 minutes and can only be used once.\r\nThe authenticated user on one device can scan this QR code on another device to log in without entering credentials.",
+        "description": "This endpoint generates a secure one-time use token that can be encoded in a QR code.\nThe token expires after 2 minutes and can only be used once.\nThe authenticated user on one device can scan this QR code on another device to log in without entering credentials.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1838,7 +1838,7 @@
           "Auth"
         ],
         "summary": "Login using a one-time QR code token",
-        "description": "This endpoint consumes a one-time use token (from QR code scan) and logs the user in.\r\nThe token is validated and then marked as consumed. If successful, returns authentication tokens.",
+        "description": "This endpoint consumes a one-time use token (from QR code scan) and logs the user in.\nThe token is validated and then marked as consumed. If successful, returns authentication tokens.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -17448,6 +17448,7 @@
         "tags": [
           "Localization"
         ],
+        "summary": "Retrieves a paginated list of localized application languages",
         "parameters": [
           {
             "name": "pageNumber",
@@ -17551,7 +17552,7 @@
         "tags": [
           "Localization"
         ],
-        "summary": "Retrieves all translations for a specific language code.\r\nGET /api/translations/{langCode}",
+        "summary": "Retrieves all translations for a specific language code.\nGET /api/translations/{langCode}",
         "parameters": [
           {
             "name": "langCode",
@@ -17733,7 +17734,7 @@
         "tags": [
           "Localization"
         ],
-        "summary": "upload excel file to update translations. the devault culture is vi-VN and it always have value while other culture can be empty\r\nif other culture is empty, it must be auto translated by Ollama",
+        "summary": "upload excel file to update translations. the devault culture is vi-VN and it always have value while other culture can be empty\nif other culture is empty, it must be auto translated by Ollama",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -17794,6 +17795,7 @@
         "tags": [
           "Localization"
         ],
+        "summary": "Download the localization Excel file.",
         "responses": {
           "200": {
             "description": "OK",
@@ -40964,7 +40966,7 @@
         "properties": {
           "value": {
             "type": "boolean",
-            "description": "Gets the value of the result."
+            "description": "Gets the value of the result. Can be null if the operation failed."
           },
           "isSuccess": {
             "type": "boolean",
@@ -47395,7 +47397,7 @@
         "type": "object",
         "properties": {
           "value": {
-            "description": "Gets the value of the result.",
+            "description": "Gets the value of the result. Can be null if the operation failed.",
             "nullable": true
           },
           "isSuccess": {
@@ -51826,7 +51828,7 @@
             "items": {
               "$ref": "#/components/schemas/SystemErrorReportDto"
             },
-            "description": "Gets the value of the result.",
+            "description": "Gets the value of the result. Can be null if the operation failed.",
             "nullable": true
           },
           "isSuccess": {
@@ -54559,7 +54561,8 @@
       "name": "LanguageKeyLang"
     },
     {
-      "name": "Localization"
+      "name": "Localization",
+      "description": "Controller for managing localization and translations.\nProvides endpoints to retrieve translations for different languages,\nincluding batch retrieval and file upload for updating translations."
     },
     {
       "name": "Machine"
