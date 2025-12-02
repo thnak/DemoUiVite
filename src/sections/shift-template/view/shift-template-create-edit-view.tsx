@@ -28,19 +28,19 @@ import { generateId } from 'src/types/shift';
 // Parse ISO 8601 duration to HH:mm format (e.g., "PT8H30M" -> "08:30")
 function parseDurationToTime(duration: string | undefined): string {
   if (!duration) return '00:00';
-  
+
   let hours = 0;
   let minutes = 0;
   const hourMatch = duration.match(/(\d+)H/);
   const minuteMatch = duration.match(/(\d+)M/);
-  
+
   if (hourMatch) {
     hours = parseInt(hourMatch[1], 10);
   }
   if (minuteMatch) {
     minutes = parseInt(minuteMatch[1], 10);
   }
-  
+
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
 }
 
@@ -64,7 +64,7 @@ function timeToIsoDuration(time: string): string {
 function formDataToApiEntity(data: ShiftTemplateFormData): ShiftTemplateEntity {
   // Group definitions by shift, then create one ShiftDefinition per day
   const shifts: ShiftDefinition[] = [];
-  
+
   for (const def of data.definitions) {
     for (const day of def.days) {
       shifts.push({
@@ -81,7 +81,7 @@ function formDataToApiEntity(data: ShiftTemplateFormData): ShiftTemplateEntity {
       });
     }
   }
-  
+
   return {
     code: data.code,
     name: data.name,
@@ -113,7 +113,7 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
           if (template) {
             // Group shifts by name to recreate definitions
             const shiftsByName = new Map<string, { shift: ShiftDefinition; days: DayOfWeek[] }>();
-            
+
             for (const shift of template.shifts || []) {
               const name = shift.name || 'Unnamed Shift';
               if (!shiftsByName.has(name)) {
@@ -123,35 +123,42 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
                 shiftsByName.get(name)!.days.push(shift.applicableDay as DayOfWeek);
               }
             }
-            
-            const definitions = Array.from(shiftsByName.entries()).map(([name, { shift, days }]) => ({
-              id: generateId(),
-              name,
-              startTime: parseDurationToTime(shift.startTime),
-              endTime: parseDurationToTime(shift.endTime),
-              breaks: (shift.breakDefinitions || []).map((b) => ({
+
+            const definitions = Array.from(shiftsByName.entries()).map(
+              ([name, { shift, days }]) => ({
                 id: generateId(),
-                startTime: parseDurationToTime(b.startTime),
-                endTime: parseDurationToTime(b.endTime),
-                name: b.description ?? undefined,
-              })),
-              days,
-            }));
-            
+                name,
+                startTime: parseDurationToTime(shift.startTime),
+                endTime: parseDurationToTime(shift.endTime),
+                breaks: (shift.breakDefinitions || []).map((b) => ({
+                  id: generateId(),
+                  startTime: parseDurationToTime(b.startTime),
+                  endTime: parseDurationToTime(b.endTime),
+                  name: b.description ?? undefined,
+                })),
+                days,
+              })
+            );
+
             setInitialData({
               code: template.code || '',
               name: template.name || '',
               description: '',
               weekType: '5-day',
               shiftPattern: '2-shifts',
-              definitions: definitions.length > 0 ? definitions : [{
-                id: generateId(),
-                name: 'Shift 1',
-                startTime: '08:00',
-                endTime: '16:00',
-                breaks: [],
-                days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
-              }],
+              definitions:
+                definitions.length > 0
+                  ? definitions
+                  : [
+                      {
+                        id: generateId(),
+                        name: 'Shift 1',
+                        startTime: '08:00',
+                        endTime: '16:00',
+                        breaks: [],
+                        days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
+                      },
+                    ],
             });
           } else {
             setErrorMessage('Template not found');
@@ -164,7 +171,7 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
         }
       }
     };
-    
+
     fetchTemplate();
   }, [isEdit, templateId]);
 
@@ -178,8 +185,12 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
             { key: 'name', value: data.name },
             { key: 'shifts', value: formDataToApiEntity(data).shifts },
           ];
-          await updateShiftTemplate(templateId, updates);
-          setSuccessMessage('Template updated successfully');
+          const updateResult = await updateShiftTemplate(templateId, updates);
+          if (updateResult.isSuccess) setSuccessMessage('Template updated successfully');
+          else {
+            setErrorMessage(updateResult.message || 'Failed to update template');
+            return;
+          }
         } else {
           const entity = formDataToApiEntity(data);
           const result = await createShiftTemplate(entity);
