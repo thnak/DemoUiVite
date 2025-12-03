@@ -26,9 +26,10 @@ type AreaTableRowProps = {
   row: AreaProps;
   selected: boolean;
   onSelectRow: () => void;
+  onDeleteRow?: () => void;
 };
 
-export function AreaTableRow({ row, selected, onSelectRow }: AreaTableRowProps) {
+export function AreaTableRow({ row, selected, onSelectRow, onDeleteRow }: AreaTableRowProps) {
   const router = useRouter();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
@@ -113,7 +114,13 @@ export function AreaTableRow({ row, selected, onSelectRow }: AreaTableRowProps) 
             Edit
           </MenuItem>
 
-          <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
+          <MenuItem
+            onClick={() => {
+              handleClosePopover();
+              onDeleteRow?.();
+            }}
+            sx={{ color: 'error.main' }}
+          >
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete
           </MenuItem>

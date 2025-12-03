@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -8,21 +9,22 @@ import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { RouterLink } from 'src/routes/components';
 
-import { _areas } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { areaKeys, useDeleteArea, useGetAreaPage } from 'src/api/hooks/generated/use-area';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
+import { emptyRows } from '../area-utils';
 import { AreaTableRow } from '../area-table-row';
 import { AreaTableHead } from '../area-table-head';
 import { AreaTableNoData } from '../area-table-no-data';
 import { AreaTableToolbar } from '../area-table-toolbar';
 import { AreaTableEmptyRows } from '../area-table-empty-rows';
-import { emptyRows, applyFilter, getComparator } from '../area-utils';
 
 import type { AreaProps } from '../area-table-row';
 
@@ -30,16 +32,65 @@ import type { AreaProps } from '../area-table-row';
 
 export function AreaView() {
   const table = useTable();
+  const queryClient = useQueryClient();
 
   const [filterName, setFilterName] = useState('');
+  const [areas, setAreas] = useState<AreaProps[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const dataFiltered: AreaProps[] = applyFilter({
-    inputData: _areas,
-    comparator: getComparator(table.order, table.orderBy),
-    filterName,
+  const { mutate: fetchAreas } = useGetAreaPage({
+    onSuccess: (data) => {
+      const mappedAreas: AreaProps[] = (data.items || []).map((item) => ({
+        id: item.id?.toString() || '',
+        name: item.name || '',
+        description: item.description || '',
+      }));
+      setAreas(mappedAreas);
+      setTotalItems(data.totalItems || 0);
+      setIsLoading(false);
+    },
+    onError: () => {
+      setIsLoading(false);
+    },
   });
 
-  const notFound = !dataFiltered.length && !!filterName;
+  const { mutate: deleteAreaMutate } = useDeleteArea({
+    onSuccess: () => {
+      // Refetch areas after deletion
+      fetchAreas({
+        data: [{ sortBy: table.orderBy, descending: table.order === 'desc' }],
+        params: {
+          pageNumber: table.page,
+          pageSize: table.rowsPerPage,
+          searchTerm: filterName || undefined,
+        },
+      });
+      queryClient.invalidateQueries({ queryKey: areaKeys.all });
+    },
+  });
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchAreas({
+      data: [{ sortBy: table.orderBy, descending: table.order === 'desc' }],
+      params: {
+        pageNumber: table.page,
+        pageSize: table.rowsPerPage,
+        searchTerm: filterName || undefined,
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [table.page, table.rowsPerPage, table.orderBy, table.order, filterName]);
+
+  const handleDeleteRow = useCallback(
+    (id: string) => {
+      deleteAreaMutate({ id });
+    },
+    [deleteAreaMutate]
+  );
+
+  const notFound = !areas.length && !!filterName;
 
   return (
     <DashboardContent>
@@ -96,55 +147,57 @@ export function AreaView() {
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <AreaTableHead
-                order={table.order}
-                orderBy={table.orderBy}
-                rowCount={dataFiltered.length}
-                numSelected={table.selected.length}
-                onSort={table.onSort}
-                onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    dataFiltered.map((area) => area.id)
-                  )
-                }
-                headLabel={[
-                  { id: 'name', label: 'Name' },
-                  { id: 'description', label: 'Description' },
-                  { id: '' },
-                ]}
-              />
-              <TableBody>
-                {dataFiltered
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row) => (
+            {isLoading ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <Table sx={{ minWidth: 800 }}>
+                <AreaTableHead
+                  order={table.order}
+                  orderBy={table.orderBy}
+                  rowCount={totalItems}
+                  numSelected={table.selected.length}
+                  onSort={table.onSort}
+                  onSelectAllRows={(checked) =>
+                    table.onSelectAllRows(
+                      checked,
+                      areas.map((area) => area.id)
+                    )
+                  }
+                  headLabel={[
+                    { id: 'name', label: 'Name' },
+                    { id: 'description', label: 'Description' },
+                    { id: '' },
+                  ]}
+                />
+                <TableBody>
+                  {areas.map((row) => (
                     <AreaTableRow
                       key={row.id}
                       row={row}
                       selected={table.selected.includes(row.id)}
                       onSelectRow={() => table.onSelectRow(row.id)}
+                      onDeleteRow={() => handleDeleteRow(row.id)}
                     />
                   ))}
 
-                <AreaTableEmptyRows
-                  height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
-                />
+                  <AreaTableEmptyRows
+                    height={68}
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, totalItems)}
+                  />
 
-                {notFound && <AreaTableNoData searchQuery={filterName} />}
-              </TableBody>
-            </Table>
+                  {notFound && <AreaTableNoData searchQuery={filterName} />}
+                </TableBody>
+              </Table>
+            )}
           </TableContainer>
         </Scrollbar>
 
         <TablePagination
           component="div"
           page={table.page}
-          count={dataFiltered.length}
+          count={totalItems}
           rowsPerPage={table.rowsPerPage}
           onPageChange={table.onChangePage}
           rowsPerPageOptions={[5, 10, 25]}

@@ -8,10 +8,12 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { useCreateArea, useUpdateArea } from 'src/api/hooks/generated/use-area';
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +40,34 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
     description: currentArea?.description || '',
   });
 
+  const { mutate: createAreaMutate, isPending: isCreating } = useCreateArea({
+    onSuccess: (result) => {
+      if (result.isSuccess) {
+        router.push('/area');
+      } else {
+        setErrorMessage(result.message || 'Failed to create area');
+      }
+    },
+    onError: (error) => {
+      setErrorMessage(error.message || 'Failed to create area');
+    },
+  });
+
+  const { mutate: updateAreaMutate, isPending: isUpdating } = useUpdateArea({
+    onSuccess: (result) => {
+      if (result.isSuccess) {
+        router.push('/area');
+      } else {
+        setErrorMessage(result.message || 'Failed to update area');
+      }
+    },
+    onError: (error) => {
+      setErrorMessage(error.message || 'Failed to update area');
+    },
+  });
+
+  const isSubmitting = isCreating || isUpdating;
+
   const handleCloseError = useCallback(() => {
     setErrorMessage(null);
   }, []);
@@ -58,11 +88,25 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
       return;
     }
 
-    console.log(`${isEdit ? 'Updating' : 'Creating'} area with data:`, formData);
-
-    // Navigate back to list after save
-    router.push('/area');
-  }, [formData, isEdit, router]);
+    if (isEdit && currentArea?.id) {
+      // Update uses key-value pairs as per API spec (PATCH-like partial update)
+      updateAreaMutate({
+        id: currentArea.id,
+        data: [
+          { key: 'name', value: formData.name },
+          { key: 'description', value: formData.description },
+        ],
+      });
+    } else {
+      // Create uses full entity object as per API spec
+      createAreaMutate({
+        data: {
+          name: formData.name,
+          description: formData.description,
+        },
+      });
+    }
+  }, [formData, isEdit, currentArea?.id, createAreaMutate, updateAreaMutate]);
 
   const handleCancel = useCallback(() => {
     router.push('/area');
@@ -113,13 +157,14 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
         </Stack>
 
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
-          <Button variant="outlined" color="inherit" onClick={handleCancel}>
+          <Button variant="outlined" color="inherit" onClick={handleCancel} disabled={isSubmitting}>
             Cancel
           </Button>
           <Button
             variant="contained"
             color="inherit"
             onClick={handleSubmit}
+            disabled={isSubmitting}
             sx={{
               bgcolor: 'grey.900',
               color: 'common.white',
@@ -128,7 +173,13 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
               },
             }}
           >
-            {isEdit ? 'Save changes' : 'Create area'}
+            {isSubmitting ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : isEdit ? (
+              'Save changes'
+            ) : (
+              'Create area'
+            )}
           </Button>
         </Box>
       </Card>
