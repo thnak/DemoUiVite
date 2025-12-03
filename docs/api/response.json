@@ -41584,12 +41584,13 @@
           },
           "applyFrom": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "example": "2025-12-03"
           },
           "applyTo": {
             "type": "string",
             "format": "date",
-            "nullable": true
+            "example": "2025-12-03"
           }
         },
         "additionalProperties": false,
@@ -41682,12 +41683,13 @@
           },
           "applyFrom": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "example": "2025-12-03"
           },
           "applyTo": {
             "type": "string",
             "format": "date",
-            "nullable": true
+            "example": "2025-12-03"
           }
         },
         "additionalProperties": false
@@ -41787,11 +41789,13 @@
           },
           "startDate": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "example": "2025-12-03"
           },
           "endDate": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "example": "2025-12-03"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -43924,7 +43928,8 @@
           },
           "createDate": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "example": "2025-12-03"
           }
         },
         "additionalProperties": false
@@ -45287,7 +45292,8 @@
           },
           "installationDate": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "example": "2025-12-03"
           },
           "lastServiceTime": {
             "type": "string",
@@ -45366,7 +45372,8 @@
           },
           "installationDate": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "example": "2025-12-03"
           },
           "lastServiceTime": {
             "type": "string",
