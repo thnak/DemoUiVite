@@ -99,6 +99,11 @@ export function useNavData(): NavData {
           icon: icon('shift-templates'),
         },
         {
+          title: 'calendar',
+          path: '/calendars',
+          icon: icon('ic-analytics'),
+        },
+        {
           title: 'defect reason',
           path: '/defect-reasons',
           icon: icon('defect-reasons'),
