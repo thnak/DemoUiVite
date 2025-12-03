@@ -1,0 +1,177 @@
+import { useState, useCallback } from 'react';
+
+import Box from '@mui/material/Box';
+import Popover from '@mui/material/Popover';
+import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
+import MenuList from '@mui/material/MenuList';
+import TableCell from '@mui/material/TableCell';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
+
+import { useRouter } from 'src/routes/hooks';
+
+import { Iconify } from 'src/components/iconify';
+
+// ----------------------------------------------------------------------
+
+export type DefectReasonProps = {
+  id: string;
+  code: string;
+  name: string;
+  requireExtraNoteFromOperator: boolean;
+  addScrapAndIncreaseTotalQuantity: boolean;
+  colorHex: string;
+  description: string;
+};
+
+type DefectReasonTableRowProps = {
+  row: DefectReasonProps;
+  selected: boolean;
+  onSelectRow: () => void;
+  onDeleteRow?: () => void;
+};
+
+export function DefectReasonTableRow({
+  row,
+  selected,
+  onSelectRow,
+  onDeleteRow,
+}: DefectReasonTableRowProps) {
+  const router = useRouter();
+  const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
+
+  const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+    setOpenPopover(event.currentTarget);
+  }, []);
+
+  const handleClosePopover = useCallback(() => {
+    setOpenPopover(null);
+  }, []);
+
+  const handleEditRow = useCallback(() => {
+    router.push(`/defect-reasons/${row.id}/edit`);
+  }, [router, row.id]);
+
+  const handleEditFromMenu = useCallback(() => {
+    handleClosePopover();
+    handleEditRow();
+  }, [handleClosePopover, handleEditRow]);
+
+  return (
+    <>
+      <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
+        <TableCell padding="checkbox">
+          <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
+        </TableCell>
+
+        <TableCell component="th" scope="row">
+          <Typography variant="subtitle2" noWrap>
+            {row.code}
+          </Typography>
+        </TableCell>
+
+        <TableCell>
+          <Typography variant="body2" noWrap>
+            {row.name}
+          </Typography>
+        </TableCell>
+
+        <TableCell>
+          <Typography variant="body2" noWrap>
+            {row.requireExtraNoteFromOperator ? 'Yes' : 'No'}
+          </Typography>
+        </TableCell>
+
+        <TableCell>
+          <Typography variant="body2" noWrap>
+            {row.addScrapAndIncreaseTotalQuantity ? 'Yes' : 'No'}
+          </Typography>
+        </TableCell>
+
+        <TableCell>
+          {row.colorHex && (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+              }}
+            >
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: 0.5,
+                  bgcolor: row.colorHex,
+                  border: '1px solid',
+                  borderColor: 'divider',
+                }}
+              />
+              <Typography variant="body2" noWrap>
+                {row.colorHex}
+              </Typography>
+            </Box>
+          )}
+        </TableCell>
+
+        <TableCell>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+            {row.description}
+          </Typography>
+        </TableCell>
+
+        <TableCell align="right">
+          <IconButton onClick={handleEditRow}>
+            <Iconify icon="solar:pen-bold" />
+          </IconButton>
+          <IconButton onClick={handleOpenPopover}>
+            <Iconify icon="eva:more-vertical-fill" />
+          </IconButton>
+        </TableCell>
+      </TableRow>
+
+      <Popover
+        open={!!openPopover}
+        anchorEl={openPopover}
+        onClose={handleClosePopover}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <MenuList
+          disablePadding
+          sx={{
+            p: 0.5,
+            gap: 0.5,
+            width: 140,
+            display: 'flex',
+            flexDirection: 'column',
+            [`& .${menuItemClasses.root}`]: {
+              px: 1,
+              gap: 2,
+              borderRadius: 0.75,
+              [`&.${menuItemClasses.selected}`]: { bgcolor: 'action.selected' },
+            },
+          }}
+        >
+          <MenuItem onClick={handleEditFromMenu}>
+            <Iconify icon="solar:pen-bold" />
+            Edit
+          </MenuItem>
+
+          <MenuItem
+            onClick={() => {
+              handleClosePopover();
+              onDeleteRow?.();
+            }}
+            sx={{ color: 'error.main' }}
+          >
+            <Iconify icon="solar:trash-bin-trash-bold" />
+            Delete
+          </MenuItem>
+        </MenuList>
+      </Popover>
+    </>
+  );
+}
