@@ -1,6 +1,6 @@
 import 'src/global.css';
 
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import { usePathname } from 'src/routes/hooks';

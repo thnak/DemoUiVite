@@ -178,19 +178,23 @@ export function DefectReasonCreateEditView({
 
       <Card sx={{ p: 3 }}>
         <Stack spacing={3}>
-          <TextField
-            fullWidth
-            label="Defect reason code"
-            value={formData.code}
-            onChange={handleInputChange('code')}
-          />
 
-          <TextField
-            fullWidth
-            label="Defect reason name"
-            value={formData.name}
-            onChange={handleInputChange('name')}
-          />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <TextField
+              fullWidth
+              label="Defect reason code"
+              value={formData.code}
+              onChange={handleInputChange('code')}
+            />
+
+            <TextField
+              fullWidth
+              label="Defect reason name"
+              value={formData.name}
+              onChange={handleInputChange('name')}
+            />
+          </Box>
+
 
           <FormControlLabel
             control={
@@ -212,30 +216,41 @@ export function DefectReasonCreateEditView({
             label="Add scrap and increase total quantity"
           />
 
-          <TextField
-            fullWidth
-            label="Color (Hex)"
-            value={formData.colorHex}
-            onChange={handleInputChange('colorHex')}
-            placeholder="#FF0000"
-            slotProps={{
-              input: {
-                startAdornment: formData.colorHex && (
-                  <Box
-                    sx={{
-                      width: 24,
-                      height: 24,
-                      borderRadius: 0.5,
-                      bgcolor: formData.colorHex,
-                      border: '1px solid',
-                      borderColor: 'divider',
-                      mr: 1,
-                    }}
-                  />
-                ),
-              },
-            }}
-          />
+          <Box>
+            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+              Color
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box
+                component="input"
+                type="color"
+                value={formData.colorHex}
+                onChange={handleInputChange('colorHex')}
+                sx={{
+                  width: 48,
+                  height: 48,
+                  border: 'none',
+                  borderRadius: 1,
+                  cursor: 'pointer',
+                  '&::-webkit-color-swatch-wrapper': {
+                    padding: 0,
+                  },
+                  '&::-webkit-color-swatch': {
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    borderRadius: 1,
+                  },
+                }}
+              />
+              <TextField
+                size="small"
+                value={formData.colorHex}
+                onChange={handleInputChange('colorHex')}
+                placeholder="#000000"
+                sx={{ width: 120 }}
+              />
+            </Box>
+          </Box>
 
           <TextField
             fullWidth

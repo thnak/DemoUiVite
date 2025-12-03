@@ -125,7 +125,13 @@ export function DefectReasonGroupCreateEditView({
         },
       });
     }
-  }, [formData, isEdit, currentDefectReasonGroup?.id, createDefectReasonGroupMutate, updateDefectReasonGroupMutate]);
+  }, [
+    formData,
+    isEdit,
+    currentDefectReasonGroup?.id,
+    createDefectReasonGroupMutate,
+    updateDefectReasonGroupMutate,
+  ]);
 
   const handleCancel = useCallback(() => {
     router.push('/defect-reason-group');
@@ -158,19 +164,21 @@ export function DefectReasonGroupCreateEditView({
 
       <Card sx={{ p: 3 }}>
         <Stack spacing={3}>
-          <TextField
-            fullWidth
-            label="Code"
-            value={formData.code}
-            onChange={handleInputChange('code')}
-          />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <TextField
+              fullWidth
+              label="Code"
+              value={formData.code}
+              onChange={handleInputChange('code')}
+            />
 
-          <TextField
-            fullWidth
-            label="Name"
-            value={formData.name}
-            onChange={handleInputChange('name')}
-          />
+            <TextField
+              fullWidth
+              label="Name"
+              value={formData.name}
+              onChange={handleInputChange('name')}
+            />
+          </Box>
 
           <Box>
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
