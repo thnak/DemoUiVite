@@ -60,7 +60,8 @@ export function ShiftTemplateAutocomplete({
 
         try {
           const result = await searchShiftTemplate({ searchText });
-          setOptions(result || []);
+          // Ensure result is always an array to prevent MUI Autocomplete errors
+          setOptions(Array.isArray(result) ? result : []);
         } catch {
           setOptions([]);
           setErrorMessage('Failed to fetch shift templates. Please try again.');
