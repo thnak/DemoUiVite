@@ -89,7 +89,7 @@ export function CalendarView() {
   }, [page, rowsPerPage]);
 
   useEffect(() => {
-    fetchCalendars().then(() => {});
+    fetchCalendars();
   }, [fetchCalendars]);
 
   const handleDelete = useCallback(

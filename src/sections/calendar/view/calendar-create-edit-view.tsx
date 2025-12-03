@@ -159,9 +159,9 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             { key: 'name', value: formData.name },
             { key: 'type', value: formData.type },
             { key: 'description', value: formData.description },
-            { key: 'shiftTemplateId', value: formData.shiftTemplateId || null },
-            { key: 'applyFrom', value: formData.applyFrom ? new Date(formData.applyFrom).toISOString() : null },
-            { key: 'applyTo', value: formData.applyTo ? new Date(formData.applyTo).toISOString() : null },
+            { key: 'shiftTemplateId', value: formData.shiftTemplateId || undefined },
+            { key: 'applyFrom', value: formData.applyFrom ? new Date(formData.applyFrom).toISOString() : undefined },
+            { key: 'applyTo', value: formData.applyTo ? new Date(formData.applyTo).toISOString() : undefined },
           ];
           const updateResult = await updateCalendar(calendarId, updates);
           if (updateResult.isSuccess) {
