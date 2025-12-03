@@ -39,10 +39,19 @@ axiosInstance.interceptors.request.use(
 /**
  * Response interceptor
  * - Handles common error responses
+ * - Extracts error messages from API response body (for 400 errors with Result type responses)
  */
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => response,
-  (error: AxiosError) => Promise.reject(error)
+  (error: AxiosError<{ message?: string; isSuccess?: boolean }>) => {
+    // Check if the error response has a message in the body (common for API Result types)
+    if (error.response?.data?.message) {
+      // Create a new error with the API message instead of the generic axios message
+      const apiError = new Error(error.response.data.message);
+      return Promise.reject(apiError);
+    }
+    return Promise.reject(error);
+  }
 );
 
 // ----------------------------------------------------------------------
