@@ -44,6 +44,9 @@ export const DefectReasonGroupEditPage = lazy(() => import('src/pages/defect-rea
 export const DefectReasonPage = lazy(() => import('src/pages/defect-reason'));
 export const DefectReasonCreatePage = lazy(() => import('src/pages/defect-reason-create'));
 export const DefectReasonEditPage = lazy(() => import('src/pages/defect-reason-edit'));
+export const CalendarListPage = lazy(() => import('src/pages/calendar-list'));
+export const CalendarCreatePage = lazy(() => import('src/pages/calendar-create'));
+export const CalendarEditPage = lazy(() => import('src/pages/calendar-edit'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -107,6 +110,9 @@ export const routesSection: RouteObject[] = [
       { path: 'defect-reasons', element: <DefectReasonPage /> },
       { path: 'defect-reasons/create', element: <DefectReasonCreatePage /> },
       { path: 'defect-reasons/:id/edit', element: <DefectReasonEditPage /> },
+      { path: 'calendars', element: <CalendarListPage /> },
+      { path: 'calendars/create', element: <CalendarCreatePage /> },
+      { path: 'calendars/:id/edit', element: <CalendarEditPage /> },
     ],
   },
   {
