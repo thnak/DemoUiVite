@@ -7,6 +7,40 @@ import { apiConfig } from './config';
 // ----------------------------------------------------------------------
 
 /**
+ * Represents the common API Result pattern used for error responses.
+ * This matches the structure of XxxResult types in the generated API types.
+ */
+interface ApiResultError {
+  /** Indicates whether the API operation was successful. Present in all Result types. */
+  isSuccess?: boolean;
+  /** The error or success message from the API. Present when the API returns a message. */
+  message?: string | null;
+  /** The type of error (e.g., 'validation', 'notFound'). Present in error responses. */
+  errorType?: string;
+}
+
+/**
+ * Custom API error that preserves the original axios error properties
+ * while exposing the API error message.
+ */
+export class ApiError extends Error {
+  /** The HTTP status code from the response */
+  readonly status?: number;
+  /** The error type from the API response */
+  readonly errorType?: string;
+  /** The original axios error, if available */
+  readonly originalError?: AxiosError;
+
+  constructor(message: string, status?: number, errorType?: string, originalError?: AxiosError) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.errorType = errorType;
+    this.originalError = originalError;
+  }
+}
+
+/**
  * Create axios instance with default configuration
  */
 const axiosInstance: AxiosInstance = axios.create({
@@ -39,10 +73,26 @@ axiosInstance.interceptors.request.use(
 /**
  * Response interceptor
  * - Handles common error responses
+ * - Extracts error messages from API response body (for 400 errors with Result type responses)
  */
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => response,
-  (error: AxiosError) => Promise.reject(error)
+  (error: AxiosError<ApiResultError>) => {
+    // Check if the error response has a message in the body (common for API Result types)
+    // Use explicit null/undefined check to handle empty string messages
+    const apiMessage = error.response?.data?.message;
+    if (apiMessage !== undefined && apiMessage !== null) {
+      // Create an ApiError that preserves original error properties while using the API message
+      const apiError = new ApiError(
+        apiMessage,
+        error.response?.status,
+        error.response?.data?.errorType,
+        error
+      );
+      return Promise.reject(apiError);
+    }
+    return Promise.reject(error);
+  }
 );
 
 // ----------------------------------------------------------------------
