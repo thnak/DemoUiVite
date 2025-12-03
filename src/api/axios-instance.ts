@@ -11,8 +11,11 @@ import { apiConfig } from './config';
  * This matches the structure of XxxResult types in the generated API types.
  */
 interface ApiResultError {
+  /** Indicates whether the API operation was successful. Present in all Result types. */
   isSuccess?: boolean;
+  /** The error or success message from the API. Present when the API returns a message. */
   message?: string | null;
+  /** The type of error (e.g., 'validation', 'notFound'). Present in error responses. */
   errorType?: string;
 }
 
@@ -76,12 +79,14 @@ axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError<ApiResultError>) => {
     // Check if the error response has a message in the body (common for API Result types)
-    if (error.response?.data?.message) {
+    // Use explicit null/undefined check to handle empty string messages
+    const apiMessage = error.response?.data?.message;
+    if (apiMessage !== undefined && apiMessage !== null) {
       // Create an ApiError that preserves original error properties while using the API message
       const apiError = new ApiError(
-        error.response.data.message,
-        error.response.status,
-        error.response.data.errorType,
+        apiMessage,
+        error.response?.status,
+        error.response?.data?.errorType,
         error
       );
       return Promise.reject(apiError);
