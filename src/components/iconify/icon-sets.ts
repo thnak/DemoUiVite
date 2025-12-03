@@ -227,9 +227,6 @@ export default {
   'eva:video-fill': {
     body: '<path fill="currentColor" d="M21 7.15a1.7 1.7 0 0 0-1.85.3l-2.15 2V8a3 3 0 0 0-3-3H5a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h9a3 3 0 0 0 3-3v-1.45l2.16 2a1.74 1.74 0 0 0 1.16.45a1.68 1.68 0 0 0 .69-.15a1.6 1.6 0 0 0 1-1.48V8.63A1.6 1.6 0 0 0 21 7.15"/>',
   },
-  'mdi:view-dashboard-edit': {
-    body: '<path fill="currentColor" d="M21 13.1c-.1 0-.3.1-.4.2l-1 1l2.1 2.1l1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8l-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.5H21V7zM6.5 7v5.5H10V7zM3 7v5.5h1v-4h.5V7zm3.5 7v3.5H10V14zm-3 0v3.5h1v-2h.5V14zm6 0v.4l-2.5 2.5V21h2.5v-5.5H12V14z"/>',
-  },
   'mdi:content-save': {
     body: '<path fill="currentColor" d="M15 9H5V5h10m-3 14a3 3 0 0 1-3-3a3 3 0 0 1 3-3a3 3 0 0 1 3 3a3 3 0 0 1-3 3m5-16H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7z"/>',
   },

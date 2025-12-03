@@ -3247,6 +3247,110 @@
         }
       }
     },
+    "/api/Calendar/search-calendars": {
+      "post": {
+        "tags": [
+          "Calendar"
+        ],
+        "summary": "Search Calendars with Pagination",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarDtoBasePaginationResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarDtoBasePaginationResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarDtoBasePaginationResponse"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarDtoBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/calendarexception/{id}": {
       "get": {
         "tags": [
@@ -9848,353 +9952,6 @@
         }
       }
     },
-    "/api/downtimegroup/{id}": {
-      "get": {
-        "tags": [
-          "DowntimeGroup"
-        ],
-        "summary": "Get Downtime Group by ID",
-        "description": "Retrieves a specific Downtime Group entity by its unique identifier.",
-        "operationId": "GetDowntimeGroupById",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DowntimeGroupEntity"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/api/downtimegroup/get-page": {
-      "post": {
-        "tags": [
-          "DowntimeGroup"
-        ],
-        "summary": "Get paginated list of Downtime Group",
-        "description": "Retrieves a paginated list of Downtime Group entities.",
-        "operationId": "GetDowntimeGroupPage",
-        "parameters": [
-          {
-            "name": "pageNumber",
-            "in": "query",
-            "description": "Page number, starting from 0.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "description": "Number of items per page.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "searchTerm",
-            "in": "query",
-            "description": "Search term for filtering results.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DowntimeGroupEntityBasePaginationResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimegroup/create": {
-      "post": {
-        "tags": [
-          "DowntimeGroup"
-        ],
-        "summary": "Create a new Downtime Group",
-        "description": "Creates a new Downtime Group entity in the system.",
-        "operationId": "CreateDowntimeGroup",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DowntimeGroupEntity"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DowntimeGroupEntityResult"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DowntimeGroupEntityResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimegroup/update/{id}": {
-      "post": {
-        "tags": [
-          "DowntimeGroup"
-        ],
-        "summary": "Update an existing Downtime Group",
-        "description": "Updates specific fields of an existing Downtime Group entity by ID.",
-        "operationId": "UpdateDowntimeGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
-                },
-                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimegroup/delete/{id}": {
-      "delete": {
-        "tags": [
-          "DowntimeGroup"
-        ],
-        "summary": "Delete a Downtime Group",
-        "description": "Deletes a Downtime Group entity by its unique identifier.",
-        "operationId": "DeleteDowntimeGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimegroup/soft-delete/{id}": {
-      "delete": {
-        "tags": [
-          "DowntimeGroup"
-        ],
-        "summary": "Soft delete a Downtime Group",
-        "description": "Soft deletes a Downtime Group entity by its unique identifier.",
-        "operationId": "SoftDeleteDowntimeGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimegroup/restore-soft-delete/{id}": {
-      "put": {
-        "tags": [
-          "DowntimeGroup"
-        ],
-        "summary": "Soft restore delete a Downtime Group",
-        "description": "Soft restore deletes a Downtime Group entity by its unique identifier.",
-        "operationId": "SoftRestoreDeleteDowntimeGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimegroup/generate-new-code": {
-      "get": {
-        "tags": [
-          "DowntimeGroup"
-        ],
-        "summary": "Generate a new code for Downtime Group",
-        "description": "Generates a new unique code for a Downtime Group entity.",
-        "operationId": "GenerateNewDowntimeGroupCode",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimegroup/search": {
-      "get": {
-        "tags": [
-          "DowntimeGroup"
-        ],
-        "summary": "Search Downtime Group entities",
-        "description": "Searches Downtime Group entities by text across searchable fields.",
-        "operationId": "SearchDowntimeGroup",
-        "parameters": [
-          {
-            "name": "searchText",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "maxResults",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DowntimeGroupEntity"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/downtimeinput/{id}": {
       "get": {
         "tags": [
@@ -10839,6 +10596,353 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/DowntimeReasonEntity"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/downtimereasongroup/{id}": {
+      "get": {
+        "tags": [
+          "DowntimeReasonGroup"
+        ],
+        "summary": "Get Downtime Reason Group by ID",
+        "description": "Retrieves a specific Downtime Reason Group entity by its unique identifier.",
+        "operationId": "GetDowntimeReasonGroupById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DowntimeReasonGroupEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/downtimereasongroup/get-page": {
+      "post": {
+        "tags": [
+          "DowntimeReasonGroup"
+        ],
+        "summary": "Get paginated list of Downtime Reason Group",
+        "description": "Retrieves a paginated list of Downtime Reason Group entities.",
+        "operationId": "GetDowntimeReasonGroupPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DowntimeReasonGroupEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/downtimereasongroup/create": {
+      "post": {
+        "tags": [
+          "DowntimeReasonGroup"
+        ],
+        "summary": "Create a new Downtime Reason Group",
+        "description": "Creates a new Downtime Reason Group entity in the system.",
+        "operationId": "CreateDowntimeReasonGroup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DowntimeReasonGroupEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DowntimeReasonGroupEntityResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DowntimeReasonGroupEntityResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/downtimereasongroup/update/{id}": {
+      "post": {
+        "tags": [
+          "DowntimeReasonGroup"
+        ],
+        "summary": "Update an existing Downtime Reason Group",
+        "description": "Updates specific fields of an existing Downtime Reason Group entity by ID.",
+        "operationId": "UpdateDowntimeReasonGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/downtimereasongroup/delete/{id}": {
+      "delete": {
+        "tags": [
+          "DowntimeReasonGroup"
+        ],
+        "summary": "Delete a Downtime Reason Group",
+        "description": "Deletes a Downtime Reason Group entity by its unique identifier.",
+        "operationId": "DeleteDowntimeReasonGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/downtimereasongroup/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "DowntimeReasonGroup"
+        ],
+        "summary": "Soft delete a Downtime Reason Group",
+        "description": "Soft deletes a Downtime Reason Group entity by its unique identifier.",
+        "operationId": "SoftDeleteDowntimeReasonGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/downtimereasongroup/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "DowntimeReasonGroup"
+        ],
+        "summary": "Soft restore delete a Downtime Reason Group",
+        "description": "Soft restore deletes a Downtime Reason Group entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteDowntimeReasonGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/downtimereasongroup/generate-new-code": {
+      "get": {
+        "tags": [
+          "DowntimeReasonGroup"
+        ],
+        "summary": "Generate a new code for Downtime Reason Group",
+        "description": "Generates a new unique code for a Downtime Reason Group entity.",
+        "operationId": "GenerateNewDowntimeReasonGroupCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/downtimereasongroup/search": {
+      "get": {
+        "tags": [
+          "DowntimeReasonGroup"
+        ],
+        "summary": "Search Downtime Reason Group entities",
+        "description": "Searches Downtime Reason Group entities by text across searchable fields.",
+        "operationId": "SearchDowntimeReasonGroup",
+        "parameters": [
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DowntimeReasonGroupEntity"
                   }
                 }
               }
@@ -41450,6 +41554,91 @@
         },
         "additionalProperties": false
       },
+      "CalendarDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "$ref": "#/components/schemas/CalendarType"
+          },
+          "shiftTemplateId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "shiftTemplateName": {
+            "type": "string",
+            "nullable": true
+          },
+          "applyFrom": {
+            "type": "string",
+            "format": "date"
+          },
+          "applyTo": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": ""
+      },
+      "CalendarDtoBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CalendarDto"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
       "CalendarEntity": {
         "type": "object",
         "properties": {
@@ -43054,124 +43243,6 @@
         "type": "string",
         "description": "Represents the type of document in the system."
       },
-      "DowntimeGroupEntity": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "$ref": "#/components/schemas/ObjectId"
-          },
-          "createTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "modifiedTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "isDeleted": {
-            "type": "boolean"
-          },
-          "isDraft": {
-            "type": "boolean"
-          },
-          "code": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "category": {
-            "$ref": "#/components/schemas/DowntimeReasonCategories"
-          },
-          "isPlanned": {
-            "type": "boolean"
-          },
-          "colorHex": {
-            "type": "string",
-            "nullable": true
-          },
-          "translations": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "DowntimeGroupEntityBasePaginationResponse": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DowntimeGroupEntity"
-            },
-            "description": "List of items in the current page",
-            "nullable": true
-          },
-          "totalItems": {
-            "type": "integer",
-            "description": "Total number of items across all pages",
-            "format": "int32"
-          },
-          "pageNumber": {
-            "type": "integer",
-            "description": "Current page number (0-based)",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "description": "Number of items per page",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "description": "Total number of pages",
-            "format": "int32"
-          },
-          "sortableFields": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "Base class for paginated responses"
-      },
-      "DowntimeGroupEntityResult": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "$ref": "#/components/schemas/DowntimeGroupEntity"
-          },
-          "isSuccess": {
-            "type": "boolean",
-            "description": "Gets a value indicating whether the operation was successful."
-          },
-          "message": {
-            "type": "string",
-            "description": "Gets the message describing the result.",
-            "nullable": true
-          },
-          "errorType": {
-            "$ref": "#/components/schemas/ErrorType"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
-      },
       "DowntimeInput": {
         "type": "object",
         "properties": {
@@ -43386,6 +43457,124 @@
         "properties": {
           "value": {
             "$ref": "#/components/schemas/DowntimeReasonEntity"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "DowntimeReasonGroupEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "isDraft": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "$ref": "#/components/schemas/DowntimeReasonCategories"
+          },
+          "isPlanned": {
+            "type": "boolean"
+          },
+          "colorHex": {
+            "type": "string",
+            "nullable": true
+          },
+          "translations": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DowntimeReasonGroupEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DowntimeReasonGroupEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "DowntimeReasonGroupEntityResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/DowntimeReasonGroupEntity"
           },
           "isSuccess": {
             "type": "boolean",
@@ -54890,7 +55079,8 @@
       "name": "Cache"
     },
     {
-      "name": "Calendar"
+      "name": "Calendar",
+      "description": ""
     },
     {
       "name": "CalendarException"
@@ -54935,13 +55125,13 @@
       "name": "Document"
     },
     {
-      "name": "DowntimeGroup"
-    },
-    {
       "name": "DowntimeInput"
     },
     {
       "name": "DowntimeReason"
+    },
+    {
+      "name": "DowntimeReasonGroup"
     },
     {
       "name": "ExternalResource"

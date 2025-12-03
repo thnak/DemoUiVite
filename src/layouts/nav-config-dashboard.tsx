@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
 import { Label } from 'src/components/label';
-import { Iconify } from 'src/components/iconify';
 import { SvgColor } from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -42,7 +41,7 @@ export function useNavData(): NavData {
         {
           title: 'Dashboard Builder',
           path: '/dashboard-builder',
-          icon: <Iconify icon="mdi:view-dashboard-edit" width={24} />,
+          icon: icon('draw-two-tone'),
         },
       ],
     },
@@ -57,7 +56,7 @@ export function useNavData(): NavData {
         {
           title: t('nav.area'),
           path: '/area',
-          icon: icon('ic-analytics'),
+          icon: icon('space-two-tone'),
         },
         {
           title: t('nav.product'),
@@ -72,7 +71,7 @@ export function useNavData(): NavData {
         {
           title: t('nav.workingParameter'),
           path: '/working-parameter',
-          icon: icon('ic-analytics'),
+          icon: icon('medical-info-two-tone'),
         },
         {
           title: t('nav.stopMachineReason'),
@@ -98,6 +97,16 @@ export function useNavData(): NavData {
           title: 'shift template',
           path: '/shift-templates',
           icon: icon('shift-templates'),
+        },
+        {
+          title: 'defect reason',
+          path: '/defect-reasons',
+          icon: icon('defect-reasons'),
+        },
+        {
+          title: 'defect reason group',
+          path: '/defect-reason-group',
+          icon: icon('defect-reason-group'),
         },
         {
           title: t('nav.blog'),
@@ -142,7 +151,7 @@ export const navData: NavData = [
       {
         title: 'Dashboard Builder',
         path: '/dashboard-builder',
-        icon: <Iconify icon="mdi:view-dashboard-edit" width={24} />,
+        icon: icon('draw-two-tone'),
       },
     ],
   },
