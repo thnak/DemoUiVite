@@ -7,6 +7,37 @@ import { apiConfig } from './config';
 // ----------------------------------------------------------------------
 
 /**
+ * Represents the common API Result pattern used for error responses.
+ * This matches the structure of XxxResult types in the generated API types.
+ */
+interface ApiResultError {
+  isSuccess?: boolean;
+  message?: string | null;
+  errorType?: string;
+}
+
+/**
+ * Custom API error that preserves the original axios error properties
+ * while exposing the API error message.
+ */
+export class ApiError extends Error {
+  /** The HTTP status code from the response */
+  readonly status?: number;
+  /** The error type from the API response */
+  readonly errorType?: string;
+  /** The original axios error, if available */
+  readonly originalError?: AxiosError;
+
+  constructor(message: string, status?: number, errorType?: string, originalError?: AxiosError) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.errorType = errorType;
+    this.originalError = originalError;
+  }
+}
+
+/**
  * Create axios instance with default configuration
  */
 const axiosInstance: AxiosInstance = axios.create({
@@ -43,11 +74,16 @@ axiosInstance.interceptors.request.use(
  */
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => response,
-  (error: AxiosError<{ message?: string; isSuccess?: boolean }>) => {
+  (error: AxiosError<ApiResultError>) => {
     // Check if the error response has a message in the body (common for API Result types)
     if (error.response?.data?.message) {
-      // Create a new error with the API message instead of the generic axios message
-      const apiError = new Error(error.response.data.message);
+      // Create an ApiError that preserves original error properties while using the API message
+      const apiError = new ApiError(
+        error.response.data.message,
+        error.response.status,
+        error.response.data.errorType,
+        error
+      );
       return Promise.reject(apiError);
     }
     return Promise.reject(error);
