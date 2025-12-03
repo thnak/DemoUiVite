@@ -75,7 +75,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
     setLoadingShiftTemplates(true);
     try {
       const templates = await searchShiftTemplate({ searchText, maxResults: 50 });
-      setShiftTemplates(templates || []);
+      setShiftTemplates(templates.data || []);
     } catch (err) {
       console.error('Error fetching shift templates:', err);
     } finally {
@@ -108,7 +108,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             // Find and set the selected shift template
             if (calendar.shiftTemplateId) {
               const templates = await searchShiftTemplate({ maxResults: 100 });
-              const foundTemplate = templates?.find(
+              const foundTemplate = templates.data?.find(
                 (t) => t.id?.toString() === calendar.shiftTemplateId?.toString()
               );
               if (foundTemplate) {
