@@ -47,6 +47,7 @@ export default function Page() {
         isEdit
         currentArea={{
           id: areaData.id?.toString() || '',
+          code: areaData.code || '',
           name: areaData.name || '',
           description: areaData.description || '',
         }}

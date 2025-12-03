@@ -18,6 +18,7 @@ import { useCreateArea, useUpdateArea } from 'src/api/hooks/generated/use-area';
 // ----------------------------------------------------------------------
 
 interface AreaFormData {
+  code: string;
   name: string;
   description: string;
 }
@@ -26,6 +27,7 @@ interface AreaCreateEditViewProps {
   isEdit?: boolean;
   currentArea?: {
     id: string;
+    code: string;
     name: string;
     description: string;
   };
@@ -36,6 +38,7 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState<AreaFormData>({
+    code: currentArea?.code || '',
     name: currentArea?.name || '',
     description: currentArea?.description || '',
   });
@@ -93,6 +96,7 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
       updateAreaMutate({
         id: currentArea.id,
         data: [
+          { key: 'code', value: formData.code },
           { key: 'name', value: formData.name },
           { key: 'description', value: formData.description },
         ],
@@ -101,6 +105,7 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
       // Create uses full entity object as per API spec
       createAreaMutate({
         data: {
+          code: formData.code,
           name: formData.name,
           description: formData.description,
         },
@@ -139,6 +144,14 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
 
       <Card sx={{ p: 3 }}>
         <Stack spacing={3}>
+
+          <TextField
+            fullWidth
+            label="Area code"
+            value={formData.code}
+            onChange={handleInputChange('code')}
+          />
+
           <TextField
             fullWidth
             label="Area name"
