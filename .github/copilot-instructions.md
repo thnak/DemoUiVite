@@ -252,3 +252,10 @@ const request = { timeout: "30s", duration: "1 hour" };
 - Include code examples for technical documentation
 - Keep documentation up to date when making code changes
 - **Always follow the theme system guidelines** to ensure dark mode compatibility
+
+## Your tools
+-- Use the mui-mcp server to answer any MUI questions --
+- 1. call the "useMuiDocs" tool to fetch the docs of the package relevant in the question
+- 2. call the "fetchDocs" tool to fetch any additional docs if needed using ONLY the URLs present in the returned content.
+- 3. repeat steps 1-2 until you have fetched all relevant docs for the given question
+- 4. use the fetched content to answer the question
