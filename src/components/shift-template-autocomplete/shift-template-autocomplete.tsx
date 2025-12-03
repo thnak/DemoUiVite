@@ -113,13 +113,17 @@ export function ShiftTemplateAutocomplete({
     if (option.code && option.name) {
       return `${option.code} - ${option.name}`;
     }
-    return option.name || option.code || '';
+    return option.name || option.code || 'Unnamed Template';
   }, []);
 
   // Check if two options are equal
   const isOptionEqualToValue = useCallback(
-    (option: ShiftTemplateEntity, val: ShiftTemplateEntity) =>
-      option.id?.toString() === val.id?.toString(),
+    (option: ShiftTemplateEntity, val: ShiftTemplateEntity) => {
+      // Handle cases where id might be undefined
+      if (!option.id && !val.id) return true;
+      if (!option.id || !val.id) return false;
+      return option.id.toString() === val.id.toString();
+    },
     []
   );
 
@@ -162,10 +166,11 @@ export function ShiftTemplateAutocomplete({
       )}
       renderOption={(props, option) => {
         const { key, ...optionProps } = props;
+        const displayCode = option.code || 'N/A';
         return (
           <li key={key} {...optionProps}>
             <div>
-              <strong>{option.code}</strong>
+              <strong>{displayCode}</strong>
               {option.name && <span> - {option.name}</span>}
             </div>
           </li>
