@@ -38,6 +38,9 @@ export const ShiftTemplateCreatePage = lazy(() => import('src/pages/shift-templa
 export const ShiftTemplateEditPage = lazy(() => import('src/pages/shift-template-edit'));
 export const DashboardBuilderPage = lazy(() => import('src/pages/dashboard-builder'));
 export const DashboardBuilderEditPage = lazy(() => import('src/pages/dashboard-builder-edit'));
+export const DefectReasonGroupListPage = lazy(() => import('src/pages/defect-reason-group-list'));
+export const DefectReasonGroupCreatePage = lazy(() => import('src/pages/defect-reason-group-create'));
+export const DefectReasonGroupEditPage = lazy(() => import('src/pages/defect-reason-group-edit'));
 export const DefectReasonPage = lazy(() => import('src/pages/defect-reason'));
 export const DefectReasonCreatePage = lazy(() => import('src/pages/defect-reason-create'));
 export const DefectReasonEditPage = lazy(() => import('src/pages/defect-reason-edit'));
@@ -98,6 +101,9 @@ export const routesSection: RouteObject[] = [
       { path: 'dashboard-builder', element: <DashboardBuilderPage /> },
       { path: 'dashboard-builder/new', element: <DashboardBuilderEditPage /> },
       { path: 'dashboard-builder/:id', element: <DashboardBuilderEditPage /> },
+      { path: 'defect-reason-group', element: <DefectReasonGroupListPage /> },
+      { path: 'defect-reason-group/create', element: <DefectReasonGroupCreatePage /> },
+      { path: 'defect-reason-group/:id/edit', element: <DefectReasonGroupEditPage /> },
       { path: 'defect-reasons', element: <DefectReasonPage /> },
       { path: 'defect-reasons/create', element: <DefectReasonCreatePage /> },
       { path: 'defect-reasons/:id/edit', element: <DefectReasonEditPage /> },
