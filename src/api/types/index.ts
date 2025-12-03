@@ -22,6 +22,7 @@ export type {
   ApiGatewayEntity,
   UserEntityResult,
   BrandEntityResult,
+  ShiftTemplateEntity,
   ProductEntityResult,
   CategoryEntityResult,
   CustomerEntityResult,
@@ -31,6 +32,7 @@ export type {
   AdaptiveRuleConfigEntity,
   AdminGlobalSettingEntity,
   StringObjectKeyValuePair,
+  ShiftTemplateEntityResult,
   AdaptiveRuleConfigEntityResult,
   AdminGlobalSettingEntityResult,
   UserEntityBasePaginationResponse,
@@ -40,6 +42,7 @@ export type {
   CustomerEntityBasePaginationResponse,
   WarehouseEntityBasePaginationResponse,
   ApiGatewayEntityBasePaginationResponse,
+  ShiftTemplateEntityBasePaginationResponse,
   AdaptiveRuleConfigEntityBasePaginationResponse,
   AdminGlobalSettingEntityBasePaginationResponse,
 } from './generated';
