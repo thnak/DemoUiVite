@@ -143,7 +143,7 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
             setInitialData({
               code: template.code || '',
               name: template.name || '',
-              description: '',
+              description: template.description || '',
               weekType: '5-day',
               shiftPattern: '2-shifts',
               definitions:
@@ -184,6 +184,7 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
             { key: 'code', value: data.code },
             { key: 'name', value: data.name },
             { key: 'shifts', value: formDataToApiEntity(data).shifts },
+            { key: 'description', value: data.description || '' },
           ];
           const updateResult = await updateShiftTemplate(templateId, updates);
           if (updateResult.isSuccess) setSuccessMessage('Template updated successfully');

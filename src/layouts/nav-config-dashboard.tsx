@@ -95,6 +95,11 @@ export function useNavData(): NavData {
           icon: icon('ic-analytics'),
         },
         {
+          title: 'shift template',
+          path: '/shift-templates',
+          icon: icon('shift-templates'),
+        },
+        {
           title: t('nav.blog'),
           path: '/blog',
           icon: icon('ic-blog'),

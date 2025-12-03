@@ -1802,7 +1802,7 @@
           "Auth"
         ],
         "summary": "Generate a one-time use QR code token for authenticated user",
-        "description": "This endpoint generates a secure one-time use token that can be encoded in a QR code.\nThe token expires after 2 minutes and can only be used once.\nThe authenticated user on one device can scan this QR code on another device to log in without entering credentials.",
+        "description": "This endpoint generates a secure one-time use token that can be encoded in a QR code.\r\nThe token expires after 2 minutes and can only be used once.\r\nThe authenticated user on one device can scan this QR code on another device to log in without entering credentials.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1838,7 +1838,7 @@
           "Auth"
         ],
         "summary": "Login using a one-time QR code token",
-        "description": "This endpoint consumes a one-time use token (from QR code scan) and logs the user in.\nThe token is validated and then marked as consumed. If successful, returns authentication tokens.",
+        "description": "This endpoint consumes a one-time use token (from QR code scan) and logs the user in.\r\nThe token is validated and then marked as consumed. If successful, returns authentication tokens.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -6428,14 +6428,14 @@
         }
       }
     },
-    "/api/defect/{id}": {
+    "/api/defectreason/{id}": {
       "get": {
         "tags": [
-          "Defect"
+          "DefectReason"
         ],
-        "summary": "Get Defect by ID",
-        "description": "Retrieves a specific Defect entity by its unique identifier.",
-        "operationId": "GetDefectById",
+        "summary": "Get Defect Reason by ID",
+        "description": "Retrieves a specific Defect Reason entity by its unique identifier.",
+        "operationId": "GetDefectReasonById",
         "parameters": [
           {
             "name": "id",
@@ -6452,7 +6452,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DefectEntity"
+                  "$ref": "#/components/schemas/DefectReasonEntity"
                 }
               }
             }
@@ -6463,14 +6463,14 @@
         }
       }
     },
-    "/api/defect/get-page": {
+    "/api/defectreason/get-page": {
       "post": {
         "tags": [
-          "Defect"
+          "DefectReason"
         ],
-        "summary": "Get paginated list of Defect",
-        "description": "Retrieves a paginated list of Defect entities.",
-        "operationId": "GetDefectPage",
+        "summary": "Get paginated list of Defect Reason",
+        "description": "Retrieves a paginated list of Defect Reason entities.",
+        "operationId": "GetDefectReasonPage",
         "parameters": [
           {
             "name": "pageNumber",
@@ -6519,7 +6519,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DefectEntityBasePaginationResponse"
+                  "$ref": "#/components/schemas/DefectReasonEntityBasePaginationResponse"
                 }
               }
             }
@@ -6527,19 +6527,19 @@
         }
       }
     },
-    "/api/defect/create": {
+    "/api/defectreason/create": {
       "post": {
         "tags": [
-          "Defect"
+          "DefectReason"
         ],
-        "summary": "Create a new Defect",
-        "description": "Creates a new Defect entity in the system.",
-        "operationId": "CreateDefect",
+        "summary": "Create a new Defect Reason",
+        "description": "Creates a new Defect Reason entity in the system.",
+        "operationId": "CreateDefectReason",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DefectEntity"
+                "$ref": "#/components/schemas/DefectReasonEntity"
               }
             }
           },
@@ -6551,7 +6551,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DefectEntityResult"
+                  "$ref": "#/components/schemas/DefectReasonEntityResult"
                 }
               }
             }
@@ -6561,7 +6561,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DefectEntityResult"
+                  "$ref": "#/components/schemas/DefectReasonEntityResult"
                 }
               }
             }
@@ -6569,14 +6569,14 @@
         }
       }
     },
-    "/api/defect/update/{id}": {
+    "/api/defectreason/update/{id}": {
       "post": {
         "tags": [
-          "Defect"
+          "DefectReason"
         ],
-        "summary": "Update an existing Defect",
-        "description": "Updates specific fields of an existing Defect entity by ID.",
-        "operationId": "UpdateDefect",
+        "summary": "Update an existing Defect Reason",
+        "description": "Updates specific fields of an existing Defect Reason entity by ID.",
+        "operationId": "UpdateDefectReason",
         "parameters": [
           {
             "name": "id",
@@ -6615,14 +6615,14 @@
         }
       }
     },
-    "/api/defect/delete/{id}": {
+    "/api/defectreason/delete/{id}": {
       "delete": {
         "tags": [
-          "Defect"
+          "DefectReason"
         ],
-        "summary": "Delete a Defect",
-        "description": "Deletes a Defect entity by its unique identifier.",
-        "operationId": "DeleteDefect",
+        "summary": "Delete a Defect Reason",
+        "description": "Deletes a Defect Reason entity by its unique identifier.",
+        "operationId": "DeleteDefectReason",
         "parameters": [
           {
             "name": "id",
@@ -6647,14 +6647,14 @@
         }
       }
     },
-    "/api/defect/soft-delete/{id}": {
+    "/api/defectreason/soft-delete/{id}": {
       "delete": {
         "tags": [
-          "Defect"
+          "DefectReason"
         ],
-        "summary": "Soft delete a Defect",
-        "description": "Soft deletes a Defect entity by its unique identifier.",
-        "operationId": "SoftDeleteDefect",
+        "summary": "Soft delete a Defect Reason",
+        "description": "Soft deletes a Defect Reason entity by its unique identifier.",
+        "operationId": "SoftDeleteDefectReason",
         "parameters": [
           {
             "name": "id",
@@ -6679,14 +6679,14 @@
         }
       }
     },
-    "/api/defect/restore-soft-delete/{id}": {
+    "/api/defectreason/restore-soft-delete/{id}": {
       "put": {
         "tags": [
-          "Defect"
+          "DefectReason"
         ],
-        "summary": "Soft restore delete a Defect",
-        "description": "Soft restore deletes a Defect entity by its unique identifier.",
-        "operationId": "SoftRestoreDeleteDefect",
+        "summary": "Soft restore delete a Defect Reason",
+        "description": "Soft restore deletes a Defect Reason entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteDefectReason",
         "parameters": [
           {
             "name": "id",
@@ -6711,14 +6711,14 @@
         }
       }
     },
-    "/api/defect/generate-new-code": {
+    "/api/defectreason/generate-new-code": {
       "get": {
         "tags": [
-          "Defect"
+          "DefectReason"
         ],
-        "summary": "Generate a new code for Defect",
-        "description": "Generates a new unique code for a Defect entity.",
-        "operationId": "GenerateNewDefectCode",
+        "summary": "Generate a new code for Defect Reason",
+        "description": "Generates a new unique code for a Defect Reason entity.",
+        "operationId": "GenerateNewDefectReasonCode",
         "responses": {
           "200": {
             "description": "OK",
@@ -6733,319 +6733,14 @@
         }
       }
     },
-    "/api/defectgroup/{id}": {
+    "/api/defectreason/search": {
       "get": {
         "tags": [
-          "DefectGroup"
+          "DefectReason"
         ],
-        "summary": "Get Defect Group by ID",
-        "description": "Retrieves a specific Defect Group entity by its unique identifier.",
-        "operationId": "GetDefectGroupById",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DefectGroupEntity"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/api/defectgroup/get-page": {
-      "post": {
-        "tags": [
-          "DefectGroup"
-        ],
-        "summary": "Get paginated list of Defect Group",
-        "description": "Retrieves a paginated list of Defect Group entities.",
-        "operationId": "GetDefectGroupPage",
-        "parameters": [
-          {
-            "name": "pageNumber",
-            "in": "query",
-            "description": "Page number, starting from 0.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "description": "Number of items per page.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "searchTerm",
-            "in": "query",
-            "description": "Search term for filtering results.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DefectGroupEntityBasePaginationResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/defectgroup/create": {
-      "post": {
-        "tags": [
-          "DefectGroup"
-        ],
-        "summary": "Create a new Defect Group",
-        "description": "Creates a new Defect Group entity in the system.",
-        "operationId": "CreateDefectGroup",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DefectGroupEntity"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DefectGroupEntityResult"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DefectGroupEntityResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/defectgroup/update/{id}": {
-      "post": {
-        "tags": [
-          "DefectGroup"
-        ],
-        "summary": "Update an existing Defect Group",
-        "description": "Updates specific fields of an existing Defect Group entity by ID.",
-        "operationId": "UpdateDefectGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
-                },
-                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/defectgroup/delete/{id}": {
-      "delete": {
-        "tags": [
-          "DefectGroup"
-        ],
-        "summary": "Delete a Defect Group",
-        "description": "Deletes a Defect Group entity by its unique identifier.",
-        "operationId": "DeleteDefectGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/defectgroup/soft-delete/{id}": {
-      "delete": {
-        "tags": [
-          "DefectGroup"
-        ],
-        "summary": "Soft delete a Defect Group",
-        "description": "Soft deletes a Defect Group entity by its unique identifier.",
-        "operationId": "SoftDeleteDefectGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/defectgroup/restore-soft-delete/{id}": {
-      "put": {
-        "tags": [
-          "DefectGroup"
-        ],
-        "summary": "Soft restore delete a Defect Group",
-        "description": "Soft restore deletes a Defect Group entity by its unique identifier.",
-        "operationId": "SoftRestoreDeleteDefectGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/defectgroup/generate-new-code": {
-      "get": {
-        "tags": [
-          "DefectGroup"
-        ],
-        "summary": "Generate a new code for Defect Group",
-        "description": "Generates a new unique code for a Defect Group entity.",
-        "operationId": "GenerateNewDefectGroupCode",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/defectgroup/search": {
-      "get": {
-        "tags": [
-          "DefectGroup"
-        ],
-        "summary": "Search Defect Group entities",
-        "description": "Searches Defect Group entities by text across searchable fields.",
-        "operationId": "SearchDefectGroup",
+        "summary": "Search Defect Reason entities",
+        "description": "Searches Defect Reason entities by text across searchable fields.",
+        "operationId": "SearchDefectReason",
         "parameters": [
           {
             "name": "searchText",
@@ -7071,7 +6766,354 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/DefectGroupEntity"
+                    "$ref": "#/components/schemas/DefectReasonEntity"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/defectreasongroup/{id}": {
+      "get": {
+        "tags": [
+          "DefectReasonGroup"
+        ],
+        "summary": "Get Defect Reason Group by ID",
+        "description": "Retrieves a specific Defect Reason Group entity by its unique identifier.",
+        "operationId": "GetDefectReasonGroupById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefectReasonGroupEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/defectreasongroup/get-page": {
+      "post": {
+        "tags": [
+          "DefectReasonGroup"
+        ],
+        "summary": "Get paginated list of Defect Reason Group",
+        "description": "Retrieves a paginated list of Defect Reason Group entities.",
+        "operationId": "GetDefectReasonGroupPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefectReasonGroupEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/defectreasongroup/create": {
+      "post": {
+        "tags": [
+          "DefectReasonGroup"
+        ],
+        "summary": "Create a new Defect Reason Group",
+        "description": "Creates a new Defect Reason Group entity in the system.",
+        "operationId": "CreateDefectReasonGroup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefectReasonGroupEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefectReasonGroupEntityResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefectReasonGroupEntityResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/defectreasongroup/update/{id}": {
+      "post": {
+        "tags": [
+          "DefectReasonGroup"
+        ],
+        "summary": "Update an existing Defect Reason Group",
+        "description": "Updates specific fields of an existing Defect Reason Group entity by ID.",
+        "operationId": "UpdateDefectReasonGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/defectreasongroup/delete/{id}": {
+      "delete": {
+        "tags": [
+          "DefectReasonGroup"
+        ],
+        "summary": "Delete a Defect Reason Group",
+        "description": "Deletes a Defect Reason Group entity by its unique identifier.",
+        "operationId": "DeleteDefectReasonGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/defectreasongroup/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "DefectReasonGroup"
+        ],
+        "summary": "Soft delete a Defect Reason Group",
+        "description": "Soft deletes a Defect Reason Group entity by its unique identifier.",
+        "operationId": "SoftDeleteDefectReasonGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/defectreasongroup/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "DefectReasonGroup"
+        ],
+        "summary": "Soft restore delete a Defect Reason Group",
+        "description": "Soft restore deletes a Defect Reason Group entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteDefectReasonGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/defectreasongroup/generate-new-code": {
+      "get": {
+        "tags": [
+          "DefectReasonGroup"
+        ],
+        "summary": "Generate a new code for Defect Reason Group",
+        "description": "Generates a new unique code for a Defect Reason Group entity.",
+        "operationId": "GenerateNewDefectReasonGroupCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/defectreasongroup/search": {
+      "get": {
+        "tags": [
+          "DefectReasonGroup"
+        ],
+        "summary": "Search Defect Reason Group entities",
+        "description": "Searches Defect Reason Group entities by text across searchable fields.",
+        "operationId": "SearchDefectReasonGroup",
+        "parameters": [
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DefectReasonGroupEntity"
                   }
                 }
               }
@@ -17552,7 +17594,7 @@
         "tags": [
           "Localization"
         ],
-        "summary": "Retrieves all translations for a specific language code.\nGET /api/translations/{langCode}",
+        "summary": "Retrieves all translations for a specific language code.\r\nGET /api/translations/{langCode}",
         "parameters": [
           {
             "name": "langCode",
@@ -17734,7 +17776,7 @@
         "tags": [
           "Localization"
         ],
-        "summary": "upload excel file to update translations. the devault culture is vi-VN and it always have value while other culture can be empty\nif other culture is empty, it must be auto translated by Ollama",
+        "summary": "upload excel file to update translations. the devault culture is vi-VN and it always have value while other culture can be empty\r\nif other culture is empty, it must be auto translated by Ollama",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -31996,6 +32038,311 @@
         }
       }
     },
+    "/api/stopmachinereason/{id}": {
+      "get": {
+        "tags": [
+          "StopMachineReason"
+        ],
+        "summary": "Get Stop Machine Reason by ID",
+        "description": "Retrieves a specific Stop Machine Reason entity by its unique identifier.",
+        "operationId": "GetStopMachineReasonById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StopMachineReasonEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/stopmachinereason/get-page": {
+      "post": {
+        "tags": [
+          "StopMachineReason"
+        ],
+        "summary": "Get paginated list of Stop Machine Reason",
+        "description": "Retrieves a paginated list of Stop Machine Reason entities.",
+        "operationId": "GetStopMachineReasonPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StopMachineReasonEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereason/create": {
+      "post": {
+        "tags": [
+          "StopMachineReason"
+        ],
+        "summary": "Create a new Stop Machine Reason",
+        "description": "Creates a new Stop Machine Reason entity in the system.",
+        "operationId": "CreateStopMachineReason",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StopMachineReasonEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StopMachineReasonEntityResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StopMachineReasonEntityResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereason/update/{id}": {
+      "post": {
+        "tags": [
+          "StopMachineReason"
+        ],
+        "summary": "Update an existing Stop Machine Reason",
+        "description": "Updates specific fields of an existing Stop Machine Reason entity by ID.",
+        "operationId": "UpdateStopMachineReason",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereason/delete/{id}": {
+      "delete": {
+        "tags": [
+          "StopMachineReason"
+        ],
+        "summary": "Delete a Stop Machine Reason",
+        "description": "Deletes a Stop Machine Reason entity by its unique identifier.",
+        "operationId": "DeleteStopMachineReason",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereason/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "StopMachineReason"
+        ],
+        "summary": "Soft delete a Stop Machine Reason",
+        "description": "Soft deletes a Stop Machine Reason entity by its unique identifier.",
+        "operationId": "SoftDeleteStopMachineReason",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereason/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "StopMachineReason"
+        ],
+        "summary": "Soft restore delete a Stop Machine Reason",
+        "description": "Soft restore deletes a Stop Machine Reason entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteStopMachineReason",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereason/generate-new-code": {
+      "get": {
+        "tags": [
+          "StopMachineReason"
+        ],
+        "summary": "Generate a new code for Stop Machine Reason",
+        "description": "Generates a new unique code for a Stop Machine Reason entity.",
+        "operationId": "GenerateNewStopMachineReasonCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/storageblock/{id}": {
       "get": {
         "tags": [
@@ -40274,6 +40621,16 @@
           "height": {
             "type": "number",
             "format": "double"
+          },
+          "area": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "volume": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -42198,7 +42555,7 @@
         ],
         "type": "string"
       },
-      "DefectEntity": {
+      "DefectReasonEntity": {
         "type": "object",
         "properties": {
           "id": {
@@ -42256,13 +42613,13 @@
         },
         "additionalProperties": false
       },
-      "DefectEntityBasePaginationResponse": {
+      "DefectReasonEntityBasePaginationResponse": {
         "type": "object",
         "properties": {
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/DefectEntity"
+              "$ref": "#/components/schemas/DefectReasonEntity"
             },
             "description": "List of items in the current page",
             "nullable": true
@@ -42300,11 +42657,11 @@
         "additionalProperties": false,
         "description": "Base class for paginated responses"
       },
-      "DefectEntityResult": {
+      "DefectReasonEntityResult": {
         "type": "object",
         "properties": {
           "value": {
-            "$ref": "#/components/schemas/DefectEntity"
+            "$ref": "#/components/schemas/DefectReasonEntity"
           },
           "isSuccess": {
             "type": "boolean",
@@ -42322,7 +42679,7 @@
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
-      "DefectGroupEntity": {
+      "DefectReasonGroupEntity": {
         "type": "object",
         "properties": {
           "id": {
@@ -42368,13 +42725,13 @@
         },
         "additionalProperties": false
       },
-      "DefectGroupEntityBasePaginationResponse": {
+      "DefectReasonGroupEntityBasePaginationResponse": {
         "type": "object",
         "properties": {
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/DefectGroupEntity"
+              "$ref": "#/components/schemas/DefectReasonGroupEntity"
             },
             "description": "List of items in the current page",
             "nullable": true
@@ -42412,11 +42769,11 @@
         "additionalProperties": false,
         "description": "Base class for paginated responses"
       },
-      "DefectGroupEntityResult": {
+      "DefectReasonGroupEntityResult": {
         "type": "object",
         "properties": {
           "value": {
-            "$ref": "#/components/schemas/DefectGroupEntity"
+            "$ref": "#/components/schemas/DefectReasonGroupEntity"
           },
           "isSuccess": {
             "type": "boolean",
@@ -45905,187 +46262,150 @@
         "properties": {
           "path": {
             "type": "string",
-            "description": "Gets or sets path",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Gets or sets name",
             "nullable": true
           },
           "defaultCulture": {
             "type": "string",
-            "description": "Gets or sets default culture",
             "nullable": true
           },
-          "comment": {
+          "comment1": {
             "type": "string",
-            "description": "Gets or sets comment",
             "nullable": true
           },
           "de": {
             "type": "string",
-            "description": "Gets or sets de",
             "nullable": true
           },
-          "commentDe": {
+          "comment2": {
             "type": "string",
-            "description": "Gets or sets comment de",
             "nullable": true
           },
           "en": {
             "type": "string",
-            "description": "Gets or sets en",
             "nullable": true
           },
-          "commentEn": {
+          "comment3": {
             "type": "string",
-            "description": "Gets or sets comment en",
             "nullable": true
           },
           "es": {
             "type": "string",
-            "description": "Gets or sets es",
             "nullable": true
           },
-          "commentEs": {
+          "comment4": {
             "type": "string",
-            "description": "Gets or sets comment es",
-            "nullable": true
-          },
-          "fr": {
-            "type": "string",
-            "description": "Gets or sets fr",
-            "nullable": true
-          },
-          "commentFr": {
-            "type": "string",
-            "description": "Gets or sets comment fr",
-            "nullable": true
-          },
-          "it": {
-            "type": "string",
-            "description": "Gets or sets it",
-            "nullable": true
-          },
-          "commentIt": {
-            "type": "string",
-            "description": "Gets or sets comment it",
             "nullable": true
           },
           "ja": {
             "type": "string",
-            "description": "Gets or sets ja",
             "nullable": true
           },
-          "commentJa": {
+          "comment5": {
             "type": "string",
-            "description": "Gets or sets comment ja",
             "nullable": true
           },
           "ko": {
             "type": "string",
-            "description": "Gets or sets ko",
             "nullable": true
           },
-          "commentKo": {
+          "comment6": {
             "type": "string",
-            "description": "Gets or sets comment ko",
             "nullable": true
           },
-          "nb": {
+          "fr": {
             "type": "string",
-            "description": "Gets or sets nb",
             "nullable": true
           },
-          "commentNb": {
+          "comment7": {
             "type": "string",
-            "description": "Gets or sets comment nb",
             "nullable": true
           },
-          "nl": {
+          "it": {
             "type": "string",
-            "description": "Gets or sets nl",
             "nullable": true
           },
-          "commentNl": {
+          "comment8": {
             "type": "string",
-            "description": "Gets or sets comment nl",
             "nullable": true
           },
           "pt": {
             "type": "string",
-            "description": "Gets or sets pt",
             "nullable": true
           },
-          "commentPt": {
+          "comment9": {
             "type": "string",
-            "description": "Gets or sets comment pt",
-            "nullable": true
-          },
-          "ru": {
-            "type": "string",
-            "description": "Gets or sets ru",
-            "nullable": true
-          },
-          "commentRu": {
-            "type": "string",
-            "description": "Gets or sets comment ru",
-            "nullable": true
-          },
-          "sv": {
-            "type": "string",
-            "description": "Gets or sets sv",
-            "nullable": true
-          },
-          "commentSv": {
-            "type": "string",
-            "description": "Gets or sets comment sv",
             "nullable": true
           },
           "th": {
             "type": "string",
-            "description": "Gets or sets th",
             "nullable": true
           },
-          "commentTh": {
+          "comment10": {
             "type": "string",
-            "description": "Gets or sets comment th",
             "nullable": true
           },
           "tr": {
             "type": "string",
-            "description": "Gets or sets tr",
             "nullable": true
           },
-          "commentTr": {
+          "comment11": {
             "type": "string",
-            "description": "Gets or sets comment tr",
             "nullable": true
           },
           "zh": {
             "type": "string",
-            "description": "Gets or sets zh",
             "nullable": true
           },
-          "commentZh": {
+          "comment12": {
             "type": "string",
-            "description": "Gets or sets comment zh",
+            "nullable": true
+          },
+          "ru": {
+            "type": "string",
+            "nullable": true
+          },
+          "comment13": {
+            "type": "string",
+            "nullable": true
+          },
+          "nl": {
+            "type": "string",
+            "nullable": true
+          },
+          "comment14": {
+            "type": "string",
+            "nullable": true
+          },
+          "sv": {
+            "type": "string",
+            "nullable": true
+          },
+          "comment15": {
+            "type": "string",
+            "nullable": true
+          },
+          "nb": {
+            "type": "string",
+            "nullable": true
+          },
+          "comment16": {
+            "type": "string",
             "nullable": true
           },
           "vi": {
             "type": "string",
-            "description": "Gets or sets vi",
             "nullable": true
           },
-          "commentVi": {
+          "comment17": {
             "type": "string",
-            "description": "Gets or sets comment vi",
             "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "Data Transfer Object for localizing application languages."
+        "additionalProperties": false
       },
       "LocalizeAppLangDtoBasePaginationResponse": {
         "type": "object",
@@ -46261,7 +46581,7 @@
           "machineTypeId": {
             "$ref": "#/components/schemas/ObjectId"
           },
-          "departmentId": {
+          "areaId": {
             "$ref": "#/components/schemas/ObjectId"
           },
           "calculationMode": {
@@ -48541,22 +48861,23 @@
         "properties": {
           "length": {
             "type": "number",
-            "description": "Length in specified unit",
             "format": "double"
           },
           "width": {
             "type": "number",
-            "description": "Width in specified unit",
             "format": "double"
           },
           "height": {
             "type": "number",
-            "description": "Height in specified unit",
             "format": "double"
+          },
+          "volume": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
           }
         },
-        "additionalProperties": false,
-        "description": "Product dimensions data"
+        "additionalProperties": false
       },
       "ProductEntity": {
         "type": "object",
@@ -48591,6 +48912,9 @@
             "nullable": true
           },
           "unitOfMeasure": {
+            "$ref": "#/components/schemas/UnitOfMeasure"
+          },
+          "secondaryUnitOfMeasure": {
             "$ref": "#/components/schemas/UnitOfMeasure"
           },
           "productType": {
@@ -50615,6 +50939,10 @@
               "$ref": "#/components/schemas/ShiftDefinition"
             },
             "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -51260,6 +51588,107 @@
         "properties": {
           "value": {
             "$ref": "#/components/schemas/StopEntity"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "StopMachineReasonEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "isDraft": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "StopMachineReasonEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StopMachineReasonEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "StopMachineReasonEntityResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/StopMachineReasonEntity"
           },
           "isSuccess": {
             "type": "boolean",
@@ -54331,6 +54760,26 @@
               "$ref": "#/components/schemas/IfElseClause"
             },
             "nullable": true
+          },
+          "machineId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "productId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "idealCycleTime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "downtimeThreshold": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "quantityPerCycle": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -54471,10 +54920,10 @@
       "name": "DataProtectionKey"
     },
     {
-      "name": "Defect"
+      "name": "DefectReason"
     },
     {
-      "name": "DefectGroup"
+      "name": "DefectReasonGroup"
     },
     {
       "name": "Department"
@@ -54562,7 +55011,7 @@
     },
     {
       "name": "Localization",
-      "description": "Controller for managing localization and translations.\nProvides endpoints to retrieve translations for different languages,\nincluding batch retrieval and file upload for updating translations."
+      "description": "Controller for managing localization and translations.\r\nProvides endpoints to retrieve translations for different languages,\r\nincluding batch retrieval and file upload for updating translations."
     },
     {
       "name": "Machine"
@@ -54686,6 +55135,9 @@
     },
     {
       "name": "Stop"
+    },
+    {
+      "name": "StopMachineReason"
     },
     {
       "name": "StorageBlock"
