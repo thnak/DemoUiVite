@@ -1,6 +1,9 @@
 // Manual auth types (kept for backwards compatibility)
 export * from './auth';
 
+// Files types
+export * from './files';
+
 // Generated types from OpenAPI spec
 // Note: Some types may be duplicated in './auth' - prefer using generated types for new code
 export type {
