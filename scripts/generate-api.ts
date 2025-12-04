@@ -278,6 +278,13 @@ function generateServiceFile(tag: string, endpoints: GeneratedEndpoint[], schema
         typesToImport.add(typeName);
       }
     }
+    // Also collect types from path parameters
+    for (const param of endpoint.parameters.filter((p) => p.in === 'path')) {
+      const paramType = resolveType(param.schema, schemas);
+      for (const typeName of extractTypeNames(paramType)) {
+        typesToImport.add(typeName);
+      }
+    }
   }
 
   lines.push(`import axiosInstance from '../../axios-instance';`);
@@ -300,10 +307,12 @@ function generateServiceFile(tag: string, endpoints: GeneratedEndpoint[], schema
   lines.push(``);
 
   // Generate endpoints object
+  // Use kebab-case based constant name to ensure uniqueness
+  const constantName = `${toKebabCase(tag).toUpperCase().replace(/-/g, '_')}_ENDPOINTS`;
   lines.push(`/**`);
   lines.push(` * ${ServiceName} API endpoints`);
   lines.push(` */`);
-  lines.push(`export const ${ServiceName.toUpperCase()}_ENDPOINTS = {`);
+  lines.push(`export const ${constantName} = {`);
   for (const endpoint of endpoints) {
     const endpointName = toCamelCase(endpoint.operationId);
     lines.push(`  ${endpointName}: '${endpoint.path}',`);
@@ -366,7 +375,7 @@ function generateServiceFile(tag: string, endpoints: GeneratedEndpoint[], schema
     lines.push(` */`);
 
     // Build URL with path params
-    let urlExpr = `${ServiceName.toUpperCase()}_ENDPOINTS.${toCamelCase(endpoint.operationId)}`;
+    let urlExpr = `${constantName}.${toCamelCase(endpoint.operationId)}`;
     if (pathParams.length > 0) {
       urlExpr = `\`${endpoint.path.replace(/\{(\w+)\}/g, '${$1}')}\``;
     }
@@ -461,6 +470,13 @@ function generateHooksFile(tag: string, endpoints: GeneratedEndpoint[], schemas:
     }
     // Also collect types from query parameters
     for (const param of endpoint.parameters.filter((p) => p.in === 'query')) {
+      const paramType = resolveType(param.schema, schemas);
+      for (const typeName of extractTypeNames(paramType)) {
+        typesToImport.add(typeName);
+      }
+    }
+    // Also collect types from path parameters
+    for (const param of endpoint.parameters.filter((p) => p.in === 'path')) {
       const paramType = resolveType(param.schema, schemas);
       for (const typeName of extractTypeNames(paramType)) {
         typesToImport.add(typeName);
