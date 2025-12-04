@@ -1,6 +1,6 @@
 import axiosInstance from '../axios-instance';
 
-import type { FilesUploadResponse } from '../types/files';
+import type { FileInfo, FilesUploadResponse } from '../types/files';
 
 // ----------------------------------------------------------------------
 // Files Service
@@ -65,8 +65,8 @@ export async function downloadFile(fileCode: string): Promise<Blob> {
  * @param fileCode - The unique code of the file
  * @returns Promise with file information
  */
-export async function getFile(fileCode: string): Promise<unknown> {
-  const response = await axiosInstance.get(`/api/Files/get/${encodeURIComponent(fileCode)}`);
+export async function getFile(fileCode: string): Promise<FileInfo> {
+  const response = await axiosInstance.get<FileInfo>(`/api/Files/get/${encodeURIComponent(fileCode)}`);
   return response.data;
 }
 

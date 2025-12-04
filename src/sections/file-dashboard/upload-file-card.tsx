@@ -25,12 +25,13 @@ export function UploadFileCard({ sx, ...other }: UploadFileCardProps) {
 
   const handleUploadComplete = (fileCodes: string[]) => {
     setUploadedCodes((prev) => [...prev, ...fileCodes]);
-    console.log('Uploaded file codes:', fileCodes);
     handleClose();
   };
 
   const handleUploadError = (error: Error) => {
-    console.error('Upload error:', error.message);
+    // Error is handled by the FileUploader component's onUploadError callback
+    // Additional error handling (e.g., toast notification) can be added here
+    void error;
   };
 
   return (

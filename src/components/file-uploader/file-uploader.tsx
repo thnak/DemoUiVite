@@ -23,6 +23,8 @@ export interface FileUploaderProps {
   onUploadComplete?: (fileCodes: string[]) => void;
   /** Callback when upload fails */
   onUploadError?: (error: Error) => void;
+  /** Callback when a file is rejected due to size or other validation */
+  onFileRejected?: (fileName: string, reason: string) => void;
   /** Accepted file types (e.g., 'image/*,.pdf') */
   accept?: string;
   /** Maximum number of files allowed */
@@ -48,6 +50,7 @@ interface SelectedFile {
 export function FileUploader({
   onUploadComplete,
   onUploadError,
+  onFileRejected,
   accept,
   maxFiles = 10,
   maxSize,
@@ -80,6 +83,14 @@ export function FileUploader({
     []
   );
 
+  const formatFileSize = useCallback((bytes: number): string => {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / k ** i).toFixed(1))} ${sizes[i]}`;
+  }, []);
+
   const createPreview = useCallback((file: File): string | undefined => {
     if (file.type.startsWith('image/')) {
       return URL.createObjectURL(file);
@@ -100,7 +111,7 @@ export function FileUploader({
 
         // Check file size if maxSize is specified
         if (maxSize && file.size > maxSize) {
-          console.warn(`File "${file.name}" exceeds maximum size of ${maxSize} bytes`);
+          onFileRejected?.(file.name, `File exceeds maximum size of ${formatFileSize(maxSize)}`);
           continue;
         }
 
@@ -115,7 +126,7 @@ export function FileUploader({
         setSelectedFiles((prev) => [...prev, ...newFiles]);
       }
     },
-    [selectedFiles.length, maxFiles, maxSize, generateId, createPreview]
+    [selectedFiles.length, maxFiles, maxSize, generateId, createPreview, onFileRejected, formatFileSize]
   );
 
   const handleInputChange = useCallback(
@@ -190,14 +201,6 @@ export function FileUploader({
     });
     setSelectedFiles([]);
   }, [selectedFiles]);
-
-  const formatFileSize = useCallback((bytes: number): string => {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${parseFloat((bytes / k ** i).toFixed(1))} ${sizes[i]}`;
-  }, []);
 
   const getFileIcon = useCallback((mimeType: string): IconifyName => {
     if (mimeType.startsWith('image/')) return 'solar:gallery-bold';
