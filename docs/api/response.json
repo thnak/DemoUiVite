@@ -16312,6 +16312,64 @@
         }
       }
     },
+    "/api/IotSensor/get-sensor-from-device/{deviceCode}": {
+      "get": {
+        "tags": [
+          "IotSensor"
+        ],
+        "summary": "Get Sensors from Device",
+        "parameters": [
+          {
+            "name": "deviceCode",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IoTSensorEntity"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IoTSensorEntity"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IoTSensorEntity"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IoTSensorEntity"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/iotsensor/{id}": {
       "get": {
         "tags": [
@@ -55940,6 +55998,10 @@
     },
     {
       "name": "IoTDeviceModel"
+    },
+    {
+      "name": "IotSensor",
+      "description": "IoT Sensor Controller"
     },
     {
       "name": "IoTSensor"
