@@ -62,9 +62,11 @@ export function IoTDeviceTableRow({ row, selected, onSelectRow, onDeleteRow }: I
   const getTypeLabel = (type: IoTDeviceType | string) => {
     const typeLabels: Record<string, { label: string; color: 'info' | 'warning' | 'success' | 'error' | 'primary' | 'secondary' | 'default' }> = {
       gateway: { label: 'Gateway', color: 'info' },
-      sensor: { label: 'Sensor', color: 'success' },
+      sensorNode: { label: 'Sensor Node', color: 'success' },
+      edgeDevice: { label: 'Edge Device', color: 'primary' },
       actuator: { label: 'Actuator', color: 'warning' },
-      controller: { label: 'Controller', color: 'primary' },
+      controller: { label: 'Controller', color: 'secondary' },
+      other: { label: 'Other', color: 'default' },
     };
     return typeLabels[type] || { label: type || 'Unknown', color: 'default' as const };
   };

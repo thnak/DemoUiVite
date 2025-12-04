@@ -234,7 +234,7 @@ export function IoTDeviceCreateEditView({
           name: formData.name,
           macAddress: formData.macAddress || undefined,
           mqttPassword: formData.mqttPassword || undefined,
-          type: formData.type as IoTDeviceType || undefined,
+          type: formData.type ? (formData.type as IoTDeviceType) : undefined,
           machineId: formData.machineId || undefined,
           imageUrl: formData.imageUrl || undefined,
         },
