@@ -114,6 +114,11 @@ export function useNavData(): NavData {
           icon: icon('defect-reason-group'),
         },
         {
+          title: 'IoT Devices',
+          path: '/iot-devices',
+          icon: icon('ic-analytics'),
+        },
+        {
           title: t('nav.blog'),
           path: '/blog',
           icon: icon('ic-blog'),
