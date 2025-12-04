@@ -6,32 +6,29 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Dialog from '@mui/material/Dialog';
 import Typography from '@mui/material/Typography';
-import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 
 import { Iconify } from 'src/components/iconify';
-import { FileUploader } from 'src/components/file-uploader';
+import { ImageUploader } from 'src/components/image-uploader';
 
 // ----------------------------------------------------------------------
 
-type UploadFileCardProps = CardProps;
+type UploadImageCardProps = CardProps;
 
-export function UploadFileCard({ sx, ...other }: UploadFileCardProps) {
+export function UploadImageCard({ sx, ...other }: UploadImageCardProps) {
   const [open, setOpen] = useState(false);
-  const [uploadedCodes, setUploadedCodes] = useState<string[]>([]);
+  const [uploadedCode, setUploadedCode] = useState<string | null>(null);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleUploadComplete = (fileCodes: string[]) => {
-    setUploadedCodes((prev) => [...prev, ...fileCodes]);
+  const handleUploadComplete = (fileCode: string) => {
+    setUploadedCode(fileCode);
     handleClose();
   };
 
-  const handleUploadError = (error: Error) => {
-    // Error is handled by the FileUploader component's onUploadError callback
-    // Additional error handling (e.g., toast notification) can be added here
-    void error;
+  const handleUploadError = (_error: Error) => {
+    // Error is handled by the ImageUploader component
   };
 
   return (
@@ -68,37 +65,38 @@ export function UploadFileCard({ sx, ...other }: UploadFileCardProps) {
           }}
         >
           <Iconify
-            icon="solar:cloud-upload-bold"
+            icon="solar:gallery-bold"
             width={24}
             height={24}
-            sx={{ color: 'primary.main' }}
+            sx={{ color: 'secondary.main' }}
           />
         </Box>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Upload file
+          Upload Image
         </Typography>
-        {uploadedCodes.length > 0 && (
+        <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+          Crop, rotate & preview
+        </Typography>
+        {uploadedCode && (
           <Typography variant="caption" sx={{ color: 'success.main' }}>
-            {uploadedCodes.length} file(s) uploaded
+            Image uploaded
           </Typography>
         )}
       </Card>
 
-      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Upload Files</DialogTitle>
-        <DialogContent>
-          <FileUploader
+      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+        <DialogContent sx={{ p: 0 }}>
+          <ImageUploader
             onUploadComplete={handleUploadComplete}
             onUploadError={handleUploadError}
-            accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.zip"
-            maxFiles={10}
             maxSize={10 * 1024 * 1024} // 10MB
-            multiple
-            sx={{ mt: 2 }}
+            aspectRatio={16 / 9}
+            quality={0.9}
+            outputFormat="jpeg"
+            placeholder="Click or drop an image to edit and upload"
           />
         </DialogContent>
       </Dialog>
     </>
   );
 }
-

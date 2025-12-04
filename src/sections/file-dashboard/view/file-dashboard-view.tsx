@@ -10,8 +10,9 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 
 import { FolderCard } from '../folder-card';
-import { UploadFileCard } from '../upload-file-card';
 import { RecentFileItem } from '../recent-file-item';
+import { UploadFileCard } from '../upload-file-card';
+import { UploadImageCard } from '../upload-image-card';
 import { UpgradePlanCard } from '../upgrade-plan-card';
 import { DataActivityChart } from '../data-activity-chart';
 import { StorageUsageChart } from '../storage-usage-chart';
@@ -145,8 +146,13 @@ export function FileDashboardView() {
         <Grid size={{ xs: 12, lg: 4 }}>
           <Grid container spacing={3}>
             {/* Upload File */}
-            <Grid size={{ xs: 12 }}>
+            <Grid size={{ xs: 6 }}>
               <UploadFileCard />
+            </Grid>
+
+            {/* Upload Image (with crop/rotate) */}
+            <Grid size={{ xs: 6 }}>
+              <UploadImageCard />
             </Grid>
 
             {/* Storage Usage */}
