@@ -1,21 +1,12 @@
 import axiosInstance from '../axios-instance';
+import { FILES_ENDPOINTS } from './generated';
 
-import type { FileInfo, FilesUploadResponse } from '../types/files';
+import type { FileInfo, FilesUploadResponse } from '../types';
 
 // ----------------------------------------------------------------------
 // Files Service
 // Endpoints for file upload, download, get, and delete operations
 // ----------------------------------------------------------------------
-
-/**
- * Files API endpoints
- */
-export const FILES_ENDPOINTS = {
-  postapiFilesupload: '/api/Files/upload',
-  getapiFilesdownloadfileCode: '/api/Files/download/{fileCode}',
-  getapiFilesgetfileCode: '/api/Files/get/{fileCode}',
-  deleteapiFilesdeletefileCode: '/api/Files/delete/{fileCode}',
-} as const;
 
 /**
  * Upload multiple files
