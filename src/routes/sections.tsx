@@ -12,6 +12,7 @@ import { SvgColor } from '../components/svg-color';
 
 // ----------------------------------------------------------------------
 
+export const IndexPage = lazy(() => import('src/pages/index'));
 export const DashboardPage = lazy(() => import('src/pages/dashboard'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
 export const UserPage = lazy(() => import('src/pages/user'));
@@ -75,7 +76,8 @@ export const routesSection: RouteObject[] = [
       </DashboardLayout>
     ),
     children: [
-      { index: true, element: <DashboardPage /> },
+      { index: true, element: <IndexPage /> },
+      { path: 'analytics', element: <DashboardPage /> },
       { path: 'user', element: <UserPage /> },
       { path: 'user/create', element: <UserCreatePage /> },
       { path: 'user/profile', element: <UserProfilePage /> },
