@@ -106,17 +106,22 @@ export function useNavData(): NavData {
         {
           title: 'defect reason',
           path: '/defect-reasons',
-          icon: icon('defect-reasons'),
+          icon: icon('defect'),
         },
         {
           title: 'defect reason group',
           path: '/defect-reason-group',
-          icon: icon('defect-reason-group'),
+          icon: icon('defect-group'),
         },
         {
           title: 'IoT Devices',
           path: '/iot-devices',
-          icon: icon('ic-analytics'),
+          icon: icon('iot-device'),
+        },
+        {
+          title: 'IoT Sensors',
+          path: '/iot-sensors',
+          icon: icon('iot-sensor'),
         },
         {
           title: t('nav.blog'),
