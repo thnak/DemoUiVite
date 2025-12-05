@@ -377,5 +377,36 @@ export default {
   'icon-park-twotone:devices':
     {
       body : '<defs><mask id="SVGd3cWvdLp"><g fill="none" stroke="#fff" strokeLinejoin="round" strokeWidth={4}><path d="M23 43h20V5H14v10"></path><path fill="#555555" d="M5 15h18v28H5z"></path><path strokeLinecap="round" d="M13 37h2m13 0h2"></path></g></mask></defs><path fill="currentColor" d="M0 0h48v48H0z" mask="url(#SVGd3cWvdLp)"></path>'
-    }
+    },
+  // Index page module icons - duotone style
+  'solar:database-bold-duotone': {
+    body: '<path fill="currentColor" d="M4 18.646V7.354C4.005 5.545 7.592 4 12 4s7.995 1.545 8 3.354v11.292C20 20.455 16.418 22 12 22s-8-1.545-8-3.354" opacity="0.5"/><path fill="currentColor" d="M20 7c0 1.657-3.582 3-8 3S4 8.657 4 7s3.582-3 8-3s8 1.343 8 3"/><path fill="currentColor" d="M20 12c0 1.657-3.582 3-8 3S4 13.657 4 12" opacity="0.7"/>'
+  },
+  'solar:chart-bold-duotone': {
+    body: '<path fill="currentColor" d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2s7.071 0 8.535 1.464C22 4.93 22 7.286 22 12s0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12" opacity="0.5"/><path fill="currentColor" d="M7 14a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1m5-4a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0v-6a1 1 0 0 1 1-1m5-3a1 1 0 0 1 1 1v9a1 1 0 1 1-2 0V8a1 1 0 0 1 1-1"/>'
+  },
+  'solar:pie-chart-2-bold-duotone': {
+    body: '<path fill="currentColor" d="M21 12a9 9 0 1 1-9-9" opacity="0.5"/><path fill="currentColor" d="M21 12a9 9 0 0 0-9-9v9z"/>'
+  },
+  'solar:cpu-bolt-bold-duotone': {
+    body: '<path fill="currentColor" d="M9 2a1 1 0 0 1 1 1v2h4V3a1 1 0 1 1 2 0v2c1.886 0 2.828 0 3.414.586S20 7.114 20 9h2a1 1 0 1 1 0 2h-2v4h2a1 1 0 1 1 0 2h-2c0 1.886 0 2.828-.586 3.414S17.886 21 16 21v2a1 1 0 1 1-2 0v-2h-4v2a1 1 0 1 1-2 0v-2c-1.886 0-2.828 0-3.414-.586S4 18.886 4 17H2a1 1 0 1 1 0-2h2v-4H2a1 1 0 1 1 0-2h2c0-1.886 0-2.828.586-3.414S6.114 5 8 5V3a1 1 0 0 1 1-1" opacity="0.5"/><path fill="currentColor" d="M15 10a1 1 0 0 0-2 0v1h-2v-1a1 1 0 0 0-2 0v1a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2z"/><path fill="currentColor" d="M9 14a1 1 0 0 1 2 0v1h2v-1a1 1 0 1 1 2 0v1a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z" opacity="0.7"/>'
+  },
+  'solar:danger-triangle-bold-duotone': {
+    body: '<path fill="currentColor" d="M5.312 10.762C8.023 5.587 9.379 3 12 3s3.977 2.587 6.688 7.762l.364.694c2.213 4.225 3.32 6.337 2.22 7.94S17.628 21 12.001 21s-7.39-1-8.272-2.604s.007-3.715 2.22-7.94z" opacity="0.5"/><path fill="currentColor" d="M12 7.25a.75.75 0 0 1 .75.75v5a.75.75 0 0 1-1.5 0V8a.75.75 0 0 1 .75-.75M12 17a1 1 0 1 0 0-2a1 1 0 0 0 0 2"/>'
+  },
+  'solar:user-circle-bold-duotone': {
+    body: '<circle cx="12" cy="6" r="4" fill="currentColor"/><path fill="currentColor" d="M20 17.5c0 2.485 0 4.5-8 4.5s-8-2.015-8-4.5S7.582 13 12 13s8 2.015 8 4.5" opacity="0.5"/>'
+  },
+  'solar:clapperboard-open-bold-duotone': {
+    body: '<path fill="currentColor" d="m18.652 2.545l-4.63 1.24l-.868-.867a1.879 1.879 0 0 0-2.656 0l-.56.558l-1.15-1.149a1.879 1.879 0 0 0-2.657 0l-.558.559l-1.148-1.15a1.879 1.879 0 0 0-2.657 0l-.563.563a1.879 1.879 0 0 0 0 2.656l1.149 1.149l-.558.559a1.879 1.879 0 0 0 0 2.656l1.149 1.149l-.558.558a1.879 1.879 0 0 0 0 2.657l.563.563l-.003.01l4.64-1.24z" opacity="0.5"/><path fill="currentColor" d="m7.602 13.418l11.05-2.962a3 3 0 0 1 3.705 2.065l1.51 5.636a3 3 0 0 1-2.065 3.704l-10.07 2.699a3 3 0 0 1-3.704-2.065l-2.49-9.287l1.15 1.15a1.879 1.879 0 0 0 2.656 0l.558-.559l-.558-.559a1.879 1.879 0 0 1-.563-.563l1.821-.26"/>'
+  },
+  'solar:factory-bold-duotone': {
+    body: '<path fill="currentColor" d="M13 6c0 2.21-1.343 4-3 4s-3-1.79-3-4s1.343-4 3-4s3 1.79 3 4" opacity="0.4"/><path fill="currentColor" d="M2 13.5c0-1.5.5-2 2-2l2 3l2-3c1.5 0 2 .5 2 2V22H2zm8 8.5h4v-2.5c0-.83.67-1.5 1.5-1.5h3c.83 0 1.5.67 1.5 1.5V22h2V10l-6 4.5V10l-6 4.5z"/>'
+  },
+  'solar:list-bold-duotone': {
+    body: '<path fill="currentColor" d="M3 6.5a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0m0 5.5a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0m0 5.5a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0"/><path fill="currentColor" d="M8 6.5a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 0 1.5H8.75A.75.75 0 0 1 8 6.5m0 5.5a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 0 1.5H8.75A.75.75 0 0 1 8 12m0 5.5a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 0 1.5H8.75a.75.75 0 0 1-.75-.75" opacity="0.5"/>'
+  },
+  'solar:grid-bold-duotone': {
+    body: '<path fill="currentColor" d="M2 6.5c0-1.886 0-2.828.586-3.414S4.114 2.5 6 2.5s2.828 0 3.414.586S10 4.614 10 6.5s0 2.828-.586 3.414S7.886 10.5 6 10.5s-2.828 0-3.414-.586S2 8.386 2 6.5m12 0c0-1.886 0-2.828.586-3.414S16.114 2.5 18 2.5s2.828 0 3.414.586S22 4.614 22 6.5s0 2.828-.586 3.414S19.886 10.5 18 10.5s-2.828 0-3.414-.586S14 8.386 14 6.5" opacity="0.5"/><path fill="currentColor" d="M2 17.5c0-1.886 0-2.828.586-3.414S4.114 13.5 6 13.5s2.828 0 3.414.586S10 15.614 10 17.5s0 2.828-.586 3.414S7.886 21.5 6 21.5s-2.828 0-3.414-.586S2 19.386 2 17.5m12 0c0-1.886 0-2.828.586-3.414S16.114 13.5 18 13.5s2.828 0 3.414.586S22 15.614 22 17.5s0 2.828-.586 3.414S19.886 21.5 18 21.5s-2.828 0-3.414-.586S14 19.386 14 17.5"/>'
+  }
 };
