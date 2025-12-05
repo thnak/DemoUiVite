@@ -24,10 +24,8 @@ import { Iconify } from 'src/components/iconify';
 export type ProductProps = {
   id: string;
   name: string;
-  price: number;
   coverUrl: string;
   category: string;
-  stock: number;
   stockStatus: StockStatus;
   publish: ProductStatus;
   createdAt: string;
@@ -156,25 +154,9 @@ export function ProductTableRow({
               color={getStockColor(row.stockStatus)}
               sx={{ height: 6, borderRadius: 1 }}
             />
-            <Typography
-              variant="caption"
-              sx={{
-                display: 'block',
-                color:
-                  row.stockStatus === 'out_of_stock'
-                    ? 'error.main'
-                    : row.stockStatus === 'low_stock'
-                      ? 'warning.main'
-                      : 'text.secondary',
-                mt: 0.5,
-              }}
-            >
-              {getStockLabel(row.stockStatus, row.stock)}
-            </Typography>
           </Box>
         </TableCell>
 
-        <TableCell>${row.price.toFixed(2)}</TableCell>
 
         <TableCell>
           <Label

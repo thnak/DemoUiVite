@@ -1,20 +1,23 @@
 import type { StockStatus, ProductStatus } from 'src/_mock';
+import type { ProductEntity } from 'src/api/types/generated';
 
-import { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
+import TableRow from '@mui/material/TableRow';
 import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
 import { useRouter } from 'src/routes/hooks';
 
-import { _products } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { deleteProduct, getProductPage } from 'src/api/services/generated/product';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -31,16 +34,64 @@ import type { ProductProps } from '../product-table-row';
 // ----------------------------------------------------------------------
 
 export function ProductListView() {
-  const router = useRouter();
-  const table = useTable();
-
+  const [templates, setTemplates] = useState<ProductEntity[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(50);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filterName, setFilterName] = useState('');
+  const router = useRouter();
+  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+  const [orderBy, setOrderBy] = useState<string>('name');
   const [filterStock, setFilterStock] = useState<StockStatus | 'all'>('all');
   const [filterPublish, setFilterPublish] = useState<ProductStatus | 'all'>('all');
 
+  // Sửa lỗi: Thêm dependencies cho filters
+  const fetchProducts = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      console.log('Fetching products...', { page, rowsPerPage });
+
+      const response = await getProductPage([], {
+        pageNumber: page,
+        pageSize: rowsPerPage,
+        searchTerm: filterName || undefined,
+      });
+
+      console.log('API Response:', response);
+
+      setTemplates(response.items || []);
+      setTotalItems(response.totalItems || 0);
+    } catch (err) {
+      setError("Không thể tải danh sách sản phẩm");
+      console.error("Error fetching products:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, rowsPerPage, filterName]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  // Chuyển đổi API data sang format hiển thị
+  const apiProducts: ProductProps[] = templates.map((p) => ({
+    id: p.id ?? '',
+    name: p.name ?? '',
+    coverUrl: p.image ?? '',
+    createdAt: p.createTime ?? new Date().toISOString(),
+    publish: p.isDraft ? 'draft' : 'published',
+    category: "category",
+    stockStatus: 'in_stock',
+  }));
+
+  // Lọc dữ liệu ở client-side
   const dataFiltered: ProductProps[] = applyFilter({
-    inputData: _products as ProductProps[],
-    comparator: getComparator(table.order, table.orderBy),
+    inputData: apiProducts,
+    comparator: getComparator(order, orderBy),
     filterName,
     filterStock,
     filterPublish,
@@ -49,21 +100,15 @@ export function ProductListView() {
   const notFound =
     !dataFiltered.length && (!!filterName || filterStock !== 'all' || filterPublish !== 'all');
 
-  const handleFilterStock = useCallback(
-    (value: StockStatus | 'all') => {
-      setFilterStock(value);
-      table.onResetPage();
-    },
-    [table]
-  );
+  const handleFilterStock = (value: StockStatus | 'all') => {
+    setFilterStock(value);
+    setPage(0);
+  };
 
-  const handleFilterPublish = useCallback(
-    (value: ProductStatus | 'all') => {
-      setFilterPublish(value);
-      table.onResetPage();
-    },
-    [table]
-  );
+  const handleFilterPublish = (value: ProductStatus | 'all') => {
+    setFilterPublish(value);
+    setPage(0);
+  };
 
   const handleEditProduct = useCallback(
     (id: string) => {
@@ -72,10 +117,46 @@ export function ProductListView() {
     [router]
   );
 
-  const handleDeleteProduct = useCallback((id: string) => {
-    console.log('Delete product:', id);
-    // Implement delete logic here
-  }, []);
+  const handleDeleteProduct = useCallback(
+    async (id: string) => {
+      try {
+        await deleteProduct(id);
+        await fetchProducts();
+        setSelected((prev) => prev.filter((i) => i !== id));
+      } catch (err) {
+        console.error("Error deleting product:", err);
+        setError("Không thể xóa sản phẩm");
+      }
+    },
+    [fetchProducts]
+  );
+
+  const handleFilterName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterName(event.target.value);
+    setPage(0);
+  };
+
+  const handleSelectRow = (id: string) => {
+    const newSelected = selected.includes(id)
+      ? selected.filter((value) => value !== id)
+      : [...selected, id];
+    setSelected(newSelected);
+  };
+
+  const handleSelectAllRows = (checked: boolean) => {
+    if (checked) {
+      const newSelecteds = dataFiltered.map((product) => product.id);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleSort = (id: string) => {
+    const isAsc = orderBy === id && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(id);
+  };
 
   return (
     <DashboardContent>
@@ -89,7 +170,7 @@ export function ProductListView() {
       >
         <Box>
           <Typography variant="h4" sx={{ mb: 1 }}>
-            List
+            Danh sách
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Typography variant="body2" sx={{ color: 'text.primary' }}>
@@ -99,13 +180,13 @@ export function ProductListView() {
               •
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.primary' }}>
-              Product
+              Sản phẩm
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               •
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              List
+              Danh sách
             </Typography>
           </Box>
         </Box>
@@ -115,20 +196,17 @@ export function ProductListView() {
           startIcon={<Iconify icon="mingcute:add-line" />}
           onClick={() => router.push('/products/create')}
         >
-          Add product
+          Thêm sản phẩm
         </Button>
       </Box>
 
       <Card>
         <ProductTableToolbar
-          numSelected={table.selected.length}
+          numSelected={selected.length}
           filterName={filterName}
           filterStock={filterStock}
           filterPublish={filterPublish}
-          onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setFilterName(event.target.value);
-            table.onResetPage();
-          }}
+          onFilterName={handleFilterName}
           onFilterStock={handleFilterStock}
           onFilterPublish={handleFilterPublish}
         />
@@ -137,49 +215,69 @@ export function ProductListView() {
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
               <ProductTableHead
-                order={table.order}
-                orderBy={table.orderBy}
+                order={order}
+                orderBy={orderBy}
                 rowCount={dataFiltered.length}
-                numSelected={table.selected.length}
-                onSort={table.onSort}
-                onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    dataFiltered.map((product) => product.id)
-                  )
-                }
+                numSelected={selected.length}
+                onSort={handleSort}
+                onSelectAllRows={handleSelectAllRows}
                 headLabel={[
-                  { id: 'name', label: 'Product' },
-                  { id: 'createdAt', label: 'Created at' },
-                  { id: 'stock', label: 'Stock' },
-                  { id: 'price', label: 'Price' },
-                  { id: 'publish', label: 'Publish' },
+                  { id: 'name', label: 'Sản phẩm' },
+                  { id: 'createdAt', label: 'Ngày tạo' },
+                  { id: 'stock', label: 'Kho' },
+                  { id: 'price', label: 'Giá' },
+                  { id: 'publish', label: 'Trạng thái' },
                   { id: '' },
                 ]}
               />
               <TableBody>
-                {dataFiltered
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row) => (
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center" sx={{ py: 3 }}>
+                      <Typography>Đang tải sản phẩm...</Typography>
+                    </TableCell>
+                  </TableRow>
+                ) : error ? (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center" sx={{ py: 3 }}>
+                      <Typography color="error">{error}</Typography>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={fetchProducts}
+                        sx={{ mt: 1 }}
+                      >
+                        Thử lại
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ) : dataFiltered.length > 0 ? (
+                  dataFiltered.map((row) => (
                     <ProductTableRow
                       key={row.id}
                       row={row}
-                      selected={table.selected.includes(row.id)}
-                      onSelectRow={() => table.onSelectRow(row.id)}
+                      selected={selected.includes(row.id)}
+                      onSelectRow={() => handleSelectRow(row.id)}
                       onEditRow={() => handleEditProduct(row.id)}
                       onDeleteRow={() => handleDeleteProduct(row.id)}
                     />
-                  ))}
+                  ))
+                ) : notFound ? (
+                  <ProductTableNoData searchQuery={filterName} />
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center" sx={{ py: 3 }}>
+                      <Typography>Chưa có sản phẩm nào</Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
 
-                <ProductTableEmptyRows
-                  height={72}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
-                />
-
-                {notFound && <ProductTableNoData searchQuery={filterName} />}
+                {!loading && !error && dataFiltered.length > 0 && (
+                  <ProductTableEmptyRows
+                    height={72}
+                    emptyRows={emptyRows(page, rowsPerPage, dataFiltered.length)}
+                  />
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -187,82 +285,17 @@ export function ProductListView() {
 
         <TablePagination
           component="div"
-          page={table.page}
-          count={dataFiltered.length}
-          rowsPerPage={table.rowsPerPage}
-          onPageChange={table.onChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
-          onRowsPerPageChange={table.onChangeRowsPerPage}
+          page={page}
+          count={totalItems}
+          rowsPerPage={rowsPerPage}
+          onPageChange={(_, newPage) => setPage(newPage)}
+          rowsPerPageOptions={[10, 25, 50]}
+          onRowsPerPageChange={(event) => {
+            setRowsPerPage(parseInt(event.target.value, 10));
+            setPage(0);
+          }}
         />
       </Card>
     </DashboardContent>
   );
-}
-
-// ----------------------------------------------------------------------
-
-export function useTable() {
-  const [page, setPage] = useState(0);
-  const [orderBy, setOrderBy] = useState('name');
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-
-  const onSort = useCallback(
-    (id: string) => {
-      const isAsc = orderBy === id && order === 'asc';
-      setOrder(isAsc ? 'desc' : 'asc');
-      setOrderBy(id);
-    },
-    [order, orderBy]
-  );
-
-  const onSelectAllRows = useCallback((checked: boolean, newSelecteds: string[]) => {
-    if (checked) {
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  }, []);
-
-  const onSelectRow = useCallback(
-    (inputValue: string) => {
-      const newSelected = selected.includes(inputValue)
-        ? selected.filter((value) => value !== inputValue)
-        : [...selected, inputValue];
-
-      setSelected(newSelected);
-    },
-    [selected]
-  );
-
-  const onResetPage = useCallback(() => {
-    setPage(0);
-  }, []);
-
-  const onChangePage = useCallback((event: unknown, newPage: number) => {
-    setPage(newPage);
-  }, []);
-
-  const onChangeRowsPerPage = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      onResetPage();
-    },
-    [onResetPage]
-  );
-
-  return {
-    page,
-    order,
-    onSort,
-    orderBy,
-    selected,
-    rowsPerPage,
-    onSelectRow,
-    onResetPage,
-    onChangePage,
-    onSelectAllRows,
-    onChangeRowsPerPage,
-  };
 }
