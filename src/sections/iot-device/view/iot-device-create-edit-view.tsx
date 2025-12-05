@@ -9,7 +9,6 @@ import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import Select from '@mui/material/Select';
 import Divider from '@mui/material/Divider';
 import Snackbar from '@mui/material/Snackbar';
@@ -38,6 +37,7 @@ import { useGetapiIotSensorgetsensorfromdevicedeviceCode } from 'src/api/hooks/g
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ImageEntityResourceUploader } from 'src/components/image-entity-resource-uploader';
 
 // ----------------------------------------------------------------------
 
@@ -192,6 +192,17 @@ export function IoTDeviceCreateEditView({
     []
   );
 
+  const handleImageUrlChange = useCallback((newImageUrl: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      imageUrl: newImageUrl,
+    }));
+  }, []);
+
+  const handleImageUploadError = useCallback((error: Error) => {
+    setErrorMessage(error.message || 'Failed to upload image');
+  }, []);
+
   const handleAddSensor = useCallback(() => {
     if (selectedSensorToAdd && !mappedSensors.find((s) => s.id === selectedSensorToAdd.id)) {
       setMappedSensors((prev) => [...prev, selectedSensorToAdd]);
@@ -278,47 +289,20 @@ export function IoTDeviceCreateEditView({
         {/* Left Section - Image */}
         <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ p: 3 }}>
-            <Stack alignItems="center" sx={{ mb: 3 }}>
-              <Box
-                sx={{
-                  position: 'relative',
-                  width: 200,
-                  height: 200,
-                  borderRadius: 2,
-                  border: '1px dashed',
-                  borderColor: 'divider',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  overflow: 'hidden',
-                }}
-              >
-                {formData.imageUrl ? (
-                  <Avatar
-                    src={formData.imageUrl}
-                    alt="Device"
-                    variant="rounded"
-                    sx={{ width: '100%', height: '100%' }}
-                  />
-                ) : (
-                  <Stack alignItems="center" spacing={0.5}>
-                    <Iconify icon="solar:settings-bold-duotone" width={48} sx={{ color: 'text.secondary' }} />
-                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                      No image
-                    </Typography>
-                  </Stack>
-                )}
-              </Box>
+            <Typography variant="subtitle2" sx={{ mb: 2 }}>
+              Device Image
+            </Typography>
+            <Stack alignItems="center">
+              <ImageEntityResourceUploader
+                imageUrl={formData.imageUrl}
+                onImageUrlChange={handleImageUrlChange}
+                onUploadError={handleImageUploadError}
+                disabled={isSubmitting}
+                placeholder="Upload device image"
+                previewSize={200}
+                aspectRatio={1}
+              />
             </Stack>
-
-            <TextField
-              fullWidth
-              label="Image URL"
-              value={formData.imageUrl}
-              onChange={handleInputChange('imageUrl')}
-              placeholder="https://example.com/image.jpg"
-              size="small"
-            />
           </Card>
         </Grid>
 

@@ -9,6 +9,7 @@ import Stack from '@mui/material/Stack';
 import Slider from '@mui/material/Slider';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -22,9 +23,11 @@ import { Iconify } from '../iconify';
 
 // ----------------------------------------------------------------------
 
-export interface ImageUploaderProps {
-  /** Callback when image is successfully uploaded, receives file code */
-  onUploadComplete?: (fileCode: string) => void;
+export interface ImageEntityResourceUploaderProps {
+  /** Current image URL to display as preview */
+  imageUrl?: string;
+  /** Callback when image is successfully uploaded, receives new image URL */
+  onImageUrlChange?: (newImageUrl: string) => void;
   /** Callback when upload fails */
   onUploadError?: (error: Error) => void;
   /** Maximum file size in bytes */
@@ -41,19 +44,23 @@ export interface ImageUploaderProps {
   placeholder?: string;
   /** Custom styles */
   sx?: SxProps<Theme>;
+  /** Size of the preview image container */
+  previewSize?: number;
 }
 
-export function ImageUploader({
-  onUploadComplete,
+export function ImageEntityResourceUploader({
+  imageUrl,
+  onImageUrlChange,
   onUploadError,
   maxSize,
   aspectRatio = 1,
   quality = 0.9,
   outputFormat = 'jpeg',
   disabled = false,
-  placeholder = 'Click or drop an image to upload',
+  placeholder = 'Click or drop an image',
   sx,
-}: ImageUploaderProps) {
+  previewSize = 200,
+}: ImageEntityResourceUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -71,7 +78,9 @@ export function ImageUploader({
   const { mutate: uploadFiles, isPending: isUploading } = useUploadFiles({
     onSuccess: (response) => {
       if (response.isSuccess && response.fileCodes && response.fileCodes.length > 0) {
-        onUploadComplete?.(response.fileCodes[0]);
+        // Construct the new image URL from the file code
+        const newImageUrl = `/api/Files/download/${response.fileCodes[0]}`;
+        onImageUrlChange?.(newImageUrl);
         handleCloseDialog();
       } else {
         onUploadError?.(new Error(response.message || 'Upload failed'));
@@ -327,7 +336,7 @@ export function ImageUploader({
   return (
     <>
       <Stack spacing={2} sx={sx}>
-        {/* Drop Zone */}
+        {/* Image Preview / Drop Zone */}
         <Box
           ref={containerRef}
           tabIndex={0}
@@ -340,37 +349,88 @@ export function ImageUploader({
           onMouseEnter={() => setIsFocused(true)}
           onMouseLeave={() => setIsFocused(false)}
           sx={{
-            p: 3,
-            borderRadius: 1,
+            position: 'relative',
+            width: previewSize,
+            height: previewSize,
+            borderRadius: 2,
             cursor: disabled ? 'not-allowed' : 'pointer',
             bgcolor: dragOver ? 'action.hover' : 'background.neutral',
             border: (theme) =>
               `2px dashed ${dragOver ? theme.palette.primary.main : theme.palette.divider}`,
             transition: 'all 0.2s ease-in-out',
             opacity: disabled ? 0.5 : 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
             outline: 'none',
             '&:hover': {
               bgcolor: disabled ? 'background.neutral' : 'action.hover',
+              '& .upload-overlay': {
+                opacity: disabled ? 0 : 1,
+              },
             },
             '&:focus': {
               borderColor: 'primary.main',
             },
           }}
         >
-          <Stack alignItems="center" spacing={1}>
-            <Iconify
-              icon="solar:gallery-bold"
-              width={48}
-              sx={{ color: dragOver ? 'primary.main' : 'text.secondary' }}
-            />
-            <Typography variant="body1" color="text.primary">
-              {placeholder}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Supports JPG, PNG, WebP • Ctrl+V to paste
-              {maxSize && ` • Max size: ${formatFileSize(maxSize)}`}
-            </Typography>
-          </Stack>
+          {imageUrl ? (
+            <>
+              <Avatar
+                src={imageUrl}
+                alt="Preview"
+                variant="rounded"
+                sx={{ width: '100%', height: '100%' }}
+              />
+              {/* Hover overlay */}
+              <Box
+                className="upload-overlay"
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  bgcolor: 'rgba(0, 0, 0, 0.5)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: 0,
+                  transition: 'opacity 0.2s ease-in-out',
+                }}
+              >
+                <Stack alignItems="center" spacing={0.5}>
+                  <Iconify
+                    icon="solar:cloud-upload-bold"
+                    width={32}
+                    sx={{ color: 'common.white' }}
+                  />
+                  <Typography variant="caption" sx={{ color: 'common.white' }}>
+                    Change image
+                  </Typography>
+                </Stack>
+              </Box>
+            </>
+          ) : (
+            <Stack alignItems="center" spacing={0.5}>
+              <Iconify
+                icon="solar:gallery-bold"
+                width={48}
+                sx={{ color: dragOver ? 'primary.main' : 'text.secondary' }}
+              />
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ textAlign: 'center', px: 1 }}
+              >
+                {placeholder}
+              </Typography>
+              <Typography variant="caption" color="text.disabled" sx={{ fontSize: '0.625rem' }}>
+                Ctrl+V to paste
+              </Typography>
+            </Stack>
+          )}
 
           <input
             ref={inputRef}
@@ -381,6 +441,12 @@ export function ImageUploader({
             style={{ display: 'none' }}
           />
         </Box>
+
+        {/* Helper text */}
+        <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center' }}>
+          Supports JPG, PNG, WebP
+          {maxSize && ` • Max: ${formatFileSize(maxSize)}`}
+        </Typography>
       </Stack>
 
       {/* Image Editor Dialog */}
