@@ -55,7 +55,9 @@ export function ImageUploader({
   sx,
 }: ImageUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   // Image editing state
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -186,7 +188,7 @@ export function ImageUploader({
 
   const handlePaste = useCallback(
     (event: ClipboardEvent) => {
-      if (disabled) return;
+      if (disabled || !isFocused) return;
 
       const items = event.clipboardData?.items;
       if (!items) return;
@@ -203,16 +205,18 @@ export function ImageUploader({
         }
       }
     },
-    [disabled, handleFileSelect]
+    [disabled, isFocused, handleFileSelect]
   );
 
-  // Listen for paste events on the document
+  // Listen for paste events on the document when focused
   useEffect(() => {
+    if (!isFocused) return undefined;
+
     document.addEventListener('paste', handlePaste);
     return () => {
       document.removeEventListener('paste', handlePaste);
     };
-  }, [handlePaste]);
+  }, [isFocused, handlePaste]);
 
   const onCropComplete = useCallback((_croppedArea: Area, croppedAreaPixelsValue: Area) => {
     setCroppedAreaPixels(croppedAreaPixelsValue);
@@ -325,10 +329,16 @@ export function ImageUploader({
       <Stack spacing={2} sx={sx}>
         {/* Drop Zone */}
         <Box
+          ref={containerRef}
+          tabIndex={0}
           onClick={handleClick}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          onMouseEnter={() => setIsFocused(true)}
+          onMouseLeave={() => setIsFocused(false)}
           sx={{
             p: 3,
             borderRadius: 1,
@@ -338,8 +348,12 @@ export function ImageUploader({
               `2px dashed ${dragOver ? theme.palette.primary.main : theme.palette.divider}`,
             transition: 'all 0.2s ease-in-out',
             opacity: disabled ? 0.5 : 1,
+            outline: 'none',
             '&:hover': {
               bgcolor: disabled ? 'background.neutral' : 'action.hover',
+            },
+            '&:focus': {
+              borderColor: 'primary.main',
             },
           }}
         >

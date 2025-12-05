@@ -64,6 +64,7 @@ export function ImageEntityResourceUploader({
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   // Image editing state
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -196,7 +197,7 @@ export function ImageEntityResourceUploader({
 
   const handlePaste = useCallback(
     (event: ClipboardEvent) => {
-      if (disabled) return;
+      if (disabled || !isFocused) return;
 
       const items = event.clipboardData?.items;
       if (!items) return;
@@ -213,16 +214,18 @@ export function ImageEntityResourceUploader({
         }
       }
     },
-    [disabled, handleFileSelect]
+    [disabled, isFocused, handleFileSelect]
   );
 
-  // Listen for paste events on the document
+  // Listen for paste events on the document when focused
   useEffect(() => {
+    if (!isFocused) return undefined;
+
     document.addEventListener('paste', handlePaste);
     return () => {
       document.removeEventListener('paste', handlePaste);
     };
-  }, [handlePaste]);
+  }, [isFocused, handlePaste]);
 
   const onCropComplete = useCallback((_croppedArea: Area, croppedAreaPixelsValue: Area) => {
     setCroppedAreaPixels(croppedAreaPixelsValue);
@@ -336,10 +339,15 @@ export function ImageEntityResourceUploader({
         {/* Image Preview / Drop Zone */}
         <Box
           ref={containerRef}
+          tabIndex={0}
           onClick={handleClick}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          onMouseEnter={() => setIsFocused(true)}
+          onMouseLeave={() => setIsFocused(false)}
           sx={{
             position: 'relative',
             width: previewSize,
@@ -355,11 +363,15 @@ export function ImageEntityResourceUploader({
             alignItems: 'center',
             justifyContent: 'center',
             overflow: 'hidden',
+            outline: 'none',
             '&:hover': {
               bgcolor: disabled ? 'background.neutral' : 'action.hover',
               '& .upload-overlay': {
                 opacity: disabled ? 0 : 1,
               },
+            },
+            '&:focus': {
+              borderColor: 'primary.main',
             },
           }}
         >
