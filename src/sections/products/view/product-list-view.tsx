@@ -53,16 +53,11 @@ export function ProductListView() {
     setLoading(true);
     setError(null);
     try {
-      console.log('Fetching products...', { page, rowsPerPage });
-
       const response = await getProductPage([], {
         pageNumber: page,
         pageSize: rowsPerPage,
         searchTerm: filterName || undefined,
       });
-
-      console.log('API Response:', response);
-
       setTemplates(response.items || []);
       setTotalItems(response.totalItems || 0);
     } catch (err) {

@@ -84,7 +84,6 @@ export function MachineView() {
             setTotalItems(response.totalItems || 0);
         } catch (err) {
             setError('Failed to load machines');
-            console.error('Error fetching machines:', err);
         } finally {
             setLoading(false);
         }
