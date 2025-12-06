@@ -1,4 +1,4 @@
-import type { CalendarType, CalendarEntity, ShiftTemplateEntity } from 'src/api/types/generated';
+import type { CalendarEntity, ShiftTemplateEntity } from 'src/api/types/generated';
 
 import { useParams } from 'react-router';
 import { useState, useEffect, useCallback } from 'react';
@@ -28,12 +28,10 @@ import {
 
 // ----------------------------------------------------------------------
 
-const CALENDAR_TYPES: CalendarType[] = ['general', 'production', 'office', 'maintenance', 'logistics'];
 
 interface CalendarFormData {
   code: string;
   name: string;
-  type: CalendarType;
   description: string;
   shiftTemplateId: string;
   applyFrom: string;
@@ -43,7 +41,6 @@ interface CalendarFormData {
 const defaultFormData: CalendarFormData = {
   code: '',
   name: '',
-  type: 'general',
   description: '',
   shiftTemplateId: '',
   applyFrom: '',
@@ -98,7 +95,6 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             setFormData({
               code: calendar.code || '',
               name: calendar.name || '',
-              type: calendar.type || 'general',
               description: calendar.description || '',
               shiftTemplateId: calendar.shiftTemplateId?.toString() || '',
               applyFrom: calendar.applyFrom ? calendar.applyFrom.split('T')[0] : '',
@@ -157,7 +153,6 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
           const updates = [
             { key: 'code', value: formData.code },
             { key: 'name', value: formData.name },
-            { key: 'type', value: formData.type },
             { key: 'description', value: formData.description },
             { key: 'shiftTemplateId', value: formData.shiftTemplateId || undefined },
             { key: 'applyFrom', value: formData.applyFrom ? new Date(formData.applyFrom).toISOString() : undefined },
@@ -175,7 +170,6 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
           const entity: CalendarEntity = {
             code: formData.code,
             name: formData.name,
-            type: formData.type,
             description: formData.description,
             shiftTemplateId: formData.shiftTemplateId || undefined,
             applyFrom: formData.applyFrom ? new Date(formData.applyFrom).toISOString() : undefined,
@@ -271,19 +265,6 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                 required
               />
 
-              <TextField
-                fullWidth
-                select
-                label="Type"
-                value={formData.type}
-                onChange={(e) => handleInputChange('type', e.target.value as CalendarType)}
-              >
-                {CALENDAR_TYPES.map((type) => (
-                  <MenuItem key={type} value={type}>
-                    {type.charAt(0).toUpperCase() + type.slice(1)}
-                  </MenuItem>
-                ))}
-              </TextField>
 
               <Autocomplete
                 fullWidth

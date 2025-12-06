@@ -3203,45 +3203,6 @@
         }
       }
     },
-    "/api/calendar/search": {
-      "get": {
-        "tags": [
-          "Calendar"
-        ],
-        "summary": "Search Calendar entities",
-        "description": "Searches Calendar entities by text across searchable fields.",
-        "operationId": "SearchCalendar",
-        "parameters": [
-          {
-            "name": "searchText",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "maxResults",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CalendarEntityResultArray"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/Calendar/search-calendars": {
       "post": {
         "tags": [
@@ -9924,694 +9885,6 @@
         }
       }
     },
-    "/api/downtimereason/{id}": {
-      "get": {
-        "tags": [
-          "DowntimeReason"
-        ],
-        "summary": "Get Downtime Reason by ID",
-        "description": "Retrieves a specific Downtime Reason entity by its unique identifier.",
-        "operationId": "GetDowntimeReasonById",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DowntimeReasonEntity"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/api/downtimereason/get-page": {
-      "post": {
-        "tags": [
-          "DowntimeReason"
-        ],
-        "summary": "Get paginated list of Downtime Reason",
-        "description": "Retrieves a paginated list of Downtime Reason entities.",
-        "operationId": "GetDowntimeReasonPage",
-        "parameters": [
-          {
-            "name": "pageNumber",
-            "in": "query",
-            "description": "Page number, starting from 0.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "description": "Number of items per page.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "searchTerm",
-            "in": "query",
-            "description": "Search term for filtering results.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DowntimeReasonEntityBasePaginationResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimereason/create": {
-      "post": {
-        "tags": [
-          "DowntimeReason"
-        ],
-        "summary": "Create a new Downtime Reason",
-        "description": "Creates a new Downtime Reason entity in the system.",
-        "operationId": "CreateDowntimeReason",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DowntimeReasonEntity"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DowntimeReasonEntityResult"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DowntimeReasonEntityResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimereason/update/{id}": {
-      "post": {
-        "tags": [
-          "DowntimeReason"
-        ],
-        "summary": "Update an existing Downtime Reason",
-        "description": "Updates specific fields of an existing Downtime Reason entity by ID.",
-        "operationId": "UpdateDowntimeReason",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
-                },
-                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimereason/delete/{id}": {
-      "delete": {
-        "tags": [
-          "DowntimeReason"
-        ],
-        "summary": "Delete a Downtime Reason",
-        "description": "Deletes a Downtime Reason entity by its unique identifier.",
-        "operationId": "DeleteDowntimeReason",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimereason/soft-delete/{id}": {
-      "delete": {
-        "tags": [
-          "DowntimeReason"
-        ],
-        "summary": "Soft delete a Downtime Reason",
-        "description": "Soft deletes a Downtime Reason entity by its unique identifier.",
-        "operationId": "SoftDeleteDowntimeReason",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimereason/restore-soft-delete/{id}": {
-      "put": {
-        "tags": [
-          "DowntimeReason"
-        ],
-        "summary": "Soft restore delete a Downtime Reason",
-        "description": "Soft restore deletes a Downtime Reason entity by its unique identifier.",
-        "operationId": "SoftRestoreDeleteDowntimeReason",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimereason/generate-new-code": {
-      "get": {
-        "tags": [
-          "DowntimeReason"
-        ],
-        "summary": "Generate a new code for Downtime Reason",
-        "description": "Generates a new unique code for a Downtime Reason entity.",
-        "operationId": "GenerateNewDowntimeReasonCode",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimereason/search": {
-      "get": {
-        "tags": [
-          "DowntimeReason"
-        ],
-        "summary": "Search Downtime Reason entities",
-        "description": "Searches Downtime Reason entities by text across searchable fields.",
-        "operationId": "SearchDowntimeReason",
-        "parameters": [
-          {
-            "name": "searchText",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "maxResults",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DowntimeReasonEntityResultArray"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimereasongroup/{id}": {
-      "get": {
-        "tags": [
-          "DowntimeReasonGroup"
-        ],
-        "summary": "Get Downtime Reason Group by ID",
-        "description": "Retrieves a specific Downtime Reason Group entity by its unique identifier.",
-        "operationId": "GetDowntimeReasonGroupById",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DowntimeReasonGroupEntity"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/api/downtimereasongroup/get-page": {
-      "post": {
-        "tags": [
-          "DowntimeReasonGroup"
-        ],
-        "summary": "Get paginated list of Downtime Reason Group",
-        "description": "Retrieves a paginated list of Downtime Reason Group entities.",
-        "operationId": "GetDowntimeReasonGroupPage",
-        "parameters": [
-          {
-            "name": "pageNumber",
-            "in": "query",
-            "description": "Page number, starting from 0.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "description": "Number of items per page.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "searchTerm",
-            "in": "query",
-            "description": "Search term for filtering results.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DowntimeReasonGroupEntityBasePaginationResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimereasongroup/create": {
-      "post": {
-        "tags": [
-          "DowntimeReasonGroup"
-        ],
-        "summary": "Create a new Downtime Reason Group",
-        "description": "Creates a new Downtime Reason Group entity in the system.",
-        "operationId": "CreateDowntimeReasonGroup",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DowntimeReasonGroupEntity"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DowntimeReasonGroupEntityResult"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DowntimeReasonGroupEntityResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimereasongroup/update/{id}": {
-      "post": {
-        "tags": [
-          "DowntimeReasonGroup"
-        ],
-        "summary": "Update an existing Downtime Reason Group",
-        "description": "Updates specific fields of an existing Downtime Reason Group entity by ID.",
-        "operationId": "UpdateDowntimeReasonGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
-                },
-                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimereasongroup/delete/{id}": {
-      "delete": {
-        "tags": [
-          "DowntimeReasonGroup"
-        ],
-        "summary": "Delete a Downtime Reason Group",
-        "description": "Deletes a Downtime Reason Group entity by its unique identifier.",
-        "operationId": "DeleteDowntimeReasonGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimereasongroup/soft-delete/{id}": {
-      "delete": {
-        "tags": [
-          "DowntimeReasonGroup"
-        ],
-        "summary": "Soft delete a Downtime Reason Group",
-        "description": "Soft deletes a Downtime Reason Group entity by its unique identifier.",
-        "operationId": "SoftDeleteDowntimeReasonGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimereasongroup/restore-soft-delete/{id}": {
-      "put": {
-        "tags": [
-          "DowntimeReasonGroup"
-        ],
-        "summary": "Soft restore delete a Downtime Reason Group",
-        "description": "Soft restore deletes a Downtime Reason Group entity by its unique identifier.",
-        "operationId": "SoftRestoreDeleteDowntimeReasonGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimereasongroup/generate-new-code": {
-      "get": {
-        "tags": [
-          "DowntimeReasonGroup"
-        ],
-        "summary": "Generate a new code for Downtime Reason Group",
-        "description": "Generates a new unique code for a Downtime Reason Group entity.",
-        "operationId": "GenerateNewDowntimeReasonGroupCode",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/downtimereasongroup/search": {
-      "get": {
-        "tags": [
-          "DowntimeReasonGroup"
-        ],
-        "summary": "Search Downtime Reason Group entities",
-        "description": "Searches Downtime Reason Group entities by text across searchable fields.",
-        "operationId": "SearchDowntimeReasonGroup",
-        "parameters": [
-          {
-            "name": "searchText",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "maxResults",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DowntimeReasonGroupEntityResultArray"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/ExternalResource/upload-ui-resource": {
       "post": {
         "tags": [
@@ -15176,6 +14449,655 @@
         }
       }
     },
+    "/api/informationbase/{id}": {
+      "get": {
+        "tags": [
+          "InformationBase"
+        ],
+        "summary": "Get Information Base by ID",
+        "description": "Retrieves a specific Information Base entity by its unique identifier.",
+        "operationId": "GetInformationBaseById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InformationBaseEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/informationbase/get-page": {
+      "post": {
+        "tags": [
+          "InformationBase"
+        ],
+        "summary": "Get paginated list of Information Base",
+        "description": "Retrieves a paginated list of Information Base entities.",
+        "operationId": "GetInformationBasePage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InformationBaseEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/informationbase/create": {
+      "post": {
+        "tags": [
+          "InformationBase"
+        ],
+        "summary": "Create a new Information Base",
+        "description": "Creates a new Information Base entity in the system.",
+        "operationId": "CreateInformationBase",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InformationBaseEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InformationBaseEntityResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InformationBaseEntityResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/informationbase/update/{id}": {
+      "post": {
+        "tags": [
+          "InformationBase"
+        ],
+        "summary": "Update an existing Information Base",
+        "description": "Updates specific fields of an existing Information Base entity by ID.",
+        "operationId": "UpdateInformationBase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/informationbase/delete/{id}": {
+      "delete": {
+        "tags": [
+          "InformationBase"
+        ],
+        "summary": "Delete a Information Base",
+        "description": "Deletes a Information Base entity by its unique identifier.",
+        "operationId": "DeleteInformationBase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/informationbase/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "InformationBase"
+        ],
+        "summary": "Soft delete a Information Base",
+        "description": "Soft deletes a Information Base entity by its unique identifier.",
+        "operationId": "SoftDeleteInformationBase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/informationbase/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "InformationBase"
+        ],
+        "summary": "Soft restore delete a Information Base",
+        "description": "Soft restore deletes a Information Base entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteInformationBase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/informationbase/generate-new-code": {
+      "get": {
+        "tags": [
+          "InformationBase"
+        ],
+        "summary": "Generate a new code for Information Base",
+        "description": "Generates a new unique code for a Information Base entity.",
+        "operationId": "GenerateNewInformationBaseCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/informationbase/search": {
+      "get": {
+        "tags": [
+          "InformationBase"
+        ],
+        "summary": "Search Information Base entities",
+        "description": "Searches Information Base entities by text across searchable fields.",
+        "operationId": "SearchInformationBase",
+        "parameters": [
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InformationBaseEntityResultArray"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/informationdecoratorbase/{id}": {
+      "get": {
+        "tags": [
+          "InformationDecoratorBase"
+        ],
+        "summary": "Get Information Decorator Base by ID",
+        "description": "Retrieves a specific Information Decorator Base entity by its unique identifier.",
+        "operationId": "GetInformationDecoratorBaseById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InformationDecoratorBaseEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/informationdecoratorbase/get-page": {
+      "post": {
+        "tags": [
+          "InformationDecoratorBase"
+        ],
+        "summary": "Get paginated list of Information Decorator Base",
+        "description": "Retrieves a paginated list of Information Decorator Base entities.",
+        "operationId": "GetInformationDecoratorBasePage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InformationDecoratorBaseEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/informationdecoratorbase/create": {
+      "post": {
+        "tags": [
+          "InformationDecoratorBase"
+        ],
+        "summary": "Create a new Information Decorator Base",
+        "description": "Creates a new Information Decorator Base entity in the system.",
+        "operationId": "CreateInformationDecoratorBase",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InformationDecoratorBaseEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InformationDecoratorBaseEntityResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InformationDecoratorBaseEntityResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/informationdecoratorbase/update/{id}": {
+      "post": {
+        "tags": [
+          "InformationDecoratorBase"
+        ],
+        "summary": "Update an existing Information Decorator Base",
+        "description": "Updates specific fields of an existing Information Decorator Base entity by ID.",
+        "operationId": "UpdateInformationDecoratorBase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/informationdecoratorbase/delete/{id}": {
+      "delete": {
+        "tags": [
+          "InformationDecoratorBase"
+        ],
+        "summary": "Delete a Information Decorator Base",
+        "description": "Deletes a Information Decorator Base entity by its unique identifier.",
+        "operationId": "DeleteInformationDecoratorBase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/informationdecoratorbase/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "InformationDecoratorBase"
+        ],
+        "summary": "Soft delete a Information Decorator Base",
+        "description": "Soft deletes a Information Decorator Base entity by its unique identifier.",
+        "operationId": "SoftDeleteInformationDecoratorBase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/informationdecoratorbase/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "InformationDecoratorBase"
+        ],
+        "summary": "Soft restore delete a Information Decorator Base",
+        "description": "Soft restore deletes a Information Decorator Base entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteInformationDecoratorBase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/informationdecoratorbase/generate-new-code": {
+      "get": {
+        "tags": [
+          "InformationDecoratorBase"
+        ],
+        "summary": "Generate a new code for Information Decorator Base",
+        "description": "Generates a new unique code for a Information Decorator Base entity.",
+        "operationId": "GenerateNewInformationDecoratorBaseCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/IotDevice/search-device": {
       "post": {
         "tags": [
@@ -18320,51 +18242,21 @@
         }
       }
     },
-    "/api/machine/search": {
-      "get": {
-        "tags": [
-          "Machine"
-        ],
-        "summary": "Search Machine entities",
-        "description": "Searches Machine entities by text across searchable fields.",
-        "operationId": "SearchMachine",
-        "parameters": [
-          {
-            "name": "searchText",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "maxResults",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MachineEntityResultArray"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/Machine/search-machines": {
       "post": {
         "tags": [
           "Machine"
         ],
+        "summary": "Searches for machines based on the provided pagination request.",
         "parameters": [
+          {
+            "name": "Mode",
+            "in": "query",
+            "description": "Output calculation mode filter",
+            "schema": {
+              "$ref": "#/components/schemas/OutputCalculationMode"
+            }
+          },
           {
             "name": "pageNumber",
             "in": "query",
@@ -18439,22 +18331,22 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/MachineDtoBasePaginationResponse"
+                  "$ref": "#/components/schemas/MachinePageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MachineDtoBasePaginationResponse"
+                  "$ref": "#/components/schemas/MachinePageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MachineDtoBasePaginationResponse"
+                  "$ref": "#/components/schemas/MachinePageResponse"
                 }
               },
               "application/vnd.msgpack": {
                 "schema": {
-                  "$ref": "#/components/schemas/MachineDtoBasePaginationResponse"
+                  "$ref": "#/components/schemas/MachinePageResponse"
                 }
               }
             }
@@ -27197,14 +27089,14 @@
         }
       }
     },
-    "/api/rolepermission/{id}": {
+    "/api/rolepermissionmapping/{id}": {
       "get": {
         "tags": [
-          "RolePermission"
+          "RolePermissionMapping"
         ],
-        "summary": "Get Role Permission by ID",
-        "description": "Retrieves a specific Role Permission entity by its unique identifier.",
-        "operationId": "GetRolePermissionById",
+        "summary": "Get Role Permission Mapping by ID",
+        "description": "Retrieves a specific Role Permission Mapping entity by its unique identifier.",
+        "operationId": "GetRolePermissionMappingById",
         "parameters": [
           {
             "name": "id",
@@ -27221,7 +27113,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RolePermissionEntity"
+                  "$ref": "#/components/schemas/RolePermissionMapping"
                 }
               }
             }
@@ -27232,14 +27124,14 @@
         }
       }
     },
-    "/api/rolepermission/get-page": {
+    "/api/rolepermissionmapping/get-page": {
       "post": {
         "tags": [
-          "RolePermission"
+          "RolePermissionMapping"
         ],
-        "summary": "Get paginated list of Role Permission",
-        "description": "Retrieves a paginated list of Role Permission entities.",
-        "operationId": "GetRolePermissionPage",
+        "summary": "Get paginated list of Role Permission Mapping",
+        "description": "Retrieves a paginated list of Role Permission Mapping entities.",
+        "operationId": "GetRolePermissionMappingPage",
         "parameters": [
           {
             "name": "pageNumber",
@@ -27288,7 +27180,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RolePermissionEntityBasePaginationResponse"
+                  "$ref": "#/components/schemas/RolePermissionMappingBasePaginationResponse"
                 }
               }
             }
@@ -27296,19 +27188,19 @@
         }
       }
     },
-    "/api/rolepermission/create": {
+    "/api/rolepermissionmapping/create": {
       "post": {
         "tags": [
-          "RolePermission"
+          "RolePermissionMapping"
         ],
-        "summary": "Create a new Role Permission",
-        "description": "Creates a new Role Permission entity in the system.",
-        "operationId": "CreateRolePermission",
+        "summary": "Create a new Role Permission Mapping",
+        "description": "Creates a new Role Permission Mapping entity in the system.",
+        "operationId": "CreateRolePermissionMapping",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RolePermissionEntity"
+                "$ref": "#/components/schemas/RolePermissionMapping"
               }
             }
           },
@@ -27320,7 +27212,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RolePermissionEntityResult"
+                  "$ref": "#/components/schemas/RolePermissionMappingResult"
                 }
               }
             }
@@ -27330,7 +27222,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RolePermissionEntityResult"
+                  "$ref": "#/components/schemas/RolePermissionMappingResult"
                 }
               }
             }
@@ -27338,14 +27230,14 @@
         }
       }
     },
-    "/api/rolepermission/update/{id}": {
+    "/api/rolepermissionmapping/update/{id}": {
       "post": {
         "tags": [
-          "RolePermission"
+          "RolePermissionMapping"
         ],
-        "summary": "Update an existing Role Permission",
-        "description": "Updates specific fields of an existing Role Permission entity by ID.",
-        "operationId": "UpdateRolePermission",
+        "summary": "Update an existing Role Permission Mapping",
+        "description": "Updates specific fields of an existing Role Permission Mapping entity by ID.",
+        "operationId": "UpdateRolePermissionMapping",
         "parameters": [
           {
             "name": "id",
@@ -27384,14 +27276,14 @@
         }
       }
     },
-    "/api/rolepermission/delete/{id}": {
+    "/api/rolepermissionmapping/delete/{id}": {
       "delete": {
         "tags": [
-          "RolePermission"
+          "RolePermissionMapping"
         ],
-        "summary": "Delete a Role Permission",
-        "description": "Deletes a Role Permission entity by its unique identifier.",
-        "operationId": "DeleteRolePermission",
+        "summary": "Delete a Role Permission Mapping",
+        "description": "Deletes a Role Permission Mapping entity by its unique identifier.",
+        "operationId": "DeleteRolePermissionMapping",
         "parameters": [
           {
             "name": "id",
@@ -27416,14 +27308,14 @@
         }
       }
     },
-    "/api/rolepermission/soft-delete/{id}": {
+    "/api/rolepermissionmapping/soft-delete/{id}": {
       "delete": {
         "tags": [
-          "RolePermission"
+          "RolePermissionMapping"
         ],
-        "summary": "Soft delete a Role Permission",
-        "description": "Soft deletes a Role Permission entity by its unique identifier.",
-        "operationId": "SoftDeleteRolePermission",
+        "summary": "Soft delete a Role Permission Mapping",
+        "description": "Soft deletes a Role Permission Mapping entity by its unique identifier.",
+        "operationId": "SoftDeleteRolePermissionMapping",
         "parameters": [
           {
             "name": "id",
@@ -27448,14 +27340,14 @@
         }
       }
     },
-    "/api/rolepermission/restore-soft-delete/{id}": {
+    "/api/rolepermissionmapping/restore-soft-delete/{id}": {
       "put": {
         "tags": [
-          "RolePermission"
+          "RolePermissionMapping"
         ],
-        "summary": "Soft restore delete a Role Permission",
-        "description": "Soft restore deletes a Role Permission entity by its unique identifier.",
-        "operationId": "SoftRestoreDeleteRolePermission",
+        "summary": "Soft restore delete a Role Permission Mapping",
+        "description": "Soft restore deletes a Role Permission Mapping entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteRolePermissionMapping",
         "parameters": [
           {
             "name": "id",
@@ -27480,14 +27372,14 @@
         }
       }
     },
-    "/api/rolepermission/generate-new-code": {
+    "/api/rolepermissionmapping/generate-new-code": {
       "get": {
         "tags": [
-          "RolePermission"
+          "RolePermissionMapping"
         ],
-        "summary": "Generate a new code for Role Permission",
-        "description": "Generates a new unique code for a Role Permission entity.",
-        "operationId": "GenerateNewRolePermissionCode",
+        "summary": "Generate a new code for Role Permission Mapping",
+        "description": "Generates a new unique code for a Role Permission Mapping entity.",
+        "operationId": "GenerateNewRolePermissionMappingCode",
         "responses": {
           "200": {
             "description": "OK",
@@ -32581,6 +32473,311 @@
         }
       }
     },
+    "/api/stopmachinereasongroup/{id}": {
+      "get": {
+        "tags": [
+          "StopMachineReasonGroup"
+        ],
+        "summary": "Get Stop Machine Reason Group by ID",
+        "description": "Retrieves a specific Stop Machine Reason Group entity by its unique identifier.",
+        "operationId": "GetStopMachineReasonGroupById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StopMachineReasonGroupEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/stopmachinereasongroup/get-page": {
+      "post": {
+        "tags": [
+          "StopMachineReasonGroup"
+        ],
+        "summary": "Get paginated list of Stop Machine Reason Group",
+        "description": "Retrieves a paginated list of Stop Machine Reason Group entities.",
+        "operationId": "GetStopMachineReasonGroupPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StopMachineReasonGroupEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereasongroup/create": {
+      "post": {
+        "tags": [
+          "StopMachineReasonGroup"
+        ],
+        "summary": "Create a new Stop Machine Reason Group",
+        "description": "Creates a new Stop Machine Reason Group entity in the system.",
+        "operationId": "CreateStopMachineReasonGroup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StopMachineReasonGroupEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StopMachineReasonGroupEntityResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StopMachineReasonGroupEntityResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereasongroup/update/{id}": {
+      "post": {
+        "tags": [
+          "StopMachineReasonGroup"
+        ],
+        "summary": "Update an existing Stop Machine Reason Group",
+        "description": "Updates specific fields of an existing Stop Machine Reason Group entity by ID.",
+        "operationId": "UpdateStopMachineReasonGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereasongroup/delete/{id}": {
+      "delete": {
+        "tags": [
+          "StopMachineReasonGroup"
+        ],
+        "summary": "Delete a Stop Machine Reason Group",
+        "description": "Deletes a Stop Machine Reason Group entity by its unique identifier.",
+        "operationId": "DeleteStopMachineReasonGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereasongroup/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "StopMachineReasonGroup"
+        ],
+        "summary": "Soft delete a Stop Machine Reason Group",
+        "description": "Soft deletes a Stop Machine Reason Group entity by its unique identifier.",
+        "operationId": "SoftDeleteStopMachineReasonGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereasongroup/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "StopMachineReasonGroup"
+        ],
+        "summary": "Soft restore delete a Stop Machine Reason Group",
+        "description": "Soft restore deletes a Stop Machine Reason Group entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteStopMachineReasonGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereasongroup/generate-new-code": {
+      "get": {
+        "tags": [
+          "StopMachineReasonGroup"
+        ],
+        "summary": "Generate a new code for Stop Machine Reason Group",
+        "description": "Generates a new unique code for a Stop Machine Reason Group entity.",
+        "operationId": "GenerateNewStopMachineReasonGroupCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/supplier/{id}": {
       "get": {
         "tags": [
@@ -34447,10 +34644,12 @@
         "tags": [
           "User"
         ],
+        "summary": "Sets the user's theme preference.",
         "parameters": [
           {
             "name": "theme",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -34468,10 +34667,12 @@
         "tags": [
           "User"
         ],
+        "summary": "Sets the user's dark mode preference.",
         "parameters": [
           {
             "name": "darkMode",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "boolean"
             }
@@ -34489,10 +34690,12 @@
         "tags": [
           "User"
         ],
+        "summary": "Sets the user's culture preference.",
         "parameters": [
           {
             "name": "culture",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -34500,6 +34703,7 @@
           {
             "name": "redirectUri",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -34517,6 +34721,7 @@
         "tags": [
           "User"
         ],
+        "summary": "Gets the user's settings.",
         "responses": {
           "200": {
             "description": "OK"
@@ -34529,6 +34734,7 @@
         "tags": [
           "User"
         ],
+        "summary": "Uploads and sets the user's avatar image.",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -34537,6 +34743,7 @@
                 "properties": {
                   "file": {
                     "type": "string",
+                    "description": "",
                     "format": "binary"
                   }
                 }
@@ -34561,6 +34768,7 @@
         "tags": [
           "User"
         ],
+        "summary": "Uploads and sets the user's banner image.",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -34569,6 +34777,7 @@
                 "properties": {
                   "file": {
                     "type": "string",
+                    "description": "",
                     "format": "binary"
                   }
                 }
@@ -34593,10 +34802,12 @@
         "tags": [
           "User"
         ],
+        "summary": "Gets the user's avatar image.",
         "parameters": [
           {
             "name": "file",
             "in": "path",
+            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -34615,10 +34826,12 @@
         "tags": [
           "User"
         ],
+        "summary": "Gets the user's banner image.",
         "parameters": [
           {
             "name": "file",
             "in": "path",
+            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -34637,6 +34850,7 @@
         "tags": [
           "User"
         ],
+        "summary": "Gets the user's avatar and banner image URLs.",
         "responses": {
           "200": {
             "description": "OK"
@@ -34831,6 +35045,110 @@
               "application/vnd.msgpack": {
                 "schema": {
                   "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/User/get-user-dtos": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Gets a paginated list of user DTOs based on the provided request.",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDtoBasePaginationResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDtoBasePaginationResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDtoBasePaginationResponse"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDtoBasePaginationResponse"
                 }
               }
             }
@@ -36400,14 +36718,14 @@
         }
       }
     },
-    "/api/userpermission/{id}": {
+    "/api/userpermissionmapping/{id}": {
       "get": {
         "tags": [
-          "UserPermission"
+          "UserPermissionMapping"
         ],
-        "summary": "Get User Permission by ID",
-        "description": "Retrieves a specific User Permission entity by its unique identifier.",
-        "operationId": "GetUserPermissionById",
+        "summary": "Get User Permission Mapping by ID",
+        "description": "Retrieves a specific User Permission Mapping entity by its unique identifier.",
+        "operationId": "GetUserPermissionMappingById",
         "parameters": [
           {
             "name": "id",
@@ -36424,7 +36742,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserPermissionEntity"
+                  "$ref": "#/components/schemas/UserPermissionMapping"
                 }
               }
             }
@@ -36435,14 +36753,14 @@
         }
       }
     },
-    "/api/userpermission/get-page": {
+    "/api/userpermissionmapping/get-page": {
       "post": {
         "tags": [
-          "UserPermission"
+          "UserPermissionMapping"
         ],
-        "summary": "Get paginated list of User Permission",
-        "description": "Retrieves a paginated list of User Permission entities.",
-        "operationId": "GetUserPermissionPage",
+        "summary": "Get paginated list of User Permission Mapping",
+        "description": "Retrieves a paginated list of User Permission Mapping entities.",
+        "operationId": "GetUserPermissionMappingPage",
         "parameters": [
           {
             "name": "pageNumber",
@@ -36491,7 +36809,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserPermissionEntityBasePaginationResponse"
+                  "$ref": "#/components/schemas/UserPermissionMappingBasePaginationResponse"
                 }
               }
             }
@@ -36499,19 +36817,19 @@
         }
       }
     },
-    "/api/userpermission/create": {
+    "/api/userpermissionmapping/create": {
       "post": {
         "tags": [
-          "UserPermission"
+          "UserPermissionMapping"
         ],
-        "summary": "Create a new User Permission",
-        "description": "Creates a new User Permission entity in the system.",
-        "operationId": "CreateUserPermission",
+        "summary": "Create a new User Permission Mapping",
+        "description": "Creates a new User Permission Mapping entity in the system.",
+        "operationId": "CreateUserPermissionMapping",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserPermissionEntity"
+                "$ref": "#/components/schemas/UserPermissionMapping"
               }
             }
           },
@@ -36523,7 +36841,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserPermissionEntityResult"
+                  "$ref": "#/components/schemas/UserPermissionMappingResult"
                 }
               }
             }
@@ -36533,7 +36851,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserPermissionEntityResult"
+                  "$ref": "#/components/schemas/UserPermissionMappingResult"
                 }
               }
             }
@@ -36541,14 +36859,14 @@
         }
       }
     },
-    "/api/userpermission/update/{id}": {
+    "/api/userpermissionmapping/update/{id}": {
       "post": {
         "tags": [
-          "UserPermission"
+          "UserPermissionMapping"
         ],
-        "summary": "Update an existing User Permission",
-        "description": "Updates specific fields of an existing User Permission entity by ID.",
-        "operationId": "UpdateUserPermission",
+        "summary": "Update an existing User Permission Mapping",
+        "description": "Updates specific fields of an existing User Permission Mapping entity by ID.",
+        "operationId": "UpdateUserPermissionMapping",
         "parameters": [
           {
             "name": "id",
@@ -36587,14 +36905,14 @@
         }
       }
     },
-    "/api/userpermission/delete/{id}": {
+    "/api/userpermissionmapping/delete/{id}": {
       "delete": {
         "tags": [
-          "UserPermission"
+          "UserPermissionMapping"
         ],
-        "summary": "Delete a User Permission",
-        "description": "Deletes a User Permission entity by its unique identifier.",
-        "operationId": "DeleteUserPermission",
+        "summary": "Delete a User Permission Mapping",
+        "description": "Deletes a User Permission Mapping entity by its unique identifier.",
+        "operationId": "DeleteUserPermissionMapping",
         "parameters": [
           {
             "name": "id",
@@ -36619,14 +36937,14 @@
         }
       }
     },
-    "/api/userpermission/soft-delete/{id}": {
+    "/api/userpermissionmapping/soft-delete/{id}": {
       "delete": {
         "tags": [
-          "UserPermission"
+          "UserPermissionMapping"
         ],
-        "summary": "Soft delete a User Permission",
-        "description": "Soft deletes a User Permission entity by its unique identifier.",
-        "operationId": "SoftDeleteUserPermission",
+        "summary": "Soft delete a User Permission Mapping",
+        "description": "Soft deletes a User Permission Mapping entity by its unique identifier.",
+        "operationId": "SoftDeleteUserPermissionMapping",
         "parameters": [
           {
             "name": "id",
@@ -36651,14 +36969,14 @@
         }
       }
     },
-    "/api/userpermission/restore-soft-delete/{id}": {
+    "/api/userpermissionmapping/restore-soft-delete/{id}": {
       "put": {
         "tags": [
-          "UserPermission"
+          "UserPermissionMapping"
         ],
-        "summary": "Soft restore delete a User Permission",
-        "description": "Soft restore deletes a User Permission entity by its unique identifier.",
-        "operationId": "SoftRestoreDeleteUserPermission",
+        "summary": "Soft restore delete a User Permission Mapping",
+        "description": "Soft restore deletes a User Permission Mapping entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteUserPermissionMapping",
         "parameters": [
           {
             "name": "id",
@@ -36683,14 +37001,14 @@
         }
       }
     },
-    "/api/userpermission/generate-new-code": {
+    "/api/userpermissionmapping/generate-new-code": {
       "get": {
         "tags": [
-          "UserPermission"
+          "UserPermissionMapping"
         ],
-        "summary": "Generate a new code for User Permission",
-        "description": "Generates a new unique code for a User Permission entity.",
-        "operationId": "GenerateNewUserPermissionCode",
+        "summary": "Generate a new code for User Permission Mapping",
+        "description": "Generates a new unique code for a User Permission Mapping entity.",
+        "operationId": "GenerateNewUserPermissionMappingCode",
         "responses": {
           "200": {
             "description": "OK",
@@ -36705,14 +37023,14 @@
         }
       }
     },
-    "/api/userrole/{id}": {
+    "/api/userrolemapping/{id}": {
       "get": {
         "tags": [
-          "UserRole"
+          "UserRoleMapping"
         ],
-        "summary": "Get User Role by ID",
-        "description": "Retrieves a specific User Role entity by its unique identifier.",
-        "operationId": "GetUserRoleById",
+        "summary": "Get User Role Mapping by ID",
+        "description": "Retrieves a specific User Role Mapping entity by its unique identifier.",
+        "operationId": "GetUserRoleMappingById",
         "parameters": [
           {
             "name": "id",
@@ -36729,7 +37047,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserRoleEntity"
+                  "$ref": "#/components/schemas/UserRoleMapping"
                 }
               }
             }
@@ -36740,14 +37058,14 @@
         }
       }
     },
-    "/api/userrole/get-page": {
+    "/api/userrolemapping/get-page": {
       "post": {
         "tags": [
-          "UserRole"
+          "UserRoleMapping"
         ],
-        "summary": "Get paginated list of User Role",
-        "description": "Retrieves a paginated list of User Role entities.",
-        "operationId": "GetUserRolePage",
+        "summary": "Get paginated list of User Role Mapping",
+        "description": "Retrieves a paginated list of User Role Mapping entities.",
+        "operationId": "GetUserRoleMappingPage",
         "parameters": [
           {
             "name": "pageNumber",
@@ -36796,7 +37114,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserRoleEntityBasePaginationResponse"
+                  "$ref": "#/components/schemas/UserRoleMappingBasePaginationResponse"
                 }
               }
             }
@@ -36804,19 +37122,19 @@
         }
       }
     },
-    "/api/userrole/create": {
+    "/api/userrolemapping/create": {
       "post": {
         "tags": [
-          "UserRole"
+          "UserRoleMapping"
         ],
-        "summary": "Create a new User Role",
-        "description": "Creates a new User Role entity in the system.",
-        "operationId": "CreateUserRole",
+        "summary": "Create a new User Role Mapping",
+        "description": "Creates a new User Role Mapping entity in the system.",
+        "operationId": "CreateUserRoleMapping",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserRoleEntity"
+                "$ref": "#/components/schemas/UserRoleMapping"
               }
             }
           },
@@ -36828,7 +37146,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserRoleEntityResult"
+                  "$ref": "#/components/schemas/UserRoleMappingResult"
                 }
               }
             }
@@ -36838,7 +37156,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserRoleEntityResult"
+                  "$ref": "#/components/schemas/UserRoleMappingResult"
                 }
               }
             }
@@ -36846,14 +37164,14 @@
         }
       }
     },
-    "/api/userrole/update/{id}": {
+    "/api/userrolemapping/update/{id}": {
       "post": {
         "tags": [
-          "UserRole"
+          "UserRoleMapping"
         ],
-        "summary": "Update an existing User Role",
-        "description": "Updates specific fields of an existing User Role entity by ID.",
-        "operationId": "UpdateUserRole",
+        "summary": "Update an existing User Role Mapping",
+        "description": "Updates specific fields of an existing User Role Mapping entity by ID.",
+        "operationId": "UpdateUserRoleMapping",
         "parameters": [
           {
             "name": "id",
@@ -36892,14 +37210,14 @@
         }
       }
     },
-    "/api/userrole/delete/{id}": {
+    "/api/userrolemapping/delete/{id}": {
       "delete": {
         "tags": [
-          "UserRole"
+          "UserRoleMapping"
         ],
-        "summary": "Delete a User Role",
-        "description": "Deletes a User Role entity by its unique identifier.",
-        "operationId": "DeleteUserRole",
+        "summary": "Delete a User Role Mapping",
+        "description": "Deletes a User Role Mapping entity by its unique identifier.",
+        "operationId": "DeleteUserRoleMapping",
         "parameters": [
           {
             "name": "id",
@@ -36924,14 +37242,14 @@
         }
       }
     },
-    "/api/userrole/soft-delete/{id}": {
+    "/api/userrolemapping/soft-delete/{id}": {
       "delete": {
         "tags": [
-          "UserRole"
+          "UserRoleMapping"
         ],
-        "summary": "Soft delete a User Role",
-        "description": "Soft deletes a User Role entity by its unique identifier.",
-        "operationId": "SoftDeleteUserRole",
+        "summary": "Soft delete a User Role Mapping",
+        "description": "Soft deletes a User Role Mapping entity by its unique identifier.",
+        "operationId": "SoftDeleteUserRoleMapping",
         "parameters": [
           {
             "name": "id",
@@ -36956,14 +37274,14 @@
         }
       }
     },
-    "/api/userrole/restore-soft-delete/{id}": {
+    "/api/userrolemapping/restore-soft-delete/{id}": {
       "put": {
         "tags": [
-          "UserRole"
+          "UserRoleMapping"
         ],
-        "summary": "Soft restore delete a User Role",
-        "description": "Soft restore deletes a User Role entity by its unique identifier.",
-        "operationId": "SoftRestoreDeleteUserRole",
+        "summary": "Soft restore delete a User Role Mapping",
+        "description": "Soft restore deletes a User Role Mapping entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteUserRoleMapping",
         "parameters": [
           {
             "name": "id",
@@ -36988,14 +37306,14 @@
         }
       }
     },
-    "/api/userrole/generate-new-code": {
+    "/api/userrolemapping/generate-new-code": {
       "get": {
         "tags": [
-          "UserRole"
+          "UserRoleMapping"
         ],
-        "summary": "Generate a new code for User Role",
-        "description": "Generates a new unique code for a User Role entity.",
-        "operationId": "GenerateNewUserRoleCode",
+        "summary": "Generate a new code for User Role Mapping",
+        "description": "Generates a new unique code for a User Role Mapping entity.",
+        "operationId": "GenerateNewUserRoleMappingCode",
         "responses": {
           "200": {
             "description": "OK",
@@ -39871,8 +40189,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -40093,8 +40410,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -40250,8 +40566,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -40439,8 +40754,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -40604,8 +40918,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -40902,8 +41215,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -41020,8 +41332,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -41136,8 +41447,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -41194,35 +41504,42 @@
           },
           "code": {
             "type": "string",
+            "description": "Mã lịch",
             "nullable": true
           },
           "name": {
             "type": "string",
+            "description": "Tên lịch",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "Mô tả",
             "nullable": true
-          },
-          "type": {
-            "$ref": "#/components/schemas/CalendarType"
           },
           "shiftTemplateId": {
             "$ref": "#/components/schemas/ObjectId"
           },
           "shiftTemplateName": {
             "type": "string",
+            "description": "Tên mẫu ca làm việc",
             "nullable": true
           },
           "applyFrom": {
             "type": "string",
+            "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-04"
+            "example": "2025-12-06"
           },
           "applyTo": {
             "type": "string",
+            "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-04"
+            "example": "2025-12-06"
+          },
+          "plan2Infinite": {
+            "type": "boolean",
+            "description": "Kế hoạch 2 là vô hạn"
           }
         },
         "additionalProperties": false,
@@ -41265,8 +41582,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -41298,14 +41614,18 @@
           },
           "code": {
             "type": "string",
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
             "nullable": true
           },
           "name": {
             "type": "string",
+            "description": "Tên mô tả của thực thể.",
             "nullable": true
           },
-          "type": {
-            "$ref": "#/components/schemas/CalendarType"
+          "description": {
+            "type": "string",
+            "description": "Mô tả chi tiết về thực thể.",
+            "nullable": true
           },
           "parentCalendarId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -41313,22 +41633,25 @@
           "shiftTemplateId": {
             "$ref": "#/components/schemas/ObjectId"
           },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
           "applyFrom": {
             "type": "string",
+            "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-04"
+            "example": "2025-12-06"
           },
           "applyTo": {
             "type": "string",
+            "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-04"
+            "example": "2025-12-06"
+          },
+          "plan2Infinite": {
+            "type": "boolean",
+            "description": "Kế hoạch 2 là vô hạn"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Lịch làm việc"
       },
       "CalendarEntityBasePaginationResponse": {
         "type": "object",
@@ -41367,8 +41690,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -41395,39 +41717,6 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
-      },
-      "CalendarEntityResultArray": {
-        "required": [
-          "data",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
-          },
-          "message": {
-            "type": "string",
-            "description": "Thông điệp trả về",
-            "nullable": true
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CalendarEntity"
-            },
-            "description": "Dữ liệu trả về",
-            "nullable": true
-          },
-          "total": {
-            "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
-            "format": "int64"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
       },
       "CalendarExceptionEntity": {
         "type": "object",
@@ -41463,12 +41752,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-04"
+            "example": "2025-12-06"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-04"
+            "example": "2025-12-06"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -41516,8 +41805,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -41544,17 +41832,6 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
-      },
-      "CalendarType": {
-        "enum": [
-          "general",
-          "production",
-          "office",
-          "maintenance",
-          "logistics"
-        ],
-        "type": "string",
-        "description": "Loại lịch"
       },
       "CategoryEntity": {
         "type": "object",
@@ -41620,8 +41897,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -41810,8 +42086,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -42031,8 +42306,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -42218,8 +42492,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -42262,8 +42535,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -42365,8 +42637,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -42549,8 +42820,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -42699,8 +42969,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -42848,8 +43117,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -43024,8 +43292,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -43129,8 +43396,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -43157,340 +43423,6 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
-      },
-      "DowntimeReasonCategories": {
-        "enum": [
-          "changeoverOrSetup",
-          "plannedMaintenance",
-          "breaks",
-          "meetingsOrTraining",
-          "materialIssues",
-          "operatorIssues",
-          "qualityIssues",
-          "breakdown",
-          "uncategorized"
-        ],
-        "type": "string",
-        "description": ""
-      },
-      "DowntimeReasonEntity": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "$ref": "#/components/schemas/ObjectId"
-          },
-          "createTime": {
-            "type": "string",
-            "description": "Represents the date and time when the entity was created.",
-            "format": "date-time"
-          },
-          "modifiedTime": {
-            "type": "string",
-            "description": "Represents the date and time when the entity was last modified.",
-            "format": "date-time"
-          },
-          "isDeleted": {
-            "type": "boolean",
-            "description": "Indicates whether the entity has been soft-deleted."
-          },
-          "isDraft": {
-            "type": "boolean",
-            "description": "Indicates whether the entity is in draft status."
-          },
-          "code": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "groupId": {
-            "$ref": "#/components/schemas/ObjectId"
-          },
-          "requiresApproval": {
-            "type": "boolean"
-          },
-          "requiresNote": {
-            "type": "boolean"
-          },
-          "requiresAttachment": {
-            "type": "boolean"
-          },
-          "requiresComment": {
-            "type": "boolean"
-          },
-          "colorHex": {
-            "type": "string",
-            "nullable": true
-          },
-          "translations": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "DowntimeReasonEntityBasePaginationResponse": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DowntimeReasonEntity"
-            },
-            "description": "List of items in the current page",
-            "nullable": true
-          },
-          "totalItems": {
-            "type": "integer",
-            "description": "Total number of items across all pages",
-            "format": "int32"
-          },
-          "pageNumber": {
-            "type": "integer",
-            "description": "Current page number (0-based)",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "description": "Number of items per page",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "description": "Total number of pages",
-            "format": "int32"
-          },
-          "sortableFields": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "Base class for paginated responses"
-      },
-      "DowntimeReasonEntityResult": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "$ref": "#/components/schemas/DowntimeReasonEntity"
-          },
-          "isSuccess": {
-            "type": "boolean",
-            "description": "Gets a value indicating whether the operation was successful."
-          },
-          "message": {
-            "type": "string",
-            "description": "Gets the message describing the result.",
-            "nullable": true
-          },
-          "errorType": {
-            "$ref": "#/components/schemas/ErrorType"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
-      },
-      "DowntimeReasonEntityResultArray": {
-        "required": [
-          "data",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
-          },
-          "message": {
-            "type": "string",
-            "description": "Thông điệp trả về",
-            "nullable": true
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DowntimeReasonEntity"
-            },
-            "description": "Dữ liệu trả về",
-            "nullable": true
-          },
-          "total": {
-            "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
-            "format": "int64"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
-      },
-      "DowntimeReasonGroupEntity": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "$ref": "#/components/schemas/ObjectId"
-          },
-          "createTime": {
-            "type": "string",
-            "description": "Represents the date and time when the entity was created.",
-            "format": "date-time"
-          },
-          "modifiedTime": {
-            "type": "string",
-            "description": "Represents the date and time when the entity was last modified.",
-            "format": "date-time"
-          },
-          "isDeleted": {
-            "type": "boolean",
-            "description": "Indicates whether the entity has been soft-deleted."
-          },
-          "isDraft": {
-            "type": "boolean",
-            "description": "Indicates whether the entity is in draft status."
-          },
-          "code": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "category": {
-            "$ref": "#/components/schemas/DowntimeReasonCategories"
-          },
-          "isPlanned": {
-            "type": "boolean"
-          },
-          "colorHex": {
-            "type": "string",
-            "nullable": true
-          },
-          "translations": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "DowntimeReasonGroupEntityBasePaginationResponse": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DowntimeReasonGroupEntity"
-            },
-            "description": "List of items in the current page",
-            "nullable": true
-          },
-          "totalItems": {
-            "type": "integer",
-            "description": "Total number of items across all pages",
-            "format": "int32"
-          },
-          "pageNumber": {
-            "type": "integer",
-            "description": "Current page number (0-based)",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "description": "Number of items per page",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "description": "Total number of pages",
-            "format": "int32"
-          },
-          "sortableFields": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "Base class for paginated responses"
-      },
-      "DowntimeReasonGroupEntityResult": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "$ref": "#/components/schemas/DowntimeReasonGroupEntity"
-          },
-          "isSuccess": {
-            "type": "boolean",
-            "description": "Gets a value indicating whether the operation was successful."
-          },
-          "message": {
-            "type": "string",
-            "description": "Gets the message describing the result.",
-            "nullable": true
-          },
-          "errorType": {
-            "$ref": "#/components/schemas/ErrorType"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
-      },
-      "DowntimeReasonGroupEntityResultArray": {
-        "required": [
-          "data",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
-          },
-          "message": {
-            "type": "string",
-            "description": "Thông điệp trả về",
-            "nullable": true
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DowntimeReasonGroupEntity"
-            },
-            "description": "Dữ liệu trả về",
-            "nullable": true
-          },
-          "total": {
-            "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
-            "format": "int64"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
       },
       "EntityLogMetaData": {
         "type": "object",
@@ -43664,8 +43596,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -43766,8 +43697,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -43850,7 +43780,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-04"
+            "example": "2025-12-06"
           }
         },
         "additionalProperties": false
@@ -43892,8 +43822,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -44016,8 +43945,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -44124,8 +44052,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -44266,8 +44193,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -44415,8 +44341,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -44547,8 +44472,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -44649,8 +44573,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -44768,8 +44691,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -44897,8 +44819,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -44961,8 +44882,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -45039,8 +44959,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -45141,6 +45060,268 @@
         "type": "object",
         "additionalProperties": false,
         "description": "Represents the base type for if-else clauses in the system."
+      },
+      "InformationBaseEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "code": {
+            "type": "string",
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Tên mô tả của thực thể.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Mô tả chi tiết về thực thể.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Thực thể cơ sở cho các thực thể có thông tin mã, tên, mô tả."
+      },
+      "InformationBaseEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InformationBaseEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "InformationBaseEntityResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/InformationBaseEntity"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "InformationBaseEntityResultArray": {
+        "required": [
+          "data",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Trạng thái thành công hay thất bại"
+          },
+          "message": {
+            "type": "string",
+            "description": "Thông điệp trả về",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InformationBaseEntity"
+            },
+            "description": "Dữ liệu trả về",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Kết quả trả về dạng mảng"
+      },
+      "InformationDecoratorBaseEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "code": {
+            "type": "string",
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Tên mô tả của thực thể.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Mô tả chi tiết về thực thể.",
+            "nullable": true
+          },
+          "colorHex": {
+            "type": "string",
+            "description": "Màu sắc hiển thị lý do dừng máy",
+            "nullable": true
+          },
+          "translations": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Các bản dịch của tên lý do dừng máy",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Mở rộng thực thể cơ sở có thông tin với các thuộc tính trang trí bổ sung"
+      },
+      "InformationDecoratorBaseEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InformationDecoratorBaseEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "InformationDecoratorBaseEntityResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/InformationDecoratorBaseEntity"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
       "IntegrationSettings": {
         "type": "object",
@@ -45305,8 +45486,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -45364,7 +45544,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2025-12-04"
+            "example": "2025-12-06"
           },
           "lastServiceTime": {
             "type": "string",
@@ -45442,8 +45622,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -45515,8 +45694,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -45600,16 +45778,19 @@
             "type": "boolean",
             "description": "Indicates whether the entity is in draft status."
           },
-          "groupId": {
+          "code": {
             "type": "string",
+            "description": "Mã nhóm thiết bị IoT",
             "nullable": true
           },
-          "groupName": {
+          "name": {
             "type": "string",
+            "description": "Tên nhóm thiết bị IoT",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "Mô tả nhóm thiết bị IoT",
             "nullable": true
           },
           "location": {
@@ -45646,7 +45827,8 @@
             "format": "int32"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Nhóm thiết bị IoT"
       },
       "IoTDeviceGroupEntityBasePaginationResponse": {
         "type": "object",
@@ -45685,8 +45867,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -45858,8 +46039,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -46062,8 +46242,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -46106,8 +46285,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -46336,8 +46514,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -46444,8 +46621,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -46553,8 +46729,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -46801,8 +46976,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -46878,8 +47052,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -46974,50 +47147,6 @@
         "additionalProperties": false,
         "description": ""
       },
-      "MachineDtoBasePaginationResponse": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MachineDto"
-            },
-            "description": "List of items in the current page",
-            "nullable": true
-          },
-          "totalItems": {
-            "type": "integer",
-            "description": "Total number of items across all pages",
-            "format": "int32"
-          },
-          "pageNumber": {
-            "type": "integer",
-            "description": "Current page number (0-based)",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "description": "Number of items per page",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "description": "Total number of pages",
-            "format": "int32"
-          },
-          "sortableFields": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "Base class for paginated responses"
-      },
       "MachineEntity": {
         "type": "object",
         "properties": {
@@ -47044,17 +47173,17 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã trung tâm làm việc, người dùng định nghĩa, duy nhất. Hỗ trợ thay đổi\r\nVí dụ: \"WC-PRESS-100T-A\"",
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của trung tâm làm việc.\r\nVí dụ: \"Tổ Máy Ép 100 Tấn A\"",
+            "description": "Tên mô tả của thực thể.",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết về trung tâm làm việc.",
+            "description": "Mô tả chi tiết về thực thể.",
             "nullable": true
           },
           "machineTypeId": {
@@ -47075,6 +47204,7 @@
           },
           "imageUrl": {
             "type": "string",
+            "description": "URL hình ảnh đại diện của máy.",
             "nullable": true
           }
         },
@@ -47118,8 +47248,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -47146,39 +47275,6 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
-      },
-      "MachineEntityResultArray": {
-        "required": [
-          "data",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "isSuccess": {
-            "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
-          },
-          "message": {
-            "type": "string",
-            "description": "Thông điệp trả về",
-            "nullable": true
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MachineEntity"
-            },
-            "description": "Dữ liệu trả về",
-            "nullable": true
-          },
-          "total": {
-            "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
-            "format": "int64"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
       },
       "MachineGroupEntity": {
         "type": "object",
@@ -47260,8 +47356,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -47393,8 +47488,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -47466,7 +47560,8 @@
             "format": "double"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Represents the mapping between a machine and its output sensor, including scaling information."
       },
       "MachineOutputMappingBasePaginationResponse": {
         "type": "object",
@@ -47505,8 +47600,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -47533,6 +47627,63 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "MachinePageResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MachineDto"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          },
+          "outputCalculationModeCounts": {
+            "type": "object",
+            "properties": {
+              "pairParallel": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "weightedChannels": {
+                "type": "integer",
+                "format": "int64"
+              }
+            },
+            "additionalProperties": false,
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "MachineSettings": {
         "type": "object",
@@ -47643,8 +47794,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -47798,8 +47948,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -47948,8 +48097,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -48087,8 +48235,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -48239,8 +48386,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -48466,8 +48612,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -48608,8 +48753,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -48801,8 +48945,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -48897,8 +49040,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -49009,8 +49151,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -49193,8 +49334,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -49294,8 +49434,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -49457,8 +49596,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -49626,14 +49764,17 @@
           },
           "name": {
             "type": "string",
+            "description": "Name of the product",
             "nullable": true
           },
           "code": {
             "type": "string",
+            "description": "Product code or SKU",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "Description of the product",
             "nullable": true
           },
           "unitOfMeasure": {
@@ -49650,14 +49791,17 @@
           },
           "weight": {
             "type": "number",
+            "description": "Weight of the product in kilograms",
             "format": "double"
           },
-          "image": {
+          "imageUrl": {
             "type": "string",
+            "description": "URL of the product image. Relative path",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Represents a product entity in the system."
       },
       "ProductEntityBasePaginationResponse": {
         "type": "object",
@@ -49696,8 +49840,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -49887,8 +50030,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -50122,8 +50264,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -50540,8 +50681,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -50641,18 +50781,22 @@
           },
           "name": {
             "type": "string",
+            "description": "Name of the role",
             "nullable": true
           },
           "normalizedName": {
             "type": "string",
+            "description": "Normalized name of the role for efficient searches.",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "Description of the role",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Represents a role entity in the system."
       },
       "RoleEntityBasePaginationResponse": {
         "type": "object",
@@ -50691,8 +50835,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -50720,7 +50863,7 @@
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
-      "RolePermissionEntity": {
+      "RolePermissionMapping": {
         "type": "object",
         "properties": {
           "id": {
@@ -50751,15 +50894,16 @@
             "$ref": "#/components/schemas/ObjectId"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": ""
       },
-      "RolePermissionEntityBasePaginationResponse": {
+      "RolePermissionMappingBasePaginationResponse": {
         "type": "object",
         "properties": {
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/RolePermissionEntity"
+              "$ref": "#/components/schemas/RolePermissionMapping"
             },
             "description": "List of items in the current page",
             "nullable": true
@@ -50790,18 +50934,17 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
         "description": "Base class for paginated responses"
       },
-      "RolePermissionEntityResult": {
+      "RolePermissionMappingResult": {
         "type": "object",
         "properties": {
           "value": {
-            "$ref": "#/components/schemas/RolePermissionEntity"
+            "$ref": "#/components/schemas/RolePermissionMapping"
           },
           "isSuccess": {
             "type": "boolean",
@@ -50935,8 +51078,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -51091,8 +51233,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -51135,8 +51276,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -51351,8 +51491,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -51395,8 +51534,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -51629,8 +51767,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -51699,8 +51836,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -51834,8 +51970,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -52045,8 +52180,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -52182,8 +52316,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -52316,8 +52449,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -52448,8 +52580,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -52562,8 +52693,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -52591,6 +52721,16 @@
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
+      "StopMachineImpact": {
+        "enum": [
+          "run",
+          "unPlanedStop",
+          "planedStop",
+          "notScheduled"
+        ],
+        "type": "string",
+        "description": "Tác động khi dừng máy"
+      },
       "StopMachineReasonEntity": {
         "type": "object",
         "properties": {
@@ -52617,18 +52757,54 @@
           },
           "code": {
             "type": "string",
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
             "nullable": true
           },
           "name": {
             "type": "string",
+            "description": "Tên mô tả của thực thể.",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "Mô tả chi tiết về thực thể.",
             "nullable": true
+          },
+          "colorHex": {
+            "type": "string",
+            "description": "Màu sắc hiển thị lý do dừng máy",
+            "nullable": true
+          },
+          "translations": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Các bản dịch của tên lý do dừng máy",
+            "nullable": true
+          },
+          "groupId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "requiresApproval": {
+            "type": "boolean",
+            "description": "Lý do dừng máy có yêu cầu phê duyệt không"
+          },
+          "requiresNote": {
+            "type": "boolean",
+            "description": "Lý do dừng máy có yêu cầu ghi chú, tệp đính kèm hoặc bình luận không"
+          },
+          "requiresAttachment": {
+            "type": "boolean",
+            "description": "Lý do dừng máy có yêu cầu tệp đính kèm không"
+          },
+          "requiresComment": {
+            "type": "boolean",
+            "description": "Lý do dừng máy có yêu cầu bình luận không"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Lý do dừng máy"
       },
       "StopMachineReasonEntityBasePaginationResponse": {
         "type": "object",
@@ -52667,8 +52843,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -52679,6 +52854,130 @@
         "properties": {
           "value": {
             "$ref": "#/components/schemas/StopMachineReasonEntity"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "StopMachineReasonGroupEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "code": {
+            "type": "string",
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Tên mô tả của thực thể.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Mô tả chi tiết về thực thể.",
+            "nullable": true
+          },
+          "colorHex": {
+            "type": "string",
+            "description": "Màu sắc hiển thị lý do dừng máy",
+            "nullable": true
+          },
+          "translations": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Các bản dịch của tên lý do dừng máy",
+            "nullable": true
+          },
+          "impact": {
+            "$ref": "#/components/schemas/StopMachineImpact"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Nhóm lý do dừng máy"
+      },
+      "StopMachineReasonGroupEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StopMachineReasonGroupEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "StopMachineReasonGroupEntityResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/StopMachineReasonGroupEntity"
           },
           "isSuccess": {
             "type": "boolean",
@@ -52800,8 +53099,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -52945,8 +53243,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -53258,8 +53555,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -53441,8 +53737,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -53718,8 +54013,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -53747,6 +54041,130 @@
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "username": {
+            "type": "string",
+            "description": "Username of the user. Must be unique. Allow to change later.",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Full name of the user.",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address of the user.",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Phone number of the user.",
+            "nullable": true
+          },
+          "avatarUrl": {
+            "type": "string",
+            "description": "Avatar URL of the user",
+            "nullable": true
+          },
+          "birthDay": {
+            "type": "string",
+            "description": "Birth date of the user",
+            "format": "date-time"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserDtoRole"
+            },
+            "description": "Roles assigned to the user",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Data transfer object for User entity"
+      },
+      "UserDtoBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserDto"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "UserDtoRole": {
+        "type": "object",
+        "properties": {
+          "roleId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "roleName": {
+            "type": "string",
+            "description": "Role Name",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "User dto role"
+      },
       "UserEntity": {
         "type": "object",
         "properties": {
@@ -53773,92 +54191,115 @@
           },
           "username": {
             "type": "string",
+            "description": "Username of the user. Must be unique. Allow to change later.",
             "nullable": true
           },
           "fullname": {
             "type": "string",
+            "description": "Full name of the user.",
             "nullable": true
           },
           "nickname": {
             "type": "string",
+            "description": "Nickname of the user.",
             "nullable": true
           },
           "normalizedUserName": {
             "type": "string",
+            "description": "Normalized username for efficient searches.",
             "nullable": true
           },
           "passwordHash": {
             "type": "string",
+            "description": "Hashed password of the user.",
             "nullable": true
           },
           "email": {
             "type": "string",
+            "description": "Email address of the user.",
             "nullable": true
           },
           "normalizedEmail": {
             "type": "string",
+            "description": "Normalized email address for efficient searches.",
             "nullable": true
           },
           "emailConfirmed": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Indicates whether the user's email has been confirmed."
           },
           "phoneNumber": {
             "type": "string",
+            "description": "Phone number of the user.",
             "nullable": true
           },
           "phoneNumberConfirmed": {
             "type": "string",
+            "description": "Indicates whether the user's phone number has been confirmed.",
             "nullable": true
           },
-          "avatar": {
+          "avatarUrl": {
             "type": "string",
+            "description": "URL or path to the user's avatar image.",
             "nullable": true
           },
           "birthDay": {
             "type": "string",
+            "description": "Indicates whether the user account is deleted.",
             "format": "date-time"
           },
-          "banner": {
+          "bannerUrl": {
             "type": "string",
+            "description": "Indicates whether the user account is deleted.",
             "nullable": true
           },
           "country": {
             "type": "string",
+            "description": "Country of the user.",
             "nullable": true
           },
           "gender": {
             "type": "string",
+            "description": "Gender",
             "nullable": true
           },
           "lockScreenPasswordHash": {
             "type": "string",
+            "description": "Hashed lock screen password of the user.",
             "nullable": true
           },
           "securityStamp": {
             "type": "string",
+            "description": "A random value that must change whenever a user's credentials change (password changed, login removed)",
             "nullable": true
           },
           "concurrencyStamp": {
             "type": "string",
+            "description": "A random value that must change whenever a user is persisted to the store",
             "nullable": true
           },
           "twoFactorEnabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Indicates whether two-factor authentication is enabled for the user."
           },
           "lockoutEnd": {
             "type": "string",
+            "description": "The date and time until which the user is locked out.",
             "format": "date-time",
             "nullable": true
           },
           "lockoutEnabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Indicates whether lockout is enabled for the user."
           },
           "accessFailedCount": {
             "type": "integer",
+            "description": "Number of failed access attempts.",
             "format": "int32"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Represents a user entity in the system."
       },
       "UserEntityBasePaginationResponse": {
         "type": "object",
@@ -53897,8 +54338,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -54052,8 +54492,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -54160,8 +54599,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -54314,8 +54752,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -54343,7 +54780,7 @@
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
-      "UserPermissionEntity": {
+      "UserPermissionMapping": {
         "type": "object",
         "properties": {
           "id": {
@@ -54376,13 +54813,13 @@
         },
         "additionalProperties": false
       },
-      "UserPermissionEntityBasePaginationResponse": {
+      "UserPermissionMappingBasePaginationResponse": {
         "type": "object",
         "properties": {
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/UserPermissionEntity"
+              "$ref": "#/components/schemas/UserPermissionMapping"
             },
             "description": "List of items in the current page",
             "nullable": true
@@ -54413,18 +54850,17 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
         "description": "Base class for paginated responses"
       },
-      "UserPermissionEntityResult": {
+      "UserPermissionMappingResult": {
         "type": "object",
         "properties": {
           "value": {
-            "$ref": "#/components/schemas/UserPermissionEntity"
+            "$ref": "#/components/schemas/UserPermissionMapping"
           },
           "isSuccess": {
             "type": "boolean",
@@ -54442,7 +54878,7 @@
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
-      "UserRoleEntity": {
+      "UserRoleMapping": {
         "type": "object",
         "properties": {
           "id": {
@@ -54473,15 +54909,16 @@
             "$ref": "#/components/schemas/ObjectId"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Represents a mapping between a user and a role."
       },
-      "UserRoleEntityBasePaginationResponse": {
+      "UserRoleMappingBasePaginationResponse": {
         "type": "object",
         "properties": {
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/UserRoleEntity"
+              "$ref": "#/components/schemas/UserRoleMapping"
             },
             "description": "List of items in the current page",
             "nullable": true
@@ -54512,18 +54949,17 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
         "description": "Base class for paginated responses"
       },
-      "UserRoleEntityResult": {
+      "UserRoleMappingResult": {
         "type": "object",
         "properties": {
           "value": {
-            "$ref": "#/components/schemas/UserRoleEntity"
+            "$ref": "#/components/schemas/UserRoleMapping"
           },
           "isSuccess": {
             "type": "boolean",
@@ -54627,8 +55063,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -54738,8 +55173,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -54943,8 +55377,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -55232,8 +55665,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -55276,8 +55708,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -55406,8 +55837,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -55558,8 +55988,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -55692,8 +56121,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -55812,8 +56240,7 @@
               "type": "string"
             },
             "description": "List of fields that can be used for sorting",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -55931,12 +56358,6 @@
       "name": "DowntimeInput"
     },
     {
-      "name": "DowntimeReason"
-    },
-    {
-      "name": "DowntimeReasonGroup"
-    },
-    {
       "name": "ExternalResource",
       "description": "Controller for managing external resource operations."
     },
@@ -55987,6 +56408,12 @@
       "name": "Image"
     },
     {
+      "name": "InformationBase"
+    },
+    {
+      "name": "InformationDecoratorBase"
+    },
+    {
       "name": "IotDevice",
       "description": "IoT Device Controller"
     },
@@ -56020,7 +56447,8 @@
       "description": "Controller for managing localization and translations.\r\nProvides endpoints to retrieve translations for different languages,\r\nincluding batch retrieval and file upload for updating translations."
     },
     {
-      "name": "Machine"
+      "name": "Machine",
+      "description": "Controller for machine-related operations"
     },
     {
       "name": "MachineAreaMapping"
@@ -56102,7 +56530,7 @@
       "name": "Role"
     },
     {
-      "name": "RolePermission"
+      "name": "RolePermissionMapping"
     },
     {
       "name": "Routing"
@@ -56147,6 +56575,9 @@
       "name": "StopMachineReason"
     },
     {
+      "name": "StopMachineReasonGroup"
+    },
+    {
       "name": "Supplier"
     },
     {
@@ -56168,7 +56599,8 @@
       "name": "Test"
     },
     {
-      "name": "User"
+      "name": "User",
+      "description": "Controller for managing user-related operations."
     },
     {
       "name": "UserDepartment"
@@ -56183,10 +56615,10 @@
       "name": "UserPasskey"
     },
     {
-      "name": "UserPermission"
+      "name": "UserPermissionMapping"
     },
     {
-      "name": "UserRole"
+      "name": "UserRoleMapping"
     },
     {
       "name": "UserSetting"

@@ -29,7 +29,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { useSearchMachine } from 'src/api/hooks/generated/use-machine';
+// import { useSearchMachine } from 'src/api/hooks/generated/use-machine';
 import { useSearchIoTSensor } from 'src/api/hooks/generated/use-io-tsensor';
 import { useCreateIoTDevice, useUpdateIoTDevice } from 'src/api/hooks/generated/use-io-tdevice';
 import { useGetapiIotSensorgetsensorfromdevicedeviceCode } from 'src/api/hooks/generated/use-iot-sensor';
@@ -105,11 +105,11 @@ export function IoTDeviceCreateEditView({
   const [sensorSearchText, setSensorSearchText] = useState('');
   const [selectedSensorToAdd, setSelectedSensorToAdd] = useState<IoTSensorEntity | null>(null);
 
-  // API hooks
-  const { data: machineSearchResult, isLoading: isSearchingMachines } = useSearchMachine(
-    { searchText: machineSearchText, maxResults: 10 },
-    { enabled: machineSearchText.length > 0 }
-  );
+  // // API hooks
+  // const { data: machineSearchResult, isLoading: isSearchingMachines } = useSearchMachine(
+  //   { searchText: machineSearchText, maxResults: 10 },
+  //   { enabled: machineSearchText.length > 0 }
+  // );
 
   const { data: sensorSearchResult, isLoading: isSearchingSensors } = useSearchIoTSensor(
     { searchText: sensorSearchText, maxResults: 10 },
@@ -257,7 +257,7 @@ export function IoTDeviceCreateEditView({
     router.push('/iot-devices');
   }, [router]);
 
-  const machines = machineSearchResult?.data || [];
+  //const machines = machineSearchResult?.data || [];
   const sensors = sensorSearchResult?.data || [];
 
   return (
@@ -368,44 +368,44 @@ export function IoTDeviceCreateEditView({
               </Grid>
 
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Autocomplete
-                  value={selectedMachine}
-                  onChange={handleMachineChange}
-                  inputValue={machineSearchText}
-                  onInputChange={(_event, newInputValue) => setMachineSearchText(newInputValue)}
-                  options={machines}
-                  getOptionLabel={(option) => option.name || ''}
-                  isOptionEqualToValue={(option, value) => option.id === value.id}
-                  loading={isSearchingMachines}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Machine"
-                      placeholder="Search machine..."
-                      InputProps={{
-                        ...params.InputProps,
-                        endAdornment: (
-                          <>
-                            {isSearchingMachines ? (
-                              <CircularProgress color="inherit" size={20} />
-                            ) : null}
-                            {params.InputProps.endAdornment}
-                          </>
-                        ),
-                      }}
-                    />
-                  )}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option.id?.toString()}>
-                      <Box>
-                        <Typography variant="body2">{option.name}</Typography>
-                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                          {option.code}
-                        </Typography>
-                      </Box>
-                    </li>
-                  )}
-                />
+                {/*<Autocomplete*/}
+                {/*  value={selectedMachine}*/}
+                {/*  onChange={handleMachineChange}*/}
+                {/*  inputValue={machineSearchText}*/}
+                {/*  onInputChange={(_event, newInputValue) => setMachineSearchText(newInputValue)}*/}
+                {/*  options={machines}*/}
+                {/*  getOptionLabel={(option) => option.name || ''}*/}
+                {/*  isOptionEqualToValue={(option, value) => option.id === value.id}*/}
+                {/*  loading={isSearchingMachines}*/}
+                {/*  renderInput={(params) => (*/}
+                {/*    <TextField*/}
+                {/*      {...params}*/}
+                {/*      label="Machine"*/}
+                {/*      placeholder="Search machine..."*/}
+                {/*      InputProps={{*/}
+                {/*        ...params.InputProps,*/}
+                {/*        endAdornment: (*/}
+                {/*          <>*/}
+                {/*            {isSearchingMachines ? (*/}
+                {/*              <CircularProgress color="inherit" size={20} />*/}
+                {/*            ) : null}*/}
+                {/*            {params.InputProps.endAdornment}*/}
+                {/*          </>*/}
+                {/*        ),*/}
+                {/*      }}*/}
+                {/*    />*/}
+                {/*  )}*/}
+                {/*  renderOption={(props, option) => (*/}
+                {/*    <li {...props} key={option.id?.toString()}>*/}
+                {/*      <Box>*/}
+                {/*        <Typography variant="body2">{option.name}</Typography>*/}
+                {/*        <Typography variant="caption" sx={{ color: 'text.secondary' }}>*/}
+                {/*          {option.code}*/}
+                {/*        </Typography>*/}
+                {/*      </Box>*/}
+                {/*    </li>*/}
+                {/*  )}*/}
+                {/*/>*/}
               </Grid>
             </Grid>
 

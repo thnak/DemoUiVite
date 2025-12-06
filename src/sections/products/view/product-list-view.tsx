@@ -81,7 +81,7 @@ export function ProductListView() {
   const apiProducts: ProductProps[] = templates.map((p) => ({
     id: p.id ?? '',
     name: p.name ?? '',
-    coverUrl: p.image ?? '',
+    coverUrl: p.imageUrl ?? '',
     createdAt: p.createTime ?? new Date().toISOString(),
     publish: p.isDraft ? 'draft' : 'published',
     category: "category",

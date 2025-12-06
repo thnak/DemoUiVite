@@ -1,4 +1,4 @@
-import type { CalendarDto, CalendarType } from 'src/api/types/generated';
+import type { CalendarDto } from 'src/api/types/generated';
 
 import { useState, useEffect, useCallback } from 'react';
 
@@ -42,22 +42,7 @@ function formatDate(dateString: string | null | undefined): string {
   });
 }
 
-// Get color for calendar type chip
-function getCalendarTypeColor(type: CalendarType | undefined): 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'info' | 'error' {
-  switch (type) {
-    case 'production':
-      return 'primary';
-    case 'office':
-      return 'info';
-    case 'maintenance':
-      return 'warning';
-    case 'logistics':
-      return 'secondary';
-    case 'general':
-    default:
-      return 'default';
-  }
-}
+
 
 // ----------------------------------------------------------------------
 
@@ -273,13 +258,6 @@ export function CalendarView() {
                           </Typography>
                         </TableCell>
                         <TableCell>{calendar.name}</TableCell>
-                        <TableCell>
-                          <Chip
-                            label={calendar.type || 'general'}
-                            size="small"
-                            color={getCalendarTypeColor(calendar.type)}
-                          />
-                        </TableCell>
                         <TableCell>{calendar.shiftTemplateName || '-'}</TableCell>
                         <TableCell>{formatDate(calendar.applyFrom)}</TableCell>
                         <TableCell>{formatDate(calendar.applyTo)}</TableCell>
