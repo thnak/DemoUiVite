@@ -24,6 +24,7 @@ The development server runs at `http://localhost:3039`.
 | Category | Technologies |
 |----------|-------------|
 | **Framework** | React 19, Vite 6 |
+| **Optimization** | React Compiler (babel-plugin-react-compiler) |
 | **UI Library** | MUI (Material UI) 7 |
 | **Styling** | Emotion (CSS-in-JS) |
 | **Routing** | React Router DOM 7 |
@@ -57,6 +58,7 @@ The development server runs at `http://localhost:3039`.
 All documentation is located in the [`docs/`](./docs/) folder:
 
 - **[Quickstart Guide](./docs/guides/quickstart.md)** - Get started with the project
+- **[React Compiler](./docs/guides/react-compiler.md)** - Automatic React optimization
 - **[Internationalization (i18n)](./docs/guides/i18n.md)** - Multi-language support documentation
 - **[API Services](./docs/guides/api-usage.md)** - Auto-generated API services and React Query hooks
 
