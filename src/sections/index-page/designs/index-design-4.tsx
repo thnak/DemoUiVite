@@ -16,13 +16,13 @@ import type { ViewMode, ModuleItem } from '../types';
 // Keyframe animations for bubbles
 const floatAnimation = keyframes`
   0%, 100% {
-    transform: translateY(0px) translateX(0px);
+    transform: translate(0, 0);
   }
   33% {
-    transform: translateY(-20px) translateX(10px);
+    transform: translate(10px, -20px);
   }
   66% {
-    transform: translateY(-10px) translateX(-10px);
+    transform: translate(-10px, -10px);
   }
 `;
 
