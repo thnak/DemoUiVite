@@ -54,10 +54,20 @@ The development server runs at `http://localhost:3039`.
 
 ## 📚 Documentation
 
-All documentation is located in the [`docs/`](./docs/) folder:
+All documentation is located in the [`docs/`](./docs/) folder. See the [Documentation Index](./docs/README.md) for a complete overview.
+
+### Getting Started
 
 - **[Quickstart Guide](./docs/guides/quickstart.md)** - Get started with the project
-- **[Internationalization (i18n)](./docs/guides/i18n.md)** - Multi-language support documentation
+- **[Creating New Pages](./docs/guides/creating-new-pages.md)** - Complete guide to adding new pages
+- **[Internationalization (i18n)](./docs/guides/i18n.md)** - Multi-language support
+
+### Development Guides
+
+- **[Navigation Patterns](./docs/guides/navigation-patterns.md)** - Navigation menu configuration and patterns
+- **[App Bar Patterns](./docs/guides/appbar-patterns.md)** - Header customization and layouts
+- **[Component Integration](./docs/guides/component-integration.md)** - Using external components (uiverse.io, etc.)
+- **[External Resources](./docs/guides/external-resource.md)** - Icon libraries, tools, and resources
 - **[API Services](./docs/guides/api-usage.md)** - Auto-generated API services and React Query hooks
 
 ## 🎨 Demo
