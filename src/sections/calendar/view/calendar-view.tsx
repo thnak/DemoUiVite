@@ -47,7 +47,7 @@ function formatDuration(duration: string | null | undefined): string {
   if (!duration) return '-';
   
   // Parse ISO 8601 duration (e.g., PT7H, PT30M, PT1H30M)
-  const match = duration.match(/^PT?(-?\d+(?:\.\d+)?H)?(-?\d+(?:\.\d+)?M)?(-?\d+(?:\.\d+)?S)?$/);
+  const match = duration.match(/^PT?(?:(-?\d+(?:\.\d+)?)H)?(?:(-?\d+(?:\.\d+)?)M)?(?:(-?\d+(?:\.\d+)?)S)?$/);
   if (!match) return duration;
   
   const hours = match[1] ? parseFloat(match[1]) : 0;
