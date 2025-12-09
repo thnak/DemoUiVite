@@ -41692,6 +41692,16 @@
           "plan2Infinite": {
             "type": "boolean",
             "description": "Kế hoạch 2 là vô hạn"
+          },
+          "workDateStartTime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "timeOffset": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
           }
         },
         "additionalProperties": false,
