@@ -203,7 +203,6 @@ export function CalendarView() {
                   </TableCell>
                   <TableCell>Code</TableCell>
                   <TableCell>Name</TableCell>
-                  <TableCell>Type</TableCell>
                   <TableCell>Shift Template</TableCell>
                   <TableCell>Apply From</TableCell>
                   <TableCell>Apply To</TableCell>
