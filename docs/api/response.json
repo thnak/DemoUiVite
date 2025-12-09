@@ -1799,7 +1799,7 @@
           "Auth"
         ],
         "summary": "Generate a one-time use QR code token for authenticated user",
-        "description": "This endpoint generates a secure one-time use token that can be encoded in a QR code.\r\nThe token expires after 2 minutes and can only be used once.\r\nThe authenticated user on one device can scan this QR code on another device to log in without entering credentials.",
+        "description": "This endpoint generates a secure one-time use token that can be encoded in a QR code.\nThe token expires after 2 minutes and can only be used once.\nThe authenticated user on one device can scan this QR code on another device to log in without entering credentials.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1835,7 +1835,7 @@
           "Auth"
         ],
         "summary": "Login using a one-time QR code token",
-        "description": "This endpoint consumes a one-time use token (from QR code scan) and logs the user in.\r\nThe token is validated and then marked as consumed. If successful, returns authentication tokens.",
+        "description": "This endpoint consumes a one-time use token (from QR code scan) and logs the user in.\nThe token is validated and then marked as consumed. If successful, returns authentication tokens.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3196,6 +3196,45 @@
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/calendar/search": {
+      "get": {
+        "tags": [
+          "Calendar"
+        ],
+        "summary": "Search Calendar entities",
+        "description": "Searches Calendar entities by text across searchable fields.",
+        "operationId": "SearchCalendar",
+        "parameters": [
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarEntityResultArray"
                 }
               }
             }
@@ -8085,7 +8124,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/IoTDeviceEntityEntityLogEntity"
+                    "$ref": "#/components/schemas/IoTDeviceEntityCheckpointLogCheckpoint"
                   }
                 }
               },
@@ -8093,7 +8132,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/IoTDeviceEntityEntityLogEntity"
+                    "$ref": "#/components/schemas/IoTDeviceEntityCheckpointLogCheckpoint"
                   }
                 }
               },
@@ -8101,7 +8140,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/IoTDeviceEntityEntityLogEntity"
+                    "$ref": "#/components/schemas/IoTDeviceEntityCheckpointLogCheckpoint"
                   }
                 }
               },
@@ -8109,7 +8148,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/IoTDeviceEntityEntityLogEntity"
+                    "$ref": "#/components/schemas/IoTDeviceEntityCheckpointLogCheckpoint"
                   }
                 }
               }
@@ -15098,6 +15137,45 @@
         }
       }
     },
+    "/api/informationdecoratorbase/search": {
+      "get": {
+        "tags": [
+          "InformationDecoratorBase"
+        ],
+        "summary": "Search Information Decorator Base entities",
+        "description": "Searches Information Decorator Base entities by text across searchable fields.",
+        "operationId": "SearchInformationDecoratorBase",
+        "parameters": [
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InformationDecoratorBaseEntityResultArray"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/IotDevice/search-device": {
       "post": {
         "tags": [
@@ -17660,7 +17738,7 @@
         "tags": [
           "Localization"
         ],
-        "summary": "Retrieves all translations for a specific language code.\r\nGET /api/translations/{langCode}",
+        "summary": "Retrieves all translations for a specific language code.\nGET /api/translations/{langCode}",
         "parameters": [
           {
             "name": "langCode",
@@ -17842,7 +17920,7 @@
         "tags": [
           "Localization"
         ],
-        "summary": "upload excel file to update translations. the devault culture is vi-VN and it always have value while other culture can be empty\r\nif other culture is empty, it must be auto translated by Ollama",
+        "summary": "upload excel file to update translations. the devault culture is vi-VN and it always have value while other culture can be empty\nif other culture is empty, it must be auto translated by Ollama",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -18235,6 +18313,45 @@
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine/search": {
+      "get": {
+        "tags": [
+          "Machine"
+        ],
+        "summary": "Search Machine entities",
+        "description": "Searches Machine entities by text across searchable fields.",
+        "operationId": "SearchMachine",
+        "parameters": [
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineEntityResultArray"
                 }
               }
             }
@@ -21138,52 +21255,6 @@
               "application/vnd.msgpack": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Mqtt/get-template-and-docs": {
-      "get": {
-        "tags": [
-          "Mqtt"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MqttControllerGetTemplateResponse"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MqttControllerGetTemplateResponse"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MqttControllerGetTemplateResponse"
-                  }
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MqttControllerGetTemplateResponse"
-                  }
                 }
               }
             }
@@ -32473,6 +32544,45 @@
         }
       }
     },
+    "/api/stopmachinereason/search": {
+      "get": {
+        "tags": [
+          "StopMachineReason"
+        ],
+        "summary": "Search Stop Machine Reason entities",
+        "description": "Searches Stop Machine Reason entities by text across searchable fields.",
+        "operationId": "SearchStopMachineReason",
+        "parameters": [
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StopMachineReasonEntityResultArray"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/stopmachinereasongroup/{id}": {
       "get": {
         "tags": [
@@ -32771,6 +32881,45 @@
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereasongroup/search": {
+      "get": {
+        "tags": [
+          "StopMachineReasonGroup"
+        ],
+        "summary": "Search Stop Machine Reason Group entities",
+        "description": "Searches Stop Machine Reason Group entities by text across searchable fields.",
+        "operationId": "SearchStopMachineReasonGroup",
+        "parameters": [
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StopMachineReasonGroupEntityResultArray"
                 }
               }
             }
@@ -35379,7 +35528,9 @@
         "tags": [
           "User"
         ],
+        "summary": "Update user configuration",
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -40243,7 +40394,7 @@
           },
           "enableMaintenanceMode": {
             "type": "boolean",
-            "description": "Gets or sets a value indicating whether the entire site is in maintenance mode.\r\nIf true, non-admin users should be redirected to a maintenance page.",
+            "description": "Gets or sets a value indicating whether the entire site is in maintenance mode.\nIf true, non-admin users should be redirected to a maintenance page.",
             "default": false
           },
           "maintenanceModeMessage": {
@@ -40266,7 +40417,7 @@
           },
           "backgroundTaskCronExpression": {
             "type": "string",
-            "description": "Gets or sets the CRON expression that defines the schedule for a recurring background job.\r\nExample: \"0 2 * * *\" for 2:00 AM daily.",
+            "description": "Gets or sets the CRON expression that defines the schedule for a recurring background job.\nExample: \"0 2 * * *\" for 2:00 AM daily.",
             "default": "0 3 * * *",
             "nullable": true
           },
@@ -40277,7 +40428,7 @@
           },
           "mailServer": {
             "type": "string",
-            "description": "Gets or sets the SMTP server address used for sending emails.\r\nFormat: \"smtp.server.com\"",
+            "description": "Gets or sets the SMTP server address used for sending emails.\nFormat: \"smtp.server.com\"",
             "nullable": true
           },
           "mailServerPort": {
@@ -40287,12 +40438,12 @@
           },
           "smtpUsername": {
             "type": "string",
-            "description": "Gets or sets the SMTP username for email authentication.\r\nUsually the same as SystemEmail but can be different for some providers.",
+            "description": "Gets or sets the SMTP username for email authentication.\nUsually the same as SystemEmail but can be different for some providers.",
             "nullable": true
           },
           "smtpPassword": {
             "type": "string",
-            "description": "Gets or sets the SMTP password for email authentication.\r\nStore app-specific passwords for providers like Gmail, Outlook, etc.",
+            "description": "Gets or sets the SMTP password for email authentication.\nStore app-specific passwords for providers like Gmail, Outlook, etc.",
             "nullable": true
           },
           "smtpEnableSsl": {
@@ -40326,7 +40477,7 @@
           },
           "allowedIpRangesForAdminAccess": {
             "type": "string",
-            "description": "Gets or sets a comma-separated list of Ip addresses or CIDR blocks allowed to access admin areas.\r\nAn empty or null string means access is not restricted by Ip.",
+            "description": "Gets or sets a comma-separated list of Ip addresses or CIDR blocks allowed to access admin areas.\nAn empty or null string means access is not restricted by Ip.",
             "nullable": true
           },
           "renderMode": {
@@ -40334,7 +40485,7 @@
           },
           "enableOnlinePayments": {
             "type": "boolean",
-            "description": "Gets or sets a value indicating whether online payment processing is enabled.\r\nThis can be used as a \"kill switch\" for the payment system.",
+            "description": "Gets or sets a value indicating whether online payment processing is enabled.\nThis can be used as a \"kill switch\" for the payment system.",
             "default": true
           },
           "enableNewUserRegistration": {
@@ -40344,12 +40495,12 @@
           },
           "enablePushNotifications": {
             "type": "boolean",
-            "description": "Gets or sets a value indicating whether the system should send push notifications.\r\nActs as a master \"kill switch\" for all push notifications.",
+            "description": "Gets or sets a value indicating whether the system should send push notifications.\nActs as a master \"kill switch\" for all push notifications.",
             "default": true
           },
           "logLevel": {
             "type": "string",
-            "description": "Gets or sets the desired logging level (e.g., \"Information\", \"Debug\", \"Warning\", \"Error\").\r\nThis should map to a LogLevel enum in your logging system.",
+            "description": "Gets or sets the desired logging level (e.g., \"Information\", \"Debug\", \"Warning\", \"Error\").\nThis should map to a LogLevel enum in your logging system.",
             "default": "Information",
             "nullable": true
           },
@@ -40506,12 +40657,12 @@
             "items": {
               "$ref": "#/components/schemas/StringObjectKeyValuePair"
             },
-            "description": "Represents a collection of field parameters and their types.",
+            "description": "Chuỗi JSON chứa các cấu hình đặc thù cho plugin.\nGiúp một plugin có thể hoạt động theo nhiều cách khác nhau cho các route khác nhau.",
             "nullable": true
           },
           "authKey": {
             "type": "string",
-            "description": "Mã xác thực (API Key) mà client phải gửi trong header để truy cập route này.\r\n**Bảo mật**: Giá trị này NÊN được hash trước khi lưu vào DB.",
+            "description": "Mã xác thực (API Key) mà client phải gửi trong header để truy cập route này.\n**Bảo mật**: Giá trị này NÊN được hash trước khi lưu vào DB.",
             "nullable": true
           },
           "isPayloadValidationEnabled": {
@@ -40520,7 +40671,7 @@
           },
           "payloadValidationSecret": {
             "type": "string",
-            "description": "Chuỗi bí mật (secret) dùng để xác thực mã băm (HMAC) của payload.\r\nChỉ được sử dụng khi IsPayloadValidationEnabled = true.\r\n**Bảo mật**: Giá trị này KHÔNG NÊN được lưu dưới dạng plaintext. Hãy mã hóa nó.",
+            "description": "Chuỗi bí mật (secret) dùng để xác thực mã băm (HMAC) của payload.\nChỉ được sử dụng khi IsPayloadValidationEnabled = true.\n**Bảo mật**: Giá trị này KHÔNG NÊN được lưu dưới dạng plaintext. Hãy mã hóa nó.",
             "nullable": true
           },
           "status": {
@@ -41494,7 +41645,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Định nghĩa một khoảng nghỉ trong ca làm việc."
       },
       "CalendarDto": {
         "type": "object",
@@ -41529,13 +41681,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-06"
+            "example": "2025-12-09"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-06"
+            "example": "2025-12-09"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -41637,17 +41789,27 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-06"
+            "example": "2025-12-09"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-06"
+            "example": "2025-12-09"
           },
           "plan2Infinite": {
             "type": "boolean",
             "description": "Kế hoạch 2 là vô hạn"
+          },
+          "workDateStartTime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "timeOffset": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
           }
         },
         "additionalProperties": false,
@@ -41718,6 +41880,39 @@
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
+      "CalendarEntityResultArray": {
+        "required": [
+          "data",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Trạng thái thành công hay thất bại"
+          },
+          "message": {
+            "type": "string",
+            "description": "Thông điệp trả về",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CalendarEntity"
+            },
+            "description": "Dữ liệu trả về",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Kết quả trả về dạng mảng"
+      },
       "CalendarExceptionEntity": {
         "type": "object",
         "properties": {
@@ -41752,12 +41947,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-06"
+            "example": "2025-12-09"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-06"
+            "example": "2025-12-09"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -42538,7 +42733,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Pagination response for queries."
       },
       "DashboardTemplateEntityResult": {
         "type": "object",
@@ -43780,7 +43976,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-06"
+            "example": "2025-12-09"
           }
         },
         "additionalProperties": false
@@ -44262,13 +44458,13 @@
           },
           "build": {
             "type": "integer",
-            "description": "Gets the optional Build version component. Often used for CI build numbers or revisions.\r\nReturns null if no build number was specified.",
+            "description": "Gets the optional Build version component. Often used for CI build numbers or revisions.\nReturns null if no build number was specified.",
             "format": "int32",
             "nullable": true
           },
           "preReleaseTag": {
             "type": "string",
-            "description": "Gets the optional Pre-release tag (e.g., \"alpha\", \"beta\", \"rc.1\").\r\nReturns null or empty if this is a stable release.",
+            "description": "Gets the optional Pre-release tag (e.g., \"alpha\", \"beta\", \"rc.1\").\nReturns null or empty if this is a stable release.",
             "nullable": true
           },
           "originalString": {
@@ -44302,7 +44498,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Represents a firmware version, typically following Major.Minor.Patch pattern,\r\npotentially including a Build number and/or a PreRelease tag.\r\nProvides functionality for parsing, comparison, string representation, and generation."
+        "description": "Represents a firmware version, typically following Major.Minor.Patch pattern,\npotentially including a Build number and/or a PreRelease tag.\nProvides functionality for parsing, comparison, string representation, and generation."
       },
       "FirmwareVersionEntityBasePaginationResponse": {
         "type": "object",
@@ -44822,7 +45018,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Pagination response for queries."
       },
       "GetDeviceLogsResponse": {
         "type": "object",
@@ -44885,7 +45082,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Pagination response for queries."
       },
       "GetRecordResponse": {
         "type": "object",
@@ -44962,7 +45160,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Pagination response for queries."
       },
       "GetSensorEntityByIdDto": {
         "type": "object",
@@ -45323,6 +45522,39 @@
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
+      "InformationDecoratorBaseEntityResultArray": {
+        "required": [
+          "data",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Trạng thái thành công hay thất bại"
+          },
+          "message": {
+            "type": "string",
+            "description": "Thông điệp trả về",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InformationDecoratorBaseEntity"
+            },
+            "description": "Dữ liệu trả về",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Kết quả trả về dạng mảng"
+      },
       "IntegrationSettings": {
         "type": "object",
         "properties": {
@@ -45544,7 +45776,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2025-12-06"
+            "example": "2025-12-09"
           },
           "lastServiceTime": {
             "type": "string",
@@ -45628,7 +45860,7 @@
         "additionalProperties": false,
         "description": "Base class for paginated responses"
       },
-      "IoTDeviceEntityEntityLogEntity": {
+      "IoTDeviceEntityCheckpointLogCheckpoint": {
         "required": [
           "entity"
         ],
@@ -45636,7 +45868,7 @@
         "properties": {
           "createTime": {
             "type": "string",
-            "description": "Represents the unique identifier for the entity.",
+            "description": "Represents the creation time of the entity in UTC.",
             "format": "date-time"
           },
           "metaData": {
@@ -45697,7 +45929,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Pagination response for queries."
       },
       "IoTDeviceEntityResult": {
         "type": "object",
@@ -46288,7 +46521,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Pagination response for queries."
       },
       "IoTSensorEntityResult": {
         "type": "object",
@@ -47275,6 +47509,39 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "MachineEntityResultArray": {
+        "required": [
+          "data",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Trạng thái thành công hay thất bại"
+          },
+          "message": {
+            "type": "string",
+            "description": "Thông điệp trả về",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MachineEntity"
+            },
+            "description": "Dữ liệu trả về",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Kết quả trả về dạng mảng"
       },
       "MachineGroupEntity": {
         "type": "object",
@@ -48389,21 +48656,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
-      },
-      "MqttControllerGetTemplateResponse": {
-        "type": "object",
-        "properties": {
-          "topic": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Pagination response for queries."
       },
       "MqttDisconnectReasonCode": {
         "enum": [
@@ -48829,7 +49083,7 @@
           },
           "quantityPerSignal": {
             "type": "number",
-            "description": "TỈ LỆ: Số lượng sản phẩm được tạo ra cho mỗi tín hiệu từ IoT\r\nMặc định là 1.0",
+            "description": "TỈ LỆ: Số lượng sản phẩm được tạo ra cho mỗi tín hiệu từ IoT\nMặc định là 1.0",
             "format": "double"
           },
           "disposition": {
@@ -51279,7 +51533,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Pagination response for queries."
       },
       "ScriptDefinitionEntityResult": {
         "type": "object",
@@ -51344,15 +51599,18 @@
         "properties": {
           "sourceCode": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "The C# source code to be executed"
           },
           "parameters": {
             "type": "object",
             "additionalProperties": { },
+            "description": "Parameters to be passed to the script",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Request model for script execution"
       },
       "ScriptVariantDto": {
         "type": "object",
@@ -51537,7 +51795,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Pagination response for queries."
       },
       "ScriptVariantEntityResult": {
         "type": "object",
@@ -51770,7 +52029,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Pagination response for queries."
       },
       "SensorDto": {
         "required": [
@@ -51839,7 +52099,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Pagination response for queries."
       },
       "ShiftDefinition": {
         "type": "object",
@@ -51876,12 +52137,12 @@
           },
           "normalizedName": {
             "type": "string",
-            "description": "Tên chuẩn hóa của ca làm việc (chuyển về chữ thường, bỏ dấu, thay khoảng trắng bằng gạch dưới).\r\nCó thể dùng để tạo mã.\r\nBE use case only.",
+            "description": "Tên chuẩn hóa của ca làm việc (chuyển về chữ thường, bỏ dấu, thay khoảng trắng bằng gạch dưới).\nCó thể dùng để tạo mã.\nBE use case only.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Định nghĩa ca làm việc cho một ngày cụ thể trong tuần.\r\nBao gồm giờ bắt đầu, giờ kết thúc và các khoảng nghỉ trong ca."
+        "description": "Định nghĩa ca làm việc cho một ngày cụ thể trong tuần.\nBao gồm giờ bắt đầu, giờ kết thúc và các khoảng nghỉ trong ca."
       },
       "ShiftTemplateEntity": {
         "type": "object",
@@ -51909,12 +52170,17 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã mẫu ca, VD: \"HANH_CHINH\", \"BA_CA\", \"TANG_CA_CN\"\r\nKhông yêu cầu phải duy nhất trên toàn hệ thống, nhưng nên duy nhất trong phạm vi tổ chức sử dụng",
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả, VD: \"Lịch hành chính chuẩn\", \"Lịch 3 ca xoay vòng\"",
+            "description": "Tên mô tả của thực thể.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Mô tả chi tiết về thực thể.",
             "nullable": true
           },
           "shifts": {
@@ -51924,14 +52190,10 @@
             },
             "description": "Một mẫu ca là một tập hợp các ca làm việc trong tuần.",
             "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Mẫu ca làm việc, định nghĩa các ca làm việc áp dụng cho một lịch làm việc.\r\nMẫu ca có thể được tái sử dụng cho nhiều lịch làm việc khác nhau và áp dụng cụ thể cho từng ngày trong tuần."
+        "description": "Mẫu ca làm việc, định nghĩa các ca làm việc áp dụng cho một lịch làm việc.\nMẫu ca có thể được tái sử dụng cho nhiều lịch làm việc khác nhau và áp dụng cụ thể cho từng ngày trong tuần."
       },
       "ShiftTemplateEntityBasePaginationResponse": {
         "type": "object",
@@ -52116,7 +52378,7 @@
             "items": {
               "$ref": "#/components/schemas/ObjectId"
             },
-            "description": "Collection of page IDs that belong to this slideshow.\r\nPages will be navigated in the order specified by their Order property.",
+            "description": "Collection of page IDs that belong to this slideshow.\nPages will be navigated in the order specified by their Order property.",
             "nullable": true
           },
           "pages": {
@@ -52124,7 +52386,7 @@
             "items": {
               "$ref": "#/components/schemas/PageEntity"
             },
-            "description": "Collection of pages that belong to this slideshow (populated when needed).\r\nThis is not stored in the database but can be populated via joins/lookups.",
+            "description": "Collection of pages that belong to this slideshow (populated when needed).\nThis is not stored in the database but can be populated via joins/lookups.",
             "nullable": true
           },
           "pageCount": {
@@ -52135,7 +52397,7 @@
           },
           "estimatedTotalDurationMs": {
             "type": "integer",
-            "description": "Gets the estimated total duration of the slideshow in milliseconds.\r\nThis considers individual page durations if set, otherwise uses the default duration.",
+            "description": "Gets the estimated total duration of the slideshow in milliseconds.\nThis considers individual page durations if set, otherwise uses the default duration.",
             "format": "int32",
             "readOnly": true
           }
@@ -52268,7 +52530,7 @@
           },
           "numberOfIdenticalUnits": {
             "type": "integer",
-            "description": "Số lượng đơn vị máy móc giống hệt nhau tại trạm này có thể hoạt động song song\r\n(Thường là 1, nhưng nếu là một cụm máy giống nhau thì có thể lớn hơn 1)",
+            "description": "Số lượng đơn vị máy móc giống hệt nhau tại trạm này có thể hoạt động song song\n(Thường là 1, nhưng nếu là một cụm máy giống nhau thì có thể lớn hơn 1)",
             "format": "int32"
           },
           "imageUrl": {
@@ -52871,6 +53133,39 @@
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
+      "StopMachineReasonEntityResultArray": {
+        "required": [
+          "data",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Trạng thái thành công hay thất bại"
+          },
+          "message": {
+            "type": "string",
+            "description": "Thông điệp trả về",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StopMachineReasonEntity"
+            },
+            "description": "Dữ liệu trả về",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Kết quả trả về dạng mảng"
+      },
       "StopMachineReasonGroupEntity": {
         "type": "object",
         "properties": {
@@ -52994,6 +53289,39 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "StopMachineReasonGroupEntityResultArray": {
+        "required": [
+          "data",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Trạng thái thành công hay thất bại"
+          },
+          "message": {
+            "type": "string",
+            "description": "Thông điệp trả về",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StopMachineReasonGroupEntity"
+            },
+            "description": "Dữ liệu trả về",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Kết quả trả về dạng mảng"
       },
       "StringListResult": {
         "type": "object",
@@ -53180,7 +53508,7 @@
             "items": {
               "$ref": "#/components/schemas/CommentReaction"
             },
-            "description": "List of emoji reactions on this comment.\r\nEach reaction includes the emoji and the user who reacted.",
+            "description": "List of emoji reactions on this comment.\nEach reaction includes the emoji and the user who reacted.",
             "nullable": true
           },
           "deletedAt": {
@@ -53194,7 +53522,7 @@
           },
           "lastEditedAt": {
             "type": "string",
-            "description": "The timestamp of the last edit to this comment.\r\nNote: Edit history is not tracked as per requirements.",
+            "description": "The timestamp of the last edit to this comment.\nNote: Edit history is not tracked as per requirements.",
             "format": "date-time",
             "nullable": true
           },
@@ -53204,7 +53532,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Represents a comment/conversation entry for a SystemErrorReportEntity.\r\nComments can contain text, attachments (images/videos), and receive emoji reactions."
+        "description": "Represents a comment/conversation entry for a SystemErrorReportEntity.\nComments can contain text, attachments (images/videos), and receive emoji reactions."
       },
       "SystemErrorReportCommentEntityBasePaginationResponse": {
         "type": "object",
@@ -53698,7 +54026,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Cấu hình hệ thống chung (ít liên quan đến các domain entity khác).\r\nLưu ý: các complex types bên trong có thể được lưu dưới dạng JSON trong cột DB."
+        "description": "Cấu hình hệ thống chung (ít liên quan đến các domain entity khác).\nLưu ý: các complex types bên trong có thể được lưu dưới dạng JSON trong cột DB."
       },
       "SystemSettingEntityBasePaginationResponse": {
         "type": "object",
@@ -55289,7 +55617,7 @@
           },
           "secret": {
             "type": "string",
-            "description": "Chuỗi bí mật dùng để tạo chữ ký HMAC, giúp phía nhận xác thực yêu cầu.\r\nCần được mã hóa khi lưu trong cơ sở dữ liệu.",
+            "description": "Chuỗi bí mật dùng để tạo chữ ký HMAC, giúp phía nhận xác thực yêu cầu.\nCần được mã hóa khi lưu trong cơ sở dữ liệu.",
             "nullable": true
           },
           "pluginId": {
@@ -55307,7 +55635,7 @@
           },
           "averageResponseTimeMs": {
             "type": "number",
-            "description": "Thời gian trung bình (ms) mà TargetUrl phản hồi.\r\nHữu ích để phát hiện các webhook chậm.",
+            "description": "Thời gian trung bình (ms) mà TargetUrl phản hồi.\nHữu ích để phát hiện các webhook chậm.",
             "format": "double"
           },
           "lastAttemptAt": {
@@ -55324,7 +55652,7 @@
           },
           "lastErrorMessage": {
             "type": "string",
-            "description": "Thông báo lỗi của lần gửi thất bại gần nhất.\r\nRất quan trọng cho việc gỡ lỗi.",
+            "description": "Thông báo lỗi của lần gửi thất bại gần nhất.\nRất quan trọng cho việc gỡ lỗi.",
             "nullable": true
           },
           "isPayloadEncrypted": {
@@ -55333,12 +55661,12 @@
           },
           "publicKey": {
             "type": "string",
-            "description": "Public Key (định dạng PEM) của người nhận, dùng để mã hóa payload.\r\nSẽ là null nếu IsPayloadEncrypted = false.",
+            "description": "Public Key (định dạng PEM) của người nhận, dùng để mã hóa payload.\nSẽ là null nếu IsPayloadEncrypted = false.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Lớp đại diện cho một Webhook trong hệ thống.\r\nWebhook là một cơ chế cho phép hệ thống gửi dữ liệu đến một URL cụ thể\r\nkhi một sự kiện xảy ra. Nó thường được sử dụng để tích hợp với các dịch vụ bên ngoài\r\nhoặc để thông báo cho các hệ thống khác về các sự kiện quan trọng trong ứng dụng."
+        "description": "Lớp đại diện cho một Webhook trong hệ thống.\nWebhook là một cơ chế cho phép hệ thống gửi dữ liệu đến một URL cụ thể\nkhi một sự kiện xảy ra. Nó thường được sử dụng để tích hợp với các dịch vụ bên ngoài\nhoặc để thông báo cho các hệ thống khác về các sự kiện quan trọng trong ứng dụng."
       },
       "WebhookEntityBasePaginationResponse": {
         "type": "object",
@@ -55711,7 +56039,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Pagination response for queries."
       },
       "WidgetConfigEntityResult": {
         "type": "object",
@@ -55945,11 +56274,12 @@
           },
           "description": {
             "type": "string",
+            "description": "Description of the work shift/break.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Work Date Calendar Statistic Entity. Stores statistics related to work date calendars.\r\nPre-computed for performance optimization."
+        "description": "Work Date Calendar Statistic Entity. Stores statistics related to work date calendars.\nPre-computed for performance optimization."
       },
       "WorkDateCalendarStatisticEntityBasePaginationResponse": {
         "type": "object",
@@ -56173,13 +56503,6 @@
             "type": "boolean",
             "description": "Indicates whether the entity is in draft status."
           },
-          "rules": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/IfElseClause"
-            },
-            "nullable": true
-          },
           "machineId": {
             "$ref": "#/components/schemas/ObjectId"
           },
@@ -56196,12 +56519,19 @@
             "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
             "format": "duration"
           },
+          "speedLossThreshold": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
           "quantityPerCycle": {
             "type": "number",
+            "description": "Quantity produced per cycle",
             "format": "double"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Working parameters entity"
       },
       "WorkingParameterEntityBasePaginationResponse": {
         "type": "object",
@@ -56267,6 +56597,14 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme.",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   },
@@ -56444,7 +56782,7 @@
     },
     {
       "name": "Localization",
-      "description": "Controller for managing localization and translations.\r\nProvides endpoints to retrieve translations for different languages,\r\nincluding batch retrieval and file upload for updating translations."
+      "description": "Controller for managing localization and translations.\nProvides endpoints to retrieve translations for different languages,\nincluding batch retrieval and file upload for updating translations."
     },
     {
       "name": "Machine",
@@ -56542,7 +56880,8 @@
       "name": "ScriptDefinition"
     },
     {
-      "name": "ScriptTest"
+      "name": "ScriptTest",
+      "description": "Controller for testing C# script execution"
     },
     {
       "name": "ScriptVariant"
