@@ -3,13 +3,39 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
-import { alpha, useTheme } from '@mui/material/styles';
+import { alpha, useTheme, keyframes } from '@mui/material/styles';
 
 import { useRouter } from 'src/routes/hooks';
 
 import { Iconify } from 'src/components/iconify';
 
 import type { ViewMode, ModuleItem } from '../types';
+
+// ----------------------------------------------------------------------
+
+// Keyframe animations for bubbles
+const floatAnimation = keyframes`
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  33% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  66% {
+    transform: translateY(-10px) translateX(-10px);
+  }
+`;
+
+const pulseAnimation = keyframes`
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.15;
+  }
+`;
 
 // ----------------------------------------------------------------------
 
@@ -67,6 +93,7 @@ export function IndexDesign4({ modules, viewMode }: Props) {
               height: 200,
               borderRadius: '50%',
               bgcolor: alpha(theme.palette.common.white, 0.1),
+              animation: `${floatAnimation} 6s ease-in-out infinite`,
             }}
           />
           <Box
@@ -78,6 +105,21 @@ export function IndexDesign4({ modules, viewMode }: Props) {
               height: 100,
               borderRadius: '50%',
               bgcolor: alpha(theme.palette.common.white, 0.05),
+              animation: `${pulseAnimation} 4s ease-in-out infinite`,
+              animationDelay: '1s',
+            }}
+          />
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: -40,
+              width: 130,
+              height: 130,
+              borderRadius: '50%',
+              bgcolor: alpha(theme.palette.common.white, 0.07),
+              animation: `${floatAnimation} 7s ease-in-out infinite`,
+              animationDelay: '2s',
             }}
           />
         </Box>
@@ -189,6 +231,7 @@ export function IndexDesign4({ modules, viewMode }: Props) {
             height: 300,
             borderRadius: '50%',
             bgcolor: alpha(theme.palette.common.white, 0.08),
+            animation: `${floatAnimation} 8s ease-in-out infinite`,
           }}
         />
         <Box
@@ -200,6 +243,34 @@ export function IndexDesign4({ modules, viewMode }: Props) {
             height: 150,
             borderRadius: '50%',
             bgcolor: alpha(theme.palette.common.white, 0.04),
+            animation: `${pulseAnimation} 5s ease-in-out infinite`,
+            animationDelay: '0.5s',
+          }}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '30%',
+            right: '20%',
+            width: 80,
+            height: 80,
+            borderRadius: '50%',
+            bgcolor: alpha(theme.palette.common.white, 0.06),
+            animation: `${floatAnimation} 7s ease-in-out infinite`,
+            animationDelay: '1.5s',
+          }}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '60%',
+            left: -30,
+            width: 120,
+            height: 120,
+            borderRadius: '50%',
+            bgcolor: alpha(theme.palette.common.white, 0.05),
+            animation: `${pulseAnimation} 6s ease-in-out infinite`,
+            animationDelay: '2.5s',
           }}
         />
         <Iconify
@@ -211,6 +282,8 @@ export function IndexDesign4({ modules, viewMode }: Props) {
             right: 40,
             opacity: 0.15,
             display: { xs: 'none', md: 'block' },
+            animation: `${pulseAnimation} 6s ease-in-out infinite`,
+            animationDelay: '2s',
           }}
         />
       </Box>

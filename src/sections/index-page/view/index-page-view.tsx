@@ -2,11 +2,10 @@ import { useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-
-import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -69,120 +68,130 @@ export function IndexPageView() {
   };
 
   return (
-    <DashboardContent maxWidth="xl">
-      {/* Header section */}
-      <Stack
-        direction={{ xs: 'column', md: 'row' }}
-        alignItems={{ xs: 'flex-start', md: 'center' }}
-        justifyContent="space-between"
-        spacing={3}
-        sx={{ mb: 5 }}
-      >
-        <Box>
-          <Typography
-            variant="h3"
-            sx={{
-              fontWeight: 800,
-              fontFamily: '"DM Sans Variable", sans-serif',
-              letterSpacing: '-0.03em',
-            }}
-          >
-            Welcome Back 👋
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
-            Select a design style and navigate to your modules
-          </Typography>
-        </Box>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        bgcolor: 'background.default',
+        py: 4,
+      }}
+    >
+      <Container maxWidth="xl">
+        {/* Header section */}
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          alignItems={{ xs: 'flex-start', md: 'center' }}
+          justifyContent="space-between"
+          spacing={3}
+          sx={{ mb: 5 }}
+        >
+          <Box>
+            <Typography
+              variant="h3"
+              sx={{
+                fontWeight: 800,
+                fontFamily: '"DM Sans Variable", sans-serif',
+                letterSpacing: '-0.03em',
+              }}
+            >
+              Welcome Back 👋
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
+              Select a design style and navigate to your modules
+            </Typography>
+          </Box>
 
-        <Stack direction="row" spacing={2}>
-          {/* View mode toggle */}
-          <ToggleButtonGroup
-            value={viewMode}
-            exclusive
-            onChange={handleViewModeChange}
-            size="small"
-            sx={{
-              bgcolor: 'background.paper',
-              '& .MuiToggleButton-root': {
-                px: 2,
-                border: 0,
-                '&.Mui-selected': {
-                  bgcolor: 'primary.main',
-                  color: 'primary.contrastText',
-                  '&:hover': {
-                    bgcolor: 'primary.dark',
+          <Stack direction="row" spacing={2}>
+            {/* View mode toggle */}
+            <ToggleButtonGroup
+              value={viewMode}
+              exclusive
+              onChange={handleViewModeChange}
+              size="small"
+              sx={{
+                bgcolor: 'background.paper',
+                '& .MuiToggleButton-root': {
+                  px: 2,
+                  border: 0,
+                  '&.Mui-selected': {
+                    bgcolor: 'primary.main',
+                    color: 'primary.contrastText',
+                    '&:hover': {
+                      bgcolor: 'primary.dark',
+                    },
                   },
+                },
+              }}
+            >
+              <ToggleButton value="grid" aria-label="grid view">
+                <Iconify icon="solar:grid-bold-duotone" width={20} sx={{ mr: 0.5 }} />
+                Grid
+              </ToggleButton>
+              <ToggleButton value="list" aria-label="list view">
+                <Iconify icon="solar:list-bold-duotone" width={20} sx={{ mr: 0.5 }} />
+                List
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Stack>
+        </Stack>
+
+        {/* Design selector */}
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="overline" color="text.secondary" sx={{ display: 'block', mb: 2 }}>
+            Choose a design to preview (Vote for your favorite)
+          </Typography>
+          <ToggleButtonGroup
+            value={selectedDesign}
+            exclusive
+            onChange={handleDesignChange}
+            sx={{
+              flexWrap: 'wrap',
+              gap: 1,
+              '& .MuiToggleButtonGroup-grouped': {
+                border: 1,
+                borderColor: 'divider',
+                borderRadius: '12px !important',
+                '&:not(:first-of-type)': {
+                  borderLeft: 1,
+                  borderColor: 'divider',
+                  ml: 0,
+                },
+                '&.Mui-selected': {
+                  borderColor: 'primary.main',
+                  bgcolor: 'primary.lighter',
+                  color: 'primary.dark',
                 },
               },
             }}
           >
-            <ToggleButton value="grid" aria-label="grid view">
-              <Iconify icon="solar:grid-bold-duotone" width={20} sx={{ mr: 0.5 }} />
-              Grid
-            </ToggleButton>
-            <ToggleButton value="list" aria-label="list view">
-              <Iconify icon="solar:list-bold-duotone" width={20} sx={{ mr: 0.5 }} />
-              List
-            </ToggleButton>
+            {DESIGN_OPTIONS.map((option) => (
+              <ToggleButton
+                key={option.value}
+                value={option.value}
+                sx={{
+                  px: 3,
+                  py: 1.5,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  gap: 0.25,
+                }}
+              >
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Design {option.value}: {option.label}
+                </Typography>
+                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 400 }}>
+                  {option.description}
+                </Typography>
+              </ToggleButton>
+            ))}
           </ToggleButtonGroup>
-        </Stack>
-      </Stack>
+        </Box>
 
-      {/* Design selector */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="overline" color="text.secondary" sx={{ display: 'block', mb: 2 }}>
-          Choose a design to preview (Vote for your favorite)
-        </Typography>
-        <ToggleButtonGroup
-          value={selectedDesign}
-          exclusive
-          onChange={handleDesignChange}
-          sx={{
-            flexWrap: 'wrap',
-            gap: 1,
-            '& .MuiToggleButtonGroup-grouped': {
-              border: 1,
-              borderColor: 'divider',
-              borderRadius: '12px !important',
-              '&:not(:first-of-type)': {
-                borderLeft: 1,
-                borderColor: 'divider',
-                ml: 0,
-              },
-              '&.Mui-selected': {
-                borderColor: 'primary.main',
-                bgcolor: 'primary.lighter',
-                color: 'primary.dark',
-              },
-            },
-          }}
-        >
-          {DESIGN_OPTIONS.map((option) => (
-            <ToggleButton
-              key={option.value}
-              value={option.value}
-              sx={{
-                px: 3,
-                py: 1.5,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-                gap: 0.25,
-              }}
-            >
-              <Typography variant="subtitle2" fontWeight={600}>
-                Design {option.value}: {option.label}
-              </Typography>
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 400 }}>
-                {option.description}
-              </Typography>
-            </ToggleButton>
-          ))}
-        </ToggleButtonGroup>
-      </Box>
-
-      {/* Main content */}
-      {renderDesign()}
-    </DashboardContent>
+        {/* Main content */}
+        {renderDesign()}
+      </Container>
+    </Box>
   );
 }
