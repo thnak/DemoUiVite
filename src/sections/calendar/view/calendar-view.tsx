@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Chip from '@mui/material/Chip';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import TableRow from '@mui/material/TableRow';
@@ -39,6 +40,26 @@ function formatDate(dateString: string | null | undefined): string {
     month: 'short',
     day: 'numeric',
   });
+}
+
+// Format ISO 8601 duration for display
+function formatDuration(duration: string | null | undefined): string {
+  if (!duration) return '-';
+  
+  // Parse ISO 8601 duration (e.g., PT7H, PT30M, PT1H30M)
+  const match = duration.match(/^PT?(?:(-?\d+(?:\.\d+)?)H)?(?:(-?\d+(?:\.\d+)?)M)?(?:(-?\d+(?:\.\d+)?)S)?$/);
+  if (!match) return duration;
+  
+  const hours = match[1] ? parseFloat(match[1]) : 0;
+  const minutes = match[2] ? parseFloat(match[2]) : 0;
+  const seconds = match[3] ? parseFloat(match[3]) : 0;
+  
+  const parts: string[] = [];
+  if (hours !== 0) parts.push(`${hours}h`);
+  if (minutes !== 0) parts.push(`${minutes}m`);
+  if (seconds !== 0) parts.push(`${seconds}s`);
+  
+  return parts.length > 0 ? parts.join(' ') : '0';
 }
 
 
@@ -205,6 +226,9 @@ export function CalendarView() {
                   <TableCell>Shift Template</TableCell>
                   <TableCell>Apply From</TableCell>
                   <TableCell>Apply To</TableCell>
+                  <TableCell>Plan to Infinite</TableCell>
+                  <TableCell>Work Start Time</TableCell>
+                  <TableCell>Time Offset</TableCell>
                   <TableCell>Description</TableCell>
                   <TableCell align="right">Actions</TableCell>
                 </TableRow>
@@ -212,13 +236,13 @@ export function CalendarView() {
               <TableBody>
                 {loading ? (
                   <TableRow>
-                    <TableCell colSpan={9} align="center" sx={{ py: 10 }}>
+                    <TableCell colSpan={11} align="center" sx={{ py: 10 }}>
                       <CircularProgress />
                     </TableCell>
                   </TableRow>
                 ) : error ? (
                   <TableRow>
-                    <TableCell colSpan={9} align="center" sx={{ py: 10 }}>
+                    <TableCell colSpan={11} align="center" sx={{ py: 10 }}>
                       <Typography variant="body1" color="error">
                         {error}
                       </Typography>
@@ -229,7 +253,7 @@ export function CalendarView() {
                   </TableRow>
                 ) : calendars.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={9} align="center" sx={{ py: 10 }}>
+                    <TableCell colSpan={11} align="center" sx={{ py: 10 }}>
                       <Typography variant="body1" color="text.secondary">
                         No calendars found
                       </Typography>
@@ -258,7 +282,22 @@ export function CalendarView() {
                         <TableCell>{calendar.name}</TableCell>
                         <TableCell>{calendar.shiftTemplateName || '-'}</TableCell>
                         <TableCell>{formatDate(calendar.applyFrom)}</TableCell>
-                        <TableCell>{formatDate(calendar.applyTo)}</TableCell>
+                        <TableCell>
+                          {calendar.plan2Infinite ? (
+                            <Chip label="Infinite" size="small" color="primary" />
+                          ) : (
+                            formatDate(calendar.applyTo)
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {calendar.plan2Infinite ? (
+                            <Chip label="Yes" size="small" color="success" />
+                          ) : (
+                            <Chip label="No" size="small" variant="outlined" />
+                          )}
+                        </TableCell>
+                        <TableCell>{formatDuration(calendar.workDateStartTime)}</TableCell>
+                        <TableCell>{formatDuration(calendar.timeOffset)}</TableCell>
                         <TableCell>
                           <Typography
                             variant="body2"

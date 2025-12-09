@@ -8,11 +8,13 @@ import Card from '@mui/material/Card';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Switch from '@mui/material/Switch';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 import Autocomplete from '@mui/material/Autocomplete';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
@@ -35,6 +37,9 @@ interface CalendarFormData {
   shiftTemplateId: string;
   applyFrom: string;
   applyTo: string;
+  plan2Infinite: boolean;
+  workDateStartTime: string;
+  timeOffset: string;
 }
 
 const defaultFormData: CalendarFormData = {
@@ -44,6 +49,9 @@ const defaultFormData: CalendarFormData = {
   shiftTemplateId: '',
   applyFrom: '',
   applyTo: '',
+  plan2Infinite: false,
+  workDateStartTime: '',
+  timeOffset: 'PT7H',
 };
 
 // ----------------------------------------------------------------------
@@ -98,6 +106,9 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
               shiftTemplateId: calendar.shiftTemplateId?.toString() || '',
               applyFrom: calendar.applyFrom ? calendar.applyFrom.split('T')[0] : '',
               applyTo: calendar.applyTo ? calendar.applyTo.split('T')[0] : '',
+              plan2Infinite: calendar.plan2Infinite || false,
+              workDateStartTime: calendar.workDateStartTime || '',
+              timeOffset: calendar.timeOffset || 'PT7H',
             });
 
             // Find and set the selected shift template
@@ -125,7 +136,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
     fetchCalendar();
   }, [isEdit, calendarId]);
 
-  const handleInputChange = useCallback((field: keyof CalendarFormData, value: string) => {
+  const handleInputChange = useCallback((field: keyof CalendarFormData, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   }, []);
 
@@ -155,7 +166,10 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             { key: 'description', value: formData.description },
             { key: 'shiftTemplateId', value: formData.shiftTemplateId || undefined },
             { key: 'applyFrom', value: formData.applyFrom ? new Date(formData.applyFrom).toISOString() : undefined },
-            { key: 'applyTo', value: formData.applyTo ? new Date(formData.applyTo).toISOString() : undefined },
+            { key: 'applyTo', value: formData.plan2Infinite ? null : (formData.applyTo ? new Date(formData.applyTo).toISOString() : undefined) },
+            { key: 'plan2Infinite', value: formData.plan2Infinite },
+            { key: 'workDateStartTime', value: formData.workDateStartTime || undefined },
+            { key: 'timeOffset', value: formData.timeOffset || undefined },
           ];
           const updateResult = await updateCalendar(calendarId, updates);
           if (updateResult.isSuccess) {
@@ -172,7 +186,10 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             description: formData.description,
             shiftTemplateId: formData.shiftTemplateId || undefined,
             applyFrom: formData.applyFrom ? new Date(formData.applyFrom).toISOString() : undefined,
-            applyTo: formData.applyTo ? new Date(formData.applyTo).toISOString() : undefined,
+            applyTo: formData.plan2Infinite ? undefined : (formData.applyTo ? new Date(formData.applyTo).toISOString() : undefined),
+            plan2Infinite: formData.plan2Infinite,
+            workDateStartTime: formData.workDateStartTime || undefined,
+            timeOffset: formData.timeOffset || undefined,
           };
           const result = await createCalendar(entity);
           if (result.isSuccess) {
@@ -332,9 +349,45 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                   type="date"
                   value={formData.applyTo}
                   onChange={(e) => handleInputChange('applyTo', e.target.value)}
+                  disabled={formData.plan2Infinite}
                   slotProps={{
                     inputLabel: { shrink: true },
                   }}
+                />
+              </Stack>
+
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={formData.plan2Infinite}
+                    onChange={(e) => {
+                      handleInputChange('plan2Infinite', e.target.checked);
+                      if (e.target.checked) {
+                        handleInputChange('applyTo', '');
+                      }
+                    }}
+                  />
+                }
+                label="Plan to Infinite (when enabled, Apply To is not applicable)"
+              />
+
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                <TextField
+                  fullWidth
+                  label="Work Date Start Time"
+                  value={formData.workDateStartTime}
+                  onChange={(e) => handleInputChange('workDateStartTime', e.target.value)}
+                  placeholder="PT0H (e.g., PT6H for 6 hours, PT30M for 30 minutes)"
+                  helperText="ISO 8601 duration format - When a new work day begins"
+                />
+
+                <TextField
+                  fullWidth
+                  label="Time Offset"
+                  value={formData.timeOffset}
+                  onChange={(e) => handleInputChange('timeOffset', e.target.value)}
+                  placeholder="PT7H (e.g., PT7H for GMT+7, PT-5H for GMT-5)"
+                  helperText="ISO 8601 duration format - Timezone offset"
                 />
               </Stack>
 
