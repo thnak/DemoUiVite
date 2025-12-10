@@ -21,6 +21,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { RouterLink } from 'src/routes/components';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import {
   deleteCalendar,
   postapiCalendarsearchcalendars,
@@ -176,15 +177,31 @@ export function CalendarView() {
             </Typography>
           </Box>
         </Box>
-        <Button
-          component={RouterLink}
-          href="/calendars/create"
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-        >
-          Add Calendar
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1.5 }}>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="solar:cloud-upload-bold" />}
+          >
+            Import
+          </Button>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="mdi:export" />}
+          >
+            Export
+          </Button>
+          <Button
+            component={RouterLink}
+            href="/calendars/create"
+            variant="contained"
+            color="inherit"
+            startIcon={<Iconify icon="mingcute:add-line" />}
+          >
+            Add Calendar
+          </Button>
+        </Box>
       </Box>
 
       <Card>
@@ -337,7 +354,7 @@ export function CalendarView() {
           count={totalItems}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[...STANDARD_ROWS_PER_PAGE_OPTIONS]}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>

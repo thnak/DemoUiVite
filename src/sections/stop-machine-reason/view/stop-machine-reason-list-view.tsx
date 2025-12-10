@@ -13,6 +13,7 @@ import TablePagination from '@mui/material/TablePagination';
 
 import { _stopMachineReasons } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -100,13 +101,29 @@ export function StopMachineReasonListView() {
             </Typography>
           </Box>
         </Box>
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-        >
-          Add reason
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1.5 }}>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="solar:cloud-upload-bold" />}
+          >
+            Import
+          </Button>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="mdi:export" />}
+          >
+            Export
+          </Button>
+          <Button
+            variant="contained"
+            color="inherit"
+            startIcon={<Iconify icon="mingcute:add-line" />}
+          >
+            Add reason
+          </Button>
+        </Box>
       </Box>
 
       <Card>
@@ -180,7 +197,7 @@ export function StopMachineReasonListView() {
           count={dataFiltered.length}
           rowsPerPage={table.rowsPerPage}
           onPageChange={table.onChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[...STANDARD_ROWS_PER_PAGE_OPTIONS]}
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
       </Card>
