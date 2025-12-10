@@ -137,14 +137,14 @@ export function DefectReasonView() {
           <Button
             variant="outlined"
             color="inherit"
-            startIcon={<Iconify icon="eva:cloud-upload-fill" />}
+            startIcon={<Iconify icon="solar:cloud-upload-bold" />}
           >
             Import
           </Button>
           <Button
             variant="outlined"
             color="inherit"
-            startIcon={<Iconify icon="eva:cloud-download-fill" />}
+            startIcon={<Iconify icon="mdi:export" />}
           >
             Export
           </Button>

@@ -62,7 +62,7 @@ export function IoTDeviceTableToolbar({ numSelected, filterName, onFilterName }:
           <Button
             size="small"
             color="inherit"
-            startIcon={<Iconify icon="solar:list-bold" width={18} />}
+            startIcon={<Iconify icon="solar:list-bold-duotone" width={18} />}
           >
             Columns
           </Button>
