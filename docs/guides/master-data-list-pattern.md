@@ -50,7 +50,7 @@ Master data list pages (Products, Machines, Defects, Devices, Sensors, Working P
     <Button
       variant="outlined"
       color="inherit"
-      startIcon={<Iconify icon="eva:cloud-upload-fill" />}
+      startIcon={<Iconify icon="solar:cloud-upload-bold" />}
     >
       Import
     </Button>
@@ -77,7 +77,7 @@ Master data list pages (Products, Machines, Defects, Devices, Sensors, Working P
 - **Left side**: Title and breadcrumbs
 - **Right side**: Import (outlined) → Export (outlined) → Add (contained)
 - Button gap: 1.5
-- Icons: `eva:cloud-upload-fill`, `mdi:export`, `mingcute:add-line`
+- Icons: `solar:cloud-upload-bold`, `mdi:export`, `mingcute:add-line`
 
 ### 2. Table Toolbar
 
@@ -321,7 +321,7 @@ export function ProductListView() {
           <Button
             variant="outlined"
             color="inherit"
-            startIcon={<Iconify icon="eva:cloud-upload-fill" />}
+            startIcon={<Iconify icon="solar:cloud-upload-bold" />}
           >
             Import
           </Button>
