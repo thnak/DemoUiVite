@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 
-import { Label } from 'src/components/label';
 import { SvgColor } from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -26,122 +25,17 @@ export function useNavData(): NavData {
 
   return [
     {
-      subheader: t('nav.overview'),
+      subheader: t('nav.dashboard'),
       items: [
         {
-          title: t('nav.dashboard'),
-          path: '/',
-          icon: icon('ic-analytics'),
-        },
-        {
-          title: 'Demo Dashboard',
-          path: '/demo/dashboard',
-          icon: icon('ic-cart'),
-        },
-        {
-          title: 'Dashboard Builder',
+          title: t('nav.dashboardBuilder'),
           path: '/dashboard-builder',
           icon: icon('draw-two-tone'),
         },
-      ],
-    },
-    {
-      subheader: t('nav.management'),
-      items: [
         {
-          title: t('nav.user'),
-          path: '/user',
-          icon: icon('ic-user'),
-        },
-        {
-          title: t('nav.area'),
-          path: '/area',
-          icon: icon('space-two-tone'),
-        },
-        {
-          title: t('nav.product'),
-          path: '/products',
+          title: t('nav.demoDashboard'),
+          path: '/demo/dashboard',
           icon: icon('ic-cart'),
-          info: (
-            <Label color="error" variant="inverted">
-              +3
-            </Label>
-          ),
-        },
-        {
-          title: t('nav.workingParameter'),
-          path: '/working-parameter',
-          icon: icon('medical-info-two-tone'),
-        },
-        {
-          title: t('nav.stopMachineReason'),
-          path: '/stop-machine-reason',
-          icon: icon('ic-disabled'),
-        },
-        {
-          title: t('nav.productGroup'),
-          path: '/product-groups',
-          icon: icon('ic-cart'),
-        },
-        {
-          title: t('nav.machine'),
-          path: '/machines',
-          icon: icon('ic-cart'),
-        },
-        {
-          title: t('nav.downtimeReport'),
-          path: '/downtime-report',
-          icon: icon('ic-analytics'),
-        },
-        {
-          title: 'shift template',
-          path: '/shift-templates',
-          icon: icon('shift-templates'),
-        },
-        {
-          title: 'calendar',
-          path: '/calendars',
-          icon: icon('ic-analytics'),
-        },
-        {
-          title: 'defect reason',
-          path: '/defect-reasons',
-          icon: icon('defect'),
-        },
-        {
-          title: 'defect reason group',
-          path: '/defect-reason-group',
-          icon: icon('defect-group'),
-        },
-        {
-          title: 'IoT Devices',
-          path: '/iot-devices',
-          icon: icon('iot-device'),
-        },
-        {
-          title: 'IoT Sensors',
-          path: '/iot-sensors',
-          icon: icon('iot-sensor'),
-        },
-        {
-          title: t('nav.blog'),
-          path: '/blog',
-          icon: icon('ic-blog'),
-        },
-      ],
-    },
-    {
-      subheader: t('nav.other'),
-      items: [
-        {
-          title: t('nav.signIn'),
-          path: '/sign-in',
-          icon: icon('ic-lock'),
-        },
-        {
-          title: t('nav.notFound'),
-          path: '/404',
-          icon: icon('ic-disabled'),
         },
       ],
     },
@@ -151,92 +45,17 @@ export function useNavData(): NavData {
 // Keep navData for backward compatibility (uses English as fallback)
 export const navData: NavData = [
   {
-    subheader: 'Overview',
+    subheader: 'Dashboard',
     items: [
-      {
-        title: 'Dashboard',
-        path: '/',
-        icon: icon('ic-analytics'),
-      },
-      {
-        title: 'Demo Dashboard',
-        path: '/demo/dashboard',
-        icon: icon('ic-cart'),
-      },
       {
         title: 'Dashboard Builder',
         path: '/dashboard-builder',
         icon: icon('draw-two-tone'),
       },
-    ],
-  },
-  {
-    subheader: 'Management',
-    items: [
       {
-        title: 'User',
-        path: '/user',
-        icon: icon('ic-user'),
-      },
-      {
-        title: 'Area',
-        path: '/area',
-        icon: icon('ic-analytics'),
-      },
-      {
-        title: 'Product',
-        path: '/products',
+        title: 'Demo Dashboard',
+        path: '/demo/dashboard',
         icon: icon('ic-cart'),
-        info: (
-          <Label color="error" variant="inverted">
-            +3
-          </Label>
-        ),
-      },
-      {
-        title: 'Working Parameter',
-        path: '/working-parameter',
-        icon: icon('ic-analytics'),
-      },
-      {
-        title: 'Stop Machine Reason',
-        path: '/stop-machine-reason',
-        icon: icon('ic-disabled'),
-      },
-      {
-        title: 'Product Group',
-        path: '/product-groups',
-        icon: icon('ic-cart'),
-      },
-      {
-        title: 'Machine',
-        path: '/machines',
-        icon: icon('ic-cart'),
-      },
-      {
-        title: 'Downtime Report',
-        path: '/downtime-report',
-        icon: icon('ic-analytics'),
-      },
-      {
-        title: 'Blog',
-        path: '/blog',
-        icon: icon('ic-blog'),
-      },
-    ],
-  },
-  {
-    subheader: 'Other',
-    items: [
-      {
-        title: 'Sign in',
-        path: '/sign-in',
-        icon: icon('ic-lock'),
-      },
-      {
-        title: 'Not found',
-        path: '/404',
-        icon: icon('ic-disabled'),
       },
     ],
   },

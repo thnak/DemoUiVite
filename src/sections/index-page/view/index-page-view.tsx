@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
+import Menu from '@mui/material/Menu';
 import Stack from '@mui/material/Stack';
+import MenuItem from '@mui/material/MenuItem';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
@@ -32,20 +35,42 @@ const DESIGN_OPTIONS: { value: DesignOption; label: string; description: string 
   { value: 5, label: 'Dashboard Style', description: 'Sidebar navigation feel' },
 ];
 
-export function IndexPageView() {
-  const [selectedDesign, setSelectedDesign] = useState<DesignOption>(1);
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+const DESIGN_STORAGE_KEY = 'index-page-design';
 
-  const handleDesignChange = (_: React.MouseEvent<HTMLElement>, newDesign: DesignOption | null) => {
-    if (newDesign !== null) {
-      setSelectedDesign(newDesign);
+export function IndexPageView() {
+  const [selectedDesign, setSelectedDesign] = useState<DesignOption>(4); // Default to Design 4
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  // Load saved design preference from localStorage
+  useEffect(() => {
+    const savedDesign = localStorage.getItem(DESIGN_STORAGE_KEY);
+    if (savedDesign) {
+      const designNumber = parseInt(savedDesign, 10);
+      if (designNumber >= 1 && designNumber <= 5) {
+        setSelectedDesign(designNumber as DesignOption);
+      }
     }
+  }, []);
+
+  const handleDesignChange = (newDesign: DesignOption) => {
+    setSelectedDesign(newDesign);
+    localStorage.setItem(DESIGN_STORAGE_KEY, newDesign.toString());
+    setAnchorEl(null);
   };
 
   const handleViewModeChange = (_: React.MouseEvent<HTMLElement>, newMode: ViewMode | null) => {
     if (newMode !== null) {
       setViewMode(newMode);
     }
+  };
+
+  const handleSettingsClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleSettingsClose = () => {
+    setAnchorEl(null);
   };
 
   const renderDesign = () => {
@@ -63,7 +88,7 @@ export function IndexPageView() {
       case 5:
         return <IndexDesign5 {...props} />;
       default:
-        return <IndexDesign1 {...props} />;
+        return <IndexDesign4 {...props} />;
     }
   };
 
@@ -98,7 +123,7 @@ export function IndexPageView() {
               Welcome Back 👋
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
-              Select a design style and navigate to your modules
+              Select a module to get started
             </Typography>
           </Box>
 
@@ -133,61 +158,67 @@ export function IndexPageView() {
                 List
               </ToggleButton>
             </ToggleButtonGroup>
+
+            {/* Settings button */}
+            <IconButton
+              onClick={handleSettingsClick}
+              sx={{
+                bgcolor: 'background.paper',
+                '&:hover': {
+                  bgcolor: 'action.hover',
+                },
+              }}
+            >
+              <Iconify icon="solar:settings-bold-duotone" width={24} />
+            </IconButton>
           </Stack>
         </Stack>
 
-        {/* Design selector */}
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="overline" color="text.secondary" sx={{ display: 'block', mb: 2 }}>
-            Choose a design to preview (Vote for your favorite)
-          </Typography>
-          <ToggleButtonGroup
-            value={selectedDesign}
-            exclusive
-            onChange={handleDesignChange}
-            sx={{
-              flexWrap: 'wrap',
-              gap: 1,
-              '& .MuiToggleButtonGroup-grouped': {
-                border: 1,
-                borderColor: 'divider',
-                borderRadius: '12px !important',
-                '&:not(:first-of-type)': {
-                  borderLeft: 1,
-                  borderColor: 'divider',
-                  ml: 0,
-                },
-                '&.Mui-selected': {
-                  borderColor: 'primary.main',
-                  bgcolor: 'primary.lighter',
-                  color: 'primary.dark',
-                },
+        {/* Settings Menu */}
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleSettingsClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          slotProps={{
+            paper: {
+              sx: {
+                mt: 1,
+                minWidth: 280,
               },
-            }}
-          >
-            {DESIGN_OPTIONS.map((option) => (
-              <ToggleButton
-                key={option.value}
-                value={option.value}
-                sx={{
-                  px: 3,
-                  py: 1.5,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  gap: 0.25,
-                }}
-              >
+            },
+          }}
+        >
+          <Box sx={{ px: 2, py: 1 }}>
+            <Typography variant="overline" color="text.secondary">
+              Design Style
+            </Typography>
+          </Box>
+          {DESIGN_OPTIONS.map((option) => (
+            <MenuItem
+              key={option.value}
+              selected={selectedDesign === option.value}
+              onClick={() => handleDesignChange(option.value)}
+              sx={{ py: 1.5 }}
+            >
+              <Stack spacing={0.25}>
                 <Typography variant="subtitle2" fontWeight={600}>
                   Design {option.value}: {option.label}
                 </Typography>
-                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 400 }}>
+                <Typography variant="caption" color="text.secondary">
                   {option.description}
                 </Typography>
-              </ToggleButton>
-            ))}
-          </ToggleButtonGroup>
-        </Box>
+              </Stack>
+            </MenuItem>
+          ))}
+        </Menu>
 
         {/* Main content */}
         {renderDesign()}

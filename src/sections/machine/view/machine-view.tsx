@@ -1,7 +1,7 @@
 import type { MachineInputType } from 'src/_mock';
-import type { MachineEntity, CalendarEntity, OutputCalculationMode } from 'src/api/types/generated';
+import type { MachineEntity, OutputCalculationMode } from 'src/api/types/generated';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -16,13 +16,13 @@ import TablePagination from '@mui/material/TablePagination';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
-import { postapiMachinesearchmachines, deleteMachine } from 'src/api/services/generated/machine';
+import { deleteMachine, postapiMachinesearchmachines } from 'src/api/services/generated/machine';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
-import { applyFilter, getComparator } from '../utils';
+import { getComparator } from '../utils';
 import { MachineTableRow } from '../machine-table-row';
 import { MachineTableHead } from '../machine-table-head';
 import { MachineTableNoData } from '../machine-table-no-data';
