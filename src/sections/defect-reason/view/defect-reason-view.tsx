@@ -14,6 +14,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { RouterLink } from 'src/routes/components';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import {
   defectReasonKeys,
   useDeleteDefectReason,
@@ -132,15 +133,31 @@ export function DefectReasonView() {
             </Typography>
           </Box>
         </Box>
-        <Button
-          component={RouterLink}
-          href="/defect-reasons/create"
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-        >
-          Add defect reason
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1.5 }}>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="eva:cloud-upload-fill" />}
+          >
+            Import
+          </Button>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="eva:cloud-download-fill" />}
+          >
+            Export
+          </Button>
+          <Button
+            component={RouterLink}
+            href="/defect-reasons/create"
+            variant="contained"
+            color="inherit"
+            startIcon={<Iconify icon="mingcute:add-line" />}
+          >
+            Add defect reason
+          </Button>
+        </Box>
       </Box>
 
       <Card>
@@ -212,7 +229,7 @@ export function DefectReasonView() {
           count={totalItems}
           rowsPerPage={table.rowsPerPage}
           onPageChange={table.onChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[...STANDARD_ROWS_PER_PAGE_OPTIONS]}
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
       </Card>

@@ -1,6 +1,7 @@
 import type { MachineInputType } from 'src/_mock';
 
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import Tooltip from '@mui/material/Tooltip';
 import Toolbar from '@mui/material/Toolbar';
@@ -123,11 +124,22 @@ export function MachineTableToolbar({
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
-        </Tooltip>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Button
+            size="small"
+            color="inherit"
+            startIcon={<Iconify icon="solar:list-bold" width={18} />}
+          >
+            Columns
+          </Button>
+          <Button
+            size="small"
+            color="inherit"
+            startIcon={<Iconify icon="ic:round-filter-list" width={18} />}
+          >
+            Filters
+          </Button>
+        </Box>
       )}
     </Toolbar>
   );

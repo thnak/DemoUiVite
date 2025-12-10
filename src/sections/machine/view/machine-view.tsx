@@ -15,6 +15,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import { postapiMachinesearchmachines, deleteMachine } from 'src/api/services/generated/machine';
 
 import { Label } from 'src/components/label';
@@ -244,14 +245,30 @@ export function MachineView() {
                         </Typography>
                     </Box>
                 </Box>
-                <Button
-                    variant="contained"
-                    color="inherit"
-                    startIcon={<Iconify icon="mingcute:add-line" />}
-                    href="/machine/create"
-                >
-                    Add machine
-                </Button>
+                <Box sx={{ display: 'flex', gap: 1.5 }}>
+                    <Button
+                        variant="outlined"
+                        color="inherit"
+                        startIcon={<Iconify icon="eva:cloud-upload-fill" />}
+                    >
+                        Import
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        color="inherit"
+                        startIcon={<Iconify icon="eva:cloud-download-fill" />}
+                    >
+                        Export
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="inherit"
+                        startIcon={<Iconify icon="mingcute:add-line" />}
+                        href="/machine/create"
+                    >
+                        Add machine
+                    </Button>
+                </Box>
             </Box>
 
             <Card>
@@ -373,7 +390,7 @@ export function MachineView() {
                     count={totalItems}
                     rowsPerPage={rowsPerPage}
                     onPageChange={handleChangePage}
-                    rowsPerPageOptions={[5, 10, 25, 50]}
+                    rowsPerPageOptions={[...STANDARD_ROWS_PER_PAGE_OPTIONS]}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Card>
