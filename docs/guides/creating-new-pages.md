@@ -2,6 +2,8 @@
 
 This guide provides a complete checklist and instructions for adding new pages to the application.
 
+> **📋 For Master Data List Pages**: If you're creating a master data list page (Products, Machines, Defects, etc.), please refer to the [Master Data List Pattern](./master-data-list-pattern.md) guide for detailed implementation standards.
+
 ## Quick Checklist
 
 When creating a new page, follow these steps in order:
@@ -340,6 +342,7 @@ export function MyFeatureEditView() {
 
 ## Related Documentation
 
+- [Master Data List Pattern](./master-data-list-pattern.md) - **Standard UI pattern for list pages**
 - [Navigation Menu Patterns](./navigation-patterns.md) - Advanced navigation configuration
 - [App Bar Patterns](./appbar-patterns.md) - Custom app bar configurations
 - [i18n Guide](./i18n.md) - Internationalization details

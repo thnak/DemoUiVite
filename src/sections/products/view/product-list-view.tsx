@@ -17,6 +17,7 @@ import TablePagination from '@mui/material/TablePagination';
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import { deleteProduct, getProductPage } from 'src/api/services/generated/product';
 
 import { Iconify } from 'src/components/iconify';
@@ -185,14 +186,30 @@ export function ProductListView() {
             </Typography>
           </Box>
         </Box>
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-          onClick={() => router.push('/products/create')}
-        >
-          Thêm sản phẩm
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1.5 }}>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="solar:cloud-upload-bold" />}
+          >
+            Import
+          </Button>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="mdi:export" />}
+          >
+            Export
+          </Button>
+          <Button
+            variant="contained"
+            color="inherit"
+            startIcon={<Iconify icon="mingcute:add-line" />}
+            onClick={() => router.push('/products/create')}
+          >
+            Thêm sản phẩm
+          </Button>
+        </Box>
       </Box>
 
       <Card>
@@ -284,7 +301,7 @@ export function ProductListView() {
           count={totalItems}
           rowsPerPage={rowsPerPage}
           onPageChange={(_, newPage) => setPage(newPage)}
-          rowsPerPageOptions={[10, 25, 50]}
+          rowsPerPageOptions={[...STANDARD_ROWS_PER_PAGE_OPTIONS]}
           onRowsPerPageChange={(event) => {
             setRowsPerPage(parseInt(event.target.value, 10));
             setPage(0);

@@ -139,7 +139,11 @@ export function ProductTableToolbar({
         </Box>
       ) : (
         <Box sx={{ display: 'flex', gap: 1 }}>
-          <Button size="small" color="inherit">
+          <Button
+            size="small"
+            color="inherit"
+            startIcon={<Iconify icon="solar:list-bold-duotone" width={18} />}
+          >
             Columns
           </Button>
           <Button
@@ -149,14 +153,6 @@ export function ProductTableToolbar({
           >
             Filters
           </Button>
-          <Button size="small" color="inherit">
-            Export
-          </Button>
-          <Tooltip title="Settings">
-            <IconButton>
-              <Iconify icon="eva:more-vertical-fill" />
-            </IconButton>
-          </Tooltip>
         </Box>
       )}
     </Toolbar>

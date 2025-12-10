@@ -1,3 +1,5 @@
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -60,11 +62,22 @@ export function WorkingParameterTableToolbar({
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <Iconify icon="ic:round-filter-list" />
-          </IconButton>
-        </Tooltip>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Button
+            size="small"
+            color="inherit"
+            startIcon={<Iconify icon="solar:list-bold-duotone" width={18} />}
+          >
+            Columns
+          </Button>
+          <Button
+            size="small"
+            color="inherit"
+            startIcon={<Iconify icon="ic:round-filter-list" width={18} />}
+          >
+            Filters
+          </Button>
+        </Box>
       )}
     </Toolbar>
   );
