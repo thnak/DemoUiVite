@@ -8,8 +8,10 @@ import Chip from '@mui/material/Chip';
 import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Popover from '@mui/material/Popover';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
+import MenuList from '@mui/material/MenuList';
 import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -18,7 +20,9 @@ import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import CircularProgress from '@mui/material/CircularProgress';
+import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
+import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -131,6 +135,7 @@ function getWorkDays(shifts: ShiftDefinition[] | null | undefined): DayOfWeek[] 
 // ----------------------------------------------------------------------
 
 export function ShiftTemplateView() {
+  const router = useRouter();
   const [templates, setTemplates] = useState<ShiftTemplateEntity[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [page, setPage] = useState(0);
@@ -138,6 +143,8 @@ export function ShiftTemplateView() {
   const [selected, setSelected] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
 
   const fetchTemplates = useCallback(async () => {
     setLoading(true);
@@ -173,6 +180,30 @@ export function ShiftTemplateView() {
     },
     [fetchTemplates]
   );
+
+  const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>, templateId: string) => {
+    setOpenPopover(event.currentTarget);
+    setSelectedTemplateId(templateId);
+  }, []);
+
+  const handleClosePopover = useCallback(() => {
+    setOpenPopover(null);
+    setSelectedTemplateId(null);
+  }, []);
+
+  const handleEditTemplate = useCallback(() => {
+    if (selectedTemplateId) {
+      handleClosePopover();
+      router.push(`/shift-templates/${selectedTemplateId}/edit`);
+    }
+  }, [selectedTemplateId, router, handleClosePopover]);
+
+  const handleDeleteTemplate = useCallback(() => {
+    if (selectedTemplateId) {
+      handleClosePopover();
+      handleDelete(selectedTemplateId);
+    }
+  }, [selectedTemplateId, handleDelete, handleClosePopover]);
 
   const handleDeleteSelected = useCallback(async () => {
     try {
@@ -380,14 +411,11 @@ export function ShiftTemplateView() {
                           <Typography variant="body2">{totalWorkingTime}</Typography>
                         </TableCell>
                         <TableCell align="right">
-                          <IconButton
-                            component={RouterLink}
-                            href={`/shift-templates/${templateId}/edit`}
+                          <IconButton 
+                            onClick={(e) => handleOpenPopover(e, templateId)}
+                            aria-label="More actions"
                           >
-                            <Iconify icon="solar:pen-bold" />
-                          </IconButton>
-                          <IconButton color="error" onClick={() => handleDelete(templateId)}>
-                            <Iconify icon="solar:trash-bin-trash-bold" />
+                            <Iconify icon="eva:more-vertical-fill" />
                           </IconButton>
                         </TableCell>
                       </TableRow>
@@ -409,6 +437,41 @@ export function ShiftTemplateView() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
+
+      <Popover
+        open={!!openPopover}
+        anchorEl={openPopover}
+        onClose={handleClosePopover}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <MenuList
+          disablePadding
+          sx={{
+            p: 0.5,
+            gap: 0.5,
+            width: 140,
+            display: 'flex',
+            flexDirection: 'column',
+            [`& .${menuItemClasses.root}`]: {
+              px: 1,
+              gap: 2,
+              borderRadius: 0.75,
+              [`&.${menuItemClasses.selected}`]: { bgcolor: 'action.selected' },
+            },
+          }}
+        >
+          <MenuItem onClick={handleEditTemplate}>
+            <Iconify icon="solar:pen-bold" />
+            Edit
+          </MenuItem>
+
+          <MenuItem onClick={handleDeleteTemplate} sx={{ color: 'error.main' }}>
+            <Iconify icon="solar:trash-bin-trash-bold" />
+            Delete
+          </MenuItem>
+        </MenuList>
+      </Popover>
     </DashboardContent>
   );
 }
