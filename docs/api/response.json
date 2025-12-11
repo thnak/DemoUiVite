@@ -1799,7 +1799,7 @@
           "Auth"
         ],
         "summary": "Generate a one-time use QR code token for authenticated user",
-        "description": "This endpoint generates a secure one-time use token that can be encoded in a QR code.\nThe token expires after 2 minutes and can only be used once.\nThe authenticated user on one device can scan this QR code on another device to log in without entering credentials.",
+        "description": "This endpoint generates a secure one-time use token that can be encoded in a QR code.\r\nThe token expires after 2 minutes and can only be used once.\r\nThe authenticated user on one device can scan this QR code on another device to log in without entering credentials.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1835,7 +1835,7 @@
           "Auth"
         ],
         "summary": "Login using a one-time QR code token",
-        "description": "This endpoint consumes a one-time use token (from QR code scan) and logs the user in.\nThe token is validated and then marked as consumed. If successful, returns authentication tokens.",
+        "description": "This endpoint consumes a one-time use token (from QR code scan) and logs the user in.\r\nThe token is validated and then marked as consumed. If successful, returns authentication tokens.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -17695,7 +17695,7 @@
         "tags": [
           "Localization"
         ],
-        "summary": "Retrieves all translations for a specific language code.\nGET /api/translations/{langCode}",
+        "summary": "Retrieves all translations for a specific language code.\r\nGET /api/translations/{langCode}",
         "parameters": [
           {
             "name": "langCode",
@@ -17877,7 +17877,7 @@
         "tags": [
           "Localization"
         ],
-        "summary": "upload excel file to update translations. the devault culture is vi-VN and it always have value while other culture can be empty\nif other culture is empty, it must be auto translated by Ollama",
+        "summary": "upload excel file to update translations. the devault culture is vi-VN and it always have value while other culture can be empty\r\nif other culture is empty, it must be auto translated by Ollama",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -19978,6 +19978,311 @@
         "summary": "Generate a new code for Machine Type",
         "description": "Generates a new unique code for a Machine Type entity.",
         "operationId": "GenerateNewMachineTypeCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/maintenancethreshold/{id}": {
+      "get": {
+        "tags": [
+          "MaintenanceThreshold"
+        ],
+        "summary": "Get Maintenance Threshold by ID",
+        "description": "Retrieves a specific Maintenance Threshold entity by its unique identifier.",
+        "operationId": "GetMaintenanceThresholdById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MaintenanceThresholdEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/maintenancethreshold/get-page": {
+      "post": {
+        "tags": [
+          "MaintenanceThreshold"
+        ],
+        "summary": "Get paginated list of Maintenance Threshold",
+        "description": "Retrieves a paginated list of Maintenance Threshold entities.",
+        "operationId": "GetMaintenanceThresholdPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MaintenanceThresholdEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/maintenancethreshold/create": {
+      "post": {
+        "tags": [
+          "MaintenanceThreshold"
+        ],
+        "summary": "Create a new Maintenance Threshold",
+        "description": "Creates a new Maintenance Threshold entity in the system.",
+        "operationId": "CreateMaintenanceThreshold",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MaintenanceThresholdEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MaintenanceThresholdEntityResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MaintenanceThresholdEntityResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/maintenancethreshold/update/{id}": {
+      "post": {
+        "tags": [
+          "MaintenanceThreshold"
+        ],
+        "summary": "Update an existing Maintenance Threshold",
+        "description": "Updates specific fields of an existing Maintenance Threshold entity by ID.",
+        "operationId": "UpdateMaintenanceThreshold",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/maintenancethreshold/delete/{id}": {
+      "delete": {
+        "tags": [
+          "MaintenanceThreshold"
+        ],
+        "summary": "Delete a Maintenance Threshold",
+        "description": "Deletes a Maintenance Threshold entity by its unique identifier.",
+        "operationId": "DeleteMaintenanceThreshold",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/maintenancethreshold/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "MaintenanceThreshold"
+        ],
+        "summary": "Soft delete a Maintenance Threshold",
+        "description": "Soft deletes a Maintenance Threshold entity by its unique identifier.",
+        "operationId": "SoftDeleteMaintenanceThreshold",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/maintenancethreshold/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "MaintenanceThreshold"
+        ],
+        "summary": "Soft restore delete a Maintenance Threshold",
+        "description": "Soft restore deletes a Maintenance Threshold entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteMaintenanceThreshold",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/maintenancethreshold/generate-new-code": {
+      "get": {
+        "tags": [
+          "MaintenanceThreshold"
+        ],
+        "summary": "Generate a new code for Maintenance Threshold",
+        "description": "Generates a new unique code for a Maintenance Threshold entity.",
+        "operationId": "GenerateNewMaintenanceThresholdCode",
         "responses": {
           "200": {
             "description": "OK",
@@ -40703,7 +41008,7 @@
           },
           "enableMaintenanceMode": {
             "type": "boolean",
-            "description": "Gets or sets a value indicating whether the entire site is in maintenance mode.\nIf true, non-admin users should be redirected to a maintenance page.",
+            "description": "Gets or sets a value indicating whether the entire site is in maintenance mode.\r\nIf true, non-admin users should be redirected to a maintenance page.",
             "default": false
           },
           "maintenanceModeMessage": {
@@ -40726,7 +41031,7 @@
           },
           "backgroundTaskCronExpression": {
             "type": "string",
-            "description": "Gets or sets the CRON expression that defines the schedule for a recurring background job.\nExample: \"0 2 * * *\" for 2:00 AM daily.",
+            "description": "Gets or sets the CRON expression that defines the schedule for a recurring background job.\r\nExample: \"0 2 * * *\" for 2:00 AM daily.",
             "default": "0 3 * * *",
             "nullable": true
           },
@@ -40737,7 +41042,7 @@
           },
           "mailServer": {
             "type": "string",
-            "description": "Gets or sets the SMTP server address used for sending emails.\nFormat: \"smtp.server.com\"",
+            "description": "Gets or sets the SMTP server address used for sending emails.\r\nFormat: \"smtp.server.com\"",
             "nullable": true
           },
           "mailServerPort": {
@@ -40747,12 +41052,12 @@
           },
           "smtpUsername": {
             "type": "string",
-            "description": "Gets or sets the SMTP username for email authentication.\nUsually the same as SystemEmail but can be different for some providers.",
+            "description": "Gets or sets the SMTP username for email authentication.\r\nUsually the same as SystemEmail but can be different for some providers.",
             "nullable": true
           },
           "smtpPassword": {
             "type": "string",
-            "description": "Gets or sets the SMTP password for email authentication.\nStore app-specific passwords for providers like Gmail, Outlook, etc.",
+            "description": "Gets or sets the SMTP password for email authentication.\r\nStore app-specific passwords for providers like Gmail, Outlook, etc.",
             "nullable": true
           },
           "smtpEnableSsl": {
@@ -40786,7 +41091,7 @@
           },
           "allowedIpRangesForAdminAccess": {
             "type": "string",
-            "description": "Gets or sets a comma-separated list of Ip addresses or CIDR blocks allowed to access admin areas.\nAn empty or null string means access is not restricted by Ip.",
+            "description": "Gets or sets a comma-separated list of Ip addresses or CIDR blocks allowed to access admin areas.\r\nAn empty or null string means access is not restricted by Ip.",
             "nullable": true
           },
           "renderMode": {
@@ -40794,7 +41099,7 @@
           },
           "enableOnlinePayments": {
             "type": "boolean",
-            "description": "Gets or sets a value indicating whether online payment processing is enabled.\nThis can be used as a \"kill switch\" for the payment system.",
+            "description": "Gets or sets a value indicating whether online payment processing is enabled.\r\nThis can be used as a \"kill switch\" for the payment system.",
             "default": true
           },
           "enableNewUserRegistration": {
@@ -40804,12 +41109,12 @@
           },
           "enablePushNotifications": {
             "type": "boolean",
-            "description": "Gets or sets a value indicating whether the system should send push notifications.\nActs as a master \"kill switch\" for all push notifications.",
+            "description": "Gets or sets a value indicating whether the system should send push notifications.\r\nActs as a master \"kill switch\" for all push notifications.",
             "default": true
           },
           "logLevel": {
             "type": "string",
-            "description": "Gets or sets the desired logging level (e.g., \"Information\", \"Debug\", \"Warning\", \"Error\").\nThis should map to a LogLevel enum in your logging system.",
+            "description": "Gets or sets the desired logging level (e.g., \"Information\", \"Debug\", \"Warning\", \"Error\").\r\nThis should map to a LogLevel enum in your logging system.",
             "default": "Information",
             "nullable": true
           },
@@ -40966,12 +41271,12 @@
             "items": {
               "$ref": "#/components/schemas/StringObjectKeyValuePair"
             },
-            "description": "Chuỗi JSON chứa các cấu hình đặc thù cho plugin.\nGiúp một plugin có thể hoạt động theo nhiều cách khác nhau cho các route khác nhau.",
+            "description": "Represents a collection of field parameters and their types.",
             "nullable": true
           },
           "authKey": {
             "type": "string",
-            "description": "Mã xác thực (API Key) mà client phải gửi trong header để truy cập route này.\n**Bảo mật**: Giá trị này NÊN được hash trước khi lưu vào DB.",
+            "description": "Mã xác thực (API Key) mà client phải gửi trong header để truy cập route này.\r\n**Bảo mật**: Giá trị này NÊN được hash trước khi lưu vào DB.",
             "nullable": true
           },
           "isPayloadValidationEnabled": {
@@ -40980,7 +41285,7 @@
           },
           "payloadValidationSecret": {
             "type": "string",
-            "description": "Chuỗi bí mật (secret) dùng để xác thực mã băm (HMAC) của payload.\nChỉ được sử dụng khi IsPayloadValidationEnabled = true.\n**Bảo mật**: Giá trị này KHÔNG NÊN được lưu dưới dạng plaintext. Hãy mã hóa nó.",
+            "description": "Chuỗi bí mật (secret) dùng để xác thực mã băm (HMAC) của payload.\r\nChỉ được sử dụng khi IsPayloadValidationEnabled = true.\r\n**Bảo mật**: Giá trị này KHÔNG NÊN được lưu dưới dạng plaintext. Hãy mã hóa nó.",
             "nullable": true
           },
           "status": {
@@ -44777,13 +45082,13 @@
           },
           "build": {
             "type": "integer",
-            "description": "Gets the optional Build version component. Often used for CI build numbers or revisions.\nReturns null if no build number was specified.",
+            "description": "Gets the optional Build version component. Often used for CI build numbers or revisions.\r\nReturns null if no build number was specified.",
             "format": "int32",
             "nullable": true
           },
           "preReleaseTag": {
             "type": "string",
-            "description": "Gets the optional Pre-release tag (e.g., \"alpha\", \"beta\", \"rc.1\").\nReturns null or empty if this is a stable release.",
+            "description": "Gets the optional Pre-release tag (e.g., \"alpha\", \"beta\", \"rc.1\").\r\nReturns null or empty if this is a stable release.",
             "nullable": true
           },
           "originalString": {
@@ -44817,7 +45122,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Represents a firmware version, typically following Major.Minor.Patch pattern,\npotentially including a Build number and/or a PreRelease tag.\nProvides functionality for parsing, comparison, string representation, and generation."
+        "description": "Represents a firmware version, typically following Major.Minor.Patch pattern,\r\npotentially including a Build number and/or a PreRelease tag.\r\nProvides functionality for parsing, comparison, string representation, and generation."
       },
       "FirmwareVersionEntityBasePaginationResponse": {
         "type": "object",
@@ -48144,6 +48449,9 @@
             "type": "number",
             "description": "Scaling factor to be applied to the final output value. Default is 1.0 (no scaling). Negative values are allowed for scrap computing.",
             "format": "double"
+          },
+          "mappingMode": {
+            "$ref": "#/components/schemas/MachineOutputMappingMode"
           }
         },
         "additionalProperties": false,
@@ -48191,6 +48499,14 @@
         },
         "additionalProperties": false,
         "description": "Base class for paginated responses"
+      },
+      "MachineOutputMappingMode": {
+        "enum": [
+          "outputGood",
+          "outputScrap"
+        ],
+        "type": "string",
+        "description": "Defines the mode of mapping for machine output."
       },
       "MachineOutputMappingResult": {
         "type": "object",
@@ -48445,6 +48761,154 @@
           }
         },
         "additionalProperties": false
+      },
+      "MaintenanceThresholdEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "machineId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "thresholdType": {
+            "type": "string",
+            "description": "Threshold type (e.g., \"CycleCount\", \"OperatingHours\", \"ProductionVolume\")",
+            "nullable": true
+          },
+          "thresholdValue": {
+            "type": "number",
+            "description": "Threshold value (e.g., 500,000 cycles)",
+            "format": "double"
+          },
+          "maintenanceAction": {
+            "type": "string",
+            "description": "Maintenance action description (e.g., \"Overhaul\", \"Major Service\")",
+            "nullable": true
+          },
+          "currentCumulativeCount": {
+            "type": "number",
+            "description": "Current cumulative count",
+            "format": "double"
+          },
+          "predictedMaintenanceDate": {
+            "type": "string",
+            "description": "Last predicted maintenance date",
+            "format": "date-time",
+            "nullable": true
+          },
+          "predictedDateLowerBound": {
+            "type": "string",
+            "description": "Confidence interval lower bound",
+            "format": "date-time",
+            "nullable": true
+          },
+          "predictedDateUpperBound": {
+            "type": "string",
+            "description": "Confidence interval upper bound",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastForecastUpdate": {
+            "type": "string",
+            "description": "Last forecast update date",
+            "format": "date-time"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Whether this threshold is currently active"
+          },
+          "alertThresholdPercentage": {
+            "type": "number",
+            "description": "Alert threshold percentage (e.g., 0.9 for alert at 90% of threshold)",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Entity for storing machine maintenance thresholds and schedules"
+      },
+      "MaintenanceThresholdEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MaintenanceThresholdEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "MaintenanceThresholdEntityResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/MaintenanceThresholdEntity"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
       "ManufacturerEntity": {
         "type": "object",
@@ -49402,7 +49866,7 @@
           },
           "quantityPerSignal": {
             "type": "number",
-            "description": "TỈ LỆ: Số lượng sản phẩm được tạo ra cho mỗi tín hiệu từ IoT\nMặc định là 1.0",
+            "description": "TỈ LỆ: Số lượng sản phẩm được tạo ra cho mỗi tín hiệu từ IoT\r\nMặc định là 1.0",
             "format": "double"
           },
           "disposition": {
@@ -52604,12 +53068,12 @@
           },
           "normalizedName": {
             "type": "string",
-            "description": "Tên chuẩn hóa của ca làm việc (chuyển về chữ thường, bỏ dấu, thay khoảng trắng bằng gạch dưới).\nCó thể dùng để tạo mã.\nBE use case only.",
+            "description": "Tên chuẩn hóa của ca làm việc (chuyển về chữ thường, bỏ dấu, thay khoảng trắng bằng gạch dưới).\r\nCó thể dùng để tạo mã.\r\nBE use case only.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Định nghĩa ca làm việc cho một ngày cụ thể trong tuần.\nBao gồm giờ bắt đầu, giờ kết thúc và các khoảng nghỉ trong ca."
+        "description": "Định nghĩa ca làm việc cho một ngày cụ thể trong tuần.\r\nBao gồm giờ bắt đầu, giờ kết thúc và các khoảng nghỉ trong ca."
       },
       "ShiftTemplateEntity": {
         "type": "object",
@@ -52660,7 +53124,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Mẫu ca làm việc, định nghĩa các ca làm việc áp dụng cho một lịch làm việc.\nMẫu ca có thể được tái sử dụng cho nhiều lịch làm việc khác nhau và áp dụng cụ thể cho từng ngày trong tuần."
+        "description": "Mẫu ca làm việc, định nghĩa các ca làm việc áp dụng cho một lịch làm việc.\r\nMẫu ca có thể được tái sử dụng cho nhiều lịch làm việc khác nhau và áp dụng cụ thể cho từng ngày trong tuần."
       },
       "ShiftTemplateEntityBasePaginationResponse": {
         "type": "object",
@@ -52845,7 +53309,7 @@
             "items": {
               "$ref": "#/components/schemas/ObjectId"
             },
-            "description": "Collection of page IDs that belong to this slideshow.\nPages will be navigated in the order specified by their Order property.",
+            "description": "Collection of page IDs that belong to this slideshow.\r\nPages will be navigated in the order specified by their Order property.",
             "nullable": true
           },
           "pages": {
@@ -52853,7 +53317,7 @@
             "items": {
               "$ref": "#/components/schemas/PageEntity"
             },
-            "description": "Collection of pages that belong to this slideshow (populated when needed).\nThis is not stored in the database but can be populated via joins/lookups.",
+            "description": "Collection of pages that belong to this slideshow (populated when needed).\r\nThis is not stored in the database but can be populated via joins/lookups.",
             "nullable": true
           },
           "pageCount": {
@@ -52864,7 +53328,7 @@
           },
           "estimatedTotalDurationMs": {
             "type": "integer",
-            "description": "Gets the estimated total duration of the slideshow in milliseconds.\nThis considers individual page durations if set, otherwise uses the default duration.",
+            "description": "Gets the estimated total duration of the slideshow in milliseconds.\r\nThis considers individual page durations if set, otherwise uses the default duration.",
             "format": "int32",
             "readOnly": true
           }
@@ -52997,7 +53461,7 @@
           },
           "numberOfIdenticalUnits": {
             "type": "integer",
-            "description": "Số lượng đơn vị máy móc giống hệt nhau tại trạm này có thể hoạt động song song\n(Thường là 1, nhưng nếu là một cụm máy giống nhau thì có thể lớn hơn 1)",
+            "description": "Số lượng đơn vị máy móc giống hệt nhau tại trạm này có thể hoạt động song song\r\n(Thường là 1, nhưng nếu là một cụm máy giống nhau thì có thể lớn hơn 1)",
             "format": "int32"
           },
           "imageUrl": {
@@ -53975,7 +54439,7 @@
             "items": {
               "$ref": "#/components/schemas/CommentReaction"
             },
-            "description": "List of emoji reactions on this comment.\nEach reaction includes the emoji and the user who reacted.",
+            "description": "List of emoji reactions on this comment.\r\nEach reaction includes the emoji and the user who reacted.",
             "nullable": true
           },
           "deletedAt": {
@@ -53989,7 +54453,7 @@
           },
           "lastEditedAt": {
             "type": "string",
-            "description": "The timestamp of the last edit to this comment.\nNote: Edit history is not tracked as per requirements.",
+            "description": "The timestamp of the last edit to this comment.\r\nNote: Edit history is not tracked as per requirements.",
             "format": "date-time",
             "nullable": true
           },
@@ -53999,7 +54463,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Represents a comment/conversation entry for a SystemErrorReportEntity.\nComments can contain text, attachments (images/videos), and receive emoji reactions."
+        "description": "Represents a comment/conversation entry for a SystemErrorReportEntity.\r\nComments can contain text, attachments (images/videos), and receive emoji reactions."
       },
       "SystemErrorReportCommentEntityBasePaginationResponse": {
         "type": "object",
@@ -54493,7 +54957,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Cấu hình hệ thống chung (ít liên quan đến các domain entity khác).\nLưu ý: các complex types bên trong có thể được lưu dưới dạng JSON trong cột DB."
+        "description": "Cấu hình hệ thống chung (ít liên quan đến các domain entity khác).\r\nLưu ý: các complex types bên trong có thể được lưu dưới dạng JSON trong cột DB."
       },
       "SystemSettingEntityBasePaginationResponse": {
         "type": "object",
@@ -56091,7 +56555,7 @@
           },
           "secret": {
             "type": "string",
-            "description": "Chuỗi bí mật dùng để tạo chữ ký HMAC, giúp phía nhận xác thực yêu cầu.\nCần được mã hóa khi lưu trong cơ sở dữ liệu.",
+            "description": "Chuỗi bí mật dùng để tạo chữ ký HMAC, giúp phía nhận xác thực yêu cầu.\r\nCần được mã hóa khi lưu trong cơ sở dữ liệu.",
             "nullable": true
           },
           "pluginId": {
@@ -56109,7 +56573,7 @@
           },
           "averageResponseTimeMs": {
             "type": "number",
-            "description": "Thời gian trung bình (ms) mà TargetUrl phản hồi.\nHữu ích để phát hiện các webhook chậm.",
+            "description": "Thời gian trung bình (ms) mà TargetUrl phản hồi.\r\nHữu ích để phát hiện các webhook chậm.",
             "format": "double"
           },
           "lastAttemptAt": {
@@ -56126,7 +56590,7 @@
           },
           "lastErrorMessage": {
             "type": "string",
-            "description": "Thông báo lỗi của lần gửi thất bại gần nhất.\nRất quan trọng cho việc gỡ lỗi.",
+            "description": "Thông báo lỗi của lần gửi thất bại gần nhất.\r\nRất quan trọng cho việc gỡ lỗi.",
             "nullable": true
           },
           "isPayloadEncrypted": {
@@ -56135,12 +56599,12 @@
           },
           "publicKey": {
             "type": "string",
-            "description": "Public Key (định dạng PEM) của người nhận, dùng để mã hóa payload.\nSẽ là null nếu IsPayloadEncrypted = false.",
+            "description": "Public Key (định dạng PEM) của người nhận, dùng để mã hóa payload.\r\nSẽ là null nếu IsPayloadEncrypted = false.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Lớp đại diện cho một Webhook trong hệ thống.\nWebhook là một cơ chế cho phép hệ thống gửi dữ liệu đến một URL cụ thể\nkhi một sự kiện xảy ra. Nó thường được sử dụng để tích hợp với các dịch vụ bên ngoài\nhoặc để thông báo cho các hệ thống khác về các sự kiện quan trọng trong ứng dụng."
+        "description": "Lớp đại diện cho một Webhook trong hệ thống.\r\nWebhook là một cơ chế cho phép hệ thống gửi dữ liệu đến một URL cụ thể\r\nkhi một sự kiện xảy ra. Nó thường được sử dụng để tích hợp với các dịch vụ bên ngoài\r\nhoặc để thông báo cho các hệ thống khác về các sự kiện quan trọng trong ứng dụng."
       },
       "WebhookEntityBasePaginationResponse": {
         "type": "object",
@@ -56753,7 +57217,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Work Date Calendar Statistic Entity. Stores statistics related to work date calendars.\nPre-computed for performance optimization."
+        "description": "Work Date Calendar Statistic Entity. Stores statistics related to work date calendars.\r\nPre-computed for performance optimization."
       },
       "WorkDateCalendarStatisticEntityBasePaginationResponse": {
         "type": "object",
@@ -57256,7 +57720,7 @@
     },
     {
       "name": "Localization",
-      "description": "Controller for managing localization and translations.\nProvides endpoints to retrieve translations for different languages,\nincluding batch retrieval and file upload for updating translations."
+      "description": "Controller for managing localization and translations.\r\nProvides endpoints to retrieve translations for different languages,\r\nincluding batch retrieval and file upload for updating translations."
     },
     {
       "name": "Machine",
@@ -57276,6 +57740,9 @@
     },
     {
       "name": "MachineType"
+    },
+    {
+      "name": "MaintenanceThreshold"
     },
     {
       "name": "Manufacturer"
