@@ -51,17 +51,18 @@ export function ProfileFriends({ friends }: ProfileFriendsProps) {
           placeholder="Search friends..."
           value={searchQuery}
           onChange={handleSearchChange}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-              </InputAdornment>
-            ),
-          }}
           sx={{ width: 220 }}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
+            }
+          }}
         />
       </Stack>
-
       <Grid container spacing={3}>
         {filteredFriends.map((friend) => (
           <Grid key={friend.id} size={{ xs: 12, sm: 6, md: 4 }}>

@@ -1,3 +1,4 @@
+import type { SelectChangeEvent } from '@mui/material/Select';
 import type {
   IoTSensorEntity,
   IoTDeviceEntity,
@@ -5,8 +6,6 @@ import type {
 } from 'src/api/types/generated';
 
 import { useState, useCallback, type ChangeEvent } from 'react';
-
-import type { SelectChangeEvent } from '@mui/material/Select';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';

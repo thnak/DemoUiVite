@@ -176,7 +176,6 @@ export function ProductCreateEditView({
           </Typography>
         </Box>
       </Box>
-
       <Grid container spacing={3}>
         {/* Left Section - Image Upload & Publish */}
         <Grid size={{ xs: 12, md: 4 }}>
@@ -311,8 +310,10 @@ export function ProductCreateEditView({
                   label="Stock"
                   value={formData.stock}
                   onChange={handleInputChange('stock')}
-                  InputProps={{
-                    inputProps: { min: 0 },
+                  slotProps={{
+                    input: {
+                      inputProps: { min: 0 },
+                    }
                   }}
                 />
               </Grid>
@@ -324,9 +325,11 @@ export function ProductCreateEditView({
                   label="Price"
                   value={formData.price}
                   onChange={handleInputChange('price')}
-                  InputProps={{
-                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                    inputProps: { min: 0, step: 0.01 },
+                  slotProps={{
+                    input: {
+                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                      inputProps: { min: 0, step: 0.01 },
+                    }
                   }}
                 />
               </Grid>
@@ -354,7 +357,6 @@ export function ProductCreateEditView({
           </Card>
         </Grid>
       </Grid>
-
       <Snackbar
         open={!!errorMessage}
         autoHideDuration={6000}

@@ -284,7 +284,6 @@ export function IoTDeviceCreateEditView({
           </Typography>
         </Box>
       </Box>
-
       <Grid container spacing={3}>
         {/* Left Section - Image */}
         <Grid size={{ xs: 12, md: 4 }}>
@@ -460,16 +459,18 @@ export function IoTDeviceCreateEditView({
                       {...params}
                       label="Search sensor to add"
                       placeholder="Search by name or code..."
-                      InputProps={{
-                        ...params.InputProps,
-                        endAdornment: (
-                          <>
-                            {isSearchingSensors ? (
-                              <CircularProgress color="inherit" size={20} />
-                            ) : null}
-                            {params.InputProps.endAdornment}
-                          </>
-                        ),
+                      slotProps={{
+                        input: {
+                          ...params.InputProps,
+                          endAdornment: (
+                            <>
+                              {isSearchingSensors ? (
+                                <CircularProgress color="inherit" size={20} />
+                              ) : null}
+                              {params.InputProps.endAdornment}
+                            </>
+                          ),
+                        }
                       }}
                     />
                   )}
@@ -566,7 +567,6 @@ export function IoTDeviceCreateEditView({
           )}
         </Grid>
       </Grid>
-
       <Snackbar
         open={!!errorMessage}
         autoHideDuration={6000}

@@ -299,7 +299,6 @@ export function ShiftTemplateForm({
           </Tabs>
         </Box>
       </Card>
-
       {/* Basic Information */}
       <Card>
         <CardContent>
@@ -338,7 +337,6 @@ export function ShiftTemplateForm({
           </Stack>
         </CardContent>
       </Card>
-
       {/* Normal Mode: Shared Days and Breaks */}
       {mode === 'normal' && (
         <Card>
@@ -363,7 +361,7 @@ export function ShiftTemplateForm({
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                       {selected.map((day) => (
                         // Guard DAY_LABELS access in case the key is missing
-                        <Chip key={day} label={(DAY_LABELS[day] ?? '').slice(0, 3)} size="small" />
+                        (<Chip key={day} label={(DAY_LABELS[day] ?? '').slice(0, 3)} size="small" />)
                       ))}
                     </Box>
                   )}
@@ -468,7 +466,6 @@ export function ShiftTemplateForm({
           </CardContent>
         </Card>
       )}
-
       {/* Shift Definitions */}
       <Card>
         <CardContent>
@@ -634,7 +631,6 @@ export function ShiftTemplateForm({
           </Stack>
         </CardContent>
       </Card>
-
       {/* Advanced Mode - Per-Day Control */}
       {mode === 'advanced' && (
         <Card>
@@ -713,10 +709,8 @@ export function ShiftTemplateForm({
           </CardContent>
         </Card>
       )}
-
       {/* Weekly Summary Chart */}
       <WeekSummaryChart summary={weekSummary} title="Weekly Hours Summary" />
-
       {/* Action Buttons */}
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
         <Button variant="outlined" color="inherit" onClick={onCancel}>

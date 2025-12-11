@@ -74,14 +74,16 @@ export function AreaSelector({
           required={required}
           error={error}
           helperText={helperText}
-          InputProps={{
-            ...params.InputProps,
-            endAdornment: (
-              <>
-                {isFetching ? <CircularProgress color="inherit" size={20} /> : null}
-                {params.InputProps.endAdornment}
-              </>
-            ),
+          slotProps={{
+            input: {
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  {isFetching ? <CircularProgress color="inherit" size={20} /> : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            }
           }}
         />
       )}
