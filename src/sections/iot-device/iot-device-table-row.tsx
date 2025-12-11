@@ -38,7 +38,12 @@ type IoTDeviceTableRowProps = {
   onDeleteRow?: () => void;
 };
 
-export function IoTDeviceTableRow({ row, selected, onSelectRow, onDeleteRow }: IoTDeviceTableRowProps) {
+export function IoTDeviceTableRow({
+  row,
+  selected,
+  onSelectRow,
+  onDeleteRow,
+}: IoTDeviceTableRowProps) {
   const router = useRouter();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
@@ -60,7 +65,13 @@ export function IoTDeviceTableRow({ row, selected, onSelectRow, onDeleteRow }: I
   }, [handleClosePopover, handleEditRow]);
 
   const getTypeLabel = (type: IoTDeviceType | string) => {
-    const typeLabels: Record<string, { label: string; color: 'info' | 'warning' | 'success' | 'error' | 'primary' | 'secondary' | 'default' }> = {
+    const typeLabels: Record<
+      string,
+      {
+        label: string;
+        color: 'info' | 'warning' | 'success' | 'error' | 'primary' | 'secondary' | 'default';
+      }
+    > = {
       gateway: { label: 'Gateway', color: 'info' },
       sensorNode: { label: 'Sensor Node', color: 'success' },
       edgeDevice: { label: 'Edge Device', color: 'primary' },

@@ -15,14 +15,20 @@ import { MachineCreateEditView } from 'src/sections/machine/view';
 export default function Page() {
   const { id } = useParams();
 
-  const { data: machineData, isLoading, error } = useGetMachineById(id || '', {
+  const {
+    data: machineData,
+    isLoading,
+    error,
+  } = useGetMachineById(id || '', {
     enabled: !!id,
   });
 
   if (isLoading) {
     return (
       <DashboardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
           <CircularProgress />
         </Box>
       </DashboardContent>
@@ -32,7 +38,9 @@ export default function Page() {
   if (error || !machineData) {
     return (
       <DashboardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
           <Typography color="error">Machine not found</Typography>
         </Box>
       </DashboardContent>

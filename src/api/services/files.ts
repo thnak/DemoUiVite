@@ -57,7 +57,9 @@ export async function downloadFile(fileCode: string): Promise<Blob> {
  * @returns Promise with file information
  */
 export async function getFile(fileCode: string): Promise<FileInfo> {
-  const response = await axiosInstance.get<FileInfo>(`/api/Files/get/${encodeURIComponent(fileCode)}`);
+  const response = await axiosInstance.get<FileInfo>(
+    `/api/Files/get/${encodeURIComponent(fileCode)}`
+  );
   return response.data;
 }
 

@@ -133,9 +133,7 @@ export function ShiftTemplateForm({
 
   const handleSharedBreakChange = useCallback(
     (breakId: string, field: keyof ShiftBreakFormData, value: string) => {
-      setSharedBreaks((prev) =>
-        prev.map((b) => (b.id === breakId ? { ...b, [field]: value } : b))
-      );
+      setSharedBreaks((prev) => prev.map((b) => (b.id === breakId ? { ...b, [field]: value } : b)));
     },
     []
   );
@@ -333,7 +331,6 @@ export function ShiftTemplateForm({
               multiline
               rows={2}
             />
-
           </Stack>
         </CardContent>
       </Card>
@@ -361,7 +358,7 @@ export function ShiftTemplateForm({
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                       {selected.map((day) => (
                         // Guard DAY_LABELS access in case the key is missing
-                        (<Chip key={day} label={(DAY_LABELS[day] ?? '').slice(0, 3)} size="small" />)
+                        <Chip key={day} label={(DAY_LABELS[day] ?? '').slice(0, 3)} size="small" />
                       ))}
                     </Box>
                   )}
@@ -469,7 +466,9 @@ export function ShiftTemplateForm({
       {/* Shift Definitions */}
       <Card>
         <CardContent>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Box
+            sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}
+          >
             <Typography variant="h6">Shift Definitions</Typography>
             <Button
               variant="outlined"
@@ -490,7 +489,12 @@ export function ShiftTemplateForm({
             {formData.definitions.map((def, defIndex) => (
               <Card key={def.id} variant="outlined" sx={{ p: 2 }}>
                 <Box
-                  sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mb: 2,
+                  }}
                 >
                   <Typography variant="subtitle1">Shift {defIndex + 1}</Typography>
                   {formData.definitions.length > 1 && (
@@ -560,7 +564,11 @@ export function ShiftTemplateForm({
                       </Box>
 
                       {def.breaks.length === 0 ? (
-                        <Typography variant="body2" color="text.disabled" sx={{ fontStyle: 'italic' }}>
+                        <Typography
+                          variant="body2"
+                          color="text.disabled"
+                          sx={{ fontStyle: 'italic' }}
+                        >
                           No breaks defined
                         </Typography>
                       ) : (
@@ -592,7 +600,12 @@ export function ShiftTemplateForm({
                                 label="Start"
                                 value={breakItem.startTime}
                                 onChange={(e) =>
-                                  handleBreakChange(def.id, breakItem.id, 'startTime', e.target.value)
+                                  handleBreakChange(
+                                    def.id,
+                                    breakItem.id,
+                                    'startTime',
+                                    e.target.value
+                                  )
                                 }
                                 slotProps={{
                                   inputLabel: { shrink: true },
@@ -644,11 +657,16 @@ export function ShiftTemplateForm({
             </Typography>
 
             <Box sx={{ overflowX: 'auto' }}>
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: 1, minWidth: 700 }}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(8, 1fr)',
+                  gap: 1,
+                  minWidth: 700,
+                }}
+              >
                 {/* Header Row */}
-                <Box sx={{ p: 1, fontWeight: 'bold', borderRadius: 1 }}>
-                  Shift
-                </Box>
+                <Box sx={{ p: 1, fontWeight: 'bold', borderRadius: 1 }}>Shift</Box>
                 {DAYS_OF_WEEK.map((day) => (
                   <Box
                     key={day}

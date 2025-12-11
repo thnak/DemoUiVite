@@ -3,7 +3,14 @@ import type { ChartOptions } from 'src/components/chart';
 
 // ----------------------------------------------------------------------
 
-export type WidgetType = 'chart' | 'text' | 'image' | 'text-image' | 'table' | 'image-blur' | 'image-cutout';
+export type WidgetType =
+  | 'chart'
+  | 'text'
+  | 'image'
+  | 'text-image'
+  | 'table'
+  | 'image-blur'
+  | 'image-cutout';
 
 export type ChartType = 'line' | 'bar' | 'pie' | 'donut' | 'area' | 'radialBar' | 'scatter';
 
@@ -57,7 +64,14 @@ export interface ImageBlurWidgetConfig {
 }
 
 // Image cutout widget configuration - displays image with shape mask
-export type CutoutShape = 'circle' | 'ellipse' | 'hexagon' | 'star' | 'heart' | 'diamond' | 'rounded-square';
+export type CutoutShape =
+  | 'circle'
+  | 'ellipse'
+  | 'hexagon'
+  | 'star'
+  | 'heart'
+  | 'diamond'
+  | 'rounded-square';
 
 export interface ImageCutoutWidgetConfig {
   src: string;
@@ -113,13 +127,13 @@ export const BREAKPOINT_CONFIGS: Record<string, BreakpointConfig> = {
 
 // Widget merge compatibility matrix
 export const MERGE_COMPATIBLE: Record<WidgetType, WidgetType[]> = {
-  "image-cutout": [],
+  'image-cutout': [],
   text: ['image'],
   image: ['text'],
   chart: [],
   'text-image': [],
   table: [],
-  'image-blur': []
+  'image-blur': [],
 };
 
 // Check if two widget types can be merged

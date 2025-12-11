@@ -1,9 +1,5 @@
 import type { SelectChangeEvent } from '@mui/material/Select';
-import type {
-  IoTDeviceEntity,
-  OutputCalculationMode,
-  MachineOutputMappingResponse,
-} from 'src/api/types/generated';
+import type { OutputCalculationMode, MachineOutputMappingResponse } from 'src/api/types/generated';
 
 import { useState, useEffect, useCallback, type ChangeEvent } from 'react';
 
@@ -33,7 +29,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { useGetapiDevicesearchdevice } from 'src/api/hooks/generated/use-device';
 import {
   useCreateMachine,
   useUpdateMachine,
@@ -443,11 +438,7 @@ export function MachineCreateEditView({
             />
 
             <Box sx={{ mt: 3 }}>
-              <AreaSelector
-                value={formData.areaId}
-                onChange={handleAreaChange}
-                label="Area"
-              />
+              <AreaSelector value={formData.areaId} onChange={handleAreaChange} label="Area" />
             </Box>
 
             <Box sx={{ mt: 3 }}>

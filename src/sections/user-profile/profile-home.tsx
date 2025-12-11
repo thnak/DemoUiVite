@@ -296,7 +296,7 @@ export function ProfilePost({ post, currentUserAvatarUrl }: ProfilePostProps) {
                   </IconButton>
                 </InputAdornment>
               ),
-            }
+            },
           }}
         />
       </Stack>

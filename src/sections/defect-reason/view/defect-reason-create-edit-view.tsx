@@ -55,7 +55,8 @@ export function DefectReasonCreateEditView({
     code: currentDefectReason?.code || '',
     name: currentDefectReason?.name || '',
     requireExtraNoteFromOperator: currentDefectReason?.requireExtraNoteFromOperator || false,
-    addScrapAndIncreaseTotalQuantity: currentDefectReason?.addScrapAndIncreaseTotalQuantity || false,
+    addScrapAndIncreaseTotalQuantity:
+      currentDefectReason?.addScrapAndIncreaseTotalQuantity || false,
     colorHex: currentDefectReason?.colorHex || '',
     description: currentDefectReason?.description || '',
   });
@@ -127,7 +128,10 @@ export function DefectReasonCreateEditView({
           { key: 'code', value: formData.code },
           { key: 'name', value: formData.name },
           { key: 'requireExtraNoteFromOperator', value: formData.requireExtraNoteFromOperator },
-          { key: 'addScrapAndIncreaseTotalQuantity', value: formData.addScrapAndIncreaseTotalQuantity },
+          {
+            key: 'addScrapAndIncreaseTotalQuantity',
+            value: formData.addScrapAndIncreaseTotalQuantity,
+          },
           { key: 'colorHex', value: formData.colorHex },
           { key: 'description', value: formData.description },
         ],
@@ -145,7 +149,13 @@ export function DefectReasonCreateEditView({
         },
       });
     }
-  }, [formData, isEdit, currentDefectReason?.id, createDefectReasonMutate, updateDefectReasonMutate]);
+  }, [
+    formData,
+    isEdit,
+    currentDefectReason?.id,
+    createDefectReasonMutate,
+    updateDefectReasonMutate,
+  ]);
 
   const handleCancel = useCallback(() => {
     router.push('/defect-reasons');
@@ -178,7 +188,6 @@ export function DefectReasonCreateEditView({
 
       <Card sx={{ p: 3 }}>
         <Stack spacing={3}>
-
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <TextField
               fullWidth
@@ -194,7 +203,6 @@ export function DefectReasonCreateEditView({
               onChange={handleInputChange('name')}
             />
           </Box>
-
 
           <FormControlLabel
             control={

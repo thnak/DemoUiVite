@@ -42,7 +42,9 @@ export const ShiftTemplateEditPage = lazy(() => import('src/pages/shift-template
 export const DashboardBuilderPage = lazy(() => import('src/pages/dashboard-builder'));
 export const DashboardBuilderEditPage = lazy(() => import('src/pages/dashboard-builder-edit'));
 export const DefectReasonGroupListPage = lazy(() => import('src/pages/defect-reason-group-list'));
-export const DefectReasonGroupCreatePage = lazy(() => import('src/pages/defect-reason-group-create'));
+export const DefectReasonGroupCreatePage = lazy(
+  () => import('src/pages/defect-reason-group-create')
+);
 export const DefectReasonGroupEditPage = lazy(() => import('src/pages/defect-reason-group-edit'));
 export const DefectReasonPage = lazy(() => import('src/pages/defect-reason'));
 export const DefectReasonCreatePage = lazy(() => import('src/pages/defect-reason-create'));
@@ -64,7 +66,7 @@ const renderFallback = () => (
       justifyContent: 'center',
     }}
   >
-    <SvgColor src="/assets/icons/load-bubble.svg"/>
+    <SvgColor src="/assets/icons/load-bubble.svg" />
   </Box>
 );
 

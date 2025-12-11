@@ -116,10 +116,10 @@ export function IoTDeviceCreateEditView({
     { enabled: sensorSearchText.length > 0 && isEdit }
   );
 
-  const { data: deviceSensors, isLoading: isLoadingSensors } = useGetapiIotSensorgetsensorfromdevicedeviceCode(
-    currentDevice?.id || '',
-    { enabled: isEdit && !!currentDevice?.id }
-  );
+  const { data: deviceSensors, isLoading: isLoadingSensors } =
+    useGetapiIotSensorgetsensorfromdevicedeviceCode(currentDevice?.id || '', {
+      enabled: isEdit && !!currentDevice?.id,
+    });
 
   const { mutate: createDeviceMutate, isPending: isCreating } = useCreateIoTDevice({
     onSuccess: (result) => {
@@ -409,7 +409,12 @@ export function IoTDeviceCreateEditView({
             </Grid>
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
-              <Button variant="outlined" color="inherit" onClick={handleCancel} disabled={isSubmitting}>
+              <Button
+                variant="outlined"
+                color="inherit"
+                onClick={handleCancel}
+                disabled={isSubmitting}
+              >
                 Cancel
               </Button>
               <Button
@@ -470,7 +475,7 @@ export function IoTDeviceCreateEditView({
                               {params.InputProps.endAdornment}
                             </>
                           ),
-                        }
+                        },
                       }}
                     />
                   )}

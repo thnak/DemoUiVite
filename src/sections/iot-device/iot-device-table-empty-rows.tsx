@@ -10,7 +10,12 @@ type IoTDeviceTableEmptyRowsProps = TableRowProps & {
   height?: number;
 };
 
-export function IoTDeviceTableEmptyRows({ emptyRows, height, sx, ...other }: IoTDeviceTableEmptyRowsProps) {
+export function IoTDeviceTableEmptyRows({
+  emptyRows,
+  height,
+  sx,
+  ...other
+}: IoTDeviceTableEmptyRowsProps) {
   if (!emptyRows) {
     return null;
   }

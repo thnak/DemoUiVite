@@ -195,7 +195,7 @@ export function DashboardBuilderView() {
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [importJson, setImportJson] = useState('');
   const [templatesDrawerOpen, setTemplatesDrawerOpen] = useState(false);
-  
+
   // Cooking Book (Widget Merge) state
   const [cookingBookOpen, setCookingBookOpen] = useState(false);
   const [mergeHistoryOpen, setMergeHistoryOpen] = useState(false);
@@ -209,7 +209,7 @@ export function DashboardBuilderView() {
   // Click-to-merge state (replacing drag-drop)
   const [mergeSelectOpen, setMergeSelectOpen] = useState(false);
   const [mergeSourceWidget, setMergeSourceWidget] = useState<WidgetItem | null>(null);
-  
+
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -415,11 +415,11 @@ export function DashboardBuilderView() {
   const handleSelectMergeTarget = useCallback(
     (targetWidget: WidgetItem, recipe: MergeRecipe) => {
       if (!mergeSourceWidget) return;
-      
+
       // Determine primary and secondary based on recipe
       let primaryWidget: WidgetItem;
       let secondaryWidget: WidgetItem;
-      
+
       if (recipe.primaryIngredient === mergeSourceWidget.widgetConfig.type) {
         primaryWidget = mergeSourceWidget;
         secondaryWidget = targetWidget;
@@ -427,7 +427,7 @@ export function DashboardBuilderView() {
         primaryWidget = targetWidget;
         secondaryWidget = mergeSourceWidget;
       }
-      
+
       // Show merge preview dialog
       setPendingMerge({ recipe, primaryWidget, secondaryWidget });
       setMergeSelectOpen(false);
@@ -477,10 +477,7 @@ export function DashboardBuilderView() {
     if (!recipe || !primaryWidget || !secondaryWidget) return;
 
     // Create merged widget using recipe transform
-    const mergedConfig = recipe.transform(
-      primaryWidget.widgetConfig,
-      secondaryWidget.widgetConfig
-    );
+    const mergedConfig = recipe.transform(primaryWidget.widgetConfig, secondaryWidget.widgetConfig);
 
     const mergedWidget: WidgetItem = {
       id: generateId(),
@@ -501,9 +498,7 @@ export function DashboardBuilderView() {
 
     // Update widgets: remove both originals, add merged
     setWidgets((prev) => {
-      const filtered = prev.filter(
-        (w) => w.id !== primaryWidget.id && w.id !== secondaryWidget.id
-      );
+      const filtered = prev.filter((w) => w.id !== primaryWidget.id && w.id !== secondaryWidget.id);
       return [...filtered, mergedWidget];
     });
 
@@ -812,9 +807,7 @@ export function DashboardBuilderView() {
           >
             {widgets.map((widget) => (
               <Box key={widget.id} sx={{ height: '100%' }}>
-                <Box
-                  sx={{ position: 'relative', height: '100%' }}
-                >
+                <Box sx={{ position: 'relative', height: '100%' }}>
                   {/* Widget controls */}
                   <Stack
                     direction="row"
@@ -831,10 +824,7 @@ export function DashboardBuilderView() {
                     }}
                   >
                     <Tooltip title="Merge with another widget">
-                      <IconButton
-                        size="small"
-                        onClick={() => handleMergeClick(widget)}
-                      >
+                      <IconButton size="small" onClick={() => handleMergeClick(widget)}>
                         <Iconify icon="mdi:merge" width={18} />
                       </IconButton>
                     </Tooltip>
@@ -1036,10 +1026,7 @@ export function DashboardBuilderView() {
       />
 
       {/* Cooking Book Drawer */}
-      <CookingBookDrawer
-        open={cookingBookOpen}
-        onClose={() => setCookingBookOpen(false)}
-      />
+      <CookingBookDrawer open={cookingBookOpen} onClose={() => setCookingBookOpen(false)} />
 
       {/* Merge History Drawer */}
       <MergeHistoryDrawer
@@ -1079,11 +1066,7 @@ export function DashboardBuilderView() {
 
               {getAvailableMergeOptions(mergeSourceWidget).length === 0 ? (
                 <Box sx={{ py: 4, textAlign: 'center' }}>
-                  <Iconify
-                    icon="mdi:chef-hat"
-                    width={48}
-                    sx={{ color: 'text.disabled', mb: 2 }}
-                  />
+                  <Iconify icon="mdi:chef-hat" width={48} sx={{ color: 'text.disabled', mb: 2 }} />
                   <Typography variant="body1" color="text.secondary">
                     No compatible widgets to merge with
                   </Typography>

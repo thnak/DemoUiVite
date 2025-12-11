@@ -209,23 +209,23 @@ export function canBeSecondary(widgetType: WidgetType): boolean {
 
 // Widget type icons for visual display
 const WIDGET_TYPE_ICONS: Record<WidgetType, IconifyName> = {
-  "image-cutout": 'mdi:image-filter-drama',
+  'image-cutout': 'mdi:image-filter-drama',
   chart: 'mdi:chart-box-outline',
   text: 'mdi:format-header-1',
   image: 'mdi:image-outline',
   'text-image': 'mdi:page-layout-sidebar-left',
   table: 'mdi:table-large',
-  'image-blur': 'mdi:image-filter-drama'
+  'image-blur': 'mdi:image-filter-drama',
 };
 
 const WIDGET_TYPE_NAMES: Record<WidgetType, string> = {
-  "image-cutout": '',
+  'image-cutout': '',
   chart: 'Chart',
   text: 'Text',
   image: 'Image',
   'text-image': 'Text + Image',
   table: 'Table',
-  'image-blur': 'Image Overlay'
+  'image-blur': 'Image Overlay',
 };
 
 // ----------------------------------------------------------------------
@@ -254,9 +254,14 @@ export function CookingBookDrawer({ open, onClose, onSelectRecipe }: CookingBook
   );
 
   return (
-    <Drawer anchor="right" open={open} onClose={onClose} slotProps={{
-      paper: { sx: { width: 400 } }
-    }}>
+    <Drawer
+      anchor="right"
+      open={open}
+      onClose={onClose}
+      slotProps={{
+        paper: { sx: { width: 400 } },
+      }}
+    >
       <Box sx={{ p: 2 }}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -427,7 +432,8 @@ export function MergePreviewDialog({
       <DialogContent>
         <Stack spacing={3} sx={{ pt: 1 }}>
           <Alert severity="info" icon={<Iconify icon="mdi:chef-hat" />}>
-            You&apos;re about to combine two widgets using the recipe: <strong>{recipe.name}</strong>
+            You&apos;re about to combine two widgets using the recipe:{' '}
+            <strong>{recipe.name}</strong>
           </Alert>
 
           {/* Visual merge representation */}
@@ -451,10 +457,7 @@ export function MergePreviewDialog({
                       borderColor: 'primary.main',
                     }}
                   >
-                    <Iconify
-                      icon={WIDGET_TYPE_ICONS[primaryWidget.widgetConfig.type]}
-                      width={32}
-                    />
+                    <Iconify icon={WIDGET_TYPE_ICONS[primaryWidget.widgetConfig.type]} width={32} />
                   </Box>
                   <Typography variant="caption" color="text.secondary">
                     {WIDGET_TYPE_NAMES[primaryWidget.widgetConfig.type]}
@@ -549,9 +552,14 @@ interface MergeHistoryDrawerProps {
  */
 export function MergeHistoryDrawer({ open, onClose, history, onUndo }: MergeHistoryDrawerProps) {
   return (
-    <Drawer anchor="right" open={open} onClose={onClose} slotProps={{
-      paper: { sx: { width: 380 } }
-    }}>
+    <Drawer
+      anchor="right"
+      open={open}
+      onClose={onClose}
+      slotProps={{
+        paper: { sx: { width: 380 } },
+      }}
+    >
       <Box sx={{ p: 2 }}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -570,11 +578,7 @@ export function MergeHistoryDrawer({ open, onClose, history, onUndo }: MergeHist
               textAlign: 'center',
             }}
           >
-            <Iconify
-              icon="mdi:history"
-              width={48}
-              sx={{ color: 'text.disabled', mb: 2 }}
-            />
+            <Iconify icon="mdi:history" width={48} sx={{ color: 'text.disabled', mb: 2 }} />
             <Typography variant="body2" color="text.secondary">
               No merge history yet
             </Typography>
@@ -595,11 +599,7 @@ export function MergeHistoryDrawer({ open, onClose, history, onUndo }: MergeHist
                   >
                     <Typography variant="subtitle2">{entry.recipeName}</Typography>
                     <Tooltip title="Undo this merge">
-                      <IconButton
-                        size="small"
-                        color="warning"
-                        onClick={() => onUndo(entry)}
-                      >
+                      <IconButton size="small" color="warning" onClick={() => onUndo(entry)}>
                         <Iconify icon="mdi:undo" width={18} />
                       </IconButton>
                     </Tooltip>
@@ -672,10 +672,7 @@ export function MergeDropZoneIndicator({ isOver, canDrop, recipe }: MergeDropZon
           width={48}
           sx={{ color: canDrop ? 'success.main' : 'error.main' }}
         />
-        <Typography
-          variant="subtitle1"
-          sx={{ color: canDrop ? 'success.dark' : 'error.dark' }}
-        >
+        <Typography variant="subtitle1" sx={{ color: canDrop ? 'success.dark' : 'error.dark' }}>
           {canDrop ? `Merge → ${recipe?.name ?? 'Drop to merge'}` : 'Cannot merge these widgets'}
         </Typography>
       </Stack>

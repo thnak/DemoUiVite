@@ -15,14 +15,20 @@ import { AreaCreateEditView } from 'src/sections/area/view';
 export default function Page() {
   const { id } = useParams();
 
-  const { data: areaData, isLoading, error } = useGetAreaById(id || '', {
+  const {
+    data: areaData,
+    isLoading,
+    error,
+  } = useGetAreaById(id || '', {
     enabled: !!id,
   });
 
   if (isLoading) {
     return (
       <DashboardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
           <CircularProgress />
         </Box>
       </DashboardContent>
@@ -32,7 +38,9 @@ export default function Page() {
   if (error || !areaData) {
     return (
       <DashboardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
           <Typography color="error">Area not found</Typography>
         </Box>
       </DashboardContent>

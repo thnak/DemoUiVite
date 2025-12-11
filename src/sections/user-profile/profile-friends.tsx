@@ -59,7 +59,7 @@ export function ProfileFriends({ friends }: ProfileFriendsProps) {
                   <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
                 </InputAdornment>
               ),
-            }
+            },
           }}
         />
       </Stack>

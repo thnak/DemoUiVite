@@ -295,7 +295,7 @@ export function CreateUserView() {
                           </FormControl>
                         </InputAdornment>
                       ),
-                    }
+                    },
                   }}
                 />
               </Grid>

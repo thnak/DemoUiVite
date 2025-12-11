@@ -74,8 +74,10 @@ export function applyFilter({ inputData, comparator, filterName }: ApplyFilterPr
       (device) =>
         device.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
         device.code.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-        (device.macAddress && device.macAddress.toLowerCase().indexOf(filterName.toLowerCase()) !== -1) ||
-        (device.machineName && device.machineName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1)
+        (device.macAddress &&
+          device.macAddress.toLowerCase().indexOf(filterName.toLowerCase()) !== -1) ||
+        (device.machineName &&
+          device.machineName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1)
     );
   }
 

@@ -151,11 +151,7 @@ export function DashboardListView() {
             minHeight: 300,
           }}
         >
-          <Iconify
-            icon="mdi:view-dashboard-outline"
-            width={64}
-            sx={{ color: 'text.secondary' }}
-          />
+          <Iconify icon="mdi:view-dashboard-outline" width={64} sx={{ color: 'text.secondary' }} />
           <Typography variant="h6" color="text.secondary">
             No dashboards yet
           </Typography>

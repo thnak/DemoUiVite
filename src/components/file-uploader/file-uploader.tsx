@@ -126,7 +126,15 @@ export function FileUploader({
         setSelectedFiles((prev) => [...prev, ...newFiles]);
       }
     },
-    [selectedFiles.length, maxFiles, maxSize, generateId, createPreview, onFileRejected, formatFileSize]
+    [
+      selectedFiles.length,
+      maxFiles,
+      maxSize,
+      generateId,
+      createPreview,
+      onFileRejected,
+      formatFileSize,
+    ]
   );
 
   const handleInputChange = useCallback(
@@ -207,12 +215,9 @@ export function FileUploader({
     if (mimeType.startsWith('video/')) return 'eva:video-fill';
     if (mimeType.startsWith('audio/')) return 'solar:music-note-3-bold';
     if (mimeType.includes('pdf')) return 'solar:document-bold';
-    if (mimeType.includes('word') || mimeType.includes('document'))
-      return 'solar:document-bold';
-    if (mimeType.includes('excel') || mimeType.includes('spreadsheet'))
-      return 'mdi:table';
-    if (mimeType.includes('zip') || mimeType.includes('compressed'))
-      return 'solar:folder-bold';
+    if (mimeType.includes('word') || mimeType.includes('document')) return 'solar:document-bold';
+    if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return 'mdi:table';
+    if (mimeType.includes('zip') || mimeType.includes('compressed')) return 'solar:folder-bold';
     return 'solar:document-bold';
   }, []);
 

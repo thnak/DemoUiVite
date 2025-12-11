@@ -26,7 +26,9 @@ export default function Page() {
   if (isLoading) {
     return (
       <DashboardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
           <CircularProgress />
         </Box>
       </DashboardContent>
@@ -36,7 +38,9 @@ export default function Page() {
   if (error || !defectReasonData) {
     return (
       <DashboardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
           <Typography color="error">Defect reason not found</Typography>
         </Box>
       </DashboardContent>
@@ -54,7 +58,8 @@ export default function Page() {
           code: defectReasonData.code || '',
           name: defectReasonData.name || '',
           requireExtraNoteFromOperator: defectReasonData.requireExtraNoteFromOperator || false,
-          addScrapAndIncreaseTotalQuantity: defectReasonData.addScrapAndIncreaseTotalQuantity || false,
+          addScrapAndIncreaseTotalQuantity:
+            defectReasonData.addScrapAndIncreaseTotalQuantity || false,
           colorHex: defectReasonData.colorHex || '',
           description: defectReasonData.description || '',
         }}
