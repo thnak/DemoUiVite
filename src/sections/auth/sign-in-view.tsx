@@ -28,36 +28,33 @@ export function SignInView() {
       <Typography variant="h5" sx={{ textAlign: 'center' }}>
         Sign in to your account
       </Typography>
-
       <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center' }}>
         Don&apos;t have an account?{' '}
         <Link variant="subtitle2" sx={{ ml: 0.5 }}>
           Get started
         </Link>
       </Typography>
-
       <TextField name="email" label="Email address" defaultValue="hello@gmail.com" />
-
       <TextField
         name="password"
         label="Password"
         defaultValue="@demo1234"
         type={showPassword ? 'text' : 'password'}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                <Iconify icon={showPassword ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
-              </IconButton>
-            </InputAdornment>
-          ),
+        slotProps={{
+          input: {
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                  <Iconify icon={showPassword ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }
         }}
       />
-
       <Link variant="body2" color="inherit" sx={{ alignSelf: 'flex-end' }}>
         Forgot password?
       </Link>
-
       <LoadingButton
         fullWidth
         size="large"

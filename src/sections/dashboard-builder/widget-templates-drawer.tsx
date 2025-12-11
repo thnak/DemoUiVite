@@ -391,11 +391,13 @@ export function WidgetTemplatesDrawer({ open, onClose, onSelectTemplate }: Widge
       anchor="right"
       open={open}
       onClose={onClose}
-      PaperProps={{
-        sx: {
-          width: drawerWidth,
-          bgcolor: 'background.default',
-        },
+      slotProps={{
+        paper: {
+          sx: {
+            width: drawerWidth,
+            bgcolor: 'background.default',
+          },
+        }
       }}
     >
       {/* Drawer Header */}
@@ -417,7 +419,6 @@ export function WidgetTemplatesDrawer({ open, onClose, onSelectTemplate }: Widge
           <Iconify icon="mdi:close" />
         </IconButton>
       </Stack>
-
       {/* Template Categories */}
       <Box
         sx={{
@@ -504,7 +505,6 @@ export function WidgetTemplatesDrawer({ open, onClose, onSelectTemplate }: Widge
           </Box>
         ))}
       </Box>
-
       {/* Drawer Footer */}
       <Box
         sx={{

@@ -186,12 +186,10 @@ export function ProfilePost({ post, currentUserAvatarUrl }: ProfilePostProps) {
           <Iconify icon="eva:more-vertical-fill" />
         </IconButton>
       </Stack>
-
       {/* Content */}
       <Typography variant="body2" sx={{ mb: 2 }}>
         {post.content}
       </Typography>
-
       {/* Cover Image */}
       {post.coverUrl && (
         <Box
@@ -207,7 +205,6 @@ export function ProfilePost({ post, currentUserAvatarUrl }: ProfilePostProps) {
           }}
         />
       )}
-
       {/* Likes Section */}
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
         <Stack direction="row" spacing={1} alignItems="center">
@@ -247,7 +244,6 @@ export function ProfilePost({ post, currentUserAvatarUrl }: ProfilePostProps) {
           </IconButton>
         </Stack>
       </Stack>
-
       {/* Comments */}
       <Stack spacing={2}>
         {post.comments.map((comment) => (
@@ -281,7 +277,6 @@ export function ProfilePost({ post, currentUserAvatarUrl }: ProfilePostProps) {
           </Stack>
         ))}
       </Stack>
-
       {/* Comment Input */}
       <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
         <Avatar src={currentUserAvatarUrl} sx={{ width: 32, height: 32 }} />
@@ -289,17 +284,19 @@ export function ProfilePost({ post, currentUserAvatarUrl }: ProfilePostProps) {
           fullWidth
           size="small"
           placeholder="Write a comment..."
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton size="small">
-                  <Iconify icon="eva:smiling-face-outline" />
-                </IconButton>
-                <IconButton size="small">
-                  <Iconify icon="eva:image-outline" />
-                </IconButton>
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton size="small">
+                    <Iconify icon="eva:smiling-face-outline" />
+                  </IconButton>
+                  <IconButton size="small">
+                    <Iconify icon="eva:image-outline" />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }
           }}
         />
       </Stack>

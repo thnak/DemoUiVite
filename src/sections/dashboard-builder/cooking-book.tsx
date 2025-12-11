@@ -254,7 +254,9 @@ export function CookingBookDrawer({ open, onClose, onSelectRecipe }: CookingBook
   );
 
   return (
-    <Drawer anchor="right" open={open} onClose={onClose} PaperProps={{ sx: { width: 400 } }}>
+    <Drawer anchor="right" open={open} onClose={onClose} slotProps={{
+      paper: { sx: { width: 400 } }
+    }}>
       <Box sx={{ p: 2 }}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -547,7 +549,9 @@ interface MergeHistoryDrawerProps {
  */
 export function MergeHistoryDrawer({ open, onClose, history, onUndo }: MergeHistoryDrawerProps) {
   return (
-    <Drawer anchor="right" open={open} onClose={onClose} PaperProps={{ sx: { width: 380 } }}>
+    <Drawer anchor="right" open={open} onClose={onClose} slotProps={{
+      paper: { sx: { width: 380 } }
+    }}>
       <Box sx={{ p: 2 }}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
           <Stack direction="row" alignItems="center" spacing={1}>

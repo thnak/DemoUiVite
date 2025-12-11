@@ -156,7 +156,6 @@ export function CreateUserView() {
           </Typography>
         </Box>
       </Box>
-
       <Grid container spacing={3}>
         {/* Left Section - Avatar Upload & Email Verified */}
         <Grid size={{ xs: 12, md: 4 }}>
@@ -267,34 +266,36 @@ export function CreateUserView() {
                   placeholder="Enter phone number"
                   value={formData.phoneNumber}
                   onChange={handleInputChange('phoneNumber')}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <FormControl variant="standard" sx={{ minWidth: 70 }}>
-                          <Select
-                            value={formData.phoneCountry}
-                            onChange={handleSelectChange('phoneCountry')}
-                            disableUnderline
-                            sx={{
-                              '& .MuiSelect-select': {
-                                display: 'flex',
-                                alignItems: 'center',
-                                py: 0,
-                                pr: 1,
-                              },
-                            }}
-                          >
-                            {COUNTRIES.map((country) => (
-                              <MenuItem key={country.code} value={country.code}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                  <span style={{ fontSize: '1.25rem' }}>{country.flag}</span>
-                                </Box>
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </InputAdornment>
-                    ),
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <FormControl variant="standard" sx={{ minWidth: 70 }}>
+                            <Select
+                              value={formData.phoneCountry}
+                              onChange={handleSelectChange('phoneCountry')}
+                              disableUnderline
+                              sx={{
+                                '& .MuiSelect-select': {
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  py: 0,
+                                  pr: 1,
+                                },
+                              }}
+                            >
+                              {COUNTRIES.map((country) => (
+                                <MenuItem key={country.code} value={country.code}>
+                                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                    <span style={{ fontSize: '1.25rem' }}>{country.flag}</span>
+                                  </Box>
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </InputAdornment>
+                      ),
+                    }
                   }}
                 />
               </Grid>
@@ -390,7 +391,6 @@ export function CreateUserView() {
           </Card>
         </Grid>
       </Grid>
-
       <Snackbar
         open={!!errorMessage}
         autoHideDuration={6000}
