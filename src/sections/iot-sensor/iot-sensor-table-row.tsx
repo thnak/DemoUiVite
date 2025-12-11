@@ -72,10 +72,19 @@ export function IoTSensorTableRow({
       temperature: { label: 'Temperature', color: 'error' },
       humidity: { label: 'Humidity', color: 'info' },
       pressure: { label: 'Pressure', color: 'warning' },
-      motion: { label: 'Motion', color: 'success' },
-      proximity: { label: 'Proximity', color: 'primary' },
       light: { label: 'Light', color: 'secondary' },
-      other: { label: 'Other', color: 'default' },
+      camera: { label: 'Camera', color: 'primary' },
+      proximity: { label: 'Proximity', color: 'success' },
+      accelerometer: { label: 'Accelerometer', color: 'info' },
+      gyroscope: { label: 'Gyroscope', color: 'info' },
+      magnetometer: { label: 'Magnetometer', color: 'primary' },
+      heartRate: { label: 'Heart Rate', color: 'error' },
+      gps: { label: 'GPS', color: 'success' },
+      pingStatus: { label: 'Ping Status', color: 'warning' },
+      counter: { label: 'Counter', color: 'secondary' },
+      analog: { label: 'Analog', color: 'default' },
+      press: { label: 'Press', color: 'primary' },
+      unknown: { label: 'Unknown', color: 'default' },
     };
     return typeLabels[type] || { label: type || 'Unknown', color: 'default' as const };
   };
