@@ -34,10 +34,8 @@ export function CalendarSelector({
 
   const { data: searchResults, isFetching } = useSearchCalendar(
     {
-      params: {
-        keyword: inputValue || undefined,
-        pageSize: 10,
-      },
+      searchText: inputValue || undefined,
+      maxResults: 10,
     },
     {
       enabled: inputValue.length > 0,

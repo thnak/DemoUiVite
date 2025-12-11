@@ -93,20 +93,16 @@ export function MachineCreateEditView({
   const [sensorOutputMappings, setSensorOutputMappings] = useState<SensorOutputMapping[]>([]);
 
   // Search devices
-  const { data: deviceSearchResults, isFetching: isDeviceSearching } =
+  const { data: devices, isFetching: isDeviceSearching } =
     useGetapiDevicesearchdevice(
       {
-        params: {
-          keyword: deviceSearchKeyword || undefined,
-          pageSize: 10,
-        },
+        search: deviceSearchKeyword || undefined,
+        pageSize: 10,
       },
       {
         enabled: deviceSearchKeyword.length > 0,
       }
     );
-
-  const devices = deviceSearchResults?.data || [];
 
   const { mutate: createMachineMutate, isPending: isCreating } = useCreateMachine({
     onSuccess: (result) => {
@@ -226,8 +222,8 @@ export function MachineCreateEditView({
           { key: 'code', value: formData.code },
           { key: 'name', value: formData.name },
           { key: 'imageUrl', value: formData.imageUrl },
-          { key: 'areaId', value: formData.areaId },
-          { key: 'calendarId', value: formData.calendarId },
+          { key: 'areaId', value: formData.areaId || undefined },
+          { key: 'calendarId', value: formData.calendarId || undefined },
           { key: 'calculationMode', value: formData.calculationMode },
         ],
       });
@@ -238,8 +234,8 @@ export function MachineCreateEditView({
           code: formData.code,
           name: formData.name,
           imageUrl: formData.imageUrl,
-          areaId: formData.areaId,
-          calendarId: formData.calendarId,
+          areaId: formData.areaId || undefined,
+          calendarId: formData.calendarId || undefined,
           calculationMode: formData.calculationMode,
         },
       });
@@ -349,7 +345,7 @@ export function MachineCreateEditView({
                 onChange={(_, newValue) => setSelectedDevice(newValue)}
                 inputValue={deviceSearchKeyword}
                 onInputChange={(_, newInputValue) => setDeviceSearchKeyword(newInputValue)}
-                options={devices}
+                options={devices || []}
                 getOptionLabel={(option) => option.name || option.code || ''}
                 isOptionEqualToValue={(option, val) => option.id === val.id}
                 loading={isDeviceSearching}

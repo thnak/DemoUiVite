@@ -34,10 +34,8 @@ export function AreaSelector({
 
   const { data: searchResults, isFetching } = useSearchArea(
     {
-      params: {
-        keyword: inputValue || undefined,
-        pageSize: 10,
-      },
+      searchText: inputValue || undefined,
+      maxResults: 10,
     },
     {
       enabled: inputValue.length > 0,
