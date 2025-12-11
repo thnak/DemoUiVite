@@ -19,7 +19,8 @@
     "re:build": "npm run clean && npm install && npm run build",
     "tsc:dev": "npm run dev & npm run tsc:watch",
     "tsc:watch": "tsc --noEmit --watch",
-    "generate:api": "tsx scripts/generate-api.ts"
+    "generate:api": "tsx scripts/generate-api.ts",
+    "generate:selectors": "tsx scripts/generate-entity-selectors.ts"
   },
   "engines": {
     "node": ">=20"
