@@ -46,9 +46,17 @@ export function MachineTypeSelector({
   const { mutate: fetchMachineTypes, isPending: isFetching } = useGetMachineTypePage({
     onSuccess: (data) => {
       setItems(data?.items || []);
+      // If we have a value prop and haven't set a selected item yet, try to find it in results
+      if (value && !selectedMachineType && data?.items) {
+        const found = data.items.find(item => String(item.id) === value);
+        if (found) {
+          setSelectedMachineType(found);
+        }
+      }
     },
   });
 
+  // Fetch initial data when component mounts or when value changes
   useEffect(() => {
     fetchMachineTypes({
       data: [],
@@ -59,6 +67,23 @@ export function MachineTypeSelector({
       }
     });
   }, [debouncedInputValue, fetchMachineTypes]);
+
+  // When value prop changes externally, try to load that specific machine type
+  useEffect(() => {
+    if (value && !selectedMachineType) {
+      // Trigger a fetch to get the selected item
+      fetchMachineTypes({
+        data: [],
+        params: {
+          pageSize: 10,
+          pageNumber: 0,
+        }
+      });
+    } else if (!value && selectedMachineType) {
+      // Clear selection when value is cleared externally
+      setSelectedMachineType(null);
+    }
+  }, [value, selectedMachineType, fetchMachineTypes]);
 
   const handleChange = useCallback(
     (_event: any, newValue: MachineTypeEntity | null) => {
