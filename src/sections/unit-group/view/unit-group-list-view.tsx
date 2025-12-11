@@ -1,6 +1,6 @@
 import type { ChangeEvent } from 'react';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -21,51 +21,46 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
-// ----------------------------------------------------------------------
+import { UnitGroupTableRow } from '../unit-group-table-row';
+import { UnitGroupTableToolbar } from '../unit-group-table-toolbar';
 
-type UnitGroup = {
-  id: string;
-  name: string;
-  description: string;
-};
+import type { UnitGroupProps } from '../unit-group-table-row';
+
+// ----------------------------------------------------------------------
 
 export function UnitGroupListView() {
   const router = useRouter();
-  const [unitGroups, setUnitGroups] = useState<UnitGroup[]>([]);
+  const [unitGroups] = useState<UnitGroupProps[]>([
+    {
+      id: '1',
+      name: 'Mass',
+      description: 'Units for measuring mass and weight',
+    },
+    {
+      id: '2',
+      name: 'Volume',
+      description: 'Units for measuring volume and capacity',
+    },
+    {
+      id: '3',
+      name: 'Count',
+      description: 'Units for counting items',
+    },
+    {
+      id: '4',
+      name: 'Length',
+      description: 'Units for measuring length and distance',
+    },
+    {
+      id: '5',
+      name: 'Area',
+      description: 'Units for measuring area',
+    },
+  ]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterName, setFilterName] = useState('');
-
-  // Mock data for demonstration
-  useEffect(() => {
-    setUnitGroups([
-      {
-        id: '1',
-        name: 'Mass',
-        description: 'Units for measuring mass and weight',
-      },
-      {
-        id: '2',
-        name: 'Volume',
-        description: 'Units for measuring volume and capacity',
-      },
-      {
-        id: '3',
-        name: 'Count',
-        description: 'Units for counting items',
-      },
-      {
-        id: '4',
-        name: 'Length',
-        description: 'Units for measuring length and distance',
-      },
-      {
-        id: '5',
-        name: 'Area',
-        description: 'Units for measuring area',
-      },
-    ]);
-  }, []);
+  const [selected, setSelected] = useState<string[]>([]);
 
   const handleFilterName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setFilterName(event.target.value);
@@ -81,14 +76,17 @@ export function UnitGroupListView() {
     setPage(0);
   }, []);
 
-  const handleEdit = useCallback(
+  const handleSelectRow = useCallback(
     (id: string) => {
-      router.push(`/settings/unit-groups/${id}/edit`);
+      const newSelected = selected.includes(id)
+        ? selected.filter((value) => value !== id)
+        : [...selected, id];
+      setSelected(newSelected);
     },
-    [router]
+    [selected]
   );
 
-  const handleDelete = useCallback(async (id: string) => {
+  const handleDeleteRow = useCallback(async (id: string) => {
     // TODO: Implement delete
     console.log('Delete unit group:', id);
   }, []);
@@ -113,11 +111,18 @@ export function UnitGroupListView() {
       </Box>
 
       <Card>
+        <UnitGroupTableToolbar
+          numSelected={selected.length}
+          filterName={filterName}
+          onFilterName={handleFilterName}
+        />
+
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
               <TableHead>
                 <TableRow>
+                  <TableCell padding="checkbox" />
                   <TableCell>Name</TableCell>
                   <TableCell>Description</TableCell>
                   <TableCell align="right">Actions</TableCell>
@@ -128,18 +133,13 @@ export function UnitGroupListView() {
                 {filteredUnitGroups
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <TableRow hover key={row.id}>
-                      <TableCell>{row.name}</TableCell>
-                      <TableCell>{row.description}</TableCell>
-                      <TableCell align="right">
-                        <Button size="small" onClick={() => handleEdit(row.id)}>
-                          Edit
-                        </Button>
-                        <Button size="small" color="error" onClick={() => handleDelete(row.id)}>
-                          Delete
-                        </Button>
-                      </TableCell>
-                    </TableRow>
+                    <UnitGroupTableRow
+                      key={row.id}
+                      row={row}
+                      selected={selected.includes(row.id)}
+                      onSelectRow={() => handleSelectRow(row.id)}
+                      onDeleteRow={() => handleDeleteRow(row.id)}
+                    />
                   ))}
               </TableBody>
             </Table>

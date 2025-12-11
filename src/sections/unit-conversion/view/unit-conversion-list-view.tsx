@@ -1,6 +1,6 @@
 import type { ChangeEvent } from 'react';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -21,61 +21,53 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
-// ----------------------------------------------------------------------
+import { UnitConversionTableRow } from '../unit-conversion-table-row';
+import { UnitConversionTableToolbar } from '../unit-conversion-table-toolbar';
 
-type UnitConversion = {
-  id: string;
-  from: string;
-  to: string;
-  conversionFactor: number;
-  offset: number;
-  formulaDescription: string;
-};
+import type { UnitConversionProps } from '../unit-conversion-table-row';
+
+// ----------------------------------------------------------------------
 
 export function UnitConversionListView() {
   const router = useRouter();
-  const [conversions, setConversions] = useState<UnitConversion[]>([]);
+  const [conversions] = useState<UnitConversionProps[]>([
+    {
+      id: '1',
+      from: 'Kilogram',
+      to: 'Gram',
+      conversionFactor: 1000,
+      offset: 0,
+      formulaDescription: 'g = kg * 1000',
+    },
+    {
+      id: '2',
+      from: 'Liter',
+      to: 'Milliliter',
+      conversionFactor: 1000,
+      offset: 0,
+      formulaDescription: 'mL = L * 1000',
+    },
+    {
+      id: '3',
+      from: 'Celsius',
+      to: 'Fahrenheit',
+      conversionFactor: 1.8,
+      offset: 32,
+      formulaDescription: 'F = C * 1.8 + 32',
+    },
+    {
+      id: '4',
+      from: 'Meter',
+      to: 'Centimeter',
+      conversionFactor: 100,
+      offset: 0,
+      formulaDescription: 'cm = m * 100',
+    },
+  ]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterName, setFilterName] = useState('');
-
-  // Mock data for demonstration
-  useEffect(() => {
-    setConversions([
-      {
-        id: '1',
-        from: 'Kilogram',
-        to: 'Gram',
-        conversionFactor: 1000,
-        offset: 0,
-        formulaDescription: 'g = kg * 1000',
-      },
-      {
-        id: '2',
-        from: 'Liter',
-        to: 'Milliliter',
-        conversionFactor: 1000,
-        offset: 0,
-        formulaDescription: 'mL = L * 1000',
-      },
-      {
-        id: '3',
-        from: 'Celsius',
-        to: 'Fahrenheit',
-        conversionFactor: 1.8,
-        offset: 32,
-        formulaDescription: 'F = C * 1.8 + 32',
-      },
-      {
-        id: '4',
-        from: 'Meter',
-        to: 'Centimeter',
-        conversionFactor: 100,
-        offset: 0,
-        formulaDescription: 'cm = m * 100',
-      },
-    ]);
-  }, []);
+  const [selected, setSelected] = useState<string[]>([]);
 
   const handleFilterName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setFilterName(event.target.value);
@@ -91,14 +83,17 @@ export function UnitConversionListView() {
     setPage(0);
   }, []);
 
-  const handleEdit = useCallback(
+  const handleSelectRow = useCallback(
     (id: string) => {
-      router.push(`/settings/unit-conversions/${id}/edit`);
+      const newSelected = selected.includes(id)
+        ? selected.filter((value) => value !== id)
+        : [...selected, id];
+      setSelected(newSelected);
     },
-    [router]
+    [selected]
   );
 
-  const handleDelete = useCallback(async (id: string) => {
+  const handleDeleteRow = useCallback(async (id: string) => {
     // TODO: Implement delete
     console.log('Delete conversion:', id);
   }, []);
@@ -125,11 +120,18 @@ export function UnitConversionListView() {
       </Box>
 
       <Card>
+        <UnitConversionTableToolbar
+          numSelected={selected.length}
+          filterName={filterName}
+          onFilterName={handleFilterName}
+        />
+
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
               <TableHead>
                 <TableRow>
+                  <TableCell padding="checkbox" />
                   <TableCell>From</TableCell>
                   <TableCell>To</TableCell>
                   <TableCell>Conversion Factor</TableCell>
@@ -143,21 +145,13 @@ export function UnitConversionListView() {
                 {filteredConversions
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <TableRow hover key={row.id}>
-                      <TableCell>{row.from}</TableCell>
-                      <TableCell>{row.to}</TableCell>
-                      <TableCell>{row.conversionFactor}</TableCell>
-                      <TableCell>{row.offset}</TableCell>
-                      <TableCell>{row.formulaDescription}</TableCell>
-                      <TableCell align="right">
-                        <Button size="small" onClick={() => handleEdit(row.id)}>
-                          Edit
-                        </Button>
-                        <Button size="small" color="error" onClick={() => handleDelete(row.id)}>
-                          Delete
-                        </Button>
-                      </TableCell>
-                    </TableRow>
+                    <UnitConversionTableRow
+                      key={row.id}
+                      row={row}
+                      selected={selected.includes(row.id)}
+                      onSelectRow={() => handleSelectRow(row.id)}
+                      onDeleteRow={() => handleDeleteRow(row.id)}
+                    />
                   ))}
               </TableBody>
             </Table>

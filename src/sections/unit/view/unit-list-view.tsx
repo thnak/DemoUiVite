@@ -1,6 +1,6 @@
 import type { ChangeEvent } from 'react';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -21,69 +21,61 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
-// ----------------------------------------------------------------------
+import { UnitTableRow } from '../unit-table-row';
+import { UnitTableToolbar } from '../unit-table-toolbar';
 
-type Unit = {
-  id: string;
-  name: string;
-  symbol: string;
-  group: string;
-  baseUnit: boolean;
-  description: string;
-};
+import type { UnitProps } from '../unit-table-row';
+
+// ----------------------------------------------------------------------
 
 export function UnitListView() {
   const router = useRouter();
-  const [units, setUnits] = useState<Unit[]>([]);
+  const [units] = useState<UnitProps[]>([
+    {
+      id: '1',
+      name: 'Kilogram',
+      symbol: 'kg',
+      group: 'Mass',
+      baseUnit: true,
+      description: 'Base unit of mass',
+    },
+    {
+      id: '2',
+      name: 'Gram',
+      symbol: 'g',
+      group: 'Mass',
+      baseUnit: false,
+      description: 'Unit of mass',
+    },
+    {
+      id: '3',
+      name: 'Liter',
+      symbol: 'L',
+      group: 'Volume',
+      baseUnit: true,
+      description: 'Base unit of volume',
+    },
+    {
+      id: '4',
+      name: 'Milliliter',
+      symbol: 'mL',
+      group: 'Volume',
+      baseUnit: false,
+      description: 'Unit of volume',
+    },
+    {
+      id: '5',
+      name: 'Piece',
+      symbol: 'pcs',
+      group: 'Count',
+      baseUnit: true,
+      description: 'Unit of count',
+    },
+  ]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterName, setFilterName] = useState('');
-
-  // Mock data for demonstration
-  useEffect(() => {
-    setUnits([
-      {
-        id: '1',
-        name: 'Kilogram',
-        symbol: 'kg',
-        group: 'Mass',
-        baseUnit: true,
-        description: 'Base unit of mass',
-      },
-      {
-        id: '2',
-        name: 'Gram',
-        symbol: 'g',
-        group: 'Mass',
-        baseUnit: false,
-        description: 'Unit of mass',
-      },
-      {
-        id: '3',
-        name: 'Liter',
-        symbol: 'L',
-        group: 'Volume',
-        baseUnit: true,
-        description: 'Base unit of volume',
-      },
-      {
-        id: '4',
-        name: 'Milliliter',
-        symbol: 'mL',
-        group: 'Volume',
-        baseUnit: false,
-        description: 'Unit of volume',
-      },
-      {
-        id: '5',
-        name: 'Piece',
-        symbol: 'pcs',
-        group: 'Count',
-        baseUnit: true,
-        description: 'Unit of count',
-      },
-    ]);
-  }, []);
+  const [selected, setSelected] = useState<string[]>([]);
 
   const handleFilterName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setFilterName(event.target.value);
@@ -99,14 +91,17 @@ export function UnitListView() {
     setPage(0);
   }, []);
 
-  const handleEdit = useCallback(
+  const handleSelectRow = useCallback(
     (id: string) => {
-      router.push(`/settings/units/${id}/edit`);
+      const newSelected = selected.includes(id)
+        ? selected.filter((value) => value !== id)
+        : [...selected, id];
+      setSelected(newSelected);
     },
-    [router]
+    [selected]
   );
 
-  const handleDelete = useCallback(async (id: string) => {
+  const handleDeleteRow = useCallback(async (id: string) => {
     // TODO: Implement delete
     console.log('Delete unit:', id);
   }, []);
@@ -131,11 +126,18 @@ export function UnitListView() {
       </Box>
 
       <Card>
+        <UnitTableToolbar
+          numSelected={selected.length}
+          filterName={filterName}
+          onFilterName={handleFilterName}
+        />
+
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
               <TableHead>
                 <TableRow>
+                  <TableCell padding="checkbox" />
                   <TableCell>Name</TableCell>
                   <TableCell>Symbol</TableCell>
                   <TableCell>Group</TableCell>
@@ -149,21 +151,13 @@ export function UnitListView() {
                 {filteredUnits
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <TableRow hover key={row.id}>
-                      <TableCell>{row.name}</TableCell>
-                      <TableCell>{row.symbol}</TableCell>
-                      <TableCell>{row.group}</TableCell>
-                      <TableCell>{row.baseUnit ? 'Yes' : 'No'}</TableCell>
-                      <TableCell>{row.description}</TableCell>
-                      <TableCell align="right">
-                        <Button size="small" onClick={() => handleEdit(row.id)}>
-                          Edit
-                        </Button>
-                        <Button size="small" color="error" onClick={() => handleDelete(row.id)}>
-                          Delete
-                        </Button>
-                      </TableCell>
-                    </TableRow>
+                    <UnitTableRow
+                      key={row.id}
+                      row={row}
+                      selected={selected.includes(row.id)}
+                      onSelectRow={() => handleSelectRow(row.id)}
+                      onDeleteRow={() => handleDeleteRow(row.id)}
+                    />
                   ))}
               </TableBody>
             </Table>
