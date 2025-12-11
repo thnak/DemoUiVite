@@ -7,6 +7,7 @@ import { usePathname } from 'src/routes/hooks';
 import { useMMSNavData } from './nav-config-mms';
 import { useNavData } from './nav-config-dashboard';
 import { useDefaultNavData } from './nav-config-default';
+import { useSettingsNavData } from './nav-config-settings';
 import { useMasterDataNavData } from './nav-config-master-data';
 import { useUserManagementNavData } from './nav-config-user-management';
 import { useDeviceManagementNavData } from './nav-config-device-management';
@@ -21,7 +22,8 @@ type NavModule =
   | 'user-management'
   | 'device-management'
   | 'dashboard'
-  | 'mms';
+  | 'mms'
+  | 'settings';
 
 type NavContextValue = {
   navData: NavData;
@@ -79,6 +81,13 @@ const getModuleFromPath = (pathname: string): NavModule => {
     return 'mms';
   }
 
+  // Settings module routes
+  if (
+    pathname.startsWith('/settings')
+  ) {
+    return 'settings';
+  }
+
   // Default for other routes
   return 'default';
 };
@@ -100,6 +109,7 @@ export function NavProvider({ children }: NavProviderProps) {
   const deviceManagementNavData = useDeviceManagementNavData();
   const dashboardNavData = useNavData();
   const mmsNavData = useMMSNavData();
+  const settingsNavData = useSettingsNavData();
 
   const navData = useMemo(() => {
     switch (currentModule) {
@@ -113,6 +123,8 @@ export function NavProvider({ children }: NavProviderProps) {
         return dashboardNavData;
       case 'mms':
         return mmsNavData;
+      case 'settings':
+        return settingsNavData;
       default:
         return defaultNavData;
     }
@@ -124,6 +136,7 @@ export function NavProvider({ children }: NavProviderProps) {
     deviceManagementNavData,
     dashboardNavData,
     mmsNavData,
+    settingsNavData,
   ]);
 
   const value = useMemo(

@@ -43,4 +43,12 @@ export const MODULES: ModuleItem[] = [
     path: '/machines',
     color: 'primary',
   },
+  {
+    id: 'settings',
+    title: 'Settings',
+    subtitle: 'System configuration - units, conversions, plugins, scheduler',
+    icon: 'solar:settings-bold-duotone',
+    path: '/settings/units',
+    color: 'secondary',
+  },
 ];
