@@ -191,7 +191,7 @@ export function IoTSensorView() {
                     { id: 'pinNumber', label: 'Pin', align: 'center' },
                     { id: 'type', label: 'Type' },
                     { id: 'unitOfMeasurement', label: 'Unit' },
-                    { id: '' },
+                    { id: '', label: '' },
                   ]}
                 />
                 <TableBody>

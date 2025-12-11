@@ -456,7 +456,7 @@ export function IoTDeviceCreateEditView({
                   inputValue={sensorSearchText}
                   onInputChange={(_event, newInputValue) => setSensorSearchText(newInputValue)}
                   options={sensors.filter((s) => !mappedSensors.find((m) => m.id === s.id))}
-                  getOptionLabel={(option) => option.sensorName || option.sensorCode || ''}
+                  getOptionLabel={(option) => option.name || option.code || ''}
                   isOptionEqualToValue={(option, value) => option.id === value.id}
                   loading={isSearchingSensors}
                   renderInput={(params) => (
@@ -482,9 +482,9 @@ export function IoTDeviceCreateEditView({
                   renderOption={(props, option) => (
                     <li {...props} key={option.id?.toString()}>
                       <Box>
-                        <Typography variant="body2">{option.sensorName}</Typography>
+                        <Typography variant="body2">{option.name}</Typography>
                         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                          {option.sensorCode} • {option.type}
+                          {option.code} • {option.type}
                         </Typography>
                       </Box>
                     </li>
@@ -531,10 +531,10 @@ export function IoTDeviceCreateEditView({
                           <TableRow key={sensor.id?.toString()}>
                             <TableCell>
                               <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                                {sensor.sensorCode}
+                                {sensor.code}
                               </Typography>
                             </TableCell>
-                            <TableCell>{sensor.sensorName}</TableCell>
+                            <TableCell>{sensor.name}</TableCell>
                             <TableCell>
                               <Label color="info">{sensor.type || '-'}</Label>
                             </TableCell>
