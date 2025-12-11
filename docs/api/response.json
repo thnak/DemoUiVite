@@ -1799,7 +1799,7 @@
           "Auth"
         ],
         "summary": "Generate a one-time use QR code token for authenticated user",
-        "description": "This endpoint generates a secure one-time use token that can be encoded in a QR code.\r\nThe token expires after 2 minutes and can only be used once.\r\nThe authenticated user on one device can scan this QR code on another device to log in without entering credentials.",
+        "description": "This endpoint generates a secure one-time use token that can be encoded in a QR code.\nThe token expires after 2 minutes and can only be used once.\nThe authenticated user on one device can scan this QR code on another device to log in without entering credentials.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1835,7 +1835,7 @@
           "Auth"
         ],
         "summary": "Login using a one-time QR code token",
-        "description": "This endpoint consumes a one-time use token (from QR code scan) and logs the user in.\r\nThe token is validated and then marked as consumed. If successful, returns authentication tokens.",
+        "description": "This endpoint consumes a one-time use token (from QR code scan) and logs the user in.\nThe token is validated and then marked as consumed. If successful, returns authentication tokens.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -17695,7 +17695,7 @@
         "tags": [
           "Localization"
         ],
-        "summary": "Retrieves all translations for a specific language code.\r\nGET /api/translations/{langCode}",
+        "summary": "Retrieves all translations for a specific language code.\nGET /api/translations/{langCode}",
         "parameters": [
           {
             "name": "langCode",
@@ -17877,7 +17877,7 @@
         "tags": [
           "Localization"
         ],
-        "summary": "upload excel file to update translations. the devault culture is vi-VN and it always have value while other culture can be empty\r\nif other culture is empty, it must be auto translated by Ollama",
+        "summary": "upload excel file to update translations. the devault culture is vi-VN and it always have value while other culture can be empty\nif other culture is empty, it must be auto translated by Ollama",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -20162,6 +20162,45 @@
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machinetype/search": {
+      "get": {
+        "tags": [
+          "MachineType"
+        ],
+        "summary": "Search Machine Type entities",
+        "description": "Searches Machine Type entities by text across searchable fields.",
+        "operationId": "SearchMachineType",
+        "parameters": [
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineTypeEntityResultArray"
                 }
               }
             }
@@ -35266,6 +35305,960 @@
         }
       }
     },
+    "/api/unit/{id}": {
+      "get": {
+        "tags": [
+          "Unit"
+        ],
+        "summary": "Get Unit by ID",
+        "description": "Retrieves a specific Unit entity by its unique identifier.",
+        "operationId": "GetUnitById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/unit/get-page": {
+      "post": {
+        "tags": [
+          "Unit"
+        ],
+        "summary": "Get paginated list of Unit",
+        "description": "Retrieves a paginated list of Unit entities.",
+        "operationId": "GetUnitPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unit/create": {
+      "post": {
+        "tags": [
+          "Unit"
+        ],
+        "summary": "Create a new Unit",
+        "description": "Creates a new Unit entity in the system.",
+        "operationId": "CreateUnit",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnitEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitEntityResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitEntityResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unit/update/{id}": {
+      "post": {
+        "tags": [
+          "Unit"
+        ],
+        "summary": "Update an existing Unit",
+        "description": "Updates specific fields of an existing Unit entity by ID.",
+        "operationId": "UpdateUnit",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unit/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Unit"
+        ],
+        "summary": "Delete a Unit",
+        "description": "Deletes a Unit entity by its unique identifier.",
+        "operationId": "DeleteUnit",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unit/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "Unit"
+        ],
+        "summary": "Soft delete a Unit",
+        "description": "Soft deletes a Unit entity by its unique identifier.",
+        "operationId": "SoftDeleteUnit",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unit/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "Unit"
+        ],
+        "summary": "Soft restore delete a Unit",
+        "description": "Soft restore deletes a Unit entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteUnit",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unit/generate-new-code": {
+      "get": {
+        "tags": [
+          "Unit"
+        ],
+        "summary": "Generate a new code for Unit",
+        "description": "Generates a new unique code for a Unit entity.",
+        "operationId": "GenerateNewUnitCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unit/search": {
+      "get": {
+        "tags": [
+          "Unit"
+        ],
+        "summary": "Search Unit entities",
+        "description": "Searches Unit entities by text across searchable fields.",
+        "operationId": "SearchUnit",
+        "parameters": [
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitEntityResultArray"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unitconversion/{id}": {
+      "get": {
+        "tags": [
+          "UnitConversion"
+        ],
+        "summary": "Get Unit Conversion by ID",
+        "description": "Retrieves a specific Unit Conversion entity by its unique identifier.",
+        "operationId": "GetUnitConversionById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitConversionEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/unitconversion/get-page": {
+      "post": {
+        "tags": [
+          "UnitConversion"
+        ],
+        "summary": "Get paginated list of Unit Conversion",
+        "description": "Retrieves a paginated list of Unit Conversion entities.",
+        "operationId": "GetUnitConversionPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitConversionEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unitconversion/create": {
+      "post": {
+        "tags": [
+          "UnitConversion"
+        ],
+        "summary": "Create a new Unit Conversion",
+        "description": "Creates a new Unit Conversion entity in the system.",
+        "operationId": "CreateUnitConversion",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnitConversionEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitConversionEntityResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitConversionEntityResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unitconversion/update/{id}": {
+      "post": {
+        "tags": [
+          "UnitConversion"
+        ],
+        "summary": "Update an existing Unit Conversion",
+        "description": "Updates specific fields of an existing Unit Conversion entity by ID.",
+        "operationId": "UpdateUnitConversion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unitconversion/delete/{id}": {
+      "delete": {
+        "tags": [
+          "UnitConversion"
+        ],
+        "summary": "Delete a Unit Conversion",
+        "description": "Deletes a Unit Conversion entity by its unique identifier.",
+        "operationId": "DeleteUnitConversion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unitconversion/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "UnitConversion"
+        ],
+        "summary": "Soft delete a Unit Conversion",
+        "description": "Soft deletes a Unit Conversion entity by its unique identifier.",
+        "operationId": "SoftDeleteUnitConversion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unitconversion/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "UnitConversion"
+        ],
+        "summary": "Soft restore delete a Unit Conversion",
+        "description": "Soft restore deletes a Unit Conversion entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteUnitConversion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unitconversion/generate-new-code": {
+      "get": {
+        "tags": [
+          "UnitConversion"
+        ],
+        "summary": "Generate a new code for Unit Conversion",
+        "description": "Generates a new unique code for a Unit Conversion entity.",
+        "operationId": "GenerateNewUnitConversionCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unitgroup/{id}": {
+      "get": {
+        "tags": [
+          "UnitGroup"
+        ],
+        "summary": "Get Unit Group by ID",
+        "description": "Retrieves a specific Unit Group entity by its unique identifier.",
+        "operationId": "GetUnitGroupById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitGroupEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/unitgroup/get-page": {
+      "post": {
+        "tags": [
+          "UnitGroup"
+        ],
+        "summary": "Get paginated list of Unit Group",
+        "description": "Retrieves a paginated list of Unit Group entities.",
+        "operationId": "GetUnitGroupPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitGroupEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unitgroup/create": {
+      "post": {
+        "tags": [
+          "UnitGroup"
+        ],
+        "summary": "Create a new Unit Group",
+        "description": "Creates a new Unit Group entity in the system.",
+        "operationId": "CreateUnitGroup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnitGroupEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitGroupEntityResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitGroupEntityResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unitgroup/update/{id}": {
+      "post": {
+        "tags": [
+          "UnitGroup"
+        ],
+        "summary": "Update an existing Unit Group",
+        "description": "Updates specific fields of an existing Unit Group entity by ID.",
+        "operationId": "UpdateUnitGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unitgroup/delete/{id}": {
+      "delete": {
+        "tags": [
+          "UnitGroup"
+        ],
+        "summary": "Delete a Unit Group",
+        "description": "Deletes a Unit Group entity by its unique identifier.",
+        "operationId": "DeleteUnitGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unitgroup/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "UnitGroup"
+        ],
+        "summary": "Soft delete a Unit Group",
+        "description": "Soft deletes a Unit Group entity by its unique identifier.",
+        "operationId": "SoftDeleteUnitGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unitgroup/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "UnitGroup"
+        ],
+        "summary": "Soft restore delete a Unit Group",
+        "description": "Soft restore deletes a Unit Group entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteUnitGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unitgroup/generate-new-code": {
+      "get": {
+        "tags": [
+          "UnitGroup"
+        ],
+        "summary": "Generate a new code for Unit Group",
+        "description": "Generates a new unique code for a Unit Group entity.",
+        "operationId": "GenerateNewUnitGroupCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/user/{id}": {
       "get": {
         "tags": [
@@ -41185,7 +42178,7 @@
           },
           "enableMaintenanceMode": {
             "type": "boolean",
-            "description": "Gets or sets a value indicating whether the entire site is in maintenance mode.\r\nIf true, non-admin users should be redirected to a maintenance page.",
+            "description": "Gets or sets a value indicating whether the entire site is in maintenance mode.\nIf true, non-admin users should be redirected to a maintenance page.",
             "default": false
           },
           "maintenanceModeMessage": {
@@ -41208,7 +42201,7 @@
           },
           "backgroundTaskCronExpression": {
             "type": "string",
-            "description": "Gets or sets the CRON expression that defines the schedule for a recurring background job.\r\nExample: \"0 2 * * *\" for 2:00 AM daily.",
+            "description": "Gets or sets the CRON expression that defines the schedule for a recurring background job.\nExample: \"0 2 * * *\" for 2:00 AM daily.",
             "default": "0 3 * * *",
             "nullable": true
           },
@@ -41219,7 +42212,7 @@
           },
           "mailServer": {
             "type": "string",
-            "description": "Gets or sets the SMTP server address used for sending emails.\r\nFormat: \"smtp.server.com\"",
+            "description": "Gets or sets the SMTP server address used for sending emails.\nFormat: \"smtp.server.com\"",
             "nullable": true
           },
           "mailServerPort": {
@@ -41229,12 +42222,12 @@
           },
           "smtpUsername": {
             "type": "string",
-            "description": "Gets or sets the SMTP username for email authentication.\r\nUsually the same as SystemEmail but can be different for some providers.",
+            "description": "Gets or sets the SMTP username for email authentication.\nUsually the same as SystemEmail but can be different for some providers.",
             "nullable": true
           },
           "smtpPassword": {
             "type": "string",
-            "description": "Gets or sets the SMTP password for email authentication.\r\nStore app-specific passwords for providers like Gmail, Outlook, etc.",
+            "description": "Gets or sets the SMTP password for email authentication.\nStore app-specific passwords for providers like Gmail, Outlook, etc.",
             "nullable": true
           },
           "smtpEnableSsl": {
@@ -41268,7 +42261,7 @@
           },
           "allowedIpRangesForAdminAccess": {
             "type": "string",
-            "description": "Gets or sets a comma-separated list of Ip addresses or CIDR blocks allowed to access admin areas.\r\nAn empty or null string means access is not restricted by Ip.",
+            "description": "Gets or sets a comma-separated list of Ip addresses or CIDR blocks allowed to access admin areas.\nAn empty or null string means access is not restricted by Ip.",
             "nullable": true
           },
           "renderMode": {
@@ -41276,7 +42269,7 @@
           },
           "enableOnlinePayments": {
             "type": "boolean",
-            "description": "Gets or sets a value indicating whether online payment processing is enabled.\r\nThis can be used as a \"kill switch\" for the payment system.",
+            "description": "Gets or sets a value indicating whether online payment processing is enabled.\nThis can be used as a \"kill switch\" for the payment system.",
             "default": true
           },
           "enableNewUserRegistration": {
@@ -41286,12 +42279,12 @@
           },
           "enablePushNotifications": {
             "type": "boolean",
-            "description": "Gets or sets a value indicating whether the system should send push notifications.\r\nActs as a master \"kill switch\" for all push notifications.",
+            "description": "Gets or sets a value indicating whether the system should send push notifications.\nActs as a master \"kill switch\" for all push notifications.",
             "default": true
           },
           "logLevel": {
             "type": "string",
-            "description": "Gets or sets the desired logging level (e.g., \"Information\", \"Debug\", \"Warning\", \"Error\").\r\nThis should map to a LogLevel enum in your logging system.",
+            "description": "Gets or sets the desired logging level (e.g., \"Information\", \"Debug\", \"Warning\", \"Error\").\nThis should map to a LogLevel enum in your logging system.",
             "default": "Information",
             "nullable": true
           },
@@ -41448,12 +42441,12 @@
             "items": {
               "$ref": "#/components/schemas/StringObjectKeyValuePair"
             },
-            "description": "Represents a collection of field parameters and their types.",
+            "description": "Chuỗi JSON chứa các cấu hình đặc thù cho plugin.\nGiúp một plugin có thể hoạt động theo nhiều cách khác nhau cho các route khác nhau.",
             "nullable": true
           },
           "authKey": {
             "type": "string",
-            "description": "Mã xác thực (API Key) mà client phải gửi trong header để truy cập route này.\r\n**Bảo mật**: Giá trị này NÊN được hash trước khi lưu vào DB.",
+            "description": "Mã xác thực (API Key) mà client phải gửi trong header để truy cập route này.\n**Bảo mật**: Giá trị này NÊN được hash trước khi lưu vào DB.",
             "nullable": true
           },
           "isPayloadValidationEnabled": {
@@ -41462,7 +42455,7 @@
           },
           "payloadValidationSecret": {
             "type": "string",
-            "description": "Chuỗi bí mật (secret) dùng để xác thực mã băm (HMAC) của payload.\r\nChỉ được sử dụng khi IsPayloadValidationEnabled = true.\r\n**Bảo mật**: Giá trị này KHÔNG NÊN được lưu dưới dạng plaintext. Hãy mã hóa nó.",
+            "description": "Chuỗi bí mật (secret) dùng để xác thực mã băm (HMAC) của payload.\nChỉ được sử dụng khi IsPayloadValidationEnabled = true.\n**Bảo mật**: Giá trị này KHÔNG NÊN được lưu dưới dạng plaintext. Hãy mã hóa nó.",
             "nullable": true
           },
           "status": {
@@ -45259,13 +46252,13 @@
           },
           "build": {
             "type": "integer",
-            "description": "Gets the optional Build version component. Often used for CI build numbers or revisions.\r\nReturns null if no build number was specified.",
+            "description": "Gets the optional Build version component. Often used for CI build numbers or revisions.\nReturns null if no build number was specified.",
             "format": "int32",
             "nullable": true
           },
           "preReleaseTag": {
             "type": "string",
-            "description": "Gets the optional Pre-release tag (e.g., \"alpha\", \"beta\", \"rc.1\").\r\nReturns null or empty if this is a stable release.",
+            "description": "Gets the optional Pre-release tag (e.g., \"alpha\", \"beta\", \"rc.1\").\nReturns null or empty if this is a stable release.",
             "nullable": true
           },
           "originalString": {
@@ -45299,7 +46292,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Represents a firmware version, typically following Major.Minor.Patch pattern,\r\npotentially including a Build number and/or a PreRelease tag.\r\nProvides functionality for parsing, comparison, string representation, and generation."
+        "description": "Represents a firmware version, typically following Major.Minor.Patch pattern,\npotentially including a Build number and/or a PreRelease tag.\nProvides functionality for parsing, comparison, string representation, and generation."
       },
       "FirmwareVersionEntityBasePaginationResponse": {
         "type": "object",
@@ -46006,8 +46999,7 @@
             "$ref": "#/components/schemas/PinInterruptMode"
           },
           "unitOfMeasurement": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/ObjectId"
           },
           "accuracy": {
             "type": "number",
@@ -47186,12 +48178,19 @@
             "type": "boolean",
             "description": "Indicates whether the entity is in draft status."
           },
-          "sensorCode": {
+          "code": {
             "type": "string",
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
             "nullable": true
           },
-          "sensorName": {
+          "name": {
             "type": "string",
+            "description": "Tên mô tả của thực thể.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Mô tả chi tiết về thực thể.",
             "nullable": true
           },
           "type": {
@@ -47202,6 +48201,7 @@
           },
           "pinNumber": {
             "type": "integer",
+            "description": "Pin the sensor is connected to",
             "format": "int32"
           },
           "pinInputMode": {
@@ -47211,33 +48211,25 @@
             "$ref": "#/components/schemas/PinInterruptMode"
           },
           "unitOfMeasurement": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/ObjectId"
           },
           "accuracy": {
             "type": "number",
+            "description": "Accuracy of the sensor",
             "format": "float"
           },
           "calibrationTime": {
             "type": "string",
+            "description": "Last calibration time of the sensor",
             "format": "date-time",
             "nullable": true
-          },
-          "rotate": {
-            "type": "number",
-            "format": "float"
-          },
-          "flipHorizontal": {
-            "type": "boolean"
-          },
-          "flipVertical": {
-            "type": "boolean"
           },
           "status": {
             "$ref": "#/components/schemas/IoTSensorStatus"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Represents an IoT Sensor entity in the system."
       },
       "IoTSensorEntityBasePaginationResponse": {
         "type": "object",
@@ -47388,7 +48380,8 @@
           "faulty",
           "decommissioned"
         ],
-        "type": "string"
+        "type": "string",
+        "description": "Status of an IoT Sensor"
       },
       "IoTSensorType": {
         "enum": [
@@ -48590,7 +49583,8 @@
           "byPosition",
           "byFunction"
         ],
-        "type": "string"
+        "type": "string",
+        "description": "Loại nhóm máy"
       },
       "MachineOutputMapping": {
         "type": "object",
@@ -48846,18 +49840,18 @@
           },
           "code": {
             "type": "string",
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
             "nullable": true
           },
           "name": {
             "type": "string",
+            "description": "Tên mô tả của thực thể.",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "Mô tả chi tiết về thực thể.",
             "nullable": true
-          },
-          "category": {
-            "$ref": "#/components/schemas/WorkCenterResourceCategory"
           }
         },
         "additionalProperties": false,
@@ -48927,6 +49921,39 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "MachineTypeEntityResultArray": {
+        "required": [
+          "data",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Trạng thái thành công hay thất bại"
+          },
+          "message": {
+            "type": "string",
+            "description": "Thông điệp trả về",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MachineTypeEntity"
+            },
+            "description": "Dữ liệu trả về",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Kết quả trả về dạng mảng"
       },
       "MaintenanceSettings": {
         "type": "object",
@@ -50070,7 +51097,7 @@
           },
           "quantityPerSignal": {
             "type": "number",
-            "description": "TỈ LỆ: Số lượng sản phẩm được tạo ra cho mỗi tín hiệu từ IoT\r\nMặc định là 1.0",
+            "description": "TỈ LỆ: Số lượng sản phẩm được tạo ra cho mỗi tín hiệu từ IoT\nMặc định là 1.0",
             "format": "double"
           },
           "disposition": {
@@ -51172,11 +52199,11 @@
             "description": "Mô tả chi tiết về thực thể.",
             "nullable": true
           },
-          "unitOfMeasure": {
-            "$ref": "#/components/schemas/UnitOfMeasure"
+          "unitOfMeasureId": {
+            "$ref": "#/components/schemas/ObjectId"
           },
-          "secondaryUnitOfMeasure": {
-            "$ref": "#/components/schemas/UnitOfMeasure"
+          "secondaryUnitOfMeasureId": {
+            "$ref": "#/components/schemas/ObjectId"
           },
           "productCategoryId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -53091,8 +54118,7 @@
             "$ref": "#/components/schemas/PinInterruptMode"
           },
           "unitOfMeasurement": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/ObjectId"
           },
           "accuracy": {
             "type": "number",
@@ -53272,12 +54298,12 @@
           },
           "normalizedName": {
             "type": "string",
-            "description": "Tên chuẩn hóa của ca làm việc (chuyển về chữ thường, bỏ dấu, thay khoảng trắng bằng gạch dưới).\r\nCó thể dùng để tạo mã.\r\nBE use case only.",
+            "description": "Tên chuẩn hóa của ca làm việc (chuyển về chữ thường, bỏ dấu, thay khoảng trắng bằng gạch dưới).\nCó thể dùng để tạo mã.\nBE use case only.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Định nghĩa ca làm việc cho một ngày cụ thể trong tuần.\r\nBao gồm giờ bắt đầu, giờ kết thúc và các khoảng nghỉ trong ca."
+        "description": "Định nghĩa ca làm việc cho một ngày cụ thể trong tuần.\nBao gồm giờ bắt đầu, giờ kết thúc và các khoảng nghỉ trong ca."
       },
       "ShiftTemplateEntity": {
         "type": "object",
@@ -53328,7 +54354,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Mẫu ca làm việc, định nghĩa các ca làm việc áp dụng cho một lịch làm việc.\r\nMẫu ca có thể được tái sử dụng cho nhiều lịch làm việc khác nhau và áp dụng cụ thể cho từng ngày trong tuần."
+        "description": "Mẫu ca làm việc, định nghĩa các ca làm việc áp dụng cho một lịch làm việc.\nMẫu ca có thể được tái sử dụng cho nhiều lịch làm việc khác nhau và áp dụng cụ thể cho từng ngày trong tuần."
       },
       "ShiftTemplateEntityBasePaginationResponse": {
         "type": "object",
@@ -53513,7 +54539,7 @@
             "items": {
               "$ref": "#/components/schemas/ObjectId"
             },
-            "description": "Collection of page IDs that belong to this slideshow.\r\nPages will be navigated in the order specified by their Order property.",
+            "description": "Collection of page IDs that belong to this slideshow.\nPages will be navigated in the order specified by their Order property.",
             "nullable": true
           },
           "pages": {
@@ -53521,7 +54547,7 @@
             "items": {
               "$ref": "#/components/schemas/PageEntity"
             },
-            "description": "Collection of pages that belong to this slideshow (populated when needed).\r\nThis is not stored in the database but can be populated via joins/lookups.",
+            "description": "Collection of pages that belong to this slideshow (populated when needed).\nThis is not stored in the database but can be populated via joins/lookups.",
             "nullable": true
           },
           "pageCount": {
@@ -53532,7 +54558,7 @@
           },
           "estimatedTotalDurationMs": {
             "type": "integer",
-            "description": "Gets the estimated total duration of the slideshow in milliseconds.\r\nThis considers individual page durations if set, otherwise uses the default duration.",
+            "description": "Gets the estimated total duration of the slideshow in milliseconds.\nThis considers individual page durations if set, otherwise uses the default duration.",
             "format": "int32",
             "readOnly": true
           }
@@ -53665,7 +54691,7 @@
           },
           "numberOfIdenticalUnits": {
             "type": "integer",
-            "description": "Số lượng đơn vị máy móc giống hệt nhau tại trạm này có thể hoạt động song song\r\n(Thường là 1, nhưng nếu là một cụm máy giống nhau thì có thể lớn hơn 1)",
+            "description": "Số lượng đơn vị máy móc giống hệt nhau tại trạm này có thể hoạt động song song\n(Thường là 1, nhưng nếu là một cụm máy giống nhau thì có thể lớn hơn 1)",
             "format": "int32"
           },
           "imageUrl": {
@@ -54643,7 +55669,7 @@
             "items": {
               "$ref": "#/components/schemas/CommentReaction"
             },
-            "description": "List of emoji reactions on this comment.\r\nEach reaction includes the emoji and the user who reacted.",
+            "description": "List of emoji reactions on this comment.\nEach reaction includes the emoji and the user who reacted.",
             "nullable": true
           },
           "deletedAt": {
@@ -54657,7 +55683,7 @@
           },
           "lastEditedAt": {
             "type": "string",
-            "description": "The timestamp of the last edit to this comment.\r\nNote: Edit history is not tracked as per requirements.",
+            "description": "The timestamp of the last edit to this comment.\nNote: Edit history is not tracked as per requirements.",
             "format": "date-time",
             "nullable": true
           },
@@ -54667,7 +55693,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Represents a comment/conversation entry for a SystemErrorReportEntity.\r\nComments can contain text, attachments (images/videos), and receive emoji reactions."
+        "description": "Represents a comment/conversation entry for a SystemErrorReportEntity.\nComments can contain text, attachments (images/videos), and receive emoji reactions."
       },
       "SystemErrorReportCommentEntityBasePaginationResponse": {
         "type": "object",
@@ -55161,7 +56187,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Cấu hình hệ thống chung (ít liên quan đến các domain entity khác).\r\nLưu ý: các complex types bên trong có thể được lưu dưới dạng JSON trong cột DB."
+        "description": "Cấu hình hệ thống chung (ít liên quan đến các domain entity khác).\nLưu ý: các complex types bên trong có thể được lưu dưới dạng JSON trong cột DB."
       },
       "SystemSettingEntityBasePaginationResponse": {
         "type": "object",
@@ -55245,6 +56271,379 @@
           }
         },
         "additionalProperties": false
+      },
+      "UnitConversionEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "fromUnitId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "toUnitId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "conversionFactor": {
+            "type": "number",
+            "description": "The factor used for conversion.",
+            "format": "double"
+          },
+          "offset": {
+            "type": "number",
+            "description": "The offset used in the conversion formula.",
+            "format": "double"
+          },
+          "formulaDescription": {
+            "type": "string",
+            "description": "A description of the conversion formula.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a conversion between two units of measurement."
+      },
+      "UnitConversionEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnitConversionEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "UnitConversionEntityResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/UnitConversionEntity"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "UnitEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the unit.",
+            "nullable": true
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Symbol of the unit (e.g., \"kg\", \"m\", \"s\").",
+            "nullable": true
+          },
+          "isBaseUnit": {
+            "type": "boolean",
+            "description": "Indicates whether this unit is the base unit for its unit group."
+          },
+          "unitGroupId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the unit.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a unit of measurement in the system."
+      },
+      "UnitEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnitEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "UnitEntityResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/UnitEntity"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "UnitEntityResultArray": {
+        "required": [
+          "data",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Trạng thái thành công hay thất bại"
+          },
+          "message": {
+            "type": "string",
+            "description": "Thông điệp trả về",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnitEntity"
+            },
+            "description": "Dữ liệu trả về",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Kết quả trả về dạng mảng"
+      },
+      "UnitGroupEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the unit group.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the unit group.",
+            "nullable": true
+          },
+          "translations": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Translations for the unit group name and description.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a group of related units of measurement."
+      },
+      "UnitGroupEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnitGroupEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "UnitGroupEntityResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/UnitGroupEntity"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
       "UnitOfMeasure": {
         "enum": [
@@ -56759,7 +58158,7 @@
           },
           "secret": {
             "type": "string",
-            "description": "Chuỗi bí mật dùng để tạo chữ ký HMAC, giúp phía nhận xác thực yêu cầu.\r\nCần được mã hóa khi lưu trong cơ sở dữ liệu.",
+            "description": "Chuỗi bí mật dùng để tạo chữ ký HMAC, giúp phía nhận xác thực yêu cầu.\nCần được mã hóa khi lưu trong cơ sở dữ liệu.",
             "nullable": true
           },
           "pluginId": {
@@ -56777,7 +58176,7 @@
           },
           "averageResponseTimeMs": {
             "type": "number",
-            "description": "Thời gian trung bình (ms) mà TargetUrl phản hồi.\r\nHữu ích để phát hiện các webhook chậm.",
+            "description": "Thời gian trung bình (ms) mà TargetUrl phản hồi.\nHữu ích để phát hiện các webhook chậm.",
             "format": "double"
           },
           "lastAttemptAt": {
@@ -56794,7 +58193,7 @@
           },
           "lastErrorMessage": {
             "type": "string",
-            "description": "Thông báo lỗi của lần gửi thất bại gần nhất.\r\nRất quan trọng cho việc gỡ lỗi.",
+            "description": "Thông báo lỗi của lần gửi thất bại gần nhất.\nRất quan trọng cho việc gỡ lỗi.",
             "nullable": true
           },
           "isPayloadEncrypted": {
@@ -56803,12 +58202,12 @@
           },
           "publicKey": {
             "type": "string",
-            "description": "Public Key (định dạng PEM) của người nhận, dùng để mã hóa payload.\r\nSẽ là null nếu IsPayloadEncrypted = false.",
+            "description": "Public Key (định dạng PEM) của người nhận, dùng để mã hóa payload.\nSẽ là null nếu IsPayloadEncrypted = false.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Lớp đại diện cho một Webhook trong hệ thống.\r\nWebhook là một cơ chế cho phép hệ thống gửi dữ liệu đến một URL cụ thể\r\nkhi một sự kiện xảy ra. Nó thường được sử dụng để tích hợp với các dịch vụ bên ngoài\r\nhoặc để thông báo cho các hệ thống khác về các sự kiện quan trọng trong ứng dụng."
+        "description": "Lớp đại diện cho một Webhook trong hệ thống.\nWebhook là một cơ chế cho phép hệ thống gửi dữ liệu đến một URL cụ thể\nkhi một sự kiện xảy ra. Nó thường được sử dụng để tích hợp với các dịch vụ bên ngoài\nhoặc để thông báo cho các hệ thống khác về các sự kiện quan trọng trong ứng dụng."
       },
       "WebhookEntityBasePaginationResponse": {
         "type": "object",
@@ -57349,17 +58748,6 @@
         },
         "additionalProperties": false
       },
-      "WorkCenterResourceCategory": {
-        "enum": [
-          "machine",
-          "labor",
-          "tool",
-          "external",
-          "virtual"
-        ],
-        "type": "string",
-        "description": "Danh mục loại tài nguyên của trung tâm làm việc."
-      },
       "WorkDateCalendarStatisticEntity": {
         "type": "object",
         "properties": {
@@ -57421,7 +58809,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Work Date Calendar Statistic Entity. Stores statistics related to work date calendars.\r\nPre-computed for performance optimization."
+        "description": "Work Date Calendar Statistic Entity. Stores statistics related to work date calendars.\nPre-computed for performance optimization."
       },
       "WorkDateCalendarStatisticEntityBasePaginationResponse": {
         "type": "object",
@@ -57924,7 +59312,7 @@
     },
     {
       "name": "Localization",
-      "description": "Controller for managing localization and translations.\r\nProvides endpoints to retrieve translations for different languages,\r\nincluding batch retrieval and file upload for updating translations."
+      "description": "Controller for managing localization and translations.\nProvides endpoints to retrieve translations for different languages,\nincluding batch retrieval and file upload for updating translations."
     },
     {
       "name": "Machine",
@@ -58084,6 +59472,15 @@
     },
     {
       "name": "Test"
+    },
+    {
+      "name": "Unit"
+    },
+    {
+      "name": "UnitConversion"
+    },
+    {
+      "name": "UnitGroup"
     },
     {
       "name": "User",
