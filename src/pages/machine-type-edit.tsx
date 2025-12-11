@@ -6,16 +6,16 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { CONFIG } from 'src/config-global';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { useGetMachineById } from 'src/api/hooks/generated/use-machine';
+import { useGetMachineTypeById } from 'src/api/hooks/generated/use-machine-type';
 
-import { MachineCreateEditView } from 'src/sections/machine/view';
+import { MachineTypeCreateEditView } from 'src/sections/machine-type/view';
 
 // ----------------------------------------------------------------------
 
 export default function Page() {
   const { id } = useParams();
 
-  const { data: machineData, isLoading, error } = useGetMachineById(id || '', {
+  const { data: machineTypeData, isLoading, error } = useGetMachineTypeById(id || '', {
     enabled: !!id,
   });
 
@@ -29,11 +29,11 @@ export default function Page() {
     );
   }
 
-  if (error || !machineData) {
+  if (error || !machineTypeData) {
     return (
       <DashboardContent>
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
-          <Typography color="error">Machine not found</Typography>
+          <Typography color="error">Machine Type not found</Typography>
         </Box>
       </DashboardContent>
     );
@@ -41,19 +41,15 @@ export default function Page() {
 
   return (
     <>
-      <title>{`Edit Machine - ${CONFIG.appName}`}</title>
+      <title>{`Edit Machine Type - ${CONFIG.appName}`}</title>
 
-      <MachineCreateEditView
+      <MachineTypeCreateEditView
         isEdit
-        currentMachine={{
-          id: machineData.id?.toString() || '',
-          code: machineData.code || '',
-          name: machineData.name || '',
-          imageUrl: machineData.imageUrl || '',
-          areaId: machineData.areaId ? String(machineData.areaId) : null,
-          calendarId: machineData.calendarId ? String(machineData.calendarId) : null,
-          machineTypeId: machineData.machineTypeId ? String(machineData.machineTypeId) : null,
-          calculationMode: machineData.calculationMode || 'pairParallel',
+        currentMachineType={{
+          id: machineTypeData.id?.toString() || '',
+          code: machineTypeData.code || '',
+          name: machineTypeData.name || '',
+          description: machineTypeData.description || '',
         }}
       />
     </>

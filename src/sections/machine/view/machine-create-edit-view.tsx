@@ -36,8 +36,9 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { useGetapiDevicesearchdevice } from 'src/api/hooks/generated/use-device';
 import { useCreateMachine, useUpdateMachine } from 'src/api/hooks/generated/use-machine';
 
-import { AreaSelector } from 'src/components/area-selector';
-import { CalendarSelector } from 'src/components/calendar-selector';
+import { AreaSelector } from 'src/components/selectors/area-selector';
+import { CalendarSelector } from 'src/components/selectors/calendar-selector';
+import { MachineTypeSelector } from 'src/components/selectors/machine-type-selector';
 import { ImageEntityResourceUploader } from 'src/components/image-entity-resource-uploader';
 
 // ----------------------------------------------------------------------
@@ -48,6 +49,7 @@ interface MachineFormData {
   imageUrl: string;
   areaId: string | null;
   calendarId: string | null;
+  machineTypeId: string | null;
   calculationMode: OutputCalculationMode;
 }
 
@@ -73,6 +75,7 @@ interface MachineCreateEditViewProps {
     imageUrl: string;
     areaId: string | null;
     calendarId: string | null;
+    machineTypeId: string | null;
     calculationMode: OutputCalculationMode;
   };
 }
@@ -90,6 +93,7 @@ export function MachineCreateEditView({
     imageUrl: currentMachine?.imageUrl || '',
     areaId: currentMachine?.areaId || null,
     calendarId: currentMachine?.calendarId || null,
+    machineTypeId: currentMachine?.machineTypeId || null,
     calculationMode: currentMachine?.calculationMode || 'pairParallel',
   });
 
@@ -187,6 +191,13 @@ export function MachineCreateEditView({
     }));
   }, []);
 
+  const handleMachineTypeChange = useCallback((machineTypeId: string | null) => {
+    setFormData((prev) => ({
+      ...prev,
+      machineTypeId,
+    }));
+  }, []);
+
   const handleDeviceAdd = useCallback(() => {
     if (selectedDevice && !deviceMappings.some((dm) => dm.deviceId === String(selectedDevice.id))) {
       setDeviceMappings((prev) => [
@@ -233,6 +244,7 @@ export function MachineCreateEditView({
           { key: 'imageUrl', value: formData.imageUrl },
           { key: 'areaId', value: formData.areaId || undefined },
           { key: 'calendarId', value: formData.calendarId || undefined },
+          { key: 'machineTypeId', value: formData.machineTypeId || undefined },
           { key: 'calculationMode', value: formData.calculationMode },
         ],
       });
@@ -245,6 +257,7 @@ export function MachineCreateEditView({
           imageUrl: formData.imageUrl,
           areaId: formData.areaId || undefined,
           calendarId: formData.calendarId || undefined,
+          machineTypeId: formData.machineTypeId || undefined,
           calculationMode: formData.calculationMode,
         },
       });
@@ -307,6 +320,14 @@ export function MachineCreateEditView({
                 value={formData.calendarId}
                 onChange={handleCalendarChange}
                 label="Calendar"
+              />
+            </Box>
+
+            <Box sx={{ mt: 3 }}>
+              <MachineTypeSelector
+                value={formData.machineTypeId}
+                onChange={handleMachineTypeChange}
+                label="Machine Type"
               />
             </Box>
 
