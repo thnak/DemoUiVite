@@ -107,9 +107,6 @@ export function DefectReasonGroupTableRow({
         </TableCell>
 
         <TableCell align="right">
-          <IconButton onClick={handleEditRow}>
-            <Iconify icon="solar:pen-bold" />
-          </IconButton>
           <IconButton onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>

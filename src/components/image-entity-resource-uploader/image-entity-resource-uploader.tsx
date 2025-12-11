@@ -77,9 +77,9 @@ export function ImageEntityResourceUploader({
 
   const { mutate: uploadFiles, isPending: isUploading } = useUploadFiles({
     onSuccess: (response) => {
-      if (response.isSuccess && response.fileCodes && response.fileCodes.length > 0) {
+      if (response.isSuccess && response.value && response.value.length > 0) {
         // Construct the new image URL from the file code
-        const newImageUrl = `/api/Files/download/${response.fileCodes[0]}`;
+        const newImageUrl = response.value[0];
         onImageUrlChange?.(newImageUrl);
         handleCloseDialog();
       } else {
