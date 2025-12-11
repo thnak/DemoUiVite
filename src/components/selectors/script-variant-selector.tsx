@@ -65,6 +65,7 @@ export function ScriptVariantSelector({
       options={items}
       getOptionLabel={(option) => {
         if (typeof option === 'string') return option;
+        // Try common property names across different entity types
         const entity = option as any;
         return entity.name || entity.code || entity.sensorName || entity.sensorCode || entity.title || String(entity.id) || '';
       }}

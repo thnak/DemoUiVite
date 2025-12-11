@@ -198,6 +198,7 @@ function generateSelectorComponent(info: EntitySearchInfo): string {
   lines.push(`      options={items}`);
   lines.push(`      getOptionLabel={(option) => {`);
   lines.push(`        if (typeof option === 'string') return option;`);
+  lines.push(`        // Try common property names across different entity types`);
   lines.push(`        const entity = option as any;`);
   lines.push(`        return entity.name || entity.code || entity.sensorName || entity.sensorCode || entity.title || String(entity.id) || '';`);
   lines.push(`      }}`);

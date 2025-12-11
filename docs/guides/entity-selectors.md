@@ -151,13 +151,15 @@ All selector components accept the following props:
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `value` | `string \| null` | `undefined` | The selected entity ID |
+| `value` | `string \| null` | `undefined` | The selected entity ID (for form integration) |
 | `onChange` | `(id: string \| null) => void` | `undefined` | Callback fired when selection changes |
 | `disabled` | `boolean` | `false` | If true, the selector is disabled |
 | `label` | `string` | Entity name | Label for the input field |
 | `error` | `boolean` | `false` | If true, shows error state |
 | `helperText` | `string` | `undefined` | Helper text shown below the input |
 | `required` | `boolean` | `false` | If true, shows required indicator |
+
+**Note on `value` prop**: The selector manages its own internal state for search and selection. The `value` prop is used for form integration and tracking the selected entity ID, but the component does not pre-load the entity from this ID. This is by design for autocomplete components that fetch data on-demand as users type.
 
 ## Features
 
