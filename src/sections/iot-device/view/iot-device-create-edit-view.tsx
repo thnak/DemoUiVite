@@ -29,7 +29,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-// import { useSearchMachine } from 'src/api/hooks/generated/use-machine';
+import { useSearchMachine } from 'src/api/hooks/generated/use-machine';
 import { useSearchIoTSensor } from 'src/api/hooks/generated/use-io-tsensor';
 import { useCreateIoTDevice, useUpdateIoTDevice } from 'src/api/hooks/generated/use-io-tdevice';
 import { useGetapiIotSensorgetsensorfromdevicedeviceCode } from 'src/api/hooks/generated/use-iot-sensor';
@@ -55,6 +55,7 @@ interface IoTDeviceFormData {
   name: string;
   macAddress: string;
   mqttPassword: string;
+  mqttUsername: string;
   type: IoTDeviceType | '';
   machineId: string;
   imageUrl: string;
@@ -68,6 +69,7 @@ interface IoTDeviceCreateEditViewProps {
     name: string;
     macAddress: string;
     mqttPassword: string;
+    mqttUsername: string;
     type: IoTDeviceType | '';
     machineId: string;
     machineName: string;
@@ -87,6 +89,7 @@ export function IoTDeviceCreateEditView({
     name: currentDevice?.name || '',
     macAddress: currentDevice?.macAddress || '',
     mqttPassword: currentDevice?.mqttPassword || '',
+    mqttUsername: currentDevice?.mqttUsername || '',
     type: currentDevice?.type || '',
     machineId: currentDevice?.machineId || '',
     imageUrl: currentDevice?.imageUrl || '',
@@ -105,11 +108,11 @@ export function IoTDeviceCreateEditView({
   const [sensorSearchText, setSensorSearchText] = useState('');
   const [selectedSensorToAdd, setSelectedSensorToAdd] = useState<IoTSensorEntity | null>(null);
 
-  // // API hooks
-  // const { data: machineSearchResult, isLoading: isSearchingMachines } = useSearchMachine(
-  //   { searchText: machineSearchText, maxResults: 10 },
-  //   { enabled: machineSearchText.length > 0 }
-  // );
+  // API hooks
+  const { data: machineSearchResult, isLoading: isSearchingMachines } = useSearchMachine(
+    { searchText: machineSearchText, maxResults: 10 },
+    { enabled: machineSearchText.length > 0 }
+  );
 
   const { data: sensorSearchResult, isLoading: isSearchingSensors } = useSearchIoTSensor(
     { searchText: sensorSearchText, maxResults: 10 },
@@ -233,6 +236,7 @@ export function IoTDeviceCreateEditView({
           { key: 'name', value: formData.name },
           { key: 'macAddress', value: formData.macAddress },
           { key: 'mqttPassword', value: formData.mqttPassword },
+          { key: 'mqttUsername', value: formData.mqttUsername },
           { key: 'type', value: formData.type },
           { key: 'machineId', value: formData.machineId },
           { key: 'imageUrl', value: formData.imageUrl },
@@ -245,6 +249,7 @@ export function IoTDeviceCreateEditView({
           name: formData.name,
           macAddress: formData.macAddress || undefined,
           mqttPassword: formData.mqttPassword || undefined,
+          mqttUsername: formData.mqttUsername || undefined,
           type: formData.type ? (formData.type as IoTDeviceType) : undefined,
           machineId: formData.machineId || undefined,
           imageUrl: formData.imageUrl || undefined,
@@ -257,7 +262,7 @@ export function IoTDeviceCreateEditView({
     router.push('/iot-devices');
   }, [router]);
 
-  //const machines = machineSearchResult?.data || [];
+  const machines = machineSearchResult?.data || [];
   const sensors = sensorSearchResult?.data || [];
 
   return (
@@ -359,6 +364,15 @@ export function IoTDeviceCreateEditView({
               <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
+                  label="MQTT Username"
+                  value={formData.mqttUsername}
+                  onChange={handleInputChange('mqttUsername')}
+                />
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  fullWidth
                   label="MQTT Password"
                   value={formData.mqttPassword}
                   onChange={handleInputChange('mqttPassword')}
@@ -367,44 +381,46 @@ export function IoTDeviceCreateEditView({
               </Grid>
 
               <Grid size={{ xs: 12, sm: 6 }}>
-                {/*<Autocomplete*/}
-                {/*  value={selectedMachine}*/}
-                {/*  onChange={handleMachineChange}*/}
-                {/*  inputValue={machineSearchText}*/}
-                {/*  onInputChange={(_event, newInputValue) => setMachineSearchText(newInputValue)}*/}
-                {/*  options={machines}*/}
-                {/*  getOptionLabel={(option) => option.name || ''}*/}
-                {/*  isOptionEqualToValue={(option, value) => option.id === value.id}*/}
-                {/*  loading={isSearchingMachines}*/}
-                {/*  renderInput={(params) => (*/}
-                {/*    <TextField*/}
-                {/*      {...params}*/}
-                {/*      label="Machine"*/}
-                {/*      placeholder="Search machine..."*/}
-                {/*      InputProps={{*/}
-                {/*        ...params.InputProps,*/}
-                {/*        endAdornment: (*/}
-                {/*          <>*/}
-                {/*            {isSearchingMachines ? (*/}
-                {/*              <CircularProgress color="inherit" size={20} />*/}
-                {/*            ) : null}*/}
-                {/*            {params.InputProps.endAdornment}*/}
-                {/*          </>*/}
-                {/*        ),*/}
-                {/*      }}*/}
-                {/*    />*/}
-                {/*  )}*/}
-                {/*  renderOption={(props, option) => (*/}
-                {/*    <li {...props} key={option.id?.toString()}>*/}
-                {/*      <Box>*/}
-                {/*        <Typography variant="body2">{option.name}</Typography>*/}
-                {/*        <Typography variant="caption" sx={{ color: 'text.secondary' }}>*/}
-                {/*          {option.code}*/}
-                {/*        </Typography>*/}
-                {/*      </Box>*/}
-                {/*    </li>*/}
-                {/*  )}*/}
-                {/*/>*/}
+                <Autocomplete
+                  value={selectedMachine}
+                  onChange={handleMachineChange}
+                  inputValue={machineSearchText}
+                  onInputChange={(_event, newInputValue) => setMachineSearchText(newInputValue)}
+                  options={machines}
+                  getOptionLabel={(option) => option.name || ''}
+                  isOptionEqualToValue={(option, value) => option.id === value.id}
+                  loading={isSearchingMachines}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Machine"
+                      placeholder="Search machine..."
+                      slotProps={{
+                        input: {
+                          ...params.InputProps,
+                          endAdornment: (
+                            <>
+                              {isSearchingMachines ? (
+                                <CircularProgress color="inherit" size={20} />
+                              ) : null}
+                              {params.InputProps.endAdornment}
+                            </>
+                          ),
+                        },
+                      }}
+                    />
+                  )}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option.id?.toString()}>
+                      <Box>
+                        <Typography variant="body2">{option.name}</Typography>
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                          {option.code}
+                        </Typography>
+                      </Box>
+                    </li>
+                  )}
+                />
               </Grid>
             </Grid>
 
@@ -422,13 +438,13 @@ export function IoTDeviceCreateEditView({
                 color="inherit"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                sx={{
-                  bgcolor: 'grey.900',
-                  color: 'common.white',
+                sx={(theme) => ({
+                  bgcolor: theme.palette.text.primary,
+                  color: theme.palette.background.paper,
                   '&:hover': {
-                    bgcolor: 'grey.800',
+                    bgcolor: theme.palette.text.secondary,
                   },
-                }}
+                })}
               >
                 {isSubmitting ? (
                   <CircularProgress size={24} color="inherit" />
@@ -456,7 +472,7 @@ export function IoTDeviceCreateEditView({
                   inputValue={sensorSearchText}
                   onInputChange={(_event, newInputValue) => setSensorSearchText(newInputValue)}
                   options={sensors.filter((s) => !mappedSensors.find((m) => m.id === s.id))}
-                  getOptionLabel={(option) => option.sensorName || option.sensorCode || ''}
+                  getOptionLabel={(option) => option.name || option.code || ''}
                   isOptionEqualToValue={(option, value) => option.id === value.id}
                   loading={isSearchingSensors}
                   renderInput={(params) => (
@@ -482,9 +498,9 @@ export function IoTDeviceCreateEditView({
                   renderOption={(props, option) => (
                     <li {...props} key={option.id?.toString()}>
                       <Box>
-                        <Typography variant="body2">{option.sensorName}</Typography>
+                        <Typography variant="body2">{option.name}</Typography>
                         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                          {option.sensorCode} • {option.type}
+                          {option.code} • {option.type}
                         </Typography>
                       </Box>
                     </li>
@@ -531,10 +547,10 @@ export function IoTDeviceCreateEditView({
                           <TableRow key={sensor.id?.toString()}>
                             <TableCell>
                               <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                                {sensor.sensorCode}
+                                {sensor.code}
                               </Typography>
                             </TableCell>
-                            <TableCell>{sensor.sensorName}</TableCell>
+                            <TableCell>{sensor.name}</TableCell>
                             <TableCell>
                               <Label color="info">{sensor.type || '-'}</Label>
                             </TableCell>
