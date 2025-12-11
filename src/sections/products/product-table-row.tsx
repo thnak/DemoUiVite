@@ -157,7 +157,6 @@ export function ProductTableRow({
           </Box>
         </TableCell>
 
-
         <TableCell>
           <Label
             variant={row.publish === 'published' ? 'soft' : 'filled'}

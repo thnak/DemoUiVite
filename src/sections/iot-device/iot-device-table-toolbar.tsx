@@ -17,7 +17,11 @@ type IoTDeviceTableToolbarProps = {
   onFilterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export function IoTDeviceTableToolbar({ numSelected, filterName, onFilterName }: IoTDeviceTableToolbarProps) {
+export function IoTDeviceTableToolbar({
+  numSelected,
+  filterName,
+  onFilterName,
+}: IoTDeviceTableToolbarProps) {
   return (
     <Toolbar
       sx={{

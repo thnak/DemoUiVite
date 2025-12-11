@@ -1,14 +1,11 @@
 import type { SelectChangeEvent } from '@mui/material/Select';
-import type {
-  IoTSensorEntity,
-  IoTDeviceEntity,
-  OutputCalculationMode,
-} from 'src/api/types/generated';
+import type { OutputCalculationMode, MachineOutputMappingResponse } from 'src/api/types/generated';
 
-import { useState, useCallback, type ChangeEvent } from 'react';
+import { useState, useEffect, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
@@ -26,15 +23,19 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import Autocomplete from '@mui/material/Autocomplete';
 import TableContainer from '@mui/material/TableContainer';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { useGetapiDevicesearchdevice } from 'src/api/hooks/generated/use-device';
-import { useCreateMachine, useUpdateMachine } from 'src/api/hooks/generated/use-machine';
+import {
+  useCreateMachine,
+  useUpdateMachine,
+  useGetapiMachinemachineIddevicemappings,
+  useGetapiMachinemachineIdmachineoutputmappings,
+  usePutapiMachinemachineIdmachineoutputmappings,
+} from 'src/api/hooks/generated/use-machine';
 
 import { AreaSelector } from 'src/components/selectors/area-selector';
 import { CalendarSelector } from 'src/components/selectors/calendar-selector';
@@ -53,18 +54,17 @@ interface MachineFormData {
   calculationMode: OutputCalculationMode;
 }
 
-interface DeviceMapping {
-  deviceId: string;
-  device: IoTDeviceEntity;
+interface SensorOutputMapping extends MachineOutputMappingResponse {
+  outputId: string;
 }
 
-interface SensorOutputMapping {
-  sensorId: string;
-  sensor: IoTSensorEntity;
-  index: number;
-  scalingFactor: number;
-  enabled: boolean;
+interface DraggedSensorMapping extends SensorOutputMapping {
+  sourceTable: 'good' | 'scrap';
 }
+
+// Constants for scale factors
+const DEFAULT_GOOD_SCALE_FACTOR = 1;
+const DEFAULT_SCRAP_SCALE_FACTOR = -1;
 
 interface MachineCreateEditViewProps {
   isEdit?: boolean;
@@ -97,25 +97,56 @@ export function MachineCreateEditView({
     calculationMode: currentMachine?.calculationMode || 'pairParallel',
   });
 
-  // Device mapping state
-  const [deviceMappings, setDeviceMappings] = useState<DeviceMapping[]>([]);
-  const [deviceSearchKeyword, setDeviceSearchKeyword] = useState('');
-  const [selectedDevice, setSelectedDevice] = useState<IoTDeviceEntity | null>(null);
+  // Sensor output mapping state - separated into good and scrap
+  const [goodOutputMappings, setGoodOutputMappings] = useState<SensorOutputMapping[]>([]);
+  const [scrapOutputMappings, setScrapOutputMappings] = useState<SensorOutputMapping[]>([]);
+  const [draggedItem, setDraggedItem] = useState<DraggedSensorMapping | null>(null);
 
-  // Sensor output mapping state
-  const [sensorOutputMappings, setSensorOutputMappings] = useState<SensorOutputMapping[]>([]);
+  // Fetch device mappings for edit mode
+  const { data: deviceMappings, isLoading: isLoadingDevices } =
+    useGetapiMachinemachineIddevicemappings(currentMachine?.id || '', {
+      enabled: isEdit && !!currentMachine?.id,
+    });
 
-  // Search devices
-  const { data: devices, isFetching: isDeviceSearching } =
-    useGetapiDevicesearchdevice(
-      {
-        search: deviceSearchKeyword || undefined,
-        pageSize: 10,
-      },
-      {
-        enabled: deviceSearchKeyword.length > 0,
-      }
-    );
+  // Fetch machine output mappings for edit mode
+  const {
+    data: machineOutputMappings,
+    isLoading: isLoadingOutputMappings,
+    refetch: refetchOutputMappings,
+  } = useGetapiMachinemachineIdmachineoutputmappings(currentMachine?.id || '', {
+    enabled: isEdit && !!currentMachine?.id,
+  });
+
+  // Load sensor output mappings when data is available
+  useEffect(() => {
+    if (machineOutputMappings) {
+      const goodMappings: SensorOutputMapping[] = [];
+      const scrapMappings: SensorOutputMapping[] = [];
+
+      machineOutputMappings.forEach((mapping) => {
+        const sensorMapping: SensorOutputMapping = {
+          ...mapping,
+          outputId: String(mapping.outputId || ''),
+          scalingFactor:
+            mapping.scalingFactor ??
+            (mapping.mappingMode === 'outputScrap'
+              ? DEFAULT_SCRAP_SCALE_FACTOR
+              : DEFAULT_GOOD_SCALE_FACTOR),
+          enabled: mapping.enabled ?? true,
+          mappingMode: mapping.mappingMode || 'outputGood',
+        };
+
+        if (mapping.mappingMode === 'outputScrap') {
+          scrapMappings.push(sensorMapping);
+        } else {
+          goodMappings.push(sensorMapping);
+        }
+      });
+
+      setGoodOutputMappings(goodMappings);
+      setScrapOutputMappings(scrapMappings);
+    }
+  }, [machineOutputMappings]);
 
   const { mutate: createMachineMutate, isPending: isCreating } = useCreateMachine({
     onSuccess: (result) => {
@@ -143,7 +174,19 @@ export function MachineCreateEditView({
     },
   });
 
-  const isSubmitting = isCreating || isUpdating;
+  const { mutate: updateOutputMappingsMutate, isPending: isUpdatingMappings } =
+    usePutapiMachinemachineIdmachineoutputmappings({
+      onSuccess: () => {
+        if (refetchOutputMappings) {
+          refetchOutputMappings();
+        }
+      },
+      onError: (error) => {
+        setErrorMessage(error.message || 'Failed to update output mappings');
+      },
+    });
+
+  const isSubmitting = isCreating || isUpdating || isUpdatingMappings;
 
   const handleCloseError = useCallback(() => {
     setErrorMessage(null);
@@ -191,42 +234,146 @@ export function MachineCreateEditView({
     }));
   }, []);
 
+  // Drag and drop handlers
+  const handleDragStart = useCallback(
+    (item: SensorOutputMapping, sourceTable: 'good' | 'scrap') => {
+      setDraggedItem({ ...item, sourceTable });
+    },
+    []
+  );
+  
   const handleMachineTypeChange = useCallback((machineTypeId: string | null) => {
     setFormData((prev) => ({
       ...prev,
       machineTypeId,
     }));
   }, []);
+  
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+  }, []);
 
-  const handleDeviceAdd = useCallback(() => {
-    if (selectedDevice && !deviceMappings.some((dm) => dm.deviceId === String(selectedDevice.id))) {
-      setDeviceMappings((prev) => [
+  const handleDropToGood = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      if (!draggedItem) return;
+
+      // Prevent dropping in the same table
+      if (draggedItem.sourceTable === 'good') {
+        setDraggedItem(null);
+        return;
+      }
+
+      // Move from scrap to good
+      setScrapOutputMappings((prev) =>
+        prev.filter((item) => item.outputId !== draggedItem.outputId)
+      );
+      setGoodOutputMappings((prev) => [
         ...prev,
         {
-          deviceId: String(selectedDevice.id),
-          device: selectedDevice,
+          ...draggedItem,
+          mappingMode: 'outputGood',
+          scalingFactor: DEFAULT_GOOD_SCALE_FACTOR,
         },
       ]);
-      setSelectedDevice(null);
-      setDeviceSearchKeyword('');
-    }
-  }, [selectedDevice, deviceMappings]);
 
-  const handleDeviceRemove = useCallback((deviceId: string) => {
-    setDeviceMappings((prev) => prev.filter((dm) => dm.deviceId !== deviceId));
-  }, []);
+      setDraggedItem(null);
+    },
+    [draggedItem]
+  );
 
-  const handleSensorScalingFactorChange = useCallback((sensorId: string, value: number) => {
-    setSensorOutputMappings((prev) =>
-      prev.map((som) => (som.sensorId === sensorId ? { ...som, scalingFactor: value } : som))
-    );
-  }, []);
+  const handleDropToScrap = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      if (!draggedItem) return;
 
-  const handleSensorEnabledChange = useCallback((sensorId: string, enabled: boolean) => {
-    setSensorOutputMappings((prev) =>
-      prev.map((som) => (som.sensorId === sensorId ? { ...som, enabled } : som))
-    );
-  }, []);
+      // Prevent dropping in the same table
+      if (draggedItem.sourceTable === 'scrap') {
+        setDraggedItem(null);
+        return;
+      }
+
+      // Move from good to scrap
+      setGoodOutputMappings((prev) =>
+        prev.filter((item) => item.outputId !== draggedItem.outputId)
+      );
+      setScrapOutputMappings((prev) => [
+        ...prev,
+        {
+          ...draggedItem,
+          mappingMode: 'outputScrap',
+          scalingFactor: DEFAULT_SCRAP_SCALE_FACTOR,
+        },
+      ]);
+
+      setDraggedItem(null);
+    },
+    [draggedItem]
+  );
+
+  const handleSensorScalingFactorChange = useCallback(
+    (outputId: string, value: number, mappingMode: 'good' | 'scrap') => {
+      if (mappingMode === 'good') {
+        setGoodOutputMappings((prev) =>
+          prev.map((som) => (som.outputId === outputId ? { ...som, scalingFactor: value } : som))
+        );
+      } else {
+        setScrapOutputMappings((prev) =>
+          prev.map((som) => (som.outputId === outputId ? { ...som, scalingFactor: value } : som))
+        );
+      }
+    },
+    []
+  );
+
+  const handleSensorEnabledChange = useCallback(
+    (outputId: string, enabled: boolean, mappingMode: 'good' | 'scrap') => {
+      if (mappingMode === 'good') {
+        setGoodOutputMappings((prev) =>
+          prev.map((som) => (som.outputId === outputId ? { ...som, enabled } : som))
+        );
+      } else {
+        setScrapOutputMappings((prev) =>
+          prev.map((som) => (som.outputId === outputId ? { ...som, enabled } : som))
+        );
+      }
+    },
+    []
+  );
+
+  const handleSaveOutputMappings = useCallback(() => {
+    if (!isEdit || !currentMachine?.id) return;
+
+    const allMappings: MachineOutputMappingResponse[] = [
+      ...goodOutputMappings.map((m) => ({
+        index: m.index,
+        outputName: m.outputName,
+        outputId: m.outputId,
+        scalingFactor: m.scalingFactor,
+        mappingMode: 'outputGood' as const,
+        enabled: m.enabled,
+      })),
+      ...scrapOutputMappings.map((m) => ({
+        index: m.index,
+        outputName: m.outputName,
+        outputId: m.outputId,
+        scalingFactor: m.scalingFactor,
+        mappingMode: 'outputScrap' as const,
+        enabled: m.enabled,
+      })),
+    ];
+
+    updateOutputMappingsMutate({
+      machineId: currentMachine.id,
+      data: allMappings,
+    });
+  }, [
+    isEdit,
+    currentMachine?.id,
+    goodOutputMappings,
+    scrapOutputMappings,
+    updateOutputMappingsMutate,
+  ]);
 
   const handleSubmit = useCallback(() => {
     if (!formData.name) {
@@ -308,11 +455,7 @@ export function MachineCreateEditView({
             />
 
             <Box sx={{ mt: 3 }}>
-              <AreaSelector
-                value={formData.areaId}
-                onChange={handleAreaChange}
-                label="Area"
-              />
+              <AreaSelector value={formData.areaId} onChange={handleAreaChange} label="Area" />
             </Box>
 
             <Box sx={{ mt: 3 }}>
@@ -377,142 +520,122 @@ export function MachineCreateEditView({
               </Grid>
             </Card>
 
-            {/* Device Mapping Section */}
+            {/* Device Mapping Section - Read Only */}
             <Card sx={{ p: 3 }}>
               <Typography variant="h6" sx={{ mb: 3 }}>
                 Device Mapping
               </Typography>
 
-              <Stack spacing={3}>
-                <Stack direction="row" spacing={2}>
-                  <Autocomplete
-                    fullWidth
-                    value={selectedDevice}
-                    onChange={(_, newValue) => setSelectedDevice(newValue)}
-                    inputValue={deviceSearchKeyword}
-                    onInputChange={(_, newInputValue) => setDeviceSearchKeyword(newInputValue)}
-                    options={devices || []}
-                    getOptionLabel={(option) => option.name || option.code || ''}
-                    isOptionEqualToValue={(option, val) => option.id === val.id}
-                    loading={isDeviceSearching}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Search Device"
-                        InputProps={{
-                          ...params.InputProps,
-                          endAdornment: (
-                            <>
-                              {isDeviceSearching ? (
-                                <CircularProgress color="inherit" size={20} />
-                              ) : null}
-                              {params.InputProps.endAdornment}
-                            </>
-                          ),
-                        }}
-                      />
-                    )}
-                  />
-                  <Button
-                    variant="contained"
-                    onClick={handleDeviceAdd}
-                    disabled={!selectedDevice}
-                    sx={{ minWidth: 120 }}
-                  >
-                    Add Device
-                  </Button>
-                </Stack>
-
-                {deviceMappings.length > 0 && (
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Code</TableCell>
-                          <TableCell>Name</TableCell>
-                          <TableCell>MAC Address</TableCell>
-                          <TableCell align="right">Actions</TableCell>
+              {isLoadingDevices ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+                  <CircularProgress size={32} />
+                </Box>
+              ) : deviceMappings && deviceMappings.length > 0 ? (
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Code</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>MAC Address</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {deviceMappings.map((device) => (
+                        <TableRow key={String(device.id)}>
+                          <TableCell>{device.code || '-'}</TableCell>
+                          <TableCell>{device.name || '-'}</TableCell>
+                          <TableCell>{device.macAddress || '-'}</TableCell>
                         </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {deviceMappings.map((dm) => (
-                          <TableRow key={dm.deviceId}>
-                            <TableCell>{dm.device.code || '-'}</TableCell>
-                            <TableCell>{dm.device.name || '-'}</TableCell>
-                            <TableCell>{dm.device.macAddress || '-'}</TableCell>
-                            <TableCell align="right">
-                              <Button
-                                size="small"
-                                color="error"
-                                onClick={() => handleDeviceRemove(dm.deviceId)}
-                              >
-                                Remove
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                )}
-
-                {deviceMappings.length === 0 && (
-                  <Box
-                    sx={{
-                      p: 3,
-                      textAlign: 'center',
-                      bgcolor: 'background.neutral',
-                      borderRadius: 1,
-                    }}
-                  >
-                    <Typography variant="body2" color="text.secondary">
-                      No devices mapped yet. Use the search above to add devices.
-                    </Typography>
-                  </Box>
-                )}
-              </Stack>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              ) : (
+                <Box
+                  sx={{
+                    p: 3,
+                    textAlign: 'center',
+                    bgcolor: 'background.neutral',
+                    borderRadius: 1,
+                  }}
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    No devices mapped to this machine yet.
+                  </Typography>
+                </Box>
+              )}
             </Card>
 
-            {/* Sensor Output Mapping Section */}
-            <Card sx={{ p: 3 }}>
-              <Typography variant="h6" sx={{ mb: 3 }}>
-                Sensor Output Mapping
-              </Typography>
+            {/* Sensor Output Mapping Section - Good Outputs */}
+            <Card
+              sx={{
+                p: 3,
+                border: 2,
+                borderColor: 'success.main',
+                position: 'relative',
+              }}
+              onDragOver={handleDragOver}
+              onDrop={handleDropToGood}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                <Typography variant="h6">Good Output Mapping</Typography>
+                <Chip label="Good" color="success" size="small" />
+              </Box>
 
-              {sensorOutputMappings.length > 0 ? (
+              {isLoadingOutputMappings ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+                  <CircularProgress size={32} />
+                </Box>
+              ) : goodOutputMappings.length > 0 ? (
                 <TableContainer>
                   <Table>
                     <TableHead>
                       <TableRow>
                         <TableCell>Index</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Factor Scale</TableCell>
+                        <TableCell>Output Name</TableCell>
+                        <TableCell>Scale Factor</TableCell>
                         <TableCell align="center">Enabled</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {sensorOutputMappings.map((som, idx) => (
-                        <TableRow key={som.sensorId}>
-                          <TableCell>{idx + 1}</TableCell>
-                          <TableCell>
-                            {som.sensor.sensorName || som.sensor.sensorCode || '-'}
-                          </TableCell>
+                      {goodOutputMappings.map((mapping) => (
+                        <TableRow
+                          key={mapping.outputId}
+                          draggable
+                          onDragStart={() => handleDragStart(mapping, 'good')}
+                          sx={{
+                            cursor: 'grab',
+                            '&:active': { cursor: 'grabbing' },
+                            '&:hover': { bgcolor: 'action.hover' },
+                          }}
+                        >
+                          <TableCell>{mapping.index ?? '-'}</TableCell>
+                          <TableCell>{mapping.outputName || '-'}</TableCell>
                           <TableCell>
                             <TextField
                               type="number"
                               size="small"
-                              value={som.scalingFactor}
+                              value={mapping.scalingFactor ?? DEFAULT_GOOD_SCALE_FACTOR}
                               onChange={(e) =>
-                                handleSensorScalingFactorChange(som.sensorId, Number(e.target.value))
+                                handleSensorScalingFactorChange(
+                                  mapping.outputId,
+                                  Number(e.target.value),
+                                  'good'
+                                )
                               }
                               sx={{ width: 120 }}
                             />
                           </TableCell>
                           <TableCell align="center">
                             <Switch
-                              checked={som.enabled}
+                              checked={mapping.enabled ?? true}
                               onChange={(e) =>
-                                handleSensorEnabledChange(som.sensorId, e.target.checked)
+                                handleSensorEnabledChange(
+                                  mapping.outputId,
+                                  e.target.checked,
+                                  'good'
+                                )
                               }
                               size="small"
                             />
@@ -532,12 +655,119 @@ export function MachineCreateEditView({
                   }}
                 >
                   <Typography variant="body2" color="text.secondary">
-                    No sensor output mappings configured. Add devices first to configure sensor
-                    outputs.
+                    No good output mappings configured. Drag items from Scrap section to add.
                   </Typography>
                 </Box>
               )}
             </Card>
+
+            {/* Sensor Output Mapping Section - Scrap Outputs */}
+            <Card
+              sx={{
+                p: 3,
+                border: 2,
+                borderColor: 'error.main',
+                position: 'relative',
+              }}
+              onDragOver={handleDragOver}
+              onDrop={handleDropToScrap}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                <Typography variant="h6">Scrap Output Mapping</Typography>
+                <Chip label="Scrap" color="error" size="small" />
+              </Box>
+
+              {isLoadingOutputMappings ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+                  <CircularProgress size={32} />
+                </Box>
+              ) : scrapOutputMappings.length > 0 ? (
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Index</TableCell>
+                        <TableCell>Output Name</TableCell>
+                        <TableCell>Scale Factor</TableCell>
+                        <TableCell align="center">Enabled</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {scrapOutputMappings.map((mapping) => (
+                        <TableRow
+                          key={mapping.outputId}
+                          draggable
+                          onDragStart={() => handleDragStart(mapping, 'scrap')}
+                          sx={{
+                            cursor: 'grab',
+                            '&:active': { cursor: 'grabbing' },
+                            '&:hover': { bgcolor: 'action.hover' },
+                          }}
+                        >
+                          <TableCell>{mapping.index ?? '-'}</TableCell>
+                          <TableCell>{mapping.outputName || '-'}</TableCell>
+                          <TableCell>
+                            <TextField
+                              type="number"
+                              size="small"
+                              value={mapping.scalingFactor ?? DEFAULT_SCRAP_SCALE_FACTOR}
+                              onChange={(e) =>
+                                handleSensorScalingFactorChange(
+                                  mapping.outputId,
+                                  Number(e.target.value),
+                                  'scrap'
+                                )
+                              }
+                              sx={{ width: 120 }}
+                            />
+                          </TableCell>
+                          <TableCell align="center">
+                            <Switch
+                              checked={mapping.enabled ?? true}
+                              onChange={(e) =>
+                                handleSensorEnabledChange(
+                                  mapping.outputId,
+                                  e.target.checked,
+                                  'scrap'
+                                )
+                              }
+                              size="small"
+                            />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              ) : (
+                <Box
+                  sx={{
+                    p: 3,
+                    textAlign: 'center',
+                    bgcolor: 'background.neutral',
+                    borderRadius: 1,
+                  }}
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    No scrap output mappings configured. Drag items from Good section to add.
+                  </Typography>
+                </Box>
+              )}
+            </Card>
+
+            {/* Save Output Mappings Button - Only in edit mode */}
+            {isEdit && (goodOutputMappings.length > 0 || scrapOutputMappings.length > 0) && (
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Button
+                  variant="outlined"
+                  onClick={handleSaveOutputMappings}
+                  disabled={isUpdatingMappings}
+                  startIcon={isUpdatingMappings ? <CircularProgress size={20} /> : null}
+                >
+                  Save Output Mappings
+                </Button>
+              </Box>
+            )}
 
             {/* Action Buttons */}
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>

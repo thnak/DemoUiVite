@@ -83,7 +83,7 @@ export function AreaSelector({
                   {params.InputProps.endAdornment}
                 </>
               ),
-            }
+            },
           }}
         />
       )}

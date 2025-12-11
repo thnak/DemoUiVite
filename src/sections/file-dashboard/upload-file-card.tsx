@@ -101,4 +101,3 @@ export function UploadFileCard({ sx, ...other }: UploadFileCardProps) {
     </>
   );
 }
-

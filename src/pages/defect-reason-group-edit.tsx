@@ -15,14 +15,20 @@ import { DefectReasonGroupCreateEditView } from 'src/sections/defect-reason-grou
 export default function Page() {
   const { id } = useParams();
 
-  const { data: defectReasonGroupData, isLoading, error } = useGetDefectReasonGroupById(id || '', {
+  const {
+    data: defectReasonGroupData,
+    isLoading,
+    error,
+  } = useGetDefectReasonGroupById(id || '', {
     enabled: !!id,
   });
 
   if (isLoading) {
     return (
       <DashboardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
           <CircularProgress />
         </Box>
       </DashboardContent>
@@ -32,7 +38,9 @@ export default function Page() {
   if (error || !defectReasonGroupData) {
     return (
       <DashboardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
           <Typography color="error">Defect reason group not found</Typography>
         </Box>
       </DashboardContent>

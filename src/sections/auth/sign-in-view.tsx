@@ -49,7 +49,7 @@ export function SignInView() {
                 </IconButton>
               </InputAdornment>
             ),
-          }
+          },
         }}
       />
       <Link variant="body2" color="inherit" sx={{ alignSelf: 'flex-end' }}>

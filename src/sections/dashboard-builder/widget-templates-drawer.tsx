@@ -1,4 +1,3 @@
-
 import type { IconifyName } from 'src/components/iconify/register-icons';
 
 import Box from '@mui/material/Box';
@@ -378,7 +377,11 @@ interface WidgetTemplatesDrawerProps {
   onSelectTemplate: (template: WidgetTemplate) => void;
 }
 
-export function WidgetTemplatesDrawer({ open, onClose, onSelectTemplate }: WidgetTemplatesDrawerProps) {
+export function WidgetTemplatesDrawer({
+  open,
+  onClose,
+  onSelectTemplate,
+}: WidgetTemplatesDrawerProps) {
   const drawerWidth = 380;
 
   const handleTemplateClick = (template: WidgetTemplate) => {
@@ -397,7 +400,7 @@ export function WidgetTemplatesDrawer({ open, onClose, onSelectTemplate }: Widge
             width: drawerWidth,
             bgcolor: 'background.default',
           },
-        }
+        },
       }}
     >
       {/* Drawer Header */}
@@ -491,7 +494,11 @@ export function WidgetTemplatesDrawer({ open, onClose, onSelectTemplate }: Widge
                       <Iconify icon={template.icon} width={18} sx={{ color: 'text.secondary' }} />
                       <Typography variant="subtitle2">{template.name}</Typography>
                     </Stack>
-                    <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ mt: 0.5, display: 'block' }}
+                    >
                       {template.description}
                     </Typography>
                   </CardContent>

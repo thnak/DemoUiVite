@@ -50,24 +50,24 @@ function formatDate(dateString: string | null | undefined): string {
 // Format ISO 8601 duration for display
 function formatDuration(duration: string | null | undefined): string {
   if (!duration) return '-';
-  
+
   // Parse ISO 8601 duration (e.g., PT7H, PT30M, PT1H30M)
-  const match = duration.match(/^PT?(?:(-?\d+(?:\.\d+)?)H)?(?:(-?\d+(?:\.\d+)?)M)?(?:(-?\d+(?:\.\d+)?)S)?$/);
+  const match = duration.match(
+    /^PT?(?:(-?\d+(?:\.\d+)?)H)?(?:(-?\d+(?:\.\d+)?)M)?(?:(-?\d+(?:\.\d+)?)S)?$/
+  );
   if (!match) return duration;
-  
+
   const hours = match[1] ? parseFloat(match[1]) : 0;
   const minutes = match[2] ? parseFloat(match[2]) : 0;
   const seconds = match[3] ? parseFloat(match[3]) : 0;
-  
+
   const parts: string[] = [];
   if (hours !== 0) parts.push(`${hours}h`);
   if (minutes !== 0) parts.push(`${minutes}m`);
   if (seconds !== 0) parts.push(`${seconds}s`);
-  
+
   return parts.length > 0 ? parts.join(' ') : '0';
 }
-
-
 
 // ----------------------------------------------------------------------
 
@@ -118,10 +118,13 @@ export function CalendarView() {
     [fetchCalendars]
   );
 
-  const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>, calendarId: string) => {
-    setOpenPopover(event.currentTarget);
-    setSelectedCalendarId(calendarId);
-  }, []);
+  const handleOpenPopover = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>, calendarId: string) => {
+      setOpenPopover(event.currentTarget);
+      setSelectedCalendarId(calendarId);
+    },
+    []
+  );
 
   const handleClosePopover = useCallback(() => {
     setOpenPopover(null);
@@ -216,11 +219,7 @@ export function CalendarView() {
           >
             Import
           </Button>
-          <Button
-            variant="outlined"
-            color="inherit"
-            startIcon={<Iconify icon="mdi:export" />}
-          >
+          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="mdi:export" />}>
             Export
           </Button>
           <Button
@@ -360,7 +359,7 @@ export function CalendarView() {
                           </Typography>
                         </TableCell>
                         <TableCell align="right">
-                          <IconButton 
+                          <IconButton
                             onClick={(e) => handleOpenPopover(e, calendarId)}
                             aria-label="More actions"
                           >

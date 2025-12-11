@@ -165,7 +165,7 @@ export function ShiftTemplateView() {
   }, [page, rowsPerPage]);
 
   useEffect(() => {
-    fetchTemplates().then(_ => {});
+    fetchTemplates().then((_) => {});
   }, [fetchTemplates]);
 
   const handleDelete = useCallback(
@@ -181,10 +181,13 @@ export function ShiftTemplateView() {
     [fetchTemplates]
   );
 
-  const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>, templateId: string) => {
-    setOpenPopover(event.currentTarget);
-    setSelectedTemplateId(templateId);
-  }, []);
+  const handleOpenPopover = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>, templateId: string) => {
+      setOpenPopover(event.currentTarget);
+      setSelectedTemplateId(templateId);
+    },
+    []
+  );
 
   const handleClosePopover = useCallback(() => {
     setOpenPopover(null);
@@ -279,11 +282,7 @@ export function ShiftTemplateView() {
           >
             Import
           </Button>
-          <Button
-            variant="outlined"
-            color="inherit"
-            startIcon={<Iconify icon="mdi:export" />}
-          >
+          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="mdi:export" />}>
             Export
           </Button>
           <Button
@@ -411,7 +410,7 @@ export function ShiftTemplateView() {
                           <Typography variant="body2">{totalWorkingTime}</Typography>
                         </TableCell>
                         <TableCell align="right">
-                          <IconButton 
+                          <IconButton
                             onClick={(e) => handleOpenPopover(e, templateId)}
                             aria-label="More actions"
                           >

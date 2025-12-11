@@ -15,7 +15,13 @@ import type { NavData } from './nav-config-dashboard';
 
 // ----------------------------------------------------------------------
 
-type NavModule = 'default' | 'master-data' | 'user-management' | 'device-management' | 'dashboard' | 'mms';
+type NavModule =
+  | 'default'
+  | 'master-data'
+  | 'user-management'
+  | 'device-management'
+  | 'dashboard'
+  | 'mms';
 
 type NavContextValue = {
   navData: NavData;
@@ -59,10 +65,7 @@ const getModuleFromPath = (pathname: string): NavModule => {
   }
 
   // Device Management module routes
-  if (
-    pathname.startsWith('/iot-devices') ||
-    pathname.startsWith('/iot-sensors')
-  ) {
+  if (pathname.startsWith('/iot-devices') || pathname.startsWith('/iot-sensors')) {
     return 'device-management';
   }
 

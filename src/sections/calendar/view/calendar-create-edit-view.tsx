@@ -29,7 +29,6 @@ import {
 
 // ----------------------------------------------------------------------
 
-
 interface CalendarFormData {
   code: string;
   name: string;
@@ -67,7 +66,9 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
 
   const [formData, setFormData] = useState<CalendarFormData>(defaultFormData);
   const [shiftTemplates, setShiftTemplates] = useState<ShiftTemplateEntity[]>([]);
-  const [selectedShiftTemplate, setSelectedShiftTemplate] = useState<ShiftTemplateEntity | null>(null);
+  const [selectedShiftTemplate, setSelectedShiftTemplate] = useState<ShiftTemplateEntity | null>(
+    null
+  );
   const [loading, setLoading] = useState(isEdit);
   const [loadingShiftTemplates, setLoadingShiftTemplates] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -136,20 +137,20 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
     fetchCalendar();
   }, [isEdit, calendarId]);
 
-  const handleInputChange = useCallback((field: keyof CalendarFormData, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  }, []);
-
-  const handleShiftTemplateChange = useCallback(
-    (_: unknown, value: ShiftTemplateEntity | null) => {
-      setSelectedShiftTemplate(value);
-      setFormData((prev) => ({
-        ...prev,
-        shiftTemplateId: value?.id?.toString() || '',
-      }));
+  const handleInputChange = useCallback(
+    (field: keyof CalendarFormData, value: string | boolean) => {
+      setFormData((prev) => ({ ...prev, [field]: value }));
     },
     []
   );
+
+  const handleShiftTemplateChange = useCallback((_: unknown, value: ShiftTemplateEntity | null) => {
+    setSelectedShiftTemplate(value);
+    setFormData((prev) => ({
+      ...prev,
+      shiftTemplateId: value?.id?.toString() || '',
+    }));
+  }, []);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -165,8 +166,18 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             { key: 'name', value: formData.name },
             { key: 'description', value: formData.description },
             { key: 'shiftTemplateId', value: formData.shiftTemplateId || undefined },
-            { key: 'applyFrom', value: formData.applyFrom ? new Date(formData.applyFrom).toISOString() : undefined },
-            { key: 'applyTo', value: formData.plan2Infinite ? null : (formData.applyTo ? new Date(formData.applyTo).toISOString() : undefined) },
+            {
+              key: 'applyFrom',
+              value: formData.applyFrom ? new Date(formData.applyFrom).toISOString() : undefined,
+            },
+            {
+              key: 'applyTo',
+              value: formData.plan2Infinite
+                ? null
+                : formData.applyTo
+                  ? new Date(formData.applyTo).toISOString()
+                  : undefined,
+            },
             { key: 'plan2Infinite', value: formData.plan2Infinite },
             { key: 'workDateStartTime', value: formData.workDateStartTime || undefined },
             { key: 'timeOffset', value: formData.timeOffset || undefined },
@@ -186,7 +197,11 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             description: formData.description,
             shiftTemplateId: formData.shiftTemplateId || undefined,
             applyFrom: formData.applyFrom ? new Date(formData.applyFrom).toISOString() : undefined,
-            applyTo: formData.plan2Infinite ? undefined : (formData.applyTo ? new Date(formData.applyTo).toISOString() : undefined),
+            applyTo: formData.plan2Infinite
+              ? undefined
+              : formData.applyTo
+                ? new Date(formData.applyTo).toISOString()
+                : undefined,
             plan2Infinite: formData.plan2Infinite,
             workDateStartTime: formData.workDateStartTime || undefined,
             timeOffset: formData.timeOffset || undefined,
@@ -280,7 +295,6 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                 onChange={(e) => handleInputChange('name', e.target.value)}
                 required
               />
-
 
               <Autocomplete
                 fullWidth
@@ -404,11 +418,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                 <Button variant="outlined" onClick={handleCancel}>
                   Cancel
                 </Button>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={submitting}
-                >
+                <Button type="submit" variant="contained" disabled={submitting}>
                   {submitting ? (
                     <CircularProgress size={24} color="inherit" />
                   ) : isEdit ? (

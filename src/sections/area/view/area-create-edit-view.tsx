@@ -144,7 +144,6 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
 
       <Card sx={{ p: 3 }}>
         <Stack spacing={3}>
-
           <TextField
             fullWidth
             label="Area code"

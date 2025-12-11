@@ -16,10 +16,7 @@ import { RouterLink } from 'src/routes/components';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import { usePostapiIotDevicesearchdevice } from 'src/api/hooks/generated/use-iot-device';
-import {
-  ioTDeviceKeys,
-  useDeleteIoTDevice,
-} from 'src/api/hooks/generated/use-io-tdevice';
+import { ioTDeviceKeys, useDeleteIoTDevice } from 'src/api/hooks/generated/use-io-tdevice';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -142,11 +139,7 @@ export function IoTDeviceView() {
           >
             Import
           </Button>
-          <Button
-            variant="outlined"
-            color="inherit"
-            startIcon={<Iconify icon="mdi:export" />}
-          >
+          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="mdi:export" />}>
             Export
           </Button>
           <Button

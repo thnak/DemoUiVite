@@ -18,7 +18,9 @@ interface WeekSummaryChartProps {
 
 export function WeekSummaryChart({ summary, title = 'Weekly Summary' }: WeekSummaryChartProps) {
   const categories = summary.dailySummaries.map((day) => (DAY_LABELS[day.day] ?? '').slice(0, 3));
-  const workHours = summary.dailySummaries.map((day) => Math.round((day.workMinutes / 60) * 10) / 10);
+  const workHours = summary.dailySummaries.map(
+    (day) => Math.round((day.workMinutes / 60) * 10) / 10
+  );
   const breakHours = summary.dailySummaries.map(
     (day) => Math.round((day.breakMinutes / 60) * 10) / 10
   );
@@ -43,7 +45,7 @@ export function WeekSummaryChart({ summary, title = 'Weekly Summary' }: WeekSumm
         formatter: (value: number) => `${value} hours`,
       },
       intersect: false,
-      shared: true
+      shared: true,
     },
     legend: {
       show: true,

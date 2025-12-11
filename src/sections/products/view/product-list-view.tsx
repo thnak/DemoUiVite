@@ -62,8 +62,8 @@ export function ProductListView() {
       setTemplates(response.items || []);
       setTotalItems(response.totalItems || 0);
     } catch (err) {
-      setError("Không thể tải danh sách sản phẩm");
-      console.error("Error fetching products:", err);
+      setError('Không thể tải danh sách sản phẩm');
+      console.error('Error fetching products:', err);
     } finally {
       setLoading(false);
     }
@@ -80,7 +80,7 @@ export function ProductListView() {
     coverUrl: p.imageUrl ?? '',
     createdAt: p.createTime ?? new Date().toISOString(),
     publish: p.isDraft ? 'draft' : 'published',
-    category: "category",
+    category: 'category',
     stockStatus: 'in_stock',
   }));
 
@@ -120,8 +120,8 @@ export function ProductListView() {
         await fetchProducts();
         setSelected((prev) => prev.filter((i) => i !== id));
       } catch (err) {
-        console.error("Error deleting product:", err);
-        setError("Không thể xóa sản phẩm");
+        console.error('Error deleting product:', err);
+        setError('Không thể xóa sản phẩm');
       }
     },
     [fetchProducts]
@@ -194,11 +194,7 @@ export function ProductListView() {
           >
             Import
           </Button>
-          <Button
-            variant="outlined"
-            color="inherit"
-            startIcon={<Iconify icon="mdi:export" />}
-          >
+          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="mdi:export" />}>
             Export
           </Button>
           <Button

@@ -15,14 +15,20 @@ import { IoTDeviceCreateEditView } from 'src/sections/iot-device/view';
 export default function Page() {
   const { id } = useParams();
 
-  const { data: deviceData, isLoading, error } = useGetIoTDeviceById(id || '', {
+  const {
+    data: deviceData,
+    isLoading,
+    error,
+  } = useGetIoTDeviceById(id || '', {
     enabled: !!id,
   });
 
   if (isLoading) {
     return (
       <DashboardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
           <CircularProgress />
         </Box>
       </DashboardContent>
@@ -32,7 +38,9 @@ export default function Page() {
   if (error || !deviceData) {
     return (
       <DashboardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
           <Typography color="error">IoT Device not found</Typography>
         </Box>
       </DashboardContent>

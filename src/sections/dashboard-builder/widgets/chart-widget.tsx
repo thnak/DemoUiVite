@@ -29,9 +29,7 @@ export function ChartWidget({ config, sx, ...other }: ChartWidgetProps) {
   // Determine if this is an axis chart or non-axis chart
   const isNonAxisChart = ['pie', 'donut', 'radialBar'].includes(config.chartType);
 
-  const chartSx = isNonAxisChart
-    ? { height: '100%', mx: 'auto' }
-    : { height: '100%' };
+  const chartSx = isNonAxisChart ? { height: '100%', mx: 'auto' } : { height: '100%' };
 
   return (
     <Card
@@ -54,12 +52,7 @@ export function ChartWidget({ config, sx, ...other }: ChartWidgetProps) {
           minHeight: 0,
         }}
       >
-        <Chart
-          type={config.chartType}
-          series={config.series}
-          options={chartOptions}
-          sx={chartSx}
-        />
+        <Chart type={config.chartType} series={config.series} options={chartOptions} sx={chartSx} />
       </Box>
     </Card>
   );

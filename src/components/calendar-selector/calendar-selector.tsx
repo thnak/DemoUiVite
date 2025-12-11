@@ -83,7 +83,7 @@ export function CalendarSelector({
                   {params.InputProps.endAdornment}
                 </>
               ),
-            }
+            },
           }}
         />
       )}

@@ -13,13 +13,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Iconify } from 'src/components/iconify';
 
 import { MODULES } from '../modules-data';
-import {
-  IndexDesign1,
-  IndexDesign2,
-  IndexDesign3,
-  IndexDesign4,
-  IndexDesign5,
-} from '../designs';
+import { IndexDesign1, IndexDesign2, IndexDesign3, IndexDesign4, IndexDesign5 } from '../designs';
 
 import type { ViewMode } from '../types';
 
