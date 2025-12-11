@@ -1,6 +1,7 @@
 import type { InformationDecoratorBaseEntity } from 'src/api/types/generated';
 
-import { useState, useCallback } from 'react';
+import { debounce } from 'es-toolkit';
+import { useMemo, useState, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -30,15 +31,21 @@ export function InformationDecoratorBaseSelector({
   required = false,
 }: InformationDecoratorBaseSelectorProps) {
   const [inputValue, setInputValue] = useState('');
+  const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedInformationDecoratorBase, setSelectedInformationDecoratorBase] = useState<InformationDecoratorBaseEntity | null>(null);
+
+  // Debounce search input with 500ms delay
+  const debouncedSetSearch = useMemo(
+    () => debounce((searchValue: string) => {
+      setDebouncedInputValue(searchValue);
+    }, 500),
+    []
+  );
 
   const { data: searchResults, isFetching } = useSearchInformationDecoratorBase(
     {
-      searchText: inputValue || undefined,
+      searchText: debouncedInputValue || undefined,
       maxResults: 10,
-    },
-    {
-      enabled: inputValue.length > 0,
     }
   );
 
@@ -52,9 +59,13 @@ export function InformationDecoratorBaseSelector({
     [onChange]
   );
 
-  const handleInputChange = useCallback((_event: any, newInputValue: string) => {
-    setInputValue(newInputValue);
-  }, []);
+  const handleInputChange = useCallback(
+    (_event: any, newInputValue: string) => {
+      setInputValue(newInputValue);
+      debouncedSetSearch(newInputValue);
+    },
+    [debouncedSetSearch]
+  );
 
   return (
     <Autocomplete
