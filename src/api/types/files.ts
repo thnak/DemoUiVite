@@ -9,7 +9,7 @@
  */
 export type FilesUploadResponse = {
   /** Array of unique codes for the uploaded files */
-  fileCodes?: string[];
+  value?: string[];
   /** Indicates whether the upload was successful */
   isSuccess?: boolean;
   /** Message describing the result */

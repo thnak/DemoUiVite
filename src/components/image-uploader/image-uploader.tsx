@@ -70,8 +70,8 @@ export function ImageUploader({
 
   const { mutate: uploadFiles, isPending: isUploading } = useUploadFiles({
     onSuccess: (response) => {
-      if (response.isSuccess && response.fileCodes && response.fileCodes.length > 0) {
-        onUploadComplete?.(response.fileCodes[0]);
+      if (response.isSuccess && response.value && response.value.length > 0) {
+        onUploadComplete?.(response.value[0]);
         handleCloseDialog();
       } else {
         onUploadError?.(new Error(response.message || 'Upload failed'));

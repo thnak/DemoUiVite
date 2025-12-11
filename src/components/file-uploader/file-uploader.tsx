@@ -65,8 +65,8 @@ export function FileUploader({
 
   const { mutate: uploadFiles, isPending: isUploading } = useUploadFiles({
     onSuccess: (response) => {
-      if (response.isSuccess && response.fileCodes) {
-        onUploadComplete?.(response.fileCodes);
+      if (response.isSuccess && response.value) {
+        onUploadComplete?.(response.value);
         // Clear selected files after successful upload
         setSelectedFiles([]);
       } else {

@@ -68,9 +68,6 @@ export function StopMachineReasonTableRow({
         <TableCell sx={{ maxWidth: 300 }}>{row.description}</TableCell>
 
         <TableCell align="right">
-          <IconButton>
-            <Iconify icon="solar:pen-bold" />
-          </IconButton>
           <IconButton onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
