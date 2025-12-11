@@ -63,7 +63,11 @@ export function MachineGroupSelector({
       inputValue={inputValue}
       onInputChange={handleInputChange}
       options={items}
-      getOptionLabel={(option) => option.name || option.code || ''}
+      getOptionLabel={(option) => {
+        if (typeof option === 'string') return option;
+        const entity = option as any;
+        return entity.name || entity.code || entity.sensorName || entity.sensorCode || entity.title || String(entity.id) || '';
+      }}
       isOptionEqualToValue={(option, val) => option.id === val.id}
       loading={isFetching}
       disabled={disabled}

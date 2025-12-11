@@ -196,7 +196,11 @@ function generateSelectorComponent(info: EntitySearchInfo): string {
   lines.push(`      inputValue={inputValue}`);
   lines.push(`      onInputChange={handleInputChange}`);
   lines.push(`      options={items}`);
-  lines.push(`      getOptionLabel={(option) => option.name || option.code || ''}`);
+  lines.push(`      getOptionLabel={(option) => {`);
+  lines.push(`        if (typeof option === 'string') return option;`);
+  lines.push(`        const entity = option as any;`);
+  lines.push(`        return entity.name || entity.code || entity.sensorName || entity.sensorCode || entity.title || String(entity.id) || '';`);
+  lines.push(`      }}`);
   lines.push(`      isOptionEqualToValue={(option, val) => option.id === val.id}`);
   lines.push(`      loading={isFetching}`);
   lines.push(`      disabled={disabled}`);
