@@ -1,6 +1,10 @@
-import type { ChangeEvent } from 'react';
+import type {
+  IoTSensorEntity,
+  IoTDeviceEntity,
+  OutputCalculationMode,
+} from 'src/api/types/generated';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -8,7 +12,6 @@ import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
-import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
@@ -21,20 +24,12 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { useGetapiDevicesearchdevice } from 'src/api/hooks/generated/use-device';
+import { useCreateMachine, useUpdateMachine } from 'src/api/hooks/generated/use-machine';
+
 import { AreaSelector } from 'src/components/area-selector';
 import { CalendarSelector } from 'src/components/calendar-selector';
-import { useCreateMachine, useUpdateMachine } from 'src/api/hooks/generated/use-machine';
 import { ImageEntityResourceUploader } from 'src/components/image-entity-resource-uploader';
-import {
-  useGetapiDevicesearchdevice,
-  useGetapiDevicegetsensorbydeviceid,
-} from 'src/api/hooks/generated/use-device';
-
-import type {
-  IoTSensorEntity,
-  IoTDeviceEntity,
-  OutputCalculationMode,
-} from 'src/api/types/generated';
 
 // ----------------------------------------------------------------------
 

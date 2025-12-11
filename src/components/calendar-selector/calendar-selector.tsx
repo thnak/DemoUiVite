@@ -1,3 +1,5 @@
+import type { CalendarEntity } from 'src/api/types/generated';
+
 import { useState, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
@@ -5,8 +7,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { useSearchCalendar } from 'src/api/hooks/generated/use-calendar';
-
-import type { CalendarEntity } from 'src/api/types/generated';
 
 // ----------------------------------------------------------------------
 
