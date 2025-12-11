@@ -2,6 +2,7 @@ import type { ChangeEvent } from 'react';
 
 import { useState, useCallback } from 'react';
 
+import type { SelectChangeEvent } from '@mui/material/Select';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -65,7 +66,7 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
     []
   );
 
-  const handleSelectChange = useCallback((event: any) => {
+  const handleSelectChange = useCallback((event: SelectChangeEvent<string>) => {
     setFormData((prev) => ({
       ...prev,
       group: event.target.value,

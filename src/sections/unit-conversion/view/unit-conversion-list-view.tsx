@@ -3,15 +3,16 @@ import type { ChangeEvent } from 'react';
 import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import TableRow from '@mui/material/TableRow';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
-import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -127,14 +128,16 @@ export function UnitConversionListView() {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <TableRow>
-                <TableCell>From</TableCell>
-                <TableCell>To</TableCell>
-                <TableCell>Conversion Factor</TableCell>
-                <TableCell>Offset</TableCell>
-                <TableCell>Formula</TableCell>
-                <TableCell align="right">Actions</TableCell>
-              </TableRow>
+              <TableHead>
+                <TableRow>
+                  <TableCell>From</TableCell>
+                  <TableCell>To</TableCell>
+                  <TableCell>Conversion Factor</TableCell>
+                  <TableCell>Offset</TableCell>
+                  <TableCell>Formula</TableCell>
+                  <TableCell align="right">Actions</TableCell>
+                </TableRow>
+              </TableHead>
 
               <TableBody>
                 {filteredConversions

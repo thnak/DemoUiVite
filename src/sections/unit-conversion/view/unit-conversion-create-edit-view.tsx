@@ -2,17 +2,18 @@ import type { ChangeEvent } from 'react';
 
 import { useState, useCallback } from 'react';
 
+import type { SelectChangeEvent } from '@mui/material/Select';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Select from '@mui/material/Select';
+import Card from '@mui/material/Card';
+import FormControl from '@mui/material/FormControl';
+import Grid from '@mui/material/Grid';
+import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -64,7 +65,7 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
     []
   );
 
-  const handleSelectChange = useCallback((field: 'from' | 'to') => (event: any) => {
+  const handleSelectChange = useCallback((field: 'from' | 'to') => (event: SelectChangeEvent<string>) => {
     setFormData((prev) => ({
       ...prev,
       [field]: event.target.value,
