@@ -6,6 +6,8 @@ import type {
 
 import { useState, useCallback, type ChangeEvent } from 'react';
 
+import type { SelectChangeEvent } from '@mui/material/Select';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -28,8 +30,6 @@ import FormControl from '@mui/material/FormControl';
 import Autocomplete from '@mui/material/Autocomplete';
 import TableContainer from '@mui/material/TableContainer';
 import CircularProgress from '@mui/material/CircularProgress';
-
-import type { SelectChangeEvent } from '@mui/material/Select';
 
 import { useRouter } from 'src/routes/hooks';
 
