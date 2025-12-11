@@ -30,6 +30,8 @@ export const WorkingParameterListPage = lazy(() => import('src/pages/working-par
 export const StopMachineReasonListPage = lazy(() => import('src/pages/stop-machine-reason-list'));
 export const ProductGroupListPage = lazy(() => import('src/pages/product-group-list'));
 export const MachineListPage = lazy(() => import('src/pages/machine-list'));
+export const MachineCreatePage = lazy(() => import('src/pages/machine-create'));
+export const MachineEditPage = lazy(() => import('src/pages/machine-edit'));
 export const MachineOEEPage = lazy(() => import('src/pages/machine-oee'));
 export const DemoDashboardPage = lazy(() => import('src/pages/demo/dashboard'));
 export const FileDashboardPage = lazy(() => import('src/pages/demo/file-dashboard'));
@@ -98,6 +100,8 @@ export const routesSection: RouteObject[] = [
       { path: 'stop-machine-reason', element: <StopMachineReasonListPage /> },
       { path: 'product-groups', element: <ProductGroupListPage /> },
       { path: 'machines', element: <MachineListPage /> },
+      { path: 'machines/create', element: <MachineCreatePage /> },
+      { path: 'machines/:id/edit', element: <MachineEditPage /> },
       { path: 'machines/:id/oee', element: <MachineOEEPage /> },
       { path: 'downtime-report', element: <DowntimeReportPage /> },
       { path: 'shift-templates', element: <ShiftTemplatesPage /> },
