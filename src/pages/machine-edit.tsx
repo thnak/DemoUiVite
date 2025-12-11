@@ -60,6 +60,7 @@ export default function Page() {
           imageUrl: machineData.imageUrl || '',
           areaId: machineData.areaId ? String(machineData.areaId) : null,
           calendarId: machineData.calendarId ? String(machineData.calendarId) : null,
+          machineTypeId: machineData.machineTypeId ? String(machineData.machineTypeId) : null,
           calculationMode: machineData.calculationMode || 'pairParallel',
         }}
       />

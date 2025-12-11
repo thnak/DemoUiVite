@@ -1,0 +1,140 @@
+import type { MachineTypeEntity } from 'src/api/types/generated';
+
+import { debounce } from 'es-toolkit';
+import { useMemo, useState, useCallback, useEffect } from 'react';
+
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import CircularProgress from '@mui/material/CircularProgress';
+
+import { useGetMachineTypePage } from 'src/api/hooks/generated/use-machine-type';
+
+// ----------------------------------------------------------------------
+
+export interface MachineTypeSelectorProps {
+  value?: string | null;
+  onChange?: (machineTypeId: string | null) => void;
+  disabled?: boolean;
+  label?: string;
+  error?: boolean;
+  helperText?: string;
+  required?: boolean;
+}
+
+export function MachineTypeSelector({
+  value,
+  onChange,
+  disabled = false,
+  label = 'Machine Type',
+  error = false,
+  helperText,
+  required = false,
+}: MachineTypeSelectorProps) {
+  const [inputValue, setInputValue] = useState('');
+  const [debouncedInputValue, setDebouncedInputValue] = useState('');
+  const [selectedMachineType, setSelectedMachineType] = useState<MachineTypeEntity | null>(null);
+  const [items, setItems] = useState<MachineTypeEntity[]>([]);
+
+  // Debounce search input with 500ms delay
+  const debouncedSetSearch = useMemo(
+    () => debounce((searchValue: string) => {
+      setDebouncedInputValue(searchValue);
+    }, 500),
+    []
+  );
+
+  const { mutate: fetchMachineTypes, isPending: isFetching } = useGetMachineTypePage({
+    onSuccess: (data) => {
+      setItems(data?.items || []);
+      // If we have a value prop and haven't set a selected item yet, try to find it in results
+      if (value && !selectedMachineType && data?.items) {
+        const found = data.items.find(item => String(item.id) === value);
+        if (found) {
+          setSelectedMachineType(found);
+        }
+      }
+    },
+  });
+
+  // Fetch initial data when component mounts or when value changes
+  useEffect(() => {
+    fetchMachineTypes({
+      data: [],
+      params: {
+        searchTerm: debouncedInputValue || undefined,
+        pageSize: 10,
+        pageNumber: 0,
+      }
+    });
+  }, [debouncedInputValue, fetchMachineTypes]);
+
+  // When value prop changes externally, try to load that specific machine type
+  useEffect(() => {
+    if (value && !selectedMachineType) {
+      // Trigger a fetch to get the selected item
+      fetchMachineTypes({
+        data: [],
+        params: {
+          pageSize: 10,
+          pageNumber: 0,
+        }
+      });
+    } else if (!value && selectedMachineType) {
+      // Clear selection when value is cleared externally
+      setSelectedMachineType(null);
+    }
+  }, [value, selectedMachineType, fetchMachineTypes]);
+
+  const handleChange = useCallback(
+    (_event: any, newValue: MachineTypeEntity | null) => {
+      setSelectedMachineType(newValue);
+      onChange?.(newValue?.id ? String(newValue.id) : null);
+    },
+    [onChange]
+  );
+
+  const handleInputChange = useCallback(
+    (_event: any, newInputValue: string) => {
+      setInputValue(newInputValue);
+      debouncedSetSearch(newInputValue);
+    },
+    [debouncedSetSearch]
+  );
+
+  return (
+    <Autocomplete
+      value={selectedMachineType}
+      onChange={handleChange}
+      inputValue={inputValue}
+      onInputChange={handleInputChange}
+      options={items}
+      getOptionLabel={(option) => {
+        if (typeof option === 'string') return option;
+        return option.name || option.code || String(option.id) || '';
+      }}
+      isOptionEqualToValue={(option, val) => option.id === val.id}
+      loading={isFetching}
+      disabled={disabled}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          required={required}
+          error={error}
+          helperText={helperText}
+          slotProps={{
+            input: {
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  {isFetching ? <CircularProgress color="inherit" size={20} /> : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            }
+          }}
+        />
+      )}
+    />
+  );
+}
