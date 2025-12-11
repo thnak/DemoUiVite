@@ -18428,6 +18428,183 @@
         }
       }
     },
+    "/api/Machine/{machineId}/device-mappings": {
+      "get": {
+        "tags": [
+          "Machine"
+        ],
+        "summary": "Retrieves the device mappings for a specific machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IoTDeviceDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IoTDeviceDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IoTDeviceDto"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IoTDeviceDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Machine/{machineId}/machine-output-mappings": {
+      "get": {
+        "tags": [
+          "Machine"
+        ],
+        "summary": "Retrieves the machine output mappings.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "MongoDB ObjectId represented as a 24-character hexadecimal string",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MachineOutputMappingResponse"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MachineOutputMappingResponse"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MachineOutputMappingResponse"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MachineOutputMappingResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Machine/{machineId}machine-output-mappings": {
+      "put": {
+        "tags": [
+          "Machine"
+        ],
+        "summary": "Updates the machine output mappings.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MachineOutputMappingResponse"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MachineOutputMappingResponse"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MachineOutputMappingResponse"
+                }
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MachineOutputMappingResponse"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/machineareamapping/{id}": {
       "get": {
         "tags": [
@@ -48507,6 +48684,33 @@
         ],
         "type": "string",
         "description": "Defines the mode of mapping for machine output."
+      },
+      "MachineOutputMappingResponse": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "outputName": {
+            "type": "string",
+            "nullable": true
+          },
+          "outputId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "scalingFactor": {
+            "type": "number",
+            "format": "double"
+          },
+          "mappingMode": {
+            "$ref": "#/components/schemas/MachineOutputMappingMode"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
       },
       "MachineOutputMappingResult": {
         "type": "object",
