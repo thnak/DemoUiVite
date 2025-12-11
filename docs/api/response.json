@@ -7812,49 +7812,6 @@
         }
       }
     },
-    "/api/Device/check-available-ip": {
-      "get": {
-        "tags": [
-          "Device"
-        ],
-        "parameters": [
-          {
-            "name": "ip",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/Device/check-available-mac": {
       "get": {
         "tags": [
@@ -25299,6 +25256,350 @@
         }
       }
     },
+    "/api/productcategory/{id}": {
+      "get": {
+        "tags": [
+          "ProductCategory"
+        ],
+        "summary": "Get Product Category by ID",
+        "description": "Retrieves a specific Product Category entity by its unique identifier.",
+        "operationId": "GetProductCategoryById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCategoryEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/productcategory/get-page": {
+      "post": {
+        "tags": [
+          "ProductCategory"
+        ],
+        "summary": "Get paginated list of Product Category",
+        "description": "Retrieves a paginated list of Product Category entities.",
+        "operationId": "GetProductCategoryPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCategoryEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productcategory/create": {
+      "post": {
+        "tags": [
+          "ProductCategory"
+        ],
+        "summary": "Create a new Product Category",
+        "description": "Creates a new Product Category entity in the system.",
+        "operationId": "CreateProductCategory",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductCategoryEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCategoryEntityResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCategoryEntityResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productcategory/update/{id}": {
+      "post": {
+        "tags": [
+          "ProductCategory"
+        ],
+        "summary": "Update an existing Product Category",
+        "description": "Updates specific fields of an existing Product Category entity by ID.",
+        "operationId": "UpdateProductCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productcategory/delete/{id}": {
+      "delete": {
+        "tags": [
+          "ProductCategory"
+        ],
+        "summary": "Delete a Product Category",
+        "description": "Deletes a Product Category entity by its unique identifier.",
+        "operationId": "DeleteProductCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productcategory/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "ProductCategory"
+        ],
+        "summary": "Soft delete a Product Category",
+        "description": "Soft deletes a Product Category entity by its unique identifier.",
+        "operationId": "SoftDeleteProductCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productcategory/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "ProductCategory"
+        ],
+        "summary": "Soft restore delete a Product Category",
+        "description": "Soft restore deletes a Product Category entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteProductCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productcategory/generate-new-code": {
+      "get": {
+        "tags": [
+          "ProductCategory"
+        ],
+        "summary": "Generate a new code for Product Category",
+        "description": "Generates a new unique code for a Product Category entity.",
+        "operationId": "GenerateNewProductCategoryCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productcategory/search": {
+      "get": {
+        "tags": [
+          "ProductCategory"
+        ],
+        "summary": "Search Product Category entities",
+        "description": "Searches Product Category entities by text across searchable fields.",
+        "operationId": "SearchProductCategory",
+        "parameters": [
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCategoryEntityResultArray"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/productionorder/{id}": {
       "get": {
         "tags": [
@@ -35209,6 +35510,14 @@
         "summary": "Gets a paginated list of user DTOs based on the provided request.",
         "parameters": [
           {
+            "name": "RoleId",
+            "in": "query",
+            "description": "Optional role ID to filter users by role",
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          },
+          {
             "name": "pageNumber",
             "in": "query",
             "description": "Page number, starting from 0.",
@@ -35282,22 +35591,22 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserDtoBasePaginationResponse"
+                  "$ref": "#/components/schemas/UserPageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserDtoBasePaginationResponse"
+                  "$ref": "#/components/schemas/UserPageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserDtoBasePaginationResponse"
+                  "$ref": "#/components/schemas/UserPageResponse"
                 }
               },
               "application/vnd.msgpack": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserDtoBasePaginationResponse"
+                  "$ref": "#/components/schemas/UserPageResponse"
                 }
               }
             }
@@ -41681,13 +41990,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-09"
+            "example": "2025-12-11"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-09"
+            "example": "2025-12-11"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -41799,13 +42108,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-09"
+            "example": "2025-12-11"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-09"
+            "example": "2025-12-11"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -41957,12 +42266,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-09"
+            "example": "2025-12-11"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-09"
+            "example": "2025-12-11"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -43986,7 +44295,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-09"
+            "example": "2025-12-11"
           }
         },
         "additionalProperties": false
@@ -45776,6 +46085,11 @@
             "description": "MQTT password for the IoT device.",
             "nullable": true
           },
+          "mqttUsername": {
+            "type": "string",
+            "description": "MQTT username for the IoT device.",
+            "nullable": true
+          },
           "type": {
             "$ref": "#/components/schemas/IoTDeviceType"
           },
@@ -45786,7 +46100,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2025-12-09"
+            "example": "2025-12-11"
           },
           "lastServiceTime": {
             "type": "string",
@@ -45808,11 +46122,6 @@
           "macAddress": {
             "type": "string",
             "description": "MAC address of the IoT device.",
-            "nullable": true
-          },
-          "ipAddress": {
-            "type": "string",
-            "description": "IP address of the IoT device.",
             "nullable": true
           },
           "imageUrl": {
@@ -49974,6 +50283,160 @@
         },
         "additionalProperties": { }
       },
+      "ProductCategoryEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "code": {
+            "type": "string",
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Tên mô tả của thực thể.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Mô tả chi tiết về thực thể.",
+            "nullable": true
+          },
+          "colorHex": {
+            "type": "string",
+            "description": "Màu sắc hiển thị lý do dừng máy",
+            "nullable": true
+          },
+          "translations": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Các bản dịch của tên lý do dừng máy",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a product category entity in the system."
+      },
+      "ProductCategoryEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductCategoryEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "ProductCategoryEntityResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/ProductCategoryEntity"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "ProductCategoryEntityResultArray": {
+        "required": [
+          "data",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Trạng thái thành công hay thất bại"
+          },
+          "message": {
+            "type": "string",
+            "description": "Thông điệp trả về",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductCategoryEntity"
+            },
+            "description": "Dữ liệu trả về",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Kết quả trả về dạng mảng"
+      },
       "ProductDimensions": {
         "type": "object",
         "properties": {
@@ -50026,19 +50489,19 @@
             "type": "boolean",
             "description": "Indicates whether the entity is in draft status."
           },
-          "name": {
-            "type": "string",
-            "description": "Name of the product",
-            "nullable": true
-          },
           "code": {
             "type": "string",
-            "description": "Product code or SKU",
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Tên mô tả của thực thể.",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Description of the product",
+            "description": "Mô tả chi tiết về thực thể.",
             "nullable": true
           },
           "unitOfMeasure": {
@@ -50047,8 +50510,8 @@
           "secondaryUnitOfMeasure": {
             "$ref": "#/components/schemas/UnitOfMeasure"
           },
-          "productType": {
-            "$ref": "#/components/schemas/ProductType"
+          "productCategoryId": {
+            "$ref": "#/components/schemas/ObjectId"
           },
           "dimensions": {
             "$ref": "#/components/schemas/ProductDimensions"
@@ -50062,6 +50525,16 @@
             "type": "string",
             "description": "URL of the product image. Relative path",
             "nullable": true
+          },
+          "stockQuantity": {
+            "type": "number",
+            "description": "Quantity of the product in stock",
+            "format": "double"
+          },
+          "price": {
+            "type": "number",
+            "description": "Price of the product",
+            "format": "double"
           }
         },
         "additionalProperties": false,
@@ -50164,22 +50637,6 @@
         },
         "additionalProperties": false,
         "description": "Kết quả trả về dạng mảng"
-      },
-      "ProductType": {
-        "enum": [
-          "finishedGood",
-          "assembly",
-          "component",
-          "rawMaterial",
-          "subAssembly",
-          "service",
-          "nonStockItem",
-          "tooling",
-          "consumable",
-          "digital",
-          "unknown"
-        ],
-        "type": "string"
       },
       "ProductionDisposition": {
         "enum": [
@@ -54445,49 +54902,6 @@
         "additionalProperties": false,
         "description": "Data transfer object for User entity"
       },
-      "UserDtoBasePaginationResponse": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserDto"
-            },
-            "description": "List of items in the current page",
-            "nullable": true
-          },
-          "totalItems": {
-            "type": "integer",
-            "description": "Total number of items across all pages",
-            "format": "int32"
-          },
-          "pageNumber": {
-            "type": "integer",
-            "description": "Current page number (0-based)",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "description": "Number of items per page",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "description": "Total number of pages",
-            "format": "int32"
-          },
-          "sortableFields": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "List of fields that can be used for sorting",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "Base class for paginated responses"
-      },
       "UserDtoRole": {
         "type": "object",
         "properties": {
@@ -54964,6 +55378,56 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "UserPageResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserDto"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          },
+          "roles": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "UserPasskeyEntity": {
         "type": "object",
@@ -56857,6 +57321,9 @@
     },
     {
       "name": "Product"
+    },
+    {
+      "name": "ProductCategory"
     },
     {
       "name": "ProductionOrder"
