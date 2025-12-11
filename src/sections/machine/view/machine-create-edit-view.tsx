@@ -8,18 +8,25 @@ import { useState, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
+import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import Switch from '@mui/material/Switch';
+import TableRow from '@mui/material/TableRow';
 import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Autocomplete from '@mui/material/Autocomplete';
+import TableContainer from '@mui/material/TableContainer';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import type { SelectChangeEvent } from '@mui/material/Select';
@@ -274,335 +281,279 @@ export function MachineCreateEditView({
         </Box>
       </Box>
 
-      <Stack spacing={3}>
-        {/* Machine Information Section */}
-        <Card sx={{ p: 3 }}>
-          <Typography variant="h6" sx={{ mb: 3 }}>
-            Machine Information
-          </Typography>
-          <Stack spacing={3}>
-            <TextField
-              fullWidth
-              label="Machine code"
-              value={formData.code}
-              onChange={handleInputChange('code')}
+      <Grid container spacing={3}>
+        {/* Left Section - Image Upload & Settings */}
+        <Grid size={{ xs: 12, md: 4 }}>
+          <Card sx={{ p: 3 }}>
+            <Typography variant="subtitle2" sx={{ mb: 2 }}>
+              Machine Image
+            </Typography>
+            <ImageEntityResourceUploader
+              imageUrl={formData.imageUrl}
+              onImageUrlChange={handleImageUrlChange}
+              aspectRatio={16 / 9}
+              previewSize={300}
             />
 
-            <TextField
-              fullWidth
-              label="Machine name"
-              value={formData.name}
-              onChange={handleInputChange('name')}
-              required
-            />
-
-            <Box>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                Machine Image
-              </Typography>
-              <ImageEntityResourceUploader
-                imageUrl={formData.imageUrl}
-                onImageUrlChange={handleImageUrlChange}
-                aspectRatio={16 / 9}
-                previewSize={300}
+            <Box sx={{ mt: 3 }}>
+              <AreaSelector
+                value={formData.areaId}
+                onChange={handleAreaChange}
+                label="Area"
               />
             </Box>
 
-            <AreaSelector
-              value={formData.areaId}
-              onChange={handleAreaChange}
-              label="Area"
-            />
-
-            <CalendarSelector
-              value={formData.calendarId}
-              onChange={handleCalendarChange}
-              label="Calendar"
-            />
-
-            <FormControl fullWidth>
-              <InputLabel>Calculation Mode</InputLabel>
-              <Select
-                value={formData.calculationMode}
-                onChange={handleCalculationModeChange}
-                label="Calculation Mode"
-              >
-                <MenuItem value="pairParallel">Pair Parallel</MenuItem>
-                <MenuItem value="weightedChannels">Weighted Channels</MenuItem>
-              </Select>
-            </FormControl>
-          </Stack>
-        </Card>
-
-        {/* Device Mapping Section */}
-        <Card sx={{ p: 3 }}>
-          <Typography variant="h6" sx={{ mb: 3 }}>
-            Device Mapping
-          </Typography>
-
-          <Stack spacing={3}>
-            <Stack direction="row" spacing={2}>
-              <Autocomplete
-                fullWidth
-                value={selectedDevice}
-                onChange={(_, newValue) => setSelectedDevice(newValue)}
-                inputValue={deviceSearchKeyword}
-                onInputChange={(_, newInputValue) => setDeviceSearchKeyword(newInputValue)}
-                options={devices || []}
-                getOptionLabel={(option) => option.name || option.code || ''}
-                isOptionEqualToValue={(option, val) => option.id === val.id}
-                loading={isDeviceSearching}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Search Device"
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <>
-                          {isDeviceSearching ? <CircularProgress color="inherit" size={20} /> : null}
-                          {params.InputProps.endAdornment}
-                        </>
-                      ),
-                    }}
-                  />
-                )}
+            <Box sx={{ mt: 3 }}>
+              <CalendarSelector
+                value={formData.calendarId}
+                onChange={handleCalendarChange}
+                label="Calendar"
               />
+            </Box>
+
+            <Box sx={{ mt: 3 }}>
+              <FormControl fullWidth>
+                <InputLabel>Calculation Mode</InputLabel>
+                <Select
+                  value={formData.calculationMode}
+                  onChange={handleCalculationModeChange}
+                  label="Calculation Mode"
+                >
+                  <MenuItem value="pairParallel">Pair Parallel</MenuItem>
+                  <MenuItem value="weightedChannels">Weighted Channels</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+          </Card>
+        </Grid>
+
+        {/* Right Section - Main Form */}
+        <Grid size={{ xs: 12, md: 8 }}>
+          <Stack spacing={3}>
+            {/* Machine Information */}
+            <Card sx={{ p: 3 }}>
+              <Typography variant="h6" sx={{ mb: 3 }}>
+                Machine Information
+              </Typography>
+              <Grid container spacing={3}>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    label="Machine code"
+                    value={formData.code}
+                    onChange={handleInputChange('code')}
+                  />
+                </Grid>
+
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    label="Machine name"
+                    value={formData.name}
+                    onChange={handleInputChange('name')}
+                    required
+                  />
+                </Grid>
+              </Grid>
+            </Card>
+
+            {/* Device Mapping Section */}
+            <Card sx={{ p: 3 }}>
+              <Typography variant="h6" sx={{ mb: 3 }}>
+                Device Mapping
+              </Typography>
+
+              <Stack spacing={3}>
+                <Stack direction="row" spacing={2}>
+                  <Autocomplete
+                    fullWidth
+                    value={selectedDevice}
+                    onChange={(_, newValue) => setSelectedDevice(newValue)}
+                    inputValue={deviceSearchKeyword}
+                    onInputChange={(_, newInputValue) => setDeviceSearchKeyword(newInputValue)}
+                    options={devices || []}
+                    getOptionLabel={(option) => option.name || option.code || ''}
+                    isOptionEqualToValue={(option, val) => option.id === val.id}
+                    loading={isDeviceSearching}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Search Device"
+                        InputProps={{
+                          ...params.InputProps,
+                          endAdornment: (
+                            <>
+                              {isDeviceSearching ? (
+                                <CircularProgress color="inherit" size={20} />
+                              ) : null}
+                              {params.InputProps.endAdornment}
+                            </>
+                          ),
+                        }}
+                      />
+                    )}
+                  />
+                  <Button
+                    variant="contained"
+                    onClick={handleDeviceAdd}
+                    disabled={!selectedDevice}
+                    sx={{ minWidth: 120 }}
+                  >
+                    Add Device
+                  </Button>
+                </Stack>
+
+                {deviceMappings.length > 0 && (
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Code</TableCell>
+                          <TableCell>Name</TableCell>
+                          <TableCell>MAC Address</TableCell>
+                          <TableCell align="right">Actions</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {deviceMappings.map((dm) => (
+                          <TableRow key={dm.deviceId}>
+                            <TableCell>{dm.device.code || '-'}</TableCell>
+                            <TableCell>{dm.device.name || '-'}</TableCell>
+                            <TableCell>{dm.device.macAddress || '-'}</TableCell>
+                            <TableCell align="right">
+                              <Button
+                                size="small"
+                                color="error"
+                                onClick={() => handleDeviceRemove(dm.deviceId)}
+                              >
+                                Remove
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
+
+                {deviceMappings.length === 0 && (
+                  <Box
+                    sx={{
+                      p: 3,
+                      textAlign: 'center',
+                      bgcolor: 'background.neutral',
+                      borderRadius: 1,
+                    }}
+                  >
+                    <Typography variant="body2" color="text.secondary">
+                      No devices mapped yet. Use the search above to add devices.
+                    </Typography>
+                  </Box>
+                )}
+              </Stack>
+            </Card>
+
+            {/* Sensor Output Mapping Section */}
+            <Card sx={{ p: 3 }}>
+              <Typography variant="h6" sx={{ mb: 3 }}>
+                Sensor Output Mapping
+              </Typography>
+
+              {sensorOutputMappings.length > 0 ? (
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Index</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Factor Scale</TableCell>
+                        <TableCell align="center">Enabled</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {sensorOutputMappings.map((som, idx) => (
+                        <TableRow key={som.sensorId}>
+                          <TableCell>{idx + 1}</TableCell>
+                          <TableCell>
+                            {som.sensor.sensorName || som.sensor.sensorCode || '-'}
+                          </TableCell>
+                          <TableCell>
+                            <TextField
+                              type="number"
+                              size="small"
+                              value={som.scalingFactor}
+                              onChange={(e) =>
+                                handleSensorScalingFactorChange(som.sensorId, Number(e.target.value))
+                              }
+                              sx={{ width: 120 }}
+                            />
+                          </TableCell>
+                          <TableCell align="center">
+                            <Switch
+                              checked={som.enabled}
+                              onChange={(e) =>
+                                handleSensorEnabledChange(som.sensorId, e.target.checked)
+                              }
+                              size="small"
+                            />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              ) : (
+                <Box
+                  sx={{
+                    p: 3,
+                    textAlign: 'center',
+                    bgcolor: 'background.neutral',
+                    borderRadius: 1,
+                  }}
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    No sensor output mappings configured. Add devices first to configure sensor
+                    outputs.
+                  </Typography>
+                </Box>
+              )}
+            </Card>
+
+            {/* Action Buttons */}
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+              <Button
+                variant="outlined"
+                color="inherit"
+                onClick={handleCancel}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </Button>
               <Button
                 variant="contained"
-                onClick={handleDeviceAdd}
-                disabled={!selectedDevice}
-                sx={{ minWidth: 120 }}
+                color="inherit"
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                sx={(theme) => ({
+                  bgcolor: theme.palette.text.primary,
+                  color: theme.palette.background.paper,
+                  '&:hover': {
+                    bgcolor: theme.palette.text.secondary,
+                  },
+                })}
               >
-                Add Device
+                {isSubmitting ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : isEdit ? (
+                  'Save changes'
+                ) : (
+                  'Create machine'
+                )}
               </Button>
-            </Stack>
-
-            {deviceMappings.length > 0 && (
-              <Box sx={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead>
-                    <tr>
-                      <th
-                        style={{
-                          textAlign: 'left',
-                          padding: '12px',
-                          borderBottom: '1px solid rgba(224, 224, 224, 1)',
-                        }}
-                      >
-                        Code
-                      </th>
-                      <th
-                        style={{
-                          textAlign: 'left',
-                          padding: '12px',
-                          borderBottom: '1px solid rgba(224, 224, 224, 1)',
-                        }}
-                      >
-                        Name
-                      </th>
-                      <th
-                        style={{
-                          textAlign: 'left',
-                          padding: '12px',
-                          borderBottom: '1px solid rgba(224, 224, 224, 1)',
-                        }}
-                      >
-                        MAC Address
-                      </th>
-                      <th
-                        style={{
-                          textAlign: 'right',
-                          padding: '12px',
-                          borderBottom: '1px solid rgba(224, 224, 224, 1)',
-                        }}
-                      >
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {deviceMappings.map((dm) => (
-                      <tr key={dm.deviceId}>
-                        <td style={{ padding: '12px', borderBottom: '1px solid rgba(224, 224, 224, 1)' }}>
-                          {dm.device.code || '-'}
-                        </td>
-                        <td style={{ padding: '12px', borderBottom: '1px solid rgba(224, 224, 224, 1)' }}>
-                          {dm.device.name || '-'}
-                        </td>
-                        <td style={{ padding: '12px', borderBottom: '1px solid rgba(224, 224, 224, 1)' }}>
-                          {dm.device.macAddress || '-'}
-                        </td>
-                        <td
-                          style={{
-                            padding: '12px',
-                            borderBottom: '1px solid rgba(224, 224, 224, 1)',
-                            textAlign: 'right',
-                          }}
-                        >
-                          <Button
-                            size="small"
-                            color="error"
-                            onClick={() => handleDeviceRemove(dm.deviceId)}
-                          >
-                            Remove
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </Box>
-            )}
-
-            {deviceMappings.length === 0 && (
-              <Box
-                sx={{
-                  p: 3,
-                  textAlign: 'center',
-                  bgcolor: 'background.neutral',
-                  borderRadius: 1,
-                }}
-              >
-                <Typography variant="body2" color="text.secondary">
-                  No devices mapped yet. Use the search above to add devices.
-                </Typography>
-              </Box>
-            )}
+            </Box>
           </Stack>
-        </Card>
-
-        {/* Sensor Output Mapping Section */}
-        <Card sx={{ p: 3 }}>
-          <Typography variant="h6" sx={{ mb: 3 }}>
-            Sensor Output Mapping
-          </Typography>
-
-          {sensorOutputMappings.length > 0 ? (
-            <Box sx={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr>
-                    <th
-                      style={{
-                        textAlign: 'left',
-                        padding: '12px',
-                        borderBottom: '1px solid rgba(224, 224, 224, 1)',
-                      }}
-                    >
-                      Index
-                    </th>
-                    <th
-                      style={{
-                        textAlign: 'left',
-                        padding: '12px',
-                        borderBottom: '1px solid rgba(224, 224, 224, 1)',
-                      }}
-                    >
-                      Name
-                    </th>
-                    <th
-                      style={{
-                        textAlign: 'left',
-                        padding: '12px',
-                        borderBottom: '1px solid rgba(224, 224, 224, 1)',
-                      }}
-                    >
-                      Factor Scale
-                    </th>
-                    <th
-                      style={{
-                        textAlign: 'center',
-                        padding: '12px',
-                        borderBottom: '1px solid rgba(224, 224, 224, 1)',
-                      }}
-                    >
-                      Enabled
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sensorOutputMappings.map((som, idx) => (
-                    <tr key={som.sensorId}>
-                      <td style={{ padding: '12px', borderBottom: '1px solid rgba(224, 224, 224, 1)' }}>
-                        {idx + 1}
-                      </td>
-                      <td style={{ padding: '12px', borderBottom: '1px solid rgba(224, 224, 224, 1)' }}>
-                        {som.sensor.sensorName || som.sensor.sensorCode || '-'}
-                      </td>
-                      <td style={{ padding: '12px', borderBottom: '1px solid rgba(224, 224, 224, 1)' }}>
-                        <TextField
-                          type="number"
-                          size="small"
-                          value={som.scalingFactor}
-                          onChange={(e) =>
-                            handleSensorScalingFactorChange(som.sensorId, Number(e.target.value))
-                          }
-                          sx={{ width: 120 }}
-                        />
-                      </td>
-                      <td
-                        style={{
-                          padding: '12px',
-                          borderBottom: '1px solid rgba(224, 224, 224, 1)',
-                          textAlign: 'center',
-                        }}
-                      >
-                        <Switch
-                          checked={som.enabled}
-                          onChange={(e) => handleSensorEnabledChange(som.sensorId, e.target.checked)}
-                          size="small"
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </Box>
-          ) : (
-            <Box
-              sx={{
-                p: 3,
-                textAlign: 'center',
-                bgcolor: 'background.neutral',
-                borderRadius: 1,
-              }}
-            >
-              <Typography variant="body2" color="text.secondary">
-                No sensor output mappings configured. Add devices first to configure sensor outputs.
-              </Typography>
-            </Box>
-          )}
-        </Card>
-
-        {/* Action Buttons */}
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-          <Button variant="outlined" color="inherit" onClick={handleCancel} disabled={isSubmitting}>
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            color="inherit"
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            sx={(theme) => ({
-              bgcolor: theme.palette.text.primary,
-              color: theme.palette.background.paper,
-              '&:hover': {
-                bgcolor: theme.palette.text.secondary,
-              },
-            })}
-          >
-            {isSubmitting ? (
-              <CircularProgress size={24} color="inherit" />
-            ) : isEdit ? (
-              'Save changes'
-            ) : (
-              'Create machine'
-            )}
-          </Button>
-        </Box>
-      </Stack>
+        </Grid>
+      </Grid>
 
       <Snackbar
         open={!!errorMessage}

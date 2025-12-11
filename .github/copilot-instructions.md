@@ -253,6 +253,103 @@ const request = { timeout: "30s", duration: "1 hour" };
 - Keep documentation up to date when making code changes
 - **Always follow the theme system guidelines** to ensure dark mode compatibility
 
+## Page Layout Standards
+
+### Create/Edit Page Layout Pattern
+
+All create and edit pages **MUST** follow the Grid-based layout pattern for consistency. This is the standard layout structure used across the application.
+
+#### Layout Structure
+
+Use a **Grid container** with two main sections:
+- **Left Column (4/12 width)**: Image/Media upload and related settings
+- **Right Column (8/12 width)**: Form fields organized in cards
+
+#### Example Pattern (Product Create/Edit)
+
+```tsx
+<DashboardContent>
+  {/* Page Header with Breadcrumbs */}
+  <Box sx={{ mb: 5 }}>
+    <Typography variant="h4" sx={{ mb: 1 }}>
+      {isEdit ? 'Edit product' : 'Create a new product'}
+    </Typography>
+    {/* Breadcrumb navigation */}
+  </Box>
+
+  <Grid container spacing={3}>
+    {/* Left Section - 4/12 width */}
+    <Grid size={{ xs: 12, md: 4 }}>
+      <Card sx={{ p: 3 }}>
+        {/* Image upload */}
+        {/* Additional settings */}
+      </Card>
+    </Grid>
+
+    {/* Right Section - 8/12 width */}
+    <Grid size={{ xs: 12, md: 8 }}>
+      <Stack spacing={3}>
+        {/* Main form card */}
+        <Card sx={{ p: 3 }}>
+          <Typography variant="h6" sx={{ mb: 3 }}>
+            Section Title
+          </Typography>
+          <Grid container spacing={3}>
+            {/* Form fields */}
+          </Grid>
+        </Card>
+
+        {/* Additional cards for related data */}
+        
+        {/* Action buttons at the bottom */}
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+          <Button variant="outlined">Cancel</Button>
+          <Button variant="contained">Save</Button>
+        </Box>
+      </Stack>
+    </Grid>
+  </Grid>
+</DashboardContent>
+```
+
+#### Key Guidelines
+
+1. **Grid Layout**: Always use `Grid` container with `spacing={3}`
+2. **Left Column**: Use `Grid size={{ xs: 12, md: 4 }}` for image/settings section
+3. **Right Column**: Use `Grid size={{ xs: 12, md: 8 }}` with `Stack spacing={3}` for multiple cards
+4. **Card Padding**: Use `sx={{ p: 3 }}` for consistent padding
+5. **Section Headings**: Use `Typography variant="h6"` for card section titles
+6. **Responsive**: Grid automatically stacks on mobile (`xs: 12`)
+7. **Action Buttons**: Place at bottom-right with flexbox alignment
+
+#### ❌ Do NOT Use
+
+```tsx
+// WRONG: Stacked layout without Grid
+<Stack spacing={3}>
+  <Card>...</Card>
+  <Card>...</Card>
+  <Card>...</Card>
+</Stack>
+```
+
+#### ✅ Always Use
+
+```tsx
+// CORRECT: Grid-based layout
+<Grid container spacing={3}>
+  <Grid size={{ xs: 12, md: 4 }}>
+    <Card sx={{ p: 3 }}>...</Card>
+  </Grid>
+  <Grid size={{ xs: 12, md: 8 }}>
+    <Stack spacing={3}>
+      <Card sx={{ p: 3 }}>...</Card>
+      <Card sx={{ p: 3 }}>...</Card>
+    </Stack>
+  </Grid>
+</Grid>
+```
+
 ## Your tools
 -- Use the mui-mcp server to answer any MUI questions --
 - 1. call the "useMuiDocs" tool to fetch the docs of the package relevant in the question
