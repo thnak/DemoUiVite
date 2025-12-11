@@ -160,7 +160,6 @@ export function MachineTypeView() {
                   { id: 'code', label: 'Code' },
                   { id: 'name', label: 'Name' },
                   { id: 'description', label: 'Description' },
-                  { id: '' },
                 ]}
               />
               <TableBody>
