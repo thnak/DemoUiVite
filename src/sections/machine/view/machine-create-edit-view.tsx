@@ -12,6 +12,7 @@ import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
+import Switch from '@mui/material/Switch';
 import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
@@ -20,6 +21,8 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
+
+import type { SelectChangeEvent } from '@mui/material/Select';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -148,7 +151,7 @@ export function MachineCreateEditView({
   );
 
   const handleCalculationModeChange = useCallback(
-    (event: any) => {
+    (event: SelectChangeEvent<OutputCalculationMode>) => {
       setFormData((prev) => ({
         ...prev,
         calculationMode: event.target.value as OutputCalculationMode,
@@ -545,10 +548,10 @@ export function MachineCreateEditView({
                           textAlign: 'center',
                         }}
                       >
-                        <input
-                          type="checkbox"
+                        <Switch
                           checked={som.enabled}
                           onChange={(e) => handleSensorEnabledChange(som.sensorId, e.target.checked)}
+                          size="small"
                         />
                       </td>
                     </tr>
