@@ -1,7 +1,7 @@
 import type { MachineTypeEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -33,6 +33,7 @@ export function MachineTypeSelector({
   const [inputValue, setInputValue] = useState('');
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedMachineType, setSelectedMachineType] = useState<MachineTypeEntity | null>(null);
+  const [items, setItems] = useState<MachineTypeEntity[]>([]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
@@ -42,18 +43,22 @@ export function MachineTypeSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useGetMachineTypePage(
-    {
+  const { mutate: fetchMachineTypes, isPending: isFetching } = useGetMachineTypePage({
+    onSuccess: (data) => {
+      setItems(data?.items || []);
+    },
+  });
+
+  useEffect(() => {
+    fetchMachineTypes({
       data: [],
       params: {
         searchTerm: debouncedInputValue || undefined,
         pageSize: 10,
         pageNumber: 0,
       }
-    }
-  );
-
-  const items = searchResults?.items || [];
+    });
+  }, [debouncedInputValue, fetchMachineTypes]);
 
   const handleChange = useCallback(
     (_event: any, newValue: MachineTypeEntity | null) => {
