@@ -56,6 +56,14 @@ interface SensorOutputMapping extends MachineOutputMappingResponse {
   outputId: string;
 }
 
+interface DraggedSensorMapping extends SensorOutputMapping {
+  sourceTable: 'good' | 'scrap';
+}
+
+// Constants for scale factors
+const DEFAULT_GOOD_SCALE_FACTOR = 1;
+const DEFAULT_SCRAP_SCALE_FACTOR = -1;
+
 interface MachineCreateEditViewProps {
   isEdit?: boolean;
   currentMachine?: {
@@ -88,7 +96,7 @@ export function MachineCreateEditView({
   // Sensor output mapping state - separated into good and scrap
   const [goodOutputMappings, setGoodOutputMappings] = useState<SensorOutputMapping[]>([]);
   const [scrapOutputMappings, setScrapOutputMappings] = useState<SensorOutputMapping[]>([]);
-  const [draggedItem, setDraggedItem] = useState<SensorOutputMapping | null>(null);
+  const [draggedItem, setDraggedItem] = useState<DraggedSensorMapping | null>(null);
 
   // Fetch device mappings for edit mode
   const { data: deviceMappings, isLoading: isLoadingDevices } =
@@ -115,7 +123,11 @@ export function MachineCreateEditView({
         const sensorMapping: SensorOutputMapping = {
           ...mapping,
           outputId: String(mapping.outputId || ''),
-          scalingFactor: mapping.scalingFactor ?? 1,
+          scalingFactor:
+            mapping.scalingFactor ??
+            (mapping.mappingMode === 'outputScrap'
+              ? DEFAULT_SCRAP_SCALE_FACTOR
+              : DEFAULT_GOOD_SCALE_FACTOR),
           enabled: mapping.enabled ?? true,
           mappingMode: mapping.mappingMode || 'outputGood',
         };
@@ -131,18 +143,6 @@ export function MachineCreateEditView({
       setScrapOutputMappings(scrapMappings);
     }
   }, [machineOutputMappings]);
-
-  // Search devices (removed - not used in read-only device mapping)
-  // const { data: devices, isFetching: isDeviceSearching } =
-  //   useGetapiDevicesearchdevice(
-  //     {
-  //       search: deviceSearchKeyword || undefined,
-  //       pageSize: 10,
-  //     },
-  //     {
-  //       enabled: deviceSearchKeyword.length > 0,
-  //     }
-  //   );
 
   const { mutate: createMachineMutate, isPending: isCreating } = useCreateMachine({
     onSuccess: (result) => {
@@ -233,7 +233,7 @@ export function MachineCreateEditView({
   // Drag and drop handlers
   const handleDragStart = useCallback(
     (item: SensorOutputMapping, sourceTable: 'good' | 'scrap') => {
-      setDraggedItem({ ...item, sourceTable } as any);
+      setDraggedItem({ ...item, sourceTable });
     },
     []
   );
@@ -247,22 +247,24 @@ export function MachineCreateEditView({
       e.preventDefault();
       if (!draggedItem) return;
 
-      const sourceTable = (draggedItem as any).sourceTable;
-
-      if (sourceTable === 'scrap') {
-        // Move from scrap to good
-        setScrapOutputMappings((prev) =>
-          prev.filter((item) => item.outputId !== draggedItem.outputId)
-        );
-        setGoodOutputMappings((prev) => [
-          ...prev,
-          {
-            ...draggedItem,
-            mappingMode: 'outputGood',
-            scalingFactor: 1, // Default for good
-          },
-        ]);
+      // Prevent dropping in the same table
+      if (draggedItem.sourceTable === 'good') {
+        setDraggedItem(null);
+        return;
       }
+
+      // Move from scrap to good
+      setScrapOutputMappings((prev) =>
+        prev.filter((item) => item.outputId !== draggedItem.outputId)
+      );
+      setGoodOutputMappings((prev) => [
+        ...prev,
+        {
+          ...draggedItem,
+          mappingMode: 'outputGood',
+          scalingFactor: DEFAULT_GOOD_SCALE_FACTOR,
+        },
+      ]);
 
       setDraggedItem(null);
     },
@@ -274,22 +276,24 @@ export function MachineCreateEditView({
       e.preventDefault();
       if (!draggedItem) return;
 
-      const sourceTable = (draggedItem as any).sourceTable;
-
-      if (sourceTable === 'good') {
-        // Move from good to scrap
-        setGoodOutputMappings((prev) =>
-          prev.filter((item) => item.outputId !== draggedItem.outputId)
-        );
-        setScrapOutputMappings((prev) => [
-          ...prev,
-          {
-            ...draggedItem,
-            mappingMode: 'outputScrap',
-            scalingFactor: -1, // Default for scrap
-          },
-        ]);
+      // Prevent dropping in the same table
+      if (draggedItem.sourceTable === 'scrap') {
+        setDraggedItem(null);
+        return;
       }
+
+      // Move from good to scrap
+      setGoodOutputMappings((prev) =>
+        prev.filter((item) => item.outputId !== draggedItem.outputId)
+      );
+      setScrapOutputMappings((prev) => [
+        ...prev,
+        {
+          ...draggedItem,
+          mappingMode: 'outputScrap',
+          scalingFactor: DEFAULT_SCRAP_SCALE_FACTOR,
+        },
+      ]);
 
       setDraggedItem(null);
     },
@@ -591,7 +595,7 @@ export function MachineCreateEditView({
                             <TextField
                               type="number"
                               size="small"
-                              value={mapping.scalingFactor ?? 1}
+                              value={mapping.scalingFactor ?? DEFAULT_GOOD_SCALE_FACTOR}
                               onChange={(e) =>
                                 handleSensorScalingFactorChange(
                                   mapping.outputId,
@@ -685,7 +689,7 @@ export function MachineCreateEditView({
                             <TextField
                               type="number"
                               size="small"
-                              value={mapping.scalingFactor ?? -1}
+                              value={mapping.scalingFactor ?? DEFAULT_SCRAP_SCALE_FACTOR}
                               onChange={(e) =>
                                 handleSensorScalingFactorChange(
                                   mapping.outputId,
