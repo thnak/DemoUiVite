@@ -411,7 +411,10 @@ export function ShiftTemplateView() {
                           <Typography variant="body2">{totalWorkingTime}</Typography>
                         </TableCell>
                         <TableCell align="right">
-                          <IconButton onClick={(e) => handleOpenPopover(e, templateId)}>
+                          <IconButton 
+                            onClick={(e) => handleOpenPopover(e, templateId)}
+                            aria-label="More actions"
+                          >
                             <Iconify icon="eva:more-vertical-fill" />
                           </IconButton>
                         </TableCell>

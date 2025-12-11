@@ -360,7 +360,10 @@ export function CalendarView() {
                           </Typography>
                         </TableCell>
                         <TableCell align="right">
-                          <IconButton onClick={(e) => handleOpenPopover(e, calendarId)}>
+                          <IconButton 
+                            onClick={(e) => handleOpenPopover(e, calendarId)}
+                            aria-label="More actions"
+                          >
                             <Iconify icon="eva:more-vertical-fill" />
                           </IconButton>
                         </TableCell>
