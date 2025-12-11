@@ -199,7 +199,7 @@ export function MachineView() {
     const handleEditMachine = useCallback((id: string) => {
         console.log('Edit machine:', id);
         // TODO: Navigate to edit page
-        // window.location.href = `/machine/${id}/edit`;
+        // window.location.href = `/machines/${id}/edit`;
     }, []);
 
     const handleDeleteMachine = useCallback(
@@ -264,7 +264,7 @@ export function MachineView() {
                         variant="contained"
                         color="inherit"
                         startIcon={<Iconify icon="mingcute:add-line" />}
-                        href="/machine/create"
+                        href="/machines/create"
                     >
                         Add machine
                     </Button>
