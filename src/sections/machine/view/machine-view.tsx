@@ -207,7 +207,7 @@ export function MachineView() {
   const handleEditMachine = useCallback((id: string) => {
     // Navigate to edit page
     router.push(`/machines/${id}/edit`);
-  }, []);
+  }, [router]);
 
   const handleDeleteMachine = useCallback(
     (id: string) => {
