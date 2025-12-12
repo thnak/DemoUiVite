@@ -350,6 +350,121 @@ Use a **Grid container** with two main sections:
 </Grid>
 ```
 
+## Entity List Page Standards
+
+All entity list pages that manage database entities (e.g., Units, Areas, Products, Calendars) **MUST** follow these patterns for consistency.
+
+### Required Components
+
+Every entity list page must include:
+
+1. **Table Row Component** (`{entity}-table-row.tsx`)
+   - Checkbox for selection
+   - All entity fields
+   - **Single action button** with popover menu containing Edit and Delete options
+   - Use `Popover` with `MenuList` for the action menu
+
+2. **Table Toolbar Component** (`{entity}-table-toolbar.tsx`)
+   - **Search input** with icon (always visible when no items selected)
+   - Selection counter (visible when items are selected)
+   - **Columns and Filters buttons** (visible when no items selected)
+   - Delete button (visible when items are selected)
+
+3. **List View Component** (`{entity}-list-view.tsx`)
+   - Page header with title and "New {Entity}" button
+   - Table toolbar
+   - Table with proper `TableHead` and `TableBody`
+   - Checkbox column
+   - Table pagination
+
+### ❌ Don't Do This
+
+```tsx
+// WRONG: Separate Edit and Delete buttons in Actions column
+<TableCell align="right">
+  <Button size="small" onClick={() => handleEdit(row.id)}>
+    Edit
+  </Button>
+  <Button size="small" color="error" onClick={() => handleDelete(row.id)}>
+    Delete
+  </Button>
+</TableCell>
+
+// WRONG: No search/filter toolbar
+<Card>
+  <Table>...</Table>
+</Card>
+```
+
+### ✅ Do This Instead
+
+```tsx
+// CORRECT: Single button with popover menu for actions
+<TableCell align="right">
+  <IconButton onClick={handleOpenPopover}>
+    <Iconify icon="eva:more-vertical-fill" />
+  </IconButton>
+</TableCell>
+
+<Popover
+  open={!!openPopover}
+  anchorEl={openPopover}
+  onClose={handleClosePopover}
+  anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+>
+  <MenuList disablePadding sx={{ p: 0.5, gap: 0.5, width: 140 }}>
+    <MenuItem onClick={handleEditFromMenu}>
+      <Iconify icon="solar:pen-bold" />
+      Edit
+    </MenuItem>
+    <MenuItem onClick={handleDeleteFromMenu} sx={{ color: 'error.main' }}>
+      <Iconify icon="solar:trash-bin-trash-bold" />
+      Delete
+    </MenuItem>
+  </MenuList>
+</Popover>
+
+// CORRECT: Always include search/filter toolbar
+<Card>
+  <EntityTableToolbar
+    numSelected={selected.length}
+    filterName={filterName}
+    onFilterName={handleFilterName}
+  />
+  <TableContainer>
+    <Table>...</Table>
+  </TableContainer>
+</Card>
+```
+
+### File Structure
+
+For an entity named "Unit":
+```
+src/sections/unit/
+├── unit-table-row.tsx           # Row component with popover actions
+├── unit-table-toolbar.tsx       # Toolbar with search and filters
+├── view/
+│   ├── unit-list-view.tsx       # Main list page
+│   ├── unit-create-edit-view.tsx
+│   └── index.ts
+```
+
+### Reference Implementation
+
+See the following files as reference examples:
+- `src/sections/area/area-table-row.tsx`
+- `src/sections/area/area-table-toolbar.tsx`
+- `src/sections/area/view/area-view.tsx`
+
+These patterns apply to ALL entity management pages including:
+- Units, Unit Groups, Unit Conversions
+- Areas, Products, Machines
+- Calendars, Shift Templates
+- Users, Roles, Permissions
+- And any other entity list pages
+
 ## Your tools
 -- Use the mui-mcp server to answer any MUI questions --
 - 1. call the "useMuiDocs" tool to fetch the docs of the package relevant in the question

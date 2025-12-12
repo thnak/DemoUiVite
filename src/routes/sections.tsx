@@ -58,6 +58,15 @@ export const IoTDeviceEditPage = lazy(() => import('src/pages/iot-device-edit'))
 export const MachineTypeListPage = lazy(() => import('src/pages/machine-type-list'));
 export const MachineTypeCreatePage = lazy(() => import('src/pages/machine-type-create'));
 export const MachineTypeEditPage = lazy(() => import('src/pages/machine-type-edit'));
+export const UnitListPage = lazy(() => import('src/pages/unit-list'));
+export const UnitCreatePage = lazy(() => import('src/pages/unit-create'));
+export const UnitEditPage = lazy(() => import('src/pages/unit-edit'));
+export const UnitGroupListPage = lazy(() => import('src/pages/unit-group-list'));
+export const UnitGroupCreatePage = lazy(() => import('src/pages/unit-group-create'));
+export const UnitGroupEditPage = lazy(() => import('src/pages/unit-group-edit'));
+export const UnitConversionListPage = lazy(() => import('src/pages/unit-conversion-list'));
+export const UnitConversionCreatePage = lazy(() => import('src/pages/unit-conversion-create'));
+export const UnitConversionEditPage = lazy(() => import('src/pages/unit-conversion-edit'));
 export const IoTSensorListPage = lazy(() => import('src/pages/iot-sensor-list'));
 export const IoTSensorCreatePage = lazy(() => import('src/pages/iot-sensor-create'));
 export const IoTSensorEditPage = lazy(() => import('src/pages/iot-sensor-edit'));
@@ -139,6 +148,15 @@ export const routesSection: RouteObject[] = [
       { path: 'machine-types', element: <MachineTypeListPage /> },
       { path: 'machine-types/create', element: <MachineTypeCreatePage /> },
       { path: 'machine-types/:id/edit', element: <MachineTypeEditPage /> },
+      { path: 'settings/units', element: <UnitListPage /> },
+      { path: 'settings/units/create', element: <UnitCreatePage /> },
+      { path: 'settings/units/:id/edit', element: <UnitEditPage /> },
+      { path: 'settings/unit-groups', element: <UnitGroupListPage /> },
+      { path: 'settings/unit-groups/create', element: <UnitGroupCreatePage /> },
+      { path: 'settings/unit-groups/:id/edit', element: <UnitGroupEditPage /> },
+      { path: 'settings/unit-conversions', element: <UnitConversionListPage /> },
+      { path: 'settings/unit-conversions/create', element: <UnitConversionCreatePage /> },
+      { path: 'settings/unit-conversions/:id/edit', element: <UnitConversionEditPage /> },
     ],
   },
   {

@@ -34,6 +34,8 @@ import {
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
+import { CalendarTableToolbar } from '../calendar-table-toolbar';
+
 // ----------------------------------------------------------------------
 
 // Format date for display
@@ -80,6 +82,7 @@ export function CalendarView() {
   const [selected, setSelected] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [filterName, setFilterName] = useState('');
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const [selectedCalendarId, setSelectedCalendarId] = useState<string | null>(null);
 
@@ -170,6 +173,11 @@ export function CalendarView() {
     setSelected((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   }, []);
 
+  const handleFilterName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterName(event.target.value);
+    setPage(0);
+  }, []);
+
   const handleChangePage = useCallback((_: unknown, newPage: number) => {
     setPage(newPage);
   }, []);
@@ -235,26 +243,12 @@ export function CalendarView() {
       </Box>
 
       <Card>
-        {selected.length > 0 && (
-          <Box
-            sx={{
-              p: 2,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              bgcolor: 'primary.lighter',
-            }}
-          >
-            <Typography>{selected.length} selected</Typography>
-            <Button
-              color="error"
-              onClick={handleDeleteSelected}
-              startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-            >
-              Delete Selected
-            </Button>
-          </Box>
-        )}
+        <CalendarTableToolbar
+          numSelected={selected.length}
+          filterName={filterName}
+          onFilterName={handleFilterName}
+          onDeleteSelected={handleDeleteSelected}
+        />
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
