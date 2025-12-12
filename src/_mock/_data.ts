@@ -1254,3 +1254,274 @@ export function generateDowntimeReportData(year: number): DowntimeReportData {
     productsSummary: calculateProductsSummary(monthlyData),
   };
 }
+
+// ----------------------------------------------------------------------
+// Shift Data
+// ----------------------------------------------------------------------
+
+export type Shift = {
+  id: string;
+  name: string;
+  startTime: string;
+  endTime: string;
+  color: string;
+};
+
+export const _shifts: Shift[] = [
+  {
+    id: 'shift-1',
+    name: 'Morning Shift',
+    startTime: '06:00',
+    endTime: '14:00',
+    color: '#00AB55',
+  },
+  {
+    id: 'shift-2',
+    name: 'Afternoon Shift',
+    startTime: '14:00',
+    endTime: '22:00',
+    color: '#1890FF',
+  },
+  {
+    id: 'shift-3',
+    name: 'Night Shift',
+    startTime: '22:00',
+    endTime: '06:00',
+    color: '#FFC107',
+  },
+];
+
+// ----------------------------------------------------------------------
+// OEE Summary Report Data Types and Generators
+// ----------------------------------------------------------------------
+
+export type TimeRangeMode = 'days' | 'months' | 'years';
+
+export type OEESummaryFilters = {
+  timeRange: TimeRangeMode;
+  startDate: Date;
+  endDate: Date;
+  machines: string[];
+  areas: string[];
+  shifts: string[];
+};
+
+export type OEESummaryMetrics = {
+  oee: number;
+  availability: number;
+  performance: number;
+  quality: number;
+};
+
+export type MachineOEESummary = {
+  machineId: string;
+  machineName: string;
+  area: string;
+  metrics: OEESummaryMetrics;
+  plannedProductionTime: number; // hours
+  actualProductionTime: number; // hours
+  goodCount: number;
+  totalCount: number;
+  targetOEE: number;
+};
+
+export type TimeOEESummary = {
+  period: string; // e.g., "2024-01-15", "January 2024", "2024"
+  periodLabel: string; // e.g., "Jan 15", "January", "2024"
+  metrics: OEESummaryMetrics;
+  plannedProductionTime: number; // hours
+  actualProductionTime: number; // hours
+  goodCount: number;
+  totalCount: number;
+  targetOEE: number;
+};
+
+export type OEESummaryReportData = {
+  byMachines: MachineOEESummary[];
+  byTimes: TimeOEESummary[];
+  overallMetrics: OEESummaryMetrics;
+};
+
+// Generate OEE summary for machines
+function generateMachineOEESummary(
+  filters: OEESummaryFilters,
+  seed: number
+): MachineOEESummary[] {
+  const filteredMachines = _machines.filter((machine) => {
+    if (filters.machines.length > 0 && !filters.machines.includes(machine.id)) return false;
+    if (filters.areas.length > 0 && !filters.areas.includes(machine.area)) return false;
+    return true;
+  });
+
+  return filteredMachines.map((machine, index) => {
+    const machineSeed = seed + index * 1000;
+    const availability = 75 + seededRandom(machineSeed) * 20; // 75-95%
+    const performance = 70 + seededRandom(machineSeed + 1) * 25; // 70-95%
+    const quality = 85 + seededRandom(machineSeed + 2) * 14; // 85-99%
+    const oee = (availability * performance * quality) / 10000;
+    const plannedTime = 160 + seededRandom(machineSeed + 3) * 80; // 160-240 hours
+    const actualTime = plannedTime * (availability / 100);
+    const totalCount = Math.floor(1000 + seededRandom(machineSeed + 4) * 4000); // 1000-5000
+    const goodCount = Math.floor(totalCount * (quality / 100));
+
+    return {
+      machineId: machine.id,
+      machineName: machine.name,
+      area: machine.area,
+      metrics: {
+        oee: Math.round(oee * 10) / 10,
+        availability: Math.round(availability * 10) / 10,
+        performance: Math.round(performance * 10) / 10,
+        quality: Math.round(quality * 10) / 10,
+      },
+      plannedProductionTime: Math.round(plannedTime * 10) / 10,
+      actualProductionTime: Math.round(actualTime * 10) / 10,
+      goodCount,
+      totalCount,
+      targetOEE: 85, // Standard target
+    };
+  });
+}
+
+// Generate OEE summary by time periods
+function generateTimeOEESummary(filters: OEESummaryFilters, seed: number): TimeOEESummary[] {
+  const result: TimeOEESummary[] = [];
+  const { timeRange, startDate, endDate } = filters;
+
+  if (timeRange === 'days') {
+    // Generate daily data
+    const days = Math.min(
+      Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)),
+      30
+    );
+    for (let i = 0; i < days; i++) {
+      const date = new Date(startDate);
+      date.setDate(date.getDate() + i);
+      const daySeed = seed + i * 100;
+      const availability = 75 + seededRandom(daySeed) * 20;
+      const performance = 70 + seededRandom(daySeed + 1) * 25;
+      const quality = 85 + seededRandom(daySeed + 2) * 14;
+      const oee = (availability * performance * quality) / 10000;
+      const plannedTime = 18 + seededRandom(daySeed + 3) * 6; // 18-24 hours
+      const actualTime = plannedTime * (availability / 100);
+      const totalCount = Math.floor(200 + seededRandom(daySeed + 4) * 300); // 200-500
+      const goodCount = Math.floor(totalCount * (quality / 100));
+
+      result.push({
+        period: date.toISOString().split('T')[0],
+        periodLabel: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        metrics: {
+          oee: Math.round(oee * 10) / 10,
+          availability: Math.round(availability * 10) / 10,
+          performance: Math.round(performance * 10) / 10,
+          quality: Math.round(quality * 10) / 10,
+        },
+        plannedProductionTime: Math.round(plannedTime * 10) / 10,
+        actualProductionTime: Math.round(actualTime * 10) / 10,
+        goodCount,
+        totalCount,
+        targetOEE: 85,
+      });
+    }
+  } else if (timeRange === 'months') {
+    // Generate monthly data for up to 12 months
+    const monthCount = Math.min(12, Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 30)));
+    for (let i = 0; i < monthCount; i++) {
+      const date = new Date(startDate);
+      date.setMonth(date.getMonth() + i);
+      const monthSeed = seed + i * 1000;
+      const availability = 75 + seededRandom(monthSeed) * 20;
+      const performance = 70 + seededRandom(monthSeed + 1) * 25;
+      const quality = 85 + seededRandom(monthSeed + 2) * 14;
+      const oee = (availability * performance * quality) / 10000;
+      const plannedTime = 520 + seededRandom(monthSeed + 3) * 200; // 520-720 hours
+      const actualTime = plannedTime * (availability / 100);
+      const totalCount = Math.floor(8000 + seededRandom(monthSeed + 4) * 12000); // 8000-20000
+      const goodCount = Math.floor(totalCount * (quality / 100));
+
+      result.push({
+        period: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`,
+        periodLabel: date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+        metrics: {
+          oee: Math.round(oee * 10) / 10,
+          availability: Math.round(availability * 10) / 10,
+          performance: Math.round(performance * 10) / 10,
+          quality: Math.round(quality * 10) / 10,
+        },
+        plannedProductionTime: Math.round(plannedTime * 10) / 10,
+        actualProductionTime: Math.round(actualTime * 10) / 10,
+        goodCount,
+        totalCount,
+        targetOEE: 85,
+      });
+    }
+  } else {
+    // Generate yearly data
+    const yearCount = endDate.getFullYear() - startDate.getFullYear() + 1;
+    for (let i = 0; i < yearCount; i++) {
+      const year = startDate.getFullYear() + i;
+      const yearSeed = seed + year;
+      const availability = 75 + seededRandom(yearSeed) * 20;
+      const performance = 70 + seededRandom(yearSeed + 1) * 25;
+      const quality = 85 + seededRandom(yearSeed + 2) * 14;
+      const oee = (availability * performance * quality) / 10000;
+      const plannedTime = 6240 + seededRandom(yearSeed + 3) * 2400; // 6240-8640 hours
+      const actualTime = plannedTime * (availability / 100);
+      const totalCount = Math.floor(100000 + seededRandom(yearSeed + 4) * 150000); // 100k-250k
+      const goodCount = Math.floor(totalCount * (quality / 100));
+
+      result.push({
+        period: String(year),
+        periodLabel: String(year),
+        metrics: {
+          oee: Math.round(oee * 10) / 10,
+          availability: Math.round(availability * 10) / 10,
+          performance: Math.round(performance * 10) / 10,
+          quality: Math.round(quality * 10) / 10,
+        },
+        plannedProductionTime: Math.round(plannedTime * 10) / 10,
+        actualProductionTime: Math.round(actualTime * 10) / 10,
+        goodCount,
+        totalCount,
+        targetOEE: 85,
+      });
+    }
+  }
+
+  return result;
+}
+
+// Generate complete OEE summary report
+export function generateOEESummaryReport(filters: OEESummaryFilters): OEESummaryReportData {
+  const seed = filters.startDate.getTime() + filters.endDate.getTime();
+
+  const byMachines = generateMachineOEESummary(filters, seed);
+  const byTimes = generateTimeOEESummary(filters, seed + 10000);
+
+  // Calculate overall metrics
+  const allMetrics = [...byMachines.map((m) => m.metrics), ...byTimes.map((t) => t.metrics)];
+  const overallMetrics: OEESummaryMetrics = {
+    oee:
+      Math.round(
+        (allMetrics.reduce((sum, m) => sum + m.oee, 0) / allMetrics.length) * 10
+      ) / 10,
+    availability:
+      Math.round(
+        (allMetrics.reduce((sum, m) => sum + m.availability, 0) / allMetrics.length) * 10
+      ) / 10,
+    performance:
+      Math.round(
+        (allMetrics.reduce((sum, m) => sum + m.performance, 0) / allMetrics.length) * 10
+      ) / 10,
+    quality:
+      Math.round(
+        (allMetrics.reduce((sum, m) => sum + m.quality, 0) / allMetrics.length) * 10
+      ) / 10,
+  };
+
+  return {
+    byMachines,
+    byTimes,
+    overallMetrics,
+  };
+}
