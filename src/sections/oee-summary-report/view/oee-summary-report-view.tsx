@@ -7,7 +7,6 @@ import Tabs from '@mui/material/Tabs';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { alpha as hexAlpha } from '@mui/material/styles';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
@@ -225,8 +224,7 @@ export function OEESummaryReportView() {
           onChange={handleTabChange}
           sx={{
             px: 2.5,
-            boxShadow: (themeVal) =>
-              `inset 0 -2px 0 0 ${hexAlpha(themeVal.vars.palette.grey['500Channel'], 0.08)}`,
+            boxShadow: (theme) => `inset 0 -2px 0 0 ${theme.vars.palette.background.neutral}`,
           }}
         >
           <Tab
