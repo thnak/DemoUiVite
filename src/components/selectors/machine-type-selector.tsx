@@ -1,7 +1,7 @@
 import type { MachineTypeEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';

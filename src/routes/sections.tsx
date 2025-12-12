@@ -67,6 +67,9 @@ export const UnitGroupEditPage = lazy(() => import('src/pages/unit-group-edit'))
 export const UnitConversionListPage = lazy(() => import('src/pages/unit-conversion-list'));
 export const UnitConversionCreatePage = lazy(() => import('src/pages/unit-conversion-create'));
 export const UnitConversionEditPage = lazy(() => import('src/pages/unit-conversion-edit'));
+export const IoTSensorListPage = lazy(() => import('src/pages/iot-sensor-list'));
+export const IoTSensorCreatePage = lazy(() => import('src/pages/iot-sensor-create'));
+export const IoTSensorEditPage = lazy(() => import('src/pages/iot-sensor-edit'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -139,6 +142,9 @@ export const routesSection: RouteObject[] = [
       { path: 'iot-devices', element: <IoTDeviceListPage /> },
       { path: 'iot-devices/create', element: <IoTDeviceCreatePage /> },
       { path: 'iot-devices/:id/edit', element: <IoTDeviceEditPage /> },
+      { path: 'iot-sensors', element: <IoTSensorListPage /> },
+      { path: 'iot-sensors/create', element: <IoTSensorCreatePage /> },
+      { path: 'iot-sensors/:id/edit', element: <IoTSensorEditPage /> },
       { path: 'machine-types', element: <MachineTypeListPage /> },
       { path: 'machine-types/create', element: <MachineTypeCreatePage /> },
       { path: 'machine-types/:id/edit', element: <MachineTypeEditPage /> },

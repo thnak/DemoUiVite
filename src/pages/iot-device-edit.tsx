@@ -59,6 +59,7 @@ export default function Page() {
           name: deviceData.name || '',
           macAddress: deviceData.macAddress || '',
           mqttPassword: deviceData.mqttPassword || '',
+          mqttUsername: deviceData.mqttUsername || '',
           type: deviceData.type || '',
           machineId: deviceData.machineId?.toString() || '',
           machineName: '',
