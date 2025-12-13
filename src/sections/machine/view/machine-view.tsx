@@ -1,5 +1,8 @@
 import type { MachineInputType } from 'src/_mock';
-import type { MachineEntity, OutputCalculationMode } from 'src/api/types/generated';
+import type {
+  MachineDto,
+  OutputCalculationMode,
+} from 'src/api/types/generated';
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 
@@ -44,7 +47,7 @@ export function MachineView() {
   const table = useTable();
   const router = useRouter();
 
-  const [machines, setMachines] = useState<MachineEntity[]>([]);
+  const [machines, setMachines] = useState<MachineDto[]>([]);
   const [totalItems, setTotalItems] = useState(0);
 
   const [page, setPage] = useState(0);
@@ -66,10 +69,10 @@ export function MachineView() {
         code: x.code ?? '',
         name: x.name ?? '',
         imageUrl: x.imageUrl ?? '',
-        area: x.areaId?.toString() ?? '',
+        area: x.areaName ?? '',
         inputType: 'WeightChannels' as MachineInputType, // TODO: map từ calculationMode
         numberOfInputChannels: 0,
-        workCalendar: x.calendarId?.toString() ?? '',
+        workCalendar: x.calendarName ?? '',
       })),
     [machines]
   );
