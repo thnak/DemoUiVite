@@ -1,4 +1,5 @@
 import { useMemo, useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -29,6 +30,49 @@ import { OEESummaryMachineTable } from '../oee-summary-machine-table';
 // ----------------------------------------------------------------------
 
 type TabValue = 'machines' | 'times';
+
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+    },
+  },
+};
+
+const tabContentVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.4,
+      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+    },
+  },
+  exit: {
+    opacity: 0,
+    x: 20,
+    transition: {
+      duration: 0.3,
+      ease: [0.4, 0, 1, 1] as [number, number, number, number],
+    },
+  },
+};
 
 export function OEESummaryReportView() {
   const [currentTab, setCurrentTab] = useState<TabValue>('machines');
@@ -182,104 +226,136 @@ export function OEESummaryReportView() {
       </Box>
 
       {/* Overall Metrics */}
-      <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <OEESummaryMetricCard
-            title="Overall OEE"
-            value={reportData.overallMetrics.oee}
-            icon={<Iconify icon={'solar:chart-bold' as any} width={32} />}
-            subtitle="Target: 85%"
-          />
+      <motion.div variants={containerVariants} initial="hidden" animate="visible">
+        <Grid container spacing={3} sx={{ mb: 3 }}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <motion.div variants={itemVariants}>
+              <OEESummaryMetricCard
+                title="Overall OEE"
+                value={reportData.overallMetrics.oee}
+                icon={<Iconify icon={'solar:chart-bold' as any} width={32} />}
+                subtitle="Target: 85%"
+              />
+            </motion.div>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <motion.div variants={itemVariants}>
+              <OEESummaryMetricCard
+                title="Availability"
+                value={reportData.overallMetrics.availability}
+                icon={<Iconify icon={'solar:clock-circle-bold' as any} width={32} />}
+                color="info"
+              />
+            </motion.div>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <motion.div variants={itemVariants}>
+              <OEESummaryMetricCard
+                title="Performance"
+                value={reportData.overallMetrics.performance}
+                icon={<Iconify icon={'solar:bolt-bold' as any} width={32} />}
+                color="warning"
+              />
+            </motion.div>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <motion.div variants={itemVariants}>
+              <OEESummaryMetricCard
+                title="Quality"
+                value={reportData.overallMetrics.quality}
+                icon={<Iconify icon={'solar:star-bold' as any} width={32} />}
+                color="success"
+              />
+            </motion.div>
+          </Grid>
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <OEESummaryMetricCard
-            title="Availability"
-            value={reportData.overallMetrics.availability}
-            icon={<Iconify icon={'solar:clock-circle-bold' as any} width={32} />}
-            color="info"
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <OEESummaryMetricCard
-            title="Performance"
-            value={reportData.overallMetrics.performance}
-            icon={<Iconify icon={'solar:bolt-bold' as any} width={32} />}
-            color="warning"
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <OEESummaryMetricCard
-            title="Quality"
-            value={reportData.overallMetrics.quality}
-            icon={<Iconify icon={'solar:star-bold' as any} width={32} />}
-            color="success"
-          />
-        </Grid>
-      </Grid>
+      </motion.div>
 
       {/* Tabs */}
-      <Card sx={{ mb: 3 }}>
-        <Tabs
-          value={currentTab}
-          onChange={handleTabChange}
-          sx={{
-            px: 2.5,
-            boxShadow: (theme) => `inset 0 -2px 0 0 ${theme.vars.palette.background.neutral}`,
-          }}
-        >
-          <Tab
-            value="machines"
-            label="By Machines"
-            icon={<Iconify icon={'solar:widget-2-bold' as any} width={24} />}
-            iconPosition="start"
-          />
-          <Tab
-            value="times"
-            label="By Times"
-            icon={<Iconify icon={'solar:calendar-mark-bold' as any} width={24} />}
-            iconPosition="start"
-          />
-        </Tabs>
-      </Card>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+      >
+        <Card sx={{ mb: 3 }}>
+          <Tabs
+            value={currentTab}
+            onChange={handleTabChange}
+            sx={{
+              px: 2.5,
+              boxShadow: (theme) => `inset 0 -2px 0 0 ${theme.vars.palette.background.neutral}`,
+            }}
+          >
+            <Tab
+              value="machines"
+              label="By Machines"
+              icon={<Iconify icon={'solar:widget-2-bold' as any} width={24} />}
+              iconPosition="start"
+            />
+            <Tab
+              value="times"
+              label="By Times"
+              icon={<Iconify icon={'solar:calendar-mark-bold' as any} width={24} />}
+              iconPosition="start"
+            />
+          </Tabs>
+        </Card>
+      </motion.div>
 
       {/* Tab Content */}
-      <Stack spacing={3}>
+      <AnimatePresence mode="wait">
         {currentTab === 'machines' && (
-          <>
-            {/* Machine Chart */}
-            <OEESummaryChart
-              title="Top 10 Machines OEE Performance"
-              subheader="Comparison of OEE metrics across machines"
-              chart={machineChartData}
-            />
+          <motion.div
+            key="machines"
+            variants={tabContentVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <Stack spacing={3}>
+              {/* Machine Chart */}
+              <OEESummaryChart
+                title="Top 10 Machines OEE Performance"
+                subheader="Comparison of OEE metrics across machines"
+                chart={machineChartData}
+              />
 
-            {/* Machine Table */}
-            <OEESummaryMachineTable
-              title="Detailed Machine OEE Report"
-              subheader="All machines sorted by OEE performance"
-              data={reportData.byMachines}
-            />
-          </>
+              {/* Machine Table */}
+              <OEESummaryMachineTable
+                title="Detailed Machine OEE Report"
+                subheader="All machines sorted by OEE performance"
+                data={reportData.byMachines}
+              />
+            </Stack>
+          </motion.div>
         )}
 
         {currentTab === 'times' && (
-          <>
-            {/* Time Chart */}
-            <OEESummaryChart
-              title="OEE Trend Over Time"
-              subheader="OEE metrics progression across time periods"
-              chart={timeChartData}
-            />
+          <motion.div
+            key="times"
+            variants={tabContentVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <Stack spacing={3}>
+              {/* Time Chart */}
+              <OEESummaryChart
+                title="OEE Trend Over Time"
+                subheader="OEE metrics progression across time periods"
+                chart={timeChartData}
+              />
 
-            {/* Time Table */}
-            <OEESummaryTimeTable
-              title="Detailed Time Period OEE Report"
-              subheader="OEE performance by time period"
-              data={reportData.byTimes}
-            />
-          </>
+              {/* Time Table */}
+              <OEESummaryTimeTable
+                title="Detailed Time Period OEE Report"
+                subheader="OEE performance by time period"
+                data={reportData.byTimes}
+              />
+            </Stack>
+          </motion.div>
         )}
-      </Stack>
+      </AnimatePresence>
     </DashboardContent>
   );
 }
