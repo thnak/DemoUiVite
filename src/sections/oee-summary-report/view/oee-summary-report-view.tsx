@@ -31,6 +31,10 @@ import { OEESummaryMachineTable } from '../oee-summary-machine-table';
 
 type TabValue = 'machines' | 'times';
 
+// Easing constants
+const EASE_OUT = [0.4, 0, 0.2, 1] as const;
+const EASE_IN = [0.4, 0, 1, 1] as const;
+
 // Animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -49,7 +53,7 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+      ease: EASE_OUT,
     },
   },
 };
@@ -61,7 +65,7 @@ const tabContentVariants = {
     x: 0,
     transition: {
       duration: 0.4,
-      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+      ease: EASE_OUT,
     },
   },
   exit: {
@@ -69,7 +73,19 @@ const tabContentVariants = {
     x: 20,
     transition: {
       duration: 0.3,
-      ease: [0.4, 0, 1, 1] as [number, number, number, number],
+      ease: EASE_IN,
+    },
+  },
+};
+
+const tabsCardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      delay: 0.4,
     },
   },
 };
@@ -272,11 +288,7 @@ export function OEESummaryReportView() {
       </motion.div>
 
       {/* Tabs */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-      >
+      <motion.div variants={tabsCardVariants} initial="hidden" animate="visible">
         <Card sx={{ mb: 3 }}>
           <Tabs
             value={currentTab}
