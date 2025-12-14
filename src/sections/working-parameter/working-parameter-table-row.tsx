@@ -16,7 +16,7 @@ export type WorkingParameterProps = {
   id: string;
   product: string;
   machine: string;
-  idealCycleTime: number;
+  idealCycleTime: string;
   quantityPerSignal: number;
   downtimeThreshold: string;
 };

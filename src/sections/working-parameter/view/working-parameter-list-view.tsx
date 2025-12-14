@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -9,7 +9,6 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { _workingParameters } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 
@@ -18,88 +17,101 @@ import { Scrollbar } from 'src/components/scrollbar';
 
 import { WorkingParameterTableRow } from '../working-parameter-table-row';
 import { WorkingParameterTableHead } from '../working-parameter-table-head';
+import { deleteShiftTemplate, getWorkingParameterPage } from '../../../api';
 import { WorkingParameterTableNoData } from '../working-parameter-table-no-data';
 import { WorkingParameterTableToolbar } from '../working-parameter-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../working-parameter-utils';
 import { WorkingParameterTableEmptyRows } from '../working-parameter-table-empty-rows';
 
+import type { WorkingParameterEntity } from '../../../api/types/generated';
 import type { WorkingParameterProps } from '../working-parameter-table-row';
 
 // ----------------------------------------------------------------------
 
 export function WorkingParameterListView() {
+  const [templates, setTemplates] = useState<WorkingParameterProps[]>([]);  // Ensure this is of type WorkingParameterProps[]
+  const [totalItems, setTotalItems] = useState(0);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [filterName, setFilterName] = useState('');
   const table = useTable();
 
-  const [filterName, setFilterName] = useState('');
+  // Function to map WorkingParameterEntity to WorkingParameterProps
+  const mapToWorkingParameterProps = (entity: WorkingParameterEntity): WorkingParameterProps => ({
+    id: entity.id?.toString() || '',
+    product: entity.productId?.toString() || '', // Convert ObjectId to string
+    machine: entity.machineId?.toString() || '', // Convert ObjectId to string
+    quantityPerSignal: entity.quantityPerCycle || 0, // Map quantityPerCycle to quantityPerSignal
+    idealCycleTime: entity.idealCycleTime || '',
+    downtimeThreshold: entity.downtimeThreshold || '',
+  });
 
+  // Fetch working parameters and map to WorkingParameterProps[]
+  const fetchWorkingParameter = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await getWorkingParameterPage([], {
+        pageNumber: page,
+        pageSize: rowsPerPage,
+      });
+
+      // Map the response items to WorkingParameterProps[]
+      const mappedTemplates: WorkingParameterProps[] = (response.items?.map(mapToWorkingParameterProps)) ?? [];
+      setTemplates(mappedTemplates);  // Set templates as WorkingParameterProps[]
+      setTotalItems(response.totalItems || 0);
+    } catch (err) {
+      setError('Failed to load shift templates');
+      console.error('Error fetching shift templates:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, rowsPerPage]);
+
+  useEffect(() => {
+    fetchWorkingParameter();
+  }, [fetchWorkingParameter]);
+
+  // Handle change in page
+  const handleChangePage = useCallback((_: unknown, newPage: number) => {
+    setPage(newPage);
+  }, []);
+
+  // Handle change in rows per page
+  const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  }, []);
+
+  // Apply filter and sorting to the templates
   const dataFiltered: WorkingParameterProps[] = applyFilter({
-    inputData: _workingParameters as WorkingParameterProps[],
+    inputData: templates,  // Now templates are of type WorkingParameterProps[]
     comparator: getComparator(table.order, table.orderBy),
     filterName,
   });
 
   const notFound = !dataFiltered.length && !!filterName;
 
-  const handleEditRow = useCallback((id: string) => {
-    console.log('Edit working parameter:', id);
-    // Implement edit logic here
-  }, []);
-
-  const handleDeleteRow = useCallback((id: string) => {
-    console.log('Delete working parameter:', id);
-    // Implement delete logic here
-  }, []);
-
   return (
     <DashboardContent>
-      <Box
-        sx={{
-          mb: 5,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
+      <Box sx={{ mb: 5, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box>
-          <Typography variant="h4" sx={{ mb: 1 }}>
-            List
-          </Typography>
+          <Typography variant="h4" sx={{ mb: 1 }}>List</Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" sx={{ color: 'text.primary' }}>
-              Dashboard
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              •
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.primary' }}>
-              Working Parameter
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              •
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              List
-            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.primary' }}>Dashboard</Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>•</Typography>
+            <Typography variant="body2" sx={{ color: 'text.primary' }}>Working Parameter</Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>•</Typography>
+            <Typography variant="body2" sx={{ color: 'text.disabled' }}>List</Typography>
           </Box>
         </Box>
         <Box sx={{ display: 'flex', gap: 1.5 }}>
-          <Button
-            variant="outlined"
-            color="inherit"
-            startIcon={<Iconify icon="solar:cloud-upload-bold" />}
-          >
-            Import
-          </Button>
-          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="mdi:export" />}>
-            Export
-          </Button>
-          <Button
-            variant="contained"
-            color="inherit"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            Add parameter
-          </Button>
+          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="solar:cloud-upload-bold" />}>Import</Button>
+          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="mdi:export" />}>Export</Button>
+          <Button variant="contained" color="inherit" startIcon={<Iconify icon="mingcute:add-line" />}>Add parameter</Button>
         </Box>
       </Box>
 
@@ -123,10 +135,7 @@ export function WorkingParameterListView() {
                 numSelected={table.selected.length}
                 onSort={table.onSort}
                 onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    dataFiltered.map((item) => item.id)
-                  )
+                  table.onSelectAllRows(checked, dataFiltered.map((item) => item.id))
                 }
                 headLabel={[
                   { id: 'product', label: 'Product' },
@@ -139,18 +148,15 @@ export function WorkingParameterListView() {
               />
               <TableBody>
                 {dataFiltered
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
+                  .slice(table.page * table.rowsPerPage, table.page * table.rowsPerPage + table.rowsPerPage)
                   .map((row) => (
                     <WorkingParameterTableRow
                       key={row.id}
                       row={row}
                       selected={table.selected.includes(row.id)}
                       onSelectRow={() => table.onSelectRow(row.id)}
-                      onEditRow={() => handleEditRow(row.id)}
-                      onDeleteRow={() => handleDeleteRow(row.id)}
+                      onEditRow={() => console.log('Edit working parameter:', row.id)}
+                      onDeleteRow={() => console.log('Delete working parameter:', row.id)}
                     />
                   ))}
 

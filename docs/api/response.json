@@ -19559,6 +19559,311 @@
         }
       }
     },
+    "/api/machineoeehourstatistic/{id}": {
+      "get": {
+        "tags": [
+          "MachineOeeHourStatistic"
+        ],
+        "summary": "Get Machine Oee Hour Statistic by ID",
+        "description": "Retrieves a specific Machine Oee Hour Statistic entity by its unique identifier.",
+        "operationId": "GetMachineOeeHourStatisticById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineOeeHourStatistic"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/machineoeehourstatistic/get-page": {
+      "post": {
+        "tags": [
+          "MachineOeeHourStatistic"
+        ],
+        "summary": "Get paginated list of Machine Oee Hour Statistic",
+        "description": "Retrieves a paginated list of Machine Oee Hour Statistic entities.",
+        "operationId": "GetMachineOeeHourStatisticPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineOeeHourStatisticBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machineoeehourstatistic/create": {
+      "post": {
+        "tags": [
+          "MachineOeeHourStatistic"
+        ],
+        "summary": "Create a new Machine Oee Hour Statistic",
+        "description": "Creates a new Machine Oee Hour Statistic entity in the system.",
+        "operationId": "CreateMachineOeeHourStatistic",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MachineOeeHourStatistic"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineOeeHourStatisticResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineOeeHourStatisticResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machineoeehourstatistic/update/{id}": {
+      "post": {
+        "tags": [
+          "MachineOeeHourStatistic"
+        ],
+        "summary": "Update an existing Machine Oee Hour Statistic",
+        "description": "Updates specific fields of an existing Machine Oee Hour Statistic entity by ID.",
+        "operationId": "UpdateMachineOeeHourStatistic",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machineoeehourstatistic/delete/{id}": {
+      "delete": {
+        "tags": [
+          "MachineOeeHourStatistic"
+        ],
+        "summary": "Delete a Machine Oee Hour Statistic",
+        "description": "Deletes a Machine Oee Hour Statistic entity by its unique identifier.",
+        "operationId": "DeleteMachineOeeHourStatistic",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machineoeehourstatistic/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "MachineOeeHourStatistic"
+        ],
+        "summary": "Soft delete a Machine Oee Hour Statistic",
+        "description": "Soft deletes a Machine Oee Hour Statistic entity by its unique identifier.",
+        "operationId": "SoftDeleteMachineOeeHourStatistic",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machineoeehourstatistic/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "MachineOeeHourStatistic"
+        ],
+        "summary": "Soft restore delete a Machine Oee Hour Statistic",
+        "description": "Soft restore deletes a Machine Oee Hour Statistic entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteMachineOeeHourStatistic",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machineoeehourstatistic/generate-new-code": {
+      "get": {
+        "tags": [
+          "MachineOeeHourStatistic"
+        ],
+        "summary": "Generate a new code for Machine Oee Hour Statistic",
+        "description": "Generates a new unique code for a Machine Oee Hour Statistic entity.",
+        "operationId": "GenerateNewMachineOeeHourStatisticCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/machineoutputmapping/{id}": {
       "get": {
         "tags": [
@@ -40116,6 +40421,45 @@
         }
       }
     },
+    "/api/warehouse/search": {
+      "get": {
+        "tags": [
+          "Warehouse"
+        ],
+        "summary": "Search Warehouse entities",
+        "description": "Searches Warehouse entities by text across searchable fields.",
+        "operationId": "SearchWarehouse",
+        "parameters": [
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WarehouseEntityResultArray"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/webhook/{id}": {
       "get": {
         "tags": [
@@ -43465,13 +43809,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-11"
+            "example": "2025-12-13"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-11"
+            "example": "2025-12-13"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -43583,13 +43927,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-11"
+            "example": "2025-12-13"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-11"
+            "example": "2025-12-13"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -43741,12 +44085,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-11"
+            "example": "2025-12-13"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-11"
+            "example": "2025-12-13"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -44694,7 +45038,8 @@
           "string",
           "boolean"
         ],
-        "type": "string"
+        "type": "string",
+        "description": "Represents the format of a data source."
       },
       "DayOfWeek": {
         "enum": [
@@ -45476,7 +45821,8 @@
           "m3U8FileSegment",
           "iotImageFile"
         ],
-        "type": "string"
+        "type": "string",
+        "description": "phân loại file"
       },
       "FileInfoEntity": {
         "type": "object",
@@ -45770,7 +46116,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-11"
+            "example": "2025-12-13"
           }
         },
         "additionalProperties": false
@@ -46078,7 +46424,8 @@
           "corruptedFile",
           "missingFile"
         ],
-        "type": "string"
+        "type": "string",
+        "description": "Represents different statuses of a file in the file system."
       },
       "FileVersions": {
         "type": "object",
@@ -46718,7 +47065,8 @@
           "trashFolder",
           "rootFolder"
         ],
-        "type": "string"
+        "type": "string",
+        "description": "Represents different types of folders in the file system."
       },
       "GenerateTokenRequest": {
         "type": "object",
@@ -47574,7 +47922,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2025-12-11"
+            "example": "2025-12-13"
           },
           "lastServiceTime": {
             "type": "string",
@@ -47962,7 +48310,8 @@
           "offline",
           "decommissioned"
         ],
-        "type": "string"
+        "type": "string",
+        "description": "Represents the status of an IoT device group."
       },
       "IoTDeviceModelEntity": {
         "type": "object",
@@ -49585,6 +49934,157 @@
         ],
         "type": "string",
         "description": "Loại nhóm máy"
+      },
+      "MachineOeeHourStatistic": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "machineId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "hour": {
+            "type": "string",
+            "description": "The specific hour for which the OEE statistics are recorded.",
+            "format": "date-time"
+          },
+          "scheduledTime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "runTime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "downtime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "speedLossTime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "goodCount": {
+            "type": "number",
+            "description": "Good output count during the hour.",
+            "format": "double"
+          },
+          "totalCount": {
+            "type": "number",
+            "description": "Total output count during the hour.",
+            "format": "double"
+          },
+          "availability": {
+            "type": "number",
+            "description": "Overall Equipment Effectiveness (OEE) metrics during the hour.",
+            "format": "double"
+          },
+          "performance": {
+            "type": "number",
+            "description": "Performance component of OEE during the hour.",
+            "format": "double"
+          },
+          "quality": {
+            "type": "number",
+            "description": "Quality component of OEE during the hour.",
+            "format": "double"
+          },
+          "oee": {
+            "type": "number",
+            "description": "Overall Equipment Effectiveness (OEE) during the hour.",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents hourly OEE statistics for a machine."
+      },
+      "MachineOeeHourStatisticBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MachineOeeHourStatistic"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "MachineOeeHourStatisticResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/MachineOeeHourStatistic"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
       "MachineOutputMapping": {
         "type": "object",
@@ -51915,7 +52415,8 @@
           "outputOpenDrain",
           "analog"
         ],
-        "type": "string"
+        "type": "string",
+        "description": "Pin input modes"
       },
       "PinInterruptMode": {
         "enum": [
@@ -51928,7 +52429,8 @@
           "lowWaveformEdge",
           "highWaveformEdge"
         ],
-        "type": "string"
+        "type": "string",
+        "description": "Pin interrupt modes"
       },
       "Position": {
         "type": "object",
@@ -52504,7 +53006,8 @@
           "closed",
           "cancelled"
         ],
-        "type": "string"
+        "type": "string",
+        "description": "Production order status"
       },
       "QrLoginRequest": {
         "type": "object",
@@ -52713,7 +53216,8 @@
           "quantitative",
           "qualitative"
         ],
-        "type": "string"
+        "type": "string",
+        "description": "Loại kiểm tra chất lượng"
       },
       "QualitySettings": {
         "type": "object",
@@ -53392,7 +53896,8 @@
           "execute",
           "forward"
         ],
-        "type": "string"
+        "type": "string",
+        "description": "Represents the type of a route in the API Gateway."
       },
       "RoutingEntity": {
         "type": "object",
@@ -55042,7 +55547,8 @@
           "failed",
           "cancelled"
         ],
-        "type": "string"
+        "type": "string",
+        "description": "Status of a production job at a station"
       },
       "StopEntity": {
         "type": "object",
@@ -57193,48 +57699,59 @@
         "properties": {
           "fullName": {
             "type": "string",
+            "description": "Full name of the user",
             "nullable": true
           },
           "email": {
             "type": "string",
+            "description": "Email address of the user",
             "nullable": true
           },
           "phoneNumber": {
             "type": "string",
+            "description": "Phone number of the user",
             "nullable": true
           },
           "country": {
             "type": "string",
+            "description": "Country of the user",
             "nullable": true
           },
           "gender": {
             "type": "string",
+            "description": "Gender",
             "nullable": true
           },
           "birthDay": {
             "type": "string",
+            "description": "Birth date of the user",
             "format": "date-time",
             "nullable": true
           },
           "culture": {
             "type": "string",
+            "description": "Culture preference of the user",
             "nullable": true
           },
           "renderMode": {
             "$ref": "#/components/schemas/RenderMode"
           },
           "twoFactorEnabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Indicates if two-factor authentication is enabled"
           },
           "emailConfirmed": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Indicates if the user's email is confirmed"
           },
           "nickname": {
             "type": "string",
+            "description": "Nickname of the user",
             "nullable": true
           },
           "userName": {
             "type": "string",
+            "description": "Username of the user",
             "nullable": true
           }
         },
@@ -57986,14 +58503,17 @@
           },
           "code": {
             "type": "string",
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
             "nullable": true
           },
           "name": {
             "type": "string",
+            "description": "Tên mô tả của thực thể.",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "Mô tả chi tiết về thực thể.",
             "nullable": true
           },
           "type": {
@@ -58003,7 +58523,8 @@
             "$ref": "#/components/schemas/WarehouseStatus"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Represents a warehouse entity in the production domain."
       },
       "WarehouseEntityBasePaginationResponse": {
         "type": "object",
@@ -58069,6 +58590,39 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "WarehouseEntityResultArray": {
+        "required": [
+          "data",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Trạng thái thành công hay thất bại"
+          },
+          "message": {
+            "type": "string",
+            "description": "Thông điệp trả về",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WarehouseEntity"
+            },
+            "description": "Dữ liệu trả về",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Kết quả trả về dạng mảng"
       },
       "WarehouseStatus": {
         "enum": [
@@ -59326,6 +59880,9 @@
     },
     {
       "name": "MachineGroupMachineMapping"
+    },
+    {
+      "name": "MachineOeeHourStatistic"
     },
     {
       "name": "MachineOutputMapping"
