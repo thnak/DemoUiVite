@@ -34,7 +34,7 @@ import {
   useUpdateMachine,
   useGetapiMachinemachineIddevicemappings,
   useGetapiMachinemachineIdmachineoutputmappings,
-  usePutapiMachinemachineIdmachineoutputmappings,
+  usePutapiMachinemachineIdupdatemachineoutputmappings,
 } from 'src/api/hooks/generated/use-machine';
 
 import { AreaSelector } from 'src/components/selectors/area-selector';
@@ -175,7 +175,7 @@ export function MachineCreateEditView({
   });
 
   const { mutate: updateOutputMappingsMutate, isPending: isUpdatingMappings } =
-    usePutapiMachinemachineIdmachineoutputmappings({
+    usePutapiMachinemachineIdupdatemachineoutputmappings({
       onSuccess: () => {
         if (refetchOutputMappings) {
           refetchOutputMappings();
