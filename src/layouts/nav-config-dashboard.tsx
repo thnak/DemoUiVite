@@ -37,6 +37,11 @@ export function useNavData(): NavData {
           path: '/demo/dashboard',
           icon: icon('ic-cart'),
         },
+        {
+          title: t('nav.realtimeDashboard'),
+          path: '/realtime-dashboard',
+          icon: icon('ic-analytics'),
+        },
       ],
     },
   ];
@@ -56,6 +61,11 @@ export const navData: NavData = [
         title: 'Demo Dashboard',
         path: '/demo/dashboard',
         icon: icon('ic-cart'),
+      },
+      {
+        title: 'Real-Time Dashboard',
+        path: '/realtime-dashboard',
+        icon: icon('ic-analytics'),
       },
     ],
   },
