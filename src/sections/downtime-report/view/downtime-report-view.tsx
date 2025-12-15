@@ -1,6 +1,7 @@
 import type { SelectChangeEvent } from '@mui/material/Select';
 
 import { useMemo, useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -27,6 +28,31 @@ import { DowntimeByReasonChart } from '../downtime-by-reason-chart';
 // ----------------------------------------------------------------------
 
 type TabValue = 'overview' | 'machines' | 'products' | 'timeline';
+
+// Easing constants
+const EASE_OUT = [0.4, 0, 0.2, 1] as const;
+const EASE_IN = [0.4, 0, 1, 1] as const;
+
+// Animation variants for tab content
+const tabContentVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.4,
+      ease: EASE_OUT,
+    },
+  },
+  exit: {
+    opacity: 0,
+    x: 20,
+    transition: {
+      duration: 0.3,
+      ease: EASE_IN,
+    },
+  },
+};
 
 export function DowntimeReportView() {
   const [selectedYear, setSelectedYear] = useState<number>(2025);
@@ -227,8 +253,16 @@ export function DowntimeReportView() {
       </Grid>
 
       {/* Tab Content */}
-      {currentTab === 'overview' && (
-        <Grid container spacing={3}>
+      <AnimatePresence mode="wait">
+        {currentTab === 'overview' && (
+          <motion.div
+            key="overview"
+            variants={tabContentVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <Grid container spacing={3}>
           <Grid size={{ xs: 12, lg: 6 }}>
             <DowntimeByReasonChart
               title="Downtime by Reason Category"
@@ -263,10 +297,18 @@ export function DowntimeReportView() {
             />
           </Grid>
         </Grid>
-      )}
+          </motion.div>
+        )}
 
-      {currentTab === 'machines' && (
-        <Grid container spacing={3}>
+        {currentTab === 'machines' && (
+          <motion.div
+            key="machines"
+            variants={tabContentVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <Grid container spacing={3}>
           <Grid size={{ xs: 12, lg: 8 }}>
             <DowntimeParetoChart
               title="Pareto Analysis - Machines"
@@ -292,10 +334,18 @@ export function DowntimeReportView() {
             />
           </Grid>
         </Grid>
-      )}
+          </motion.div>
+        )}
 
-      {currentTab === 'products' && (
-        <Grid container spacing={3}>
+        {currentTab === 'products' && (
+          <motion.div
+            key="products"
+            variants={tabContentVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <Grid container spacing={3}>
           <Grid size={{ xs: 12, lg: 8 }}>
             <DowntimeParetoChart
               title="Pareto Analysis - Products"
@@ -343,10 +393,18 @@ export function DowntimeReportView() {
             </Card>
           </Grid>
         </Grid>
-      )}
+          </motion.div>
+        )}
 
-      {currentTab === 'timeline' && (
-        <Grid container spacing={3}>
+        {currentTab === 'timeline' && (
+          <motion.div
+            key="timeline"
+            variants={tabContentVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <Grid container spacing={3}>
           <Grid size={{ xs: 12 }}>
             <DowntimeTimelineChart
               title="Monthly Overview"
@@ -385,7 +443,9 @@ export function DowntimeReportView() {
             />
           </Grid>
         </Grid>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </DashboardContent>
   );
 }

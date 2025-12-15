@@ -1,6 +1,7 @@
 import type { UserStatus } from 'src/_mock';
 
 import { useMemo, useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -40,6 +41,31 @@ const STATUS_OPTIONS: { value: UserStatus | 'all'; label: string }[] = [
   { value: 'banned', label: 'Banned' },
   { value: 'rejected', label: 'Rejected' },
 ];
+
+// Easing constants
+const EASE_OUT = [0.4, 0, 0.2, 1] as const;
+const EASE_IN = [0.4, 0, 1, 1] as const;
+
+// Animation variants for table content
+const tableContentVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.3,
+      ease: EASE_OUT,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -10,
+    transition: {
+      duration: 0.2,
+      ease: EASE_IN,
+    },
+  },
+};
 
 export function UserView() {
   const router = useRouter();
@@ -184,7 +210,15 @@ export function UserView() {
           onFilterRole={handleFilterRole}
         />
 
-        <Scrollbar>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={filterStatus}
+            variants={tableContentVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
               <UserTableHead
@@ -243,6 +277,8 @@ export function UserView() {
           rowsPerPageOptions={[5, 10, 25]}
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
+          </motion.div>
+        </AnimatePresence>
       </Card>
     </DashboardContent>
   );
