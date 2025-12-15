@@ -36,6 +36,7 @@ export const MachineOEEPage = lazy(() => import('src/pages/machine-oee'));
 export const DemoDashboardPage = lazy(() => import('src/pages/demo/dashboard'));
 export const FileDashboardPage = lazy(() => import('src/pages/demo/file-dashboard'));
 export const RealtimeDashboardPage = lazy(() => import('src/pages/realtime-dashboard'));
+export const FrontendGuidePage = lazy(() => import('src/pages/frontend-guide'));
 export const DowntimeReportPage = lazy(() => import('src/pages/downtime-report'));
 export const OEESummaryReportPage = lazy(() => import('src/pages/oee-summary-report'));
 export const ShiftTemplatesPage = lazy(() => import('src/pages/shift-templates'));
@@ -131,6 +132,7 @@ export const routesSection: RouteObject[] = [
       { path: 'demo/dashboard', element: <DemoDashboardPage /> },
       { path: 'demo/file-dashboard', element: <FileDashboardPage /> },
       { path: 'realtime-dashboard', element: <RealtimeDashboardPage /> },
+      { path: 'frontend-guide', element: <FrontendGuidePage /> },
       { path: 'dashboard-builder', element: <DashboardBuilderPage /> },
       { path: 'dashboard-builder/new', element: <DashboardBuilderEditPage /> },
       { path: 'dashboard-builder/:id', element: <DashboardBuilderEditPage /> },

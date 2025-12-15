@@ -1,0 +1,1 @@
+export { FrontendGuideView } from './view';
