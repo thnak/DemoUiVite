@@ -93,6 +93,9 @@ New to the project? Start here:
 ## 📋 Feature-Specific Guides
 
 - **[Shift Templates](./guides/shift-templates.md)** - Working with shift template features
+- **[Real-Time Dashboard](./guides/realtime-dashboard-complete-solution.md)** - SignalR + Orleans real-time data streaming
+  - **[Architecture Overview](./guides/realtime-dashboard-architecture.md)** - Comprehensive architecture guide
+  - **[Client Implementation](./guides/realtime-dashboard-client-implementation.md)** - React/TypeScript implementation
 
 ## 🔧 Technical Reference
 
