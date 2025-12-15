@@ -137,9 +137,9 @@ function generateSelectorComponent(info: EntitySearchInfo): string {
   lines.push(``);
   lines.push(`import { debounce } from 'es-toolkit';`);
   lines.push(``);
-  lines.push(`import TextField from '@mui/material/TextField';`);
   lines.push(`import Autocomplete from '@mui/material/Autocomplete';`);
   lines.push(`import CircularProgress from '@mui/material/CircularProgress';`);
+  lines.push(`import TextField from '@mui/material/TextField';`);
   lines.push(``);
   lines.push(`import { use${toPascalCase(info.hookName)} } from 'src/api/hooks/generated/use-${toKebabCase(info.tag)}';`);
   lines.push(``);

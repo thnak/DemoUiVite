@@ -1,8 +1,7 @@
 import type { ScriptDefinitionEntity } from 'src/api/types/generated';
 
-import { useCallback, useMemo, useState } from 'react';
-
 import { debounce } from 'es-toolkit';
+import { useMemo, useState, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
