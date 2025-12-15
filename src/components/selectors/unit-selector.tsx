@@ -1,4 +1,4 @@
-import type { ManufacturerEntity } from 'src/api/types/generated';
+import type { UnitEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
 import { useMemo, useState, useCallback } from 'react';
@@ -7,13 +7,13 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchManufacturer } from 'src/api/hooks/generated/use-manufacturer';
+import { useSearchUnit } from 'src/api/hooks/generated/use-unit';
 
 // ----------------------------------------------------------------------
 
-export interface ManufacturerSelectorProps {
+export interface UnitSelectorProps {
   value?: string | null;
-  onChange?: (manufacturerId: string | null) => void;
+  onChange?: (unitId: string | null) => void;
   disabled?: boolean;
   label?: string;
   error?: boolean;
@@ -21,18 +21,18 @@ export interface ManufacturerSelectorProps {
   required?: boolean;
 }
 
-export function ManufacturerSelector({
+export function UnitSelector({
   value,
   onChange,
   disabled = false,
-  label = 'Manufacturer',
+  label = 'Unit',
   error = false,
   helperText,
   required = false,
-}: ManufacturerSelectorProps) {
+}: UnitSelectorProps) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
-  const [selectedManufacturer, setSelectedManufacturer] = useState<ManufacturerEntity | null>(null);
+  const [selectedUnit, setSelectedUnit] = useState<UnitEntity | null>(null);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
@@ -42,7 +42,7 @@ export function ManufacturerSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchManufacturer(
+  const { data: searchResults, isFetching } = useSearchUnit(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -52,8 +52,8 @@ export function ManufacturerSelector({
   const items = searchResults?.data || [];
 
   const handleChange = useCallback(
-    (_event: any, newValue: ManufacturerEntity | null) => {
-      setSelectedManufacturer(newValue);
+    (_event: any, newValue: UnitEntity | null) => {
+      setSelectedUnit(newValue);
       onChange?.(newValue?.id ? String(newValue.id) : null);
     },
     [onChange]
@@ -69,7 +69,7 @@ export function ManufacturerSelector({
 
   return (
     <Autocomplete
-      value={selectedManufacturer}
+      value={selectedUnit}
       onChange={handleChange}
       inputValue={inputValue}
       onInputChange={handleInputChange}

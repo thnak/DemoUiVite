@@ -15,9 +15,9 @@ import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
+import { getWorkingParameterPage } from '../../../api';
 import { WorkingParameterTableRow } from '../working-parameter-table-row';
 import { WorkingParameterTableHead } from '../working-parameter-table-head';
-import { deleteShiftTemplate, getWorkingParameterPage } from '../../../api';
 import { WorkingParameterTableNoData } from '../working-parameter-table-no-data';
 import { WorkingParameterTableToolbar } from '../working-parameter-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../working-parameter-utils';
