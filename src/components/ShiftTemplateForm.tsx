@@ -6,6 +6,7 @@ import type {
   ShiftDefinitionFormData,
 } from 'src/types/shift';
 
+import { motion, AnimatePresence } from 'framer-motion';
 import React, { Fragment, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -47,6 +48,31 @@ interface ShiftTemplateFormProps {
 }
 
 type EditorMode = 'normal' | 'advanced';
+
+// Easing constants
+const EASE_OUT = [0.4, 0, 0.2, 1] as const;
+const EASE_IN = [0.4, 0, 1, 1] as const;
+
+// Animation variants for tab content
+const tabContentVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.4,
+      ease: EASE_OUT,
+    },
+  },
+  exit: {
+    opacity: 0,
+    x: 20,
+    transition: {
+      duration: 0.3,
+      ease: EASE_IN,
+    },
+  },
+};
 
 export function ShiftTemplateForm({
   initialData,
@@ -335,8 +361,16 @@ export function ShiftTemplateForm({
         </CardContent>
       </Card>
       {/* Normal Mode: Shared Days and Breaks */}
-      {mode === 'normal' && (
-        <Card>
+      <AnimatePresence mode="wait">
+        {mode === 'normal' && (
+          <motion.div
+            key="normal-mode"
+            variants={tabContentVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <Card>
           <CardContent>
             <Typography variant="h6" sx={{ mb: 3 }}>
               Days & Breaks (Applied to All Shifts)
@@ -462,7 +496,9 @@ export function ShiftTemplateForm({
             </Stack>
           </CardContent>
         </Card>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Shift Definitions */}
       <Card>
         <CardContent>
@@ -645,8 +681,16 @@ export function ShiftTemplateForm({
         </CardContent>
       </Card>
       {/* Advanced Mode - Per-Day Control */}
-      {mode === 'advanced' && (
-        <Card>
+      <AnimatePresence mode="wait">
+        {mode === 'advanced' && (
+          <motion.div
+            key="advanced-mode"
+            variants={tabContentVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <Card>
           <CardContent>
             <Typography variant="h6" sx={{ mb: 3 }}>
               Advanced: Per-Day Shift Control
@@ -726,7 +770,9 @@ export function ShiftTemplateForm({
             </Box>
           </CardContent>
         </Card>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Weekly Summary Chart */}
       <WeekSummaryChart summary={weekSummary} title="Weekly Hours Summary" />
       {/* Action Buttons */}

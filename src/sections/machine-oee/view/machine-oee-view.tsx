@@ -1,5 +1,6 @@
 import type { SelectChangeEvent } from '@mui/material/Select';
 
+import { motion } from 'framer-motion';
 import { useMemo, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -28,6 +29,22 @@ import { OEEWidgetSummary } from '../oee-widget-summary';
 // ----------------------------------------------------------------------
 
 type TimePeriod = 'year' | 'month' | 'week';
+
+// Easing constants
+const EASE_OUT = [0.4, 0, 0.2, 1] as const;
+
+// Animation variants for content refresh
+const contentVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.3,
+      ease: EASE_OUT,
+    },
+  },
+};
 
 export function MachineOEEView() {
   const { id } = useParams<{ id: string }>();
@@ -236,7 +253,13 @@ export function MachineOEEView() {
         </Tabs>
       </Card>
 
-      <Grid container spacing={3}>
+      <motion.div
+        key={`${timePeriod}-${selectedYear}-${selectedMonth}`}
+        variants={contentVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <Grid container spacing={3}>
         {/* OEE Summary Widgets */}
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <OEEWidgetSummary
@@ -312,6 +335,7 @@ export function MachineOEEView() {
           />
         </Grid>
       </Grid>
+      </motion.div>
     </DashboardContent>
   );
 }

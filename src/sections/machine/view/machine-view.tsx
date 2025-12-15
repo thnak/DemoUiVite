@@ -4,6 +4,7 @@ import type {
   OutputCalculationMode,
 } from 'src/api/types/generated';
 
+import { motion, AnimatePresence } from 'framer-motion';
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -42,6 +43,31 @@ const INPUT_TYPE_OPTIONS: { value: MachineInputType | 'all'; label: string }[] =
   { value: 'WeightChannels', label: 'Weight Channels' },
   { value: 'PairChannel', label: 'Pair Channel' },
 ];
+
+// Easing constants
+const EASE_OUT = [0.4, 0, 0.2, 1] as const;
+const EASE_IN = [0.4, 0, 1, 1] as const;
+
+// Animation variants for table content
+const tableContentVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.3,
+      ease: EASE_OUT,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -10,
+    transition: {
+      duration: 0.2,
+      ease: EASE_IN,
+    },
+  },
+};
 
 export function MachineView() {
   const table = useTable();
@@ -327,7 +353,15 @@ export function MachineView() {
           }}
         />
 
-        <Scrollbar>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={filterInputType}
+            variants={tableContentVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
               <MachineTableHead
@@ -399,6 +433,8 @@ export function MachineView() {
           rowsPerPageOptions={[...STANDARD_ROWS_PER_PAGE_OPTIONS]}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
+          </motion.div>
+        </AnimatePresence>
       </Card>
     </DashboardContent>
   );
