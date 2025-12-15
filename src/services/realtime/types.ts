@@ -41,9 +41,12 @@ export interface MetricSubscription {
   unsubscribe: () => void;
 }
 
+import type { SignalRClient } from './signalr-client';
+import type { MetricSubscriptionManager } from './metric-subscription';
+
 export interface RealtimeContext {
-  client: any; // SignalR HubConnection
-  subscriptionManager: any;
+  client: SignalRClient;
+  subscriptionManager: MetricSubscriptionManager;
   connectionState: ConnectionState;
 }
 

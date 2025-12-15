@@ -36,12 +36,15 @@ export class SignalRClient {
       return;
     }
 
+    // Configure transport types (WebSockets with SSE fallback)
+    /* eslint-disable no-bitwise */
+    const transportTypes =
+      signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.ServerSentEvents;
+    /* eslint-enable no-bitwise */
+
     const builder = new signalR.HubConnectionBuilder().withUrl(this.config.hubUrl, {
       accessTokenFactory: this.config.accessTokenFactory,
-      transport: (() => 
-        // eslint-disable-next-line no-bitwise
-         signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.ServerSentEvents
-      )(),
+      transport: transportTypes,
       skipNegotiation: false, // Allow negotiation for best transport
     });
 
