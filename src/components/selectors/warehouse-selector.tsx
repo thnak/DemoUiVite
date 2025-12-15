@@ -1,4 +1,4 @@
-import type { ShiftTemplateEntity } from 'src/api/types/generated';
+import type { WarehouseEntity } from 'src/api/types/generated';
 
 import { useCallback, useMemo, useState } from 'react';
 
@@ -8,13 +8,13 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchShiftTemplate } from 'src/api/hooks/generated/use-shift-template';
+import { useSearchWarehouse } from 'src/api/hooks/generated/use-warehouse';
 
 // ----------------------------------------------------------------------
 
-export interface ShiftTemplateSelectorProps {
+export interface WarehouseSelectorProps {
   value?: string | null;
-  onChange?: (shiftTemplateId: string | null) => void;
+  onChange?: (warehouseId: string | null) => void;
   disabled?: boolean;
   label?: string;
   error?: boolean;
@@ -22,18 +22,18 @@ export interface ShiftTemplateSelectorProps {
   required?: boolean;
 }
 
-export function ShiftTemplateSelector({
+export function WarehouseSelector({
   value,
   onChange,
   disabled = false,
-  label = 'ShiftTemplate',
+  label = 'Warehouse',
   error = false,
   helperText,
   required = false,
-}: ShiftTemplateSelectorProps) {
+}: WarehouseSelectorProps) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
-  const [selectedShiftTemplate, setSelectedShiftTemplate] = useState<ShiftTemplateEntity | null>(null);
+  const [selectedWarehouse, setSelectedWarehouse] = useState<WarehouseEntity | null>(null);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
@@ -43,7 +43,7 @@ export function ShiftTemplateSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchShiftTemplate(
+  const { data: searchResults, isFetching } = useSearchWarehouse(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -53,8 +53,8 @@ export function ShiftTemplateSelector({
   const items = searchResults?.data || [];
 
   const handleChange = useCallback(
-    (_event: any, newValue: ShiftTemplateEntity | null) => {
-      setSelectedShiftTemplate(newValue);
+    (_event: any, newValue: WarehouseEntity | null) => {
+      setSelectedWarehouse(newValue);
       onChange?.(newValue?.id ? String(newValue.id) : null);
     },
     [onChange]
@@ -70,7 +70,7 @@ export function ShiftTemplateSelector({
 
   return (
     <Autocomplete
-      value={selectedShiftTemplate}
+      value={selectedWarehouse}
       onChange={handleChange}
       inputValue={inputValue}
       onInputChange={handleInputChange}

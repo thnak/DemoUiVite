@@ -1,13 +1,14 @@
 import type { MachineTypeEntity } from 'src/api/types/generated';
 
+import { useCallback, useMemo, useState } from 'react';
+
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useGetMachineTypePage } from 'src/api/hooks/generated/use-machine-type';
+import { useSearchMachineType } from 'src/api/hooks/generated/use-machine-type';
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +26,7 @@ export function MachineTypeSelector({
   value,
   onChange,
   disabled = false,
-  label = 'Machine Type',
+  label = 'MachineType',
   error = false,
   helperText,
   required = false,
@@ -33,7 +34,6 @@ export function MachineTypeSelector({
   const [inputValue, setInputValue] = useState('');
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedMachineType, setSelectedMachineType] = useState<MachineTypeEntity | null>(null);
-  const [items, setItems] = useState<MachineTypeEntity[]>([]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
@@ -43,47 +43,14 @@ export function MachineTypeSelector({
     []
   );
 
-  const { mutate: fetchMachineTypes, isPending: isFetching } = useGetMachineTypePage({
-    onSuccess: (data) => {
-      setItems(data?.items || []);
-      // If we have a value prop and haven't set a selected item yet, try to find it in results
-      if (value && !selectedMachineType && data?.items) {
-        const found = data.items.find(item => String(item.id) === value);
-        if (found) {
-          setSelectedMachineType(found);
-        }
-      }
-    },
-  });
-
-  // Fetch initial data when component mounts or when value changes
-  useEffect(() => {
-    fetchMachineTypes({
-      data: [],
-      params: {
-        searchTerm: debouncedInputValue || undefined,
-        pageSize: 10,
-        pageNumber: 0,
-      }
-    });
-  }, [debouncedInputValue, fetchMachineTypes]);
-
-  // When value prop changes externally, try to load that specific machine type
-  useEffect(() => {
-    if (value && !selectedMachineType) {
-      // Trigger a fetch to get the selected item
-      fetchMachineTypes({
-        data: [],
-        params: {
-          pageSize: 10,
-          pageNumber: 0,
-        }
-      });
-    } else if (!value && selectedMachineType) {
-      // Clear selection when value is cleared externally
-      setSelectedMachineType(null);
+  const { data: searchResults, isFetching } = useSearchMachineType(
+    {
+      searchText: debouncedInputValue || undefined,
+      maxResults: 10,
     }
-  }, [value, selectedMachineType, fetchMachineTypes]);
+  );
+
+  const items = searchResults?.data || [];
 
   const handleChange = useCallback(
     (_event: any, newValue: MachineTypeEntity | null) => {
@@ -110,7 +77,9 @@ export function MachineTypeSelector({
       options={items}
       getOptionLabel={(option) => {
         if (typeof option === 'string') return option;
-        return option.name || option.code || String(option.id) || '';
+        // Try common property names across different entity types
+        const entity = option as any;
+        return entity.name || entity.code || entity.sensorName || entity.sensorCode || entity.title || String(entity.id) || '';
       }}
       isOptionEqualToValue={(option, val) => option.id === val.id}
       loading={isFetching}

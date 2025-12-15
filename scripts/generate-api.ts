@@ -525,9 +525,31 @@ function generateHooksFile(tag: string, endpoints: GeneratedEndpoint[], schemas:
   for (const endpoint of queryEndpoints) {
     const keyName = toCamelCase(endpoint.operationId);
     const pathParams = endpoint.parameters.filter((p) => p.in === 'path');
-    if (pathParams.length > 0) {
-      const paramTypes = pathParams.map((p) => `${p.name}: ${resolveType(p.schema, {})}`).join(', ');
-      lines.push(`  ${keyName}: (${paramTypes}) => ['${serviceName}', '${keyName}', ${pathParams.map((p) => p.name).join(', ')}] as const,`);
+    const queryParams = endpoint.parameters.filter((p) => p.in === 'query');
+    
+    // Build parameter types for the key function
+    const allParams: string[] = [];
+    for (const param of pathParams) {
+      allParams.push(`${param.name}: ${resolveType(param.schema, {})}`);
+    }
+    if (queryParams.length > 0) {
+      const queryParamTypes = queryParams
+        .map((p) => {
+          const paramType = resolveType(p.schema, {});
+          return `${p.name}${p.required ? '' : '?'}: ${paramType}`;
+        })
+        .join('; ');
+      allParams.push(`params?: { ${queryParamTypes} }`);
+    }
+    
+    // Build the key array
+    const keyParts = [`'${serviceName}'`, `'${keyName}'`, ...pathParams.map((p) => p.name)];
+    if (queryParams.length > 0) {
+      keyParts.push('params');
+    }
+    
+    if (allParams.length > 0) {
+      lines.push(`  ${keyName}: (${allParams.join(', ')}) => [${keyParts.join(', ')}] as const,`);
     } else {
       lines.push(`  ${keyName}: ['${serviceName}', '${keyName}'] as const,`);
     }
@@ -562,10 +584,15 @@ function generateHooksFile(tag: string, endpoints: GeneratedEndpoint[], schemas:
       `options?: Omit<UseQueryOptions<${returnType}, Error>, 'queryKey' | 'queryFn'>`
     );
 
-    // Build query key
+    // Build query key - include both path params and query params
     let queryKey: string;
-    if (pathParams.length > 0) {
-      queryKey = `${serviceName}Keys.${functionName}(${pathParams.map((p) => p.name).join(', ')})`;
+    const keyArgs: string[] = [...pathParams.map((p) => p.name)];
+    if (queryParams.length > 0) {
+      keyArgs.push('params');
+    }
+    
+    if (keyArgs.length > 0) {
+      queryKey = `${serviceName}Keys.${functionName}(${keyArgs.join(', ')})`;
     } else {
       queryKey = `${serviceName}Keys.${functionName}`;
     }
