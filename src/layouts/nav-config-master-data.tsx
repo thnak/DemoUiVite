@@ -21,6 +21,11 @@ export function useMasterDataNavData(): NavData {
           icon: icon('ic-cart'),
         },
         {
+          title: t('nav.machineType'),
+          path: '/machine-types',
+          icon: icon('ic-cart'),
+        },
+        {
           title: t('nav.product'),
           path: '/products',
           icon: icon('ic-cart'),

@@ -18,6 +18,7 @@
     "stopMachineReason": "Stop Machine Reason",
     "productGroup": "Product Group",
     "machine": "Machine",
+    "machineType": "Machine Type",
     "machineGroup": "Machine Group",
     "machineTracking": "Machine Tracking",
     "productionTracking": "Production Tracking",
