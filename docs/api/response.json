@@ -26768,6 +26768,311 @@
         }
       }
     },
+    "/api/productvariant/{id}": {
+      "get": {
+        "tags": [
+          "ProductVariant"
+        ],
+        "summary": "Get Product Variant by ID",
+        "description": "Retrieves a specific Product Variant entity by its unique identifier.",
+        "operationId": "GetProductVariantById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductVariantEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/productvariant/get-page": {
+      "post": {
+        "tags": [
+          "ProductVariant"
+        ],
+        "summary": "Get paginated list of Product Variant",
+        "description": "Retrieves a paginated list of Product Variant entities.",
+        "operationId": "GetProductVariantPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductVariantEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productvariant/create": {
+      "post": {
+        "tags": [
+          "ProductVariant"
+        ],
+        "summary": "Create a new Product Variant",
+        "description": "Creates a new Product Variant entity in the system.",
+        "operationId": "CreateProductVariant",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductVariantEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductVariantEntityResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductVariantEntityResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productvariant/update/{id}": {
+      "post": {
+        "tags": [
+          "ProductVariant"
+        ],
+        "summary": "Update an existing Product Variant",
+        "description": "Updates specific fields of an existing Product Variant entity by ID.",
+        "operationId": "UpdateProductVariant",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productvariant/delete/{id}": {
+      "delete": {
+        "tags": [
+          "ProductVariant"
+        ],
+        "summary": "Delete a Product Variant",
+        "description": "Deletes a Product Variant entity by its unique identifier.",
+        "operationId": "DeleteProductVariant",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productvariant/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "ProductVariant"
+        ],
+        "summary": "Soft delete a Product Variant",
+        "description": "Soft deletes a Product Variant entity by its unique identifier.",
+        "operationId": "SoftDeleteProductVariant",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productvariant/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "ProductVariant"
+        ],
+        "summary": "Soft restore delete a Product Variant",
+        "description": "Soft restore deletes a Product Variant entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteProductVariant",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productvariant/generate-new-code": {
+      "get": {
+        "tags": [
+          "ProductVariant"
+        ],
+        "summary": "Generate a new code for Product Variant",
+        "description": "Generates a new unique code for a Product Variant entity.",
+        "operationId": "GenerateNewProductVariantCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/qualitycheckpoint/{id}": {
       "get": {
         "tags": [
@@ -36580,6 +36885,118 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnitEntityResultArray"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Unit/get-units": {
+      "post": {
+        "tags": [
+          "Unit"
+        ],
+        "summary": "Retrieves a paginated list of units based on the provided request.",
+        "parameters": [
+          {
+            "name": "UnitGroupName",
+            "in": "query",
+            "description": "Unit group name filter",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitPageResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitPageResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitPageResponse"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitPageResponse"
                 }
               }
             }
@@ -50976,10 +51393,12 @@
         "properties": {
           "index": {
             "type": "integer",
+            "description": "Index of the mapping",
             "format": "int32"
           },
           "outputName": {
             "type": "string",
+            "description": "Output name",
             "nullable": true
           },
           "outputId": {
@@ -50987,16 +51406,19 @@
           },
           "scalingFactor": {
             "type": "number",
+            "description": "Scaling factor to be applied to the final output value. Default is 1.0 (no scaling). Negative values are allowed for scrap computing.",
             "format": "double"
           },
           "mappingMode": {
             "$ref": "#/components/schemas/MachineOutputMappingMode"
           },
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Indicates whether the mapping is enabled."
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Response model for machine output mapping"
       },
       "MachineOutputMappingResult": {
         "type": "object",
@@ -51072,10 +51494,12 @@
               }
             },
             "additionalProperties": false,
+            "description": "Dictionary containing counts of machines per output calculation mode",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Paginated response for machines"
       },
       "MachineSettings": {
         "type": "object",
@@ -53626,6 +54050,120 @@
         },
         "additionalProperties": false,
         "description": "Kết quả trả về dạng mảng"
+      },
+      "ProductVariantEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "productId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "variantName": {
+            "type": "string",
+            "description": "Name of the product variant",
+            "nullable": true
+          },
+          "color": {
+            "type": "string",
+            "description": "Color of the product variant",
+            "nullable": true
+          },
+          "dimensions": {
+            "$ref": "#/components/schemas/ProductDimensions"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Weight of the product in kilograms",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a variant of a product with specific attributes."
+      },
+      "ProductVariantEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductVariantEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "ProductVariantEntityResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/ProductVariantEntity"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
       "ProductionDisposition": {
         "enum": [
@@ -58168,6 +58706,34 @@
         "additionalProperties": false,
         "description": "Represents unit conversion metadata for a property"
       },
+      "UnitDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the unit",
+            "nullable": true
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Symbol of the unit",
+            "nullable": true
+          },
+          "unitGroupId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "unitGroupName": {
+            "type": "string",
+            "description": "Description of the unit",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Data Transfer Object for Unit"
+      },
       "UnitEntity": {
         "type": "object",
         "properties": {
@@ -58447,6 +59013,56 @@
         ],
         "type": "string",
         "description": "Represents the unit of measure for quantities in the system."
+      },
+      "UnitPageResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnitDto"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          },
+          "totalUnitsPerGroup": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "UnitSystem": {
         "enum": [
@@ -59284,10 +59900,12 @@
               "type": "integer",
               "format": "int64"
             },
+            "description": "How many users per role",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Paginated response for users"
       },
       "UserPasskeyEntity": {
         "type": "object",
@@ -61229,6 +61847,9 @@
       "name": "ProductionOrder"
     },
     {
+      "name": "ProductVariant"
+    },
+    {
       "name": "QualityCheckPoint"
     },
     {
@@ -61323,7 +61944,8 @@
       "name": "Test"
     },
     {
-      "name": "Unit"
+      "name": "Unit",
+      "description": "Controller for unit-related operations"
     },
     {
       "name": "UnitConversion"

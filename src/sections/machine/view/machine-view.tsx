@@ -1,7 +1,9 @@
 import type { MachineInputType } from 'src/_mock';
 import type {
-  MachineDto,
+  MachineEntity,
+  CalendarEntity,
   OutputCalculationMode,
+  MachineDto,
 } from 'src/api/types/generated';
 
 import { motion, AnimatePresence } from 'framer-motion';

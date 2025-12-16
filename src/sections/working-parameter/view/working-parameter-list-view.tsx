@@ -15,13 +15,17 @@ import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
-import { getWorkingParameterPage } from '../../../api';
-import { WorkingParameterTableRow } from '../working-parameter-table-row';
 import { WorkingParameterTableHead } from '../working-parameter-table-head';
 import { WorkingParameterTableNoData } from '../working-parameter-table-no-data';
 import { WorkingParameterTableToolbar } from '../working-parameter-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../working-parameter-utils';
+import { getWorkingParameterPage, searchMachine, searchProduct } from '../../../api';
 import { WorkingParameterTableEmptyRows } from '../working-parameter-table-empty-rows';
+import {
+  formatSecondsHms,
+  timeSpanToSeconds,
+  WorkingParameterTableRow,
+} from '../working-parameter-table-row';
 
 import type { WorkingParameterEntity } from '../../../api/types/generated';
 import type { WorkingParameterProps } from '../working-parameter-table-row';
@@ -29,7 +33,6 @@ import type { WorkingParameterProps } from '../working-parameter-table-row';
 // ----------------------------------------------------------------------
 
 export function WorkingParameterListView() {
-  const [templates, setTemplates] = useState<WorkingParameterProps[]>([]);  // Ensure this is of type WorkingParameterProps[]
   const [totalItems, setTotalItems] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -38,16 +41,60 @@ export function WorkingParameterListView() {
   const [error, setError] = useState<string | null>(null);
   const [filterName, setFilterName] = useState('');
   const table = useTable();
+  const [entities, setEntities] = useState<WorkingParameterEntity[]>([]);
+  const [productMap, setProductMap] = useState<Record<string, string>>({});
+  const [machineMap, setMachineMap] = useState<Record<string, string>>({});
+
+
+  function unwrapArray<T>(res: any): T[] {
+    if (Array.isArray(res)) return res;
+    // các case phổ biến trong codegen
+    return res?.value ?? res?.data ?? res?.items ?? res?.result ?? [];
+  }
+  useEffect(() => {
+    (async () => {
+      const [pRes, mRes] = await Promise.all([
+        searchProduct({ maxResults: 5000 }),
+        searchMachine({ maxResults: 5000 }),
+      ]);
+
+      const products = unwrapArray<any>(pRes);
+      const machines = unwrapArray<any>(mRes);
+
+      setProductMap(Object.fromEntries(products.map(p => [p.id?.toString?.() ?? `${p.id}`, p.productName ?? p.name ?? ''])));
+      setMachineMap(Object.fromEntries(machines.map(m => [m.id?.toString?.() ?? `${m.id}`, m.machineName ?? m.name ?? ''])));
+    })();
+  }, []);
+
+
 
   // Function to map WorkingParameterEntity to WorkingParameterProps
-  const mapToWorkingParameterProps = (entity: WorkingParameterEntity): WorkingParameterProps => ({
-    id: entity.id?.toString() || '',
-    product: entity.productId?.toString() || '', // Convert ObjectId to string
-    machine: entity.machineId?.toString() || '', // Convert ObjectId to string
-    quantityPerSignal: entity.quantityPerCycle || 0, // Map quantityPerCycle to quantityPerSignal
-    idealCycleTime: entity.idealCycleTime || '',
-    downtimeThreshold: entity.downtimeThreshold || '',
-  });
+  const templates: WorkingParameterProps[] = React.useMemo(
+    () =>
+      entities.map((entity) => {
+        const productId = entity.productId?.toString() || '';
+        const machineId = entity.machineId?.toString() || '';
+        const idealSeconds = timeSpanToSeconds(entity.idealCycleTime);
+        const downSeconds  = timeSpanToSeconds(entity.downtimeThreshold);
+        console.log('idealCycleTime raw =', entity.idealCycleTime, typeof entity.idealCycleTime);
+        console.log('downtimeThreshold raw =', entity.downtimeThreshold, typeof entity.downtimeThreshold);
+
+        return {
+          id: entity.id?.toString() || '',
+          product: productId,
+          machine: machineId,
+          productName: productMap[productId] ?? productId,
+          machineName: machineMap[machineId] ?? machineId,
+          quantityPerSignal: entity.quantityPerCycle || 0,
+          idealCycleTime: formatSecondsHms(idealSeconds) || '',
+          downtimeThreshold: formatSecondsHms(downSeconds) || '',
+        };
+      }),
+    [entities, productMap, machineMap]
+  );
+
+
+
 
   // Fetch working parameters and map to WorkingParameterProps[]
   const fetchWorkingParameter = useCallback(async () => {
@@ -58,10 +105,7 @@ export function WorkingParameterListView() {
         pageNumber: page,
         pageSize: rowsPerPage,
       });
-
-      // Map the response items to WorkingParameterProps[]
-      const mappedTemplates: WorkingParameterProps[] = (response.items?.map(mapToWorkingParameterProps)) ?? [];
-      setTemplates(mappedTemplates);  // Set templates as WorkingParameterProps[]
+      setEntities(response.items ?? []);
       setTotalItems(response.totalItems || 0);
     } catch (err) {
       setError('Failed to load shift templates');

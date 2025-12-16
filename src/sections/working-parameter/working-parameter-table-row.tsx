@@ -15,11 +15,72 @@ import { Iconify } from 'src/components/iconify';
 export type WorkingParameterProps = {
   id: string;
   product: string;
+  productName: string;
   machine: string;
-  idealCycleTime: string;
+  machineName: string;
   quantityPerSignal: number;
+  idealCycleTime: string;
   downtimeThreshold: string;
 };
+export function timeSpanToSeconds(input: unknown): number {
+  if (input == null) return 0;
+
+  // ISO-8601 duration: PnDTnHnMnS / PT5S / PT5M ...
+  if (typeof input === 'string') {
+    const s = input.trim();
+
+    // ISO duration
+    if (/^P/i.test(s)) {
+      const m = s.match(
+        /^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?$/i
+      );
+      if (!m) return 0;
+      const days = Number(m[1] ?? 0);
+      const hours = Number(m[2] ?? 0);
+      const mins = Number(m[3] ?? 0);
+      const secs = Number(m[4] ?? 0);
+      return Math.floor(days * 86400 + hours * 3600 + mins * 60 + secs);
+    }
+
+    // hh:mm:ss / mm:ss / ss (kèm fraction)
+    let t = s.replace(',', '.');
+    // strip fractional seconds: 00:00:05.123
+    const firstColon = t.indexOf(':');
+    const dot = t.indexOf('.');
+    if (dot !== -1 && firstColon !== -1 && dot > firstColon) t = t.slice(0, dot);
+
+    // day prefix: 1.02:03:04
+    let days = 0;
+    const firstDot = t.indexOf('.');
+    if (firstDot !== -1 && (firstColon === -1 || firstDot < firstColon)) {
+      days = Number(t.slice(0, firstDot)) || 0;
+      t = t.slice(firstDot + 1);
+    }
+
+    const parts = t.split(':').map(Number);
+    if (parts.some(Number.isNaN)) return 0;
+
+    let h = 0, m2 = 0, sec = 0;
+    if (parts.length === 3) [h, m2, sec] = parts as [number, number, number];
+    else if (parts.length === 2) [m2, sec] = parts as [number, number];
+    else [sec] = parts as [number];
+
+    return days * 86400 + h * 3600 + m2 * 60 + sec;
+  }
+
+  return 0;
+}
+
+export function formatSecondsHms(totalSeconds: number): string {
+  const s = Math.max(0, Math.floor(totalSeconds));
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${pad(h)}:${pad(m)}:${pad(sec)}`;
+}
+
+
 
 type WorkingParameterTableRowProps = {
   row: WorkingParameterProps;
@@ -63,11 +124,11 @@ export function WorkingParameterTableRow({
           <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
         </TableCell>
 
-        <TableCell>{row.product}</TableCell>
+        <TableCell>{row.productName}</TableCell>
 
-        <TableCell>{row.machine}</TableCell>
+        <TableCell>{row.machineName}</TableCell>
 
-        <TableCell>{row.idealCycleTime} s</TableCell>
+        <TableCell>{row.idealCycleTime}</TableCell>
 
         <TableCell>{row.quantityPerSignal}</TableCell>
 
