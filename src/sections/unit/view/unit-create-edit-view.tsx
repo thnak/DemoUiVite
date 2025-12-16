@@ -1,5 +1,6 @@
 import type { ChangeEvent } from 'react';
 import type { SelectChangeEvent } from '@mui/material/Select';
+import type { UnitGroupEntity } from 'src/api/types/generated';
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -18,15 +19,8 @@ import FormControl from '@mui/material/FormControl';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import {
-  unitKeys,
-  useCreateUnit,
-  useUpdateUnit,
-  useGetUnitById,
-} from 'src/api/hooks/generated/use-unit';
 import { useGetUnitGroupPage } from 'src/api/hooks/generated/use-unit-group';
-
-import type { UnitGroupEntity } from 'src/api/types/generated';
+import { useCreateUnit, useUpdateUnit, useGetUnitById } from 'src/api/hooks/generated/use-unit';
 
 // ----------------------------------------------------------------------
 

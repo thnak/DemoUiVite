@@ -51,7 +51,7 @@ export function UnitListView() {
         name: item.name || '',
         symbol: item.symbol || '',
         group: item.unitGroupName || '',
-        baseUnit: false, // This info is not in the DTO, we might need to adjust
+        baseUnit: false,
         description: '',
       }));
       setUnits(mappedUnits);
@@ -64,23 +64,7 @@ export function UnitListView() {
     },
   });
 
-  const { mutate: deleteUnitMutate } = useDeleteUnit({
-    onSuccess: () => {
-      // Refetch units after deletion
-      fetchUnits({
-        data: [{ sortBy: table.orderBy, descending: table.order === 'desc' }],
-        params: {
-          pageNumber: table.page,
-          pageSize: table.rowsPerPage,
-          searchTerm: filterName || undefined,
-          UnitGroupName: currentTab !== 'all' ? currentTab : undefined,
-        },
-      });
-      queryClient.invalidateQueries({ queryKey: unitKeys.all });
-    },
-  });
-
-  useEffect(() => {
+  const refetchUnits = useCallback(() => {
     setIsLoading(true);
     fetchUnits({
       data: [{ sortBy: table.orderBy, descending: table.order === 'desc' }],
@@ -91,6 +75,17 @@ export function UnitListView() {
         UnitGroupName: currentTab !== 'all' ? currentTab : undefined,
       },
     });
+  }, [fetchUnits, table.orderBy, table.order, table.page, table.rowsPerPage, filterName, currentTab]);
+
+  const { mutate: deleteUnitMutate } = useDeleteUnit({
+    onSuccess: () => {
+      refetchUnits();
+      queryClient.invalidateQueries({ queryKey: unitKeys.all });
+    },
+  });
+
+  useEffect(() => {
+    refetchUnits();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table.page, table.rowsPerPage, table.orderBy, table.order, filterName, currentTab]);
 
