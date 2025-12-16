@@ -19,7 +19,7 @@ import { WorkingParameterTableHead } from '../working-parameter-table-head';
 import { WorkingParameterTableNoData } from '../working-parameter-table-no-data';
 import { WorkingParameterTableToolbar } from '../working-parameter-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../working-parameter-utils';
-import { getWorkingParameterPage, searchMachine, searchProduct } from '../../../api';
+import { searchMachine, searchProduct, getWorkingParameterPage } from '../../../api';
 import { WorkingParameterTableEmptyRows } from '../working-parameter-table-empty-rows';
 import {
   formatSecondsHms,
