@@ -7,13 +7,13 @@
 
 import type {
   ApiResult,
-  EntityMetadata,
   ReportQuery,
   ReportResult,
+  EntityMetadata,
   RelationshipMetadata,
 } from 'src/types/report-builder';
 
-import { axiosInstance } from './axios-instance';
+import axiosInstance from './axios-instance';
 
 // ----------------------------------------------------------------------
 

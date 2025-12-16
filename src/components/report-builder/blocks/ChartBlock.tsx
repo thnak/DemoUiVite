@@ -15,8 +15,8 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -54,7 +54,7 @@ export function ChartBlock({
       onClick={onSelect}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-        <Iconify icon="eva:bar-chart-outline" sx={{ mr: 1, color: 'primary.main' }} />
+        <Iconify icon="solar:chart-bold-duotone" sx={{ mr: 1, color: 'primary.main' }} />
         <Typography variant="h6" sx={{ flex: 1 }}>
           {block.title || 'Chart Block'}
         </Typography>
@@ -82,7 +82,7 @@ export function ChartBlock({
               onClick={(e) => e.stopPropagation()}
               deleteIcon={
                 <IconButton size="small" sx={{ '& svg': { fontSize: 16 } }}>
-                  <Iconify icon="eva:close-fill" />
+                  <Iconify icon={"solar:trash-bin-trash-bold" as any} />
                 </IconButton>
               }
             />

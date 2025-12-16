@@ -49,7 +49,7 @@ export function TableBlock({
       onClick={onSelect}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-        <Iconify icon="eva:grid-outline" sx={{ mr: 1, color: 'primary.main' }} />
+        <Iconify icon="solar:grid-bold-duotone" sx={{ mr: 1, color: 'primary.main' }} />
         <Typography variant="h6" sx={{ flex: 1 }}>
           {block.title || 'Table Block'}
         </Typography>
@@ -84,7 +84,7 @@ export function TableBlock({
               onClick={(e) => e.stopPropagation()}
               deleteIcon={
                 <IconButton size="small" sx={{ '& svg': { fontSize: 16 } }}>
-                  <Iconify icon="eva:close-fill" />
+                  <Iconify icon={"solar:trash-bin-trash-bold" as any} />
                 </IconButton>
               }
             />

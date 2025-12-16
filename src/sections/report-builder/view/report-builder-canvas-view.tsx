@@ -8,8 +8,9 @@
 
 import type {
   Block,
-  EntityMetadata,
   ReportResult,
+  EntityMetadata,
+  ChartBlock as ChartBlockType,
   TableBlock as TableBlockType,
 } from 'src/types/report-builder';
 
@@ -17,33 +18,34 @@ import { v4 as uuidv4 } from 'uuid';
 import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
+import TableRow from '@mui/material/TableRow';
+import Container from '@mui/material/Container';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
 import InputLabel from '@mui/material/InputLabel';
+import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
+import TableContainer from '@mui/material/TableContainer';
+import CircularProgress from '@mui/material/CircularProgress';
+
+import {
+  buildQueryFromBlock,
+  executeQueryPreview,
+  fetchEntityMetadata,
+  fetchAllEntitiesMetadata,
+} from 'src/api/report-builder-api';
 
 import { Iconify } from 'src/components/iconify';
-import {
-  fetchAllEntitiesMetadata,
-  fetchEntityMetadata,
-  executeQueryPreview,
-  buildQueryFromBlock,
-} from 'src/api/report-builder-api';
-import { Palette } from 'src/components/report-builder/Palette';
 import { Canvas } from 'src/components/report-builder/Canvas';
+import { Palette } from 'src/components/report-builder/Palette';
 import { PropertiesPanel } from 'src/components/report-builder/PropertiesPanel';
 import { OnboardingWizard } from 'src/components/report-builder/OnboardingWizard';
 
@@ -105,7 +107,7 @@ export function ReportBuilderCanvasView() {
       // Auto-create a table block if none is selected
       const newBlock: TableBlockType = {
         id: uuidv4(),
-        type: 'table',
+        type: 'table' as const,
         title: 'Table 1',
         fields: [fieldName],
         pageSize: 10,
@@ -115,20 +117,24 @@ export function ReportBuilderCanvasView() {
     } else {
       // Add field to selected block
       setBlocks(
-        blocks.map((block) =>
-          block.id === selectedBlockId && !block.fields.includes(fieldName)
-            ? { ...block, fields: [...block.fields, fieldName] }
-            : block
-        )
+        blocks.map((block) => {
+          if (block.id === selectedBlockId && !block.fields.includes(fieldName)) {
+            return { ...block, fields: [...block.fields, fieldName] };
+          }
+          return block;
+        })
       );
     }
   };
 
-  const handleUpdateSelectedBlock = (updates: Partial<Block>) => {
+  const handleUpdateSelectedBlock = (updates: Partial<TableBlockType> | Partial<ChartBlockType>) => {
     if (!selectedBlockId) return;
 
     setBlocks(
-      blocks.map((block) => (block.id === selectedBlockId ? { ...block, ...updates } : block))
+      blocks.map((block) => {
+        if (block.id !== selectedBlockId) return block;
+        return { ...block, ...updates } as Block;
+      })
     );
   };
 
@@ -189,7 +195,7 @@ export function ReportBuilderCanvasView() {
     // Create a table block with selected fields
     const newBlock: TableBlockType = {
       id: uuidv4(),
-      type: 'table',
+      type: 'table' as const,
       title: 'Table 1',
       fields: selectedFields,
       pageSize: 10,
@@ -229,7 +235,7 @@ export function ReportBuilderCanvasView() {
 
             <Button
               variant="outlined"
-              startIcon={<Iconify icon="eva:question-mark-circle-outline" />}
+              startIcon={<Iconify icon={"solar:user-circle-bold-duotone" as any} />}
               onClick={() => setShowWizard(true)}
             >
               Quick Start
@@ -240,7 +246,7 @@ export function ReportBuilderCanvasView() {
             <Button
               variant="contained"
               color="primary"
-              startIcon={<Iconify icon="eva:play-circle-outline" />}
+              startIcon={<Iconify icon={"solar:play-bold-duotone" as any} />}
               onClick={handleRun}
               disabled={loading || !selectedEntityName || blocks.length === 0}
             >
@@ -249,7 +255,7 @@ export function ReportBuilderCanvasView() {
 
             <Button
               variant="outlined"
-              startIcon={<Iconify icon="eva:save-outline" />}
+              startIcon={<Iconify icon={"solar:diskette-bold-duotone" as any} />}
               onClick={handleSave}
               disabled={!selectedEntityName || blocks.length === 0}
             >

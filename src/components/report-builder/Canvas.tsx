@@ -36,7 +36,7 @@ export function Canvas({ blocks, selectedBlockId, onBlocksChange, onSelectBlock 
   const handleAddTableBlock = () => {
     const newBlock: TableBlockType = {
       id: uuidv4(),
-      type: 'table',
+      type: 'table' as const,
       title: `Table ${blocks.filter((b) => b.type === 'table').length + 1}`,
       fields: [],
       pageSize: 10,
@@ -48,7 +48,7 @@ export function Canvas({ blocks, selectedBlockId, onBlocksChange, onSelectBlock 
   const handleAddChartBlock = () => {
     const newBlock: ChartBlockType = {
       id: uuidv4(),
-      type: 'chart',
+      type: 'chart' as const,
       title: `Chart ${blocks.filter((b) => b.type === 'chart').length + 1}`,
       fields: [],
       chartType: 'bar',
@@ -78,11 +78,12 @@ export function Canvas({ blocks, selectedBlockId, onBlocksChange, onSelectBlock 
     }
   };
 
-  const handleUpdateBlock = (blockId: string, updates: Partial<Block>) => {
+  const handleUpdateBlock = (blockId: string, updates: Partial<TableBlockType> | Partial<ChartBlockType>) => {
     onBlocksChange(
-      blocks.map((block) =>
-        block.id === blockId ? { ...block, ...updates } : block
-      )
+      blocks.map((block) => {
+        if (block.id !== blockId) return block;
+        return { ...block, ...updates } as Block;
+      })
     );
   };
 
@@ -105,7 +106,7 @@ export function Canvas({ blocks, selectedBlockId, onBlocksChange, onSelectBlock 
           <Button
             size="small"
             variant="outlined"
-            startIcon={<Iconify icon="eva:grid-outline" />}
+            startIcon={<Iconify icon="solar:grid-bold-duotone" />}
             onClick={handleAddTableBlock}
           >
             Add Table
@@ -113,7 +114,7 @@ export function Canvas({ blocks, selectedBlockId, onBlocksChange, onSelectBlock 
           <Button
             size="small"
             variant="outlined"
-            startIcon={<Iconify icon="eva:bar-chart-outline" />}
+            startIcon={<Iconify icon="solar:chart-bold-duotone" />}
             onClick={handleAddChartBlock}
           >
             Add Chart
@@ -133,7 +134,7 @@ export function Canvas({ blocks, selectedBlockId, onBlocksChange, onSelectBlock 
               color: 'text.secondary',
             }}
           >
-            <Iconify icon="eva:layers-outline" width={64} sx={{ mb: 2, opacity: 0.3 }} />
+            <Iconify icon={"solar:list-bold-duotone" as any} width={64} sx={{ mb: 2, opacity: 0.3 }} />
             <Typography variant="body1" gutterBottom>
               No blocks yet
             </Typography>
@@ -153,7 +154,7 @@ export function Canvas({ blocks, selectedBlockId, onBlocksChange, onSelectBlock 
                       disabled={index === 0}
                       sx={{ bgcolor: 'background.paper' }}
                     >
-                      <Iconify icon="eva:arrow-up-fill" />
+                      <Iconify icon={"solar:arrow-up-bold-duotone" as any} />
                     </IconButton>
                     <IconButton
                       size="small"
@@ -161,14 +162,14 @@ export function Canvas({ blocks, selectedBlockId, onBlocksChange, onSelectBlock 
                       disabled={index === blocks.length - 1}
                       sx={{ bgcolor: 'background.paper' }}
                     >
-                      <Iconify icon="eva:arrow-down-fill" />
+                      <Iconify icon={"solar:arrow-down-bold-duotone" as any} />
                     </IconButton>
                     <IconButton
                       size="small"
                       onClick={() => handleRemoveBlock(block.id)}
                       sx={{ bgcolor: 'background.paper', color: 'error.main' }}
                     >
-                      <Iconify icon="eva:trash-2-outline" />
+                      <Iconify icon="solar:trash-bin-trash-bold" />
                     </IconButton>
                   </Stack>
                 </Box>
