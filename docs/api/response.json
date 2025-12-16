@@ -1799,7 +1799,7 @@
           "Auth"
         ],
         "summary": "Generate a one-time use QR code token for authenticated user",
-        "description": "This endpoint generates a secure one-time use token that can be encoded in a QR code.\r\nThe token expires after 2 minutes and can only be used once.\r\nThe authenticated user on one device can scan this QR code on another device to log in without entering credentials.",
+        "description": "This endpoint generates a secure one-time use token that can be encoded in a QR code.\nThe token expires after 2 minutes and can only be used once.\nThe authenticated user on one device can scan this QR code on another device to log in without entering credentials.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1835,7 +1835,7 @@
           "Auth"
         ],
         "summary": "Login using a one-time QR code token",
-        "description": "This endpoint consumes a one-time use token (from QR code scan) and logs the user in.\r\nThe token is validated and then marked as consumed. If successful, returns authentication tokens.",
+        "description": "This endpoint consumes a one-time use token (from QR code scan) and logs the user in.\nThe token is validated and then marked as consumed. If successful, returns authentication tokens.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -17732,7 +17732,7 @@
         "tags": [
           "Localization"
         ],
-        "summary": "Retrieves all translations for a specific language code.\r\nGET /api/translations/{langCode}",
+        "summary": "Retrieves all translations for a specific language code.\nGET /api/translations/{langCode}",
         "parameters": [
           {
             "name": "langCode",
@@ -17914,7 +17914,7 @@
         "tags": [
           "Localization"
         ],
-        "summary": "upload excel file to update translations. the devault culture is vi-VN and it always have value while other culture can be empty\r\nif other culture is empty, it must be auto translated by Ollama",
+        "summary": "upload excel file to update translations. the devault culture is vi-VN and it always have value while other culture can be empty\nif other culture is empty, it must be auto translated by Ollama",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -28012,6 +28012,602 @@
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reports/query/data": {
+      "post": {
+        "tags": [
+          "ReportQuery"
+        ],
+        "summary": "Executes a complete report query and returns data\nEndpoint: POST /api/reports/query/data",
+        "requestBody": {
+          "description": "The query to execute",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportQueryDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportQueryDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportQueryDto"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportQueryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResultDtoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResultDtoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResultDtoResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResultDtoResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResultDtoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResultDtoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResultDtoResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResultDtoResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reports/query/preview": {
+      "post": {
+        "tags": [
+          "ReportQuery"
+        ],
+        "summary": "Executes a preview of the report query with limited results (10-20 rows)\nEndpoint: POST /api/reports/query/preview",
+        "requestBody": {
+          "description": "The query to preview",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportQueryDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportQueryDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportQueryDto"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportQueryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResultDtoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResultDtoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResultDtoResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResultDtoResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResultDtoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResultDtoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResultDtoResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResultDtoResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reports/query/validate": {
+      "post": {
+        "tags": [
+          "ReportQuery"
+        ],
+        "summary": "Validates a report query without executing it\nEndpoint: POST /api/reports/query/validate",
+        "requestBody": {
+          "description": "The query to validate",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportQueryDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportQueryDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportQueryDto"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportQueryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryValidationResultDtoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryValidationResultDtoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryValidationResultDtoResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryValidationResultDtoResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryValidationResultDtoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryValidationResultDtoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryValidationResultDtoResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryValidationResultDtoResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reports/metadata": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Gets complete metadata schema including entities, fields, relationships, and data types\nEndpoint: GET /api/reports/metadata",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityMetadataDtoListResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityMetadataDtoListResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityMetadataDtoListResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityMetadataDtoListResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityMetadataDtoListResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityMetadataDtoListResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityMetadataDtoListResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityMetadataDtoListResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reports/metadata/{entityName}": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Gets metadata for a specific entity by name\nEndpoint: GET /api/reports/metadata/{entityName}",
+        "parameters": [
+          {
+            "name": "entityName",
+            "in": "path",
+            "description": "The entity name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityMetadataDtoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityMetadataDtoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityMetadataDtoResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityMetadataDtoResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityMetadataDtoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityMetadataDtoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityMetadataDtoResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityMetadataDtoResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reports/metadata/relationships": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Gets all relationships between entities\nEndpoint: GET /api/reports/metadata/relationships",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipMetadataDtoListResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipMetadataDtoListResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipMetadataDtoListResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipMetadataDtoListResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipMetadataDtoListResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipMetadataDtoListResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipMetadataDtoListResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelationshipMetadataDtoListResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reports/metadata/categories": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Gets a list of entity categories for grouping\nEndpoint: GET /api/reports/metadata/categories",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reports/query/suggest/{entityName}/{field}": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Gets distinct values for a field to provide filter suggestions\nEndpoint: GET /api/reports/query/suggest/{entityName}/{field}",
+        "parameters": [
+          {
+            "name": "entityName",
+            "in": "path",
+            "description": "The entity name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "field",
+            "in": "path",
+            "description": "The field name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of suggestions (default: 100)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/FieldSuggestionResultDtoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FieldSuggestionResultDtoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FieldSuggestionResultDtoResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/FieldSuggestionResultDtoResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/FieldSuggestionResultDtoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FieldSuggestionResultDtoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FieldSuggestionResultDtoResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/FieldSuggestionResultDtoResult"
                 }
               }
             }
@@ -42559,7 +43155,7 @@
           },
           "enableMaintenanceMode": {
             "type": "boolean",
-            "description": "Gets or sets a value indicating whether the entire site is in maintenance mode.\r\nIf true, non-admin users should be redirected to a maintenance page.",
+            "description": "Gets or sets a value indicating whether the entire site is in maintenance mode.\nIf true, non-admin users should be redirected to a maintenance page.",
             "default": false
           },
           "maintenanceModeMessage": {
@@ -42582,7 +43178,7 @@
           },
           "backgroundTaskCronExpression": {
             "type": "string",
-            "description": "Gets or sets the CRON expression that defines the schedule for a recurring background job.\r\nExample: \"0 2 * * *\" for 2:00 AM daily.",
+            "description": "Gets or sets the CRON expression that defines the schedule for a recurring background job.\nExample: \"0 2 * * *\" for 2:00 AM daily.",
             "default": "0 3 * * *",
             "nullable": true
           },
@@ -42593,7 +43189,7 @@
           },
           "mailServer": {
             "type": "string",
-            "description": "Gets or sets the SMTP server address used for sending emails.\r\nFormat: \"smtp.server.com\"",
+            "description": "Gets or sets the SMTP server address used for sending emails.\nFormat: \"smtp.server.com\"",
             "nullable": true
           },
           "mailServerPort": {
@@ -42603,12 +43199,12 @@
           },
           "smtpUsername": {
             "type": "string",
-            "description": "Gets or sets the SMTP username for email authentication.\r\nUsually the same as SystemEmail but can be different for some providers.",
+            "description": "Gets or sets the SMTP username for email authentication.\nUsually the same as SystemEmail but can be different for some providers.",
             "nullable": true
           },
           "smtpPassword": {
             "type": "string",
-            "description": "Gets or sets the SMTP password for email authentication.\r\nStore app-specific passwords for providers like Gmail, Outlook, etc.",
+            "description": "Gets or sets the SMTP password for email authentication.\nStore app-specific passwords for providers like Gmail, Outlook, etc.",
             "nullable": true
           },
           "smtpEnableSsl": {
@@ -42642,7 +43238,7 @@
           },
           "allowedIpRangesForAdminAccess": {
             "type": "string",
-            "description": "Gets or sets a comma-separated list of Ip addresses or CIDR blocks allowed to access admin areas.\r\nAn empty or null string means access is not restricted by Ip.",
+            "description": "Gets or sets a comma-separated list of Ip addresses or CIDR blocks allowed to access admin areas.\nAn empty or null string means access is not restricted by Ip.",
             "nullable": true
           },
           "renderMode": {
@@ -42650,7 +43246,7 @@
           },
           "enableOnlinePayments": {
             "type": "boolean",
-            "description": "Gets or sets a value indicating whether online payment processing is enabled.\r\nThis can be used as a \"kill switch\" for the payment system.",
+            "description": "Gets or sets a value indicating whether online payment processing is enabled.\nThis can be used as a \"kill switch\" for the payment system.",
             "default": true
           },
           "enableNewUserRegistration": {
@@ -42660,12 +43256,12 @@
           },
           "enablePushNotifications": {
             "type": "boolean",
-            "description": "Gets or sets a value indicating whether the system should send push notifications.\r\nActs as a master \"kill switch\" for all push notifications.",
+            "description": "Gets or sets a value indicating whether the system should send push notifications.\nActs as a master \"kill switch\" for all push notifications.",
             "default": true
           },
           "logLevel": {
             "type": "string",
-            "description": "Gets or sets the desired logging level (e.g., \"Information\", \"Debug\", \"Warning\", \"Error\").\r\nThis should map to a LogLevel enum in your logging system.",
+            "description": "Gets or sets the desired logging level (e.g., \"Information\", \"Debug\", \"Warning\", \"Error\").\nThis should map to a LogLevel enum in your logging system.",
             "default": "Information",
             "nullable": true
           },
@@ -42822,12 +43418,12 @@
             "items": {
               "$ref": "#/components/schemas/StringObjectKeyValuePair"
             },
-            "description": "Represents a collection of field parameters and their types.",
+            "description": "Chuỗi JSON chứa các cấu hình đặc thù cho plugin.\nGiúp một plugin có thể hoạt động theo nhiều cách khác nhau cho các route khác nhau.",
             "nullable": true
           },
           "authKey": {
             "type": "string",
-            "description": "Mã xác thực (API Key) mà client phải gửi trong header để truy cập route này.\r\n**Bảo mật**: Giá trị này NÊN được hash trước khi lưu vào DB.",
+            "description": "Mã xác thực (API Key) mà client phải gửi trong header để truy cập route này.\n**Bảo mật**: Giá trị này NÊN được hash trước khi lưu vào DB.",
             "nullable": true
           },
           "isPayloadValidationEnabled": {
@@ -42836,7 +43432,7 @@
           },
           "payloadValidationSecret": {
             "type": "string",
-            "description": "Chuỗi bí mật (secret) dùng để xác thực mã băm (HMAC) của payload.\r\nChỉ được sử dụng khi IsPayloadValidationEnabled = true.\r\n**Bảo mật**: Giá trị này KHÔNG NÊN được lưu dưới dạng plaintext. Hãy mã hóa nó.",
+            "description": "Chuỗi bí mật (secret) dùng để xác thực mã băm (HMAC) của payload.\nChỉ được sử dụng khi IsPayloadValidationEnabled = true.\n**Bảo mật**: Giá trị này KHÔNG NÊN được lưu dưới dạng plaintext. Hãy mã hóa nó.",
             "nullable": true
           },
           "status": {
@@ -43846,13 +44442,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-13"
+            "example": "2025-12-16"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-13"
+            "example": "2025-12-16"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -43964,13 +44560,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-13"
+            "example": "2025-12-16"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-13"
+            "example": "2025-12-16"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -44122,12 +44718,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-13"
+            "example": "2025-12-16"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-13"
+            "example": "2025-12-16"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -45808,6 +46404,112 @@
         },
         "additionalProperties": false
       },
+      "EntityMetadataDto": {
+        "type": "object",
+        "properties": {
+          "entityName": {
+            "type": "string",
+            "description": "Gets or sets the entity name",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Gets or sets the display name for UI",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Gets or sets the entity description",
+            "nullable": true
+          },
+          "category": {
+            "type": "string",
+            "description": "Gets or sets the category for grouping entities",
+            "nullable": true
+          },
+          "collectionName": {
+            "type": "string",
+            "description": "Gets or sets the collection name in MongoDB",
+            "nullable": true
+          },
+          "clrTypeName": {
+            "type": "string",
+            "description": "Gets or sets the CLR type name",
+            "nullable": true
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PropertyMetadataDto"
+            },
+            "description": "Gets or sets the list of properties",
+            "nullable": true
+          },
+          "relationships": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RelationshipMetadataDto"
+            },
+            "description": "Gets or sets the list of relationships",
+            "nullable": true
+          },
+          "isAvailable": {
+            "type": "boolean",
+            "description": "Gets or sets whether this entity is available for reporting"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents complete metadata about an entity for the report builder"
+      },
+      "EntityMetadataDtoListResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityMetadataDto"
+            },
+            "description": "Gets the value of the result. Can be null if the operation failed.",
+            "nullable": true
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "EntityMetadataDtoResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/EntityMetadataDto"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
       "ErrorType": {
         "enum": [
           "none",
@@ -45848,6 +46550,55 @@
           }
         },
         "additionalProperties": false
+      },
+      "FieldSuggestionResultDto": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "Gets or sets the field name",
+            "nullable": true
+          },
+          "values": {
+            "type": "array",
+            "items": { },
+            "description": "Gets or sets the list of distinct values for the field",
+            "nullable": true
+          },
+          "totalCount": {
+            "type": "integer",
+            "description": "Gets or sets the total count of distinct values",
+            "format": "int32"
+          },
+          "isLimited": {
+            "type": "boolean",
+            "description": "Gets or sets whether the results were limited"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of a field value suggestion query"
+      },
+      "FieldSuggestionResultDtoResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/FieldSuggestionResultDto"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
       "FileClassify": {
         "enum": [
@@ -46153,7 +46904,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-13"
+            "example": "2025-12-16"
           }
         },
         "additionalProperties": false
@@ -46636,13 +47387,13 @@
           },
           "build": {
             "type": "integer",
-            "description": "Gets the optional Build version component. Often used for CI build numbers or revisions.\r\nReturns null if no build number was specified.",
+            "description": "Gets the optional Build version component. Often used for CI build numbers or revisions.\nReturns null if no build number was specified.",
             "format": "int32",
             "nullable": true
           },
           "preReleaseTag": {
             "type": "string",
-            "description": "Gets the optional Pre-release tag (e.g., \"alpha\", \"beta\", \"rc.1\").\r\nReturns null or empty if this is a stable release.",
+            "description": "Gets the optional Pre-release tag (e.g., \"alpha\", \"beta\", \"rc.1\").\nReturns null or empty if this is a stable release.",
             "nullable": true
           },
           "originalString": {
@@ -46676,7 +47427,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Represents a firmware version, typically following Major.Minor.Patch pattern,\r\npotentially including a Build number and/or a PreRelease tag.\r\nProvides functionality for parsing, comparison, string representation, and generation."
+        "description": "Represents a firmware version, typically following Major.Minor.Patch pattern,\npotentially including a Build number and/or a PreRelease tag.\nProvides functionality for parsing, comparison, string representation, and generation."
       },
       "FirmwareVersionEntityBasePaginationResponse": {
         "type": "object",
@@ -47963,7 +48714,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2025-12-13"
+            "example": "2025-12-16"
           },
           "lastServiceTime": {
             "type": "string",
@@ -51638,7 +52389,7 @@
           },
           "quantityPerSignal": {
             "type": "number",
-            "description": "TỈ LỆ: Số lượng sản phẩm được tạo ra cho mỗi tín hiệu từ IoT\r\nMặc định là 1.0",
+            "description": "TỈ LỆ: Số lượng sản phẩm được tạo ra cho mỗi tín hiệu từ IoT\nMặc định là 1.0",
             "format": "double"
           },
           "disposition": {
@@ -53050,6 +53801,83 @@
         "type": "string",
         "description": "Production order status"
       },
+      "PropertyMetadataDto": {
+        "type": "object",
+        "properties": {
+          "propertyName": {
+            "type": "string",
+            "description": "Gets or sets the property name",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Gets or sets the display name for UI",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Gets or sets the property description",
+            "nullable": true
+          },
+          "clrTypeName": {
+            "type": "string",
+            "description": "Gets or sets the CLR type name",
+            "nullable": true
+          },
+          "typeName": {
+            "type": "string",
+            "description": "Gets or sets the simplified type name (String, Int32, DateTime, etc.)",
+            "nullable": true
+          },
+          "isNullable": {
+            "type": "boolean",
+            "description": "Gets or sets whether this is a nullable type"
+          },
+          "isCollection": {
+            "type": "boolean",
+            "description": "Gets or sets whether this is a collection/array type"
+          },
+          "filterable": {
+            "type": "boolean",
+            "description": "Gets or sets whether this property can be filtered"
+          },
+          "sortable": {
+            "type": "boolean",
+            "description": "Gets or sets whether this property can be sorted"
+          },
+          "groupable": {
+            "type": "boolean",
+            "description": "Gets or sets whether this property can be grouped"
+          },
+          "aggregatable": {
+            "type": "boolean",
+            "description": "Gets or sets whether this property can be aggregated"
+          },
+          "format": {
+            "type": "string",
+            "description": "Gets or sets the format string for display",
+            "nullable": true
+          },
+          "isId": {
+            "type": "boolean",
+            "description": "Gets or sets whether this is an ID field"
+          },
+          "isForeignKey": {
+            "type": "boolean",
+            "description": "Gets or sets whether this is a foreign key"
+          },
+          "unitConversions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnitConversionMetadataDto"
+            },
+            "description": "Gets or sets the available unit conversions for this property",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents metadata about an entity property for the report builder"
+      },
       "QrLoginRequest": {
         "type": "object",
         "properties": {
@@ -53542,6 +54370,77 @@
         "additionalProperties": false,
         "description": "DTO representing a Quartz.NET trigger information"
       },
+      "QueryValidationError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Gets or sets the error code",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets or sets the error message",
+            "nullable": true
+          },
+          "field": {
+            "type": "string",
+            "description": "Gets or sets the field or location where the error occurred",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a validation error in a report query"
+      },
+      "QueryValidationResultDto": {
+        "type": "object",
+        "properties": {
+          "isValid": {
+            "type": "boolean",
+            "description": "Gets or sets whether the query is valid"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryValidationError"
+            },
+            "description": "Gets or sets the list of validation errors",
+            "nullable": true
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryValidationError"
+            },
+            "description": "Gets or sets the list of validation warnings",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of validating a report query"
+      },
+      "QueryValidationResultDtoResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/QueryValidationResultDto"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
       "RefreshTokenEntity": {
         "type": "object",
         "properties": {
@@ -53682,6 +54581,75 @@
         "additionalProperties": false,
         "description": "Represents a request to obtain a new JWT access token using a refresh token."
       },
+      "RelationshipMetadataDto": {
+        "type": "object",
+        "properties": {
+          "sourceEntity": {
+            "type": "string",
+            "description": "Gets or sets the source entity name",
+            "nullable": true
+          },
+          "targetEntity": {
+            "type": "string",
+            "description": "Gets or sets the target/related entity name",
+            "nullable": true
+          },
+          "relationshipType": {
+            "type": "string",
+            "description": "Gets or sets the relationship type (OneToOne, OneToMany, etc.)",
+            "nullable": true
+          },
+          "foreignKeyProperty": {
+            "type": "string",
+            "description": "Gets or sets the foreign key property name in the source entity",
+            "nullable": true
+          },
+          "referencedProperty": {
+            "type": "string",
+            "description": "Gets or sets the referenced property name in the target entity",
+            "nullable": true
+          },
+          "navigationProperty": {
+            "type": "string",
+            "description": "Gets or sets the navigation property name",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Gets or sets the description of this relationship",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents metadata about a relationship between entities"
+      },
+      "RelationshipMetadataDtoListResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RelationshipMetadataDto"
+            },
+            "description": "Gets the value of the result. Can be null if the operation failed.",
+            "nullable": true
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
       "RenderMode": {
         "enum": [
           "letSystemDecide",
@@ -53691,6 +54659,242 @@
         ],
         "type": "string",
         "description": "Represents the rendering mode of the application."
+      },
+      "ReportFieldDto": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "Gets or sets the field name (can include entity prefix like \"Entity.Field\")",
+            "nullable": true
+          },
+          "alias": {
+            "type": "string",
+            "description": "Gets or sets an alias for this field in the result",
+            "nullable": true
+          },
+          "aggregation": {
+            "type": "string",
+            "description": "Gets or sets the aggregation function (Sum, Avg, Count, Min, Max)",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a field to select in a report query"
+      },
+      "ReportFilterDto": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "Gets or sets the field name to filter on",
+            "nullable": true
+          },
+          "operator": {
+            "type": "string",
+            "description": "Gets or sets the operator (Equals, NotEquals, Contains, GreaterThan, etc.)",
+            "nullable": true
+          },
+          "value": {
+            "description": "Gets or sets the value to compare against",
+            "nullable": true
+          },
+          "logicalOperator": {
+            "type": "string",
+            "description": "Gets or sets the logical connector with the next filter (And, Or)",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a filter condition in a report query"
+      },
+      "ReportJoinDto": {
+        "type": "object",
+        "properties": {
+          "targetEntity": {
+            "type": "string",
+            "description": "Gets or sets the entity to join with",
+            "nullable": true
+          },
+          "joinType": {
+            "type": "string",
+            "description": "Gets or sets the join type (Inner, Left, Right)",
+            "nullable": true
+          },
+          "sourceField": {
+            "type": "string",
+            "description": "Gets or sets the foreign key field in the source entity",
+            "nullable": true
+          },
+          "targetField": {
+            "type": "string",
+            "description": "Gets or sets the referenced field in the target entity",
+            "nullable": true
+          },
+          "alias": {
+            "type": "string",
+            "description": "Gets or sets an alias for this joined entity",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a join between two entities in a report query"
+      },
+      "ReportQueryDto": {
+        "type": "object",
+        "properties": {
+          "sourceEntity": {
+            "type": "string",
+            "description": "Gets or sets the source entity name",
+            "nullable": true
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReportFieldDto"
+            },
+            "description": "Gets or sets the fields to select",
+            "nullable": true
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReportFilterDto"
+            },
+            "description": "Gets or sets the filter conditions",
+            "nullable": true
+          },
+          "joins": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReportJoinDto"
+            },
+            "description": "Gets or sets the joins to other entities",
+            "nullable": true
+          },
+          "sorts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReportSortDto"
+            },
+            "description": "Gets or sets the sort orders",
+            "nullable": true
+          },
+          "groupBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets the fields to group by",
+            "nullable": true
+          },
+          "page": {
+            "type": "integer",
+            "description": "Gets or sets the page number (1-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Gets or sets the page size",
+            "format": "int32"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Gets or sets the maximum number of results to return",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a complete report query definition"
+      },
+      "ReportResultDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": { }
+            },
+            "description": "Gets or sets the data rows",
+            "nullable": true
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets the column names",
+            "nullable": true
+          },
+          "totalCount": {
+            "type": "integer",
+            "description": "Gets or sets the total count of records (before pagination)",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "description": "Gets or sets the current page number",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Gets or sets the page size",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Gets or sets the total number of pages",
+            "format": "int32"
+          },
+          "executionTimeMs": {
+            "type": "integer",
+            "description": "Gets or sets the execution time in milliseconds",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of executing a report query"
+      },
+      "ReportResultDtoResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/ReportResultDto"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "ReportSortDto": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "Gets or sets the field name to sort by",
+            "nullable": true
+          },
+          "direction": {
+            "type": "string",
+            "description": "Gets or sets the sort direction (Ascending, Descending)",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a sort order in a report query"
       },
       "ReportingSettings": {
         "type": "object",
@@ -54844,12 +56048,12 @@
           },
           "normalizedName": {
             "type": "string",
-            "description": "Tên chuẩn hóa của ca làm việc (chuyển về chữ thường, bỏ dấu, thay khoảng trắng bằng gạch dưới).\r\nCó thể dùng để tạo mã.\r\nBE use case only.",
+            "description": "Tên chuẩn hóa của ca làm việc (chuyển về chữ thường, bỏ dấu, thay khoảng trắng bằng gạch dưới).\nCó thể dùng để tạo mã.\nBE use case only.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Định nghĩa ca làm việc cho một ngày cụ thể trong tuần.\r\nBao gồm giờ bắt đầu, giờ kết thúc và các khoảng nghỉ trong ca."
+        "description": "Định nghĩa ca làm việc cho một ngày cụ thể trong tuần.\nBao gồm giờ bắt đầu, giờ kết thúc và các khoảng nghỉ trong ca."
       },
       "ShiftTemplateEntity": {
         "type": "object",
@@ -54900,7 +56104,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Mẫu ca làm việc, định nghĩa các ca làm việc áp dụng cho một lịch làm việc.\r\nMẫu ca có thể được tái sử dụng cho nhiều lịch làm việc khác nhau và áp dụng cụ thể cho từng ngày trong tuần."
+        "description": "Mẫu ca làm việc, định nghĩa các ca làm việc áp dụng cho một lịch làm việc.\nMẫu ca có thể được tái sử dụng cho nhiều lịch làm việc khác nhau và áp dụng cụ thể cho từng ngày trong tuần."
       },
       "ShiftTemplateEntityBasePaginationResponse": {
         "type": "object",
@@ -55085,7 +56289,7 @@
             "items": {
               "$ref": "#/components/schemas/ObjectId"
             },
-            "description": "Collection of page IDs that belong to this slideshow.\r\nPages will be navigated in the order specified by their Order property.",
+            "description": "Collection of page IDs that belong to this slideshow.\nPages will be navigated in the order specified by their Order property.",
             "nullable": true
           },
           "pages": {
@@ -55093,7 +56297,7 @@
             "items": {
               "$ref": "#/components/schemas/PageEntity"
             },
-            "description": "Collection of pages that belong to this slideshow (populated when needed).\r\nThis is not stored in the database but can be populated via joins/lookups.",
+            "description": "Collection of pages that belong to this slideshow (populated when needed).\nThis is not stored in the database but can be populated via joins/lookups.",
             "nullable": true
           },
           "pageCount": {
@@ -55104,7 +56308,7 @@
           },
           "estimatedTotalDurationMs": {
             "type": "integer",
-            "description": "Gets the estimated total duration of the slideshow in milliseconds.\r\nThis considers individual page durations if set, otherwise uses the default duration.",
+            "description": "Gets the estimated total duration of the slideshow in milliseconds.\nThis considers individual page durations if set, otherwise uses the default duration.",
             "format": "int32",
             "readOnly": true
           }
@@ -55237,7 +56441,7 @@
           },
           "numberOfIdenticalUnits": {
             "type": "integer",
-            "description": "Số lượng đơn vị máy móc giống hệt nhau tại trạm này có thể hoạt động song song\r\n(Thường là 1, nhưng nếu là một cụm máy giống nhau thì có thể lớn hơn 1)",
+            "description": "Số lượng đơn vị máy móc giống hệt nhau tại trạm này có thể hoạt động song song\n(Thường là 1, nhưng nếu là một cụm máy giống nhau thì có thể lớn hơn 1)",
             "format": "int32"
           },
           "imageUrl": {
@@ -56216,7 +57420,7 @@
             "items": {
               "$ref": "#/components/schemas/CommentReaction"
             },
-            "description": "List of emoji reactions on this comment.\r\nEach reaction includes the emoji and the user who reacted.",
+            "description": "List of emoji reactions on this comment.\nEach reaction includes the emoji and the user who reacted.",
             "nullable": true
           },
           "deletedAt": {
@@ -56230,7 +57434,7 @@
           },
           "lastEditedAt": {
             "type": "string",
-            "description": "The timestamp of the last edit to this comment.\r\nNote: Edit history is not tracked as per requirements.",
+            "description": "The timestamp of the last edit to this comment.\nNote: Edit history is not tracked as per requirements.",
             "format": "date-time",
             "nullable": true
           },
@@ -56240,7 +57444,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Represents a comment/conversation entry for a SystemErrorReportEntity.\r\nComments can contain text, attachments (images/videos), and receive emoji reactions."
+        "description": "Represents a comment/conversation entry for a SystemErrorReportEntity.\nComments can contain text, attachments (images/videos), and receive emoji reactions."
       },
       "SystemErrorReportCommentEntityBasePaginationResponse": {
         "type": "object",
@@ -56734,7 +57938,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Cấu hình hệ thống chung (ít liên quan đến các domain entity khác).\r\nLưu ý: các complex types bên trong có thể được lưu dưới dạng JSON trong cột DB."
+        "description": "Cấu hình hệ thống chung (ít liên quan đến các domain entity khác).\nLưu ý: các complex types bên trong có thể được lưu dưới dạng JSON trong cột DB."
       },
       "SystemSettingEntityBasePaginationResponse": {
         "type": "object",
@@ -56932,6 +58136,37 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "UnitConversionMetadataDto": {
+        "type": "object",
+        "properties": {
+          "sourceUnit": {
+            "type": "string",
+            "description": "Gets or sets the source unit",
+            "nullable": true
+          },
+          "targetUnit": {
+            "type": "string",
+            "description": "Gets or sets the target unit",
+            "nullable": true
+          },
+          "formula": {
+            "type": "string",
+            "description": "Gets or sets the conversion formula",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Gets or sets the display name",
+            "nullable": true
+          },
+          "isDefault": {
+            "type": "boolean",
+            "description": "Gets or sets whether this is the default conversion"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents unit conversion metadata for a property"
       },
       "UnitEntity": {
         "type": "object",
@@ -58753,7 +59988,7 @@
           },
           "secret": {
             "type": "string",
-            "description": "Chuỗi bí mật dùng để tạo chữ ký HMAC, giúp phía nhận xác thực yêu cầu.\r\nCần được mã hóa khi lưu trong cơ sở dữ liệu.",
+            "description": "Chuỗi bí mật dùng để tạo chữ ký HMAC, giúp phía nhận xác thực yêu cầu.\nCần được mã hóa khi lưu trong cơ sở dữ liệu.",
             "nullable": true
           },
           "pluginId": {
@@ -58771,7 +60006,7 @@
           },
           "averageResponseTimeMs": {
             "type": "number",
-            "description": "Thời gian trung bình (ms) mà TargetUrl phản hồi.\r\nHữu ích để phát hiện các webhook chậm.",
+            "description": "Thời gian trung bình (ms) mà TargetUrl phản hồi.\nHữu ích để phát hiện các webhook chậm.",
             "format": "double"
           },
           "lastAttemptAt": {
@@ -58788,7 +60023,7 @@
           },
           "lastErrorMessage": {
             "type": "string",
-            "description": "Thông báo lỗi của lần gửi thất bại gần nhất.\r\nRất quan trọng cho việc gỡ lỗi.",
+            "description": "Thông báo lỗi của lần gửi thất bại gần nhất.\nRất quan trọng cho việc gỡ lỗi.",
             "nullable": true
           },
           "isPayloadEncrypted": {
@@ -58797,12 +60032,12 @@
           },
           "publicKey": {
             "type": "string",
-            "description": "Public Key (định dạng PEM) của người nhận, dùng để mã hóa payload.\r\nSẽ là null nếu IsPayloadEncrypted = false.",
+            "description": "Public Key (định dạng PEM) của người nhận, dùng để mã hóa payload.\nSẽ là null nếu IsPayloadEncrypted = false.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Lớp đại diện cho một Webhook trong hệ thống.\r\nWebhook là một cơ chế cho phép hệ thống gửi dữ liệu đến một URL cụ thể\r\nkhi một sự kiện xảy ra. Nó thường được sử dụng để tích hợp với các dịch vụ bên ngoài\r\nhoặc để thông báo cho các hệ thống khác về các sự kiện quan trọng trong ứng dụng."
+        "description": "Lớp đại diện cho một Webhook trong hệ thống.\nWebhook là một cơ chế cho phép hệ thống gửi dữ liệu đến một URL cụ thể\nkhi một sự kiện xảy ra. Nó thường được sử dụng để tích hợp với các dịch vụ bên ngoài\nhoặc để thông báo cho các hệ thống khác về các sự kiện quan trọng trong ứng dụng."
       },
       "WebhookEntityBasePaginationResponse": {
         "type": "object",
@@ -59404,7 +60639,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Work Date Calendar Statistic Entity. Stores statistics related to work date calendars.\r\nPre-computed for performance optimization."
+        "description": "Work Date Calendar Statistic Entity. Stores statistics related to work date calendars.\nPre-computed for performance optimization."
       },
       "WorkDateCalendarStatisticEntityBasePaginationResponse": {
         "type": "object",
@@ -59495,8 +60730,9 @@
             "type": "boolean",
             "description": "Indicates whether the entity is in draft status."
           },
-          "workOrderNumber": {
+          "orderNumber": {
             "type": "string",
+            "description": "",
             "nullable": true
           },
           "productionOrderId": {
@@ -59510,23 +60746,28 @@
           },
           "plannedQuantity": {
             "type": "number",
+            "description": "",
             "format": "double"
           },
           "plannedStartDate": {
             "type": "string",
+            "description": "",
             "format": "date-time"
           },
           "plannedEndDate": {
             "type": "string",
+            "description": "",
             "format": "date-time"
           },
           "actualStartDate": {
             "type": "string",
+            "description": "",
             "format": "date-time",
             "nullable": true
           },
           "actualEndDate": {
             "type": "string",
+            "description": "",
             "format": "date-time",
             "nullable": true
           },
@@ -59534,10 +60775,12 @@
             "$ref": "#/components/schemas/ProductionStatus"
           },
           "isAssemblyWo": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": ""
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": ""
       },
       "WorkOrderEntityBasePaginationResponse": {
         "type": "object",
@@ -59907,7 +61150,7 @@
     },
     {
       "name": "Localization",
-      "description": "Controller for managing localization and translations.\r\nProvides endpoints to retrieve translations for different languages,\r\nincluding batch retrieval and file upload for updating translations."
+      "description": "Controller for managing localization and translations.\nProvides endpoints to retrieve translations for different languages,\nincluding batch retrieval and file upload for updating translations."
     },
     {
       "name": "Machine",
@@ -59997,6 +61240,14 @@
     },
     {
       "name": "RefreshToken"
+    },
+    {
+      "name": "ReportQuery",
+      "description": "Controller for executing report queries\nAPI routes follow the pattern: /api/reports/query/*\n\nSECURITY NOTES:\n- All endpoints are READ-ONLY. No data modification is allowed.\n- Authentication is REQUIRED for all endpoints (add [Authorize] attribute in production)\n- Queries are validated before execution to prevent injection attacks\n- Query complexity is limited to prevent DoS attacks"
+    },
+    {
+      "name": "Reports",
+      "description": "Controller for managing report metadata and configuration\nAPI routes follow the pattern: /api/reports/*\n\nSECURITY NOTES:\n- All endpoints are READ-ONLY. No data modification is allowed.\n- Authentication is REQUIRED for all endpoints (add [Authorize] attribute in production)\n- Metadata endpoints provide read-only access to entity schemas\n- Field suggestion endpoint uses MongoDB $distinct for safe data retrieval"
     },
     {
       "name": "Role"
