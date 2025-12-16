@@ -28,6 +28,11 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 
 import { Iconify } from 'src/components/iconify';
 import { WeekSummaryChart } from 'src/components/WeekSummaryChart';
+import {
+  DurationTimePicker,
+  parseDurationToParts,
+  partsToIsoDuration,
+} from 'src/components/duration-time-picker';
 
 import {
   generateId,
@@ -163,6 +168,29 @@ export function ShiftTemplateForm({
     },
     []
   );
+
+  // Helper to convert time field (HH:mm or ISO 8601) to ISO 8601
+  const normalizeTimeValue = useCallback((value: string): string => {
+    // If already in ISO 8601 format (starts with P), return as is
+    if (value.startsWith('P')) {
+      return value;
+    }
+    // Otherwise convert HH:mm to ISO 8601
+    if (value.includes(':')) {
+      const [hours, minutes] = value.split(':').map(Number);
+      return partsToIsoDuration({ hours, minutes });
+    }
+    return value;
+  }, []);
+
+  // Helper to convert ISO 8601 to HH:mm for display
+  const denormalizeTimeValue = useCallback((value: string): string => {
+    if (!value || !value.startsWith('P')) {
+      return value;
+    }
+    const parts = parseDurationToParts(value);
+    return `${parts.hours.toString().padStart(2, '0')}:${parts.minutes.toString().padStart(2, '0')}`;
+  }, []);
 
   // ----------------------------------------------------------------------
   // Shift Definition Handlers
@@ -455,32 +483,28 @@ export function ShiftTemplateForm({
                           }
                           sx={{ flex: 1 }}
                         />
-                        <TextField
-                          size="small"
-                          type="time"
-                          label="Start"
-                          value={breakItem.startTime}
-                          onChange={(e) =>
-                            handleSharedBreakChange(breakItem.id, 'startTime', e.target.value)
-                          }
-                          slotProps={{
-                            inputLabel: { shrink: true },
-                          }}
-                          sx={{ width: 130 }}
-                        />
-                        <TextField
-                          size="small"
-                          type="time"
-                          label="End"
-                          value={breakItem.endTime}
-                          onChange={(e) =>
-                            handleSharedBreakChange(breakItem.id, 'endTime', e.target.value)
-                          }
-                          slotProps={{
-                            inputLabel: { shrink: true },
-                          }}
-                          sx={{ width: 130 }}
-                        />
+                        <Box sx={{ width: 200 }}>
+                          <DurationTimePicker
+                            label="Start"
+                            value={normalizeTimeValue(breakItem.startTime)}
+                            onChange={(duration) =>
+                              handleSharedBreakChange(breakItem.id, 'startTime', duration)
+                            }
+                            size="small"
+                            showHelperText={false}
+                          />
+                        </Box>
+                        <Box sx={{ width: 200 }}>
+                          <DurationTimePicker
+                            label="End"
+                            value={normalizeTimeValue(breakItem.endTime)}
+                            onChange={(duration) =>
+                              handleSharedBreakChange(breakItem.id, 'endTime', duration)
+                            }
+                            size="small"
+                            showHelperText={false}
+                          />
+                        </Box>
                         <IconButton
                           size="small"
                           color="error"
@@ -556,28 +580,26 @@ export function ShiftTemplateForm({
                   />
 
                   <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                    <TextField
-                      fullWidth
-                      size="small"
-                      type="time"
-                      label="Start Time"
-                      value={def.startTime}
-                      onChange={(e) => handleDefinitionChange(def.id, 'startTime', e.target.value)}
-                      slotProps={{
-                        inputLabel: { shrink: true },
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      size="small"
-                      type="time"
-                      label="End Time"
-                      value={def.endTime}
-                      onChange={(e) => handleDefinitionChange(def.id, 'endTime', e.target.value)}
-                      slotProps={{
-                        inputLabel: { shrink: true },
-                      }}
-                    />
+                    <Box sx={{ flex: 1 }}>
+                      <DurationTimePicker
+                        label="Start Time"
+                        value={normalizeTimeValue(def.startTime)}
+                        onChange={(duration) => handleDefinitionChange(def.id, 'startTime', duration)}
+                        size="small"
+                        fullWidth
+                        showHelperText={false}
+                      />
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <DurationTimePicker
+                        label="End Time"
+                        value={normalizeTimeValue(def.endTime)}
+                        onChange={(duration) => handleDefinitionChange(def.id, 'endTime', duration)}
+                        size="small"
+                        fullWidth
+                        showHelperText={false}
+                      />
+                    </Box>
                   </Stack>
 
                   {/* Advanced Mode: Per-shift Breaks */}
@@ -630,37 +652,28 @@ export function ShiftTemplateForm({
                                 }
                                 sx={{ flex: 1 }}
                               />
-                              <TextField
-                                size="small"
-                                type="time"
-                                label="Start"
-                                value={breakItem.startTime}
-                                onChange={(e) =>
-                                  handleBreakChange(
-                                    def.id,
-                                    breakItem.id,
-                                    'startTime',
-                                    e.target.value
-                                  )
-                                }
-                                slotProps={{
-                                  inputLabel: { shrink: true },
-                                }}
-                                sx={{ width: 130 }}
-                              />
-                              <TextField
-                                size="small"
-                                type="time"
-                                label="End"
-                                value={breakItem.endTime}
-                                onChange={(e) =>
-                                  handleBreakChange(def.id, breakItem.id, 'endTime', e.target.value)
-                                }
-                                slotProps={{
-                                  inputLabel: { shrink: true },
-                                }}
-                                sx={{ width: 130 }}
-                              />
+                              <Box sx={{ width: 200 }}>
+                                <DurationTimePicker
+                                  label="Start"
+                                  value={normalizeTimeValue(breakItem.startTime)}
+                                  onChange={(duration) =>
+                                    handleBreakChange(def.id, breakItem.id, 'startTime', duration)
+                                  }
+                                  size="small"
+                                  showHelperText={false}
+                                />
+                              </Box>
+                              <Box sx={{ width: 200 }}>
+                                <DurationTimePicker
+                                  label="End"
+                                  value={normalizeTimeValue(breakItem.endTime)}
+                                  onChange={(duration) =>
+                                    handleBreakChange(def.id, breakItem.id, 'endTime', duration)
+                                  }
+                                  size="small"
+                                  showHelperText={false}
+                                />
+                              </Box>
                               <IconButton
                                 size="small"
                                 color="error"

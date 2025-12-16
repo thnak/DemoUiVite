@@ -115,6 +115,22 @@ export function generateId(): string {
 }
 
 export function parseTime(time: string): { hours: number; minutes: number } {
+  // Handle both HH:mm format and ISO 8601 duration
+  if (time.startsWith('PT') || time.startsWith('P')) {
+    // ISO 8601 format
+    let hours = 0;
+    let minutes = 0;
+    const hourMatch = time.match(/(\d+)H/);
+    const minuteMatch = time.match(/(\d+)M(?!S)/); // M not followed by S
+    if (hourMatch) {
+      hours = parseInt(hourMatch[1], 10);
+    }
+    if (minuteMatch) {
+      minutes = parseInt(minuteMatch[1], 10);
+    }
+    return { hours, minutes };
+  }
+  // HH:mm format
   const [hours, minutes] = time.split(':').map(Number);
   return { hours, minutes };
 }
@@ -180,8 +196,8 @@ export function createDefaultShiftDefinition(name: string = 'Shift 1'): ShiftDef
   return {
     id: generateId(),
     name,
-    startTime: '08:00',
-    endTime: '16:00',
+    startTime: 'PT8H', // ISO 8601 format for 08:00
+    endTime: 'PT16H', // ISO 8601 format for 16:00
     breaks: [],
     days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
   };
@@ -190,8 +206,8 @@ export function createDefaultShiftDefinition(name: string = 'Shift 1'): ShiftDef
 export function createDefaultBreak(): ShiftBreakFormData {
   return {
     id: generateId(),
-    startTime: '12:00',
-    endTime: '12:30',
+    startTime: 'PT12H', // ISO 8601 format for 12:00
+    endTime: 'PT12H30M', // ISO 8601 format for 12:30
     name: 'Lunch Break',
   };
 }
