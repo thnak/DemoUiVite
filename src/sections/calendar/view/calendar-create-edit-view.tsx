@@ -27,6 +27,8 @@ import {
   getCalendarById,
 } from 'src/api/services/generated/calendar';
 
+import { DurationTimePicker } from 'src/components/duration-time-picker';
+
 // ----------------------------------------------------------------------
 
 interface CalendarFormData {
@@ -386,22 +388,18 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
               />
 
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                <TextField
+                <DurationTimePicker
                   fullWidth
                   label="Work Date Start Time"
                   value={formData.workDateStartTime}
-                  onChange={(e) => handleInputChange('workDateStartTime', e.target.value)}
-                  placeholder="PT0H (e.g., PT6H for 6 hours, PT30M for 30 minutes)"
-                  helperText="ISO 8601 duration format - When a new work day begins"
+                  onChange={(duration) => handleInputChange('workDateStartTime', duration)}
                 />
 
-                <TextField
+                <DurationTimePicker
                   fullWidth
                   label="Time Offset"
                   value={formData.timeOffset}
-                  onChange={(e) => handleInputChange('timeOffset', e.target.value)}
-                  placeholder="PT7H (e.g., PT7H for GMT+7, PT-5H for GMT-5)"
-                  helperText="ISO 8601 duration format - Timezone offset"
+                  onChange={(duration) => handleInputChange('timeOffset', duration)}
                 />
               </Stack>
 

@@ -245,6 +245,79 @@ const request = { timeout: "30s", duration: "1 hour" };
 3. **Standard** - Internationally recognized format
 4. **Consistent** - Same format across all API endpoints
 
+## Time Duration Input Standard
+
+All time duration input fields **MUST** use the `DurationTimePicker` component which handles ISO 8601 duration format with 24-hour time display.
+
+### Using DurationTimePicker
+
+The `DurationTimePicker` component provides:
+- **24-hour time format** input (e.g., 08:30, 14:45)
+- **Automatic conversion** to/from ISO 8601 duration (e.g., PT8H30M)
+- **User-friendly display** showing both readable format and ISO 8601
+- **Consistent behavior** across all time duration inputs
+
+### ✅ Correct Usage
+
+```tsx
+import { DurationTimePicker } from 'src/components/duration-time-picker';
+
+// Basic usage
+<DurationTimePicker
+  label="Start Time"
+  value={formData.startTime} // ISO 8601 format: "PT8H30M"
+  onChange={(duration) => handleChange('startTime', duration)}
+  fullWidth
+/>
+
+// Without helper text
+<DurationTimePicker
+  label="Time Offset"
+  value="PT7H"
+  onChange={handleTimeChange}
+  showHelperText={false}
+/>
+```
+
+### ❌ Incorrect Usage
+
+```tsx
+// WRONG: Using plain TextField for duration input
+<TextField
+  label="Start Time"
+  value={formData.startTime}
+  onChange={(e) => handleChange('startTime', e.target.value)}
+  placeholder="PT8H30M"
+/>
+
+// WRONG: Not converting to ISO 8601 format
+<TextField
+  type="time"
+  value="08:30" // Should be converted to "PT8H30M"
+  onChange={handleChange}
+/>
+```
+
+### When to Use DurationTimePicker
+
+Use `DurationTimePicker` for:
+- **Time offsets** (e.g., timezone offsets, work day start time)
+- **Duration inputs** that need to be stored in ISO 8601 format
+- **Any field** that accepts ISO 8601 duration in the API
+
+**DO NOT** use for:
+- Date/time pickers (use MUI DatePicker/DateTimePicker)
+- Plain time of day without duration context (though it can be used)
+
+### Component Features
+
+| Feature | Description |
+|---------|-------------|
+| **Value** | Accepts and returns ISO 8601 duration string |
+| **Display** | Shows 24-hour time format (HH:mm) |
+| **Helper Text** | Automatically shows human-readable format and ISO 8601 |
+| **Conversion** | Handles bidirectional conversion automatically |
+
 ## Important Notes
 
 - This is a **client-side only** UI project - no server-side documentation needed
