@@ -284,7 +284,6 @@ export function DurationTimePicker({
             onChange={(e) => handlePartChange('days', e.target.value)}
             placeholder="0"
             label="Days"
-            size="small"
             sx={{ width: 80 }}
             slotProps={{
               htmlInput: {
@@ -303,7 +302,6 @@ export function DurationTimePicker({
           onChange={(e) => handlePartChange('hours', e.target.value)}
           placeholder="0"
           label="Hours"
-          size="small"
           sx={{ width: 80 }}
           slotProps={{
             htmlInput: {
@@ -321,7 +319,6 @@ export function DurationTimePicker({
           onChange={(e) => handlePartChange('minutes', e.target.value)}
           placeholder="0"
           label="Minutes"
-          size="small"
           sx={{ width: 90 }}
           slotProps={{
             htmlInput: {
@@ -340,7 +337,6 @@ export function DurationTimePicker({
             onChange={(e) => handlePartChange('seconds', e.target.value)}
             placeholder="0"
             label="Seconds"
-            size="small"
             sx={{ width: 90 }}
             slotProps={{
               htmlInput: {
