@@ -9,6 +9,8 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
+import { useRouter } from 'src/routes/hooks';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 
@@ -19,7 +21,7 @@ import { WorkingParameterTableHead } from '../working-parameter-table-head';
 import { WorkingParameterTableNoData } from '../working-parameter-table-no-data';
 import { WorkingParameterTableToolbar } from '../working-parameter-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../working-parameter-utils';
-import { getWorkingParameterPage, searchMachine, searchProduct } from '../../../api';
+import { searchMachine, searchProduct, getWorkingParameterPage } from '../../../api';
 import { WorkingParameterTableEmptyRows } from '../working-parameter-table-empty-rows';
 import {
   formatSecondsHms,
@@ -40,6 +42,7 @@ export function WorkingParameterListView() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filterName, setFilterName] = useState('');
+  const router = useRouter();
   const table = useTable();
   const [entities, setEntities] = useState<WorkingParameterEntity[]>([]);
   const [productMap, setProductMap] = useState<Record<string, string>>({});
@@ -155,7 +158,15 @@ export function WorkingParameterListView() {
         <Box sx={{ display: 'flex', gap: 1.5 }}>
           <Button variant="outlined" color="inherit" startIcon={<Iconify icon="solar:cloud-upload-bold" />}>Import</Button>
           <Button variant="outlined" color="inherit" startIcon={<Iconify icon="mdi:export" />}>Export</Button>
-          <Button variant="contained" color="inherit" startIcon={<Iconify icon="mingcute:add-line" />}>Add parameter</Button>
+          <Button
+            variant="contained"
+            color="inherit"
+            startIcon={<Iconify icon="mingcute:add-line" />}
+            onClick={() => router.push('/working-parameter/create')}
+          >
+            Add parameter
+          </Button>
+
         </Box>
       </Box>
 
