@@ -40,6 +40,9 @@ export function MachineTypeView() {
   const [machineTypes, setMachineTypes] = useState<MachineTypeProps[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { mutate: fetchMachineTypes } = useGetMachineTypePage({
     onSuccess: (data) => {
@@ -70,6 +73,12 @@ export function MachineTypeView() {
         },
       });
       queryClient.invalidateQueries({ queryKey: machineTypeKeys.all });
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    },
+    onError: () => {
+      setIsDeleting(false);
     },
   });
 
@@ -88,10 +97,25 @@ export function MachineTypeView() {
 
   const handleDeleteRow = useCallback(
     (id: string) => {
-      deleteMachineTypeMutate({ id });
+      setItemToDelete(id);
+      setDeleteDialogOpen(true);
     },
-    [deleteMachineTypeMutate]
+    []
   );
+
+  const handleConfirmDelete = useCallback(() => {
+    if (itemToDelete) {
+      setIsDeleting(true);
+      deleteMachineTypeMutate({ id: itemToDelete });
+    }
+  }, [itemToDelete, deleteMachineTypeMutate]);
+
+  const handleCloseDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [isDeleting]);
 
   const notFound = !machineTypes.length && !!filterName;
 
@@ -211,6 +235,14 @@ export function MachineTypeView() {
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
       </Card>
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        entityName="machine type"
+        loading={isDeleting}
+      />
     </DashboardContent>
   );
 }

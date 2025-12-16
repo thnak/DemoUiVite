@@ -89,6 +89,10 @@ export function MachineView() {
   const [filterName, setFilterName] = useState('');
   const [filterArea, setFilterArea] = useState('');
   const [filterInputType, setFilterInputType] = useState<MachineInputType | 'all'>('all');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Map MachineEntity (API) -> MachineProps (UI)
   const machineProps: MachineProps[] = useMemo(
@@ -137,25 +141,44 @@ export function MachineView() {
   const handleDelete = useCallback(
     async (id: string) => {
       try {
+        setIsDeleting(true);
         await deleteMachine(id);
         await fetchMachines();
         setSelected((prev) => prev.filter((i) => i !== id));
+        setDeleteDialogOpen(false);
+        setItemToDelete(null);
       } catch (err) {
         console.error('Error deleting machine:', err);
+      } finally {
+        setIsDeleting(false);
       }
     },
     [fetchMachines]
   );
 
   const handleDeleteSelected = useCallback(async () => {
+    setBulkDeleteDialogOpen(true);
+  }, []);
+
+  const handleConfirmBulkDelete = useCallback(async () => {
     try {
+      setIsDeleting(true);
       await Promise.all(selected.map((id) => deleteMachine(id)));
       await fetchMachines();
       setSelected([]);
+      setBulkDeleteDialogOpen(false);
     } catch (err) {
       console.error('Error deleting machines:', err);
+    } finally {
+      setIsDeleting(false);
     }
   }, [selected, fetchMachines]);
+
+  const handleCloseBulkDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setBulkDeleteDialogOpen(false);
+    }
+  }, [isDeleting]);
 
   const handleSelectAll = useCallback(
     (checked: boolean) => {
@@ -243,12 +266,24 @@ export function MachineView() {
 
   const handleDeleteMachine = useCallback(
     (id: string) => {
-      if (window.confirm('Are you sure you want to delete this machine?')) {
-        handleDelete(id);
-      }
+      setItemToDelete(id);
+      setDeleteDialogOpen(true);
     },
-    [handleDelete]
+    []
   );
+
+  const handleConfirmDelete = useCallback(() => {
+    if (itemToDelete) {
+      handleDelete(itemToDelete);
+    }
+  }, [itemToDelete, handleDelete]);
+
+  const handleCloseDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [isDeleting]);
 
   const emptyRowsCount = Math.max(0, rowsPerPage - dataFiltered.length);
 
@@ -439,6 +474,23 @@ export function MachineView() {
           </motion.div>
         </AnimatePresence>
       </Card>
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        entityName="machine"
+        loading={isDeleting}
+      />
+
+      <ConfirmDeleteDialog
+        open={bulkDeleteDialogOpen}
+        onClose={handleCloseBulkDeleteDialog}
+        onConfirm={handleConfirmBulkDelete}
+        entityName="machine"
+        itemCount={selected.length}
+        loading={isDeleting}
+      />
     </DashboardContent>
   );
 }
