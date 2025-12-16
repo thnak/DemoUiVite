@@ -74,7 +74,7 @@ export function ConfirmDeleteDialog({
         <Box sx={{ mb: 3 }}>
           <Typography variant="body1" gutterBottom>
             {isBulkDelete
-              ? `Are you sure you want to delete ${itemCount} ${itemCount === 1 ? entityName : `${entityName}s`}?`
+              ? `Are you sure you want to delete ${itemCount} ${entityName}${itemCount > 1 ? 's' : ''}?`
               : `Are you sure you want to delete this ${entityName}?`}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>

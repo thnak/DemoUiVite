@@ -113,7 +113,8 @@ export function UnitListView() {
   const handleConfirmDelete = useCallback(async () => {
     if (itemToDelete) {
       setIsDeleting(true);
-      // TODO: Implement delete
+      // TODO: Implement actual delete when API is connected
+      // Currently using mock data, so just simulating the delete operation
       console.log('Delete unit:', itemToDelete);
       // Simulate async delete
       await new Promise((resolve) => { setTimeout(resolve, 500); });
