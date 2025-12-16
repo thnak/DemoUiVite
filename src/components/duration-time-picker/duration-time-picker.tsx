@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 /**
  * Parse ISO 8601 duration to HH:mm format (e.g., "PT8H30M" -> "08:30")
  * Supports hours and minutes only (for time of day within 24 hours)
+ * Note: Negative durations are converted to positive for display
  */
 export function parseDurationToTime(duration: string | undefined): string {
   if (!duration) return '00:00';
@@ -17,8 +18,7 @@ export function parseDurationToTime(duration: string | undefined): string {
   let hours = 0;
   let minutes = 0;
 
-  // Handle negative durations (e.g., "PT-5H" for GMT-5)
-  const isNegative = duration.includes('-');
+  // Extract numeric values (remove any negative signs for display)
   const cleanDuration = duration.replace(/-/g, '');
 
   const hourMatch = cleanDuration.match(/(\d+)H/);
@@ -31,14 +31,8 @@ export function parseDurationToTime(duration: string | undefined): string {
     minutes = parseInt(minuteMatch[1], 10);
   }
 
-  // Apply negative sign to hours if needed
-  if (isNegative) {
-    hours = -hours;
-  }
-
   // Ensure values are in valid range for display (0-23 hours, 0-59 minutes)
-  // For negative values, we'll show them as-is for timezone offsets
-  const displayHours = Math.abs(hours) % 24;
+  const displayHours = hours % 24;
   const displayMinutes = minutes % 60;
 
   return `${displayHours.toString().padStart(2, '0')}:${displayMinutes.toString().padStart(2, '0')}`;
@@ -75,8 +69,7 @@ export function formatDurationToHumanReadable(duration: string | undefined): str
   let hours = 0;
   let minutes = 0;
 
-  // Handle negative durations
-  const isNegative = duration.includes('-');
+  // Extract numeric values
   const cleanDuration = duration.replace(/-/g, '');
 
   const hourMatch = cleanDuration.match(/(\d+)H/);
@@ -90,10 +83,9 @@ export function formatDurationToHumanReadable(duration: string | undefined): str
   }
 
   const parts: string[] = [];
-  const sign = isNegative ? '-' : '';
 
   if (hours > 0) {
-    parts.push(`${sign}${hours} ${hours === 1 ? 'hour' : 'hours'}`);
+    parts.push(`${hours} ${hours === 1 ? 'hour' : 'hours'}`);
   }
   if (minutes > 0) {
     parts.push(`${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`);
