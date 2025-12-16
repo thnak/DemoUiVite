@@ -1,6 +1,7 @@
 import type { ChangeEvent } from 'react';
 
-import { useState, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -13,10 +14,17 @@ import TableHead from '@mui/material/TableHead';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
+import {
+  unitGroupKeys,
+  useDeleteUnitGroup,
+  useGetUnitGroupPage,
+} from 'src/api/hooks/generated/use-unit-group';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -30,37 +38,61 @@ import type { UnitGroupProps } from '../unit-group-table-row';
 
 export function UnitGroupListView() {
   const router = useRouter();
-  const [unitGroups] = useState<UnitGroupProps[]>([
-    {
-      id: '1',
-      name: 'Mass',
-      description: 'Units for measuring mass and weight',
-    },
-    {
-      id: '2',
-      name: 'Volume',
-      description: 'Units for measuring volume and capacity',
-    },
-    {
-      id: '3',
-      name: 'Count',
-      description: 'Units for counting items',
-    },
-    {
-      id: '4',
-      name: 'Length',
-      description: 'Units for measuring length and distance',
-    },
-    {
-      id: '5',
-      name: 'Area',
-      description: 'Units for measuring area',
-    },
-  ]);
+  const queryClient = useQueryClient();
+
+  const [unitGroups, setUnitGroups] = useState<UnitGroupProps[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filterName, setFilterName] = useState('');
   const [selected, setSelected] = useState<string[]>([]);
+  const [orderBy, setOrderBy] = useState('name');
+  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+
+  const { mutate: fetchUnitGroups } = useGetUnitGroupPage({
+    onSuccess: (data) => {
+      const mappedUnitGroups: UnitGroupProps[] = (data.items || []).map((item) => ({
+        id: item.id?.toString() || '',
+        name: item.name || '',
+        description: item.description || '',
+      }));
+      setUnitGroups(mappedUnitGroups);
+      setTotalItems(data.totalItems || 0);
+      setIsLoading(false);
+    },
+    onError: () => {
+      setIsLoading(false);
+    },
+  });
+
+  const { mutate: deleteUnitGroupMutate } = useDeleteUnitGroup({
+    onSuccess: () => {
+      // Refetch unit groups after deletion
+      fetchUnitGroups({
+        data: [{ sortBy: orderBy, descending: order === 'desc' }],
+        params: {
+          pageNumber: page,
+          pageSize: rowsPerPage,
+          searchTerm: filterName || undefined,
+        },
+      });
+      queryClient.invalidateQueries({ queryKey: unitGroupKeys.all });
+    },
+  });
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchUnitGroups({
+      data: [{ sortBy: orderBy, descending: order === 'desc' }],
+      params: {
+        pageNumber: page,
+        pageSize: rowsPerPage,
+        searchTerm: filterName || undefined,
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, rowsPerPage, orderBy, order, filterName]);
 
   const handleFilterName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setFilterName(event.target.value);
@@ -86,13 +118,11 @@ export function UnitGroupListView() {
     [selected]
   );
 
-  const handleDeleteRow = useCallback(async (id: string) => {
-    // TODO: Implement delete
-    console.log('Delete unit group:', id);
-  }, []);
-
-  const filteredUnitGroups = unitGroups.filter((group) =>
-    group.name.toLowerCase().includes(filterName.toLowerCase())
+  const handleDeleteRow = useCallback(
+    (id: string) => {
+      deleteUnitGroupMutate({ id });
+    },
+    [deleteUnitGroupMutate]
   );
 
   return (
@@ -119,20 +149,23 @@ export function UnitGroupListView() {
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell padding="checkbox" />
-                  <TableCell>Name</TableCell>
-                  <TableCell>Description</TableCell>
-                  <TableCell align="right">Actions</TableCell>
-                </TableRow>
-              </TableHead>
+            {isLoading ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <Table sx={{ minWidth: 800 }}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="checkbox" />
+                    <TableCell>Name</TableCell>
+                    <TableCell>Description</TableCell>
+                    <TableCell align="right">Actions</TableCell>
+                  </TableRow>
+                </TableHead>
 
-              <TableBody>
-                {filteredUnitGroups
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
+                <TableBody>
+                  {unitGroups.map((row) => (
                     <UnitGroupTableRow
                       key={row.id}
                       row={row}
@@ -141,18 +174,19 @@ export function UnitGroupListView() {
                       onDeleteRow={() => handleDeleteRow(row.id)}
                     />
                   ))}
-              </TableBody>
-            </Table>
+                </TableBody>
+              </Table>
+            )}
           </TableContainer>
         </Scrollbar>
 
         <TablePagination
           component="div"
           page={page}
-          count={filteredUnitGroups.length}
+          count={totalItems}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[...STANDARD_ROWS_PER_PAGE_OPTIONS]}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
