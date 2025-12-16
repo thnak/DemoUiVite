@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
  * Parse ISO 8601 duration to HH:mm format (e.g., "PT8H30M" -> "08:30")
  * Supports hours and minutes only (for time of day within 24 hours)
  * Note: Negative durations are converted to positive for display
+ * Modulo operation ensures values fit within time input constraints
  */
 export function parseDurationToTime(duration: string | undefined): string {
   if (!duration) return '00:00';
@@ -31,7 +32,7 @@ export function parseDurationToTime(duration: string | undefined): string {
     minutes = parseInt(minuteMatch[1], 10);
   }
 
-  // Ensure values are in valid range for display (0-23 hours, 0-59 minutes)
+  // Ensure values are in valid range for HTML5 time input (0-23 hours, 0-59 minutes)
   const displayHours = hours % 24;
   const displayMinutes = minutes % 60;
 
@@ -40,6 +41,7 @@ export function parseDurationToTime(duration: string | undefined): string {
 
 /**
  * Convert HH:mm format to ISO 8601 duration (e.g., "08:30" -> "PT8H30M")
+ * Note: Input is expected to be validated by HTML5 time input (type="time")
  */
 export function timeToIsoDuration(time: string): string {
   if (!time) return 'PT0M';
