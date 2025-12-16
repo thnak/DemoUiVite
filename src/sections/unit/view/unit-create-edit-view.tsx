@@ -1,7 +1,9 @@
 import type { ChangeEvent } from 'react';
 import type { SelectChangeEvent } from '@mui/material/Select';
+import type { UnitGroupEntity } from 'src/api/types/generated';
 
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -9,51 +11,93 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
-import Switch from '@mui/material/Switch';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-
-import { useRouter } from 'src/routes/hooks';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { useGetUnitGroupPage } from 'src/api/hooks/generated/use-unit-group';
+import { useCreateUnit, useUpdateUnit, useGetUnitById } from 'src/api/hooks/generated/use-unit';
 
 // ----------------------------------------------------------------------
 
 interface UnitFormData {
   name: string;
   symbol: string;
-  group: string;
-  baseUnit: boolean;
+  unitGroupId: string;
   description: string;
 }
-
-const UNIT_GROUPS = [
-  { value: 'mass', label: 'Mass' },
-  { value: 'volume', label: 'Volume' },
-  { value: 'count', label: 'Count' },
-  { value: 'length', label: 'Length' },
-  { value: 'area', label: 'Area' },
-  { value: 'time', label: 'Time' },
-  { value: 'temperature', label: 'Temperature' },
-];
 
 interface UnitCreateEditViewProps {
   isEdit?: boolean;
 }
 
 export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) {
-  const router = useRouter();
+  const navigate = useNavigate();
+  const { id } = useParams();
 
   const [formData, setFormData] = useState<UnitFormData>({
     name: '',
     symbol: '',
-    group: '',
-    baseUnit: false,
+    unitGroupId: '',
     description: '',
+  });
+  const [unitGroups, setUnitGroups] = useState<UnitGroupEntity[]>([]);
+  const [isLoadingGroups, setIsLoadingGroups] = useState(true);
+  const [isLoadingUnit, setIsLoadingUnit] = useState(isEdit);
+
+  // Fetch unit groups
+  const { mutate: fetchUnitGroups } = useGetUnitGroupPage({
+    onSuccess: (data) => {
+      setUnitGroups(data.items || []);
+      setIsLoadingGroups(false);
+    },
+    onError: () => {
+      setIsLoadingGroups(false);
+    },
+  });
+
+  // Fetch unit data if editing
+  const { data: unitData } = useGetUnitById(id || '', {
+    enabled: isEdit && !!id,
+  });
+
+  useEffect(() => {
+    // Fetch all unit groups
+    fetchUnitGroups({
+      data: [{ sortBy: 'name', descending: false }],
+      params: {
+        pageNumber: 0,
+        pageSize: 100,
+      },
+    });
+  }, [fetchUnitGroups]);
+
+  useEffect(() => {
+    if (isEdit && unitData) {
+      setFormData({
+        name: unitData.name || '',
+        symbol: unitData.symbol || '',
+        unitGroupId: unitData.unitGroupId?.toString() || '',
+        description: unitData.description || '',
+      });
+      setIsLoadingUnit(false);
+    }
+  }, [isEdit, unitData]);
+
+  const { mutate: createUnit, isPending: isCreating } = useCreateUnit({
+    onSuccess: () => {
+      navigate('/settings/units');
+    },
+  });
+
+  const { mutate: updateUnit, isPending: isUpdating } = useUpdateUnit({
+    onSuccess: () => {
+      navigate('/settings/units');
+    },
   });
 
   const handleChange = useCallback(
@@ -69,26 +113,48 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
   const handleSelectChange = useCallback((event: SelectChangeEvent<string>) => {
     setFormData((prev) => ({
       ...prev,
-      group: event.target.value,
-    }));
-  }, []);
-
-  const handleSwitchChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      baseUnit: event.target.checked,
+      unitGroupId: event.target.value,
     }));
   }, []);
 
   const handleSave = useCallback(() => {
-    // TODO: Implement save
-    console.log('Save unit:', formData);
-    router.push('/settings/units');
-  }, [formData, router]);
+    if (isEdit && id) {
+      // Update existing unit
+      updateUnit({
+        id,
+        data: [
+          { key: 'name', value: formData.name },
+          { key: 'symbol', value: formData.symbol },
+          { key: 'unitGroupId', value: formData.unitGroupId },
+          { key: 'description', value: formData.description },
+        ],
+      });
+    } else {
+      // Create new unit
+      createUnit({
+        data: {
+          name: formData.name,
+          symbol: formData.symbol,
+          unitGroupId: formData.unitGroupId,
+          description: formData.description,
+        },
+      });
+    }
+  }, [formData, isEdit, id, createUnit, updateUnit]);
 
   const handleCancel = useCallback(() => {
-    router.push('/settings/units');
-  }, [router]);
+    navigate('/settings/units');
+  }, [navigate]);
+
+  if (isLoadingUnit || isLoadingGroups) {
+    return (
+      <DashboardContent>
+        <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+          <CircularProgress />
+        </Box>
+      </DashboardContent>
+    );
+  }
 
   return (
     <DashboardContent>
@@ -112,6 +178,7 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
                     label="Name"
                     value={formData.name}
                     onChange={handleChange('name')}
+                    required
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
@@ -120,27 +187,24 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
                     label="Symbol"
                     value={formData.symbol}
                     onChange={handleChange('symbol')}
+                    required
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
-                  <FormControl fullWidth>
-                    <InputLabel>Group</InputLabel>
-                    <Select value={formData.group} onChange={handleSelectChange} label="Group">
-                      {UNIT_GROUPS.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                  <FormControl fullWidth required>
+                    <InputLabel>Unit Group</InputLabel>
+                    <Select
+                      value={formData.unitGroupId}
+                      onChange={handleSelectChange}
+                      label="Unit Group"
+                    >
+                      {unitGroups.map((group) => (
+                        <MenuItem key={group.id?.toString()} value={group.id?.toString()}>
+                          {group.name}
                         </MenuItem>
                       ))}
                     </Select>
                   </FormControl>
-                </Grid>
-                <Grid size={{ xs: 12, md: 6 }}>
-                  <FormControlLabel
-                    control={
-                      <Switch checked={formData.baseUnit} onChange={handleSwitchChange} />
-                    }
-                    label="Base Unit"
-                  />
                 </Grid>
                 <Grid size={{ xs: 12 }}>
                   <TextField
@@ -156,11 +220,15 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
             </Card>
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-              <Button variant="outlined" onClick={handleCancel}>
+              <Button variant="outlined" onClick={handleCancel} disabled={isCreating || isUpdating}>
                 Cancel
               </Button>
-              <Button variant="contained" onClick={handleSave}>
-                Save
+              <Button
+                variant="contained"
+                onClick={handleSave}
+                disabled={isCreating || isUpdating || !formData.name || !formData.symbol || !formData.unitGroupId}
+              >
+                {isCreating || isUpdating ? 'Saving...' : 'Save'}
               </Button>
             </Box>
           </Stack>
