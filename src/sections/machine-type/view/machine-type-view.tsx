@@ -19,6 +19,7 @@ import { machineTypeKeys, useDeleteMachineType, useGetMachineTypePage } from 'sr
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { emptyRows } from '../machine-type-utils';
 import { MachineTypeTableRow } from '../machine-type-table-row';

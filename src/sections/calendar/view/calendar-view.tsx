@@ -33,6 +33,7 @@ import {
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { CalendarTableToolbar } from '../calendar-table-toolbar';
 
@@ -85,6 +86,10 @@ export function CalendarView() {
   const [filterName, setFilterName] = useState('');
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const [selectedCalendarId, setSelectedCalendarId] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchCalendars = useCallback(async () => {
     setLoading(true);
@@ -111,11 +116,16 @@ export function CalendarView() {
   const handleDelete = useCallback(
     async (id: string) => {
       try {
+        setIsDeleting(true);
         await deleteCalendar(id);
         await fetchCalendars();
         setSelected((prev) => prev.filter((i) => i !== id));
+        setDeleteDialogOpen(false);
+        setItemToDelete(null);
       } catch (err) {
         console.error('Error deleting calendar:', err);
+      } finally {
+        setIsDeleting(false);
       }
     },
     [fetchCalendars]
@@ -144,19 +154,47 @@ export function CalendarView() {
   const handleDeleteCalendar = useCallback(() => {
     if (selectedCalendarId) {
       handleClosePopover();
-      handleDelete(selectedCalendarId);
+      setItemToDelete(selectedCalendarId);
+      setDeleteDialogOpen(true);
     }
-  }, [selectedCalendarId, handleDelete, handleClosePopover]);
+  }, [selectedCalendarId, handleClosePopover]);
+
+  const handleConfirmDelete = useCallback(() => {
+    if (itemToDelete) {
+      handleDelete(itemToDelete);
+    }
+  }, [itemToDelete, handleDelete]);
+
+  const handleCloseDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [isDeleting]);
 
   const handleDeleteSelected = useCallback(async () => {
+    setBulkDeleteDialogOpen(true);
+  }, []);
+
+  const handleConfirmBulkDelete = useCallback(async () => {
     try {
+      setIsDeleting(true);
       await Promise.all(selected.map((id) => deleteCalendar(id)));
       await fetchCalendars();
       setSelected([]);
+      setBulkDeleteDialogOpen(false);
     } catch (err) {
       console.error('Error deleting calendars:', err);
+    } finally {
+      setIsDeleting(false);
     }
   }, [selected, fetchCalendars]);
+
+  const handleCloseBulkDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setBulkDeleteDialogOpen(false);
+    }
+  }, [isDeleting]);
 
   const handleSelectAll = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -379,6 +417,23 @@ export function CalendarView() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        entityName="calendar"
+        loading={isDeleting}
+      />
+
+      <ConfirmDeleteDialog
+        open={bulkDeleteDialogOpen}
+        onClose={handleCloseBulkDeleteDialog}
+        onConfirm={handleConfirmBulkDelete}
+        entityName="calendar"
+        itemCount={selected.length}
+        loading={isDeleting}
+      />
 
       <Popover
         open={!!openPopover}

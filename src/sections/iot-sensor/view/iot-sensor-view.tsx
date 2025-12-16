@@ -20,6 +20,7 @@ import { ioTSensorKeys, useDeleteIoTSensor } from 'src/api/hooks/generated/use-i
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { emptyRows } from '../iot-sensor-utils';
 import { IoTSensorTableRow } from '../iot-sensor-table-row';

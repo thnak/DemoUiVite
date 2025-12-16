@@ -15,6 +15,7 @@ import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { ProductGroupTableRow } from '../product-group-table-row';
 import { ProductGroupTableHead } from '../product-group-table-head';

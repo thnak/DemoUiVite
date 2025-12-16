@@ -28,6 +28,7 @@ import {
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { UnitGroupTableRow } from '../unit-group-table-row';
 import { UnitGroupTableToolbar } from '../unit-group-table-toolbar';

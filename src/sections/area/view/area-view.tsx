@@ -19,6 +19,7 @@ import { areaKeys, useDeleteArea, useGetAreaPage } from 'src/api/hooks/generated
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { emptyRows } from '../area-utils';
 import { AreaTableRow } from '../area-table-row';
@@ -39,6 +40,9 @@ export function AreaView() {
   const [areas, setAreas] = useState<AreaProps[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { mutate: fetchAreas } = useGetAreaPage({
     onSuccess: (data) => {
@@ -68,6 +72,12 @@ export function AreaView() {
         },
       });
       queryClient.invalidateQueries({ queryKey: areaKeys.all });
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    },
+    onError: () => {
+      setIsDeleting(false);
     },
   });
 
@@ -86,10 +96,25 @@ export function AreaView() {
 
   const handleDeleteRow = useCallback(
     (id: string) => {
-      deleteAreaMutate({ id });
+      setItemToDelete(id);
+      setDeleteDialogOpen(true);
     },
-    [deleteAreaMutate]
+    []
   );
+
+  const handleConfirmDelete = useCallback(() => {
+    if (itemToDelete) {
+      setIsDeleting(true);
+      deleteAreaMutate({ id: itemToDelete });
+    }
+  }, [itemToDelete, deleteAreaMutate]);
+
+  const handleCloseDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [isDeleting]);
 
   const notFound = !areas.length && !!filterName;
 
@@ -217,6 +242,14 @@ export function AreaView() {
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
       </Card>
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        entityName="area"
+        loading={isDeleting}
+      />
     </DashboardContent>
   );
 }

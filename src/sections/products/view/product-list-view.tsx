@@ -22,6 +22,7 @@ import { deleteProduct, getProductPage } from 'src/api/services/generated/produc
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { ProductTableRow } from '../product-table-row';
 import { ProductTableHead } from '../product-table-head';
@@ -48,6 +49,9 @@ export function ProductListView() {
   const [orderBy, setOrderBy] = useState<string>('name');
   const [filterStock, setFilterStock] = useState<StockStatus | 'all'>('all');
   const [filterPublish, setFilterPublish] = useState<ProductStatus | 'all'>('all');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Sửa lỗi: Thêm dependencies cho filters
   const fetchProducts = useCallback(async () => {
@@ -115,17 +119,36 @@ export function ProductListView() {
 
   const handleDeleteProduct = useCallback(
     async (id: string) => {
+      setItemToDelete(id);
+      setDeleteDialogOpen(true);
+    },
+    []
+  );
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (itemToDelete) {
       try {
-        await deleteProduct(id);
+        setIsDeleting(true);
+        await deleteProduct(itemToDelete);
         await fetchProducts();
-        setSelected((prev) => prev.filter((i) => i !== id));
+        setSelected((prev) => prev.filter((i) => i !== itemToDelete));
+        setDeleteDialogOpen(false);
+        setItemToDelete(null);
       } catch (err) {
         console.error('Error deleting product:', err);
         setError('Không thể xóa sản phẩm');
+      } finally {
+        setIsDeleting(false);
       }
-    },
-    [fetchProducts]
-  );
+    }
+  }, [itemToDelete, fetchProducts]);
+
+  const handleCloseDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [isDeleting]);
 
   const handleFilterName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilterName(event.target.value);
@@ -304,6 +327,14 @@ export function ProductListView() {
           }}
         />
       </Card>
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        entityName="product"
+        loading={isDeleting}
+      />
     </DashboardContent>
   );
 }

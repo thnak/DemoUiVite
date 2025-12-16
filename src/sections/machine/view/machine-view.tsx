@@ -27,6 +27,7 @@ import { deleteMachine, postapiMachinesearchmachines } from 'src/api/services/ge
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { getComparator } from '../utils';
 import { useRouter } from '../../../routes/hooks';

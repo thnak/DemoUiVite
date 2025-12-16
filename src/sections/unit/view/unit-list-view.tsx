@@ -20,6 +20,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { UnitTableRow } from '../unit-table-row';
 import { UnitTableToolbar } from '../unit-table-toolbar';
@@ -76,6 +77,9 @@ export function UnitListView() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterName, setFilterName] = useState('');
   const [selected, setSelected] = useState<string[]>([]);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleFilterName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setFilterName(event.target.value);
@@ -102,9 +106,29 @@ export function UnitListView() {
   );
 
   const handleDeleteRow = useCallback(async (id: string) => {
-    // TODO: Implement delete
-    console.log('Delete unit:', id);
+    setItemToDelete(id);
+    setDeleteDialogOpen(true);
   }, []);
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (itemToDelete) {
+      setIsDeleting(true);
+      // TODO: Implement delete
+      console.log('Delete unit:', itemToDelete);
+      // Simulate async delete
+      await new Promise((resolve) => { setTimeout(resolve, 500); });
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [itemToDelete]);
+
+  const handleCloseDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [isDeleting]);
 
   const filteredUnits = units.filter((unit) =>
     unit.name.toLowerCase().includes(filterName.toLowerCase())
@@ -174,6 +198,14 @@ export function UnitListView() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        entityName="unit"
+        loading={isDeleting}
+      />
     </DashboardContent>
   );
 }
