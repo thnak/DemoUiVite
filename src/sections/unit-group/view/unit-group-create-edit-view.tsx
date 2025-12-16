@@ -1,6 +1,7 @@
 import type { ChangeEvent } from 'react';
+import type { UnitGroupEntity } from 'src/api/types/generated';
 
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -9,10 +10,15 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import {
+  useCreateUnitGroup,
+  useUpdateUnitGroup,
+} from 'src/api/hooks/generated/use-unit-group';
 
 // ----------------------------------------------------------------------
 
@@ -23,9 +29,13 @@ interface UnitGroupFormData {
 
 interface UnitGroupCreateEditViewProps {
   isEdit?: boolean;
+  currentUnitGroup?: UnitGroupEntity;
 }
 
-export function UnitGroupCreateEditView({ isEdit = false }: UnitGroupCreateEditViewProps) {
+export function UnitGroupCreateEditView({
+  isEdit = false,
+  currentUnitGroup,
+}: UnitGroupCreateEditViewProps) {
   const router = useRouter();
 
   const [formData, setFormData] = useState<UnitGroupFormData>({
@@ -33,25 +43,70 @@ export function UnitGroupCreateEditView({ isEdit = false }: UnitGroupCreateEditV
     description: '',
   });
 
-  const handleChange = useCallback(
-    (field: keyof UnitGroupFormData) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setFormData((prev) => ({
-        ...prev,
-        [field]: event.target.value,
-      }));
+  useEffect(() => {
+    if (isEdit && currentUnitGroup) {
+      setFormData({
+        name: currentUnitGroup.name || '',
+        description: currentUnitGroup.description || '',
+      });
+    }
+  }, [isEdit, currentUnitGroup]);
+
+  const { mutate: createUnitGroup, isPending: isCreating } = useCreateUnitGroup({
+    onSuccess: () => {
+      router.push('/settings/unit-groups');
     },
+    onError: (error) => {
+      console.error('Failed to create unit group:', error);
+    },
+  });
+
+  const { mutate: updateUnitGroup, isPending: isUpdating } = useUpdateUnitGroup({
+    onSuccess: () => {
+      router.push('/settings/unit-groups');
+    },
+    onError: (error) => {
+      console.error('Failed to update unit group:', error);
+    },
+  });
+
+  const handleChange = useCallback(
+    (field: keyof UnitGroupFormData) =>
+      (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setFormData((prev) => ({
+          ...prev,
+          [field]: event.target.value,
+        }));
+      },
     []
   );
 
   const handleSave = useCallback(() => {
-    // TODO: Implement save
-    console.log('Save unit group:', formData);
-    router.push('/settings/unit-groups');
-  }, [formData, router]);
+    if (isEdit && currentUnitGroup?.id) {
+      // Update existing unit group
+      updateUnitGroup({
+        id: currentUnitGroup.id.toString(),
+        data: [
+          { key: 'name', value: formData.name },
+          { key: 'description', value: formData.description },
+        ],
+      });
+    } else {
+      // Create new unit group
+      createUnitGroup({
+        data: {
+          name: formData.name,
+          description: formData.description,
+        },
+      });
+    }
+  }, [isEdit, currentUnitGroup, formData, createUnitGroup, updateUnitGroup]);
 
   const handleCancel = useCallback(() => {
     router.push('/settings/unit-groups');
   }, [router]);
+
+  const isSubmitting = isCreating || isUpdating;
 
   return (
     <DashboardContent>
@@ -91,12 +146,17 @@ export function UnitGroupCreateEditView({ isEdit = false }: UnitGroupCreateEditV
             </Card>
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-              <Button variant="outlined" onClick={handleCancel}>
+              <Button variant="outlined" onClick={handleCancel} disabled={isSubmitting}>
                 Cancel
               </Button>
-              <Button variant="contained" onClick={handleSave}>
-                Save
-              </Button>
+              <LoadingButton
+                variant="contained"
+                onClick={handleSave}
+                loading={isSubmitting}
+                disabled={!formData.name}
+              >
+                {isEdit ? 'Update' : 'Create'}
+              </LoadingButton>
             </Box>
           </Stack>
         </Grid>
