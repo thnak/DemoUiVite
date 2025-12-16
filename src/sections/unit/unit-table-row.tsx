@@ -69,14 +69,6 @@ export function UnitTableRow({ row, selected, onSelectRow, onDeleteRow }: UnitTa
 
         <TableCell>{row.group}</TableCell>
 
-        <TableCell>{row.baseUnit ? 'Yes' : 'No'}</TableCell>
-
-        <TableCell>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {row.description}
-          </Typography>
-        </TableCell>
-
         <TableCell align="right">
           <IconButton onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
