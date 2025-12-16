@@ -64,10 +64,8 @@ export function UnitListView() {
       setIsLoading(false);
     },
   });
-  ]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [filterName, setFilterName] = useState('');
   const [selected, setSelected] = useState<string[]>([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
@@ -84,7 +82,15 @@ export function UnitListView() {
         UnitGroupName: currentTab !== 'all' ? currentTab : undefined,
       },
     });
-  }, [fetchUnits, table.orderBy, table.order, table.page, table.rowsPerPage, filterName, currentTab]);
+  }, [
+    fetchUnits,
+    table.orderBy,
+    table.order,
+    table.page,
+    table.rowsPerPage,
+    filterName,
+    currentTab,
+  ]);
 
   const { mutate: deleteUnitMutate } = useDeleteUnit({
     onSuccess: () => {
@@ -98,19 +104,14 @@ export function UnitListView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table.page, table.rowsPerPage, table.orderBy, table.order, filterName, currentTab]);
 
-  const handleDeleteRow = useCallback(
-    (id: string) => {
-      deleteUnitMutate({ id });
-    },
-    [deleteUnitMutate]
-  );
-
   const handleTabChange = useCallback(
     (_event: React.SyntheticEvent, newValue: string) => {
       setCurrentTab(newValue);
       table.onResetPage();
     },
     [table]
+  );
+
   const handleDeleteRow = useCallback(async (id: string) => {
     setItemToDelete(id);
     setDeleteDialogOpen(true);
@@ -119,16 +120,14 @@ export function UnitListView() {
   const handleConfirmDelete = useCallback(async () => {
     if (itemToDelete) {
       setIsDeleting(true);
-      // TODO: Implement actual delete when API is connected
-      // Currently using mock data, so just simulating the delete operation
-      console.log('Delete unit:', itemToDelete);
-      // Simulate async delete
-      await new Promise((resolve) => { setTimeout(resolve, 500); });
+
+      deleteUnitMutate({ id: itemToDelete });
+
       setIsDeleting(false);
       setDeleteDialogOpen(false);
       setItemToDelete(null);
     }
-  }, [itemToDelete]);
+  }, [deleteUnitMutate, itemToDelete]);
 
   const handleCloseDeleteDialog = useCallback(() => {
     if (!isDeleting) {
@@ -136,10 +135,6 @@ export function UnitListView() {
       setItemToDelete(null);
     }
   }, [isDeleting]);
-
-  const filteredUnits = units.filter((unit) =>
-    unit.name.toLowerCase().includes(filterName.toLowerCase())
-  );
 
   const notFound = !units.length && !!filterName;
 
@@ -201,11 +196,7 @@ export function UnitListView() {
               bgcolor: 'background.neutral',
             }}
           >
-            <Tab
-              value="all"
-              label={`All (${totalItems})`}
-              iconPosition="end"
-            />
+            <Tab value="all" label={`All (${totalItems})`} iconPosition="end" />
             {groupTabs.map((group) => (
               <Tab
                 key={group}
