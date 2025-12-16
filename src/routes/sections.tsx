@@ -71,6 +71,7 @@ export const UnitConversionEditPage = lazy(() => import('src/pages/unit-conversi
 export const IoTSensorListPage = lazy(() => import('src/pages/iot-sensor-list'));
 export const IoTSensorCreatePage = lazy(() => import('src/pages/iot-sensor-create'));
 export const IoTSensorEditPage = lazy(() => import('src/pages/iot-sensor-edit'));
+export const ReportBuilderCanvasPage = lazy(() => import('src/pages/report-builder-canvas'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -159,6 +160,7 @@ export const routesSection: RouteObject[] = [
       { path: 'settings/unit-conversions', element: <UnitConversionListPage /> },
       { path: 'settings/unit-conversions/create', element: <UnitConversionCreatePage /> },
       { path: 'settings/unit-conversions/:id/edit', element: <UnitConversionEditPage /> },
+      { path: 'report-builder', element: <ReportBuilderCanvasPage /> },
     ],
   },
   {
