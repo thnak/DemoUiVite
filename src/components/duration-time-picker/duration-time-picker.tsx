@@ -1,111 +1,146 @@
 import type { TextFieldProps } from '@mui/material/TextField';
 
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useState } from 'react';
 
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-
-import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
 /**
- * Parse ISO 8601 duration to HH:mm format (e.g., "PT8H30M" -> "08:30")
- * Supports hours and minutes only (for time of day within 24 hours)
- * Note: Negative durations are converted to positive for display
+ * Precision mode for duration picker
+ * - 'hours-minutes': Hours and minutes (default, for time of day)
+ * - 'days-hours-minutes': Days, hours, and minutes (for longer durations)
+ * - 'hours-minutes-seconds': Hours, minutes, and seconds (for precise durations)
  */
-export function parseDurationToTime(duration: string | undefined): string {
-  if (!duration) return '00:00';
+export type DurationPrecision = 'hours-minutes' | 'days-hours-minutes' | 'hours-minutes-seconds';
 
+// ----------------------------------------------------------------------
+
+/**
+ * Parse ISO 8601 duration to component parts
+ */
+export function parseDurationToParts(duration: string | undefined): {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+} {
+  if (!duration) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+
+  let days = 0;
   let hours = 0;
   let minutes = 0;
+  let seconds = 0;
 
   // Extract numeric values (remove any negative signs for display)
   const cleanDuration = duration.replace(/-/g, '');
 
+  const dayMatch = cleanDuration.match(/(\d+)D/);
   const hourMatch = cleanDuration.match(/(\d+)H/);
-  const minuteMatch = cleanDuration.match(/(\d+)M/);
+  const minuteMatch = cleanDuration.match(/(\d+)M(?!S)/); // M not followed by S
+  const secondMatch = cleanDuration.match(/(\d+)S/);
 
+  if (dayMatch) {
+    days = parseInt(dayMatch[1], 10);
+  }
   if (hourMatch) {
     hours = parseInt(hourMatch[1], 10);
   }
   if (minuteMatch) {
     minutes = parseInt(minuteMatch[1], 10);
   }
+  if (secondMatch) {
+    seconds = parseInt(secondMatch[1], 10);
+  }
 
-  // Ensure values are in valid range for display (0-23 hours, 0-59 minutes)
-  const displayHours = hours % 24;
-  const displayMinutes = minutes % 60;
-
-  return `${displayHours.toString().padStart(2, '0')}:${displayMinutes.toString().padStart(2, '0')}`;
+  return { days, hours, minutes, seconds };
 }
 
 /**
- * Convert HH:mm format to ISO 8601 duration (e.g., "08:30" -> "PT8H30M")
+ * Convert component parts to ISO 8601 duration
  */
-export function timeToIsoDuration(time: string): string {
-  if (!time) return 'PT0M';
+export function partsToIsoDuration(parts: {
+  days?: number;
+  hours?: number;
+  minutes?: number;
+  seconds?: number;
+}): string {
+  const { days = 0, hours = 0, minutes = 0, seconds = 0 } = parts;
 
-  const [hours, minutes] = time.split(':').map(Number);
-  let duration = 'PT';
+  if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
+    return 'PT0M';
+  }
 
+  let duration = 'P';
+  
+  if (days > 0) {
+    duration += `${days}D`;
+  }
+  
+  duration += 'T';
+  
   if (hours > 0) {
     duration += `${hours}H`;
   }
   if (minutes > 0) {
     duration += `${minutes}M`;
   }
+  if (seconds > 0) {
+    duration += `${seconds}S`;
+  }
+
+  // Remove T if no time components
   if (duration === 'PT') {
-    duration = 'PT0M';
+    return 'PT0M';
   }
 
   return duration;
 }
 
 /**
- * Format ISO 8601 duration to human-readable format (e.g., "PT8H30M" -> "8 hours 30 minutes")
+ * Format ISO 8601 duration to human-readable format
  */
-export function formatDurationToHumanReadable(duration: string | undefined): string {
+export function formatDurationToHumanReadable(
+  duration: string | undefined,
+  precision: DurationPrecision = 'hours-minutes'
+): string {
   if (!duration) return '0 minutes';
 
-  let hours = 0;
-  let minutes = 0;
+  const parts = parseDurationToParts(duration);
+  const { days, hours, minutes, seconds } = parts;
 
-  // Extract numeric values
-  const cleanDuration = duration.replace(/-/g, '');
+  const result: string[] = [];
 
-  const hourMatch = cleanDuration.match(/(\d+)H/);
-  const minuteMatch = cleanDuration.match(/(\d+)M/);
-
-  if (hourMatch) {
-    hours = parseInt(hourMatch[1], 10);
+  if (precision === 'days-hours-minutes' && days > 0) {
+    result.push(`${days} ${days === 1 ? 'day' : 'days'}`);
   }
-  if (minuteMatch) {
-    minutes = parseInt(minuteMatch[1], 10);
-  }
-
-  const parts: string[] = [];
-
+  
   if (hours > 0) {
-    parts.push(`${hours} ${hours === 1 ? 'hour' : 'hours'}`);
+    result.push(`${hours} ${hours === 1 ? 'hour' : 'hours'}`);
   }
+  
   if (minutes > 0) {
-    parts.push(`${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`);
+    result.push(`${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`);
+  }
+  
+  if (precision === 'hours-minutes-seconds' && seconds > 0) {
+    result.push(`${seconds} ${seconds === 1 ? 'second' : 'seconds'}`);
   }
 
-  if (parts.length === 0) {
+  if (result.length === 0) {
+    if (precision === 'hours-minutes-seconds') return '0 seconds';
     return '0 minutes';
   }
 
-  return parts.join(' ');
+  return result.join(' ');
 }
 
 // ----------------------------------------------------------------------
 
-export interface DurationTimePickerProps
-  extends Omit<TextFieldProps, 'value' | 'onChange' | 'type'> {
+export interface DurationTimePickerProps extends Omit<TextFieldProps, 'value' | 'onChange'> {
   /**
    * ISO 8601 duration string value (e.g., "PT8H30M")
    */
@@ -120,18 +155,41 @@ export interface DurationTimePickerProps
    * @default true
    */
   showHelperText?: boolean;
+  /**
+   * Precision mode for duration input
+   * @default 'hours-minutes'
+   */
+  precision?: DurationPrecision;
 }
 
 /**
  * DurationTimePicker Component
  *
- * A time picker component for ISO 8601 duration format with 24-hour display.
+ * A duration picker with separate inputs for better UX.
+ * Supports multiple precision modes.
  *
  * @example
  * ```tsx
+ * // Hours and minutes (default)
  * <DurationTimePicker
  *   label="Start Time"
  *   value="PT8H30M"
+ *   onChange={(duration) => console.log(duration)}
+ * />
+ *
+ * // Days, hours, minutes
+ * <DurationTimePicker
+ *   label="Duration"
+ *   value="P2DT8H30M"
+ *   precision="days-hours-minutes"
+ *   onChange={(duration) => console.log(duration)}
+ * />
+ *
+ * // Hours, minutes, seconds
+ * <DurationTimePicker
+ *   label="Time"
+ *   value="PT2H30M45S"
+ *   precision="hours-minutes-seconds"
  *   onChange={(duration) => console.log(duration)}
  * />
  * ```
@@ -139,46 +197,55 @@ export interface DurationTimePickerProps
 export function DurationTimePicker({
   value,
   onChange,
+  label,
   helperText,
   showHelperText = true,
+  precision = 'hours-minutes',
   ...other
 }: DurationTimePickerProps) {
-  // Convert ISO 8601 duration to HH:mm format for the time input
-  const timeValue = useMemo(() => parseDurationToTime(value), [value]);
+  // Parse current value into parts
+  const parts = useMemo(() => parseDurationToParts(value), [value]);
 
-  // Handle text input change with format validation
-  const handleTimeChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      let newTime = event.target.value;
-      
-      // Remove any non-digit and non-colon characters
-      newTime = newTime.replace(/[^\d:]/g, '');
-      
-      // Auto-format as user types
-      if (newTime.length === 2 && !newTime.includes(':')) {
-        newTime += ':';
-      }
-      
-      // Limit to HH:mm format
-      const parts = newTime.split(':');
-      if (parts.length > 2) {
-        newTime = `${parts[0]}:${parts[1]}`;
-      }
-      
-      // Validate and convert when complete
-      if (newTime.match(/^\d{2}:\d{2}$/)) {
-        const [hours, minutes] = newTime.split(':').map(Number);
-        
-        // Validate ranges
-        if (hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59) {
-          if (onChange) {
-            const isoDuration = timeToIsoDuration(newTime);
-            onChange(isoDuration);
-          }
-        }
+  // Local state for each input field (as strings to allow empty state)
+  const [daysStr, setDaysStr] = useState(() => (parts.days > 0 ? String(parts.days) : ''));
+  const [hoursStr, setHoursStr] = useState(() => (parts.hours > 0 ? String(parts.hours) : ''));
+  const [minutesStr, setMinutesStr] = useState(() => (parts.minutes > 0 ? String(parts.minutes) : ''));
+  const [secondsStr, setSecondsStr] = useState(() => (parts.seconds > 0 ? String(parts.seconds) : ''));
+
+  // Update local state when value prop changes externally
+  useMemo(() => {
+    setDaysStr(parts.days > 0 ? String(parts.days) : '');
+    setHoursStr(parts.hours > 0 ? String(parts.hours) : '');
+    setMinutesStr(parts.minutes > 0 ? String(parts.minutes) : '');
+    setSecondsStr(parts.seconds > 0 ? String(parts.seconds) : '');
+  }, [parts.days, parts.hours, parts.minutes, parts.seconds]);
+
+  // Handle input changes
+  const handlePartChange = useCallback(
+    (partName: 'days' | 'hours' | 'minutes' | 'seconds', newValue: string) => {
+      // Update local state
+      const updateState = {
+        days: partName === 'days' ? setDaysStr : null,
+        hours: partName === 'hours' ? setHoursStr : null,
+        minutes: partName === 'minutes' ? setMinutesStr : null,
+        seconds: partName === 'seconds' ? setSecondsStr : null,
+      };
+
+      updateState[partName]?.(newValue);
+
+      // Parse all values (empty string = 0)
+      const days = partName === 'days' ? (newValue === '' ? 0 : parseInt(newValue, 10) || 0) : parts.days;
+      const hours = partName === 'hours' ? (newValue === '' ? 0 : parseInt(newValue, 10) || 0) : parts.hours;
+      const minutes = partName === 'minutes' ? (newValue === '' ? 0 : parseInt(newValue, 10) || 0) : parts.minutes;
+      const seconds = partName === 'seconds' ? (newValue === '' ? 0 : parseInt(newValue, 10) || 0) : parts.seconds;
+
+      // Convert to ISO 8601 and notify parent
+      if (onChange) {
+        const isoDuration = partsToIsoDuration({ days, hours, minutes, seconds });
+        onChange(isoDuration);
       }
     },
-    [onChange]
+    [onChange, parts.days, parts.hours, parts.minutes, parts.seconds]
   );
 
   // Generate helper text
@@ -186,7 +253,7 @@ export function DurationTimePicker({
     if (helperText) return helperText;
     if (!showHelperText) return undefined;
 
-    const humanReadable = formatDurationToHumanReadable(value);
+    const humanReadable = formatDurationToHumanReadable(value, precision);
     return (
       <>
         <Typography component="span" variant="caption">
@@ -199,34 +266,97 @@ export function DurationTimePicker({
         )}
       </>
     );
-  }, [helperText, showHelperText, value]);
+  }, [helperText, showHelperText, value, precision]);
 
   return (
-    <TextField
-      {...other}
-      value={timeValue}
-      onChange={handleTimeChange}
-      helperText={generatedHelperText}
-      placeholder="HH:mm (24-hour)"
-      slotProps={{
-        inputLabel: { shrink: true },
-        input: {
-          ...other.slotProps?.input,
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton edge="end" size="small" disabled>
-                <Iconify icon="solar:clock-circle-outline" width={20} />
-              </IconButton>
-            </InputAdornment>
-          ),
-        },
-        htmlInput: {
-          ...other.slotProps?.htmlInput,
-          maxLength: 5, // HH:mm = 5 characters
-          pattern: '[0-2][0-9]:[0-5][0-9]', // 24-hour pattern
-        },
-        ...other.slotProps,
-      }}
-    />
+    <Box>
+      {label && (
+        <Typography variant="body2" sx={{ mb: 0.5, color: 'text.secondary' }}>
+          {label}
+        </Typography>
+      )}
+      <Stack direction="row" spacing={1} alignItems="center">
+        {precision === 'days-hours-minutes' && (
+          <TextField
+            {...other}
+            type="number"
+            value={daysStr}
+            onChange={(e) => handlePartChange('days', e.target.value)}
+            placeholder="0"
+            label="Days"
+            size="small"
+            sx={{ width: 80 }}
+            slotProps={{
+              htmlInput: {
+                min: 0,
+                max: 365,
+                ...other.slotProps?.htmlInput,
+              },
+            }}
+          />
+        )}
+
+        <TextField
+          {...other}
+          type="number"
+          value={hoursStr}
+          onChange={(e) => handlePartChange('hours', e.target.value)}
+          placeholder="0"
+          label="Hours"
+          size="small"
+          sx={{ width: 80 }}
+          slotProps={{
+            htmlInput: {
+              min: 0,
+              max: precision === 'days-hours-minutes' ? 23 : 9999,
+              ...other.slotProps?.htmlInput,
+            },
+          }}
+        />
+
+        <TextField
+          {...other}
+          type="number"
+          value={minutesStr}
+          onChange={(e) => handlePartChange('minutes', e.target.value)}
+          placeholder="0"
+          label="Minutes"
+          size="small"
+          sx={{ width: 90 }}
+          slotProps={{
+            htmlInput: {
+              min: 0,
+              max: 59,
+              ...other.slotProps?.htmlInput,
+            },
+          }}
+        />
+
+        {precision === 'hours-minutes-seconds' && (
+          <TextField
+            {...other}
+            type="number"
+            value={secondsStr}
+            onChange={(e) => handlePartChange('seconds', e.target.value)}
+            placeholder="0"
+            label="Seconds"
+            size="small"
+            sx={{ width: 90 }}
+            slotProps={{
+              htmlInput: {
+                min: 0,
+                max: 59,
+                ...other.slotProps?.htmlInput,
+              },
+            }}
+          />
+        )}
+      </Stack>
+      {generatedHelperText && (
+        <Typography variant="caption" sx={{ mt: 0.5, display: 'block', color: 'text.secondary' }}>
+          {generatedHelperText}
+        </Typography>
+      )}
+    </Box>
   );
 }
