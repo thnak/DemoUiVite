@@ -97,7 +97,7 @@ export function MachineView() {
         imageUrl: x.imageUrl ?? '',
         area: x.areaName ?? '',
         inputType: 'WeightChannels' as MachineInputType, // TODO: map từ calculationMode
-        numberOfInputChannels: 0,
+        numberOfInputChannels: x.numberOfChannels ?? 0,
         workCalendar: x.calendarName ?? '',
       })),
     [machines]
