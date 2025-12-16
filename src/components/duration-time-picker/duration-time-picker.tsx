@@ -4,6 +4,10 @@ import { useMemo, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+
+import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -144,13 +148,36 @@ export function DurationTimePicker({
   // Convert ISO 8601 duration to HH:mm format for the time input
   const timeValue = useMemo(() => parseDurationToTime(value), [value]);
 
-  // Convert HH:mm format back to ISO 8601 duration
+  // Handle text input change with format validation
   const handleTimeChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const newTime = event.target.value;
-      if (onChange) {
-        const isoDuration = timeToIsoDuration(newTime);
-        onChange(isoDuration);
+      let newTime = event.target.value;
+      
+      // Remove any non-digit and non-colon characters
+      newTime = newTime.replace(/[^\d:]/g, '');
+      
+      // Auto-format as user types
+      if (newTime.length === 2 && !newTime.includes(':')) {
+        newTime += ':';
+      }
+      
+      // Limit to HH:mm format
+      const parts = newTime.split(':');
+      if (parts.length > 2) {
+        newTime = `${parts[0]}:${parts[1]}`;
+      }
+      
+      // Validate and convert when complete
+      if (newTime.match(/^\d{2}:\d{2}$/)) {
+        const [hours, minutes] = newTime.split(':').map(Number);
+        
+        // Validate ranges
+        if (hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59) {
+          if (onChange) {
+            const isoDuration = timeToIsoDuration(newTime);
+            onChange(isoDuration);
+          }
+        }
       }
     },
     [onChange]
@@ -179,12 +206,27 @@ export function DurationTimePicker({
   return (
     <TextField
       {...other}
-      type="time"
       value={timeValue}
       onChange={handleTimeChange}
       helperText={generatedHelperText}
+      placeholder="HH:mm (24-hour)"
       slotProps={{
         inputLabel: { shrink: true },
+        input: {
+          ...other.slotProps?.input,
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton edge="end" size="small" disabled>
+                <Iconify icon="solar:clock-circle-outline" width={20} />
+              </IconButton>
+            </InputAdornment>
+          ),
+        },
+        htmlInput: {
+          ...other.slotProps?.htmlInput,
+          maxLength: 5, // HH:mm = 5 characters
+          pattern: '[0-2][0-9]:[0-5][0-9]', // 24-hour pattern
+        },
         ...other.slotProps,
       }}
     />
