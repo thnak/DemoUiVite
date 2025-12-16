@@ -21,6 +21,7 @@ import { unitKeys, useDeleteUnit, usePostapiUnitgetunits } from 'src/api/hooks/g
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { emptyRows } from '../unit-utils';
 import { UnitTableRow } from '../unit-table-row';
@@ -63,6 +64,14 @@ export function UnitListView() {
       setIsLoading(false);
     },
   });
+  ]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [filterName, setFilterName] = useState('');
+  const [selected, setSelected] = useState<string[]>([]);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const refetchUnits = useCallback(() => {
     setIsLoading(true);
@@ -102,6 +111,34 @@ export function UnitListView() {
       table.onResetPage();
     },
     [table]
+  const handleDeleteRow = useCallback(async (id: string) => {
+    setItemToDelete(id);
+    setDeleteDialogOpen(true);
+  }, []);
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (itemToDelete) {
+      setIsDeleting(true);
+      // TODO: Implement actual delete when API is connected
+      // Currently using mock data, so just simulating the delete operation
+      console.log('Delete unit:', itemToDelete);
+      // Simulate async delete
+      await new Promise((resolve) => { setTimeout(resolve, 500); });
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [itemToDelete]);
+
+  const handleCloseDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [isDeleting]);
+
+  const filteredUnits = units.filter((unit) =>
+    unit.name.toLowerCase().includes(filterName.toLowerCase())
   );
 
   const notFound = !units.length && !!filterName;
@@ -249,6 +286,14 @@ export function UnitListView() {
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
       </Card>
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        entityName="unit"
+        loading={isDeleting}
+      />
     </DashboardContent>
   );
 }

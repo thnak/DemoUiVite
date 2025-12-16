@@ -18,6 +18,7 @@
     "stopMachineReason": "Lý do dừng máy",
     "productGroup": "Nhóm sản phẩm",
     "machine": "Máy móc",
+    "machineType": "Loại máy",
     "machineGroup": "Nhóm máy",
     "machineTracking": "Theo dõi máy",
     "productionTracking": "Theo dõi sản xuất",

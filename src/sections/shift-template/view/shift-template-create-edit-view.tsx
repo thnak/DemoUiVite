@@ -69,12 +69,12 @@ function formDataToApiEntity(data: ShiftTemplateFormData): ShiftTemplateEntity {
     for (const day of def.days) {
       shifts.push({
         applicableDay: day,
-        startTime: timeToIsoDuration(def.startTime),
-        endTime: timeToIsoDuration(def.endTime),
+        startTime: def.startTime, // Already in ISO 8601 format from DurationTimePicker
+        endTime: def.endTime, // Already in ISO 8601 format from DurationTimePicker
         name: def.name,
         breakDefinitions: def.breaks.map((b) => ({
-          startTime: timeToIsoDuration(b.startTime),
-          endTime: timeToIsoDuration(b.endTime),
+          startTime: b.startTime, // Already in ISO 8601 format from DurationTimePicker
+          endTime: b.endTime, // Already in ISO 8601 format from DurationTimePicker
           description: b.name,
         })),
         isOverTimeShift: false,
@@ -128,12 +128,12 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
               ([name, { shift, days }]) => ({
                 id: generateId(),
                 name,
-                startTime: parseDurationToTime(shift.startTime),
-                endTime: parseDurationToTime(shift.endTime),
+                startTime: shift.startTime || 'PT8H', // Keep as ISO 8601 for DurationTimePicker
+                endTime: shift.endTime || 'PT16H', // Keep as ISO 8601 for DurationTimePicker
                 breaks: (shift.breakDefinitions || []).map((b) => ({
                   id: generateId(),
-                  startTime: parseDurationToTime(b.startTime),
-                  endTime: parseDurationToTime(b.endTime),
+                  startTime: b.startTime || 'PT12H', // Keep as ISO 8601 for DurationTimePicker
+                  endTime: b.endTime || 'PT13H', // Keep as ISO 8601 for DurationTimePicker
                   name: b.description ?? undefined,
                 })),
                 days,
@@ -153,8 +153,8 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
                       {
                         id: generateId(),
                         name: 'Shift 1',
-                        startTime: '08:00',
-                        endTime: '16:00',
+                        startTime: 'PT8H', // Use ISO 8601 for DurationTimePicker
+                        endTime: 'PT16H', // Use ISO 8601 for DurationTimePicker
                         breaks: [],
                         days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
                       },
