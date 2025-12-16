@@ -37004,6 +37004,110 @@
         }
       }
     },
+    "/api/Unit/get-unit-conversions": {
+      "post": {
+        "tags": [
+          "Unit"
+        ],
+        "summary": "Retrieves a paginated list of unit conversions based on the provided request.",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitConversionPageResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitConversionPageResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitConversionPageResponse"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitConversionPageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/unitconversion/{id}": {
       "get": {
         "tags": [
@@ -58561,6 +58665,44 @@
         },
         "additionalProperties": false
       },
+      "UnitConversionDto": {
+        "type": "object",
+        "properties": {
+          "fromUnitId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "fromUnitName": {
+            "type": "string",
+            "description": "Name of the source unit",
+            "nullable": true
+          },
+          "toUnitId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "toUnitName": {
+            "type": "string",
+            "description": "Name of the target unit",
+            "nullable": true
+          },
+          "conversionFactor": {
+            "type": "number",
+            "description": "Conversion factor from source unit to target unit",
+            "format": "double"
+          },
+          "offset": {
+            "type": "number",
+            "description": "Offset to be applied during conversion",
+            "format": "double"
+          },
+          "formula": {
+            "type": "string",
+            "description": "Formula used for conversion, if applicable",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Data Transfer Object for Unit Conversion"
+      },
       "UnitConversionEntity": {
         "type": "object",
         "properties": {
@@ -58705,6 +58847,49 @@
         },
         "additionalProperties": false,
         "description": "Represents unit conversion metadata for a property"
+      },
+      "UnitConversionPageResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnitConversionDto"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": ""
       },
       "UnitDto": {
         "type": "object",
@@ -59059,10 +59244,12 @@
               "type": "integer",
               "format": "int64"
             },
+            "description": "Total units per group",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Paginated response for units"
       },
       "UnitSystem": {
         "enum": [
