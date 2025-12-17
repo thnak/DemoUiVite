@@ -79,6 +79,7 @@ export function WorkingParameterListView() {
         const machineId = entity.machineId?.toString() || '';
         const idealSeconds = timeSpanToSeconds(entity.idealCycleTime);
         const downSeconds  = timeSpanToSeconds(entity.downtimeThreshold);
+        const speedLossThreshold = timeSpanToSeconds(entity.speedLossThreshold)
         console.log('idealCycleTime raw =', entity.idealCycleTime, typeof entity.idealCycleTime);
         console.log('downtimeThreshold raw =', entity.downtimeThreshold, typeof entity.downtimeThreshold);
 
@@ -91,6 +92,7 @@ export function WorkingParameterListView() {
           quantityPerSignal: entity.quantityPerCycle || 0,
           idealCycleTime: formatSecondsHms(idealSeconds) || '',
           downtimeThreshold: formatSecondsHms(downSeconds) || '',
+          speedLossThreshold: formatSecondsHms(speedLossThreshold) || '',
         };
       }),
     [entities, productMap, machineMap]
@@ -198,7 +200,8 @@ export function WorkingParameterListView() {
                   { id: 'idealCycleTime', label: 'Ideal Cycle Time' },
                   { id: 'quantityPerSignal', label: 'Quantity per Output Signal' },
                   { id: 'downtimeThreshold', label: 'Downtime Threshold' },
-                  { id: '' },
+                  { id: 'speedLossThreshold', label: 'SpeedLossThreshold' },
+                  { id: ''}
                 ]}
               />
               <TableBody>

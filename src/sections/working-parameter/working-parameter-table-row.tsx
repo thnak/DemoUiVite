@@ -21,6 +21,7 @@ export type WorkingParameterProps = {
   quantityPerSignal: number;
   idealCycleTime: string;
   downtimeThreshold: string;
+  speedLossThreshold: string;
 };
 export function timeSpanToSeconds(input: unknown): number {
   if (input == null) return 0;
@@ -133,6 +134,9 @@ export function WorkingParameterTableRow({
         <TableCell>{row.quantityPerSignal}</TableCell>
 
         <TableCell>{row.downtimeThreshold}</TableCell>
+
+        <TableCell>{row.speedLossThreshold}</TableCell>
+
 
         <TableCell align="right">
           <IconButton onClick={handleOpenPopover}>
