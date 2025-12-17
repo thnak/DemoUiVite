@@ -27,8 +27,10 @@ export type ProductProps = {
   coverUrl: string;
   category: string;
   stockStatus: StockStatus;
+  stock: number;
   publish: ProductStatus;
   createdAt: string;
+  price: number;
 };
 
 type ProductTableRowProps = {
@@ -147,15 +149,20 @@ export function ProductTableRow({
         </TableCell>
 
         <TableCell>
-          <Box sx={{ width: 100 }}>
-            <LinearProgress
-              variant="determinate"
-              value={getStockProgress(row.stockStatus)}
-              color={getStockColor(row.stockStatus)}
-              sx={{ height: 6, borderRadius: 1 }}
-            />
-          </Box>
+          <Label>{(row.stockStatus)}</Label>
+
         </TableCell>
+
+        <TableCell>
+          <Label>{(row.stock ?? 0)}</Label>
+        </TableCell>
+
+        <TableCell>
+          <Label>{(row.price ?? 0).toLocaleString('vi-VN')}</Label>
+        </TableCell>
+
+
+
 
         <TableCell>
           <Label

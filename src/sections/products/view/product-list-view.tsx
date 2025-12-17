@@ -86,6 +86,8 @@ export function ProductListView() {
     publish: p.isDraft ? 'draft' : 'published',
     category: 'category',
     stockStatus: 'in_stock',
+    stock: p.stockQuantity ?? 0,
+    price: p.price ?? 0,
   }));
 
   // Lọc dữ liệu ở client-side
@@ -255,7 +257,8 @@ export function ProductListView() {
                 headLabel={[
                   { id: 'name', label: 'Sản phẩm' },
                   { id: 'createdAt', label: 'Ngày tạo' },
-                  { id: 'stock', label: 'Kho' },
+                  { id: 'stockStatus', label: 'Tình trạng' },
+                  { id: 'stock', label: 'Tồn kho'},
                   { id: 'price', label: 'Giá' },
                   { id: 'publish', label: 'Trạng thái' },
                   { id: '' },
