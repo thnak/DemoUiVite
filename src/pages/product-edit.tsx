@@ -23,6 +23,7 @@ export default function Page() {
             ? {
                 id: currentProduct.id,
                 name: currentProduct.name,
+                code: currentProduct.code,
                 category: currentProduct.category,
                 price: currentProduct.price,
                 stock: currentProduct.stock,

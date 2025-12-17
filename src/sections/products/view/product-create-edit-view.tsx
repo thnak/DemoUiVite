@@ -24,11 +24,13 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
 
+import { createProduct, updateProduct, updateWorkingParameter } from '../../../api';
+
 // ----------------------------------------------------------------------
 
 interface ProductFormData {
   name: string;
-  description: string;
+  code: string;
   category: string;
   price: string;
   stock: string;
@@ -48,7 +50,7 @@ interface ProductCreateEditViewProps {
   currentProduct?: {
     id: string;
     name: string;
-    description?: string;
+    code: string;
     category: string;
     price: number;
     stock: number;
@@ -68,10 +70,10 @@ export function ProductCreateEditView({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState<ProductFormData>({
     name: currentProduct?.name || '',
-    description: currentProduct?.description || '',
+    code: currentProduct?.code || '',
     category: currentProduct?.category?.toLowerCase() || '',
-    price: currentProduct?.price?.toString() || '',
-    stock: currentProduct?.stock?.toString() || '',
+    price: currentProduct?.price?.toString() ?? '' ,
+    stock: currentProduct?.stock?.toString() ?? '',
   });
 
   const handleCloseError = useCallback(() => {
@@ -120,7 +122,7 @@ export function ProductCreateEditView({
     []
   );
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     if (!formData.name) {
       setErrorMessage('Product name is required');
       return;
@@ -137,15 +139,46 @@ export function ProductCreateEditView({
       setErrorMessage('Valid stock quantity is required');
       return;
     }
+    const price = Number(formData.price);
+    const stock = Number(formData.stock);
 
-    console.log(`${isEdit ? 'Updating' : 'Creating'} product with data:`, {
-      ...formData,
-      published,
-      imageUrl,
-    });
+    if (!Number.isFinite(price) || price < 0) {
+      setErrorMessage('Valid price is required')
+      return;
+    };
+    if (!Number.isFinite(stock) || stock < 0) {
+      setErrorMessage('Valid stock quantity is required')
+      return;
+    };
+    try {
+      if (isEdit && currentProduct?.id) {
+        await updateProduct(
+          currentProduct.id,
+          [
+            { key: 'name', value: formData.name },
+            { key: 'code', value: formData.code },
+            { key: 'category', value: formData.category },
+            { key: 'price', value: formData.price },
+            { key: 'stock', value: formData.stock },
+          ],
+        );
+      } else {
+        await createProduct(
+          {
+            name: formData.name,
+            code: formData.code,
+            price: Number(formData.price),
+            stockQuantity: Number(formData.stock),
+          }
+
+        );
+      }
+    router.push('/products');
+  } catch (e: any) {
+    setErrorMessage(e?.message ?? 'Something went wrong');
+  }
 
     // Navigate back to list after save
-    router.push('/products');
   }, [formData, published, imageUrl, isEdit, router]);
 
   const handleCancel = useCallback(() => {
@@ -278,9 +311,9 @@ export function ProductCreateEditView({
               <Grid size={{ xs: 12 }}>
                 <TextField
                   fullWidth
-                  label="Description"
-                  value={formData.description}
-                  onChange={handleInputChange('description')}
+                  label="Code"
+                  value={formData.code}
+                  onChange={handleInputChange('code')}
                   multiline
                   rows={3}
                 />

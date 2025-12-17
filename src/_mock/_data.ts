@@ -126,6 +126,7 @@ export const _products = [...Array(20)].map((_, index) => {
     stockStatus,
     publish: _publishStatus(index),
     createdAt: _createdAt(index),
+    code: '',
   };
 });
 
