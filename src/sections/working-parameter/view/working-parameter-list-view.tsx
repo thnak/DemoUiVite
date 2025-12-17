@@ -71,7 +71,6 @@ export function WorkingParameterListView() {
   }, []);
 
 
-
   // Function to map WorkingParameterEntity to WorkingParameterProps
   const templates: WorkingParameterProps[] = React.useMemo(
     () =>

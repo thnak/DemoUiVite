@@ -30,14 +30,18 @@ import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
+import { createWorkingParameter, updateWorkingParameter } from '../../../api';
+import { DurationTimePicker } from '../../../components/duration-time-picker';
+import { MachineSelector, ProductSelector } from '../../../components/selectors';
+
 
 interface WorkingFormData {
-  machine: string;
-  product: string;
+  machine: string | null;
+  product: string | null;
   idealCycleTime: string;
-  downtimeThreshold: string | null;
-  speedLossThreshold: string | null;
-  quantityPerCycle: string | null;
+  downtimeThreshold: string | undefined;
+  speedLossThreshold: string | undefined;
+  quantityPerCycle: string | undefined;
 }
 interface WorkingParameterCreateEditViewProps {
   isEdit?: boolean;
@@ -63,19 +67,15 @@ currentWorkingParameter,
     idealCycleTime: currentWorkingParameter?.idealCycleTime?.toString()|| '',
     downtimeThreshold: currentWorkingParameter?.downtimeThreshold?.toString() || '',
     speedLossThreshold: currentWorkingParameter?.speedLossThreshold?.toString() || '',
-    quantityPerCycle: currentWorkingParameter?.quantityPerCycle || '',
+    quantityPerCycle: currentWorkingParameter?.quantityPerCycle || '1',
   });
   const handleCloseError = useCallback(() => {
     setErrorMessage(null);
   }, []);
   const handleInputChange = useCallback(
-    (field: keyof WorkingFormData) =>
-      (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setFormData((prev) => ({
-          ...prev,
-          [field]: event.target.value,
-        }));
-      },
+    (field: keyof WorkingFormData, value: string | boolean) => {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+    },
     []
   );
   const handleSelectChange = useCallback(
@@ -90,36 +90,62 @@ currentWorkingParameter,
   const handleCancel = useCallback(() => {
     router.push('/working-parameter');
   }, [router]);
-  const handleSubmit = useCallback(() => {
-    if (!formData.machine) {
-      setErrorMessage('machine  is required');
-      return;
-    }
-    if (!formData.product) {
-      setErrorMessage('product is required');
-      return;
-    }
-    if (!formData.quantityPerCycle) {
-      setErrorMessage('quantityPerCycle is required');
-      return;
-    }
-    if (!formData.downtimeThreshold) {
-      setErrorMessage('downtimeThreshold is required');
-      return;
-    }
-    if (!formData.idealCycleTime) {
-      setErrorMessage('idealCycleTime is required');
-      return;
-    }
-    if (!formData.speedLossThreshold) {
-      setErrorMessage('speedLossThreshold is required');
-      return;
-    }
+  const toNumberOrUndefined = (v: string | null | undefined) => {
+    const s = String(v ?? '').trim();
+    if (!s) return undefined;
+    const n = Number(s);
+    return Number.isFinite(n) ? n : undefined;
+  };
 
+  const handleSubmit = useCallback(async () => {
+    if (!formData.machine) { setErrorMessage('machine is required'); return; }
+    if (!formData.product) { setErrorMessage('product is required'); return; }
+    if (!formData.quantityPerCycle) { setErrorMessage('quantityPerCycle is required'); return; }
+    if (!formData.downtimeThreshold) { setErrorMessage('downtimeThreshold is required'); return; }
+    if (!formData.idealCycleTime) { setErrorMessage('idealCycleTime is required'); return; }
 
-    // Navigate back to list after save
-    router.push('/working-parameter');
-  }, [formData, isEdit, router]);
+    try {
+      if (isEdit && currentWorkingParameter?.id) {
+        await updateWorkingParameter(
+          currentWorkingParameter.id,
+           [
+            { key: 'machine', value: formData.machine },
+            { key: 'product', value: formData.product },
+            { key: 'idealCycleTime', value: formData.idealCycleTime },
+            { key: 'quantityPerCycle', value: toNumberOrUndefined(formData.quantityPerCycle) },
+            { key: 'downtimeThreshold', value: formData.downtimeThreshold },
+            { key: 'speedLossThreshold', value: formData.speedLossThreshold },
+          ],
+        );
+      } else {
+        await createWorkingParameter({
+          machineId: formData.machine,
+          productId: formData.product,
+          idealCycleTime: formData.idealCycleTime,
+          quantityPerCycle: toNumberOrUndefined(formData.quantityPerCycle),
+          downtimeThreshold: formData.downtimeThreshold,
+          speedLossThreshold: formData.speedLossThreshold,
+        });
+      }
+
+      router.push('/working-parameter');
+    } catch (e: any) {
+      setErrorMessage(e?.message ?? 'Something went wrong');
+    }
+  }, [formData, isEdit, currentWorkingParameter?.id, createWorkingParameter, updateWorkingParameter]);
+
+  const handleMachineChange = useCallback((machine: string | null) => {
+      setFormData((prev) => ({
+          ...prev,
+          machine,
+      }));
+  }, []);
+  const handleProductChange = useCallback((product: string | null) => {
+      setFormData((prev) => ({
+          ...prev,
+          product,
+      }));
+  }, []);
   return (
     <DashboardContent>
       <Box sx={{ mb: 5 }}>
@@ -151,54 +177,52 @@ currentWorkingParameter,
           <Card sx={{ p: 3 }}>
             <Grid container spacing={3}>
               <Grid size={{ xs: 12 }}>
-                <TextField
-                  fullWidth
-                  label="Product name"
-                  value={formData.product}
-                  onChange={handleInputChange('product')}
-                />
+                <MachineSelector value={formData.machine}
+                onChange={handleMachineChange}
+                label="Machine" />
               </Grid>
 
               <Grid size={{ xs: 12 }}>
-                <TextField
-                  fullWidth
-                  label="Machine name"
-                  value={formData.machine}
-                  onChange={handleInputChange('machine')}
-                  multiline
-                  rows={3}
-                />
+                  <ProductSelector value={formData.product}
+                                   onChange={handleProductChange}
+                                   label="Product" />
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                <DurationTimePicker
                   fullWidth
                   label="Ideal Cycle Time"
                   value={formData.idealCycleTime}
-                  onChange={handleInputChange('idealCycleTime')}
-                  multiline
-                  rows={3}
+                  onChange={(duration) => handleInputChange('idealCycleTime', duration)}
+                  precision="hours-minutes-seconds"
                 />
-              </Grid>
+              </Stack>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                <DurationTimePicker
                   fullWidth
                   label="Downtime Threshold"
                   value={formData.downtimeThreshold}
-                  onChange={handleInputChange('downtimeThreshold')}
-                  multiline
-                  rows={3}
+                  onChange={(duration) => handleInputChange('downtimeThreshold', duration)}
+                  precision="hours-minutes-seconds"
                 />
-              </Grid>
+              </Stack>
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                <DurationTimePicker
+                  fullWidth
+                  label="SpeedLoss Threshold"
+                  value={formData.speedLossThreshold}
+                  onChange={(duration) => handleInputChange('speedLossThreshold', duration)}
+                  precision="hours-minutes-seconds"
+
+                />
+              </Stack>
               <Grid size={{ xs: 12 }}>
                 <TextField
                   fullWidth
                   label="Quantity Per Cycle"
                   value={formData.quantityPerCycle}
-                  onChange={handleInputChange('quantityPerCycle')}
-                  multiline
-                  rows={3}
+                  onChange={(e) => handleInputChange('quantityPerCycle', e.target.value)}
                 />
               </Grid>
             </Grid>
