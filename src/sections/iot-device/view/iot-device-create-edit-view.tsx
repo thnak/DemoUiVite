@@ -32,10 +32,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { useSearchIoTSensor } from 'src/api/hooks/generated/use-io-tsensor';
 import { useCreateIoTDevice, useUpdateIoTDevice } from 'src/api/hooks/generated/use-io-tdevice';
 import { useGetapiIotSensorgetsensorfromdevicedeviceCode } from 'src/api/hooks/generated/use-iot-sensor';
-import {
-  usePostapiDeviceaddsensortodevice,
-  usePostapiDeviceremovesensorfromdevice,
-} from 'src/api/hooks/generated/use-device';
+import { useAddSensorToDevice, useRemoveSensorFromDevice } from 'src/api/hooks/use-device';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -141,7 +138,7 @@ export function IoTDeviceCreateEditView({
     },
   });
 
-  const { mutate: addSensorToDevice, isPending: isAddingSensor } = usePostapiDeviceaddsensortodevice({
+  const { mutate: addSensorToDevice, isPending: isAddingSensor } = useAddSensorToDevice({
     onSuccess: (result) => {
       if (result.isSuccess) {
         refetchSensors();
@@ -157,7 +154,7 @@ export function IoTDeviceCreateEditView({
   });
 
   const { mutate: removeSensorFromDevice, isPending: isRemovingSensor } =
-    usePostapiDeviceremovesensorfromdevice({
+    useRemoveSensorFromDevice({
       onSuccess: (result) => {
         if (result.isSuccess) {
           refetchSensors();
