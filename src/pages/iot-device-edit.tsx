@@ -61,7 +61,7 @@ export default function Page() {
           mqttPassword: deviceData.mqttPassword || '',
           mqttUsername: deviceData.mqttUsername || '',
           type: deviceData.type || '',
-          machineId: deviceData.machineId?.toString() || '',
+          machineId: deviceData.machineId || '',
           machineName: '',
           imageUrl: deviceData.imageUrl || '',
         }}
