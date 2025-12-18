@@ -21,8 +21,8 @@ import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useGetMachineById } from 'src/api/hooks/generated/use-machine';
 import { apiConfig } from 'src/api/config';
+import { useGetMachineById } from 'src/api/hooks/generated/use-machine';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { MachineHubService, MachineRunState as MachineRunStateEnum } from 'src/services/machineHub';
 
