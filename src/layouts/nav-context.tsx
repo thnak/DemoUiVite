@@ -4,9 +4,9 @@ import { useMemo, useContext, createContext } from 'react';
 
 import { usePathname } from 'src/routes/hooks';
 
+import { useOINavData } from './nav-config-oi';
 import { useMMSNavData } from './nav-config-mms';
 import { useNavData } from './nav-config-dashboard';
-import { useOINavData } from './nav-config-oi';
 import { useDefaultNavData } from './nav-config-default';
 import { useSettingsNavData } from './nav-config-settings';
 import { useMasterDataNavData } from './nav-config-master-data';

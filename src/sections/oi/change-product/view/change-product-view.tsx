@@ -7,21 +7,20 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import {
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  CircularProgress,
-} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListItemButton,
+  CircularProgress,
+} from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { searchProduct } from 'src/api/services/generated/product';
