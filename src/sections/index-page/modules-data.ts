@@ -44,6 +44,14 @@ export const MODULES: ModuleItem[] = [
     color: 'primary',
   },
   {
+    id: 'oi',
+    title: 'OI - Operation Interface',
+    subtitle: 'Operator dashboard, product change, defect tracking',
+    icon: 'solar:grid-bold-duotone',
+    path: '/oi/dashboard',
+    color: 'secondary',
+  },
+  {
     id: 'settings',
     title: 'Settings',
     subtitle: 'System configuration - units, conversions, plugins, scheduler',
