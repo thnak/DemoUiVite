@@ -1,13 +1,13 @@
 import type { StopMachineReasonGroupEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchStopMachineReasonGroup } from 'src/api/hooks/generated/use-stop-machine-reason-group';
+import { useSearchStopMachineReasonGroup, useGetStopMachineReasonGroupById } from 'src/api/hooks/generated/use-stop-machine-reason-group';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,23 @@ export function StopMachineReasonGroupSelector({
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedStopMachineReasonGroup, setSelectedStopMachineReasonGroup] = useState<StopMachineReasonGroupEntity | null>(null);
 
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetStopMachineReasonGroupById(
+    value || '',
+    {
+      enabled: !!value && !selectedStopMachineReasonGroup,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedStopMachineReasonGroup(entityById);
+    } else if (!value) {
+      setSelectedStopMachineReasonGroup(null);
+    }
+  }, [entityById, value]);
+
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
@@ -42,7 +59,7 @@ export function StopMachineReasonGroupSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchStopMachineReasonGroup(
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchStopMachineReasonGroup(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -50,6 +67,7 @@ export function StopMachineReasonGroupSelector({
   );
 
   const items = searchResults?.data || [];
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: StopMachineReasonGroupEntity | null) => {

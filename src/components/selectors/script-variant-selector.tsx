@@ -1,13 +1,13 @@
 import type { ScriptVariantEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchScriptVariant } from 'src/api/hooks/generated/use-script-variant';
+import { useSearchScriptVariant, useGetScriptVariantById } from 'src/api/hooks/generated/use-script-variant';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,23 @@ export function ScriptVariantSelector({
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedScriptVariant, setSelectedScriptVariant] = useState<ScriptVariantEntity | null>(null);
 
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetScriptVariantById(
+    value || '',
+    {
+      enabled: !!value && !selectedScriptVariant,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedScriptVariant(entityById);
+    } else if (!value) {
+      setSelectedScriptVariant(null);
+    }
+  }, [entityById, value]);
+
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
@@ -42,7 +59,7 @@ export function ScriptVariantSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchScriptVariant(
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchScriptVariant(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -50,6 +67,7 @@ export function ScriptVariantSelector({
   );
 
   const items = searchResults?.data || [];
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: ScriptVariantEntity | null) => {

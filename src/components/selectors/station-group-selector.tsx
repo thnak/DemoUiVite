@@ -1,13 +1,13 @@
 import type { StationGroupEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchStationGroup } from 'src/api/hooks/generated/use-station-group';
+import { useSearchStationGroup, useGetStationGroupById } from 'src/api/hooks/generated/use-station-group';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,23 @@ export function StationGroupSelector({
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedStationGroup, setSelectedStationGroup] = useState<StationGroupEntity | null>(null);
 
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetStationGroupById(
+    value || '',
+    {
+      enabled: !!value && !selectedStationGroup,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedStationGroup(entityById);
+    } else if (!value) {
+      setSelectedStationGroup(null);
+    }
+  }, [entityById, value]);
+
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
@@ -42,7 +59,7 @@ export function StationGroupSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchStationGroup(
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchStationGroup(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -50,6 +67,7 @@ export function StationGroupSelector({
   );
 
   const items = searchResults?.data || [];
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: StationGroupEntity | null) => {

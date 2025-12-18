@@ -1,13 +1,13 @@
 import type { StationEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchStation } from 'src/api/hooks/generated/use-station';
+import { useSearchStation, useGetStationById } from 'src/api/hooks/generated/use-station';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,23 @@ export function StationSelector({
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedStation, setSelectedStation] = useState<StationEntity | null>(null);
 
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetStationById(
+    value || '',
+    {
+      enabled: !!value && !selectedStation,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedStation(entityById);
+    } else if (!value) {
+      setSelectedStation(null);
+    }
+  }, [entityById, value]);
+
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
@@ -42,7 +59,7 @@ export function StationSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchStation(
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchStation(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -50,6 +67,7 @@ export function StationSelector({
   );
 
   const items = searchResults?.data || [];
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: StationEntity | null) => {

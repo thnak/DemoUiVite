@@ -1,13 +1,13 @@
 import type { MachineTypeEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchMachineType } from 'src/api/hooks/generated/use-machine-type';
+import { useSearchMachineType, useGetMachineTypeById } from 'src/api/hooks/generated/use-machine-type';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,23 @@ export function MachineTypeSelector({
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedMachineType, setSelectedMachineType] = useState<MachineTypeEntity | null>(null);
 
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetMachineTypeById(
+    value || '',
+    {
+      enabled: !!value && !selectedMachineType,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedMachineType(entityById);
+    } else if (!value) {
+      setSelectedMachineType(null);
+    }
+  }, [entityById, value]);
+
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
@@ -42,7 +59,7 @@ export function MachineTypeSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchMachineType(
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchMachineType(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -50,6 +67,7 @@ export function MachineTypeSelector({
   );
 
   const items = searchResults?.data || [];
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: MachineTypeEntity | null) => {

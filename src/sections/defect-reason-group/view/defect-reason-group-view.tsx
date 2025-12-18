@@ -23,7 +23,6 @@ import {
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
-import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { emptyRows } from '../defect-reason-group-utils';
 import { DefectReasonGroupTableRow } from '../defect-reason-group-table-row';

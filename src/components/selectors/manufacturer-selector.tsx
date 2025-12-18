@@ -1,13 +1,13 @@
 import type { ManufacturerEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchManufacturer } from 'src/api/hooks/generated/use-manufacturer';
+import { useSearchManufacturer, useGetManufacturerById } from 'src/api/hooks/generated/use-manufacturer';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,23 @@ export function ManufacturerSelector({
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedManufacturer, setSelectedManufacturer] = useState<ManufacturerEntity | null>(null);
 
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetManufacturerById(
+    value || '',
+    {
+      enabled: !!value && !selectedManufacturer,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedManufacturer(entityById);
+    } else if (!value) {
+      setSelectedManufacturer(null);
+    }
+  }, [entityById, value]);
+
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
@@ -42,7 +59,7 @@ export function ManufacturerSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchManufacturer(
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchManufacturer(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -50,6 +67,7 @@ export function ManufacturerSelector({
   );
 
   const items = searchResults?.data || [];
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: ManufacturerEntity | null) => {

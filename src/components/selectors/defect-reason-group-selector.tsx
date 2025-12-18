@@ -1,13 +1,13 @@
 import type { DefectReasonGroupEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchDefectReasonGroup } from 'src/api/hooks/generated/use-defect-reason-group';
+import { useSearchDefectReasonGroup, useGetDefectReasonGroupById } from 'src/api/hooks/generated/use-defect-reason-group';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,23 @@ export function DefectReasonGroupSelector({
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedDefectReasonGroup, setSelectedDefectReasonGroup] = useState<DefectReasonGroupEntity | null>(null);
 
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetDefectReasonGroupById(
+    value || '',
+    {
+      enabled: !!value && !selectedDefectReasonGroup,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedDefectReasonGroup(entityById);
+    } else if (!value) {
+      setSelectedDefectReasonGroup(null);
+    }
+  }, [entityById, value]);
+
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
@@ -42,7 +59,7 @@ export function DefectReasonGroupSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchDefectReasonGroup(
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchDefectReasonGroup(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -50,6 +67,7 @@ export function DefectReasonGroupSelector({
   );
 
   const items = searchResults?.data || [];
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: DefectReasonGroupEntity | null) => {

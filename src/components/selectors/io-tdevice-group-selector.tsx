@@ -1,13 +1,13 @@
 import type { IoTDeviceGroupEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchIoTDeviceGroup } from 'src/api/hooks/generated/use-io-tdevice-group';
+import { useSearchIoTDeviceGroup, useGetIoTDeviceGroupById } from 'src/api/hooks/generated/use-io-tdevice-group';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,23 @@ export function IoTDeviceGroupSelector({
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedIoTDeviceGroup, setSelectedIoTDeviceGroup] = useState<IoTDeviceGroupEntity | null>(null);
 
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetIoTDeviceGroupById(
+    value || '',
+    {
+      enabled: !!value && !selectedIoTDeviceGroup,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedIoTDeviceGroup(entityById);
+    } else if (!value) {
+      setSelectedIoTDeviceGroup(null);
+    }
+  }, [entityById, value]);
+
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
@@ -42,7 +59,7 @@ export function IoTDeviceGroupSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchIoTDeviceGroup(
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchIoTDeviceGroup(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -50,6 +67,7 @@ export function IoTDeviceGroupSelector({
   );
 
   const items = searchResults?.data || [];
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: IoTDeviceGroupEntity | null) => {

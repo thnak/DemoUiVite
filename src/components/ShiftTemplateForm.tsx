@@ -30,8 +30,8 @@ import { Iconify } from 'src/components/iconify';
 import { WeekSummaryChart } from 'src/components/WeekSummaryChart';
 import {
   DurationTimePicker,
-  parseDurationToParts,
   partsToIsoDuration,
+  parseDurationToParts,
 } from 'src/components/duration-time-picker';
 
 import {

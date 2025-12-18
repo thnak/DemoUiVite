@@ -1,13 +1,13 @@
 import type { ShiftTemplateEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchShiftTemplate } from 'src/api/hooks/generated/use-shift-template';
+import { useSearchShiftTemplate, useGetShiftTemplateById } from 'src/api/hooks/generated/use-shift-template';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,23 @@ export function ShiftTemplateSelector({
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedShiftTemplate, setSelectedShiftTemplate] = useState<ShiftTemplateEntity | null>(null);
 
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetShiftTemplateById(
+    value || '',
+    {
+      enabled: !!value && !selectedShiftTemplate,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedShiftTemplate(entityById);
+    } else if (!value) {
+      setSelectedShiftTemplate(null);
+    }
+  }, [entityById, value]);
+
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
@@ -42,7 +59,7 @@ export function ShiftTemplateSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchShiftTemplate(
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchShiftTemplate(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -50,6 +67,7 @@ export function ShiftTemplateSelector({
   );
 
   const items = searchResults?.data || [];
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: ShiftTemplateEntity | null) => {

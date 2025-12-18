@@ -1,13 +1,13 @@
 import type { WarehouseEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchWarehouse } from 'src/api/hooks/generated/use-warehouse';
+import { useSearchWarehouse, useGetWarehouseById } from 'src/api/hooks/generated/use-warehouse';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,23 @@ export function WarehouseSelector({
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedWarehouse, setSelectedWarehouse] = useState<WarehouseEntity | null>(null);
 
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetWarehouseById(
+    value || '',
+    {
+      enabled: !!value && !selectedWarehouse,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedWarehouse(entityById);
+    } else if (!value) {
+      setSelectedWarehouse(null);
+    }
+  }, [entityById, value]);
+
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
@@ -42,7 +59,7 @@ export function WarehouseSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchWarehouse(
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchWarehouse(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -50,6 +67,7 @@ export function WarehouseSelector({
   );
 
   const items = searchResults?.data || [];
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: WarehouseEntity | null) => {

@@ -1,13 +1,13 @@
 import type { InformationBaseEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchInformationBase } from 'src/api/hooks/generated/use-information-base';
+import { useSearchInformationBase, useGetInformationBaseById } from 'src/api/hooks/generated/use-information-base';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,23 @@ export function InformationBaseSelector({
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedInformationBase, setSelectedInformationBase] = useState<InformationBaseEntity | null>(null);
 
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetInformationBaseById(
+    value || '',
+    {
+      enabled: !!value && !selectedInformationBase,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedInformationBase(entityById);
+    } else if (!value) {
+      setSelectedInformationBase(null);
+    }
+  }, [entityById, value]);
+
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
@@ -42,7 +59,7 @@ export function InformationBaseSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchInformationBase(
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchInformationBase(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -50,6 +67,7 @@ export function InformationBaseSelector({
   );
 
   const items = searchResults?.data || [];
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: InformationBaseEntity | null) => {
