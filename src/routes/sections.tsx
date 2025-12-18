@@ -8,6 +8,8 @@ import Box from '@mui/material/Box';
 import { AuthLayout } from 'src/layouts/auth';
 import { DashboardLayout } from 'src/layouts/dashboard';
 
+import { MachineSelectorProvider } from 'src/sections/oi/context/machine-selector-context';
+
 import { SvgColor } from '../components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -74,6 +76,9 @@ export const UnitConversionEditPage = lazy(() => import('src/pages/unit-conversi
 export const IoTSensorListPage = lazy(() => import('src/pages/iot-sensor-list'));
 export const IoTSensorCreatePage = lazy(() => import('src/pages/iot-sensor-create'));
 export const IoTSensorEditPage = lazy(() => import('src/pages/iot-sensor-edit'));
+export const OperatorDashboardPage = lazy(() => import('src/pages/oi/operator-dashboard'));
+export const ChangeProductPage = lazy(() => import('src/pages/oi/change-product'));
+export const DefectInputPage = lazy(() => import('src/pages/oi/defect-input'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -165,6 +170,19 @@ export const routesSection: RouteObject[] = [
       { path: 'settings/unit-conversions', element: <UnitConversionListPage /> },
       { path: 'settings/unit-conversions/create', element: <UnitConversionCreatePage /> },
       { path: 'settings/unit-conversions/:id/edit', element: <UnitConversionEditPage /> },
+      {
+        path: 'oi',
+        element: (
+          <MachineSelectorProvider>
+            <Outlet />
+          </MachineSelectorProvider>
+        ),
+        children: [
+          { path: 'dashboard', element: <OperatorDashboardPage /> },
+          { path: 'change-product', element: <ChangeProductPage /> },
+          { path: 'defect-input', element: <DefectInputPage /> },
+        ],
+      },
     ],
   },
   {

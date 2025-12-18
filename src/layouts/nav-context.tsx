@@ -4,6 +4,7 @@ import { useMemo, useContext, createContext } from 'react';
 
 import { usePathname } from 'src/routes/hooks';
 
+import { useOINavData } from './nav-config-oi';
 import { useMMSNavData } from './nav-config-mms';
 import { useNavData } from './nav-config-dashboard';
 import { useDefaultNavData } from './nav-config-default';
@@ -23,6 +24,7 @@ type NavModule =
   | 'device-management'
   | 'dashboard'
   | 'mms'
+  | 'oi'
   | 'settings';
 
 type NavContextValue = {
@@ -81,6 +83,11 @@ const getModuleFromPath = (pathname: string): NavModule => {
     return 'mms';
   }
 
+  // OI (Operation Interface) module routes
+  if (pathname.startsWith('/oi')) {
+    return 'oi';
+  }
+
   // Settings module routes
   if (
     pathname.startsWith('/settings')
@@ -109,6 +116,7 @@ export function NavProvider({ children }: NavProviderProps) {
   const deviceManagementNavData = useDeviceManagementNavData();
   const dashboardNavData = useNavData();
   const mmsNavData = useMMSNavData();
+  const oiNavData = useOINavData();
   const settingsNavData = useSettingsNavData();
 
   const navData = useMemo(() => {
@@ -123,6 +131,8 @@ export function NavProvider({ children }: NavProviderProps) {
         return dashboardNavData;
       case 'mms':
         return mmsNavData;
+      case 'oi':
+        return oiNavData;
       case 'settings':
         return settingsNavData;
       default:
@@ -136,6 +146,7 @@ export function NavProvider({ children }: NavProviderProps) {
     deviceManagementNavData,
     dashboardNavData,
     mmsNavData,
+    oiNavData,
     settingsNavData,
   ]);
 
