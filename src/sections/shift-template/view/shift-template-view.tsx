@@ -34,7 +34,6 @@ import {
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
-import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { ShiftTemplateTableToolbar } from '../shift-template-table-toolbar';
 

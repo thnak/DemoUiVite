@@ -30,9 +30,9 @@ import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useSearchIoTSensor } from 'src/api/hooks/generated/use-io-tsensor';
+import { useAddSensorToDevice, useRemoveSensorFromDevice } from 'src/api/hooks/use-device';
 import { useCreateIoTDevice, useUpdateIoTDevice } from 'src/api/hooks/generated/use-io-tdevice';
 import { useGetapiIotSensorgetsensorfromdevicedeviceCode } from 'src/api/hooks/generated/use-iot-sensor';
-import { useAddSensorToDevice, useRemoveSensorFromDevice } from 'src/api/hooks/use-device';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
