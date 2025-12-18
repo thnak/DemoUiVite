@@ -1,6 +1,6 @@
 import type {
-  MachineOeeUpdate,
   MachineRunState,
+  MachineOeeUpdate,
   MachineRunStateTimeBlock,
 } from 'src/services/machineHub';
 
@@ -22,8 +22,8 @@ import LinearProgress from '@mui/material/LinearProgress';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { apiConfig } from 'src/api/config';
-import { useGetMachineById } from 'src/api/hooks/generated/use-machine';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { useGetMachineById } from 'src/api/hooks/generated/use-machine';
 import { MachineHubService, MachineRunState as MachineRunStateEnum } from 'src/services/machineHub';
 
 import { Label } from 'src/components/label';

@@ -179,7 +179,7 @@ export function ProductCreateEditView({
   }
 
     // Navigate back to list after save
-  }, [formData, published, imageUrl, isEdit, router]);
+  }, [formData.name, formData.category, formData.price, formData.stock, formData.code, isEdit, currentProduct?.id, router]);
 
   const handleCancel = useCallback(() => {
     router.push('/products');

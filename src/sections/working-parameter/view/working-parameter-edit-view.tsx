@@ -125,7 +125,7 @@ currentWorkingParameter,
     } catch (e: any) {
       setErrorMessage(e?.message ?? 'Something went wrong');
     }
-  }, [formData, isEdit, currentWorkingParameter?.id, createWorkingParameter, updateWorkingParameter]);
+  }, [formData.machine, formData.product, formData.quantityPerCycle, formData.downtimeThreshold, formData.idealCycleTime, formData.speedLossThreshold, isEdit, currentWorkingParameter?.id, router]);
 
   const handleMachineChange = useCallback((machine: string | null) => {
       setFormData((prev) => ({

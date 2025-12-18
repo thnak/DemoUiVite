@@ -23,8 +23,8 @@ import {
   _quantityPerSignal,
   _productGroupCodes,
   _productGroupNames,
-  _productGroupDescriptions,
   _speedLossThreshold,
+  _productGroupDescriptions,
 } from './_mock';
 
 // ----------------------------------------------------------------------
