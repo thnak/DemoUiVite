@@ -59,10 +59,19 @@ export function IoTDeviceTableRow({
     router.push(`/iot-devices/${row.id}/edit`);
   }, [router, row.id]);
 
+  const handleTrackingRow = useCallback(() => {
+    router.push(`/iot-devices/${row.id}/tracking`);
+  }, [router, row.id]);
+
   const handleEditFromMenu = useCallback(() => {
     handleClosePopover();
     handleEditRow();
   }, [handleClosePopover, handleEditRow]);
+
+  const handleTrackingFromMenu = useCallback(() => {
+    handleClosePopover();
+    handleTrackingRow();
+  }, [handleClosePopover, handleTrackingRow]);
 
   const getTypeLabel = (type: IoTDeviceType | string) => {
     const typeLabels: Record<
@@ -161,7 +170,7 @@ export function IoTDeviceTableRow({
           sx={{
             p: 0.5,
             gap: 0.5,
-            width: 140,
+            width: 160,
             display: 'flex',
             flexDirection: 'column',
             [`& .${menuItemClasses.root}`]: {
@@ -172,6 +181,11 @@ export function IoTDeviceTableRow({
             },
           }}
         >
+          <MenuItem onClick={handleTrackingFromMenu}>
+            <Iconify icon="solar:chart-bold-duotone" />
+            Tracking
+          </MenuItem>
+
           <MenuItem onClick={handleEditFromMenu}>
             <Iconify icon="solar:pen-bold" />
             Edit
