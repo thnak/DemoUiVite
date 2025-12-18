@@ -128,6 +128,12 @@ export function WorkingParameterListView() {
   const handleChangePage = useCallback((_: unknown, newPage: number) => {
     setPage(newPage);
   }, []);
+  const handleEditWorkingParameter = useCallback(
+    (id: string) => {
+      router.push(`/working-parameter/edit/${id}`);
+    },
+    [router]
+  );
 
   // Handle change in rows per page
   const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -213,7 +219,7 @@ export function WorkingParameterListView() {
                       row={row}
                       selected={table.selected.includes(row.id)}
                       onSelectRow={() => table.onSelectRow(row.id)}
-                      onEditRow={() => console.log('Edit working parameter:', row.id)}
+                      onEditRow={() => handleEditWorkingParameter(row.id)}
                       onDeleteRow={() => console.log('Delete working parameter:', row.id)}
                     />
                   ))}

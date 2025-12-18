@@ -1,13 +1,13 @@
 import type { ProductEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchProduct } from 'src/api/hooks/generated/use-product';
+import { useGetProductById, useSearchProduct } from 'src/api/hooks/generated/use-product';
 
 // ----------------------------------------------------------------------
 
@@ -48,8 +48,33 @@ export function ProductSelector({
       maxResults: 10,
     }
   );
-
+  const { data: productById } = useGetProductById(
+    value ?? '',
+    { enabled: Boolean(value) } as any // tùy lib của bạn (react-query) để bật/tắt
+  );
   const items = searchResults?.data || [];
+
+  const resolvedSelected = useMemo(() => {
+    if (!value) return null;
+    return items.find((x) => String(x.id) === String(value)) ?? (productById ?? null);
+  }, [value, items, productById]);
+  useEffect(() => {
+    if (!value) {
+      setSelectedProduct(null);
+      setInputValue('');
+      return;
+    }
+    if (!resolvedSelected) return;
+
+    setSelectedProduct(resolvedSelected);
+
+    // set text hiển thị trên input
+    const anyEnt: any = resolvedSelected as any;
+    const labelText =
+      anyEnt.name || anyEnt.code || anyEnt.title || String(anyEnt.id) || '';
+    setInputValue(labelText);
+  }, [value, resolvedSelected]);
+
 
   const handleChange = useCallback(
     (_event: any, newValue: ProductEntity | null) => {

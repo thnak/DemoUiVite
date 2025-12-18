@@ -28,6 +28,7 @@ export const ProductCreatePage = lazy(() => import('src/pages/product-create'));
 export const ProductEditPage = lazy(() => import('src/pages/product-edit'));
 export const WorkingParameterListPage = lazy(() => import('src/pages/working-parameter-list'));
 export const WorkingParameterCreatePage = lazy(() => import('src/pages/working-parameter-create'));
+export const WorkingParameterEditPage = lazy(() => import('src/pages/working-parameter-edit'));
 export const StopMachineReasonListPage = lazy(() => import('src/pages/stop-machine-reason-list'));
 export const ProductGroupListPage = lazy(() => import('src/pages/product-group-list'));
 export const MachineListPage = lazy(() => import('src/pages/machine-list'));
@@ -117,6 +118,7 @@ export const routesSection: RouteObject[] = [
       { path: 'products/:id/edit', element: <ProductEditPage /> },
       { path: 'working-parameter', element: <WorkingParameterListPage /> },
       { path: 'working-parameter/create', element: <WorkingParameterCreatePage /> },
+      { path: 'working-parameter/edit/:id', element: <WorkingParameterEditPage /> },
       { path: 'stop-machine-reason', element: <StopMachineReasonListPage /> },
       { path: 'product-groups', element: <ProductGroupListPage /> },
       { path: 'machines', element: <MachineListPage /> },

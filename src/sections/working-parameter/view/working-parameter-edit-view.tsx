@@ -55,20 +55,29 @@ interface WorkingParameterCreateEditViewProps {
     quantityPerCycle: string | null;
   };
 }
+const getDefaultForm = (
+    wp?: WorkingParameterCreateEditViewProps['currentWorkingParameter']
+): WorkingFormData => ({
+    machine: wp?.machine ?? '',
+    product: wp?.product ?? '',
+    idealCycleTime: wp?.idealCycleTime ?? '',
+    downtimeThreshold: wp?.downtimeThreshold ?? '',
+    speedLossThreshold: wp?.speedLossThreshold ?? '',
+    quantityPerCycle: wp?.quantityPerCycle ?? '1',
+});
+
 export function WorkingParameterCreateEditView({
 isEdit = false,
 currentWorkingParameter,
 }: WorkingParameterCreateEditViewProps){
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [formData, setFormData] = useState<WorkingFormData>({
-    machine: currentWorkingParameter?.machine || '',
-    product: currentWorkingParameter?.product || '',
-    idealCycleTime: currentWorkingParameter?.idealCycleTime?.toString()|| '',
-    downtimeThreshold: currentWorkingParameter?.downtimeThreshold?.toString() || '',
-    speedLossThreshold: currentWorkingParameter?.speedLossThreshold?.toString() || '',
-    quantityPerCycle: currentWorkingParameter?.quantityPerCycle || '1',
-  });
+    const [formData, setFormData] = useState<WorkingFormData>(() => getDefaultForm(currentWorkingParameter));   
+    useEffect(() => {
+        if (!isEdit) return;
+
+        setFormData(getDefaultForm(currentWorkingParameter));
+    }, [isEdit, currentWorkingParameter?.id]);
   const handleCloseError = useCallback(() => {
     setErrorMessage(null);
   }, []);

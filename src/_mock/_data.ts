@@ -24,6 +24,7 @@ import {
   _productGroupCodes,
   _productGroupNames,
   _productGroupDescriptions,
+  _speedLossThreshold,
 } from './_mock';
 
 // ----------------------------------------------------------------------
@@ -518,6 +519,7 @@ export const _workingParameters = [...Array(20)].map((_, index) => ({
   idealCycleTime: _idealCycleTime(index),
   quantityPerSignal: _quantityPerSignal(index),
   downtimeThreshold: _downtimeThreshold(index),
+  speedLossThreshold: _speedLossThreshold(index),
 }));
 
 export type MachineInputType = 'WeightChannels' | 'PairChannel';
