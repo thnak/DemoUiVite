@@ -101,7 +101,7 @@ export function DeviceTrackingView() {
 
     // Cleanup function
     return () => {
-      mounted = false;
+      // mounted = false;
 
       // Unsubscribe and stop connection
       if (id) {
