@@ -1,13 +1,13 @@
 import type { IoTSensorEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchIoTSensor } from 'src/api/hooks/generated/use-io-tsensor';
+import { useSearchIoTSensor, useGetIoTSensorById } from 'src/api/hooks/generated/use-io-tsensor';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,23 @@ export function IoTSensorSelector({
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedIoTSensor, setSelectedIoTSensor] = useState<IoTSensorEntity | null>(null);
 
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetIoTSensorById(
+    value || '',
+    {
+      enabled: !!value && !selectedIoTSensor,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedIoTSensor(entityById);
+    } else if (!value) {
+      setSelectedIoTSensor(null);
+    }
+  }, [entityById, value]);
+
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
@@ -42,7 +59,7 @@ export function IoTSensorSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchIoTSensor(
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchIoTSensor(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -50,6 +67,7 @@ export function IoTSensorSelector({
   );
 
   const items = searchResults?.data || [];
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: IoTSensorEntity | null) => {

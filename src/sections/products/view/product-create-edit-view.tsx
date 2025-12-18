@@ -24,7 +24,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
 
-import { createProduct, updateProduct, updateWorkingParameter } from '../../../api';
+import { createProduct, updateProduct } from '../../../api';
 
 // ----------------------------------------------------------------------
 

@@ -1,13 +1,13 @@
 import type { DefectReasonEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchDefectReason } from 'src/api/hooks/generated/use-defect-reason';
+import { useSearchDefectReason, useGetDefectReasonById } from 'src/api/hooks/generated/use-defect-reason';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,23 @@ export function DefectReasonSelector({
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedDefectReason, setSelectedDefectReason] = useState<DefectReasonEntity | null>(null);
 
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetDefectReasonById(
+    value || '',
+    {
+      enabled: !!value && !selectedDefectReason,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedDefectReason(entityById);
+    } else if (!value) {
+      setSelectedDefectReason(null);
+    }
+  }, [entityById, value]);
+
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
@@ -42,7 +59,7 @@ export function DefectReasonSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchDefectReason(
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchDefectReason(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -50,6 +67,7 @@ export function DefectReasonSelector({
   );
 
   const items = searchResults?.data || [];
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: DefectReasonEntity | null) => {
