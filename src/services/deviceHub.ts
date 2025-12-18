@@ -58,9 +58,9 @@ export class DeviceHubService {
     deviceId: string,
     callback: (update: DeviceStateUpdate) => void
   ): Promise<void> {
-    this.callbacks.set(deviceId, callback);
     try {
       await this.connection.invoke('SubscribeToDevice', deviceId);
+      this.callbacks.set(deviceId, callback);
       console.log(`Subscribed to device: ${deviceId}`);
     } catch (err) {
       console.error(`Error subscribing to device ${deviceId}:`, err);
