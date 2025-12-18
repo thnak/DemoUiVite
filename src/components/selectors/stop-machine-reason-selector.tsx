@@ -1,13 +1,13 @@
 import type { StopMachineReasonEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchStopMachineReason } from 'src/api/hooks/generated/use-stop-machine-reason';
+import { useSearchStopMachineReason, useGetStopMachineReasonById } from 'src/api/hooks/generated/use-stop-machine-reason';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,23 @@ export function StopMachineReasonSelector({
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedStopMachineReason, setSelectedStopMachineReason] = useState<StopMachineReasonEntity | null>(null);
 
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetStopMachineReasonById(
+    value || '',
+    {
+      enabled: !!value && !selectedStopMachineReason,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedStopMachineReason(entityById);
+    } else if (!value) {
+      setSelectedStopMachineReason(null);
+    }
+  }, [entityById, value]);
+
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
@@ -42,7 +59,7 @@ export function StopMachineReasonSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchStopMachineReason(
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchStopMachineReason(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -50,6 +67,7 @@ export function StopMachineReasonSelector({
   );
 
   const items = searchResults?.data || [];
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: StopMachineReasonEntity | null) => {

@@ -1,12 +1,13 @@
 import type { AreaEntity } from 'src/api/types/generated';
 
-import { useState, useCallback } from 'react';
+import { debounce } from 'es-toolkit';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchArea } from 'src/api/hooks/generated/use-area';
+import { useSearchArea, useGetAreaById } from 'src/api/hooks/generated/use-area';
 
 // ----------------------------------------------------------------------
 
@@ -30,19 +31,43 @@ export function AreaSelector({
   required = false,
 }: AreaSelectorProps) {
   const [inputValue, setInputValue] = useState('');
+  const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedArea, setSelectedArea] = useState<AreaEntity | null>(null);
 
-  const { data: searchResults, isFetching } = useSearchArea(
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetAreaById(
+    value || '',
     {
-      searchText: inputValue || undefined,
+      enabled: !!value && !selectedArea,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedArea(entityById);
+    } else if (!value) {
+      setSelectedArea(null);
+    }
+  }, [entityById, value]);
+
+  // Debounce search input with 500ms delay
+  const debouncedSetSearch = useMemo(
+    () => debounce((searchValue: string) => {
+      setDebouncedInputValue(searchValue);
+    }, 500),
+    []
+  );
+
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchArea(
+    {
+      searchText: debouncedInputValue || undefined,
       maxResults: 10,
-    },
-    {
-      enabled: inputValue.length > 0,
     }
   );
 
   const areas = searchResults?.data || [];
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: AreaEntity | null) => {
@@ -52,9 +77,13 @@ export function AreaSelector({
     [onChange]
   );
 
-  const handleInputChange = useCallback((_event: any, newInputValue: string) => {
-    setInputValue(newInputValue);
-  }, []);
+  const handleInputChange = useCallback(
+    (_event: any, newInputValue: string) => {
+      setInputValue(newInputValue);
+      debouncedSetSearch(newInputValue);
+    },
+    [debouncedSetSearch]
+  );
 
   return (
     <Autocomplete

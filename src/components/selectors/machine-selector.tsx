@@ -1,13 +1,13 @@
 import type { MachineEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useGetMachineById, useSearchMachine } from 'src/api/hooks/generated/use-machine';
+import { useSearchMachine, useGetMachineById } from 'src/api/hooks/generated/use-machine';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,23 @@ export function MachineSelector({
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedMachine, setSelectedMachine] = useState<MachineEntity | null>(null);
 
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetMachineById(
+    value || '',
+    {
+      enabled: !!value && !selectedMachine,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedMachine(entityById);
+    } else if (!value) {
+      setSelectedMachine(null);
+    }
+  }, [entityById, value]);
+
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
@@ -42,37 +59,15 @@ export function MachineSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchMachine(
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchMachine(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
     }
   );
-  const { data: productById } = useGetMachineById(
-    value ?? '',
-    { enabled: Boolean(value) } as any // tùy lib của bạn (react-query) để bật/tắt
-  );
+
   const items = searchResults?.data || [];
-  const resolvedSelected = useMemo(() => {
-    if (!value) return null;
-    return items.find((x) => String(x.id) === String(value)) ?? (productById ?? null);
-  }, [value, items, productById]);
-  useEffect(() => {
-    if (!value) {
-      setSelectedMachine(null);
-      setInputValue('');
-      return;
-    }
-    if (!resolvedSelected) return;
-
-    setSelectedMachine(resolvedSelected);
-
-    // set text hiển thị trên input
-    const anyEnt: any = resolvedSelected as any;
-    const labelText =
-      anyEnt.name || anyEnt.code || anyEnt.title || String(anyEnt.id) || '';
-    setInputValue(labelText);
-  }, [value, resolvedSelected]);
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: MachineEntity | null) => {

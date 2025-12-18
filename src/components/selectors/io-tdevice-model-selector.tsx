@@ -1,13 +1,13 @@
 import type { IoTDeviceModelEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchIoTDeviceModel } from 'src/api/hooks/generated/use-io-tdevice-model';
+import { useSearchIoTDeviceModel, useGetIoTDeviceModelById } from 'src/api/hooks/generated/use-io-tdevice-model';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,23 @@ export function IoTDeviceModelSelector({
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedIoTDeviceModel, setSelectedIoTDeviceModel] = useState<IoTDeviceModelEntity | null>(null);
 
+  // Fetch entity by ID when value prop is provided
+  const { data: entityById, isFetching: isFetchingById } = useGetIoTDeviceModelById(
+    value || '',
+    {
+      enabled: !!value && !selectedIoTDeviceModel,
+    }
+  );
+
+  // Set initial value when entity is fetched
+  useEffect(() => {
+    if (entityById && value) {
+      setSelectedIoTDeviceModel(entityById);
+    } else if (!value) {
+      setSelectedIoTDeviceModel(null);
+    }
+  }, [entityById, value]);
+
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
@@ -42,7 +59,7 @@ export function IoTDeviceModelSelector({
     []
   );
 
-  const { data: searchResults, isFetching } = useSearchIoTDeviceModel(
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchIoTDeviceModel(
     {
       searchText: debouncedInputValue || undefined,
       maxResults: 10,
@@ -50,6 +67,7 @@ export function IoTDeviceModelSelector({
   );
 
   const items = searchResults?.data || [];
+  const isFetching = isFetchingById || isFetchingSearch;
 
   const handleChange = useCallback(
     (_event: any, newValue: IoTDeviceModelEntity | null) => {

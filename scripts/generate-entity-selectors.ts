@@ -133,7 +133,7 @@ function generateSelectorComponent(info: EntitySearchInfo): string {
 
   lines.push(`import type { ${info.entityType} } from 'src/api/types/generated';`);
   lines.push(``);
-  lines.push(`import { useCallback, useMemo, useState } from 'react';`);
+  lines.push(`import { useCallback, useEffect, useMemo, useState } from 'react';`);
   lines.push(``);
   lines.push(`import { debounce } from 'es-toolkit';`);
   lines.push(``);
@@ -141,7 +141,7 @@ function generateSelectorComponent(info: EntitySearchInfo): string {
   lines.push(`import CircularProgress from '@mui/material/CircularProgress';`);
   lines.push(`import TextField from '@mui/material/TextField';`);
   lines.push(``);
-  lines.push(`import { use${toPascalCase(info.hookName)} } from 'src/api/hooks/generated/use-${toKebabCase(info.tag)}';`);
+  lines.push(`import { useGet${toPascalCase(info.entityName)}ById, use${toPascalCase(info.hookName)} } from 'src/api/hooks/generated/use-${toKebabCase(info.tag)}';`);
   lines.push(``);
   lines.push(`// ----------------------------------------------------------------------`);
   lines.push(``);
@@ -168,6 +168,23 @@ function generateSelectorComponent(info: EntitySearchInfo): string {
   lines.push(`  const [debouncedInputValue, setDebouncedInputValue] = useState('');`);
   lines.push(`  const [selected${info.entityName}, setSelected${info.entityName}] = useState<${info.entityType} | null>(null);`);
   lines.push(``);
+  lines.push(`  // Fetch entity by ID when value prop is provided`);
+  lines.push(`  const { data: entityById, isFetching: isFetchingById } = useGet${toPascalCase(info.entityName)}ById(`);
+  lines.push(`    value || '',`);
+  lines.push(`    {`);
+  lines.push(`      enabled: !!value && !selected${info.entityName},`);
+  lines.push(`    }`);
+  lines.push(`  );`);
+  lines.push(``);
+  lines.push(`  // Set initial value when entity is fetched`);
+  lines.push(`  useEffect(() => {`);
+  lines.push(`    if (entityById && value) {`);
+  lines.push(`      setSelected${info.entityName}(entityById);`);
+  lines.push(`    } else if (!value) {`);
+  lines.push(`      setSelected${info.entityName}(null);`);
+  lines.push(`    }`);
+  lines.push(`  }, [entityById, value]);`);
+  lines.push(``);
   lines.push(`  // Debounce search input with 500ms delay`);
   lines.push(`  const debouncedSetSearch = useMemo(`);
   lines.push(`    () => debounce((searchValue: string) => {`);
@@ -176,7 +193,7 @@ function generateSelectorComponent(info: EntitySearchInfo): string {
   lines.push(`    []`);
   lines.push(`  );`);
   lines.push(``);
-  lines.push(`  const { data: searchResults, isFetching } = use${toPascalCase(info.hookName)}(`);
+  lines.push(`  const { data: searchResults, isFetching: isFetchingSearch } = use${toPascalCase(info.hookName)}(`);
   lines.push(`    {`);
   lines.push(`      searchText: debouncedInputValue || undefined,`);
   lines.push(`      maxResults: 10,`);
@@ -184,6 +201,7 @@ function generateSelectorComponent(info: EntitySearchInfo): string {
   lines.push(`  );`);
   lines.push(``);
   lines.push(`  const items = searchResults?.data || [];`);
+  lines.push(`  const isFetching = isFetchingById || isFetchingSearch;`);
   lines.push(``);
   lines.push(`  const handleChange = useCallback(`);
   lines.push(`    (_event: any, newValue: ${info.entityType} | null) => {`);
