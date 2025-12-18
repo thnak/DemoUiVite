@@ -57,6 +57,7 @@ export const CalendarEditPage = lazy(() => import('src/pages/calendar-edit'));
 export const IoTDeviceListPage = lazy(() => import('src/pages/iot-device-list'));
 export const IoTDeviceCreatePage = lazy(() => import('src/pages/iot-device-create'));
 export const IoTDeviceEditPage = lazy(() => import('src/pages/iot-device-edit'));
+export const IoTDeviceTrackingPage = lazy(() => import('src/pages/iot-device-tracking'));
 export const MachineTypeListPage = lazy(() => import('src/pages/machine-type-list'));
 export const MachineTypeCreatePage = lazy(() => import('src/pages/machine-type-create'));
 export const MachineTypeEditPage = lazy(() => import('src/pages/machine-type-edit'));
@@ -146,6 +147,7 @@ export const routesSection: RouteObject[] = [
       { path: 'iot-devices', element: <IoTDeviceListPage /> },
       { path: 'iot-devices/create', element: <IoTDeviceCreatePage /> },
       { path: 'iot-devices/:id/edit', element: <IoTDeviceEditPage /> },
+      { path: 'iot-devices/:id/tracking', element: <IoTDeviceTrackingPage /> },
       { path: 'iot-sensors', element: <IoTSensorListPage /> },
       { path: 'iot-sensors/create', element: <IoTSensorCreatePage /> },
       { path: 'iot-sensors/:id/edit', element: <IoTSensorEditPage /> },
