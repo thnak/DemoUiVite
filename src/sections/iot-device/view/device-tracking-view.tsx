@@ -48,7 +48,7 @@ export function DeviceTrackingView() {
   useEffect(() => {
     if (!id) return undefined;
 
-    let mounted = true;
+    const mounted = true;
 
     const initializeConnection = async () => {
       try {
