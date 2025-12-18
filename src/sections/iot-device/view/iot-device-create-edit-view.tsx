@@ -1,4 +1,4 @@
-import type { IoTDeviceType, MachineEntity, IoTSensorEntity } from 'src/api/types/generated';
+import type { IoTDeviceType, IoTSensorEntity } from 'src/api/types/generated';
 
 import { useState, useEffect, useCallback, type ChangeEvent } from 'react';
 
@@ -29,14 +29,18 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { useSearchMachine } from 'src/api/hooks/generated/use-machine';
 import { useSearchIoTSensor } from 'src/api/hooks/generated/use-io-tsensor';
 import { useCreateIoTDevice, useUpdateIoTDevice } from 'src/api/hooks/generated/use-io-tdevice';
 import { useGetapiIotSensorgetsensorfromdevicedeviceCode } from 'src/api/hooks/generated/use-iot-sensor';
+import {
+  usePostapiDeviceaddsensortodevice,
+  usePostapiDeviceremovesensorfromdevice,
+} from 'src/api/hooks/generated/use-device';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { MachineSelector } from 'src/components/selectors/machine-selector';
 import { ImageEntityResourceUploader } from 'src/components/image-entity-resource-uploader';
 
 // ----------------------------------------------------------------------
@@ -95,31 +99,18 @@ export function IoTDeviceCreateEditView({
     imageUrl: currentDevice?.imageUrl || '',
   });
 
-  // Machine search state
-  const [machineSearchText, setMachineSearchText] = useState('');
-  const [selectedMachine, setSelectedMachine] = useState<MachineEntity | null>(
-    currentDevice?.machineId
-      ? { id: currentDevice.machineId, name: currentDevice.machineName }
-      : null
-  );
-
   // Sensor mapping state (only for edit mode)
   const [mappedSensors, setMappedSensors] = useState<IoTSensorEntity[]>([]);
   const [sensorSearchText, setSensorSearchText] = useState('');
   const [selectedSensorToAdd, setSelectedSensorToAdd] = useState<IoTSensorEntity | null>(null);
 
   // API hooks
-  const { data: machineSearchResult, isLoading: isSearchingMachines } = useSearchMachine(
-    { searchText: machineSearchText, maxResults: 10 },
-    { enabled: machineSearchText.length > 0 }
-  );
-
   const { data: sensorSearchResult, isLoading: isSearchingSensors } = useSearchIoTSensor(
     { searchText: sensorSearchText, maxResults: 10 },
     { enabled: sensorSearchText.length > 0 && isEdit }
   );
 
-  const { data: deviceSensors, isLoading: isLoadingSensors } =
+  const { data: deviceSensors, isLoading: isLoadingSensors, refetch: refetchSensors } =
     useGetapiIotSensorgetsensorfromdevicedeviceCode(currentDevice?.id || '', {
       enabled: isEdit && !!currentDevice?.id,
     });
@@ -149,6 +140,35 @@ export function IoTDeviceCreateEditView({
       setErrorMessage(error.message || 'Failed to update device');
     },
   });
+
+  const { mutate: addSensorToDevice, isPending: isAddingSensor } = usePostapiDeviceaddsensortodevice({
+    onSuccess: (result) => {
+      if (result.isSuccess) {
+        refetchSensors();
+        setSelectedSensorToAdd(null);
+        setSensorSearchText('');
+      } else {
+        setErrorMessage(result.message || 'Failed to add sensor');
+      }
+    },
+    onError: (error) => {
+      setErrorMessage(error.message || 'Failed to add sensor');
+    },
+  });
+
+  const { mutate: removeSensorFromDevice, isPending: isRemovingSensor } =
+    usePostapiDeviceremovesensorfromdevice({
+      onSuccess: (result) => {
+        if (result.isSuccess) {
+          refetchSensors();
+        } else {
+          setErrorMessage(result.message || 'Failed to remove sensor');
+        }
+      },
+      onError: (error) => {
+        setErrorMessage(error.message || 'Failed to remove sensor');
+      },
+    });
 
   // Load device sensors when in edit mode
   useEffect(() => {
@@ -184,16 +204,12 @@ export function IoTDeviceCreateEditView({
     []
   );
 
-  const handleMachineChange = useCallback(
-    (_event: React.SyntheticEvent, value: MachineEntity | null) => {
-      setSelectedMachine(value);
-      setFormData((prev) => ({
-        ...prev,
-        machineId: value?.id?.toString() || '',
-      }));
-    },
-    []
-  );
+  const handleMachineChange = useCallback((machineId: string | null) => {
+    setFormData((prev) => ({
+      ...prev,
+      machineId: machineId || '',
+    }));
+  }, []);
 
   const handleImageUrlChange = useCallback((newImageUrl: string) => {
     setFormData((prev) => ({
@@ -207,16 +223,20 @@ export function IoTDeviceCreateEditView({
   }, []);
 
   const handleAddSensor = useCallback(() => {
-    if (selectedSensorToAdd && !mappedSensors.find((s) => s.id === selectedSensorToAdd.id)) {
-      setMappedSensors((prev) => [...prev, selectedSensorToAdd]);
-      setSelectedSensorToAdd(null);
-      setSensorSearchText('');
+    if (selectedSensorToAdd && currentDevice?.id) {
+      addSensorToDevice({
+        deviceId: currentDevice.id,
+        sensorId: selectedSensorToAdd.id?.toString() || '',
+      });
     }
-  }, [selectedSensorToAdd, mappedSensors]);
+  }, [selectedSensorToAdd, currentDevice?.id, addSensorToDevice]);
 
-  const handleRemoveSensor = useCallback((sensorId: string) => {
-    setMappedSensors((prev) => prev.filter((s) => s.id?.toString() !== sensorId));
-  }, []);
+  const handleRemoveSensor = useCallback(
+    (sensorId: string) => {
+      removeSensorFromDevice({ sensorId });
+    },
+    [removeSensorFromDevice]
+  );
 
   const handleSubmit = useCallback(() => {
     if (!formData.name) {
@@ -262,7 +282,6 @@ export function IoTDeviceCreateEditView({
     router.push('/iot-devices');
   }, [router]);
 
-  const machines = machineSearchResult?.data || [];
   const sensors = sensorSearchResult?.data || [];
 
   return (
@@ -292,22 +311,36 @@ export function IoTDeviceCreateEditView({
       <Grid container spacing={3}>
         {/* Left Section - Image */}
         <Grid size={{ xs: 12, md: 4 }}>
-          <Card sx={{ p: 3 }}>
-            <Typography variant="subtitle2" sx={{ mb: 2 }}>
-              Device Image
-            </Typography>
-            <Stack alignItems="center">
-              <ImageEntityResourceUploader
-                imageUrl={formData.imageUrl}
-                onImageUrlChange={handleImageUrlChange}
-                onUploadError={handleImageUploadError}
+          <Stack spacing={3}>
+            <Card sx={{ p: 3 }}>
+              <Typography variant="subtitle2" sx={{ mb: 2 }}>
+                Device Image
+              </Typography>
+              <Stack alignItems="center">
+                <ImageEntityResourceUploader
+                  imageUrl={formData.imageUrl}
+                  onImageUrlChange={handleImageUrlChange}
+                  onUploadError={handleImageUploadError}
+                  disabled={isSubmitting}
+                  placeholder="Upload device image"
+                  previewSize={200}
+                  aspectRatio={1}
+                />
+              </Stack>
+            </Card>
+
+            <Card sx={{ p: 3 }}>
+              <Typography variant="subtitle2" sx={{ mb: 2 }}>
+                Machine
+              </Typography>
+              <MachineSelector
+                value={formData.machineId}
+                onChange={handleMachineChange}
                 disabled={isSubmitting}
-                placeholder="Upload device image"
-                previewSize={200}
-                aspectRatio={1}
+                label="Select Machine"
               />
-            </Stack>
-          </Card>
+            </Card>
+          </Stack>
         </Grid>
 
         {/* Right Section - Device Info Form */}
@@ -377,49 +410,6 @@ export function IoTDeviceCreateEditView({
                   value={formData.mqttPassword}
                   onChange={handleInputChange('mqttPassword')}
                   type="password"
-                />
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Autocomplete
-                  value={selectedMachine}
-                  onChange={handleMachineChange}
-                  inputValue={machineSearchText}
-                  onInputChange={(_event, newInputValue) => setMachineSearchText(newInputValue)}
-                  options={machines}
-                  getOptionLabel={(option) => option.name || ''}
-                  isOptionEqualToValue={(option, value) => option.id === value.id}
-                  loading={isSearchingMachines}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Machine"
-                      placeholder="Search machine..."
-                      slotProps={{
-                        input: {
-                          ...params.InputProps,
-                          endAdornment: (
-                            <>
-                              {isSearchingMachines ? (
-                                <CircularProgress color="inherit" size={20} />
-                              ) : null}
-                              {params.InputProps.endAdornment}
-                            </>
-                          ),
-                        },
-                      }}
-                    />
-                  )}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option.id?.toString()}>
-                      <Box>
-                        <Typography variant="body2">{option.name}</Typography>
-                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                          {option.code}
-                        </Typography>
-                      </Box>
-                    </li>
-                  )}
                 />
               </Grid>
             </Grid>
@@ -509,10 +499,10 @@ export function IoTDeviceCreateEditView({
                 <Button
                   variant="contained"
                   onClick={handleAddSensor}
-                  disabled={!selectedSensorToAdd}
+                  disabled={!selectedSensorToAdd || isAddingSensor}
                   sx={{ minWidth: 100 }}
                 >
-                  Add
+                  {isAddingSensor ? <CircularProgress size={24} /> : 'Add'}
                 </Button>
               </Box>
 
@@ -573,6 +563,7 @@ export function IoTDeviceCreateEditView({
                                 size="small"
                                 color="error"
                                 onClick={() => handleRemoveSensor(sensor.id?.toString() || '')}
+                                disabled={isRemovingSensor}
                               >
                                 <Iconify icon="solar:trash-bin-trash-bold" />
                               </IconButton>
