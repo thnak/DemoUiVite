@@ -82,6 +82,11 @@ export function MachineTableRow({
     navigate(`/machines/${row.id}/oee`);
   }, [navigate, row.id, handleClosePopover]);
 
+  const handleViewTracking = useCallback(() => {
+    handleClosePopover();
+    navigate(`/machines/${row.id}/tracking`);
+  }, [navigate, row.id, handleClosePopover]);
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -154,6 +159,11 @@ export function MachineTableRow({
             },
           }}
         >
+          <MenuItem onClick={handleViewTracking} sx={{ color: 'info.main' }}>
+            <Iconify icon="solar:chart-bold-duotone" />
+            Realtime Tracking
+          </MenuItem>
+
           <MenuItem onClick={handleViewOEE} sx={{ color: 'primary.main' }}>
             <Iconify icon="mdi:gauge" />
             OEE Dashboard

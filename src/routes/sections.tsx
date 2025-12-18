@@ -35,6 +35,7 @@ export const MachineListPage = lazy(() => import('src/pages/machine-list'));
 export const MachineCreatePage = lazy(() => import('src/pages/machine-create'));
 export const MachineEditPage = lazy(() => import('src/pages/machine-edit'));
 export const MachineOEEPage = lazy(() => import('src/pages/machine-oee'));
+export const MachineTrackingPage = lazy(() => import('src/pages/machine-tracking'));
 export const DemoDashboardPage = lazy(() => import('src/pages/demo/dashboard'));
 export const FileDashboardPage = lazy(() => import('src/pages/demo/file-dashboard'));
 export const DowntimeReportPage = lazy(() => import('src/pages/downtime-report'));
@@ -126,6 +127,7 @@ export const routesSection: RouteObject[] = [
       { path: 'machines/create', element: <MachineCreatePage /> },
       { path: 'machines/:id/edit', element: <MachineEditPage /> },
       { path: 'machines/:id/oee', element: <MachineOEEPage /> },
+      { path: 'machines/:id/tracking', element: <MachineTrackingPage /> },
       { path: 'downtime-report', element: <DowntimeReportPage /> },
       { path: 'oee-summary-report', element: <OEESummaryReportPage /> },
       { path: 'shift-templates', element: <ShiftTemplatesPage /> },
