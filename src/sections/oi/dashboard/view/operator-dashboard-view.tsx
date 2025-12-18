@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
+import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import { LinearProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { Alert, LinearProgress } from '@mui/material';
-
-import { useTranslation } from 'react-i18next';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
 
-import { useMachineSelector } from '../context/machine-selector-context';
-import { MachineSelectorCard } from '../components/machine-selector-card';
+import { useMachineSelector } from 'src/sections/oi/context';
+import { MachineSelectorCard } from 'src/sections/oi/components';
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ function MetricCard({ title, value, unit, icon, color, trend }: MetricCardProps)
             mr: 2,
           }}
         >
-          <Iconify icon={icon} sx={{ fontSize: 40, color: `${color}.main` }} />
+          <Iconify icon={icon as any} sx={{ fontSize: 40, color: `${color}.main` }} />
         </Box>
         <Box sx={{ flex: 1 }}>
           <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '1rem', mb: 0.5 }}>
@@ -74,7 +74,7 @@ function MetricCard({ title, value, unit, icon, color, trend }: MetricCardProps)
       {trend && (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Iconify 
-            icon={trend.isPositive ? 'solar:arrow-up-bold' : 'solar:arrow-down-bold'}
+            icon={(trend.isPositive ? 'mdi:arrow-up-bold' : 'mdi:arrow-down-bold') as any}
             sx={{ 
               color: trend.isPositive ? 'success.main' : 'error.main',
               fontSize: 20,
@@ -256,7 +256,7 @@ export function OperatorDashboardView() {
                 title={t('oi.oee')}
                 value={mockData.oee}
                 unit="%"
-                icon="solar:chart-2-bold"
+                icon="eva:trending-up-fill"
                 color="success"
                 trend={{ value: 2.5, isPositive: true }}
               />
@@ -266,7 +266,7 @@ export function OperatorDashboardView() {
                 title={t('oi.availability')}
                 value={mockData.availability}
                 unit="%"
-                icon="solar:clock-circle-bold"
+                icon="eva:clock-fill"
                 color="info"
                 trend={{ value: 1.8, isPositive: true }}
               />
@@ -276,7 +276,7 @@ export function OperatorDashboardView() {
                 title={t('oi.performance')}
                 value={mockData.performance}
                 unit="%"
-                icon="solar:graph-up-bold"
+                icon="eva:activity-fill"
                 color="primary"
                 trend={{ value: 3.2, isPositive: true }}
               />
@@ -286,7 +286,7 @@ export function OperatorDashboardView() {
                 title={t('oi.quality')}
                 value={mockData.quality}
                 unit="%"
-                icon="solar:shield-check-bold"
+                icon="eva:shield-fill"
                 color="success"
                 trend={{ value: 0.5, isPositive: false }}
               />
@@ -300,7 +300,7 @@ export function OperatorDashboardView() {
                 title={t('oi.totalOutput')}
                 value={mockData.output.toLocaleString()}
                 unit={t('oi.pieces')}
-                icon="solar:box-bold"
+                icon="eva:cube-fill"
                 color="primary"
                 trend={{ value: 5.2, isPositive: true }}
               />
@@ -310,7 +310,7 @@ export function OperatorDashboardView() {
                 title={t('oi.totalDefects')}
                 value={mockData.defects}
                 unit={t('oi.pieces')}
-                icon="solar:danger-circle-bold"
+                icon="eva:alert-circle-fill"
                 color="error"
                 trend={{ value: 1.2, isPositive: false }}
               />
@@ -338,7 +338,7 @@ export function OperatorDashboardView() {
                       mb: 2,
                     }}
                   >
-                    <Iconify icon="solar:check-circle-bold" sx={{ fontSize: 48, color: 'white' }} />
+                    <Iconify icon="eva:checkmark-fill" sx={{ fontSize: 48, color: 'white' }} />
                   </Box>
                   <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                     {t('oi.running')}

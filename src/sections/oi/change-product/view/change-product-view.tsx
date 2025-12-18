@@ -1,28 +1,35 @@
 import type { ProductEntity } from 'src/api/types/generated';
 
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import {
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  CircularProgress,
+} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import { List, ListItem, ListItemButton, ListItemText, CircularProgress, Alert } from '@mui/material';
 
-import { useTranslation } from 'react-i18next';
-
-import { searchProduct } from 'src/api/services/generated/product';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { searchProduct } from 'src/api/services/generated/product';
 
 import { Iconify } from 'src/components/iconify';
 
-import { useMachineSelector } from '../context/machine-selector-context';
-import { MachineSelectorCard } from '../components/machine-selector-card';
+import { useMachineSelector } from 'src/sections/oi/context';
+import { MachineSelectorCard } from 'src/sections/oi/components';
 
 // ----------------------------------------------------------------------
 
@@ -54,10 +61,10 @@ export function ChangeProductView() {
     setLoading(true);
     try {
       const response = await searchProduct({ 
-        searchTerm: search,
-        pageSize: 50,
+        searchText: search,
+        maxResults: 50,
       });
-      setProducts(response.data?.items || []);
+      setProducts(response.data || []);
     } catch (error) {
       console.error('Failed to load products:', error);
       setProducts([]);
@@ -142,7 +149,7 @@ export function ChangeProductView() {
                 >
                   <Box sx={{ textAlign: 'center' }}>
                     <Iconify 
-                      icon="solar:box-bold-duotone" 
+                      icon={"eva:cube-outline" as any} 
                       sx={{ fontSize: 64, color: 'text.disabled', mb: 2 }} 
                     />
                     <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '1.1rem' }}>
@@ -172,7 +179,7 @@ export function ChangeProductView() {
                   variant="contained"
                   size="large"
                   onClick={handleOpenProductDialog}
-                  startIcon={<Iconify icon="solar:box-bold" />}
+                  startIcon={<Iconify icon={"eva:cube-fill" as any} />}
                   sx={{
                     minHeight: 80,
                     minWidth: 280,
@@ -254,7 +261,7 @@ export function ChangeProductView() {
                       }}
                     />
                     <Iconify 
-                      icon="solar:arrow-right-bold" 
+                      icon={"mdi:arrow-right" as any} 
                       sx={{ color: 'text.secondary', fontSize: 32 }} 
                     />
                   </ListItemButton>

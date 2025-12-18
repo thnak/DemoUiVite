@@ -1,29 +1,36 @@
 import type { DefectReasonEntity } from 'src/api/types/generated';
 
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
+import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import {
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  CircularProgress,
+  InputAdornment,
+} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import { List, ListItem, ListItemButton, ListItemText, CircularProgress, Alert, InputAdornment } from '@mui/material';
 
-import { useTranslation } from 'react-i18next';
-
-import { searchDefectReason } from 'src/api/services/generated/defect-reason';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { searchDefectReason } from 'src/api/services/generated/defect-reason';
 
 import { Iconify } from 'src/components/iconify';
 
-import { useMachineSelector } from '../context/machine-selector-context';
-import { MachineSelectorCard } from '../components/machine-selector-card';
+import { useMachineSelector } from 'src/sections/oi/context';
+import { MachineSelectorCard } from 'src/sections/oi/components';
 
 // ----------------------------------------------------------------------
 
@@ -56,10 +63,10 @@ export function DefectInputView() {
     setLoading(true);
     try {
       const response = await searchDefectReason({ 
-        searchTerm: search,
-        pageSize: 50,
+        searchText: search,
+        maxResults: 50,
       });
-      setDefectReasons(response.data?.items || []);
+      setDefectReasons(response.data || []);
     } catch (error) {
       console.error('Failed to load defect reasons:', error);
       setDefectReasons([]);
@@ -192,7 +199,7 @@ export function DefectInputView() {
                       variant="contained"
                       size="large"
                       onClick={handleOpenDefectDialog}
-                      startIcon={<Iconify icon="solar:danger-circle-bold" />}
+                      startIcon={<Iconify icon={"eva:alert-circle-fill" as any} />}
                       sx={{
                         minHeight: 80,
                         minWidth: 280,
@@ -262,7 +269,7 @@ export function DefectInputView() {
                   size="large"
                   onClick={handleReset}
                   fullWidth
-                  startIcon={<Iconify icon="solar:refresh-bold" />}
+                  startIcon={<Iconify icon={"eva:refresh-fill" as any} />}
                   sx={{
                     minHeight: 80,
                     fontSize: '1.5rem',
@@ -366,7 +373,7 @@ export function DefectInputView() {
                     />
                     {selectedDefectReason?.id === defectReason.id && (
                       <Iconify 
-                        icon="eva:checkmark-circle-2-fill" 
+                        icon="eva:checkmark-fill" 
                         sx={{ color: 'primary.main', fontSize: 32 }} 
                       />
                     )}

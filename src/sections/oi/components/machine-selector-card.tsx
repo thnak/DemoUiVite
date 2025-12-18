@@ -1,25 +1,30 @@
 import type { MachineEntity } from 'src/api/types/generated';
 
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import {
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  CircularProgress,
+} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import { List, ListItem, ListItemButton, ListItemText, CircularProgress } from '@mui/material';
-
-import { useTranslation } from 'react-i18next';
 
 import { searchMachine } from 'src/api/services/generated/machine';
 
 import { Iconify } from 'src/components/iconify';
 
-import { useMachineSelector } from '../context/machine-selector-context';
+import { useMachineSelector } from 'src/sections/oi/context';
 
 // ----------------------------------------------------------------------
 
@@ -45,10 +50,10 @@ export function MachineSelectorCard() {
     setLoading(true);
     try {
       const response = await searchMachine({ 
-        searchTerm: search,
-        pageSize: 50,
+        searchText: search,
+        maxResults: 50,
       });
-      setMachines(response.data?.items || []);
+      setMachines(response.data || []);
     } catch (error) {
       console.error('Failed to load machines:', error);
       setMachines([]);
@@ -102,7 +107,7 @@ export function MachineSelectorCard() {
             variant="contained"
             size="large"
             onClick={handleOpenDialog}
-            startIcon={<Iconify icon="solar:widget-4-bold" />}
+            startIcon={<Iconify icon={"eva:cube-fill" as any} />}
             sx={{
               minHeight: 64,
               minWidth: 200,
@@ -186,7 +191,7 @@ export function MachineSelectorCard() {
                     />
                     {selectedMachine?.id === machine.id && (
                       <Iconify 
-                        icon="eva:checkmark-circle-2-fill" 
+                        icon="eva:checkmark-fill" 
                         sx={{ color: 'primary.main', fontSize: 32 }} 
                       />
                     )}

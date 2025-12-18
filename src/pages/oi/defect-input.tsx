@@ -1,19 +1,13 @@
-import { Helmet } from 'react-helmet-async';
-
 import { CONFIG } from 'src/config-global';
 
 import { DefectInputView } from 'src/sections/oi/defect-input/view';
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Defect Input | OI - ${CONFIG.site.name}` };
-
 export default function Page() {
   return (
     <>
-      <Helmet>
-        <title> {metadata.title}</title>
-      </Helmet>
+      <title>{`Defect Input - ${CONFIG.appName}`}</title>
 
       <DefectInputView />
     </>
