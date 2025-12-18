@@ -220,19 +220,21 @@ export function IoTDeviceCreateEditView({
   }, []);
 
   const handleAddSensor = useCallback(() => {
-    if (selectedSensorToAdd && currentDevice?.id) {
+    if (selectedSensorToAdd?.id && currentDevice?.id) {
       addSensorToDevice({
         deviceId: currentDevice.id,
-        sensorId: selectedSensorToAdd.id?.toString() || '',
+        sensorId: selectedSensorToAdd.id.toString(),
       });
     }
   }, [selectedSensorToAdd, currentDevice?.id, addSensorToDevice]);
 
   const handleRemoveSensor = useCallback(
     (sensorId: string) => {
-      removeSensorFromDevice({ sensorId });
+      if (sensorId && currentDevice?.id) {
+        removeSensorFromDevice({ sensorId });
+      }
     },
-    [removeSensorFromDevice]
+    [currentDevice?.id, removeSensorFromDevice]
   );
 
   const handleSubmit = useCallback(() => {
