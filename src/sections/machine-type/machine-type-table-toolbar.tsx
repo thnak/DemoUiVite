@@ -39,6 +39,7 @@ export function MachineTypeTableToolbar({
         fullWidth
         value={filterName}
         onChange={onFilterName}
+        size="small"
         placeholder="Search machine type..."
         startAdornment={
           <InputAdornment position="start">

@@ -48,6 +48,7 @@ const getModuleFromPath = (pathname: string): NavModule => {
     pathname.startsWith('/products') ||
     pathname.startsWith('/product-groups') ||
     pathname.startsWith('/machines') ||
+    pathname.startsWith('/machine-types') ||
     pathname.startsWith('/working-parameter') ||
     pathname.startsWith('/defect-reasons') ||
     pathname.startsWith('/defect-reason-group') ||
