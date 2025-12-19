@@ -193,6 +193,58 @@ For semantic colors, use the palette tokens:
 
 ## NOTE: this project using api service generator make sure called npm run generate:api before run build/dev
 
+## API Service Guidelines - **MANDATORY**
+
+**CRITICAL**: This project uses an API service generator. ALL API interactions MUST use generated services.
+
+### ❌ Prohibited Practices
+- **NEVER create custom endpoint files** like `src/api/services/machine-custom.ts`
+- **NEVER write manual API calls** outside of generated services
+- **NEVER create helper functions** that wrap or bypass generated services
+
+### ✅ Required Practices
+1. **Use Generated Services Only**: Import functions from `src/api/services/generated/`
+2. **Missing Endpoints**: If an endpoint is not in the generated code:
+   - **DO NOT** create a custom service file
+   - **Request** that the API specification (`docs/api/response.json`) be updated
+   - **Re-run** `npm run generate:api` after the spec is updated
+3. **Image URLs**: Construct image URLs directly using `apiConfig.baseUrl`
+   - Example: `${apiConfig.baseUrl}/api/Machine/${machineId}/image`
+   - Do NOT create wrapper functions for image URLs
+
+### Example: Correct Usage
+
+```typescript
+// ✅ CORRECT: Import from generated services
+import {
+  getapiMachinemachineIdavailableproducts,
+  postapiMachinemachineIdchangeproduct,
+  getapiMachinemachineIdcurrentproduct,
+} from 'src/api/services/generated/machine';
+import { apiConfig } from 'src/api/config';
+
+// ✅ CORRECT: Use generated function
+const products = await getapiMachinemachineIdavailableproducts(machineId, { 
+  page: 1, 
+  pageSize: 10 
+});
+
+// ✅ CORRECT: Construct image URL directly
+const imageUrl = `${apiConfig.baseUrl}/api/Machine/${machineId}/image`;
+
+// ❌ WRONG: Custom service file
+import { getAvailableProducts } from 'src/api/services/machine-custom';
+
+// ❌ WRONG: Manual axios call
+const response = await axiosInstance.get(`/api/Machine/${id}/products`);
+```
+
+### Why This Matters
+- **Consistency**: All API calls follow the same pattern
+- **Type Safety**: Generated services provide accurate TypeScript types
+- **Maintenance**: API changes are reflected automatically when regenerating
+- **Documentation**: Generated code is self-documenting from the OpenAPI spec
+
 ## API Time Duration Standards
 
 All time duration values in API calls **MUST** use the ISO 8601 duration format. This is a mandatory standard with no exceptions.
@@ -211,6 +263,38 @@ The format follows the pattern: `PnYnMnDTnHnMnS`
 | `nH` | Number of hours | `PT2H` (2 hours) |
 | `nM` | Number of minutes | `PT30M` (30 minutes) |
 | `nS` | Number of seconds | `PT45S` (45 seconds) |
+
+### Duration Display Format - **SECONDS ONLY**
+
+**MANDATORY**: All working parameter durations (idealCycleTime, downtimeThreshold, speedLossThreshold, quantityPerCycle) **MUST** be displayed and edited in **seconds format only**.
+
+#### Display Rules:
+- **Convert ISO 8601 to seconds** for display: `PT2H30M` → `9000s` (2*3600 + 30*60)
+- **Always show in seconds**: `PT45S` → `45s`
+- **Use DurationTimePicker with `precision="seconds"`** for all working parameter inputs
+
+#### Example Implementation:
+```typescript
+// Correct: Display in seconds
+const formatDurationInSeconds = (duration: string) => {
+  const totalSeconds = parseDurationToSeconds(duration);
+  return `${totalSeconds}s`;
+};
+
+// Correct: Edit in seconds
+<DurationTimePicker
+  label="Ideal Cycle Time"
+  value={idealCycleTime}
+  onChange={(value) => handleChange(value)}
+  precision="seconds"  // MANDATORY for working parameters
+/>
+```
+
+#### Fields Requiring Seconds Format:
+- `idealCycleTime` - Display and edit in seconds only
+- `downtimeThreshold` - Display and edit in seconds only  
+- `speedLossThreshold` - Display and edit in seconds only
+- Any machine/product working parameter durations
 
 ### ✅ Correct Examples
 

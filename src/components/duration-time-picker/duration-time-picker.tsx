@@ -14,8 +14,9 @@ import Typography from '@mui/material/Typography';
  * - 'hours-minutes': Hours and minutes (default, for time of day)
  * - 'days-hours-minutes': Days, hours, and minutes (for longer durations)
  * - 'hours-minutes-seconds': Hours, minutes, and seconds (for precise durations)
+ * - 'seconds': Seconds only (for cycle times and thresholds)
  */
-export type DurationPrecision = 'hours-minutes' | 'days-hours-minutes' | 'hours-minutes-seconds';
+export type DurationPrecision = 'hours-minutes' | 'days-hours-minutes' | 'hours-minutes-seconds' | 'seconds';
 
 // ----------------------------------------------------------------------
 
@@ -71,7 +72,7 @@ export function partsToIsoDuration(parts: {
   const { days = 0, hours = 0, minutes = 0, seconds = 0 } = parts;
 
   if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
-    return 'PT0M';
+    return 'PT0S';
   }
 
   let duration = 'P';
@@ -94,10 +95,30 @@ export function partsToIsoDuration(parts: {
 
   // Remove T if no time components
   if (duration === 'PT') {
-    return 'PT0M';
+    return 'PT0S';
   }
 
   return duration;
+}
+
+/**
+ * Convert seconds to ISO 8601 duration
+ */
+export function secondsToIsoDuration(seconds: number): string {
+  if (seconds === 0) return 'PT0S';
+  return `PT${seconds}S`;
+}
+
+/**
+ * Convert ISO 8601 duration to total seconds
+ */
+export function isoDurationToSeconds(duration: string | undefined): number {
+  if (!duration) return 0;
+  
+  const parts = parseDurationToParts(duration);
+  const { days, hours, minutes, seconds } = parts;
+  
+  return days * 86400 + hours * 3600 + minutes * 60 + seconds;
 }
 
 /**
@@ -107,10 +128,20 @@ export function formatDurationToHumanReadable(
   duration: string | undefined,
   precision: DurationPrecision = 'hours-minutes'
 ): string {
-  if (!duration) return '0 minutes';
+  if (!duration) {
+    if (precision === 'seconds') return '0 seconds';
+    if (precision === 'hours-minutes-seconds') return '0 seconds';
+    return '0 minutes';
+  }
 
   const parts = parseDurationToParts(duration);
   const { days, hours, minutes, seconds } = parts;
+
+  // For seconds-only mode, convert everything to seconds
+  if (precision === 'seconds') {
+    const totalSeconds = days * 86400 + hours * 3600 + minutes * 60 + seconds;
+    return `${totalSeconds} ${totalSeconds === 1 ? 'second' : 'seconds'}`;
+  }
 
   const result: string[] = [];
 
@@ -203,7 +234,20 @@ export function DurationTimePicker({
   precision = 'hours-minutes',
   ...other
 }: DurationTimePickerProps) {
-  // Parse current value into parts
+  // For seconds-only mode, use total seconds
+  const totalSeconds = useMemo(() => {
+    if (precision === 'seconds') {
+      return isoDurationToSeconds(value);
+    }
+    return 0;
+  }, [value, precision]);
+
+  // Local state for seconds-only mode
+  const [totalSecondsStr, setTotalSecondsStr] = useState(() => 
+    precision === 'seconds' && totalSeconds > 0 ? String(totalSeconds) : ''
+  );
+
+  // Parse current value into parts (for multi-part modes)
   const parts = useMemo(() => parseDurationToParts(value), [value]);
 
   // Local state for each input field (as strings to allow empty state)
@@ -214,13 +258,31 @@ export function DurationTimePicker({
 
   // Update local state when value prop changes externally
   useMemo(() => {
-    setDaysStr(parts.days > 0 ? String(parts.days) : '');
-    setHoursStr(parts.hours > 0 ? String(parts.hours) : '');
-    setMinutesStr(parts.minutes > 0 ? String(parts.minutes) : '');
-    setSecondsStr(parts.seconds > 0 ? String(parts.seconds) : '');
-  }, [parts.days, parts.hours, parts.minutes, parts.seconds]);
+    if (precision === 'seconds') {
+      setTotalSecondsStr(totalSeconds > 0 ? String(totalSeconds) : '');
+    } else {
+      setDaysStr(parts.days > 0 ? String(parts.days) : '');
+      setHoursStr(parts.hours > 0 ? String(parts.hours) : '');
+      setMinutesStr(parts.minutes > 0 ? String(parts.minutes) : '');
+      setSecondsStr(parts.seconds > 0 ? String(parts.seconds) : '');
+    }
+  }, [parts.days, parts.hours, parts.minutes, parts.seconds, totalSeconds, precision]);
 
-  // Handle input changes
+  // Handle seconds-only input change
+  const handleSecondsOnlyChange = useCallback(
+    (newValue: string) => {
+      setTotalSecondsStr(newValue);
+      
+      if (onChange) {
+        const secs = newValue === '' ? 0 : parseInt(newValue, 10) || 0;
+        const isoDuration = secondsToIsoDuration(secs);
+        onChange(isoDuration);
+      }
+    },
+    [onChange]
+  );
+
+  // Handle input changes (for multi-part modes)
   const handlePartChange = useCallback(
     (partName: 'days' | 'hours' | 'minutes' | 'seconds', newValue: string) => {
       // Update local state
@@ -276,76 +338,101 @@ export function DurationTimePicker({
         </Typography>
       )}
       <Stack direction="row" spacing={1} alignItems="center">
-        {precision === 'days-hours-minutes' && (
+        {/* Seconds-only mode */}
+        {precision === 'seconds' && (
           <TextField
             {...other}
             type="number"
-            value={daysStr}
-            onChange={(e) => handlePartChange('days', e.target.value)}
+            value={totalSecondsStr}
+            onChange={(e) => handleSecondsOnlyChange(e.target.value)}
             placeholder="0"
-            label="Days"
-            sx={{ width: 80 }}
+            label="Seconds"
+            sx={{ width: 120 }}
             slotProps={{
               htmlInput: {
                 min: 0,
-                max: 365,
+                max: 999999,
                 ...other.slotProps?.htmlInput,
               },
             }}
           />
         )}
 
-        <TextField
-          {...other}
-          type="number"
-          value={hoursStr}
-          onChange={(e) => handlePartChange('hours', e.target.value)}
-          placeholder="0"
-          label="Hours"
-          sx={{ width: 80 }}
-          slotProps={{
-            htmlInput: {
-              min: 0,
-              max: precision === 'days-hours-minutes' ? 23 : 9999,
-              ...other.slotProps?.htmlInput,
-            },
-          }}
-        />
+        {/* Multi-part modes */}
+        {precision !== 'seconds' && (
+          <>
+            {precision === 'days-hours-minutes' && (
+              <TextField
+                {...other}
+                type="number"
+                value={daysStr}
+                onChange={(e) => handlePartChange('days', e.target.value)}
+                placeholder="0"
+                label="Days"
+                sx={{ width: 80 }}
+                slotProps={{
+                  htmlInput: {
+                    min: 0,
+                    max: 365,
+                    ...other.slotProps?.htmlInput,
+                  },
+                }}
+              />
+            )}
 
-        <TextField
-          {...other}
-          type="number"
-          value={minutesStr}
-          onChange={(e) => handlePartChange('minutes', e.target.value)}
-          placeholder="0"
-          label="Minutes"
-          sx={{ width: 90 }}
-          slotProps={{
-            htmlInput: {
-              min: 0,
-              max: 59,
-              ...other.slotProps?.htmlInput,
-            },
-          }}
-        />
+            <TextField
+              {...other}
+              type="number"
+              value={hoursStr}
+              onChange={(e) => handlePartChange('hours', e.target.value)}
+              placeholder="0"
+              label="Hours"
+              sx={{ width: 80 }}
+              slotProps={{
+                htmlInput: {
+                  min: 0,
+                  max: precision === 'days-hours-minutes' ? 23 : 9999,
+                  ...other.slotProps?.htmlInput,
+                },
+              }}
+            />
 
-        {precision === 'hours-minutes-seconds' && (
-          <TextField
-            {...other}
-            type="number"
-            value={secondsStr}
-            onChange={(e) => handlePartChange('seconds', e.target.value)}
-            placeholder="0"
-            label="Seconds"
-            sx={{ width: 90 }}
-            slotProps={{
-              htmlInput: {
-                min: 0,
-                max: 59,
-                ...other.slotProps?.htmlInput,
-              },
-            }}
-          />
+            <TextField
+              {...other}
+              type="number"
+              value={minutesStr}
+              onChange={(e) => handlePartChange('minutes', e.target.value)}
+              placeholder="0"
+              label="Minutes"
+              sx={{ width: 90 }}
+              slotProps={{
+                htmlInput: {
+                  min: 0,
+                  max: 59,
+                  ...other.slotProps?.htmlInput,
+                },
+              }}
+            />
+
+            {precision === 'hours-minutes-seconds' && (
+              <TextField
+                {...other}
+                type="number"
+                value={secondsStr}
+                onChange={(e) => handlePartChange('seconds', e.target.value)}
+                placeholder="0"
+                label="Seconds"
+                sx={{ width: 90 }}
+                slotProps={{
+                  htmlInput: {
+                    min: 0,
+                    max: 59,
+                    ...other.slotProps?.htmlInput,
+                  },
+                }}
+              />
+            )}
+          </>
         )}
       </Stack>
       {generatedHelperText && (
