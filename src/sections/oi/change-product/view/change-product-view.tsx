@@ -33,7 +33,10 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import {
   changeProduct,
+  getCurrentProduct,
   getAvailableProducts,
+  getMachineImageUrl,
+  getProductImageUrl,
   type GetAvailableProductsParams,
 } from 'src/api/services/machine-custom';
 
@@ -80,17 +83,19 @@ export function ChangeProductView() {
         params.searchTerm = searchTerm;
       }
 
-      const response = await getAvailableProducts(selectedMachine.id, params);
-      setAvailableProducts(response.items || []);
-      setTotalItems(response.totalItems || 0);
+      const [productsResponse, currentProductData] = await Promise.all([
+        getAvailableProducts(selectedMachine.id, params),
+        getCurrentProduct(selectedMachine.id),
+      ]);
       
-      // TODO: Get current product from machine status API
-      // For now, we'll leave it as null until the machine status API is available
-      // setCurrentProduct should be set from actual machine running product data
+      setAvailableProducts(productsResponse.items || []);
+      setTotalItems(productsResponse.totalItems || 0);
+      setCurrentProduct(currentProductData);
     } catch (error) {
       console.error('Failed to load available products:', error);
       setAvailableProducts([]);
       setTotalItems(0);
+      setCurrentProduct(null);
     } finally {
       setLoading(false);
     }
@@ -176,23 +181,21 @@ export function ChangeProductView() {
     setEditedSpecs(null);
   };
 
-  const formatDuration = (duration: string | undefined | null) => {
+  const formatDurationInSeconds = (duration: string | undefined | null) => {
     if (!duration) return 'N/A';
     
-    // Parse ISO 8601 duration (e.g., PT1H30M or PT45S)
-    const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+    // Parse ISO 8601 duration and convert to total seconds
+    const match = duration.match(/P(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
     if (!match) return duration;
     
-    const hours = match[1] ? parseInt(match[1], 10) : 0;
-    const minutes = match[2] ? parseInt(match[2], 10) : 0;
-    const seconds = match[3] ? parseInt(match[3], 10) : 0;
+    const days = match[1] ? parseInt(match[1], 10) : 0;
+    const hours = match[2] ? parseInt(match[2], 10) : 0;
+    const minutes = match[3] ? parseInt(match[3], 10) : 0;
+    const seconds = match[4] ? parseInt(match[4], 10) : 0;
     
-    const parts = [];
-    if (hours > 0) parts.push(`${hours}h`);
-    if (minutes > 0) parts.push(`${minutes}m`);
-    if (seconds > 0) parts.push(`${seconds}s`);
+    const totalSeconds = days * 86400 + hours * 3600 + minutes * 60 + seconds;
     
-    return parts.length > 0 ? parts.join(' ') : '0s';
+    return `${totalSeconds}s`;
   };
 
   const isSameProduct = currentProduct?.productId === selectedProductDto?.productId;
@@ -216,6 +219,28 @@ export function ChangeProductView() {
         </Alert>
       ) : (
         <Grid container spacing={3}>
+          {/* Machine Image (if available) */}
+          {selectedMachine?.id && (
+            <Grid size={{ xs: 12 }}>
+              <Card sx={{ p: 2 }}>
+                <Box
+                  component="img"
+                  src={getMachineImageUrl(selectedMachine.id)}
+                  alt={selectedMachine.name || 'Machine'}
+                  sx={{
+                    width: '100%',
+                    maxHeight: 200,
+                    objectFit: 'cover',
+                    borderRadius: 1,
+                  }}
+                  onError={(e: any) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
+              </Card>
+            </Grid>
+          )}
+
           {/* Current Product */}
           <Grid size={{ xs: 12, md: 4 }}>
             <Card sx={{ p: 4, height: '100%' }}>
@@ -224,6 +249,25 @@ export function ChangeProductView() {
               </Typography>
               {currentProduct?.productName ? (
                 <Box>
+                  {/* Product Image */}
+                  {currentProduct.productId && (
+                    <Box
+                      component="img"
+                      src={getProductImageUrl(currentProduct.productId)}
+                      alt={currentProduct.productName}
+                      sx={{
+                        width: '100%',
+                        height: 120,
+                        objectFit: 'cover',
+                        borderRadius: 1,
+                        mb: 2,
+                      }}
+                      onError={(e: any) => {
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  )}
+                  
                   <Typography variant="h4" sx={{ mb: 1, fontWeight: 'bold' }}>
                     {currentProduct.productName}
                   </Typography>
@@ -245,7 +289,7 @@ export function ChangeProductView() {
                             {t('oi.idealCycleTime')}:
                           </Typography>
                           <Typography variant="body2">
-                            {formatDuration(currentProduct.idealCycleTime)}
+                            {formatDurationInSeconds(currentProduct.idealCycleTime)}
                           </Typography>
                         </Box>
                         <Box>
@@ -400,7 +444,7 @@ export function ChangeProductView() {
                                               {t('oi.idealCycleTime')}:
                                             </Typography>
                                             <Typography variant="body2">
-                                              {formatDuration(productDto.idealCycleTime)}
+                                              {formatDurationInSeconds(productDto.idealCycleTime)}
                                             </Typography>
                                           </Grid>
                                           <Grid size={{ xs: 12, sm: 6 }}>
@@ -408,7 +452,7 @@ export function ChangeProductView() {
                                               {t('oi.downtimeThreshold')}:
                                             </Typography>
                                             <Typography variant="body2">
-                                              {formatDuration(productDto.downtimeThreshold)}
+                                              {formatDurationInSeconds(productDto.downtimeThreshold)}
                                             </Typography>
                                           </Grid>
                                           <Grid size={{ xs: 12, sm: 6 }}>
@@ -416,7 +460,7 @@ export function ChangeProductView() {
                                               {t('oi.speedLossThreshold')}:
                                             </Typography>
                                             <Typography variant="body2">
-                                              {formatDuration(productDto.speedLossThreshold)}
+                                              {formatDurationInSeconds(productDto.speedLossThreshold)}
                                             </Typography>
                                           </Grid>
                                           <Grid size={{ xs: 12, sm: 6 }}>
@@ -528,6 +572,7 @@ export function ChangeProductView() {
                   label={t('oi.idealCycleTime')}
                   value={editedSpecs?.idealCycleTime || ''}
                   onChange={(value) => handleSpecChange('idealCycleTime', value)}
+                  precision="seconds"
                   fullWidth
                 />
               </Grid>
@@ -536,6 +581,7 @@ export function ChangeProductView() {
                   label={t('oi.downtimeThreshold')}
                   value={editedSpecs?.downtimeThreshold || ''}
                   onChange={(value) => handleSpecChange('downtimeThreshold', value)}
+                  precision="seconds"
                   fullWidth
                 />
               </Grid>
@@ -544,6 +590,7 @@ export function ChangeProductView() {
                   label={t('oi.speedLossThreshold')}
                   value={editedSpecs?.speedLossThreshold || ''}
                   onChange={(value) => handleSpecChange('speedLossThreshold', value)}
+                  precision="seconds"
                   fullWidth
                 />
               </Grid>

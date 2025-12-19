@@ -212,6 +212,38 @@ The format follows the pattern: `PnYnMnDTnHnMnS`
 | `nM` | Number of minutes | `PT30M` (30 minutes) |
 | `nS` | Number of seconds | `PT45S` (45 seconds) |
 
+### Duration Display Format - **SECONDS ONLY**
+
+**MANDATORY**: All working parameter durations (idealCycleTime, downtimeThreshold, speedLossThreshold, quantityPerCycle) **MUST** be displayed and edited in **seconds format only**.
+
+#### Display Rules:
+- **Convert ISO 8601 to seconds** for display: `PT2H30M` → `9000s` (2*3600 + 30*60)
+- **Always show in seconds**: `PT45S` → `45s`
+- **Use DurationTimePicker with `precision="seconds"`** for all working parameter inputs
+
+#### Example Implementation:
+```typescript
+// Correct: Display in seconds
+const formatDurationInSeconds = (duration: string) => {
+  const totalSeconds = parseDurationToSeconds(duration);
+  return `${totalSeconds}s`;
+};
+
+// Correct: Edit in seconds
+<DurationTimePicker
+  label="Ideal Cycle Time"
+  value={idealCycleTime}
+  onChange={(value) => handleChange(value)}
+  precision="seconds"  // MANDATORY for working parameters
+/>
+```
+
+#### Fields Requiring Seconds Format:
+- `idealCycleTime` - Display and edit in seconds only
+- `downtimeThreshold` - Display and edit in seconds only  
+- `speedLossThreshold` - Display and edit in seconds only
+- Any machine/product working parameter durations
+
 ### ✅ Correct Examples
 
 ```typescript

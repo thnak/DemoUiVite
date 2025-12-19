@@ -5,6 +5,7 @@ import type {
   BooleanResult,
   ProductEntity,
   WorkingParameterEntity,
+  ProductWorkingStateByMachine,
   ProductWorkingStateByMachineBasePaginationResponse,
 } from '../types/generated';
 
@@ -56,6 +57,50 @@ export async function getAvailableProducts(
     { params }
   );
   return response.data;
+}
+
+/**
+ * Get current product running on a machine
+ * 
+ * Retrieves the current product being processed by the machine.
+ * @param machineId - MongoDB ObjectId represented as a 24-character hexadecimal string
+ * @returns Promise<ProductWorkingStateByMachine | null>
+ */
+export async function getCurrentProduct(machineId: ObjectId): Promise<ProductWorkingStateByMachine | null> {
+  try {
+    const response = await axiosInstance.get<ProductWorkingStateByMachine>(
+      `/api/Machine/${machineId}/current-product`
+    );
+    return response.data;
+  } catch (error: any) {
+    // Return null if 404 (no product running)
+    if (error?.response?.status === 404) {
+      return null;
+    }
+    throw error;
+  }
+}
+
+/**
+ * Get machine image URL
+ * 
+ * Returns the image URL for a specific machine (redirects to actual image).
+ * @param machineId - MongoDB ObjectId represented as a 24-character hexadecimal string
+ * @returns string - Image URL
+ */
+export function getMachineImageUrl(machineId: ObjectId): string {
+  return `${axiosInstance.defaults.baseURL}/api/Machine/${machineId}/image`;
+}
+
+/**
+ * Get product image URL
+ * 
+ * Returns the image URL for a specific product (redirects to actual image).
+ * @param productId - MongoDB ObjectId represented as a 24-character hexadecimal string
+ * @returns string - Image URL
+ */
+export function getProductImageUrl(productId: ObjectId): string {
+  return `${axiosInstance.defaults.baseURL}/api/Product/${productId}/image`;
 }
 
 /**
