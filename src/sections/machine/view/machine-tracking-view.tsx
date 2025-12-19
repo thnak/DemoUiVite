@@ -28,6 +28,7 @@ import { MachineHubService, MachineRunState as MachineRunStateEnum } from 'src/s
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
+import { Chart, useChart } from 'src/components/chart';
 
 // ----------------------------------------------------------------------
 
@@ -156,31 +157,125 @@ export function MachineTrackingView() {
     }
   };
 
-  const getStateColor = (state: MachineRunState): string => {
-    switch (state) {
-      case MachineRunStateEnum.Running:
-        return '#008000'; // Green
-      case MachineRunStateEnum.SpeedLoss:
-        return '#FFFF00'; // Yellow
-      case MachineRunStateEnum.Downtime:
-        return '#FF0000'; // Red
-      default:
-        return 'gray';
+  // Helper to normalize state - SignalR serializes enum as string
+  const normalizeState = (state: MachineRunState): string => {
+    // If it's already a string, normalize it to consistent format
+    if (typeof state === 'string') {
+      // Handle both 'SpeedLoss' and 'Speed Loss' variations
+      const stateStr = state as string;
+      const normalized = stateStr.replace(/\s+/g, '');
+      return normalized;
     }
-  };
-
-  const getStateName = (state: MachineRunState): string => {
+    // If it's a number, convert to string representation
     switch (state) {
       case MachineRunStateEnum.Running:
         return 'Running';
       case MachineRunStateEnum.SpeedLoss:
-        return 'Speed Loss';
+        return 'SpeedLoss';
       case MachineRunStateEnum.Downtime:
         return 'Downtime';
       default:
         return 'Unknown';
     }
   };
+
+  // State color constants
+  const STATE_COLORS = {
+    Running: '#4caf50',    // Green
+    SpeedLoss: '#ff9800',  // Orange
+    Downtime: '#f44336',   // Red
+    Unknown: '#9e9e9e',    // Gray
+  } as const;
+
+  const getStateColor = (state: MachineRunState): string => {
+    const normalizedState = normalizeState(state);
+    return STATE_COLORS[normalizedState as keyof typeof STATE_COLORS] || STATE_COLORS.Unknown;
+  };
+
+  const getStateName = (state: MachineRunState): string => {
+    const normalizedState = normalizeState(state);
+    switch (normalizedState) {
+      case 'Running':
+        return 'Running';
+      case 'SpeedLoss':
+        return 'Speed Loss';
+      case 'Downtime':
+        return 'Downtime';
+      default:
+        return 'Unknown';
+    }
+  };
+
+  // Prepare data for range bar chart
+  const prepareRangeBarData = () => {
+    if (!machineState?.runStateHistory || machineState.runStateHistory.length === 0) {
+      return [];
+    }
+
+    return machineState.runStateHistory.map((block: MachineRunStateTimeBlock) => {
+      const startTime = new Date(block.startTime).getTime();
+      const endTime = new Date(block.endTime).getTime();
+      
+      return {
+        x: 'Machine State',
+        y: [startTime, endTime],
+        fillColor: getStateColor(block.state),
+        stateName: getStateName(block.state),
+      };
+    });
+  };
+
+  const rangeBarChartOptions = useChart({
+    chart: {
+      type: 'rangeBar',
+      height: 150,
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        borderRadius: 4,
+        rangeBarGroupRows: false,
+      },
+    },
+    xaxis: {
+      type: 'datetime',
+      labels: {
+        datetimeUTC: false,
+        format: 'HH:mm:ss',
+      },
+    },
+    yaxis: {
+      show: false,
+    },
+    tooltip: {
+      custom: (opts: { seriesIndex: number; dataPointIndex: number; w: { config: { series: Array<{ data: Array<{ y: [number, number]; stateName: string }> }> } } }) => {
+        const { dataPointIndex, w } = opts;
+        const data = w.config.series[0].data[dataPointIndex];
+        const startTime = new Date(data.y[0]).toLocaleTimeString();
+        const endTime = new Date(data.y[1]).toLocaleTimeString();
+        const duration = Math.round((data.y[1] - data.y[0]) / 1000 / 60); // minutes
+        
+        return `
+          <div style="padding: 8px 12px; background: rgba(0, 0, 0, 0.8); color: white; border-radius: 4px;">
+            <div style="font-weight: 600; margin-bottom: 4px;">${data.stateName}</div>
+            <div style="font-size: 12px; opacity: 0.9;">${startTime} - ${endTime}</div>
+            <div style="font-size: 12px; opacity: 0.9;">Duration: ${duration} min</div>
+          </div>
+        `;
+      },
+    },
+    legend: {
+      show: false,
+    },
+    grid: {
+      padding: {
+        top: 0,
+        bottom: 0,
+        left: 10,
+        right: 10,
+      },
+    },
+  });
 
   const formatDuration = (duration: string): string => {
     if (!duration) return 'N/A';
@@ -533,51 +628,61 @@ export function MachineTrackingView() {
                       Run State History
                     </Typography>
 
-                    <Stack spacing={1.5}>
-                      {machineState.runStateHistory.map((block: MachineRunStateTimeBlock, index: number) => (
+                    <Box sx={{ mb: 2 }}>
+                      <Chart
+                        type="rangeBar"
+                        series={[
+                          {
+                            data: prepareRangeBarData(),
+                          },
+                        ]}
+                        options={rangeBarChartOptions}
+                        sx={{ height: 150 }}
+                      />
+                    </Box>
+
+                    {/* Legend */}
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mt: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Box
-                          key={index}
                           sx={{
-                            p: 2,
-                            borderRadius: 1,
-                            bgcolor: 'background.neutral',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
+                            width: 16,
+                            height: 16,
+                            borderRadius: 0.5,
+                            bgcolor: STATE_COLORS.Running,
                           }}
-                        >
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                            <Box
-                              sx={{
-                                width: 12,
-                                height: 12,
-                                borderRadius: '50%',
-                                bgcolor: getStateColor(block.state),
-                                flexShrink: 0,
-                              }}
-                            />
-                            <Box>
-                              <Label
-                                color={
-                                  block.state === MachineRunStateEnum.Running
-                                    ? 'success'
-                                    : block.state === MachineRunStateEnum.SpeedLoss
-                                      ? 'warning'
-                                      : 'error'
-                                }
-                                sx={{ mb: 0.5 }}
-                              >
-                                {getStateName(block.state)}
-                              </Label>
-                              <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
-                                {new Date(block.startTime).toLocaleTimeString()} -{' '}
-                                {new Date(block.endTime).toLocaleTimeString()}
-                              </Typography>
-                            </Box>
-                          </Box>
-                        </Box>
-                      ))}
-                    </Stack>
+                        />
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                          Running
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box
+                          sx={{
+                            width: 16,
+                            height: 16,
+                            borderRadius: 0.5,
+                            bgcolor: STATE_COLORS.SpeedLoss,
+                          }}
+                        />
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                          Speed Loss
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box
+                          sx={{
+                            width: 16,
+                            height: 16,
+                            borderRadius: 0.5,
+                            bgcolor: STATE_COLORS.Downtime,
+                          }}
+                        />
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                          Downtime
+                        </Typography>
+                      </Box>
+                    </Box>
                   </Card>
                 )}
               </>
