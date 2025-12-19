@@ -159,8 +159,13 @@ export function MachineTrackingView() {
 
   // Helper to normalize state - SignalR serializes enum as string
   const normalizeState = (state: MachineRunState): string => {
-    // If it's already a string, return as-is
-    if (typeof state === 'string') return state;
+    // If it's already a string, normalize it to consistent format
+    if (typeof state === 'string') {
+      // Handle both 'SpeedLoss' and 'Speed Loss' variations
+      const stateStr = state as string;
+      const normalized = stateStr.replace(/\s+/g, '');
+      return normalized;
+    }
     // If it's a number, convert to string representation
     switch (state) {
       case MachineRunStateEnum.Running:
@@ -174,18 +179,17 @@ export function MachineTrackingView() {
     }
   };
 
+  // State color constants
+  const STATE_COLORS = {
+    Running: '#4caf50',    // Green
+    SpeedLoss: '#ff9800',  // Orange
+    Downtime: '#f44336',   // Red
+    Unknown: '#9e9e9e',    // Gray
+  } as const;
+
   const getStateColor = (state: MachineRunState): string => {
     const normalizedState = normalizeState(state);
-    switch (normalizedState) {
-      case 'Running':
-        return '#4caf50'; // Green
-      case 'SpeedLoss':
-        return '#ff9800'; // Orange
-      case 'Downtime':
-        return '#f44336'; // Red
-      default:
-        return '#9e9e9e'; // Gray
-    }
+    return STATE_COLORS[normalizedState as keyof typeof STATE_COLORS] || STATE_COLORS.Unknown;
   };
 
   const getStateName = (state: MachineRunState): string => {
@@ -244,7 +248,8 @@ export function MachineTrackingView() {
       show: false,
     },
     tooltip: {
-      custom: ({ seriesIndex, dataPointIndex, w }: any) => {
+      custom: (opts: { seriesIndex: number; dataPointIndex: number; w: { config: { series: Array<{ data: Array<{ y: [number, number]; stateName: string }> }> } } }) => {
+        const { dataPointIndex, w } = opts;
         const data = w.config.series[0].data[dataPointIndex];
         const startTime = new Date(data.y[0]).toLocaleTimeString();
         const endTime = new Date(data.y[1]).toLocaleTimeString();
@@ -644,7 +649,7 @@ export function MachineTrackingView() {
                             width: 16,
                             height: 16,
                             borderRadius: 0.5,
-                            bgcolor: '#4caf50',
+                            bgcolor: STATE_COLORS.Running,
                           }}
                         />
                         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
@@ -657,7 +662,7 @@ export function MachineTrackingView() {
                             width: 16,
                             height: 16,
                             borderRadius: 0.5,
-                            bgcolor: '#ff9800',
+                            bgcolor: STATE_COLORS.SpeedLoss,
                           }}
                         />
                         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
@@ -670,7 +675,7 @@ export function MachineTrackingView() {
                             width: 16,
                             height: 16,
                             borderRadius: 0.5,
-                            bgcolor: '#f44336',
+                            bgcolor: STATE_COLORS.Downtime,
                           }}
                         />
                         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
