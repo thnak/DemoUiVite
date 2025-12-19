@@ -164,21 +164,24 @@ currentWorkingParameter,
         </Box>
       </Box>
       <Grid container spacing={3}>
-
         {/* Right Section - Product Info Form */}
         <Grid size={{ xs: 12, md: 8 }}>
           <Card sx={{ p: 3 }}>
             <Grid container spacing={3}>
               <Grid size={{ xs: 12 }}>
-                <MachineSelector value={formData.machine}
-                onChange={handleMachineChange}
-                label="Machine" />
+                <MachineSelector
+                  value={formData.machine}
+                  onChange={handleMachineChange}
+                  label="Machine"
+                />
               </Grid>
 
               <Grid size={{ xs: 12 }}>
-                  <ProductSelector value={formData.product}
-                                   onChange={handleProductChange}
-                                   label="Product" />
+                <ProductSelector
+                  value={formData.product}
+                  onChange={handleProductChange}
+                  label="Product"
+                />
               </Grid>
 
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
@@ -187,7 +190,17 @@ currentWorkingParameter,
                   label="Ideal Cycle Time"
                   value={formData.idealCycleTime}
                   onChange={(duration) => handleInputChange('idealCycleTime', duration)}
-                  precision="hours-minutes-seconds"
+                  precision="seconds"
+                />
+              </Stack>
+
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                <DurationTimePicker
+                  fullWidth
+                  label="SpeedLoss Threshold"
+                  value={formData.speedLossThreshold}
+                  onChange={(duration) => handleInputChange('speedLossThreshold', duration)}
+                  precision="seconds"
                 />
               </Stack>
 
@@ -197,19 +210,10 @@ currentWorkingParameter,
                   label="Downtime Threshold"
                   value={formData.downtimeThreshold}
                   onChange={(duration) => handleInputChange('downtimeThreshold', duration)}
-                  precision="hours-minutes-seconds"
+                  precision="seconds"
                 />
               </Stack>
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                <DurationTimePicker
-                  fullWidth
-                  label="SpeedLoss Threshold"
-                  value={formData.speedLossThreshold}
-                  onChange={(duration) => handleInputChange('speedLossThreshold', duration)}
-                  precision="hours-minutes-seconds"
 
-                />
-              </Stack>
               <Grid size={{ xs: 12 }}>
                 <TextField
                   fullWidth
