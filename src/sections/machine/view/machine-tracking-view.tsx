@@ -23,8 +23,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { apiConfig } from 'src/api/config';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { MachineHubService } from 'src/services/machineHub';
 import { useGetMachineById } from 'src/api/hooks/generated/use-machine';
-import { MachineHubService, MachineRunState as MachineRunStateEnum } from 'src/services/machineHub';
 
 import { Iconify } from 'src/components/iconify';
 import { Chart, useChart } from 'src/components/chart';
@@ -153,28 +153,6 @@ export function MachineTrackingView() {
         return 'error';
       default:
         return 'info';
-    }
-  };
-
-  // Helper to normalize state - SignalR serializes enum as string
-  const normalizeState = (state: MachineRunState): string => {
-    // If it's already a string, normalize it to consistent format
-    if (typeof state === 'string') {
-      // Handle both 'SpeedLoss' and 'Speed Loss' variations
-      const stateStr = state as string;
-      const normalized = stateStr.replace(/\s+/g, '');
-      return normalized;
-    }
-    // If it's a number, convert to string representation
-    switch (state) {
-      case MachineRunStateEnum.Running:
-        return 'Running';
-      case MachineRunStateEnum.SpeedLoss:
-        return 'SpeedLoss';
-      case MachineRunStateEnum.Downtime:
-        return 'Downtime';
-      default:
-        return 'Unknown';
     }
   };
 
