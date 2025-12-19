@@ -1,8 +1,8 @@
 import axiosInstance from '../axios-instance';
 
 import type {
-  BooleanResult,
   ObjectId,
+  BooleanResult,
   ProductEntity,
   WorkingParameterEntity,
 } from '../types/generated';

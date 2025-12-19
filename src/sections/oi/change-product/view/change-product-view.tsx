@@ -26,7 +26,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import TableContainer from '@mui/material/TableContainer';
-import { Collapse, CircularProgress, Stack, Snackbar } from '@mui/material';
+import { Stack, Collapse, Snackbar, CircularProgress } from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
