@@ -26,7 +26,6 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { useGetMachineById } from 'src/api/hooks/generated/use-machine';
 import { MachineHubService, MachineRunState as MachineRunStateEnum } from 'src/services/machineHub';
 
-import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Chart, useChart } from 'src/components/chart';
 
@@ -181,25 +180,22 @@ export function MachineTrackingView() {
 
   // State color constants
   const STATE_COLORS = {
-    Running: '#4caf50',    // Green
-    SpeedLoss: '#ff9800',  // Orange
-    Downtime: '#f44336',   // Red
-    Unknown: '#9e9e9e',    // Gray
+    running: '#4caf50', // Green
+    speedloss: '#ff9800', // Orange
+    downtime: '#f44336', // Red
+    unknown: '#9e9e9e', // Gray
   } as const;
 
-  const getStateColor = (state: MachineRunState): string => {
-    const normalizedState = normalizeState(state);
-    return STATE_COLORS[normalizedState as keyof typeof STATE_COLORS] || STATE_COLORS.Unknown;
-  };
+  const getStateColor = (state: MachineRunState): string =>
+    STATE_COLORS[state as keyof typeof STATE_COLORS] || STATE_COLORS.unknown;
 
   const getStateName = (state: MachineRunState): string => {
-    const normalizedState = normalizeState(state);
-    switch (normalizedState) {
-      case 'Running':
+    switch (state) {
+      case 'running':
         return 'Running';
-      case 'SpeedLoss':
+      case 'speedloss':
         return 'Speed Loss';
-      case 'Downtime':
+      case 'downtime':
         return 'Downtime';
       default:
         return 'Unknown';
@@ -215,7 +211,7 @@ export function MachineTrackingView() {
     return machineState.runStateHistory.map((block: MachineRunStateTimeBlock) => {
       const startTime = new Date(block.startTime).getTime();
       const endTime = new Date(block.endTime).getTime();
-      
+
       return {
         x: 'Machine State',
         y: [startTime, endTime],
@@ -233,9 +229,20 @@ export function MachineTrackingView() {
     plotOptions: {
       bar: {
         horizontal: true,
-        borderRadius: 4,
+        borderRadius: 0,
         rangeBarGroupRows: false,
       },
+    },
+    dataLabels: {
+      enabled: false, // <--- HERE
+    },
+    stroke: {
+      show: false,
+      curve: 'straight',
+      lineCap: 'butt',
+      colors: undefined,
+      width: 2,
+      dashArray: 0,
     },
     xaxis: {
       type: 'datetime',
@@ -248,13 +255,19 @@ export function MachineTrackingView() {
       show: false,
     },
     tooltip: {
-      custom: (opts: { seriesIndex: number; dataPointIndex: number; w: { config: { series: Array<{ data: Array<{ y: [number, number]; stateName: string }> }> } } }) => {
+      custom: (opts: {
+        seriesIndex: number;
+        dataPointIndex: number;
+        w: {
+          config: { series: Array<{ data: Array<{ y: [number, number]; stateName: string }> }> };
+        };
+      }) => {
         const { dataPointIndex, w } = opts;
         const data = w.config.series[0].data[dataPointIndex];
         const startTime = new Date(data.y[0]).toLocaleTimeString();
         const endTime = new Date(data.y[1]).toLocaleTimeString();
         const duration = Math.round((data.y[1] - data.y[0]) / 1000 / 60); // minutes
-        
+
         return `
           <div style="padding: 8px 12px; background: rgba(0, 0, 0, 0.8); color: white; border-radius: 4px;">
             <div style="font-weight: 600; margin-bottom: 4px;">${data.stateName}</div>
@@ -299,7 +312,9 @@ export function MachineTrackingView() {
   if (isLoadingMachine) {
     return (
       <DashboardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
           <CircularProgress />
         </Box>
       </DashboardContent>
@@ -325,7 +340,9 @@ export function MachineTrackingView() {
           <Button
             variant="outlined"
             size="small"
-            startIcon={<Iconify icon="eva:arrow-ios-forward-fill" sx={{ transform: 'rotate(180deg)' }} />}
+            startIcon={
+              <Iconify icon="eva:arrow-ios-forward-fill" sx={{ transform: 'rotate(180deg)' }} />
+            }
             onClick={handleBackToList}
           >
             Back
@@ -376,21 +393,30 @@ export function MachineTrackingView() {
               <Divider />
 
               <Box>
-                <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}>
+                <Typography
+                  variant="caption"
+                  sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}
+                >
                   Area
                 </Typography>
                 <Typography variant="body2">{machine.areaId?.toString() || '-'}</Typography>
               </Box>
 
               <Box>
-                <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}>
+                <Typography
+                  variant="caption"
+                  sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}
+                >
                   Work Calendar
                 </Typography>
                 <Typography variant="body2">{machine.calendarId?.toString() || '-'}</Typography>
               </Box>
 
               <Box>
-                <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}>
+                <Typography
+                  variant="caption"
+                  sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}
+                >
                   Calculation Mode
                 </Typography>
                 <Typography variant="body2">{machine.calculationMode || '-'}</Typography>
@@ -404,7 +430,14 @@ export function MachineTrackingView() {
           <Stack spacing={3}>
             {/* Connection Status */}
             <Card sx={{ p: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  mb: 2,
+                }}
+              >
                 <Typography variant="h6">Connection Status</Typography>
                 <Chip
                   icon={
@@ -445,11 +478,17 @@ export function MachineTrackingView() {
                     {/* Overall OEE */}
                     <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                       <Box>
-                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: 'text.secondary', display: 'block', mb: 1 }}
+                        >
                           OEE
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
-                          <Typography variant="h3" sx={{ color: `${getOeeColor(machineState.oee)}.main` }}>
+                          <Typography
+                            variant="h3"
+                            sx={{ color: `${getOeeColor(machineState.oee)}.main` }}
+                          >
                             {machineState.oee.toFixed(1)}
                           </Typography>
                           <Typography variant="body1" sx={{ color: 'text.secondary' }}>
@@ -468,11 +507,16 @@ export function MachineTrackingView() {
                     {/* Availability */}
                     <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                       <Box>
-                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: 'text.secondary', display: 'block', mb: 1 }}
+                        >
                           Availability
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
-                          <Typography variant="h4">{machineState.availability.toFixed(1)}</Typography>
+                          <Typography variant="h4">
+                            {machineState.availability.toFixed(1)}
+                          </Typography>
                           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                             %
                           </Typography>
@@ -488,11 +532,16 @@ export function MachineTrackingView() {
                     {/* Performance */}
                     <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                       <Box>
-                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: 'text.secondary', display: 'block', mb: 1 }}
+                        >
                           Performance
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
-                          <Typography variant="h4">{machineState.performance.toFixed(1)}</Typography>
+                          <Typography variant="h4">
+                            {machineState.performance.toFixed(1)}
+                          </Typography>
                           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                             %
                           </Typography>
@@ -508,7 +557,10 @@ export function MachineTrackingView() {
                     {/* Quality */}
                     <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                       <Box>
-                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: 'text.secondary', display: 'block', mb: 1 }}
+                        >
                           Quality
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
@@ -536,7 +588,10 @@ export function MachineTrackingView() {
                   <Grid container spacing={3}>
                     <Grid size={{ xs: 12, sm: 4 }}>
                       <Box>
-                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: 'text.secondary', display: 'block', mb: 1 }}
+                        >
                           Good Count
                         </Typography>
                         <Typography variant="h4" sx={{ color: 'success.main' }}>
@@ -547,16 +602,24 @@ export function MachineTrackingView() {
 
                     <Grid size={{ xs: 12, sm: 4 }}>
                       <Box>
-                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: 'text.secondary', display: 'block', mb: 1 }}
+                        >
                           Total Count
                         </Typography>
-                        <Typography variant="h4">{machineState.totalCount.toLocaleString()}</Typography>
+                        <Typography variant="h4">
+                          {machineState.totalCount.toLocaleString()}
+                        </Typography>
                       </Box>
                     </Grid>
 
                     <Grid size={{ xs: 12, sm: 4 }}>
                       <Box>
-                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: 'text.secondary', display: 'block', mb: 1 }}
+                        >
                           Current Product
                         </Typography>
                         <Typography variant="body1" sx={{ fontWeight: 500 }}>
@@ -576,36 +639,63 @@ export function MachineTrackingView() {
                   <Grid container spacing={3}>
                     <Grid size={{ xs: 12, sm: 4 }}>
                       <Box>
-                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: 'text.secondary', display: 'block', mb: 1 }}
+                        >
                           Run Time
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <Iconify icon="solar:play-circle-bold" width={24} sx={{ color: 'success.main' }} />
-                          <Typography variant="h5">{formatDuration(machineState.runTime)}</Typography>
+                          <Iconify
+                            icon="solar:play-circle-bold"
+                            width={24}
+                            sx={{ color: 'success.main' }}
+                          />
+                          <Typography variant="h5">
+                            {formatDuration(machineState.runTime)}
+                          </Typography>
                         </Box>
                       </Box>
                     </Grid>
 
                     <Grid size={{ xs: 12, sm: 4 }}>
                       <Box>
-                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: 'text.secondary', display: 'block', mb: 1 }}
+                        >
                           Downtime
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <Iconify icon="solar:restart-bold" width={24} sx={{ color: 'error.main' }} />
-                          <Typography variant="h5">{formatDuration(machineState.downtime)}</Typography>
+                          <Iconify
+                            icon="solar:restart-bold"
+                            width={24}
+                            sx={{ color: 'error.main' }}
+                          />
+                          <Typography variant="h5">
+                            {formatDuration(machineState.downtime)}
+                          </Typography>
                         </Box>
                       </Box>
                     </Grid>
 
                     <Grid size={{ xs: 12, sm: 4 }}>
                       <Box>
-                        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: 'text.secondary', display: 'block', mb: 1 }}
+                        >
                           Speed Loss
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <Iconify icon="solar:danger-triangle-bold-duotone" width={24} sx={{ color: 'warning.main' }} />
-                          <Typography variant="h5">{formatDuration(machineState.speedLossTime)}</Typography>
+                          <Iconify
+                            icon="solar:danger-triangle-bold-duotone"
+                            width={24}
+                            sx={{ color: 'warning.main' }}
+                          />
+                          <Typography variant="h5">
+                            {formatDuration(machineState.speedLossTime)}
+                          </Typography>
                         </Box>
                       </Box>
                     </Grid>
@@ -649,7 +739,7 @@ export function MachineTrackingView() {
                             width: 16,
                             height: 16,
                             borderRadius: 0.5,
-                            bgcolor: STATE_COLORS.Running,
+                            bgcolor: STATE_COLORS.running,
                           }}
                         />
                         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
@@ -662,7 +752,7 @@ export function MachineTrackingView() {
                             width: 16,
                             height: 16,
                             borderRadius: 0.5,
-                            bgcolor: STATE_COLORS.SpeedLoss,
+                            bgcolor: STATE_COLORS.speedloss,
                           }}
                         />
                         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
@@ -675,7 +765,7 @@ export function MachineTrackingView() {
                             width: 16,
                             height: 16,
                             borderRadius: 0.5,
-                            bgcolor: STATE_COLORS.Downtime,
+                            bgcolor: STATE_COLORS.downtime,
                           }}
                         />
                         <Typography variant="caption" sx={{ color: 'text.secondary' }}>

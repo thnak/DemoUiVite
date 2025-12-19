@@ -3,9 +3,9 @@ import * as signalR from '@microsoft/signalr';
 // ----------------------------------------------------------------------
 
 export enum MachineRunState {
-  Running = 0,
-  SpeedLoss = 1,
-  Downtime = 2,
+  Running = "running",
+  SpeedLoss = "speedloss",
+  Downtime = "downtime",
 }
 
 export interface MachineRunStateTimeBlock {
