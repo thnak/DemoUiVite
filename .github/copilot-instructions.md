@@ -193,6 +193,58 @@ For semantic colors, use the palette tokens:
 
 ## NOTE: this project using api service generator make sure called npm run generate:api before run build/dev
 
+## API Service Guidelines - **MANDATORY**
+
+**CRITICAL**: This project uses an API service generator. ALL API interactions MUST use generated services.
+
+### ❌ Prohibited Practices
+- **NEVER create custom endpoint files** like `src/api/services/machine-custom.ts`
+- **NEVER write manual API calls** outside of generated services
+- **NEVER create helper functions** that wrap or bypass generated services
+
+### ✅ Required Practices
+1. **Use Generated Services Only**: Import functions from `src/api/services/generated/`
+2. **Missing Endpoints**: If an endpoint is not in the generated code:
+   - **DO NOT** create a custom service file
+   - **Request** that the API specification (`docs/api/response.json`) be updated
+   - **Re-run** `npm run generate:api` after the spec is updated
+3. **Image URLs**: Construct image URLs directly using `apiConfig.baseUrl`
+   - Example: `${apiConfig.baseUrl}/api/Machine/${machineId}/image`
+   - Do NOT create wrapper functions for image URLs
+
+### Example: Correct Usage
+
+```typescript
+// ✅ CORRECT: Import from generated services
+import {
+  getapiMachinemachineIdavailableproducts,
+  postapiMachinemachineIdchangeproduct,
+  getapiMachinemachineIdcurrentproduct,
+} from 'src/api/services/generated/machine';
+import { apiConfig } from 'src/api/config';
+
+// ✅ CORRECT: Use generated function
+const products = await getapiMachinemachineIdavailableproducts(machineId, { 
+  page: 1, 
+  pageSize: 10 
+});
+
+// ✅ CORRECT: Construct image URL directly
+const imageUrl = `${apiConfig.baseUrl}/api/Machine/${machineId}/image`;
+
+// ❌ WRONG: Custom service file
+import { getAvailableProducts } from 'src/api/services/machine-custom';
+
+// ❌ WRONG: Manual axios call
+const response = await axiosInstance.get(`/api/Machine/${id}/products`);
+```
+
+### Why This Matters
+- **Consistency**: All API calls follow the same pattern
+- **Type Safety**: Generated services provide accurate TypeScript types
+- **Maintenance**: API changes are reflected automatically when regenerating
+- **Documentation**: Generated code is self-documenting from the OpenAPI spec
+
 ## API Time Duration Standards
 
 All time duration values in API calls **MUST** use the ISO 8601 duration format. This is a mandatory standard with no exceptions.

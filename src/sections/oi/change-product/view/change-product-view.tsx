@@ -29,16 +29,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import { Stack, Collapse, Snackbar, CircularProgress } from '@mui/material';
 
+import { apiConfig } from 'src/api/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import {
-  changeProduct,
-  getCurrentProduct,
-  getMachineImageUrl,
-  getProductImageUrl,
-  getAvailableProducts,
-  type GetAvailableProductsParams,
-} from 'src/api/services/machine-custom';
+  getapiMachinemachineIdcurrentproduct,
+  postapiMachinemachineIdchangeproduct,
+  getapiMachinemachineIdavailableproducts,
+} from 'src/api/services/generated/machine';
 
 import { Iconify } from 'src/components/iconify';
 import { DurationTimePicker } from 'src/components/duration-time-picker';
@@ -74,18 +72,15 @@ export function ChangeProductView() {
 
     setLoading(true);
     try {
-      const params: GetAvailableProductsParams = {
+      const params = {
         page: page + 1, // API uses 1-based pagination
         pageSize: rowsPerPage,
+        searchTerm: searchTerm || undefined,
       };
-      
-      if (searchTerm) {
-        params.searchTerm = searchTerm;
-      }
 
       const [productsResponse, currentProductData] = await Promise.all([
-        getAvailableProducts(selectedMachine.id, params),
-        getCurrentProduct(selectedMachine.id),
+        getapiMachinemachineIdavailableproducts(selectedMachine.id, params),
+        getapiMachinemachineIdcurrentproduct(selectedMachine.id).catch(() => null),
       ]);
       
       setAvailableProducts(productsResponse.items || []);
@@ -145,9 +140,12 @@ export function ChangeProductView() {
 
     setSubmitting(true);
     try {
-      await changeProduct(selectedMachine.id, {
+      await postapiMachinemachineIdchangeproduct(selectedMachine.id, {
         productId: selectedProductDto.productId,
-        workingParameter: editedSpecs || undefined,
+        idealCycleTime: editedSpecs?.idealCycleTime,
+        downtimeThreshold: editedSpecs?.downtimeThreshold,
+        speedLossThreshold: editedSpecs?.speedLossThreshold,
+        quantityPerSignal: editedSpecs?.quantityPerCycle,
       });
 
       // Show success message
@@ -225,7 +223,7 @@ export function ChangeProductView() {
               <Card sx={{ p: 2 }}>
                 <Box
                   component="img"
-                  src={getMachineImageUrl(selectedMachine.id)}
+                  src={`${apiConfig.baseUrl}/api/Machine/${selectedMachine.id}/image`}
                   alt={selectedMachine.name || 'Machine'}
                   sx={{
                     width: '100%',
@@ -253,7 +251,7 @@ export function ChangeProductView() {
                   {currentProduct.productId && (
                     <Box
                       component="img"
-                      src={getProductImageUrl(currentProduct.productId)}
+                      src={`${apiConfig.baseUrl}/api/Product/${currentProduct.productId}/image`}
                       alt={currentProduct.productName}
                       sx={{
                         width: '100%',
