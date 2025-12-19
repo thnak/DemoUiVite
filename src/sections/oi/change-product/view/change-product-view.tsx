@@ -120,7 +120,7 @@ export function ChangeProductView() {
       idealCycleTime: productDto.idealCycleTime,
       downtimeThreshold: productDto.downtimeThreshold,
       speedLossThreshold: productDto.speedLossThreshold,
-      quantityPerCycle: productDto.quantityPerSignal,
+      quantityPerCycle: productDto.quantityPerCycle,
     };
     setEditedSpecs(workingParams);
     setConfirmDialogOpen(true);
@@ -253,7 +253,7 @@ export function ChangeProductView() {
                             {t('oi.quantityPerCycle')}:
                           </Typography>
                           <Typography variant="body2">
-                            {currentProduct.quantityPerSignal || 'N/A'}
+                            {currentProduct.quantityPerCycle || 'N/A'}
                           </Typography>
                         </Box>
                       </Stack>
@@ -424,7 +424,7 @@ export function ChangeProductView() {
                                               {t('oi.quantityPerCycle')}:
                                             </Typography>
                                             <Typography variant="body2">
-                                              {productDto.quantityPerSignal || 'N/A'}
+                                              {productDto.quantityPerCycle || 'N/A'}
                                             </Typography>
                                           </Grid>
                                         </Grid>
