@@ -5,6 +5,7 @@ import type {
   BooleanResult,
   ProductEntity,
   WorkingParameterEntity,
+  ProductWorkingStateByMachineBasePaginationResponse,
 } from '../types/generated';
 
 // ----------------------------------------------------------------------
@@ -14,6 +15,7 @@ import type {
 
 /**
  * Represents an available product for a machine with its working parameters
+ * @deprecated Use ProductWorkingStateByMachine from generated types instead
  */
 export type AvailableProductDto = {
   product?: ProductEntity;
@@ -29,14 +31,30 @@ export type ChangeProductRequest = {
 };
 
 /**
- * Get available products for a machine
+ * Parameters for fetching available products
+ */
+export type GetAvailableProductsParams = {
+  searchTerm?: string;
+  page?: number;
+  pageSize?: number;
+};
+
+/**
+ * Get available products for a machine with pagination and search
  * 
  * Retrieves all products that can be produced on this machine along with their working parameters.
  * @param machineId - MongoDB ObjectId represented as a 24-character hexadecimal string
- * @returns Promise<AvailableProductDto[]>
+ * @param params - Optional parameters for search and pagination
+ * @returns Promise<ProductWorkingStateByMachineBasePaginationResponse>
  */
-export async function getAvailableProducts(machineId: ObjectId): Promise<AvailableProductDto[]> {
-  const response = await axiosInstance.get<AvailableProductDto[]>(`/api/Machine/${machineId}/available-products`);
+export async function getAvailableProducts(
+  machineId: ObjectId,
+  params?: GetAvailableProductsParams
+): Promise<ProductWorkingStateByMachineBasePaginationResponse> {
+  const response = await axiosInstance.get<ProductWorkingStateByMachineBasePaginationResponse>(
+    `/api/Machine/${machineId}/available-products`,
+    { params }
+  );
   return response.data;
 }
 

@@ -1,9 +1,7 @@
 import type {
   WorkingParameterEntity,
+  ProductWorkingStateByMachine,
 } from 'src/api/types/generated';
-import type {
-  AvailableProductDto,
-} from 'src/api/services/machine-custom';
 
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,15 +21,20 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import DialogTitle from '@mui/material/DialogTitle';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import InputAdornment from '@mui/material/InputAdornment';
 import TableContainer from '@mui/material/TableContainer';
+import TablePagination from '@mui/material/TablePagination';
 import { Stack, Collapse, Snackbar, CircularProgress } from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import {
   changeProduct,
   getAvailableProducts,
+  type GetAvailableProductsParams,
 } from 'src/api/services/machine-custom';
 
 import { Iconify } from 'src/components/iconify';
@@ -45,14 +48,18 @@ import { MachineSelectorCard } from 'src/sections/oi/components';
 export function ChangeProductView() {
   const { t } = useTranslation();
   const { selectedMachine } = useMachineSelector();
-  const [availableProducts, setAvailableProducts] = useState<AvailableProductDto[]>([]);
+  const [availableProducts, setAvailableProducts] = useState<ProductWorkingStateByMachine[]>([]);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [selectedProductDto, setSelectedProductDto] = useState<AvailableProductDto | null>(null);
+  const [selectedProductDto, setSelectedProductDto] = useState<ProductWorkingStateByMachine | null>(null);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [editedSpecs, setEditedSpecs] = useState<WorkingParameterEntity | null>(null);
-  const [currentProduct, setCurrentProduct] = useState<AvailableProductDto | null>(null);
+  const [currentProduct, setCurrentProduct] = useState<ProductWorkingStateByMachine | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
     open: false,
     message: '',
@@ -64,8 +71,18 @@ export function ChangeProductView() {
 
     setLoading(true);
     try {
-      const products = await getAvailableProducts(selectedMachine.id);
-      setAvailableProducts(products);
+      const params: GetAvailableProductsParams = {
+        page: page + 1, // API uses 1-based pagination
+        pageSize: rowsPerPage,
+      };
+      
+      if (searchTerm) {
+        params.searchTerm = searchTerm;
+      }
+
+      const response = await getAvailableProducts(selectedMachine.id, params);
+      setAvailableProducts(response.items || []);
+      setTotalItems(response.totalItems || 0);
       
       // TODO: Get current product from machine status API
       // For now, we'll leave it as null until the machine status API is available
@@ -73,6 +90,7 @@ export function ChangeProductView() {
     } catch (error) {
       console.error('Failed to load available products:', error);
       setAvailableProducts([]);
+      setTotalItems(0);
     } finally {
       setLoading(false);
     }
@@ -81,7 +99,7 @@ export function ChangeProductView() {
   useEffect(() => {
     loadAvailableProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMachine]);
+  }, [selectedMachine, page, rowsPerPage, searchTerm]);
 
   const handleToggleSpecs = (productId: string) => {
     setExpandedRows((prev) => {
@@ -95,9 +113,16 @@ export function ChangeProductView() {
     });
   };
 
-  const handleSelectProduct = (productDto: AvailableProductDto) => {
+  const handleSelectProduct = (productDto: ProductWorkingStateByMachine) => {
     setSelectedProductDto(productDto);
-    setEditedSpecs(productDto.workingParameter || null);
+    // Map ProductWorkingStateByMachine to WorkingParameterEntity format
+    const workingParams: WorkingParameterEntity = {
+      idealCycleTime: productDto.idealCycleTime,
+      downtimeThreshold: productDto.downtimeThreshold,
+      speedLossThreshold: productDto.speedLossThreshold,
+      quantityPerCycle: productDto.quantityPerSignal,
+    };
+    setEditedSpecs(workingParams);
     setConfirmDialogOpen(true);
   };
 
@@ -109,14 +134,14 @@ export function ChangeProductView() {
   };
 
   const handleConfirmChange = async () => {
-    if (!selectedMachine?.id || !selectedProductDto?.product?.id) return;
+    if (!selectedMachine?.id || !selectedProductDto?.productId) return;
 
-    const isSameProduct = currentProduct?.product?.id === selectedProductDto.product.id;
+    const isSameProduct = currentProduct?.productId === selectedProductDto.productId;
 
     setSubmitting(true);
     try {
       await changeProduct(selectedMachine.id, {
-        productId: selectedProductDto.product.id,
+        productId: selectedProductDto.productId,
         workingParameter: editedSpecs || undefined,
       });
 
@@ -170,7 +195,7 @@ export function ChangeProductView() {
     return parts.length > 0 ? parts.join(' ') : '0s';
   };
 
-  const isSameProduct = currentProduct?.product?.id === selectedProductDto?.product?.id;
+  const isSameProduct = currentProduct?.productId === selectedProductDto?.productId;
 
   return (
     <DashboardContent maxWidth="xl">
@@ -197,19 +222,19 @@ export function ChangeProductView() {
               <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold' }}>
                 {t('oi.currentProduct')}
               </Typography>
-              {currentProduct?.product ? (
+              {currentProduct?.productName ? (
                 <Box>
                   <Typography variant="h4" sx={{ mb: 1, fontWeight: 'bold' }}>
-                    {currentProduct.product.code || currentProduct.product.name}
+                    {currentProduct.productName}
                   </Typography>
                   <Typography
                     variant="body1"
                     sx={{ color: 'text.secondary', fontSize: '1.1rem', mb: 3 }}
                   >
-                    {currentProduct.product.name || 'N/A'}
+                    {currentProduct.productName || 'N/A'}
                   </Typography>
 
-                  {currentProduct.workingParameter && (
+                  {currentProduct.idealCycleTime && (
                     <Box sx={{ mt: 2 }}>
                       <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
                         {t('oi.specifications')}:
@@ -220,7 +245,7 @@ export function ChangeProductView() {
                             {t('oi.idealCycleTime')}:
                           </Typography>
                           <Typography variant="body2">
-                            {formatDuration(currentProduct.workingParameter.idealCycleTime)}
+                            {formatDuration(currentProduct.idealCycleTime)}
                           </Typography>
                         </Box>
                         <Box>
@@ -228,7 +253,7 @@ export function ChangeProductView() {
                             {t('oi.quantityPerCycle')}:
                           </Typography>
                           <Typography variant="body2">
-                            {currentProduct.workingParameter.quantityPerCycle || 'N/A'}
+                            {currentProduct.quantityPerSignal || 'N/A'}
                           </Typography>
                         </Box>
                       </Stack>
@@ -269,149 +294,184 @@ export function ChangeProductView() {
                 {t('oi.availableProducts')}
               </Typography>
 
+              {/* Search Box */}
+              <Box sx={{ mb: 3 }}>
+                <OutlinedInput
+                  fullWidth
+                  size="small"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setPage(0); // Reset to first page when searching
+                  }}
+                  placeholder={t('common.search') || 'Search products...'}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <Iconify width={20} icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                    </InputAdornment>
+                  }
+                />
+              </Box>
+
               {loading ? (
                 <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
                   <CircularProgress size={48} />
                 </Box>
               ) : (
-                <TableContainer>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell sx={{ width: 48 }} />
-                        <TableCell>{t('oi.productCode')}</TableCell>
-                        <TableCell>{t('oi.productName')}</TableCell>
-                        <TableCell align="right">{t('common.actions')}</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {availableProducts.map((productDto) => {
-                        const isExpanded = expandedRows.has(productDto.product?.id || '');
-                        const isCurrent = currentProduct?.product?.id === productDto.product?.id;
-
-                        return (
-                          <>
-                            <TableRow key={productDto.product?.id} hover>
-                              <TableCell>
-                                <IconButton
-                                  size="small"
-                                  onClick={() => handleToggleSpecs(productDto.product?.id || '')}
-                                  disabled={!productDto.workingParameter}
-                                >
-                                  <Iconify
-                                    icon={
-                                      isExpanded
-                                        ? 'eva:arrow-ios-downward-fill'
-                                        : 'eva:arrow-ios-forward-fill'
-                                    }
-                                  />
-                                </IconButton>
-                              </TableCell>
-                              <TableCell>
-                                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                                  {productDto.product?.code || 'N/A'}
-                                  {isCurrent && (
-                                    <Box
-                                      component="span"
-                                      sx={{
-                                        ml: 1,
-                                        px: 1,
-                                        py: 0.5,
-                                        borderRadius: 1,
-                                        bgcolor: 'primary.lighter',
-                                        color: 'primary.main',
-                                        fontSize: '0.75rem',
-                                        fontWeight: 'bold',
-                                      }}
-                                    >
-                                      {t('oi.current')}
-                                    </Box>
-                                  )}
-                                </Typography>
-                              </TableCell>
-                              <TableCell>{productDto.product?.name || 'N/A'}</TableCell>
-                              <TableCell align="right">
-                                <Button
-                                  variant={isCurrent ? 'outlined' : 'contained'}
-                                  size="small"
-                                  onClick={() => handleSelectProduct(productDto)}
-                                >
-                                  {isCurrent ? t('oi.updateSpecs') : t('oi.selectProduct')}
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-
-                            {/* Expandable Specs Row */}
-                            <TableRow>
-                              <TableCell colSpan={4} sx={{ py: 0, border: 0 }}>
-                                <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-                                  <Box sx={{ p: 3, bgcolor: 'background.neutral', borderRadius: 1 }}>
-                                    <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 'bold' }}>
-                                      {t('oi.specifications')}
-                                    </Typography>
-
-                                    {productDto.workingParameter ? (
-                                      <Grid container spacing={2}>
-                                        <Grid size={{ xs: 12, sm: 6 }}>
-                                          <Typography variant="caption" color="text.secondary">
-                                            {t('oi.idealCycleTime')}:
-                                          </Typography>
-                                          <Typography variant="body2">
-                                            {formatDuration(productDto.workingParameter.idealCycleTime)}
-                                          </Typography>
-                                        </Grid>
-                                        <Grid size={{ xs: 12, sm: 6 }}>
-                                          <Typography variant="caption" color="text.secondary">
-                                            {t('oi.downtimeThreshold')}:
-                                          </Typography>
-                                          <Typography variant="body2">
-                                            {formatDuration(productDto.workingParameter.downtimeThreshold)}
-                                          </Typography>
-                                        </Grid>
-                                        <Grid size={{ xs: 12, sm: 6 }}>
-                                          <Typography variant="caption" color="text.secondary">
-                                            {t('oi.speedLossThreshold')}:
-                                          </Typography>
-                                          <Typography variant="body2">
-                                            {formatDuration(productDto.workingParameter.speedLossThreshold)}
-                                          </Typography>
-                                        </Grid>
-                                        <Grid size={{ xs: 12, sm: 6 }}>
-                                          <Typography variant="caption" color="text.secondary">
-                                            {t('oi.quantityPerCycle')}:
-                                          </Typography>
-                                          <Typography variant="body2">
-                                            {productDto.workingParameter.quantityPerCycle || 'N/A'}
-                                          </Typography>
-                                        </Grid>
-                                      </Grid>
-                                    ) : (
-                                      <Typography variant="body2" color="text.secondary">
-                                        {t('oi.noSpecsAvailable')}
-                                      </Typography>
-                                    )}
-                                  </Box>
-                                </Collapse>
-                              </TableCell>
-                            </TableRow>
-                          </>
-                        );
-                      })}
-
-                      {availableProducts.length === 0 && !loading && (
+                <>
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
                         <TableRow>
-                          <TableCell colSpan={4} align="center">
-                            <Box sx={{ py: 4 }}>
-                              <Typography variant="body1" color="text.secondary">
-                                {t('oi.noProductsFound')}
-                              </Typography>
-                            </Box>
-                          </TableCell>
+                          <TableCell sx={{ width: 48 }} />
+                          <TableCell>{t('oi.productName')}</TableCell>
+                          <TableCell align="right">{t('common.actions')}</TableCell>
                         </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                      </TableHead>
+                      <TableBody>
+                        {availableProducts.map((productDto) => {
+                          const isExpanded = expandedRows.has(productDto.productId || '');
+                          const isCurrent = currentProduct?.productId === productDto.productId;
+
+                          return (
+                            <>
+                              <TableRow key={productDto.productId} hover>
+                                <TableCell>
+                                  <IconButton
+                                    size="small"
+                                    onClick={() => handleToggleSpecs(productDto.productId || '')}
+                                    disabled={!productDto.idealCycleTime}
+                                  >
+                                    <Iconify
+                                      icon={
+                                        isExpanded
+                                          ? 'eva:arrow-ios-downward-fill'
+                                          : 'eva:arrow-ios-forward-fill'
+                                      }
+                                    />
+                                  </IconButton>
+                                </TableCell>
+                                <TableCell>
+                                  <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                                    {productDto.productName || 'N/A'}
+                                    {isCurrent && (
+                                      <Box
+                                        component="span"
+                                        sx={{
+                                          ml: 1,
+                                          px: 1,
+                                          py: 0.5,
+                                          borderRadius: 1,
+                                          bgcolor: 'primary.lighter',
+                                          color: 'primary.main',
+                                          fontSize: '0.75rem',
+                                          fontWeight: 'bold',
+                                        }}
+                                      >
+                                        {t('oi.current')}
+                                      </Box>
+                                    )}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Button
+                                    variant={isCurrent ? 'outlined' : 'contained'}
+                                    size="small"
+                                    onClick={() => handleSelectProduct(productDto)}
+                                  >
+                                    {isCurrent ? t('oi.updateSpecs') : t('oi.selectProduct')}
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+
+                              {/* Expandable Specs Row */}
+                              <TableRow>
+                                <TableCell colSpan={3} sx={{ py: 0, border: 0 }}>
+                                  <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                                    <Box sx={{ p: 3, bgcolor: 'background.neutral', borderRadius: 1 }}>
+                                      <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 'bold' }}>
+                                        {t('oi.specifications')}
+                                      </Typography>
+
+                                      {productDto.idealCycleTime ? (
+                                        <Grid container spacing={2}>
+                                          <Grid size={{ xs: 12, sm: 6 }}>
+                                            <Typography variant="caption" color="text.secondary">
+                                              {t('oi.idealCycleTime')}:
+                                            </Typography>
+                                            <Typography variant="body2">
+                                              {formatDuration(productDto.idealCycleTime)}
+                                            </Typography>
+                                          </Grid>
+                                          <Grid size={{ xs: 12, sm: 6 }}>
+                                            <Typography variant="caption" color="text.secondary">
+                                              {t('oi.downtimeThreshold')}:
+                                            </Typography>
+                                            <Typography variant="body2">
+                                              {formatDuration(productDto.downtimeThreshold)}
+                                            </Typography>
+                                          </Grid>
+                                          <Grid size={{ xs: 12, sm: 6 }}>
+                                            <Typography variant="caption" color="text.secondary">
+                                              {t('oi.speedLossThreshold')}:
+                                            </Typography>
+                                            <Typography variant="body2">
+                                              {formatDuration(productDto.speedLossThreshold)}
+                                            </Typography>
+                                          </Grid>
+                                          <Grid size={{ xs: 12, sm: 6 }}>
+                                            <Typography variant="caption" color="text.secondary">
+                                              {t('oi.quantityPerCycle')}:
+                                            </Typography>
+                                            <Typography variant="body2">
+                                              {productDto.quantityPerSignal || 'N/A'}
+                                            </Typography>
+                                          </Grid>
+                                        </Grid>
+                                      ) : (
+                                        <Typography variant="body2" color="text.secondary">
+                                          {t('oi.noSpecsAvailable')}
+                                        </Typography>
+                                      )}
+                                    </Box>
+                                  </Collapse>
+                                </TableCell>
+                              </TableRow>
+                            </>
+                          );
+                        })}
+
+                        {availableProducts.length === 0 && !loading && (
+                          <TableRow>
+                            <TableCell colSpan={3} align="center">
+                              <Box sx={{ py: 4 }}>
+                                <Typography variant="body1" color="text.secondary">
+                                  {searchTerm ? t('common.noResultsFound') : t('oi.noProductsFound')}
+                                </Typography>
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+
+                  {/* Pagination */}
+                  {totalItems > 0 && (
+                    <TablePagination
+                      component="div"
+                      page={page}
+                      count={totalItems}
+                      rowsPerPage={rowsPerPage}
+                      onPageChange={(event, newPage) => setPage(newPage)}
+                      rowsPerPageOptions={[...STANDARD_ROWS_PER_PAGE_OPTIONS]}
+                      onRowsPerPageChange={(event) => {
+                        setRowsPerPage(parseInt(event.target.value, 10));
+                        setPage(0);
+                      }}
+                    />
+                  )}
+                </>
               )}
             </Card>
           </Grid>
@@ -446,14 +506,14 @@ export function ChangeProductView() {
                   {t('oi.from')}:
                 </Typography>
                 <Typography variant="h6" sx={{ mb: 2 }}>
-                  {currentProduct?.product?.code || currentProduct?.product?.name || t('oi.noProductRunning')}
+                  {currentProduct?.productName || t('oi.noProductRunning')}
                 </Typography>
 
                 <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
                   {t('oi.to')}:
                 </Typography>
                 <Typography variant="h6" sx={{ color: 'primary.main' }}>
-                  {selectedProductDto?.product?.code || selectedProductDto?.product?.name}
+                  {selectedProductDto?.productName}
                 </Typography>
               </Box>
             )}
