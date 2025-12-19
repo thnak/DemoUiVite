@@ -26,7 +26,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import TableContainer from '@mui/material/TableContainer';
-import { Collapse, CircularProgress, Stack } from '@mui/material';
+import { Collapse, CircularProgress, Stack, Snackbar } from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
@@ -53,6 +53,11 @@ export function ChangeProductView() {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [editedSpecs, setEditedSpecs] = useState<WorkingParameterEntity | null>(null);
   const [currentProduct, setCurrentProduct] = useState<AvailableProductDto | null>(null);
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
+    open: false,
+    message: '',
+    severity: 'success',
+  });
 
   const loadAvailableProducts = async () => {
     if (!selectedMachine?.id) return;
@@ -62,11 +67,9 @@ export function ChangeProductView() {
       const products = await getAvailableProducts(selectedMachine.id);
       setAvailableProducts(products);
       
-      // Find current product (you might need to get this from machine status)
-      // For now, we'll set it as the first one if available
-      if (products.length > 0) {
-        setCurrentProduct(products[0]);
-      }
+      // TODO: Get current product from machine status API
+      // For now, we'll leave it as null until the machine status API is available
+      // setCurrentProduct should be set from actual machine running product data
     } catch (error) {
       console.error('Failed to load available products:', error);
       setAvailableProducts([]);
@@ -118,11 +121,11 @@ export function ChangeProductView() {
       });
 
       // Show success message
-      alert(
-        isSameProduct
-          ? 'Product specifications updated successfully!'
-          : 'Product changed successfully!'
-      );
+      setSnackbar({
+        open: true,
+        message: isSameProduct ? t('oi.successSpecsUpdated') : t('oi.successProductChanged'),
+        severity: 'success',
+      });
 
       // Reload products to get updated data
       await loadAvailableProducts();
@@ -132,7 +135,11 @@ export function ChangeProductView() {
       setEditedSpecs(null);
     } catch (error) {
       console.error('Failed to change product:', error);
-      alert('Failed to change product. Please try again.');
+      setSnackbar({
+        open: true,
+        message: t('oi.errorProductChange'),
+        severity: 'error',
+      });
     } finally {
       setSubmitting(false);
     }
@@ -317,7 +324,7 @@ export function ChangeProductView() {
                                         fontWeight: 'bold',
                                       }}
                                     >
-                                      Current
+                                      {t('oi.current')}
                                     </Box>
                                   )}
                                 </Typography>
@@ -484,10 +491,14 @@ export function ChangeProductView() {
                 <TextField
                   label={t('oi.quantityPerCycle')}
                   type="number"
-                  value={editedSpecs?.quantityPerCycle || ''}
-                  onChange={(e) =>
-                    handleSpecChange('quantityPerCycle', parseFloat(e.target.value) || 0)
-                  }
+                  value={editedSpecs?.quantityPerCycle ?? ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    handleSpecChange(
+                      'quantityPerCycle',
+                      value === '' ? undefined : parseFloat(value)
+                    );
+                  }}
                   fullWidth
                   inputProps={{ min: 0, step: 0.01 }}
                 />
@@ -503,7 +514,7 @@ export function ChangeProductView() {
             disabled={submitting}
             sx={{
               minHeight: 64,
-              minWidth: 140,
+                          minWidth: 140,
               fontSize: '1.2rem',
             }}
           >
@@ -530,6 +541,22 @@ export function ChangeProductView() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </DashboardContent>
   );
 }
