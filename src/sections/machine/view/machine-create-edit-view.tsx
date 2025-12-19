@@ -126,7 +126,7 @@ export function MachineCreateEditView({
       machineOutputMappings.forEach((mapping) => {
         const sensorMapping: SensorOutputMapping = {
           ...mapping,
-          outputId: String(mapping.outputId || ''),
+          outputId: String(mapping.sensorId || ''),
           scalingFactor:
             mapping.scalingFactor ??
             (mapping.mappingMode === 'outputScrap'
@@ -347,7 +347,7 @@ export function MachineCreateEditView({
     const allMappings: MachineOutputMappingResponse[] = [
       ...goodOutputMappings.map((m) => ({
         index: m.index,
-        outputName: m.outputName,
+        outputName: m.sensorName,
         outputId: m.outputId,
         scalingFactor: m.scalingFactor,
         mappingMode: 'outputGood' as const,
@@ -355,7 +355,7 @@ export function MachineCreateEditView({
       })),
       ...scrapOutputMappings.map((m) => ({
         index: m.index,
-        outputName: m.outputName,
+        outputName: m.sensorName,
         outputId: m.outputId,
         scalingFactor: m.scalingFactor,
         mappingMode: 'outputScrap' as const,
@@ -611,7 +611,7 @@ export function MachineCreateEditView({
                           }}
                         >
                           <TableCell>{mapping.index ?? '-'}</TableCell>
-                          <TableCell>{mapping.outputName || '-'}</TableCell>
+                          <TableCell>{mapping.sensorName || '-'}</TableCell>
                           <TableCell>
                             <TextField
                               type="number"
@@ -705,7 +705,7 @@ export function MachineCreateEditView({
                           }}
                         >
                           <TableCell>{mapping.index ?? '-'}</TableCell>
-                          <TableCell>{mapping.outputName || '-'}</TableCell>
+                          <TableCell>{mapping.sensorName || '-'}</TableCell>
                           <TableCell>
                             <TextField
                               type="number"
