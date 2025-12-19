@@ -34,9 +34,9 @@ import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import {
   changeProduct,
   getCurrentProduct,
-  getAvailableProducts,
   getMachineImageUrl,
   getProductImageUrl,
+  getAvailableProducts,
   type GetAvailableProductsParams,
 } from 'src/api/services/machine-custom';
 
