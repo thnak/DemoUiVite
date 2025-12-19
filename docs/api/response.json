@@ -18724,6 +18724,129 @@
         }
       }
     },
+    "/api/Machine/{machineId}/available-products": {
+      "get": {
+        "tags": [
+          "Machine"
+        ],
+        "summary": "Retrieves available products for a specific machine with optional search and pagination.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductWorkingStateByMachineBasePaginationResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductWorkingStateByMachineBasePaginationResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductWorkingStateByMachineBasePaginationResponse"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductWorkingStateByMachineBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Machine/{machineId}/change-product": {
+      "post": {
+        "tags": [
+          "Machine"
+        ],
+        "summary": "Changes the product of a specific machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeMachineProductRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeMachineProductRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeMachineProductRequest"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeMachineProductRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/machineareamapping/{id}": {
       "get": {
         "tags": [
@@ -45045,13 +45168,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-18"
+            "example": "2025-12-19"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-18"
+            "example": "2025-12-19"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -45163,13 +45286,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-18"
+            "example": "2025-12-19"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-18"
+            "example": "2025-12-19"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -45321,12 +45444,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-18"
+            "example": "2025-12-19"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-18"
+            "example": "2025-12-19"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -45517,6 +45640,41 @@
         },
         "additionalProperties": false,
         "description": "Data transfer object for changing lock screen password"
+      },
+      "ChangeMachineProductRequest": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "plannedQuantity": {
+            "type": "number",
+            "description": "Planned quantity for the new product after changeover.",
+            "format": "double"
+          },
+          "quantityPerSignal": {
+            "type": "number",
+            "description": "Quantity produced per signal for the product.",
+            "format": "double"
+          },
+          "idealCycleTime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "downtimeThreshold": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "speedLossThreshold": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request structure for changing the product of a machine"
       },
       "ChangePasswordDto": {
         "required": [
@@ -47508,7 +47666,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-18"
+            "example": "2025-12-19"
           }
         },
         "additionalProperties": false
@@ -49301,7 +49459,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2025-12-18"
+            "example": "2025-12-19"
           },
           "lastServiceTime": {
             "type": "string",
@@ -51502,6 +51660,10 @@
           },
           "mappingMode": {
             "$ref": "#/components/schemas/MachineOutputMappingMode"
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Indicates whether the mapping is enabled."
           }
         },
         "additionalProperties": false,
@@ -51566,12 +51728,12 @@
             "description": "Index of the mapping",
             "format": "int32"
           },
-          "outputName": {
+          "sensorName": {
             "type": "string",
             "description": "Output name",
             "nullable": true
           },
-          "outputId": {
+          "sensorId": {
             "$ref": "#/components/schemas/ObjectId"
           },
           "scalingFactor": {
@@ -54334,6 +54496,84 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "ProductWorkingStateByMachine": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "quantityPerSignal": {
+            "type": "number",
+            "description": "Quantity produced per signal for the product.",
+            "format": "double"
+          },
+          "idealCycleTime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "downtimeThreshold": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "speedLossThreshold": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "productName": {
+            "type": "string",
+            "description": "Name of the product.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response structure for available products by machine"
+      },
+      "ProductWorkingStateByMachineBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductWorkingStateByMachine"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
       },
       "ProductionDisposition": {
         "enum": [
