@@ -37,6 +37,9 @@ import {
   usePutapiMachinemachineIdupdatemachineoutputmappings,
 } from 'src/api/hooks/generated/use-machine';
 
+import { useValidationResult } from 'src/hooks/use-validation-result';
+import { isValidationSuccess } from 'src/utils/validation-result';
+
 import { AreaSelector } from 'src/components/selectors/area-selector';
 import { CalendarSelector } from 'src/components/selectors/calendar-selector';
 import { MachineTypeSelector } from 'src/components/selectors/machine-type-selector';
@@ -85,6 +88,16 @@ export function MachineCreateEditView({
   currentMachine,
 }: MachineCreateEditViewProps) {
   const router = useRouter();
+
+  // Use ValidationResult hook for form validation
+  const {
+    setValidationResult,
+    clearValidationResult,
+    getFieldErrorMessage,
+    hasError,
+    clearFieldError,
+    overallMessage,
+  } = useValidationResult();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState<MachineFormData>({
@@ -150,10 +163,14 @@ export function MachineCreateEditView({
 
   const { mutate: createMachineMutate, isPending: isCreating } = useCreateMachine({
     onSuccess: (result) => {
-      if (result.isSuccess) {
+      setValidationResult(result);
+      if (isValidationSuccess(result)) {
         router.push('/machines');
       } else {
-        setErrorMessage(result.message || 'Failed to create machine');
+        // Show overall message if present
+        if (result.message) {
+          setErrorMessage(result.message);
+        }
       }
     },
     onError: (error) => {
@@ -163,10 +180,14 @@ export function MachineCreateEditView({
 
   const { mutate: updateMachineMutate, isPending: isUpdating } = useUpdateMachine({
     onSuccess: (result) => {
-      if (result.isSuccess) {
+      setValidationResult(result);
+      if (isValidationSuccess(result)) {
         router.push('/machines');
       } else {
-        setErrorMessage(result.message || 'Failed to update machine');
+        // Show overall message if present
+        if (result.message) {
+          setErrorMessage(result.message);
+        }
       }
     },
     onError: (error) => {
@@ -199,8 +220,10 @@ export function MachineCreateEditView({
           ...prev,
           [field]: event.target.value,
         }));
+        // Clear field error when user starts typing
+        clearFieldError(field);
       },
-    []
+    [clearFieldError]
   );
 
   const handleCalculationModeChange = useCallback(
@@ -209,8 +232,9 @@ export function MachineCreateEditView({
         ...prev,
         calculationMode: event.target.value as OutputCalculationMode,
       }));
+      clearFieldError('calculationMode');
     },
-    []
+    [clearFieldError]
   );
 
   const handleImageUrlChange = useCallback((newImageUrl: string) => {
@@ -218,21 +242,24 @@ export function MachineCreateEditView({
       ...prev,
       imageUrl: newImageUrl,
     }));
-  }, []);
+    clearFieldError('imageUrl');
+  }, [clearFieldError]);
 
   const handleAreaChange = useCallback((areaId: string | null) => {
     setFormData((prev) => ({
       ...prev,
       areaId,
     }));
-  }, []);
+    clearFieldError('areaId');
+  }, [clearFieldError]);
 
   const handleCalendarChange = useCallback((calendarId: string | null) => {
     setFormData((prev) => ({
       ...prev,
       calendarId,
     }));
-  }, []);
+    clearFieldError('calendarId');
+  }, [clearFieldError]);
 
   // Drag and drop handlers
   const handleDragStart = useCallback(
@@ -247,7 +274,8 @@ export function MachineCreateEditView({
       ...prev,
       machineTypeId,
     }));
-  }, []);
+    clearFieldError('machineTypeId');
+  }, [clearFieldError]);
   
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -376,6 +404,10 @@ export function MachineCreateEditView({
   ]);
 
   const handleSubmit = useCallback(() => {
+    // Clear previous validation errors
+    clearValidationResult();
+    setErrorMessage(null);
+
     if (!formData.name) {
       setErrorMessage('Machine name is required');
       return;
@@ -409,7 +441,7 @@ export function MachineCreateEditView({
         },
       });
     }
-  }, [formData, isEdit, currentMachine?.id, createMachineMutate, updateMachineMutate]);
+  }, [formData, isEdit, currentMachine?.id, createMachineMutate, updateMachineMutate, clearValidationResult]);
 
   const handleCancel = useCallback(() => {
     router.push('/machines');
@@ -505,6 +537,8 @@ export function MachineCreateEditView({
                     label="Machine code"
                     value={formData.code}
                     onChange={handleInputChange('code')}
+                    error={hasError('code')}
+                    helperText={getFieldErrorMessage('code')}
                   />
                 </Grid>
 
@@ -515,6 +549,8 @@ export function MachineCreateEditView({
                     value={formData.name}
                     onChange={handleInputChange('name')}
                     required
+                    error={hasError('name')}
+                    helperText={getFieldErrorMessage('name')}
                   />
                 </Grid>
               </Grid>
@@ -806,13 +842,13 @@ export function MachineCreateEditView({
       </Grid>
 
       <Snackbar
-        open={!!errorMessage}
+        open={!!(errorMessage || overallMessage)}
         autoHideDuration={6000}
         onClose={handleCloseError}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
-          {errorMessage}
+          {errorMessage || overallMessage}
         </Alert>
       </Snackbar>
     </DashboardContent>
