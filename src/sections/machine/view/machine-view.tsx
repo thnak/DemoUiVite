@@ -18,11 +18,11 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
+import { isValidationSuccess } from 'src/utils/validation-result';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import { deleteMachine, postapiMachinesearchmachines } from 'src/api/services/generated/machine';
-
-import { isValidationSuccess } from 'src/utils/validation-result';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';

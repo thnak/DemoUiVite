@@ -28,6 +28,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { useValidationResult } from 'src/hooks/use-validation-result';
+
+import { isValidationSuccess } from 'src/utils/validation-result';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
   useCreateMachine,
@@ -36,9 +40,6 @@ import {
   useGetapiMachinemachineIdmachineoutputmappings,
   usePutapiMachinemachineIdupdatemachineoutputmappings,
 } from 'src/api/hooks/generated/use-machine';
-
-import { useValidationResult } from 'src/hooks/use-validation-result';
-import { isValidationSuccess } from 'src/utils/validation-result';
 
 import { AreaSelector } from 'src/components/selectors/area-selector';
 import { CalendarSelector } from 'src/components/selectors/calendar-selector';

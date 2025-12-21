@@ -7,16 +7,17 @@
  * - Clear errors when fields are edited
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import type { FormFieldErrors, ValidationResult } from 'src/utils/validation-result';
 
-import type { ValidationResult, FormFieldErrors } from 'src/utils/validation-result';
+import { useMemo, useState, useCallback } from 'react';
+
 import {
+  getFieldError,
+  hasFieldError,
   getFieldErrors,
   getOverallMessage,
   isValidationSuccess,
   getAllErrorMessages,
-  getFieldError,
-  hasFieldError,
 } from 'src/utils/validation-result';
 
 interface UseValidationResultReturn {

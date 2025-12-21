@@ -12,6 +12,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { useValidationResult } from 'src/hooks/use-validation-result';
+
+import { isValidationSuccess } from 'src/utils/validation-result';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useCreateArea, useUpdateArea } from 'src/api/hooks/generated/use-area';
 
@@ -36,6 +40,16 @@ interface AreaCreateEditViewProps {
 export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEditViewProps) {
   const router = useRouter();
 
+  // Use ValidationResult hook for form validation
+  const {
+    setValidationResult,
+    clearValidationResult,
+    getFieldErrorMessage,
+    hasError,
+    clearFieldError,
+    overallMessage,
+  } = useValidationResult();
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState<AreaFormData>({
     code: currentArea?.code || '',
@@ -45,10 +59,13 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
 
   const { mutate: createAreaMutate, isPending: isCreating } = useCreateArea({
     onSuccess: (result) => {
-      if (result.isSuccess) {
+      setValidationResult(result);
+      if (isValidationSuccess(result)) {
         router.push('/area');
       } else {
-        setErrorMessage(result.message || 'Failed to create area');
+        if (result.message) {
+          setErrorMessage(result.message);
+        }
       }
     },
     onError: (error) => {
@@ -58,10 +75,13 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
 
   const { mutate: updateAreaMutate, isPending: isUpdating } = useUpdateArea({
     onSuccess: (result) => {
-      if (result.isSuccess) {
+      setValidationResult(result);
+      if (isValidationSuccess(result)) {
         router.push('/area');
       } else {
-        setErrorMessage(result.message || 'Failed to update area');
+        if (result.message) {
+          setErrorMessage(result.message);
+        }
       }
     },
     onError: (error) => {
@@ -81,11 +101,15 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
         ...prev,
         [field]: event.target.value,
       }));
+      clearFieldError(field);
     },
-    []
+    [clearFieldError]
   );
 
   const handleSubmit = useCallback(() => {
+    clearValidationResult();
+    setErrorMessage(null);
+
     if (!formData.name) {
       setErrorMessage('Area name is required');
       return;
@@ -111,7 +135,7 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
         },
       });
     }
-  }, [formData, isEdit, currentArea?.id, createAreaMutate, updateAreaMutate]);
+  }, [formData, isEdit, currentArea?.id, createAreaMutate, updateAreaMutate, clearValidationResult]);
 
   const handleCancel = useCallback(() => {
     router.push('/area');
@@ -149,6 +173,8 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
             label="Area code"
             value={formData.code}
             onChange={handleInputChange('code')}
+            error={hasError('code')}
+            helperText={getFieldErrorMessage('code')}
           />
 
           <TextField
@@ -156,6 +182,8 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
             label="Area name"
             value={formData.name}
             onChange={handleInputChange('name')}
+            error={hasError('name')}
+            helperText={getFieldErrorMessage('name')}
           />
 
           <TextField
@@ -165,6 +193,8 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
             onChange={handleInputChange('description')}
             multiline
             rows={4}
+            error={hasError('description')}
+            helperText={getFieldErrorMessage('description')}
           />
         </Stack>
 
@@ -197,13 +227,13 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
       </Card>
 
       <Snackbar
-        open={!!errorMessage}
+        open={!!(errorMessage || overallMessage)}
         autoHideDuration={6000}
         onClose={handleCloseError}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
-          {errorMessage}
+          {errorMessage || overallMessage}
         </Alert>
       </Snackbar>
     </DashboardContent>
