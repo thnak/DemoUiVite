@@ -63,7 +63,7 @@ export function DefectReasonCreateEditView({
 
   const { mutate: createDefectReasonMutate, isPending: isCreating } = useCreateDefectReason({
     onSuccess: (result) => {
-      if (result.isSuccess) {
+      if (result.isValid) {
         router.push('/defect-reasons');
       } else {
         setErrorMessage(result.message || 'Failed to create defect reason');
@@ -76,7 +76,7 @@ export function DefectReasonCreateEditView({
 
   const { mutate: updateDefectReasonMutate, isPending: isUpdating } = useUpdateDefectReason({
     onSuccess: (result) => {
-      if (result.isSuccess) {
+      if (result.isValid) {
         router.push('/defect-reasons');
       } else {
         setErrorMessage(result.message || 'Failed to update defect reason');

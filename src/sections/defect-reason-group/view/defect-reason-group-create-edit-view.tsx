@@ -55,7 +55,7 @@ export function DefectReasonGroupCreateEditView({
   const { mutate: createDefectReasonGroupMutate, isPending: isCreating } =
     useCreateDefectReasonGroup({
       onSuccess: (result) => {
-        if (result.isSuccess) {
+        if (result.isValid) {
           router.push('/defect-reason-group');
         } else {
           setErrorMessage(result.message || 'Failed to create defect reason group');
@@ -69,7 +69,7 @@ export function DefectReasonGroupCreateEditView({
   const { mutate: updateDefectReasonGroupMutate, isPending: isUpdating } =
     useUpdateDefectReasonGroup({
       onSuccess: (result) => {
-        if (result.isSuccess) {
+        if (result.isValid) {
           router.push('/defect-reason-group');
         } else {
           setErrorMessage(result.message || 'Failed to update defect reason group');

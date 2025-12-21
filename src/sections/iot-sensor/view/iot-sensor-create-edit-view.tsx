@@ -105,7 +105,7 @@ export function IoTSensorCreateEditView({
 
   const { mutate: createSensorMutate, isPending: isCreating } = useCreateIoTSensor({
     onSuccess: (result) => {
-      if (result.isSuccess) {
+      if (result.isValid) {
         router.push('/iot-sensors');
       } else {
         setErrorMessage(result.message || 'Failed to create sensor');
@@ -118,7 +118,7 @@ export function IoTSensorCreateEditView({
 
   const { mutate: updateSensorMutate, isPending: isUpdating } = useUpdateIoTSensor({
     onSuccess: (result) => {
-      if (result.isSuccess) {
+      if (result.isValid) {
         router.push('/iot-sensors');
       } else {
         setErrorMessage(result.message || 'Failed to update sensor');
