@@ -146,17 +146,19 @@ export function useValidationResult(): UseValidationResultReturn {
 
   const clearFieldError = useCallback(
     (fieldName: string) => {
-      if (!validationResult?.errors) return;
+      setValidationResult((prev) => {
+        if (!prev?.errors) return prev;
 
-      const newErrors = { ...validationResult.errors };
-      delete newErrors[fieldName];
+        const newErrors = { ...prev.errors };
+        delete newErrors[fieldName];
 
-      setValidationResult({
-        ...validationResult,
-        errors: Object.keys(newErrors).length > 0 ? newErrors : null,
+        return {
+          ...prev,
+          errors: Object.keys(newErrors).length > 0 ? newErrors : null,
+        };
       });
     },
-    [validationResult]
+    []
   );
 
   return {

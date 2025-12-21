@@ -129,15 +129,15 @@ export function hasFieldError(result: ValidationResult, fieldName: string): bool
  * 
  * @param result - The validation result from the API
  * @param fieldName - The name of the field
- * @returns The severity level or null
+ * @returns The severity level or 'error' as default
  */
 export function getFieldErrorSeverity(
   result: ValidationResult,
   fieldName: string
-): ValidationSeverity | null {
+): ValidationSeverity {
   if (!result.errors || !result.errors[fieldName]) {
-    return null;
+    return 'error';
   }
 
-  return result.errors[fieldName].severity || null;
+  return result.errors[fieldName].severity || 'error';
 }
