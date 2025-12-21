@@ -185,7 +185,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             { key: 'timeOffset', value: formData.timeOffset || undefined },
           ];
           const updateResult = await updateCalendar(calendarId, updates);
-          if (updateResult.isSuccess) {
+          if (updateResult.isValid) {
             setSuccessMessage('Calendar updated successfully');
           } else {
             setErrorMessage(updateResult.message || 'Failed to update calendar');
@@ -209,7 +209,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             timeOffset: formData.timeOffset || undefined,
           };
           const result = await createCalendar(entity);
-          if (result.isSuccess) {
+          if (result.isValid) {
             setSuccessMessage('Calendar created successfully');
           } else {
             setErrorMessage(result.message || 'Failed to create calendar');

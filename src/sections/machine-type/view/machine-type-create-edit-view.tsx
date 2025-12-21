@@ -12,6 +12,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { useValidationResult } from 'src/hooks/use-validation-result';
+
+import { isValidationSuccess } from 'src/utils/validation-result';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useCreateMachineType, useUpdateMachineType } from 'src/api/hooks/generated/use-machine-type';
 
@@ -36,6 +40,15 @@ interface MachineTypeCreateEditViewProps {
 export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }: MachineTypeCreateEditViewProps) {
   const router = useRouter();
 
+  const {
+    setValidationResult,
+    clearValidationResult,
+    getFieldErrorMessage,
+    hasError,
+    clearFieldError,
+    overallMessage,
+  } = useValidationResult();
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState<MachineTypeFormData>({
     code: currentMachineType?.code || '',
@@ -45,10 +58,13 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
 
   const { mutate: createMachineTypeMutate, isPending: isCreating } = useCreateMachineType({
     onSuccess: (result) => {
-      if (result.isSuccess) {
+      setValidationResult(result);
+      if (isValidationSuccess(result)) {
         router.push('/machine-types');
       } else {
-        setErrorMessage(result.message || 'Failed to create machine type');
+        if (result.message) {
+          setErrorMessage(result.message);
+        }
       }
     },
     onError: (error) => {
@@ -58,10 +74,13 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
 
   const { mutate: updateMachineTypeMutate, isPending: isUpdating } = useUpdateMachineType({
     onSuccess: (result) => {
-      if (result.isSuccess) {
+      setValidationResult(result);
+      if (isValidationSuccess(result)) {
         router.push('/machine-types');
       } else {
-        setErrorMessage(result.message || 'Failed to update machine type');
+        if (result.message) {
+          setErrorMessage(result.message);
+        }
       }
     },
     onError: (error) => {
@@ -81,11 +100,15 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
         ...prev,
         [field]: event.target.value,
       }));
+      clearFieldError(field);
     },
-    []
+    [clearFieldError]
   );
 
   const handleSubmit = useCallback(() => {
+    clearValidationResult();
+    setErrorMessage(null);
+
     if (!formData.name) {
       setErrorMessage('Machine type name is required');
       return;
@@ -111,7 +134,7 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
         },
       });
     }
-  }, [formData, isEdit, currentMachineType?.id, createMachineTypeMutate, updateMachineTypeMutate]);
+  }, [formData, isEdit, currentMachineType?.id, createMachineTypeMutate, updateMachineTypeMutate, clearValidationResult]);
 
   const handleCancel = useCallback(() => {
     router.push('/machine-types');
@@ -150,6 +173,8 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
             label="Machine type code"
             value={formData.code}
             onChange={handleInputChange('code')}
+            error={hasError('code')}
+            helperText={getFieldErrorMessage('code')}
           />
 
           <TextField
@@ -157,6 +182,8 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
             label="Machine type name"
             value={formData.name}
             onChange={handleInputChange('name')}
+            error={hasError('name')}
+            helperText={getFieldErrorMessage('name')}
           />
 
           <TextField
@@ -166,6 +193,8 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
             onChange={handleInputChange('description')}
             multiline
             rows={4}
+            error={hasError('description')}
+            helperText={getFieldErrorMessage('description')}
           />
         </Stack>
 
@@ -198,13 +227,13 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
       </Card>
 
       <Snackbar
-        open={!!errorMessage}
+        open={!!(errorMessage || overallMessage)}
         autoHideDuration={6000}
         onClose={handleCloseError}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
-          {errorMessage}
+          {errorMessage || overallMessage}
         </Alert>
       </Snackbar>
     </DashboardContent>

@@ -18,6 +18,8 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
+import { isValidationSuccess } from 'src/utils/validation-result';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import { deleteMachine, postapiMachinesearchmachines } from 'src/api/services/generated/machine';
@@ -140,13 +142,23 @@ export function MachineView() {
     async (id: string) => {
       try {
         setIsDeleting(true);
-        await deleteMachine(id);
-        await fetchMachines();
-        setSelected((prev) => prev.filter((i) => i !== id));
-        setDeleteDialogOpen(false);
-        setItemToDelete(null);
+        const result = await deleteMachine(id);
+        
+        // Check if deletion was successful
+        if (isValidationSuccess(result)) {
+          await fetchMachines();
+          setSelected((prev) => prev.filter((i) => i !== id));
+          setDeleteDialogOpen(false);
+          setItemToDelete(null);
+        } else {
+          // Show error message from validation result
+          const errorMsg = result.message || 'Failed to delete machine';
+          console.error('Delete validation failed:', errorMsg);
+          setError(errorMsg);
+        }
       } catch (err) {
         console.error('Error deleting machine:', err);
+        setError('Failed to delete machine');
       } finally {
         setIsDeleting(false);
       }
@@ -161,12 +173,26 @@ export function MachineView() {
   const handleConfirmBulkDelete = useCallback(async () => {
     try {
       setIsDeleting(true);
-      await Promise.all(selected.map((id) => deleteMachine(id)));
+      
+      // Delete all selected machines and collect results
+      const results = await Promise.all(selected.map((id) => deleteMachine(id)));
+      
+      // Check if any deletions failed
+      const failedDeletions = results.filter((result) => !isValidationSuccess(result));
+      
+      if (failedDeletions.length > 0) {
+        // Show error for failed deletions
+        const errorMsg = `Failed to delete ${failedDeletions.length} machine(s)`;
+        console.error('Bulk delete validation failed:', errorMsg);
+        setError(errorMsg);
+      }
+      
       await fetchMachines();
       setSelected([]);
       setBulkDeleteDialogOpen(false);
     } catch (err) {
       console.error('Error deleting machines:', err);
+      setError('Failed to delete machines');
     } finally {
       setIsDeleting(false);
     }

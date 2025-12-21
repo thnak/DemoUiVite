@@ -114,7 +114,7 @@ export function IoTDeviceCreateEditView({
 
   const { mutate: createDeviceMutate, isPending: isCreating } = useCreateIoTDevice({
     onSuccess: (result) => {
-      if (result.isSuccess) {
+      if (result.isValid) {
         router.push('/iot-devices');
       } else {
         setErrorMessage(result.message || 'Failed to create device');
@@ -127,7 +127,7 @@ export function IoTDeviceCreateEditView({
 
   const { mutate: updateDeviceMutate, isPending: isUpdating } = useUpdateIoTDevice({
     onSuccess: (result) => {
-      if (result.isSuccess) {
+      if (result.isValid) {
         router.push('/iot-devices');
       } else {
         setErrorMessage(result.message || 'Failed to update device');

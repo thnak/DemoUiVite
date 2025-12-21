@@ -187,7 +187,7 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
             { key: 'description', value: data.description || '' },
           ];
           const updateResult = await updateShiftTemplate(templateId, updates);
-          if (updateResult.isSuccess) setSuccessMessage('Template updated successfully');
+          if (updateResult.isValid) setSuccessMessage('Template updated successfully');
           else {
             setErrorMessage(updateResult.message || 'Failed to update template');
             return;
@@ -195,7 +195,7 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
         } else {
           const entity = formDataToApiEntity(data);
           const result = await createShiftTemplate(entity);
-          if (result.isSuccess) {
+          if (result.isValid) {
             setSuccessMessage('Template created successfully');
           } else {
             setErrorMessage(result.message || 'Failed to create template');
