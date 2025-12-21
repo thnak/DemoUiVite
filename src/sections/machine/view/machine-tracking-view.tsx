@@ -75,25 +75,25 @@ export function MachineTrackingView() {
         });
 
         // Get initial machine aggregation
-        const initialAggregation = await hubService.getMachineAggregation(id);
-        if (mounted && initialAggregation) {
-          // Convert aggregation to update format
-          setMachineState({
-            availability: initialAggregation.availability,
-            performance: initialAggregation.performance,
-            quality: initialAggregation.quality,
-            oee: initialAggregation.oee,
-            goodCount: initialAggregation.goodCount,
-            totalCount: initialAggregation.totalCount,
-            plannedProductionTime: '',
-            runTime: initialAggregation.totalRunTime,
-            downtime: initialAggregation.totalDowntime,
-            speedLossTime: initialAggregation.totalSpeedLossTime,
-            currentProductName: '',
-            runStateHistory: [],
-          });
-          setLastUpdateTime(new Date());
-        }
+        // const initialAggregation = await hubService.getMachineAggregation(id);
+        // if (mounted && initialAggregation) {
+        //   // Convert aggregation to update format
+        //   setMachineState({
+        //     availability: initialAggregation.availability,
+        //     performance: initialAggregation.performance,
+        //     quality: initialAggregation.quality,
+        //     oee: initialAggregation.oee,
+        //     goodCount: initialAggregation.goodCount,
+        //     totalCount: initialAggregation.totalCount,
+        //     plannedProductionTime: '',
+        //     runTime: initialAggregation.totalRunTime,
+        //     downtime: initialAggregation.totalDowntime,
+        //     speedLossTime: initialAggregation.totalSpeedLossTime,
+        //     currentProductName: '',
+        //     runStateHistory: [],
+        //   });
+        //   setLastUpdateTime(new Date());
+        // }
 
         // Get subscriber count
         const count = await hubService.getSubscriberCount(id);
