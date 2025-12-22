@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
@@ -38,7 +39,7 @@ import { Iconify } from 'src/components/iconify';
 import { DurationTimePicker } from 'src/components/duration-time-picker';
 
 import { createProduct, updateProduct } from '../../../api';
-import { getMachinePage } from '../../../api/services/generated/machine';
+import { getMachinePage , getapiMachinemachineIdcurrentproduct } from '../../../api/services/generated/machine';
 import {
   deleteWorkingParameter,
   updateWorkingParameter,
@@ -104,6 +105,7 @@ export function ProductCreateEditView({
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [currentParam, setCurrentParam] = useState<WorkingParameterEntity | null>(null);
   const [paramFormData, setParamFormData] = useState<Partial<WorkingParameterEntity>>({});
+  const [runningMachines, setRunningMachines] = useState<Array<{ machineId: string; machineName: string; productName: string }>>([]);
 
   const handleCloseError = useCallback(() => {
     setErrorMessage(null);
@@ -222,7 +224,8 @@ export function ProductCreateEditView({
     try {
       // Load machines first
       const machinesResponse = await getMachinePage([], { pageSize: 100 });
-      setMachines(machinesResponse.items || []);
+      const allMachines = machinesResponse.items || [];
+      setMachines(allMachines);
 
       // Load working parameters for this product
       const paramsResponse = await getWorkingParameterPage([], { pageSize: 100 });
@@ -233,6 +236,31 @@ export function ProductCreateEditView({
       );
       
       setWorkingParameters(productParams);
+
+      // Check which machines are currently running this product
+      const runningMachinesData: Array<{ machineId: string; machineName: string; productName: string }> = [];
+      
+      await Promise.all(
+        allMachines.map(async (machine) => {
+          try {
+            if (machine.id) {
+              const machineCurrentProduct = await getapiMachinemachineIdcurrentproduct(machine.id);
+              if (machineCurrentProduct && machineCurrentProduct.productId === currentProduct.id) {
+                runningMachinesData.push({
+                  machineId: machine.id,
+                  machineName: machine.name || 'Unknown',
+                  productName: machineCurrentProduct.productName || 'Unknown',
+                });
+              }
+            }
+          } catch (err) {
+            // Ignore errors for machines that don't have a current product
+            console.debug(`Machine ${machine.id} has no current product`, err);
+          }
+        })
+      );
+
+      setRunningMachines(runningMachinesData);
     } catch (error) {
       console.error('Failed to load working parameters:', error);
     } finally {
@@ -557,6 +585,58 @@ export function ProductCreateEditView({
                               >
                                 <Iconify icon="solar:trash-bin-trash-bold" width={20} />
                               </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
+              </Card>
+            )}
+
+            {/* Currently Running Machines Section - Only show in edit mode */}
+            {isEdit && currentProduct?.id && (
+              <Card sx={{ p: 3, mt: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+                  <Typography variant="h6">
+                    Currently Running Machines
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    Machines currently running this product
+                  </Typography>
+                </Box>
+
+                {loadingParams ? (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
+                    <CircularProgress />
+                  </Box>
+                ) : runningMachines.length === 0 ? (
+                  <Alert severity="info">
+                    This product is not currently running on any machine.
+                  </Alert>
+                ) : (
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Machine</TableCell>
+                          <TableCell>Product</TableCell>
+                          <TableCell>Status</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {runningMachines.map((machine) => (
+                          <TableRow key={machine.machineId}>
+                            <TableCell>{machine.machineName}</TableCell>
+                            <TableCell>{machine.productName}</TableCell>
+                            <TableCell>
+                              <Chip 
+                                label="Running" 
+                                color="success" 
+                                size="small" 
+                                icon={<Iconify icon="solar:play-circle-bold" />}
+                              />
                             </TableCell>
                           </TableRow>
                         ))}
