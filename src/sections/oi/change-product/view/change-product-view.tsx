@@ -56,6 +56,7 @@ export function ChangeProductView() {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [editedSpecs, setEditedSpecs] = useState<WorkingParameterEntity | null>(null);
+  const [plannedQuantity, setPlannedQuantity] = useState<number | undefined>(undefined);
   const [currentProduct, setCurrentProduct] = useState<ProductWorkingStateByMachine | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
@@ -123,6 +124,8 @@ export function ChangeProductView() {
       quantityPerCycle: productDto.quantityPerCycle,
     };
     setEditedSpecs(workingParams);
+    // Initialize plannedQuantity (can be empty for user to fill in)
+    setPlannedQuantity(undefined);
     setConfirmDialogOpen(true);
   };
 
@@ -142,6 +145,7 @@ export function ChangeProductView() {
     try {
       await postapiMachinemachineIdchangeproduct(selectedMachine.id, {
         productId: selectedProductDto.productId,
+        plannedQuantity,
         idealCycleTime: editedSpecs?.idealCycleTime,
         downtimeThreshold: editedSpecs?.downtimeThreshold,
         speedLossThreshold: editedSpecs?.speedLossThreshold,
@@ -161,6 +165,7 @@ export function ChangeProductView() {
       setConfirmDialogOpen(false);
       setSelectedProductDto(null);
       setEditedSpecs(null);
+      setPlannedQuantity(undefined);
     } catch (error) {
       console.error('Failed to change product:', error);
       setSnackbar({
@@ -177,6 +182,7 @@ export function ChangeProductView() {
     setConfirmDialogOpen(false);
     setSelectedProductDto(null);
     setEditedSpecs(null);
+    setPlannedQuantity(undefined);
   };
 
   const formatDurationInSeconds = (duration: string | undefined | null) => {
@@ -265,7 +271,7 @@ export function ChangeProductView() {
                       }}
                     />
                   )}
-                  
+
                   <Typography variant="h4" sx={{ mb: 1, fontWeight: 'bold' }}>
                     {currentProduct.productName}
                   </Typography>
@@ -284,6 +290,15 @@ export function ChangeProductView() {
                       <Stack spacing={1}>
                         <Box>
                           <Typography variant="caption" color="text.secondary">
+                            {t('oi.plannedQuantity')}:
+                          </Typography>
+                          <Typography variant="body2">
+                            {currentProduct.plannedQuantity || 'N/A'}
+                          </Typography>
+                        </Box>
+
+                        <Box>
+                          <Typography variant="caption" color="text.secondary">
                             {t('oi.idealCycleTime')}:
                           </Typography>
                           <Typography variant="body2">
@@ -296,6 +311,23 @@ export function ChangeProductView() {
                           </Typography>
                           <Typography variant="body2">
                             {currentProduct.quantityPerCycle || 'N/A'}
+                          </Typography>
+                        </Box>
+
+                        <Box>
+                          <Typography variant="caption" color="text.secondary">
+                            {t('oi.speedLossThreshold')}:
+                          </Typography>
+                          <Typography variant="body2">
+                            {formatDurationInSeconds(currentProduct.speedLossThreshold)}
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <Typography variant="caption" color="text.secondary">
+                            {t('oi.downtimeThreshold')}:
+                          </Typography>
+                          <Typography variant="body2">
+                            {formatDurationInSeconds(currentProduct.downtimeThreshold)}
                           </Typography>
                         </Box>
                       </Stack>
@@ -320,7 +352,10 @@ export function ChangeProductView() {
                       icon={'eva:cube-outline' as any}
                       sx={{ fontSize: 64, color: 'text.disabled', mb: 2 }}
                     />
-                    <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '1.1rem' }}>
+                    <Typography
+                      variant="body1"
+                      sx={{ color: 'text.secondary', fontSize: '1.1rem' }}
+                    >
                       {t('oi.noProductRunning')}
                     </Typography>
                   </Box>
@@ -430,8 +465,13 @@ export function ChangeProductView() {
                               <TableRow>
                                 <TableCell colSpan={3} sx={{ py: 0, border: 0 }}>
                                   <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-                                    <Box sx={{ p: 3, bgcolor: 'background.neutral', borderRadius: 1 }}>
-                                      <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 'bold' }}>
+                                    <Box
+                                      sx={{ p: 3, bgcolor: 'background.neutral', borderRadius: 1 }}
+                                    >
+                                      <Typography
+                                        variant="subtitle2"
+                                        sx={{ mb: 2, fontWeight: 'bold' }}
+                                      >
                                         {t('oi.specifications')}
                                       </Typography>
 
@@ -450,7 +490,9 @@ export function ChangeProductView() {
                                               {t('oi.downtimeThreshold')}:
                                             </Typography>
                                             <Typography variant="body2">
-                                              {formatDurationInSeconds(productDto.downtimeThreshold)}
+                                              {formatDurationInSeconds(
+                                                productDto.downtimeThreshold
+                                              )}
                                             </Typography>
                                           </Grid>
                                           <Grid size={{ xs: 12, sm: 6 }}>
@@ -458,7 +500,9 @@ export function ChangeProductView() {
                                               {t('oi.speedLossThreshold')}:
                                             </Typography>
                                             <Typography variant="body2">
-                                              {formatDurationInSeconds(productDto.speedLossThreshold)}
+                                              {formatDurationInSeconds(
+                                                productDto.speedLossThreshold
+                                              )}
                                             </Typography>
                                           </Grid>
                                           <Grid size={{ xs: 12, sm: 6 }}>
@@ -488,7 +532,9 @@ export function ChangeProductView() {
                             <TableCell colSpan={3} align="center">
                               <Box sx={{ py: 4 }}>
                                 <Typography variant="body1" color="text.secondary">
-                                  {searchTerm ? t('common.noResultsFound') : t('oi.noProductsFound')}
+                                  {searchTerm
+                                    ? t('common.noResultsFound')
+                                    : t('oi.noProductsFound')}
                                 </Typography>
                               </Box>
                             </TableCell>
@@ -521,12 +567,7 @@ export function ChangeProductView() {
       )}
 
       {/* Confirmation Dialog with Spec Editing */}
-      <Dialog
-        open={confirmDialogOpen}
-        onClose={handleCancelChange}
-        maxWidth="md"
-        fullWidth
-      >
+      <Dialog open={confirmDialogOpen} onClose={handleCancelChange} maxWidth="md" fullWidth>
         <DialogTitle sx={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
           {isSameProduct ? t('oi.sameProductSelected') : t('oi.confirmProductChange')}
         </DialogTitle>
@@ -566,6 +607,38 @@ export function ChangeProductView() {
             </Typography>
             <Grid container spacing={3}>
               <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label={t('oi.plannedQuantity')}
+                  type="number"
+                  value={plannedQuantity ?? ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setPlannedQuantity(value === '' ? undefined : parseFloat(value));
+                  }}
+                  fullWidth
+                  inputProps={{ min: 0, step: 1 }}
+                  helperText={
+                    t('oi.plannedQuantityHelperText') || 'Target quantity for this production run'
+                  }
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label={t('oi.quantityPerCycle')}
+                  type="number"
+                  value={editedSpecs?.quantityPerCycle ?? ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    handleSpecChange(
+                      'quantityPerCycle',
+                      value === '' ? undefined : parseFloat(value)
+                    );
+                  }}
+                  fullWidth
+                  inputProps={{ min: 0, step: 0.01 }}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <DurationTimePicker
                   label={t('oi.idealCycleTime')}
                   value={editedSpecs?.idealCycleTime || ''}
@@ -592,22 +665,6 @@ export function ChangeProductView() {
                   fullWidth
                 />
               </Grid>
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
-                  label={t('oi.quantityPerCycle')}
-                  type="number"
-                  value={editedSpecs?.quantityPerCycle ?? ''}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    handleSpecChange(
-                      'quantityPerCycle',
-                      value === '' ? undefined : parseFloat(value)
-                    );
-                  }}
-                  fullWidth
-                  inputProps={{ min: 0, step: 0.01 }}
-                />
-              </Grid>
             </Grid>
           </Box>
         </DialogContent>
@@ -619,7 +676,7 @@ export function ChangeProductView() {
             disabled={submitting}
             sx={{
               minHeight: 64,
-                          minWidth: 140,
+              minWidth: 140,
               fontSize: '1.2rem',
             }}
           >
@@ -638,11 +695,7 @@ export function ChangeProductView() {
               fontWeight: 'bold',
             }}
           >
-            {submitting ? (
-              <CircularProgress size={24} color="inherit" />
-            ) : (
-              t('common.confirm')
-            )}
+            {submitting ? <CircularProgress size={24} color="inherit" /> : t('common.confirm')}
           </Button>
         </DialogActions>
       </Dialog>

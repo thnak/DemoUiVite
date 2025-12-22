@@ -19448,22 +19448,34 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UnitOfWorkResult"
+                  }
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UnitOfWorkResult"
+                  }
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UnitOfWorkResult"
+                  }
                 }
               },
               "application/vnd.msgpack": {
                 "schema": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UnitOfWorkResult"
+                  }
                 }
               }
             }
@@ -47933,13 +47945,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-21"
+            "example": "2025-12-22"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-21"
+            "example": "2025-12-22"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -48051,13 +48063,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-21"
+            "example": "2025-12-22"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-21"
+            "example": "2025-12-22"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -48213,12 +48225,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-21"
+            "example": "2025-12-22"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-21"
+            "example": "2025-12-22"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -50500,7 +50512,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-21"
+            "example": "2025-12-22"
           }
         },
         "additionalProperties": false
@@ -52333,7 +52345,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2025-12-21"
+            "example": "2025-12-22"
           },
           "lastServiceTime": {
             "type": "string",
@@ -57548,6 +57560,11 @@
             "type": "string",
             "description": "Name of the product.",
             "nullable": true
+          },
+          "plannedQuantity": {
+            "type": "number",
+            "description": "Planned quantity for the new product after changeover.",
+            "format": "double"
           }
         },
         "additionalProperties": false,
@@ -62807,6 +62824,36 @@
         "type": "string",
         "description": "Represents the unit of measure for quantities in the system."
       },
+      "UnitOfWorkResult": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the commit operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the overall result message.",
+            "nullable": true
+          },
+          "validationResults": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationResult"
+            },
+            "description": "Gets the collection of validation results from all commands.\r\nEmpty if no validation errors occurred.",
+            "nullable": true,
+            "readOnly": true
+          },
+          "hasValidationErrors": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether any validation errors occurred.",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of a Unit of Work commit operation.\r\nContains validation results from all commands executed during the commit."
+      },
       "UnitPageResponse": {
         "type": "object",
         "properties": {
@@ -64213,6 +64260,32 @@
         "additionalProperties": false,
         "description": "Represents a validation error for a specific property."
       },
+      "ValidationResult": {
+        "type": "object",
+        "properties": {
+          "isValid": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the validation was successful.",
+            "readOnly": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets or sets the overall validation message.",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of a validation operation with property-level error details."
+      },
       "ValidationSeverity": {
         "enum": [
           "info",
@@ -65092,7 +65165,7 @@
             "type": "string",
             "description": "The specific work date this statistic applies to.",
             "format": "date",
-            "example": "2025-12-21"
+            "example": "2025-12-22"
           },
           "calendarId": {
             "$ref": "#/components/schemas/ObjectId"
