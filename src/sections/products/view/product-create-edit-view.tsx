@@ -37,9 +37,13 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
 import { DurationTimePicker } from 'src/components/duration-time-picker';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { createProduct, updateProduct } from '../../../api';
-import { getMachinePage , getapiMachinemachineIdcurrentproduct } from '../../../api/services/generated/machine';
+import {
+  getMachinePage,
+  getapiMachinemachineIdcurrentproduct,
+} from '../../../api/services/generated/machine';
 import {
   deleteWorkingParameter,
   updateWorkingParameter,
@@ -49,6 +53,17 @@ import {
 import type { MachineEntity, WorkingParameterEntity } from '../../../api/types/generated';
 
 // ----------------------------------------------------------------------
+
+// Constants for working parameter field keys
+const WORKING_PARAM_FIELDS = {
+  IDEAL_CYCLE_TIME: 'idealCycleTime',
+  DOWNTIME_THRESHOLD: 'downtimeThreshold',
+  SPEED_LOSS_THRESHOLD: 'speedLossThreshold',
+  QUANTITY_PER_CYCLE: 'quantityPerCycle',
+} as const;
+
+// ISO 8601 duration parsing regex
+const ISO_8601_DURATION_REGEX = /P(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
 
 interface ProductFormData {
   name: string;
@@ -106,6 +121,9 @@ export function ProductCreateEditView({
   const [currentParam, setCurrentParam] = useState<WorkingParameterEntity | null>(null);
   const [paramFormData, setParamFormData] = useState<Partial<WorkingParameterEntity>>({});
   const [runningMachines, setRunningMachines] = useState<Array<{ machineId: string; machineName: string; productName: string }>>([]);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [paramToDelete, setParamToDelete] = useState<string | null>(null);
+  const [deletingParam, setDeletingParam] = useState(false);
 
   const handleCloseError = useCallback(() => {
     setErrorMessage(null);
@@ -278,7 +296,7 @@ export function ProductCreateEditView({
   const formatDurationInSeconds = (duration: string | undefined | null) => {
     if (!duration) return 'N/A';
     
-    const match = duration.match(/P(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+    const match = duration.match(ISO_8601_DURATION_REGEX);
     if (!match) return duration;
     
     const days = match[1] ? parseInt(match[1], 10) : 0;
@@ -316,10 +334,10 @@ export function ProductCreateEditView({
 
     try {
       await updateWorkingParameter(currentParam.id, [
-        { key: 'idealCycleTime', value: paramFormData.idealCycleTime },
-        { key: 'downtimeThreshold', value: paramFormData.downtimeThreshold },
-        { key: 'speedLossThreshold', value: paramFormData.speedLossThreshold },
-        { key: 'quantityPerCycle', value: paramFormData.quantityPerCycle },
+        { key: WORKING_PARAM_FIELDS.IDEAL_CYCLE_TIME, value: paramFormData.idealCycleTime },
+        { key: WORKING_PARAM_FIELDS.DOWNTIME_THRESHOLD, value: paramFormData.downtimeThreshold },
+        { key: WORKING_PARAM_FIELDS.SPEED_LOSS_THRESHOLD, value: paramFormData.speedLossThreshold },
+        { key: WORKING_PARAM_FIELDS.QUANTITY_PER_CYCLE, value: paramFormData.quantityPerCycle },
       ]);
 
       // Reload working parameters
@@ -332,13 +350,31 @@ export function ProductCreateEditView({
     }
   };
 
-  // Handle delete working parameter
-  const handleDeleteParam = async (paramId: string) => {
+  // Handle open delete dialog
+  const handleOpenDeleteDialog = (paramId: string) => {
+    setParamToDelete(paramId);
+    setDeleteDialogOpen(true);
+  };
+
+  // Handle close delete dialog
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+    setParamToDelete(null);
+  };
+
+  // Handle confirm delete working parameter
+  const handleConfirmDelete = async () => {
+    if (!paramToDelete) return;
+
+    setDeletingParam(true);
     try {
-      await deleteWorkingParameter(paramId);
+      await deleteWorkingParameter(paramToDelete);
       await loadWorkingParameters();
+      handleCloseDeleteDialog();
     } catch (error: any) {
       setErrorMessage(error?.message ?? 'Failed to delete working parameter');
+    } finally {
+      setDeletingParam(false);
     }
   };
 
@@ -578,8 +614,8 @@ export function ProductCreateEditView({
                                 size="small"
                                 color="error"
                                 onClick={() => {
-                                  if (param.id && window.confirm('Are you sure you want to delete this working parameter?')) {
-                                    handleDeleteParam(param.id);
+                                  if (param.id) {
+                                    handleOpenDeleteDialog(param.id);
                                   }
                                 }}
                               >
@@ -738,6 +774,15 @@ export function ProductCreateEditView({
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        entityName="working parameter"
+        loading={deletingParam}
+      />
     </DashboardContent>
   );
 }
