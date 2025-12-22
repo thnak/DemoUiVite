@@ -28,14 +28,9 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 
 import { Iconify } from 'src/components/iconify';
 import { WeekSummaryChart } from 'src/components/WeekSummaryChart';
-import {
-  DurationTimePicker,
-  partsToIsoDuration,
-  parseDurationToParts,
-} from 'src/components/duration-time-picker';
+import { DurationTimePicker, partsToIsoDuration } from 'src/components/duration-time-picker';
 
 import {
-  generateId,
   DAY_LABELS,
   DAYS_OF_WEEK,
   createDefaultBreak,
@@ -98,14 +93,10 @@ export function ShiftTemplateForm({
     }
   );
 
-  // Normal mode shared state: days and breaks that apply to all shifts
+  // Normal mode shared state: days that apply to all shifts
   const [sharedDays, setSharedDays] = useState<DayOfWeek[]>(() => {
     const firstDef = initialData?.definitions?.[0];
     return firstDef?.days ?? ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
-  });
-  const [sharedBreaks, setSharedBreaks] = useState<ShiftBreakFormData[]>(() => {
-    const firstDef = initialData?.definitions?.[0];
-    return firstDef?.breaks ?? [];
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -114,20 +105,19 @@ export function ShiftTemplateForm({
 
   const handleModeChange = useCallback(
     (_: React.SyntheticEvent, newMode: EditorMode) => {
-      // When switching from normal to advanced, sync the shared days/breaks to all definitions
+      // When switching from normal to advanced, sync the shared days to all definitions
       if (mode === 'normal' && newMode === 'advanced') {
         setFormData((prev) => ({
           ...prev,
           definitions: prev.definitions.map((def) => ({
             ...def,
             days: sharedDays,
-            breaks: sharedBreaks.map((b) => ({ ...b, id: generateId() })),
           })),
         }));
       }
       setMode(newMode);
     },
-    [mode, sharedDays, sharedBreaks]
+    [mode, sharedDays]
   );
 
   const handleInputChange = useCallback(
@@ -149,26 +139,6 @@ export function ShiftTemplateForm({
     setErrors((prev) => ({ ...prev, sharedDays: '' }));
   }, []);
 
-  // ----------------------------------------------------------------------
-  // Shared Break Handlers (Normal Mode)
-  // ----------------------------------------------------------------------
-
-  const handleAddSharedBreak = useCallback(() => {
-    const newBreak = createDefaultBreak();
-    setSharedBreaks((prev) => [...prev, newBreak]);
-  }, []);
-
-  const handleRemoveSharedBreak = useCallback((breakId: string) => {
-    setSharedBreaks((prev) => prev.filter((b) => b.id !== breakId));
-  }, []);
-
-  const handleSharedBreakChange = useCallback(
-    (breakId: string, field: keyof ShiftBreakFormData, value: string) => {
-      setSharedBreaks((prev) => prev.map((b) => (b.id === breakId ? { ...b, [field]: value } : b)));
-    },
-    []
-  );
-
   // Helper to convert time field (HH:mm or ISO 8601) to ISO 8601
   const normalizeTimeValue = useCallback((value: string): string => {
     // If already in ISO 8601 format (starts with P), return as is
@@ -183,23 +153,15 @@ export function ShiftTemplateForm({
     return value;
   }, []);
 
-  // Helper to convert ISO 8601 to HH:mm for display
-  const denormalizeTimeValue = useCallback((value: string): string => {
-    if (!value || !value.startsWith('P')) {
-      return value;
-    }
-    const parts = parseDurationToParts(value);
-    return `${parts.hours.toString().padStart(2, '0')}:${parts.minutes.toString().padStart(2, '0')}`;
-  }, []);
-
   // ----------------------------------------------------------------------
   // Shift Definition Handlers
   // ----------------------------------------------------------------------
 
   const handleAddDefinition = useCallback(() => {
     const newDef = createDefaultShiftDefinition(`Shift ${formData.definitions.length + 1}`);
-    // In advanced mode, new definitions get their own days/breaks
-    // In normal mode, they will inherit shared days/breaks when switching to advanced or on submit
+    // New definitions get their own breaks in both modes
+    // In normal mode, they will inherit shared days on submit
+    // In advanced mode, they get their own days
     setFormData((prev) => ({
       ...prev,
       definitions: [...prev.definitions, newDef],
@@ -226,7 +188,7 @@ export function ShiftTemplateForm({
   );
 
   // ----------------------------------------------------------------------
-  // Break Handlers (Advanced Mode - per shift)
+  // Break Handlers (per shift - used in both normal and advanced modes)
   // ----------------------------------------------------------------------
 
   const handleAddBreak = useCallback((defId: string) => {
@@ -305,14 +267,13 @@ export function ShiftTemplateForm({
 
   const handleSubmit = useCallback(() => {
     if (validate()) {
-      // In normal mode, apply shared days and breaks to all definitions before submitting
+      // In normal mode, apply shared days to all definitions before submitting
       if (mode === 'normal') {
         const updatedData = {
           ...formData,
           definitions: formData.definitions.map((def) => ({
             ...def,
             days: sharedDays,
-            breaks: sharedBreaks.map((b) => ({ ...b, id: generateId() })),
           })),
         };
         onSubmit(updatedData);
@@ -320,7 +281,7 @@ export function ShiftTemplateForm({
         onSubmit(formData);
       }
     }
-  }, [formData, onSubmit, validate, mode, sharedDays, sharedBreaks]);
+  }, [formData, onSubmit, validate, mode, sharedDays]);
 
   // ----------------------------------------------------------------------
   // Calculate Summary
@@ -332,7 +293,6 @@ export function ShiftTemplateForm({
       ? formData.definitions.map((def) => ({
           ...def,
           days: sharedDays,
-          breaks: sharedBreaks,
         }))
       : formData.definitions;
 
@@ -388,7 +348,7 @@ export function ShiftTemplateForm({
           </Stack>
         </CardContent>
       </Card>
-      {/* Normal Mode: Shared Days and Breaks */}
+      {/* Normal Mode: Shared Days */}
       <AnimatePresence mode="wait">
         {mode === 'normal' && (
           <motion.div
@@ -401,11 +361,11 @@ export function ShiftTemplateForm({
             <Card>
           <CardContent>
             <Typography variant="h6" sx={{ mb: 3 }}>
-              Days & Breaks (Applied to All Shifts)
+              Days (Applied to All Shifts)
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              Select the days of the week and define break times. These settings will apply to all
-              shifts you create.
+              Select the days of the week that apply to all shifts. Break times can be configured
+              individually for each shift below.
             </Typography>
             <Stack spacing={3}>
               {/* Shared Days Selector */}
@@ -437,86 +397,6 @@ export function ShiftTemplateForm({
                   </Typography>
                 )}
               </FormControl>
-
-              {/* Shared Breaks Section */}
-              <Box>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    mb: 1,
-                  }}
-                >
-                  <Typography variant="body2" color="text.secondary">
-                    Break Times (Applied to All Shifts)
-                  </Typography>
-                  <Button size="small" onClick={handleAddSharedBreak}>
-                    Add Break
-                  </Button>
-                </Box>
-
-                {sharedBreaks.length === 0 ? (
-                  <Typography variant="body2" color="text.disabled" sx={{ fontStyle: 'italic' }}>
-                    No breaks defined
-                  </Typography>
-                ) : (
-                  <Stack spacing={1}>
-                    {sharedBreaks.map((breakItem) => (
-                      <Box
-                        key={breakItem.id}
-                        sx={{
-                          display: 'flex',
-                          gap: 1,
-                          alignItems: 'center',
-                          p: 1,
-                          bgcolor: 'grey.50',
-                          borderRadius: 1,
-                        }}
-                      >
-                        <TextField
-                          size="small"
-                          label="Name"
-                          value={breakItem.name || ''}
-                          onChange={(e) =>
-                            handleSharedBreakChange(breakItem.id, 'name', e.target.value)
-                          }
-                          sx={{ flex: 1 }}
-                        />
-                        <Box sx={{ width: 200 }}>
-                          <DurationTimePicker
-                            label="Start"
-                            value={normalizeTimeValue(breakItem.startTime)}
-                            onChange={(duration) =>
-                              handleSharedBreakChange(breakItem.id, 'startTime', duration)
-                            }
-                            size="small"
-                            showHelperText={false}
-                          />
-                        </Box>
-                        <Box sx={{ width: 200 }}>
-                          <DurationTimePicker
-                            label="End"
-                            value={normalizeTimeValue(breakItem.endTime)}
-                            onChange={(duration) =>
-                              handleSharedBreakChange(breakItem.id, 'endTime', duration)
-                            }
-                            size="small"
-                            showHelperText={false}
-                          />
-                        </Box>
-                        <IconButton
-                          size="small"
-                          color="error"
-                          onClick={() => handleRemoveSharedBreak(breakItem.id)}
-                        >
-                          <Iconify icon="solar:trash-bin-trash-bold" />
-                        </IconButton>
-                      </Box>
-                    ))}
-                  </Stack>
-                )}
-              </Box>
             </Stack>
           </CardContent>
         </Card>
@@ -602,90 +482,121 @@ export function ShiftTemplateForm({
                     </Box>
                   </Stack>
 
-                  {/* Advanced Mode: Per-shift Breaks */}
-                  {mode === 'advanced' && (
-                    <Box>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          mb: 1,
-                        }}
-                      >
-                        <Typography variant="body2" color="text.secondary">
-                          Breaks
-                        </Typography>
-                        <Button size="small" onClick={() => handleAddBreak(def.id)}>
-                          Add Break
-                        </Button>
-                      </Box>
-
-                      {def.breaks.length === 0 ? (
-                        <Typography
-                          variant="body2"
-                          color="text.disabled"
-                          sx={{ fontStyle: 'italic' }}
-                        >
-                          No breaks defined
-                        </Typography>
-                      ) : (
-                        <Stack spacing={1}>
-                          {def.breaks.map((breakItem) => (
-                            <Box
-                              key={breakItem.id}
-                              sx={{
-                                display: 'flex',
-                                gap: 1,
-                                alignItems: 'center',
-                                p: 1,
-                                bgcolor: 'grey.50',
-                                borderRadius: 1,
-                              }}
-                            >
-                              <TextField
-                                size="small"
-                                label="Name"
-                                value={breakItem.name || ''}
-                                onChange={(e) =>
-                                  handleBreakChange(def.id, breakItem.id, 'name', e.target.value)
-                                }
-                                sx={{ flex: 1 }}
-                              />
-                              <Box sx={{ width: 200 }}>
-                                <DurationTimePicker
-                                  label="Start"
-                                  value={normalizeTimeValue(breakItem.startTime)}
-                                  onChange={(duration) =>
-                                    handleBreakChange(def.id, breakItem.id, 'startTime', duration)
-                                  }
-                                  size="small"
-                                  showHelperText={false}
-                                />
-                              </Box>
-                              <Box sx={{ width: 200 }}>
-                                <DurationTimePicker
-                                  label="End"
-                                  value={normalizeTimeValue(breakItem.endTime)}
-                                  onChange={(duration) =>
-                                    handleBreakChange(def.id, breakItem.id, 'endTime', duration)
-                                  }
-                                  size="small"
-                                  showHelperText={false}
-                                />
-                              </Box>
-                              <IconButton
-                                size="small"
-                                color="error"
-                                onClick={() => handleRemoveBreak(def.id, breakItem.id)}
-                              >
-                                <Iconify icon="solar:trash-bin-trash-bold" />
-                              </IconButton>
-                            </Box>
-                          ))}
-                        </Stack>
-                      )}
+                  {/* Breaks section - shown in both normal and advanced mode */}
+                  <Box>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        mb: 1,
+                      }}
+                    >
+                      <Typography variant="body2" color="text.secondary">
+                        Breaks
+                      </Typography>
+                      <Button size="small" onClick={() => handleAddBreak(def.id)}>
+                        Add Break
+                      </Button>
                     </Box>
+
+                    {def.breaks.length === 0 ? (
+                      <Typography
+                        variant="body2"
+                        color="text.disabled"
+                        sx={{ fontStyle: 'italic' }}
+                      >
+                        No breaks defined
+                      </Typography>
+                    ) : (
+                      <Stack spacing={1}>
+                        {def.breaks.map((breakItem) => (
+                          <Box
+                            key={breakItem.id}
+                            sx={{
+                              display: 'flex',
+                              gap: 1,
+                              alignItems: 'center',
+                              p: 1,
+                              bgcolor: 'grey.50',
+                              borderRadius: 1,
+                            }}
+                          >
+                            <TextField
+                              size="small"
+                              label="Name"
+                              value={breakItem.name || ''}
+                              onChange={(e) =>
+                                handleBreakChange(def.id, breakItem.id, 'name', e.target.value)
+                              }
+                              sx={{ flex: 1 }}
+                            />
+                            <Box sx={{ width: 200 }}>
+                              <DurationTimePicker
+                                label="Start"
+                                value={normalizeTimeValue(breakItem.startTime)}
+                                onChange={(duration) =>
+                                  handleBreakChange(def.id, breakItem.id, 'startTime', duration)
+                                }
+                                size="small"
+                                showHelperText={false}
+                              />
+                            </Box>
+                            <Box sx={{ width: 200 }}>
+                              <DurationTimePicker
+                                label="End"
+                                value={normalizeTimeValue(breakItem.endTime)}
+                                onChange={(duration) =>
+                                  handleBreakChange(def.id, breakItem.id, 'endTime', duration)
+                                }
+                                size="small"
+                                showHelperText={false}
+                              />
+                            </Box>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => handleRemoveBreak(def.id, breakItem.id)}
+                            >
+                              <Iconify icon="solar:trash-bin-trash-bold" />
+                            </IconButton>
+                          </Box>
+                        ))}
+                      </Stack>
+                    )}
+                  </Box>
+
+                  {/* Advanced Mode: Per-shift Days */}
+                  {mode === 'advanced' && (
+                    <FormControl fullWidth error={!!errors[`def-${defIndex}-days`]}>
+                      <InputLabel>Days of Week</InputLabel>
+                      <Select
+                        multiple
+                        value={def.days}
+                        onChange={(e) =>
+                          handleDefinitionChange(def.id, 'days', e.target.value as DayOfWeek[])
+                        }
+                        input={<OutlinedInput label="Days of Week" />}
+                        renderValue={(selected) => (
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            {selected.map((day) => (
+                              <Chip key={day} label={(DAY_LABELS[day] ?? '').slice(0, 3)} size="small" />
+                            ))}
+                          </Box>
+                        )}
+                      >
+                        {DAYS_OF_WEEK.map((day) => (
+                          <MenuItem key={day} value={day}>
+                            {DAY_LABELS[day]}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {errors[`def-${defIndex}-days`] && (
+                        <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>
+                          {errors[`def-${defIndex}-days`]}
+                        </Typography>
+                      )}
+                    </FormControl>
                   )}
                 </Stack>
               </Card>
