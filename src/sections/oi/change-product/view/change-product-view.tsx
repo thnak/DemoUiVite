@@ -56,6 +56,7 @@ export function ChangeProductView() {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [editedSpecs, setEditedSpecs] = useState<WorkingParameterEntity | null>(null);
+  const [plannedQuantity, setPlannedQuantity] = useState<number | undefined>(undefined);
   const [currentProduct, setCurrentProduct] = useState<ProductWorkingStateByMachine | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
@@ -123,6 +124,8 @@ export function ChangeProductView() {
       quantityPerCycle: productDto.quantityPerCycle,
     };
     setEditedSpecs(workingParams);
+    // Initialize plannedQuantity (can be empty for user to fill in)
+    setPlannedQuantity(undefined);
     setConfirmDialogOpen(true);
   };
 
@@ -142,6 +145,7 @@ export function ChangeProductView() {
     try {
       await postapiMachinemachineIdchangeproduct(selectedMachine.id, {
         productId: selectedProductDto.productId,
+        plannedQuantity,
         idealCycleTime: editedSpecs?.idealCycleTime,
         downtimeThreshold: editedSpecs?.downtimeThreshold,
         speedLossThreshold: editedSpecs?.speedLossThreshold,
@@ -161,6 +165,7 @@ export function ChangeProductView() {
       setConfirmDialogOpen(false);
       setSelectedProductDto(null);
       setEditedSpecs(null);
+      setPlannedQuantity(undefined);
     } catch (error) {
       console.error('Failed to change product:', error);
       setSnackbar({
@@ -177,6 +182,7 @@ export function ChangeProductView() {
     setConfirmDialogOpen(false);
     setSelectedProductDto(null);
     setEditedSpecs(null);
+    setPlannedQuantity(undefined);
   };
 
   const formatDurationInSeconds = (duration: string | undefined | null) => {
@@ -566,6 +572,36 @@ export function ChangeProductView() {
             </Typography>
             <Grid container spacing={3}>
               <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label={t('oi.plannedQuantity')}
+                  type="number"
+                  value={plannedQuantity ?? ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setPlannedQuantity(value === '' ? undefined : parseFloat(value));
+                  }}
+                  fullWidth
+                  inputProps={{ min: 0, step: 1 }}
+                  helperText={t('oi.plannedQuantityHelperText') || 'Target quantity for this production run'}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label={t('oi.quantityPerCycle')}
+                  type="number"
+                  value={editedSpecs?.quantityPerCycle ?? ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    handleSpecChange(
+                      'quantityPerCycle',
+                      value === '' ? undefined : parseFloat(value)
+                    );
+                  }}
+                  fullWidth
+                  inputProps={{ min: 0, step: 0.01 }}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <DurationTimePicker
                   label={t('oi.idealCycleTime')}
                   value={editedSpecs?.idealCycleTime || ''}
@@ -590,22 +626,6 @@ export function ChangeProductView() {
                   onChange={(value) => handleSpecChange('speedLossThreshold', value)}
                   precision="seconds"
                   fullWidth
-                />
-              </Grid>
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
-                  label={t('oi.quantityPerCycle')}
-                  type="number"
-                  value={editedSpecs?.quantityPerCycle ?? ''}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    handleSpecChange(
-                      'quantityPerCycle',
-                      value === '' ? undefined : parseFloat(value)
-                    );
-                  }}
-                  fullWidth
-                  inputProps={{ min: 0, step: 0.01 }}
                 />
               </Grid>
             </Grid>
