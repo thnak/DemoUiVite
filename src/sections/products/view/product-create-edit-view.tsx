@@ -1,21 +1,33 @@
-import { useState, useCallback, type ChangeEvent } from 'react';
+import { useState, useEffect, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
-import Switch from '@mui/material/Switch';
-import Button from '@mui/material/Button';
-import Select from '@mui/material/Select';
+import Stack from '@mui/material/Stack';
+import Table from '@mui/material/Table';
 import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Select from '@mui/material/Select';
+import Switch from '@mui/material/Switch';
 import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
+import TableRow from '@mui/material/TableRow';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
+import Typography from '@mui/material/Typography';
+import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 import InputAdornment from '@mui/material/InputAdornment';
+import TableContainer from '@mui/material/TableContainer';
+import CircularProgress from '@mui/material/CircularProgress';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { useRouter } from 'src/routes/hooks';
@@ -23,8 +35,17 @@ import { useRouter } from 'src/routes/hooks';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
+import { DurationTimePicker } from 'src/components/duration-time-picker';
 
 import { createProduct, updateProduct } from '../../../api';
+import { getMachinePage } from '../../../api/services/generated/machine';
+import {
+  deleteWorkingParameter,
+  updateWorkingParameter,
+  getWorkingParameterPage,
+} from '../../../api/services/generated/working-parameter';
+
+import type { MachineEntity, WorkingParameterEntity } from '../../../api/types/generated';
 
 // ----------------------------------------------------------------------
 
@@ -75,6 +96,14 @@ export function ProductCreateEditView({
     price: currentProduct?.price?.toString() ?? '' ,
     stock: currentProduct?.stock?.toString() ?? '',
   });
+
+  // Working parameters state
+  const [workingParameters, setWorkingParameters] = useState<WorkingParameterEntity[]>([]);
+  const [machines, setMachines] = useState<MachineEntity[]>([]);
+  const [loadingParams, setLoadingParams] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [currentParam, setCurrentParam] = useState<WorkingParameterEntity | null>(null);
+  const [paramFormData, setParamFormData] = useState<Partial<WorkingParameterEntity>>({});
 
   const handleCloseError = useCallback(() => {
     setErrorMessage(null);
@@ -184,6 +213,106 @@ export function ProductCreateEditView({
   const handleCancel = useCallback(() => {
     router.push('/products');
   }, [router]);
+
+  // Load working parameters for this product
+  const loadWorkingParameters = useCallback(async () => {
+    if (!isEdit || !currentProduct?.id) return;
+
+    setLoadingParams(true);
+    try {
+      // Load machines first
+      const machinesResponse = await getMachinePage([], { pageSize: 100 });
+      setMachines(machinesResponse.items || []);
+
+      // Load working parameters for this product
+      const paramsResponse = await getWorkingParameterPage([], { pageSize: 100 });
+      
+      // Filter parameters for this product
+      const productParams = (paramsResponse.items || []).filter(
+        (param) => param.productId === currentProduct.id
+      );
+      
+      setWorkingParameters(productParams);
+    } catch (error) {
+      console.error('Failed to load working parameters:', error);
+    } finally {
+      setLoadingParams(false);
+    }
+  }, [isEdit, currentProduct?.id]);
+
+  useEffect(() => {
+    if (isEdit && currentProduct?.id) {
+      loadWorkingParameters();
+    }
+  }, [isEdit, currentProduct?.id, loadWorkingParameters]);
+
+  // Helper function to format duration in seconds
+  const formatDurationInSeconds = (duration: string | undefined | null) => {
+    if (!duration) return 'N/A';
+    
+    const match = duration.match(/P(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+    if (!match) return duration;
+    
+    const days = match[1] ? parseInt(match[1], 10) : 0;
+    const hours = match[2] ? parseInt(match[2], 10) : 0;
+    const minutes = match[3] ? parseInt(match[3], 10) : 0;
+    const seconds = match[4] ? parseInt(match[4], 10) : 0;
+    
+    const totalSeconds = days * 86400 + hours * 3600 + minutes * 60 + seconds;
+    
+    return `${totalSeconds}s`;
+  };
+
+  // Get machine name by ID
+  const getMachineName = (machineId: string | undefined) => {
+    if (!machineId) return 'N/A';
+    const machine = machines.find((m) => m.id === machineId);
+    return machine?.name || machineId;
+  };
+
+  // Handle edit working parameter
+  const handleEditParam = (param: WorkingParameterEntity) => {
+    setCurrentParam(param);
+    setParamFormData({
+      idealCycleTime: param.idealCycleTime,
+      downtimeThreshold: param.downtimeThreshold,
+      speedLossThreshold: param.speedLossThreshold,
+      quantityPerCycle: param.quantityPerCycle,
+    });
+    setEditDialogOpen(true);
+  };
+
+  // Handle save working parameter
+  const handleSaveParam = async () => {
+    if (!currentParam?.id) return;
+
+    try {
+      await updateWorkingParameter(currentParam.id, [
+        { key: 'idealCycleTime', value: paramFormData.idealCycleTime },
+        { key: 'downtimeThreshold', value: paramFormData.downtimeThreshold },
+        { key: 'speedLossThreshold', value: paramFormData.speedLossThreshold },
+        { key: 'quantityPerCycle', value: paramFormData.quantityPerCycle },
+      ]);
+
+      // Reload working parameters
+      await loadWorkingParameters();
+      setEditDialogOpen(false);
+      setCurrentParam(null);
+      setParamFormData({});
+    } catch (error: any) {
+      setErrorMessage(error?.message ?? 'Failed to update working parameter');
+    }
+  };
+
+  // Handle delete working parameter
+  const handleDeleteParam = async (paramId: string) => {
+    try {
+      await deleteWorkingParameter(paramId);
+      await loadWorkingParameters();
+    } catch (error: any) {
+      setErrorMessage(error?.message ?? 'Failed to delete working parameter');
+    }
+  };
 
   return (
     <DashboardContent>
@@ -368,6 +497,76 @@ export function ProductCreateEditView({
               </Grid>
             </Grid>
 
+            {/* Working Parameters Section - Only show in edit mode */}
+            {isEdit && currentProduct?.id && (
+              <Card sx={{ p: 3, mt: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+                  <Typography variant="h6">
+                    Working Parameters
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    Configure parameters for different machines
+                  </Typography>
+                </Box>
+
+                {loadingParams ? (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
+                    <CircularProgress />
+                  </Box>
+                ) : workingParameters.length === 0 ? (
+                  <Alert severity="info">
+                    No working parameters configured for this product yet. Configure them from the Working Parameters page.
+                  </Alert>
+                ) : (
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Machine</TableCell>
+                          <TableCell>Ideal Cycle Time</TableCell>
+                          <TableCell>Downtime Threshold</TableCell>
+                          <TableCell>Speed Loss Threshold</TableCell>
+                          <TableCell>Quantity Per Cycle</TableCell>
+                          <TableCell align="right">Actions</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {workingParameters.map((param) => (
+                          <TableRow key={param.id}>
+                            <TableCell>{getMachineName(param.machineId)}</TableCell>
+                            <TableCell>{formatDurationInSeconds(param.idealCycleTime)}</TableCell>
+                            <TableCell>{formatDurationInSeconds(param.downtimeThreshold)}</TableCell>
+                            <TableCell>{formatDurationInSeconds(param.speedLossThreshold)}</TableCell>
+                            <TableCell>{param.quantityPerCycle ?? 'N/A'}</TableCell>
+                            <TableCell align="right">
+                              <IconButton
+                                size="small"
+                                onClick={() => handleEditParam(param)}
+                                sx={{ mr: 1 }}
+                              >
+                                <Iconify icon="solar:pen-bold" width={20} />
+                              </IconButton>
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => {
+                                  if (param.id && window.confirm('Are you sure you want to delete this working parameter?')) {
+                                    handleDeleteParam(param.id);
+                                  }
+                                }}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" width={20} />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
+              </Card>
+            )}
+
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
               <Button variant="outlined" color="inherit" onClick={handleCancel}>
                 Cancel
@@ -400,6 +599,65 @@ export function ProductCreateEditView({
           {errorMessage}
         </Alert>
       </Snackbar>
+
+      {/* Edit Working Parameter Dialog */}
+      <Dialog 
+        open={editDialogOpen} 
+        onClose={() => setEditDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Edit Working Parameter</DialogTitle>
+        <DialogContent>
+          <Stack spacing={3} sx={{ mt: 2 }}>
+            <DurationTimePicker
+              fullWidth
+              label="Ideal Cycle Time"
+              value={paramFormData.idealCycleTime || ''}
+              onChange={(value) => setParamFormData((prev) => ({ ...prev, idealCycleTime: value }))}
+              precision="seconds"
+            />
+            
+            <DurationTimePicker
+              fullWidth
+              label="Downtime Threshold"
+              value={paramFormData.downtimeThreshold || ''}
+              onChange={(value) => setParamFormData((prev) => ({ ...prev, downtimeThreshold: value }))}
+              precision="seconds"
+            />
+            
+            <DurationTimePicker
+              fullWidth
+              label="Speed Loss Threshold"
+              value={paramFormData.speedLossThreshold || ''}
+              onChange={(value) => setParamFormData((prev) => ({ ...prev, speedLossThreshold: value }))}
+              precision="seconds"
+            />
+            
+            <TextField
+              fullWidth
+              type="number"
+              label="Quantity Per Cycle"
+              value={paramFormData.quantityPerCycle ?? ''}
+              onChange={(e) => setParamFormData((prev) => ({ 
+                ...prev, 
+                quantityPerCycle: e.target.value ? Number(e.target.value) : undefined 
+              }))}
+              slotProps={{
+                input: {
+                  inputProps: { min: 0, step: 1 },
+                },
+              }}
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEditDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleSaveParam} variant="contained">
+            Save Changes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </DashboardContent>
   );
 }
