@@ -24,7 +24,7 @@ export function TimeBlockNameTableEmptyRows({
         }),
       }}
     >
-      <TableCell colSpan={9} />
+      <TableCell colSpan={6} />
     </TableRow>
   );
 }

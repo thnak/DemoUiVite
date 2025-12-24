@@ -11,7 +11,7 @@ type TimeBlockNameTableNoDataProps = {
 export function TimeBlockNameTableNoData({ searchQuery }: TimeBlockNameTableNoDataProps) {
   return (
     <TableRow>
-      <TableCell align="center" colSpan={7}>
+      <TableCell align="center" colSpan={6}>
         <Typography variant="h6" sx={{ py: 10 }}>
           Not found
         </Typography>

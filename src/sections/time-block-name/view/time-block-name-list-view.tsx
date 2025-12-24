@@ -83,6 +83,12 @@ export function TimeBlockNameListView() {
     onSuccess: () => {
       refetchTimeBlockNames();
       queryClient.invalidateQueries({ queryKey: timeBlockNameKeys.all });
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    },
+    onError: () => {
+      setIsDeleting(false);
     },
   });
 
@@ -99,12 +105,7 @@ export function TimeBlockNameListView() {
   const handleConfirmDelete = useCallback(async () => {
     if (itemToDelete) {
       setIsDeleting(true);
-
       deleteTimeBlockNameMutate({ id: itemToDelete });
-
-      setIsDeleting(false);
-      setDeleteDialogOpen(false);
-      setItemToDelete(null);
     }
   }, [deleteTimeBlockNameMutate, itemToDelete]);
 
