@@ -138,20 +138,6 @@ export function ReportView() {
           </Box>
         </motion.div>
 
-        {/* 2D Canvas Button */}
-        <motion.div variants={itemVariants}>
-          <Button
-            variant="contained"
-            color="inherit"
-            size="large"
-            startIcon={<Iconify icon={"solar:map-bold-duotone" as any} />}
-            onClick={() => navigate('/factory-layout')}
-            sx={{ mb: 3 }}
-          >
-            View Factory Layout (2D)
-          </Button>
-        </motion.div>
-
         {/* Overall Factory Metrics - Bento Grid */}
         <motion.div variants={itemVariants}>
           <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
@@ -163,7 +149,7 @@ export function ReportView() {
         <Grid container spacing={3} sx={{ mb: 5 }}>
           {/* Large OEE Card */}
           <Grid size={{ xs: 12, md: 6 }}>
-            <motion.div variants={itemVariants}>
+            <motion.div variants={itemVariants} style={{ height: '100%' }}>
               <OEEMetricCard
                 title="Overall Equipment Effectiveness"
                 value={mockFactoryOEE.overall.oee}
@@ -279,7 +265,7 @@ export function ReportView() {
               </Button>
               <Button
                 variant="outlined"
-                startIcon={<Iconify icon={"solar:map-bold-duotone" as any} />}
+                startIcon={<Iconify icon={'solar:map-bold-duotone' as any} />}
                 onClick={() => navigate('/area')}
               >
                 Area Management
@@ -287,6 +273,20 @@ export function ReportView() {
             </Stack>
           </Box>
         </motion.div>
+      </motion.div>
+
+      {/* 2D Canvas Button */}
+      <motion.div variants={itemVariants}>
+        <Button
+          variant="contained"
+          color="inherit"
+          size="large"
+          startIcon={<Iconify icon={"solar:map-bold-duotone" as any} />}
+          onClick={() => navigate('/factory-layout')}
+          sx={{ mb: 3 }}
+        >
+          View Factory Layout (2D)
+        </Button>
       </motion.div>
     </DashboardContent>
   );
