@@ -80,6 +80,9 @@ export const IoTSensorEditPage = lazy(() => import('src/pages/iot-sensor-edit'))
 export const OperatorDashboardPage = lazy(() => import('src/pages/oi/operator-dashboard'));
 export const ChangeProductPage = lazy(() => import('src/pages/oi/change-product'));
 export const DefectInputPage = lazy(() => import('src/pages/oi/defect-input'));
+export const RoleListPage = lazy(() => import('src/pages/role-list'));
+export const RoleCreatePage = lazy(() => import('src/pages/role-create'));
+export const RoleEditPage = lazy(() => import('src/pages/role-edit'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -172,6 +175,9 @@ export const routesSection: RouteObject[] = [
       { path: 'settings/unit-conversions', element: <UnitConversionListPage /> },
       { path: 'settings/unit-conversions/create', element: <UnitConversionCreatePage /> },
       { path: 'settings/unit-conversions/:id/edit', element: <UnitConversionEditPage /> },
+      { path: 'roles', element: <RoleListPage /> },
+      { path: 'roles/create', element: <RoleCreatePage /> },
+      { path: 'roles/:id/edit', element: <RoleEditPage /> },
       {
         path: 'oi',
         element: (
