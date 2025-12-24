@@ -15,7 +15,6 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 
 import { OEEMetricCard } from '../components/oee-metric-card';
-import { FactoryCanvas2D } from '../components/factory-canvas-2d';
 
 // ----------------------------------------------------------------------
 
@@ -69,151 +68,6 @@ const mockFactoryOEE = {
   },
 };
 
-// Mock data for 2D Canvas
-const mockCanvasData = [
-  {
-    id: 'area-1',
-    name: 'Assembly Line A',
-    position: { x: 50, y: 50 },
-    width: 500,
-    height: 300,
-    machines: [
-      {
-        id: 'machine-1',
-        name: 'Machine 1',
-        position: { x: 20, y: 50 },
-        status: 'running' as const,
-        oee: 85.2,
-      },
-      {
-        id: 'machine-2',
-        name: 'Machine 2',
-        position: { x: 120, y: 50 },
-        status: 'running' as const,
-        oee: 88.7,
-      },
-      {
-        id: 'machine-3',
-        name: 'Machine 3',
-        position: { x: 220, y: 50 },
-        status: 'maintenance' as const,
-        oee: 72.1,
-      },
-      {
-        id: 'machine-4',
-        name: 'Machine 4',
-        position: { x: 320, y: 50 },
-        status: 'running' as const,
-        oee: 90.3,
-      },
-      {
-        id: 'machine-5',
-        name: 'Machine 5',
-        position: { x: 20, y: 150 },
-        status: 'running' as const,
-        oee: 79.8,
-      },
-      {
-        id: 'machine-6',
-        name: 'Machine 6',
-        position: { x: 120, y: 150 },
-        status: 'stopped' as const,
-        oee: 45.2,
-      },
-    ],
-  },
-  {
-    id: 'area-2',
-    name: 'Assembly Line B',
-    position: { x: 600, y: 50 },
-    width: 500,
-    height: 300,
-    machines: [
-      {
-        id: 'machine-7',
-        name: 'Machine 7',
-        position: { x: 20, y: 50 },
-        status: 'running' as const,
-        oee: 82.4,
-      },
-      {
-        id: 'machine-8',
-        name: 'Machine 8',
-        position: { x: 120, y: 50 },
-        status: 'running' as const,
-        oee: 76.9,
-      },
-      {
-        id: 'machine-9',
-        name: 'Machine 9',
-        position: { x: 220, y: 50 },
-        status: 'idle' as const,
-        oee: 55.3,
-      },
-      {
-        id: 'machine-10',
-        name: 'Machine 10',
-        position: { x: 320, y: 50 },
-        status: 'running' as const,
-        oee: 84.1,
-      },
-    ],
-  },
-  {
-    id: 'area-3',
-    name: 'Packaging',
-    position: { x: 50, y: 400 },
-    width: 500,
-    height: 300,
-    machines: [
-      {
-        id: 'machine-11',
-        name: 'Machine 11',
-        position: { x: 20, y: 50 },
-        status: 'running' as const,
-        oee: 87.6,
-      },
-      {
-        id: 'machine-12',
-        name: 'Machine 12',
-        position: { x: 120, y: 50 },
-        status: 'running' as const,
-        oee: 81.2,
-      },
-      {
-        id: 'machine-13',
-        name: 'Machine 13',
-        position: { x: 220, y: 50 },
-        status: 'running' as const,
-        oee: 89.4,
-      },
-    ],
-  },
-  {
-    id: 'area-4',
-    name: 'Quality Control',
-    position: { x: 600, y: 400 },
-    width: 500,
-    height: 300,
-    machines: [
-      {
-        id: 'machine-14',
-        name: 'Machine 14',
-        position: { x: 20, y: 50 },
-        status: 'running' as const,
-        oee: 78.3,
-      },
-      {
-        id: 'machine-15',
-        name: 'Machine 15',
-        position: { x: 120, y: 50 },
-        status: 'maintenance' as const,
-        oee: 68.7,
-      },
-    ],
-  },
-];
-
 // Animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -241,11 +95,6 @@ export function ReportView() {
   const theme = useTheme();
   const navigate = useNavigate();
   const [selectedArea, setSelectedArea] = useState<string | null>(null);
-
-  const handleMachineClick = (machineId: string) => {
-    // Navigate to machine OEE details
-    navigate(`/machines/${machineId}/oee`);
-  };
 
   const handleAreaClick = (areaId: string) => {
     setSelectedArea(areaId);
@@ -291,11 +140,16 @@ export function ReportView() {
 
         {/* 2D Canvas Button */}
         <motion.div variants={itemVariants}>
-          <FactoryCanvas2D
-            areas={mockCanvasData}
-            onMachineClick={handleMachineClick}
-            onAreaClick={handleAreaClick}
-          />
+          <Button
+            variant="contained"
+            color="inherit"
+            size="large"
+            startIcon={<Iconify icon={"solar:map-bold-duotone" as any} />}
+            onClick={() => navigate('/factory-layout')}
+            sx={{ mb: 3 }}
+          >
+            View Factory Layout (2D)
+          </Button>
         </motion.div>
 
         {/* Overall Factory Metrics - Bento Grid */}
