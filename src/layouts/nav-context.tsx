@@ -46,7 +46,7 @@ const getModuleFromPath = (pathname: string): NavModule => {
   // Master Data module routes
   if (
     pathname.startsWith('/products') ||
-    pathname.startsWith('/product-groups') ||
+    pathname.startsWith('/product-categories') ||
     pathname.startsWith('/machines') ||
     pathname.startsWith('/machine-types') ||
     pathname.startsWith('/working-parameter') ||

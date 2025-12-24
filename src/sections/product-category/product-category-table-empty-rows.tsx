@@ -8,7 +8,7 @@ type TableEmptyRowsProps = {
   height?: number;
 };
 
-export function ProductGroupTableEmptyRows({ emptyRows, height }: TableEmptyRowsProps) {
+export function ProductCategoryTableEmptyRows({ emptyRows, height }: TableEmptyRowsProps) {
   if (!emptyRows) {
     return null;
   }

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -8,46 +8,114 @@ import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
+import CircularProgress from '@mui/material/CircularProgress';
 
-import { _productGroups } from 'src/_mock';
-import { DashboardContent } from 'src/layouts/dashboard';
+import { useRouter } from 'src/routes/hooks';
+
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
+
+import { DashboardContent } from 'src/layouts/dashboard';
+import {
+  useGetProductCategoryPage,
+  useDeleteProductCategory,
+} from 'src/api/hooks/generated/use-product-category';
+
+import type { ProductCategoryEntity } from 'src/api/types/generated';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
-import { ProductGroupTableRow } from '../product-group-table-row';
-import { ProductGroupTableHead } from '../product-group-table-head';
-import { ProductGroupTableNoData } from '../product-group-table-no-data';
-import { ProductGroupTableToolbar } from '../product-group-table-toolbar';
-import { ProductGroupTableEmptyRows } from '../product-group-table-empty-rows';
-import { emptyRows, applyFilter, getComparator } from '../product-group-utils';
+import { ProductCategoryTableRow } from '../product-category-table-row';
+import { ProductCategoryTableHead } from '../product-category-table-head';
+import { ProductCategoryTableNoData } from '../product-category-table-no-data';
+import { ProductCategoryTableToolbar } from '../product-category-table-toolbar';
+import { ProductCategoryTableEmptyRows } from '../product-category-table-empty-rows';
+import { emptyRows, applyFilter, getComparator } from '../product-category-utils';
 
-import type { ProductGroupProps } from '../product-group-table-row';
+import type { ProductCategoryProps } from '../product-category-table-row';
 
 // ----------------------------------------------------------------------
 
-export function ProductGroupListView() {
+export function ProductCategoryListView() {
+  const router = useRouter();
   const table = useTable();
 
   const [filterName, setFilterName] = useState('');
+  const [productCategories, setProductCategories] = useState<ProductCategoryProps[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
 
-  const dataFiltered: ProductGroupProps[] = applyFilter({
-    inputData: _productGroups as ProductGroupProps[],
+  const { mutate: fetchProductCategories, isPending: isLoading } = useGetProductCategoryPage({
+    onSuccess: (result) => {
+      if (result.items) {
+        const formattedData: ProductCategoryProps[] = result.items.map((item: ProductCategoryEntity) => ({
+          id: item.id?.toString() || '',
+          code: item.code || '',
+          name: item.name || '',
+          description: item.description || '',
+        }));
+        setProductCategories(formattedData);
+        setTotalCount(result.totalCount || 0);
+      }
+    },
+  });
+
+  const { mutate: deleteProductCategory } = useDeleteProductCategory({
+    onSuccess: () => {
+      // Refetch data after deletion
+      fetchProductCategories({
+        data: [],
+        params: {
+          pageNumber: table.page,
+          pageSize: table.rowsPerPage,
+          searchTerm: filterName,
+        },
+      });
+    },
+  });
+
+  useEffect(() => {
+    fetchProductCategories({
+      data: [],
+      params: {
+        pageNumber: table.page,
+        pageSize: table.rowsPerPage,
+        searchTerm: filterName,
+      },
+    });
+  }, [table.page, table.rowsPerPage, filterName]);
+
+  const dataFiltered: ProductCategoryProps[] = applyFilter({
+    inputData: productCategories,
     comparator: getComparator(table.order, table.orderBy),
-    filterName,
+    filterName: '',
   });
 
   const notFound = !dataFiltered.length && !!filterName;
 
-  const handleEditProductGroup = useCallback((id: string) => {
-    console.log('Edit product group:', id);
-    // Implement edit logic here
+  const handleEditProductCategory = useCallback(
+    (id: string) => {
+      router.push(`/product-categories/${id}/edit`);
+    },
+    [router]
+  );
+
+  const handleDeleteProductCategory = useCallback(
+    (id: string) => {
+      if (window.confirm('Are you sure you want to delete this product category?')) {
+        deleteProductCategory({ id });
+      }
+    },
+    [deleteProductCategory]
+  );
+
+  const handleImport = useCallback(() => {
+    console.log('Import product categories');
+    // TODO: Implement import logic
   }, []);
 
-  const handleDeleteProductGroup = useCallback((id: string) => {
-    console.log('Delete product group:', id);
-    // Implement delete logic here
+  const handleExport = useCallback(() => {
+    console.log('Export product categories');
+    // TODO: Implement export logic
   }, []);
 
   return (
@@ -72,7 +140,7 @@ export function ProductGroupListView() {
               •
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.primary' }}>
-              Product Group
+              Product Category
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               •
@@ -87,24 +155,31 @@ export function ProductGroupListView() {
             variant="outlined"
             color="inherit"
             startIcon={<Iconify icon="solar:cloud-upload-bold" />}
+            onClick={handleImport}
           >
             Import
           </Button>
-          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="mdi:export" />}>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="mdi:export" />}
+            onClick={handleExport}
+          >
             Export
           </Button>
           <Button
             variant="contained"
             color="inherit"
             startIcon={<Iconify icon="mingcute:add-line" />}
+            onClick={() => router.push('/product-categories/create')}
           >
-            Add product group
+            Add product category
           </Button>
         </Box>
       </Box>
 
       <Card>
-        <ProductGroupTableToolbar
+        <ProductCategoryTableToolbar
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,7 +191,7 @@ export function ProductGroupListView() {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <ProductGroupTableHead
+              <ProductCategoryTableHead
                 order={table.order}
                 orderBy={table.orderBy}
                 rowCount={dataFiltered.length}
@@ -125,7 +200,7 @@ export function ProductGroupListView() {
                 onSelectAllRows={(checked) =>
                   table.onSelectAllRows(
                     checked,
-                    dataFiltered.map((productGroup) => productGroup.id)
+                    dataFiltered.map((productCategory) => productCategory.id)
                   )
                 }
                 headLabel={[
@@ -136,28 +211,42 @@ export function ProductGroupListView() {
                 ]}
               />
               <TableBody>
-                {dataFiltered
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row) => (
-                    <ProductGroupTableRow
-                      key={row.id}
-                      row={row}
-                      selected={table.selected.includes(row.id)}
-                      onSelectRow={() => table.onSelectRow(row.id)}
-                      onEditRow={() => handleEditProductGroup(row.id)}
-                      onDeleteRow={() => handleDeleteProductGroup(row.id)}
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={5} align="center">
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          py: 10,
+                        }}
+                      >
+                        <CircularProgress />
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  <>
+                    {dataFiltered.map((row) => (
+                      <ProductCategoryTableRow
+                        key={row.id}
+                        row={row}
+                        selected={table.selected.includes(row.id)}
+                        onSelectRow={() => table.onSelectRow(row.id)}
+                        onEditRow={() => handleEditProductCategory(row.id)}
+                        onDeleteRow={() => handleDeleteProductCategory(row.id)}
+                      />
+                    ))}
+
+                    <ProductCategoryTableEmptyRows
+                      height={68}
+                      emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
                     />
-                  ))}
 
-                <ProductGroupTableEmptyRows
-                  height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
-                />
-
-                {notFound && <ProductGroupTableNoData searchQuery={filterName} />}
+                    {notFound && <ProductCategoryTableNoData searchQuery={filterName} />}
+                  </>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -166,7 +255,7 @@ export function ProductGroupListView() {
         <TablePagination
           component="div"
           page={table.page}
-          count={dataFiltered.length}
+          count={totalCount}
           rowsPerPage={table.rowsPerPage}
           onPageChange={table.onChangePage}
           rowsPerPageOptions={[...STANDARD_ROWS_PER_PAGE_OPTIONS]}

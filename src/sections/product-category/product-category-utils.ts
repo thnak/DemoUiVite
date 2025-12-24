@@ -1,4 +1,4 @@
-import type { ProductGroupProps } from './product-group-table-row';
+import type { ProductCategoryProps } from './product-category-table-row';
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ export function getComparator<Key extends keyof any>(
 // ----------------------------------------------------------------------
 
 type ApplyFilterProps = {
-  inputData: ProductGroupProps[];
+  inputData: ProductCategoryProps[];
   filterName: string;
   comparator: (a: any, b: any) => number;
 };
@@ -71,10 +71,10 @@ export function applyFilter({ inputData, comparator, filterName }: ApplyFilterPr
 
   if (filterName) {
     inputData = inputData.filter(
-      (productGroup) =>
-        productGroup.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-        productGroup.code.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-        productGroup.description.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (productCategory) =>
+        productCategory.name?.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+        productCategory.code?.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+        productCategory.description?.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 

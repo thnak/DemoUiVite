@@ -14,28 +14,28 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export type ProductGroupProps = {
+export type ProductCategoryProps = {
   id: string;
   code: string;
   name: string;
   description: string;
 };
 
-type ProductGroupTableRowProps = {
-  row: ProductGroupProps;
+type ProductCategoryTableRowProps = {
+  row: ProductCategoryProps;
   selected: boolean;
   onSelectRow: () => void;
   onEditRow: () => void;
   onDeleteRow: () => void;
 };
 
-export function ProductGroupTableRow({
+export function ProductCategoryTableRow({
   row,
   selected,
   onSelectRow,
   onEditRow,
   onDeleteRow,
-}: ProductGroupTableRowProps) {
+}: ProductCategoryTableRowProps) {
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {

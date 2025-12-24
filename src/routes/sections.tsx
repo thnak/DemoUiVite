@@ -32,7 +32,9 @@ export const WorkingParameterListPage = lazy(() => import('src/pages/working-par
 export const WorkingParameterCreatePage = lazy(() => import('src/pages/working-parameter-create'));
 export const WorkingParameterEditPage = lazy(() => import('src/pages/working-parameter-edit'));
 export const StopMachineReasonListPage = lazy(() => import('src/pages/stop-machine-reason-list'));
-export const ProductGroupListPage = lazy(() => import('src/pages/product-group-list'));
+export const ProductCategoryListPage = lazy(() => import('src/pages/product-category-list'));
+export const ProductCategoryCreatePage = lazy(() => import('src/pages/product-category-create'));
+export const ProductCategoryEditPage = lazy(() => import('src/pages/product-category-edit'));
 export const MachineListPage = lazy(() => import('src/pages/machine-list'));
 export const MachineCreatePage = lazy(() => import('src/pages/machine-create'));
 export const MachineEditPage = lazy(() => import('src/pages/machine-edit'));
@@ -130,7 +132,9 @@ export const routesSection: RouteObject[] = [
       { path: 'working-parameter/create', element: <WorkingParameterCreatePage /> },
       { path: 'working-parameter/edit/:id', element: <WorkingParameterEditPage /> },
       { path: 'stop-machine-reason', element: <StopMachineReasonListPage /> },
-      { path: 'product-groups', element: <ProductGroupListPage /> },
+      { path: 'product-categories', element: <ProductCategoryListPage /> },
+      { path: 'product-categories/create', element: <ProductCategoryCreatePage /> },
+      { path: 'product-categories/:id/edit', element: <ProductCategoryEditPage /> },
       { path: 'machines', element: <MachineListPage /> },
       { path: 'machines/create', element: <MachineCreatePage /> },
       { path: 'machines/:id/edit', element: <MachineEditPage /> },
