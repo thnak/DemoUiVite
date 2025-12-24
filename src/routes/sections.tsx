@@ -85,6 +85,8 @@ export const DefectInputPage = lazy(() => import('src/pages/oi/defect-input'));
 export const RoleListPage = lazy(() => import('src/pages/role-list'));
 export const RoleCreatePage = lazy(() => import('src/pages/role-create'));
 export const RoleEditPage = lazy(() => import('src/pages/role-edit'));
+export const ReportPage = lazy(() => import('src/pages/report'));
+export const FactoryLayoutPage = lazy(() => import('src/pages/factory-layout'));
 export const TimeBlockNameListPage = lazy(() => import('src/pages/time-block-name-list'));
 export const TimeBlockNameCreatePage = lazy(() => import('src/pages/time-block-name-create'));
 export const TimeBlockNameEditPage = lazy(() => import('src/pages/time-block-name-edit'));
@@ -188,6 +190,8 @@ export const routesSection: RouteObject[] = [
       { path: 'roles', element: <RoleListPage /> },
       { path: 'roles/create', element: <RoleCreatePage /> },
       { path: 'roles/:id/edit', element: <RoleEditPage /> },
+      { path: 'report', element: <ReportPage /> },
+      { path: 'factory-layout', element: <FactoryLayoutPage /> },
       {
         path: 'oi',
         element: (
