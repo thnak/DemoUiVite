@@ -6,13 +6,19 @@ import { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
+import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { useRouter } from 'src/routes/hooks';
+
+import { useValidationResult } from 'src/hooks/use-validation-result';
+
+import { isValidationSuccess } from 'src/utils/validation-result';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
@@ -38,6 +44,17 @@ export function UnitGroupCreateEditView({
 }: UnitGroupCreateEditViewProps) {
   const router = useRouter();
 
+  // Use ValidationResult hook for form validation
+  const {
+    setValidationResult,
+    clearValidationResult,
+    getFieldErrorMessage,
+    hasError,
+    clearFieldError,
+    overallMessage,
+  } = useValidationResult();
+
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState<UnitGroupFormData>({
     name: '',
     description: '',
@@ -53,22 +70,40 @@ export function UnitGroupCreateEditView({
   }, [isEdit, currentUnitGroup]);
 
   const { mutate: createUnitGroup, isPending: isCreating } = useCreateUnitGroup({
-    onSuccess: () => {
-      router.push('/settings/unit-groups');
+    onSuccess: (result) => {
+      setValidationResult(result);
+      if (isValidationSuccess(result)) {
+        router.push('/settings/unit-groups');
+      } else {
+        if (result.message) {
+          setErrorMessage(result.message);
+        }
+      }
     },
     onError: (error) => {
-      console.error('Failed to create unit group:', error);
+      setErrorMessage(error.message || 'Failed to create unit group');
     },
   });
 
   const { mutate: updateUnitGroup, isPending: isUpdating } = useUpdateUnitGroup({
-    onSuccess: () => {
-      router.push('/settings/unit-groups');
+    onSuccess: (result) => {
+      setValidationResult(result);
+      if (isValidationSuccess(result)) {
+        router.push('/settings/unit-groups');
+      } else {
+        if (result.message) {
+          setErrorMessage(result.message);
+        }
+      }
     },
     onError: (error) => {
-      console.error('Failed to update unit group:', error);
+      setErrorMessage(error.message || 'Failed to update unit group');
     },
   });
+
+  const handleCloseError = useCallback(() => {
+    setErrorMessage(null);
+  }, []);
 
   const handleChange = useCallback(
     (field: keyof UnitGroupFormData) =>
@@ -77,11 +112,15 @@ export function UnitGroupCreateEditView({
           ...prev,
           [field]: event.target.value,
         }));
+        clearFieldError(field);
       },
-    []
+    [clearFieldError]
   );
 
   const handleSave = useCallback(() => {
+    clearValidationResult();
+    setErrorMessage(null);
+
     if (isEdit && currentUnitGroup?.id) {
       // Update existing unit group
       updateUnitGroup({
@@ -100,7 +139,7 @@ export function UnitGroupCreateEditView({
         },
       });
     }
-  }, [isEdit, currentUnitGroup, formData, createUnitGroup, updateUnitGroup]);
+  }, [isEdit, currentUnitGroup, formData, createUnitGroup, updateUnitGroup, clearValidationResult]);
 
   const handleCancel = useCallback(() => {
     router.push('/settings/unit-groups');
@@ -130,6 +169,8 @@ export function UnitGroupCreateEditView({
                     label="Name"
                     value={formData.name}
                     onChange={handleChange('name')}
+                    error={hasError('name')}
+                    helperText={getFieldErrorMessage('name')}
                   />
                 </Grid>
                 <Grid size={{ xs: 12 }}>
@@ -140,6 +181,8 @@ export function UnitGroupCreateEditView({
                     label="Description"
                     value={formData.description}
                     onChange={handleChange('description')}
+                    error={hasError('description')}
+                    helperText={getFieldErrorMessage('description')}
                   />
                 </Grid>
               </Grid>
@@ -161,6 +204,17 @@ export function UnitGroupCreateEditView({
           </Stack>
         </Grid>
       </Grid>
+
+      <Snackbar
+        open={!!(errorMessage || overallMessage)}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+          {errorMessage || overallMessage}
+        </Alert>
+      </Snackbar>
     </DashboardContent>
   );
 }

@@ -12,6 +12,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { useValidationResult } from 'src/hooks/use-validation-result';
+
+import { isValidationSuccess } from 'src/utils/validation-result';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
   createShiftTemplate,
@@ -100,6 +104,13 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
   const params = useParams();
   const templateId = params.id as string | undefined;
 
+  // Use ValidationResult hook for form validation
+  const {
+    setValidationResult,
+    clearValidationResult,
+    overallMessage,
+  } = useValidationResult();
+
   const [initialData, setInitialData] = useState<ShiftTemplateFormData | undefined>(undefined);
   const [loading, setLoading] = useState(isEdit);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -177,6 +188,9 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
 
   const handleSubmit = useCallback(
     async (data: ShiftTemplateFormData) => {
+      clearValidationResult();
+      setErrorMessage(null);
+
       try {
         if (isEdit && templateId) {
           // For update, we need to send field updates as key-value pairs
@@ -187,18 +201,25 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
             { key: 'description', value: data.description || '' },
           ];
           const updateResult = await updateShiftTemplate(templateId, updates);
-          if (updateResult.isValid) setSuccessMessage('Template updated successfully');
-          else {
-            setErrorMessage(updateResult.message || 'Failed to update template');
+          setValidationResult(updateResult);
+          if (isValidationSuccess(updateResult)) {
+            setSuccessMessage('Template updated successfully');
+          } else {
+            if (updateResult.message) {
+              setErrorMessage(updateResult.message);
+            }
             return;
           }
         } else {
           const entity = formDataToApiEntity(data);
           const result = await createShiftTemplate(entity);
-          if (result.isValid) {
+          setValidationResult(result);
+          if (isValidationSuccess(result)) {
             setSuccessMessage('Template created successfully');
           } else {
-            setErrorMessage(result.message || 'Failed to create template');
+            if (result.message) {
+              setErrorMessage(result.message);
+            }
             return;
           }
         }
@@ -211,7 +232,7 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
         console.error('Error saving template:', err);
       }
     },
-    [isEdit, templateId, router]
+    [isEdit, templateId, router, clearValidationResult, setValidationResult]
   );
 
   const handleCancel = useCallback(() => {
@@ -269,13 +290,13 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
       />
 
       <Snackbar
-        open={!!errorMessage}
+        open={!!(errorMessage || overallMessage)}
         autoHideDuration={6000}
         onClose={handleCloseError}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
-          {errorMessage}
+          {errorMessage || overallMessage}
         </Alert>
       </Snackbar>
 
