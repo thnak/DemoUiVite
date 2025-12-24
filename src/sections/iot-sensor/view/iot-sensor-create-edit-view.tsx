@@ -19,6 +19,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { useValidationResult } from 'src/hooks/use-validation-result';
+
+import { isValidationSuccess } from 'src/utils/validation-result';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
   useCreateIoTSensor,
@@ -70,6 +74,16 @@ export function IoTSensorCreateEditView({
 }: IoTSensorCreateEditViewProps) {
   const router = useRouter();
 
+  // Use ValidationResult hook for form validation
+  const {
+    setValidationResult,
+    clearValidationResult,
+    getFieldErrorMessage,
+    hasError,
+    clearFieldError,
+    overallMessage,
+  } = useValidationResult();
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState<IoTSensorFormData>({
     code: '',
@@ -105,10 +119,13 @@ export function IoTSensorCreateEditView({
 
   const { mutate: createSensorMutate, isPending: isCreating } = useCreateIoTSensor({
     onSuccess: (result) => {
-      if (result.isValid) {
+      setValidationResult(result);
+      if (isValidationSuccess(result)) {
         router.push('/iot-sensors');
       } else {
-        setErrorMessage(result.message || 'Failed to create sensor');
+        if (result.message) {
+          setErrorMessage(result.message);
+        }
       }
     },
     onError: (error) => {
@@ -118,10 +135,13 @@ export function IoTSensorCreateEditView({
 
   const { mutate: updateSensorMutate, isPending: isUpdating } = useUpdateIoTSensor({
     onSuccess: (result) => {
-      if (result.isValid) {
+      setValidationResult(result);
+      if (isValidationSuccess(result)) {
         router.push('/iot-sensors');
       } else {
-        setErrorMessage(result.message || 'Failed to update sensor');
+        if (result.message) {
+          setErrorMessage(result.message);
+        }
       }
     },
     onError: (error) => {
@@ -142,8 +162,9 @@ export function IoTSensorCreateEditView({
           ...prev,
           [field]: event.target.value,
         }));
+        clearFieldError(field);
       },
-    []
+    [clearFieldError]
   );
 
   const handleSelectChange = useCallback(
@@ -152,18 +173,26 @@ export function IoTSensorCreateEditView({
         ...prev,
         [field]: event.target.value,
       }));
+      clearFieldError(field);
     },
-    []
+    [clearFieldError]
   );
 
-  const handleDeviceChange = useCallback((deviceId: string | null) => {
-    setFormData((prev) => ({
-      ...prev,
-      deviceId: deviceId || '',
-    }));
-  }, []);
+  const handleDeviceChange = useCallback(
+    (deviceId: string | null) => {
+      setFormData((prev) => ({
+        ...prev,
+        deviceId: deviceId || '',
+      }));
+      clearFieldError('deviceId');
+    },
+    [clearFieldError]
+  );
 
   const handleSubmit = useCallback(() => {
+    clearValidationResult();
+    setErrorMessage(null);
+
     if (!formData.name) {
       setErrorMessage('Sensor name is required');
       return;
@@ -203,7 +232,7 @@ export function IoTSensorCreateEditView({
         },
       });
     }
-  }, [formData, isEdit, currentSensorId, createSensorMutate, updateSensorMutate]);
+  }, [formData, isEdit, currentSensorId, createSensorMutate, updateSensorMutate, clearValidationResult]);
 
   const handleCancel = useCallback(() => {
     router.push('/iot-sensors');
@@ -260,6 +289,8 @@ export function IoTSensorCreateEditView({
                 multiline
                 rows={4}
                 placeholder="Sensor description..."
+                error={hasError('description')}
+                helperText={getFieldErrorMessage('description')}
               />
             </Stack>
           </Card>
@@ -281,6 +312,8 @@ export function IoTSensorCreateEditView({
                     onChange={handleInputChange('code')}
                     required
                     placeholder="SEN-001"
+                    error={hasError('code')}
+                    helperText={getFieldErrorMessage('code')}
                   />
                 </Grid>
 
@@ -292,6 +325,8 @@ export function IoTSensorCreateEditView({
                     onChange={handleInputChange('name')}
                     required
                     placeholder="Temperature Sensor"
+                    error={hasError('name')}
+                    helperText={getFieldErrorMessage('name')}
                   />
                 </Grid>
 
@@ -302,6 +337,8 @@ export function IoTSensorCreateEditView({
                     label="Device"
                     required
                     disabled={isSubmitting}
+                    error={hasError('deviceId')}
+                    helperText={getFieldErrorMessage('deviceId')}
                   />
                 </Grid>
 
@@ -313,11 +350,13 @@ export function IoTSensorCreateEditView({
                     onChange={handleInputChange('pinNumber')}
                     type="number"
                     placeholder="0"
+                    error={hasError('pinNumber')}
+                    helperText={getFieldErrorMessage('pinNumber')}
                   />
                 </Grid>
 
                 <Grid size={{ xs: 12, sm: 6 }}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth error={hasError('type')}>
                     <InputLabel>Sensor Type</InputLabel>
                     <Select
                       value={formData.type}
@@ -340,6 +379,8 @@ export function IoTSensorCreateEditView({
                     value={formData.unitOfMeasurement}
                     onChange={handleInputChange('unitOfMeasurement')}
                     placeholder="°C, %, etc."
+                    error={hasError('unitOfMeasurement')}
+                    helperText={getFieldErrorMessage('unitOfMeasurement')}
                   />
                 </Grid>
               </Grid>
@@ -382,13 +423,13 @@ export function IoTSensorCreateEditView({
       </Grid>
 
       <Snackbar
-        open={!!errorMessage}
+        open={!!(errorMessage || overallMessage)}
         autoHideDuration={6000}
         onClose={handleCloseError}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
-          {errorMessage}
+          {errorMessage || overallMessage}
         </Alert>
       </Snackbar>
     </DashboardContent>
