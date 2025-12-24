@@ -8,14 +8,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
+import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
+import Snackbar from '@mui/material/Snackbar';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -48,6 +51,8 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
   const [unitGroups, setUnitGroups] = useState<UnitGroupEntity[]>([]);
   const [isLoadingGroups, setIsLoadingGroups] = useState(true);
   const [isLoadingUnit, setIsLoadingUnit] = useState(isEdit);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   // Fetch unit groups
   const { mutate: fetchUnitGroups } = useGetUnitGroupPage({
@@ -89,14 +94,60 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
   }, [isEdit, unitData]);
 
   const { mutate: createUnit, isPending: isCreating } = useCreateUnit({
-    onSuccess: () => {
-      navigate('/settings/units');
+    onSuccess: (result) => {
+      if (result.isValid) {
+        navigate('/settings/units');
+      } else {
+        // Handle validation errors from the API
+        setErrorMessage(result.message || 'Validation failed');
+        if (result.errors) {
+          const errors: Record<string, string> = {};
+          Object.entries(result.errors).forEach(([key, error]) => {
+            errors[key] = error.message || 'Invalid value';
+          });
+          setFieldErrors(errors);
+        }
+      }
+    },
+    onError: (error) => {
+      // Error is also a ValidationResult type, handle it the same way
+      setErrorMessage(error.message || 'Failed to create unit');
+      if (error.errors) {
+        const errors: Record<string, string> = {};
+        Object.entries(error.errors).forEach(([key, validationError]) => {
+          errors[key] = validationError.message || 'Invalid value';
+        });
+        setFieldErrors(errors);
+      }
     },
   });
 
   const { mutate: updateUnit, isPending: isUpdating } = useUpdateUnit({
-    onSuccess: () => {
-      navigate('/settings/units');
+    onSuccess: (result) => {
+      if (result.isValid) {
+        navigate('/settings/units');
+      } else {
+        // Handle validation errors from the API
+        setErrorMessage(result.message || 'Validation failed');
+        if (result.errors) {
+          const errors: Record<string, string> = {};
+          Object.entries(result.errors).forEach(([key, error]) => {
+            errors[key] = error.message || 'Invalid value';
+          });
+          setFieldErrors(errors);
+        }
+      }
+    },
+    onError: (error) => {
+      // Error is also a ValidationResult type, handle it the same way
+      setErrorMessage(error.message || 'Failed to update unit');
+      if (error.errors) {
+        const errors: Record<string, string> = {};
+        Object.entries(error.errors).forEach(([key, validationError]) => {
+          errors[key] = validationError.message || 'Invalid value';
+        });
+        setFieldErrors(errors);
+      }
     },
   });
 
@@ -117,7 +168,16 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
     }));
   }, []);
 
+  const handleCloseError = useCallback(() => {
+    setErrorMessage(null);
+    setFieldErrors({});
+  }, []);
+
   const handleSave = useCallback(() => {
+    // Clear previous errors
+    setErrorMessage(null);
+    setFieldErrors({});
+
     if (isEdit && id) {
       // Update existing unit
       updateUnit({
@@ -179,6 +239,8 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
                     value={formData.name}
                     onChange={handleChange('name')}
                     required
+                    error={!!fieldErrors.name}
+                    helperText={fieldErrors.name}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
@@ -188,10 +250,12 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
                     value={formData.symbol}
                     onChange={handleChange('symbol')}
                     required
+                    error={!!fieldErrors.symbol}
+                    helperText={fieldErrors.symbol}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
-                  <FormControl fullWidth required>
+                  <FormControl fullWidth required error={!!fieldErrors.unitGroupId}>
                     <InputLabel>Unit Group</InputLabel>
                     <Select
                       value={formData.unitGroupId}
@@ -204,6 +268,9 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
                         </MenuItem>
                       ))}
                     </Select>
+                    {fieldErrors.unitGroupId && (
+                      <FormHelperText>{fieldErrors.unitGroupId}</FormHelperText>
+                    )}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12 }}>
@@ -214,6 +281,8 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
                     label="Description"
                     value={formData.description}
                     onChange={handleChange('description')}
+                    error={!!fieldErrors.description}
+                    helperText={fieldErrors.description}
                   />
                 </Grid>
               </Grid>
@@ -234,6 +303,17 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
           </Stack>
         </Grid>
       </Grid>
+
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </DashboardContent>
   );
 }

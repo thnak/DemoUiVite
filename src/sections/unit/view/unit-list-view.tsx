@@ -241,7 +241,7 @@ export function UnitListView() {
                     { id: 'name', label: 'Name' },
                     { id: 'symbol', label: 'Symbol' },
                     { id: 'unitGroupName', label: 'Group' },
-                    { id: '' },
+                    { id: '', label: 'Actions', align: 'right' },
                   ]}
                 />
                 <TableBody>

@@ -629,6 +629,9 @@ function generateHooksFile(tag: string, endpoints: GeneratedEndpoint[], schemas:
     const pathParams = endpoint.parameters.filter((p) => p.in === 'path');
     const queryParams = endpoint.parameters.filter((p) => p.in === 'query');
     const returnType = endpoint.responseType === 'void' ? 'void' : endpoint.responseType;
+    
+    // Use ValidationResult as error type for create/update operations, otherwise use Error
+    const errorType = returnType.includes('ValidationResult') ? returnType : 'Error';
 
     // Build mutation variables type - maintain same order as function params
     const variableTypes: string[] = [];
@@ -658,7 +661,7 @@ function generateHooksFile(tag: string, endpoints: GeneratedEndpoint[], schemas:
     }
     lines.push(` */`);
     lines.push(`export function ${hookName}(`);
-    lines.push(`  options?: Omit<UseMutationOptions<${returnType}, Error, ${variablesType}>, 'mutationFn'>`);
+    lines.push(`  options?: Omit<UseMutationOptions<${returnType}, ${errorType}, ${variablesType}>, 'mutationFn'>`);
     lines.push(`) {`);
     lines.push(`  return useMutation({`);
 
