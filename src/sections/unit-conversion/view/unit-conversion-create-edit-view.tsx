@@ -14,6 +14,10 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import { useValidationResult } from 'src/hooks/use-validation-result';
+
+import { isValidationSuccess } from 'src/utils/validation-result';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
   useCreateUnitConversion,
@@ -41,6 +45,16 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
   const navigate = useNavigate();
   const { id } = useParams();
 
+  // Use ValidationResult hook for form validation
+  const {
+    setValidationResult,
+    clearValidationResult,
+    getFieldErrorMessage,
+    hasError,
+    clearFieldError,
+    overallMessage,
+  } = useValidationResult();
+
   const [formData, setFormData] = useState<UnitConversionFormData>({
     fromUnitId: '',
     toUnitId: '',
@@ -50,7 +64,6 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
   });
   const [isLoadingConversion, setIsLoadingConversion] = useState(isEdit);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   // Fetch conversion data if editing
   const { data: conversionData } = useGetUnitConversionById(id || '', {
@@ -72,57 +85,33 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
 
   const { mutate: createConversion, isPending: isCreating } = useCreateUnitConversion({
     onSuccess: (result) => {
-      if (result.isValid) {
+      setValidationResult(result);
+      if (isValidationSuccess(result)) {
         navigate('/settings/unit-conversions');
       } else {
-        setErrorMessage(result.message || 'Validation failed');
-        if (result.errors) {
-          const errors: Record<string, string> = {};
-          Object.entries(result.errors).forEach(([key, error]) => {
-            errors[key] = error.message || 'Invalid value';
-          });
-          setFieldErrors(errors);
+        if (result.message) {
+          setErrorMessage(result.message);
         }
       }
     },
     onError: (error) => {
-      // Error is also a ValidationResult type, handle it the same way
       setErrorMessage(error.message || 'Failed to create unit conversion');
-      if (error.errors) {
-        const errors: Record<string, string> = {};
-        Object.entries(error.errors).forEach(([key, validationError]) => {
-          errors[key] = validationError.message || 'Invalid value';
-        });
-        setFieldErrors(errors);
-      }
     },
   });
 
   const { mutate: updateConversion, isPending: isUpdating } = useUpdateUnitConversion({
     onSuccess: (result) => {
-      if (result.isValid) {
+      setValidationResult(result);
+      if (isValidationSuccess(result)) {
         navigate('/settings/unit-conversions');
       } else {
-        setErrorMessage(result.message || 'Validation failed');
-        if (result.errors) {
-          const errors: Record<string, string> = {};
-          Object.entries(result.errors).forEach(([key, error]) => {
-            errors[key] = error.message || 'Invalid value';
-          });
-          setFieldErrors(errors);
+        if (result.message) {
+          setErrorMessage(result.message);
         }
       }
     },
     onError: (error) => {
-      // Error is also a ValidationResult type, handle it the same way
       setErrorMessage(error.message || 'Failed to update unit conversion');
-      if (error.errors) {
-        const errors: Record<string, string> = {};
-        Object.entries(error.errors).forEach(([key, validationError]) => {
-          errors[key] = validationError.message || 'Invalid value';
-        });
-        setFieldErrors(errors);
-      }
     },
   });
 
@@ -132,26 +121,30 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
         ...prev,
         [field]: event.target.value,
       }));
+      clearFieldError(field);
     },
-    []
+    [clearFieldError]
   );
 
-  const handleUnitChange = useCallback((field: 'fromUnitId' | 'toUnitId') => (unitId: string | null) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: unitId || '',
-    }));
-  }, []);
+  const handleUnitChange = useCallback(
+    (field: 'fromUnitId' | 'toUnitId') => (unitId: string | null) => {
+      setFormData((prev) => ({
+        ...prev,
+        [field]: unitId || '',
+      }));
+      clearFieldError(field);
+    },
+    [clearFieldError]
+  );
 
   const handleCloseError = useCallback(() => {
     setErrorMessage(null);
-    setFieldErrors({});
   }, []);
 
   const handleSave = useCallback(() => {
     // Clear previous errors
+    clearValidationResult();
     setErrorMessage(null);
-    setFieldErrors({});
 
     if (isEdit && id) {
       // Update existing conversion
@@ -177,7 +170,7 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
         },
       });
     }
-  }, [formData, isEdit, id, createConversion, updateConversion]);
+  }, [formData, isEdit, id, createConversion, updateConversion, clearValidationResult]);
 
   const handleCancel = useCallback(() => {
     navigate('/settings/unit-conversions');
@@ -215,8 +208,8 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
                     onChange={handleUnitChange('fromUnitId')}
                     label="From Unit"
                     required
-                    error={!!fieldErrors.fromUnitId}
-                    helperText={fieldErrors.fromUnitId}
+                    error={hasError('fromUnitId')}
+                    helperText={getFieldErrorMessage('fromUnitId')}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
@@ -225,8 +218,8 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
                     onChange={handleUnitChange('toUnitId')}
                     label="To Unit"
                     required
-                    error={!!fieldErrors.toUnitId}
-                    helperText={fieldErrors.toUnitId}
+                    error={hasError('toUnitId')}
+                    helperText={getFieldErrorMessage('toUnitId')}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
@@ -236,9 +229,9 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
                     label="Conversion Factor"
                     value={formData.conversionFactor}
                     onChange={handleChange('conversionFactor')}
-                    helperText={fieldErrors.conversionFactor || "Multiply the from-unit by this factor"}
+                    helperText={getFieldErrorMessage('conversionFactor') || "Multiply the from-unit by this factor"}
                     required
-                    error={!!fieldErrors.conversionFactor}
+                    error={hasError('conversionFactor')}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
@@ -248,8 +241,8 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
                     label="Offset"
                     value={formData.offset}
                     onChange={handleChange('offset')}
-                    helperText={fieldErrors.offset || "Add this offset after multiplication"}
-                    error={!!fieldErrors.offset}
+                    helperText={getFieldErrorMessage('offset') || "Add this offset after multiplication"}
+                    error={hasError('offset')}
                   />
                 </Grid>
                 <Grid size={{ xs: 12 }}>
@@ -260,8 +253,8 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
                     label="Formula Description"
                     value={formData.formulaDescription}
                     onChange={handleChange('formulaDescription')}
-                    helperText={fieldErrors.formulaDescription || "e.g., 'F = C * 1.8 + 32'"}
-                    error={!!fieldErrors.formulaDescription}
+                    helperText={getFieldErrorMessage('formulaDescription') || "e.g., 'F = C * 1.8 + 32'"}
+                    error={hasError('formulaDescription')}
                   />
                 </Grid>
               </Grid>
@@ -284,13 +277,13 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
       </Grid>
 
       <Snackbar
-        open={!!errorMessage}
+        open={!!(errorMessage || overallMessage)}
         autoHideDuration={6000}
         onClose={handleCloseError}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
-          {errorMessage}
+          {errorMessage || overallMessage}
         </Alert>
       </Snackbar>
     </DashboardContent>

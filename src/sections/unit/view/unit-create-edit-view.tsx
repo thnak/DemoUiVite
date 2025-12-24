@@ -21,6 +21,10 @@ import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import { useValidationResult } from 'src/hooks/use-validation-result';
+
+import { isValidationSuccess } from 'src/utils/validation-result';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useGetUnitGroupPage } from 'src/api/hooks/generated/use-unit-group';
 import { useCreateUnit, useUpdateUnit, useGetUnitById } from 'src/api/hooks/generated/use-unit';
@@ -42,6 +46,16 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
   const navigate = useNavigate();
   const { id } = useParams();
 
+  // Use ValidationResult hook for form validation
+  const {
+    setValidationResult,
+    clearValidationResult,
+    getFieldErrorMessage,
+    hasError,
+    clearFieldError,
+    overallMessage,
+  } = useValidationResult();
+
   const [formData, setFormData] = useState<UnitFormData>({
     name: '',
     symbol: '',
@@ -52,7 +66,6 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
   const [isLoadingGroups, setIsLoadingGroups] = useState(true);
   const [isLoadingUnit, setIsLoadingUnit] = useState(isEdit);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   // Fetch unit groups
   const { mutate: fetchUnitGroups } = useGetUnitGroupPage({
@@ -95,59 +108,33 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
 
   const { mutate: createUnit, isPending: isCreating } = useCreateUnit({
     onSuccess: (result) => {
-      if (result.isValid) {
+      setValidationResult(result);
+      if (isValidationSuccess(result)) {
         navigate('/settings/units');
       } else {
-        // Handle validation errors from the API
-        setErrorMessage(result.message || 'Validation failed');
-        if (result.errors) {
-          const errors: Record<string, string> = {};
-          Object.entries(result.errors).forEach(([key, error]) => {
-            errors[key] = error.message || 'Invalid value';
-          });
-          setFieldErrors(errors);
+        if (result.message) {
+          setErrorMessage(result.message);
         }
       }
     },
     onError: (error) => {
-      // Error is also a ValidationResult type, handle it the same way
       setErrorMessage(error.message || 'Failed to create unit');
-      if (error.errors) {
-        const errors: Record<string, string> = {};
-        Object.entries(error.errors).forEach(([key, validationError]) => {
-          errors[key] = validationError.message || 'Invalid value';
-        });
-        setFieldErrors(errors);
-      }
     },
   });
 
   const { mutate: updateUnit, isPending: isUpdating } = useUpdateUnit({
     onSuccess: (result) => {
-      if (result.isValid) {
+      setValidationResult(result);
+      if (isValidationSuccess(result)) {
         navigate('/settings/units');
       } else {
-        // Handle validation errors from the API
-        setErrorMessage(result.message || 'Validation failed');
-        if (result.errors) {
-          const errors: Record<string, string> = {};
-          Object.entries(result.errors).forEach(([key, error]) => {
-            errors[key] = error.message || 'Invalid value';
-          });
-          setFieldErrors(errors);
+        if (result.message) {
+          setErrorMessage(result.message);
         }
       }
     },
     onError: (error) => {
-      // Error is also a ValidationResult type, handle it the same way
       setErrorMessage(error.message || 'Failed to update unit');
-      if (error.errors) {
-        const errors: Record<string, string> = {};
-        Object.entries(error.errors).forEach(([key, validationError]) => {
-          errors[key] = validationError.message || 'Invalid value';
-        });
-        setFieldErrors(errors);
-      }
     },
   });
 
@@ -157,26 +144,30 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
         ...prev,
         [field]: event.target.value,
       }));
+      clearFieldError(field);
     },
-    []
+    [clearFieldError]
   );
 
-  const handleSelectChange = useCallback((event: SelectChangeEvent<string>) => {
-    setFormData((prev) => ({
-      ...prev,
-      unitGroupId: event.target.value,
-    }));
-  }, []);
+  const handleSelectChange = useCallback(
+    (event: SelectChangeEvent<string>) => {
+      setFormData((prev) => ({
+        ...prev,
+        unitGroupId: event.target.value,
+      }));
+      clearFieldError('unitGroupId');
+    },
+    [clearFieldError]
+  );
 
   const handleCloseError = useCallback(() => {
     setErrorMessage(null);
-    setFieldErrors({});
   }, []);
 
   const handleSave = useCallback(() => {
     // Clear previous errors
+    clearValidationResult();
     setErrorMessage(null);
-    setFieldErrors({});
 
     if (isEdit && id) {
       // Update existing unit
@@ -200,7 +191,7 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
         },
       });
     }
-  }, [formData, isEdit, id, createUnit, updateUnit]);
+  }, [formData, isEdit, id, createUnit, updateUnit, clearValidationResult]);
 
   const handleCancel = useCallback(() => {
     navigate('/settings/units');
@@ -239,8 +230,8 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
                     value={formData.name}
                     onChange={handleChange('name')}
                     required
-                    error={!!fieldErrors.name}
-                    helperText={fieldErrors.name}
+                    error={hasError('name')}
+                    helperText={getFieldErrorMessage('name')}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
@@ -250,12 +241,12 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
                     value={formData.symbol}
                     onChange={handleChange('symbol')}
                     required
-                    error={!!fieldErrors.symbol}
-                    helperText={fieldErrors.symbol}
+                    error={hasError('symbol')}
+                    helperText={getFieldErrorMessage('symbol')}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
-                  <FormControl fullWidth required error={!!fieldErrors.unitGroupId}>
+                  <FormControl fullWidth required error={hasError('unitGroupId')}>
                     <InputLabel>Unit Group</InputLabel>
                     <Select
                       value={formData.unitGroupId}
@@ -268,8 +259,8 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
                         </MenuItem>
                       ))}
                     </Select>
-                    {fieldErrors.unitGroupId && (
-                      <FormHelperText>{fieldErrors.unitGroupId}</FormHelperText>
+                    {hasError('unitGroupId') && (
+                      <FormHelperText>{getFieldErrorMessage('unitGroupId')}</FormHelperText>
                     )}
                   </FormControl>
                 </Grid>
@@ -281,8 +272,8 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
                     label="Description"
                     value={formData.description}
                     onChange={handleChange('description')}
-                    error={!!fieldErrors.description}
-                    helperText={fieldErrors.description}
+                    error={hasError('description')}
+                    helperText={getFieldErrorMessage('description')}
                   />
                 </Grid>
               </Grid>
@@ -305,13 +296,13 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
       </Grid>
 
       <Snackbar
-        open={!!errorMessage}
+        open={!!(errorMessage || overallMessage)}
         autoHideDuration={6000}
         onClose={handleCloseError}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
-          {errorMessage}
+          {errorMessage || overallMessage}
         </Alert>
       </Snackbar>
     </DashboardContent>
