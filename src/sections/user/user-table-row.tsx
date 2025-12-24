@@ -1,5 +1,3 @@
-import type { UserStatus } from 'src/_mock';
-
 import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -20,35 +18,18 @@ import { Iconify } from 'src/components/iconify';
 
 export type UserProps = {
   id: string;
-  name: string;
+  username: string;
+  displayName: string;
   email: string;
-  role: string;
-  status: UserStatus;
-  company: string;
-  avatarUrl: string;
   phoneNumber: string;
-  isVerified: boolean;
+  avatarUrl: string;
+  roleNames: string[];
 };
 
 type UserTableRowProps = {
   row: UserProps;
   selected: boolean;
   onSelectRow: () => void;
-};
-
-const getStatusColor = (status: UserStatus): 'success' | 'warning' | 'error' | 'default' => {
-  switch (status) {
-    case 'active':
-      return 'success';
-    case 'pending':
-      return 'warning';
-    case 'banned':
-      return 'error';
-    case 'rejected':
-      return 'default';
-    default:
-      return 'default';
-  }
 };
 
 export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) {
@@ -77,32 +58,30 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
               alignItems: 'center',
             }}
           >
-            <Avatar alt={row.name} src={row.avatarUrl} />
-            <Box>
-              <Typography variant="subtitle2" noWrap>
-                {row.name}
-              </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                {row.email}
-              </Typography>
-            </Box>
+            <Avatar alt={row.username} src={row.avatarUrl} />
+            <Typography variant="subtitle2" noWrap>
+              {row.username}
+            </Typography>
           </Box>
         </TableCell>
 
+        <TableCell>{row.displayName}</TableCell>
+
+        <TableCell>{row.email}</TableCell>
+
         <TableCell>{row.phoneNumber}</TableCell>
 
-        <TableCell>{row.company}</TableCell>
-
-        <TableCell>{row.role}</TableCell>
-
         <TableCell>
-          <Label color={getStatusColor(row.status)}>{row.status}</Label>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            {row.roleNames.map((role) => (
+              <Label key={role} color="default">
+                {role}
+              </Label>
+            ))}
+          </Box>
         </TableCell>
 
         <TableCell align="right">
-          <IconButton>
-            <Iconify icon="solar:pen-bold" />
-          </IconButton>
           <IconButton onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
@@ -132,11 +111,6 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
             },
           }}
         >
-          <MenuItem onClick={handleClosePopover}>
-            <Iconify icon="solar:pen-bold" />
-            Edit
-          </MenuItem>
-
           <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete

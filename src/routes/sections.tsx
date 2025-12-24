@@ -17,7 +17,7 @@ import { SvgColor } from '../components/svg-color';
 export const IndexPage = lazy(() => import('src/pages/index'));
 export const DashboardPage = lazy(() => import('src/pages/dashboard'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
-export const UserPage = lazy(() => import('src/pages/user'));
+export const UserPage = lazy(() => import('src/pages/users'));
 export const UserCreatePage = lazy(() => import('src/pages/user-create'));
 export const UserProfilePage = lazy(() => import('src/pages/user-profile'));
 export const AreaPage = lazy(() => import('src/pages/area'));
@@ -114,9 +114,9 @@ export const routesSection: RouteObject[] = [
     ),
     children: [
       { path: 'analytics', element: <DashboardPage /> },
-      { path: 'user', element: <UserPage /> },
-      { path: 'user/create', element: <UserCreatePage /> },
-      { path: 'user/profile', element: <UserProfilePage /> },
+      { path: 'users', element: <UserPage /> },
+      { path: 'users/create', element: <UserCreatePage /> },
+      { path: 'users/profile', element: <UserProfilePage /> },
       { path: 'area', element: <AreaPage /> },
       { path: 'area/create', element: <AreaCreatePage /> },
       { path: 'area/:id/edit', element: <AreaEditPage /> },

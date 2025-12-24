@@ -62,7 +62,7 @@ const getModuleFromPath = (pathname: string): NavModule => {
 
   // User Management module routes
   if (
-    pathname.startsWith('/user') ||
+    pathname.startsWith('/users') ||
     pathname.startsWith('/roles') ||
     pathname.startsWith('/permissions')
   ) {
