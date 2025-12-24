@@ -3540,16 +3540,16 @@
             "description": "Accepted",
             "content": {
               "text/plain": {
-                "schema": { }
+                "schema": {}
               },
               "application/json": {
-                "schema": { }
+                "schema": {}
               },
               "text/json": {
-                "schema": { }
+                "schema": {}
               },
               "application/vnd.msgpack": {
-                "schema": { }
+                "schema": {}
               }
             }
           }
@@ -10462,16 +10462,16 @@
             "description": "OK",
             "content": {
               "text/plain": {
-                "schema": { }
+                "schema": {}
               },
               "application/json": {
-                "schema": { }
+                "schema": {}
               },
               "text/json": {
-                "schema": { }
+                "schema": {}
               },
               "application/vnd.msgpack": {
-                "schema": { }
+                "schema": {}
               }
             }
           },
@@ -10550,16 +10550,16 @@
             "description": "OK",
             "content": {
               "text/plain": {
-                "schema": { }
+                "schema": {}
               },
               "application/json": {
-                "schema": { }
+                "schema": {}
               },
               "text/json": {
-                "schema": { }
+                "schema": {}
               },
               "application/vnd.msgpack": {
-                "schema": { }
+                "schema": {}
               }
             }
           },
@@ -26453,16 +26453,16 @@
             "description": "OK",
             "content": {
               "text/plain": {
-                "schema": { }
+                "schema": {}
               },
               "application/json": {
-                "schema": { }
+                "schema": {}
               },
               "text/json": {
-                "schema": { }
+                "schema": {}
               },
               "application/vnd.msgpack": {
-                "schema": { }
+                "schema": {}
               }
             }
           },
@@ -27846,7 +27846,7 @@
       }
     },
     "/api/Product/get-product-page": {
-      "get": {
+      "post": {
         "tags": [
           "Product"
         ],
@@ -45778,7 +45778,7 @@
         "tags": [
           "WorkCenter"
         ],
-        "summary": "Tìm kiếm group Code theo mã hoặc tên",
+        "summary": "T\u00ecm ki\u1ebfm group Code theo m\u00e3 ho\u1eb7c t\u00ean",
         "parameters": [
           {
             "name": "keyword",
@@ -47185,7 +47185,7 @@
           },
           "name": {
             "type": "string",
-            "description": "Tên gọi để người dùng dễ nhận biết mục đích của route.",
+            "description": "T\u00ean g\u1ecdi \u0111\u1ec3 ng\u01b0\u1eddi d\u00f9ng d\u1ec5 nh\u1eadn bi\u1ebft m\u1ee5c \u0111\u00edch c\u1ee7a route.",
             "nullable": true
           },
           "upstreamHttpMethod": {
@@ -47193,7 +47193,7 @@
           },
           "upstreamPathTemplate": {
             "type": "string",
-            "description": "Mẫu đường dẫn (path template) mà client nhìn thấy (ví dụ: \"/api/users/{id}\").",
+            "description": "M\u1eabu \u0111\u01b0\u1eddng d\u1eabn (path template) m\u00e0 client nh\u00ecn th\u1ea5y (v\u00ed d\u1ee5: \"/api/users/{id}\").",
             "nullable": true
           },
           "routeType": {
@@ -47201,7 +47201,7 @@
           },
           "downstreamUrl": {
             "type": "string",
-            "description": "Đường dẫn đầy đủ của service nội bộ sẽ xử lý request (ví dụ: \"http://user-service/api/v1/users/{id}\").",
+            "description": "\u0110\u01b0\u1eddng d\u1eabn \u0111\u1ea7y \u0111\u1ee7 c\u1ee7a service n\u1ed9i b\u1ed9 s\u1ebd x\u1eed l\u00fd request (v\u00ed d\u1ee5: \"http://user-service/api/v1/users/{id}\").",
             "nullable": true
           },
           "pluginId": {
@@ -47217,16 +47217,16 @@
           },
           "authKey": {
             "type": "string",
-            "description": "Mã xác thực (API Key) mà client phải gửi trong header để truy cập route này.\r\n**Bảo mật**: Giá trị này NÊN được hash trước khi lưu vào DB.",
+            "description": "M\u00e3 x\u00e1c th\u1ef1c (API Key) m\u00e0 client ph\u1ea3i g\u1eedi trong header \u0111\u1ec3 truy c\u1eadp route n\u00e0y.\r\n**B\u1ea3o m\u1eadt**: Gi\u00e1 tr\u1ecb n\u00e0y N\u00caN \u0111\u01b0\u1ee3c hash tr\u01b0\u1edbc khi l\u01b0u v\u00e0o DB.",
             "nullable": true
           },
           "isPayloadValidationEnabled": {
             "type": "boolean",
-            "description": "Bật hoặc tắt cơ chế xác thực payload."
+            "description": "B\u1eadt ho\u1eb7c t\u1eaft c\u01a1 ch\u1ebf x\u00e1c th\u1ef1c payload."
           },
           "payloadValidationSecret": {
             "type": "string",
-            "description": "Chuỗi bí mật (secret) dùng để xác thực mã băm (HMAC) của payload.\r\nChỉ được sử dụng khi IsPayloadValidationEnabled = true.\r\n**Bảo mật**: Giá trị này KHÔNG NÊN được lưu dưới dạng plaintext. Hãy mã hóa nó.",
+            "description": "Chu\u1ed7i b\u00ed m\u1eadt (secret) d\u00f9ng \u0111\u1ec3 x\u00e1c th\u1ef1c m\u00e3 b\u0103m (HMAC) c\u1ee7a payload.\r\nCh\u1ec9 \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng khi IsPayloadValidationEnabled = true.\r\n**B\u1ea3o m\u1eadt**: Gi\u00e1 tr\u1ecb n\u00e0y KH\u00d4NG N\u00caN \u0111\u01b0\u1ee3c l\u01b0u d\u01b0\u1edbi d\u1ea1ng plaintext. H\u00e3y m\u00e3 h\u00f3a n\u00f3.",
             "nullable": true
           },
           "status": {
@@ -47479,11 +47479,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -47491,17 +47491,17 @@
             "items": {
               "$ref": "#/components/schemas/AreaEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "AreaEntityValidationResult": {
         "type": "object",
@@ -47536,7 +47536,7 @@
           "hold"
         ],
         "type": "string",
-        "description": "Trạng thái vị trí"
+        "description": "Tr\u1ea1ng th\u00e1i v\u1ecb tr\u00ed"
       },
       "AreaType": {
         "enum": [
@@ -47550,7 +47550,7 @@
           "station"
         ],
         "type": "string",
-        "description": "Loại vị trí trong kho hoặc nhà xưởng"
+        "description": "Lo\u1ea1i v\u1ecb tr\u00ed trong kho ho\u1eb7c nh\u00e0 x\u01b0\u1edfng"
       },
       "AssemblyHashInfoEntity": {
         "type": "object",
@@ -48220,12 +48220,12 @@
           },
           "description": {
             "type": "string",
-            "description": "Mô tả về khoảng nghỉ (VD: \"Nghỉ trưa\")",
+            "description": "M\u00f4 t\u1ea3 v\u1ec1 kho\u1ea3ng ngh\u1ec9 (VD: \"Ngh\u1ec9 tr\u01b0a\")",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Định nghĩa một khoảng nghỉ trong ca làm việc."
+        "description": "\u0110\u1ecbnh ngh\u0129a m\u1ed9t kho\u1ea3ng ngh\u1ec9 trong ca l\u00e0m vi\u1ec7c."
       },
       "CalendarDto": {
         "type": "object",
@@ -48235,17 +48235,17 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã lịch",
+            "description": "M\u00e3 l\u1ecbch",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên lịch",
+            "description": "T\u00ean l\u1ecbch",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả",
+            "description": "M\u00f4 t\u1ea3",
             "nullable": true
           },
           "shiftTemplateId": {
@@ -48253,24 +48253,24 @@
           },
           "shiftTemplateName": {
             "type": "string",
-            "description": "Tên mẫu ca làm việc",
+            "description": "T\u00ean m\u1eabu ca l\u00e0m vi\u1ec7c",
             "nullable": true
           },
           "applyFrom": {
             "type": "string",
-            "description": "Áp dụng từ ngày",
+            "description": "\u00c1p d\u1ee5ng t\u1eeb ng\u00e0y",
             "format": "date",
             "example": "2025-12-24"
           },
           "applyTo": {
             "type": "string",
-            "description": "Áp dụng đến ngày",
+            "description": "\u00c1p d\u1ee5ng \u0111\u1ebfn ng\u00e0y",
             "format": "date",
             "example": "2025-12-24"
           },
           "plan2Infinite": {
             "type": "boolean",
-            "description": "Kế hoạch 2 là vô hạn"
+            "description": "K\u1ebf ho\u1ea1ch 2 l\u00e0 v\u00f4 h\u1ea1n"
           },
           "workDateStartTime": {
             "type": "string",
@@ -48355,17 +48355,17 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "description": "M\u00e3 \u0111\u1ecbnh danh duy nh\u1ea5t do ng\u01b0\u1eddi d\u00f9ng \u0111\u1ecbnh ngh\u0129a. H\u1ed7 tr\u1ee3 thay \u0111\u1ed5i.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
+            "description": "T\u00ean m\u00f4 t\u1ea3 c\u1ee7a th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
+            "description": "M\u00f4 t\u1ea3 chi ti\u1ebft v\u1ec1 th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "parentCalendarId": {
@@ -48376,19 +48376,19 @@
           },
           "applyFrom": {
             "type": "string",
-            "description": "Áp dụng từ ngày",
+            "description": "\u00c1p d\u1ee5ng t\u1eeb ng\u00e0y",
             "format": "date",
             "example": "2025-12-24"
           },
           "applyTo": {
             "type": "string",
-            "description": "Áp dụng đến ngày",
+            "description": "\u00c1p d\u1ee5ng \u0111\u1ebfn ng\u00e0y",
             "format": "date",
             "example": "2025-12-24"
           },
           "plan2Infinite": {
             "type": "boolean",
-            "description": "Kế hoạch 2 là vô hạn"
+            "description": "K\u1ebf ho\u1ea1ch 2 l\u00e0 v\u00f4 h\u1ea1n"
           },
           "workDateStartTime": {
             "type": "string",
@@ -48402,7 +48402,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Lịch làm việc"
+        "description": "L\u1ecbch l\u00e0m vi\u1ec7c"
       },
       "CalendarEntityBasePaginationResponse": {
         "type": "object",
@@ -48456,11 +48456,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -48468,17 +48468,17 @@
             "items": {
               "$ref": "#/components/schemas/CalendarEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "CalendarEntityValidationResult": {
         "type": "object",
@@ -48958,7 +48958,7 @@
         "properties": {
           "emoji": {
             "type": "string",
-            "description": "The emoji used for the reaction (e.g., \"👍\", \"❤️\", \"😊\").",
+            "description": "The emoji used for the reaction (e.g., \"\ud83d\udc4d\", \"\u2764\ufe0f\", \"\ud83d\ude0a\").",
             "nullable": true
           },
           "userId": {
@@ -49639,7 +49639,7 @@
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các bản dịch cho tên nhóm lỗi, key là mã ngôn ngữ, value là tên đã dịch.",
+            "description": "C\u00e1c b\u1ea3n d\u1ecbch cho t\u00ean nh\u00f3m l\u1ed7i, key l\u00e0 m\u00e3 ng\u00f4n ng\u1eef, value l\u00e0 t\u00ean \u0111\u00e3 d\u1ecbch.",
             "nullable": true
           }
         },
@@ -49697,11 +49697,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -49709,17 +49709,17 @@
             "items": {
               "$ref": "#/components/schemas/DefectReasonEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "DefectReasonEntityValidationResult": {
         "type": "object",
@@ -49792,7 +49792,7 @@
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các bản dịch cho tên nhóm lỗi, key là mã ngôn ngữ, value là tên đã dịch.",
+            "description": "C\u00e1c b\u1ea3n d\u1ecbch cho t\u00ean nh\u00f3m l\u1ed7i, key l\u00e0 m\u00e3 ng\u00f4n ng\u1eef, value l\u00e0 t\u00ean \u0111\u00e3 d\u1ecbch.",
             "nullable": true
           }
         },
@@ -49850,11 +49850,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -49862,17 +49862,17 @@
             "items": {
               "$ref": "#/components/schemas/DefectReasonGroupEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "DefectReasonGroupEntityValidationResult": {
         "type": "object",
@@ -50002,11 +50002,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -50014,17 +50014,17 @@
             "items": {
               "$ref": "#/components/schemas/DepartmentEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "DepartmentEntityValidationResult": {
         "type": "object",
@@ -50442,7 +50442,7 @@
           "unauthorized"
         ],
         "type": "string",
-        "description": "Chỉ định các loại lỗi có thể xảy ra trong ứng dụng."
+        "description": "Ch\u1ec9 \u0111\u1ecbnh c\u00e1c lo\u1ea1i l\u1ed7i c\u00f3 th\u1ec3 x\u1ea3y ra trong \u1ee9ng d\u1ee5ng."
       },
       "EscalationStep": {
         "type": "object",
@@ -50476,7 +50476,7 @@
           },
           "values": {
             "type": "array",
-            "items": { },
+            "items": {},
             "description": "Gets or sets the list of distinct values for the field",
             "nullable": true
           },
@@ -50525,7 +50525,7 @@
           "iotImageFile"
         ],
         "type": "string",
-        "description": "phân loại file"
+        "description": "ph\u00e2n lo\u1ea1i file"
       },
       "FileInfoEntity": {
         "type": "object",
@@ -50553,7 +50553,7 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã tài nguyên.",
+            "description": "M\u00e3 t\u00e0i nguy\u00ean.",
             "nullable": true
           },
           "parentResource": {
@@ -50561,17 +50561,17 @@
           },
           "fileName": {
             "type": "string",
-            "description": "Tên tệp tin.",
+            "description": "T\u00ean t\u1ec7p tin.",
             "nullable": true
           },
           "tagId": {
             "type": "string",
-            "description": "Thẻ tệp tin.",
+            "description": "Th\u1ebb t\u1ec7p tin.",
             "nullable": true
           },
           "diskPath": {
             "type": "string",
-            "description": "Đường dẫn tệp tin trên đĩa.",
+            "description": "\u0110\u01b0\u1eddng d\u1eabn t\u1ec7p tin tr\u00ean \u0111\u0129a.",
             "nullable": true
           },
           "parentFolderId": {
@@ -50582,21 +50582,21 @@
           },
           "isPublic": {
             "type": "boolean",
-            "description": "Tệp tin công khai."
+            "description": "T\u1ec7p tin c\u00f4ng khai."
           },
           "sizeInBytes": {
             "type": "integer",
-            "description": "Kích thước tệp tin (byte).",
+            "description": "K\u00edch th\u01b0\u1edbc t\u1ec7p tin (byte).",
             "format": "int64"
           },
           "contentType": {
             "type": "string",
-            "description": "Loại nội dung tệp tin.",
+            "description": "Lo\u1ea1i n\u1ed9i dung t\u1ec7p tin.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Thông tin tệp tin."
+        "description": "Th\u00f4ng tin t\u1ec7p tin."
       },
       "FileInfoEntityBasePaginationResponse": {
         "type": "object",
@@ -51476,7 +51476,7 @@
           },
           "relativePath": {
             "type": "string",
-            "description": "Relative path for UI display, nó có thể thay đổi",
+            "description": "Relative path for UI display, n\u00f3 c\u00f3 th\u1ec3 thay \u0111\u1ed5i",
             "nullable": true
           },
           "type": {
@@ -52312,22 +52312,22 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "description": "M\u00e3 \u0111\u1ecbnh danh duy nh\u1ea5t do ng\u01b0\u1eddi d\u00f9ng \u0111\u1ecbnh ngh\u0129a. H\u1ed7 tr\u1ee3 thay \u0111\u1ed5i.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
+            "description": "T\u00ean m\u00f4 t\u1ea3 c\u1ee7a th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
+            "description": "M\u00f4 t\u1ea3 chi ti\u1ebft v\u1ec1 th\u1ef1c th\u1ec3.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Thực thể cơ sở cho các thực thể có thông tin mã, tên, mô tả."
+        "description": "Th\u1ef1c th\u1ec3 c\u01a1 s\u1edf cho c\u00e1c th\u1ef1c th\u1ec3 c\u00f3 th\u00f4ng tin m\u00e3, t\u00ean, m\u00f4 t\u1ea3."
       },
       "InformationBaseEntityBasePaginationResponse": {
         "type": "object",
@@ -52381,11 +52381,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -52393,17 +52393,17 @@
             "items": {
               "$ref": "#/components/schemas/InformationBaseEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "InformationBaseEntityValidationResult": {
         "type": "object",
@@ -52457,22 +52457,22 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "description": "M\u00e3 \u0111\u1ecbnh danh duy nh\u1ea5t do ng\u01b0\u1eddi d\u00f9ng \u0111\u1ecbnh ngh\u0129a. H\u1ed7 tr\u1ee3 thay \u0111\u1ed5i.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
+            "description": "T\u00ean m\u00f4 t\u1ea3 c\u1ee7a th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
+            "description": "M\u00f4 t\u1ea3 chi ti\u1ebft v\u1ec1 th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "colorHex": {
             "type": "string",
-            "description": "Màu sắc hiển thị lý do dừng máy",
+            "description": "M\u00e0u s\u1eafc hi\u1ec3n th\u1ecb l\u00fd do d\u1eebng m\u00e1y",
             "nullable": true
           },
           "translations": {
@@ -52480,12 +52480,12 @@
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các bản dịch của tên lý do dừng máy",
+            "description": "C\u00e1c b\u1ea3n d\u1ecbch c\u1ee7a t\u00ean l\u00fd do d\u1eebng m\u00e1y",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Mở rộng thực thể cơ sở có thông tin với các thuộc tính trang trí bổ sung"
+        "description": "M\u1edf r\u1ed9ng th\u1ef1c th\u1ec3 c\u01a1 s\u1edf c\u00f3 th\u00f4ng tin v\u1edbi c\u00e1c thu\u1ed9c t\u00ednh trang tr\u00ed b\u1ed5 sung"
       },
       "InformationDecoratorBaseEntityBasePaginationResponse": {
         "type": "object",
@@ -52539,11 +52539,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -52551,17 +52551,17 @@
             "items": {
               "$ref": "#/components/schemas/InformationDecoratorBaseEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "InformationDecoratorBaseEntityValidationResult": {
         "type": "object",
@@ -52975,11 +52975,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -52987,17 +52987,17 @@
             "items": {
               "$ref": "#/components/schemas/IoTDeviceEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "IoTDeviceEntityValidationResult": {
         "type": "object",
@@ -53051,17 +53051,17 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã nhóm thiết bị IoT",
+            "description": "M\u00e3 nh\u00f3m thi\u1ebft b\u1ecb IoT",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên nhóm thiết bị IoT",
+            "description": "T\u00ean nh\u00f3m thi\u1ebft b\u1ecb IoT",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả nhóm thiết bị IoT",
+            "description": "M\u00f4 t\u1ea3 nh\u00f3m thi\u1ebft b\u1ecb IoT",
             "nullable": true
           },
           "location": {
@@ -53099,7 +53099,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Nhóm thiết bị IoT"
+        "description": "Nh\u00f3m thi\u1ebft b\u1ecb IoT"
       },
       "IoTDeviceGroupEntityBasePaginationResponse": {
         "type": "object",
@@ -53153,11 +53153,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -53165,17 +53165,17 @@
             "items": {
               "$ref": "#/components/schemas/IoTDeviceGroupEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "IoTDeviceGroupEntityValidationResult": {
         "type": "object",
@@ -53330,11 +53330,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -53342,17 +53342,17 @@
             "items": {
               "$ref": "#/components/schemas/IoTDeviceModelEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "IoTDeviceModelEntityValidationResult": {
         "type": "object",
@@ -53434,17 +53434,17 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "description": "M\u00e3 \u0111\u1ecbnh danh duy nh\u1ea5t do ng\u01b0\u1eddi d\u00f9ng \u0111\u1ecbnh ngh\u0129a. H\u1ed7 tr\u1ee3 thay \u0111\u1ed5i.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
+            "description": "T\u00ean m\u00f4 t\u1ea3 c\u1ee7a th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
+            "description": "M\u00f4 t\u1ea3 chi ti\u1ebft v\u1ec1 th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "type": {
@@ -53580,11 +53580,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -53592,17 +53592,17 @@
             "items": {
               "$ref": "#/components/schemas/IoTSensorEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "IoTSensorEntityValidationResult": {
         "type": "object",
@@ -54475,17 +54475,17 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "description": "M\u00e3 \u0111\u1ecbnh danh duy nh\u1ea5t do ng\u01b0\u1eddi d\u00f9ng \u0111\u1ecbnh ngh\u0129a. H\u1ed7 tr\u1ee3 thay \u0111\u1ed5i.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
+            "description": "T\u00ean m\u00f4 t\u1ea3 c\u1ee7a th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
+            "description": "M\u00f4 t\u1ea3 chi ti\u1ebft v\u1ec1 th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "machineTypeId": {
@@ -54506,12 +54506,12 @@
           },
           "imageUrl": {
             "type": "string",
-            "description": "URL hình ảnh đại diện của máy.",
+            "description": "URL h\u00ecnh \u1ea3nh \u0111\u1ea1i di\u1ec7n c\u1ee7a m\u00e1y.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Machine Entity - Trung tâm làm việc, máy móc thiết bị trong sản xuất."
+        "description": "Machine Entity - Trung t\u00e2m l\u00e0m vi\u1ec7c, m\u00e1y m\u00f3c thi\u1ebft b\u1ecb trong s\u1ea3n xu\u1ea5t."
       },
       "MachineEntityBasePaginationResponse": {
         "type": "object",
@@ -54565,11 +54565,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -54577,17 +54577,17 @@
             "items": {
               "$ref": "#/components/schemas/MachineEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "MachineEntityValidationResult": {
         "type": "object",
@@ -54656,7 +54656,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Group tự do cho máy móc trong sản xuất"
+        "description": "Group t\u1ef1 do cho m\u00e1y m\u00f3c trong s\u1ea3n xu\u1ea5t"
       },
       "MachineGroupEntityBasePaginationResponse": {
         "type": "object",
@@ -54710,11 +54710,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -54722,17 +54722,17 @@
             "items": {
               "$ref": "#/components/schemas/MachineGroupEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "MachineGroupEntityValidationResult": {
         "type": "object",
@@ -54792,7 +54792,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Bản đồ giữa nhóm máy và máy móc. N-N mapping"
+        "description": "B\u1ea3n \u0111\u1ed3 gi\u1eefa nh\u00f3m m\u00e1y v\u00e0 m\u00e1y m\u00f3c. N-N mapping"
       },
       "MachineGroupMachineMappingBasePaginationResponse": {
         "type": "object",
@@ -54870,7 +54870,7 @@
           "byFunction"
         ],
         "type": "string",
-        "description": "Loại nhóm máy"
+        "description": "Lo\u1ea1i nh\u00f3m m\u00e1y"
       },
       "MachineOeeHourStatistic": {
         "type": "object",
@@ -55296,22 +55296,22 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "description": "M\u00e3 \u0111\u1ecbnh danh duy nh\u1ea5t do ng\u01b0\u1eddi d\u00f9ng \u0111\u1ecbnh ngh\u0129a. H\u1ed7 tr\u1ee3 thay \u0111\u1ed5i.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
+            "description": "T\u00ean m\u00f4 t\u1ea3 c\u1ee7a th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
+            "description": "M\u00f4 t\u1ea3 chi ti\u1ebft v\u1ec1 th\u1ef1c th\u1ec3.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Nhóm loại máy móc thiết bị. Theo công năng, đặc tính."
+        "description": "Nh\u00f3m lo\u1ea1i m\u00e1y m\u00f3c thi\u1ebft b\u1ecb. Theo c\u00f4ng n\u0103ng, \u0111\u1eb7c t\u00ednh."
       },
       "MachineTypeEntityBasePaginationResponse": {
         "type": "object",
@@ -55365,11 +55365,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -55377,17 +55377,17 @@
             "items": {
               "$ref": "#/components/schemas/MachineTypeEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "MachineTypeEntityValidationResult": {
         "type": "object",
@@ -55708,11 +55708,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -55720,17 +55720,17 @@
             "items": {
               "$ref": "#/components/schemas/ManufacturerEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "ManufacturerEntityValidationResult": {
         "type": "object",
@@ -55945,7 +55945,7 @@
           },
           "additionalProperties": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {},
             "nullable": true
           }
         },
@@ -56448,17 +56448,17 @@
           },
           "sequenceNumber": {
             "type": "integer",
-            "description": "Thứ tự thực hiện công đoạn trong quy trình",
+            "description": "Th\u1ee9 t\u1ef1 th\u1ef1c hi\u1ec7n c\u00f4ng \u0111o\u1ea1n trong quy tr\u00ecnh",
             "format": "int32"
           },
           "code": {
             "type": "string",
-            "description": "Mã loại công đoạn (tham chiếu đến một thư viện các loại công đoạn chuẩn, VD: \"CUT_LASER\", \"EP_KHUON_NHUA\")",
+            "description": "M\u00e3 lo\u1ea1i c\u00f4ng \u0111o\u1ea1n (tham chi\u1ebfu \u0111\u1ebfn m\u1ed9t th\u01b0 vi\u1ec7n c\u00e1c lo\u1ea1i c\u00f4ng \u0111o\u1ea1n chu\u1ea9n, VD: \"CUT_LASER\", \"EP_KHUON_NHUA\")",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên công đoạn, VD: \"Cắt laser thép tấm\", \"Ép khuôn đế giày\"",
+            "description": "T\u00ean c\u00f4ng \u0111o\u1ea1n, VD: \"C\u1eaft laser th\u00e9p t\u1ea5m\", \"\u00c9p khu\u00f4n \u0111\u1ebf gi\u00e0y\"",
             "nullable": true
           },
           "description": {
@@ -56480,7 +56480,7 @@
           },
           "defaultEfficiencyFactor": {
             "type": "number",
-            "description": "Hệ số hiệu suất làm việc mặc định của trạm (ví dụ: 0.85 = 85%)",
+            "description": "H\u1ec7 s\u1ed1 hi\u1ec7u su\u1ea5t l\u00e0m vi\u1ec7c m\u1eb7c \u0111\u1ecbnh c\u1ee7a tr\u1ea1m (v\u00ed d\u1ee5: 0.85 = 85%)",
             "format": "double"
           },
           "outputMappings": {
@@ -56488,12 +56488,12 @@
             "items": {
               "$ref": "#/components/schemas/OperationOutputMapping"
             },
-            "description": "Danh sách các quy tắc ánh xạ tín hiệu IoT thành sản lượng cho công đoạn này",
+            "description": "Danh s\u00e1ch c\u00e1c quy t\u1eafc \u00e1nh x\u1ea1 t\u00edn hi\u1ec7u IoT th\u00e0nh s\u1ea3n l\u01b0\u1ee3ng cho c\u00f4ng \u0111o\u1ea1n n\u00e0y",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Đại diện cho một công đoạn trong quy trình sản xuất"
+        "description": "\u0110\u1ea1i di\u1ec7n cho m\u1ed9t c\u00f4ng \u0111o\u1ea1n trong quy tr\u00ecnh s\u1ea3n xu\u1ea5t"
       },
       "OperationEntityBasePaginationResponse": {
         "type": "object",
@@ -56547,11 +56547,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -56559,17 +56559,17 @@
             "items": {
               "$ref": "#/components/schemas/OperationEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "OperationEntityValidationResult": {
         "type": "object",
@@ -56602,17 +56602,17 @@
         "properties": {
           "mappedIoTPointId": {
             "type": "string",
-            "description": "ID của điểm IoT cụ thể cung cấp tín hiệu",
+            "description": "ID c\u1ee7a \u0111i\u1ec3m IoT c\u1ee5 th\u1ec3 cung c\u1ea5p t\u00edn hi\u1ec7u",
             "nullable": true
           },
           "componentProductCode": {
             "type": "string",
-            "description": "Mã linh kiện/sản phẩm được tạo ra",
+            "description": "M\u00e3 linh ki\u1ec7n/s\u1ea3n ph\u1ea9m \u0111\u01b0\u1ee3c t\u1ea1o ra",
             "nullable": true
           },
           "quantityPerSignal": {
             "type": "number",
-            "description": "TỈ LỆ: Số lượng sản phẩm được tạo ra cho mỗi tín hiệu từ IoT\r\nMặc định là 1.0",
+            "description": "T\u1ec8 L\u1ec6: S\u1ed1 l\u01b0\u1ee3ng s\u1ea3n ph\u1ea9m \u0111\u01b0\u1ee3c t\u1ea1o ra cho m\u1ed7i t\u00edn hi\u1ec7u t\u1eeb IoT\r\nM\u1eb7c \u0111\u1ecbnh l\u00e0 1.0",
             "format": "double"
           },
           "disposition": {
@@ -56620,7 +56620,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Lớp định nghĩa quy tắc ánh xạ cho một điểm IoT trong một công đoạn"
+        "description": "L\u1edbp \u0111\u1ecbnh ngh\u0129a quy t\u1eafc \u00e1nh x\u1ea1 cho m\u1ed9t \u0111i\u1ec3m IoT trong m\u1ed9t c\u00f4ng \u0111o\u1ea1n"
       },
       "OperationParameterSettingEntity": {
         "type": "object",
@@ -56999,7 +56999,7 @@
           },
           "defaultSiteId": {
             "type": "string",
-            "description": "Mặc định site/plant id (GUID) để tạo WorkOrder mới nếu không có site cụ thể.",
+            "description": "M\u1eb7c \u0111\u1ecbnh site/plant id (GUID) \u0111\u1ec3 t\u1ea1o WorkOrder m\u1edbi n\u1ebfu kh\u00f4ng c\u00f3 site c\u1ee5 th\u1ec3.",
             "format": "uuid",
             "nullable": true
           },
@@ -57008,7 +57008,7 @@
             "items": {
               "$ref": "#/components/schemas/SiteInfo"
             },
-            "description": "Danh sách site đơn giản (id + tên). Nếu cần quản lý chi tiết, tách thành entity riêng.",
+            "description": "Danh s\u00e1ch site \u0111\u01a1n gi\u1ea3n (id + t\u00ean). N\u1ebfu c\u1ea7n qu\u1ea3n l\u00fd chi ti\u1ebft, t\u00e1ch th\u00e0nh entity ri\u00eang.",
             "nullable": true
           }
         },
@@ -57520,7 +57520,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": {}
       },
       "ProductCategoryEntity": {
         "type": "object",
@@ -57548,22 +57548,22 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "description": "M\u00e3 \u0111\u1ecbnh danh duy nh\u1ea5t do ng\u01b0\u1eddi d\u00f9ng \u0111\u1ecbnh ngh\u0129a. H\u1ed7 tr\u1ee3 thay \u0111\u1ed5i.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
+            "description": "T\u00ean m\u00f4 t\u1ea3 c\u1ee7a th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
+            "description": "M\u00f4 t\u1ea3 chi ti\u1ebft v\u1ec1 th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "colorHex": {
             "type": "string",
-            "description": "Màu sắc hiển thị lý do dừng máy",
+            "description": "M\u00e0u s\u1eafc hi\u1ec3n th\u1ecb l\u00fd do d\u1eebng m\u00e1y",
             "nullable": true
           },
           "translations": {
@@ -57571,7 +57571,7 @@
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các bản dịch của tên lý do dừng máy",
+            "description": "C\u00e1c b\u1ea3n d\u1ecbch c\u1ee7a t\u00ean l\u00fd do d\u1eebng m\u00e1y",
             "nullable": true
           }
         },
@@ -57630,11 +57630,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -57642,17 +57642,17 @@
             "items": {
               "$ref": "#/components/schemas/ProductCategoryEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "ProductCategoryEntityValidationResult": {
         "type": "object",
@@ -57734,17 +57734,17 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "description": "M\u00e3 \u0111\u1ecbnh danh duy nh\u1ea5t do ng\u01b0\u1eddi d\u00f9ng \u0111\u1ecbnh ngh\u0129a. H\u1ed7 tr\u1ee3 thay \u0111\u1ed5i.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
+            "description": "T\u00ean m\u00f4 t\u1ea3 c\u1ee7a th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
+            "description": "M\u00f4 t\u1ea3 chi ti\u1ebft v\u1ec1 th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "unitOfMeasureId": {
@@ -57835,11 +57835,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -57847,17 +57847,17 @@
             "items": {
               "$ref": "#/components/schemas/ProductEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "ProductEntityValidationResult": {
         "type": "object",
@@ -57890,17 +57890,17 @@
         "properties": {
           "code": {
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "description": "M\u00e3 \u0111\u1ecbnh danh duy nh\u1ea5t do ng\u01b0\u1eddi d\u00f9ng \u0111\u1ecbnh ngh\u0129a. H\u1ed7 tr\u1ee3 thay \u0111\u1ed5i.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
+            "description": "T\u00ean m\u00f4 t\u1ea3 c\u1ee7a th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
+            "description": "M\u00f4 t\u1ea3 chi ti\u1ebft v\u1ec1 th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "price": {
@@ -58210,7 +58210,7 @@
           "rework"
         ],
         "type": "string",
-        "description": "Enum để phân loại sản lượng"
+        "description": "Enum \u0111\u1ec3 ph\u00e2n lo\u1ea1i s\u1ea3n l\u01b0\u1ee3ng"
       },
       "ProductionOrderEntity": {
         "type": "object",
@@ -58670,7 +58670,7 @@
           "qualitative"
         ],
         "type": "string",
-        "description": "Loại kiểm tra chất lượng"
+        "description": "Lo\u1ea1i ki\u1ec3m tra ch\u1ea5t l\u01b0\u1ee3ng"
       },
       "QualitySettings": {
         "type": "object",
@@ -59403,7 +59403,7 @@
             "type": "array",
             "items": {
               "type": "object",
-              "additionalProperties": { }
+              "additionalProperties": {}
             },
             "description": "Gets or sets the data rows",
             "nullable": true
@@ -59603,11 +59603,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -59615,17 +59615,17 @@
             "items": {
               "$ref": "#/components/schemas/RoleEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "RoleEntityValidationResult": {
         "type": "object",
@@ -59763,7 +59763,7 @@
           "maintenance"
         ],
         "type": "string",
-        "description": "Enum định nghĩa trạng thái hoạt động của một API route."
+        "description": "Enum \u0111\u1ecbnh ngh\u0129a tr\u1ea1ng th\u00e1i ho\u1ea1t \u0111\u1ed9ng c\u1ee7a m\u1ed9t API route."
       },
       "RouteType": {
         "enum": [
@@ -59834,7 +59834,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Đại diện cho một quy trình sản xuất, có thể có nhiều phiên bản khác nhau"
+        "description": "\u0110\u1ea1i di\u1ec7n cho m\u1ed9t quy tr\u00ecnh s\u1ea3n xu\u1ea5t, c\u00f3 th\u1ec3 c\u00f3 nhi\u1ec1u phi\u00ean b\u1ea3n kh\u00e1c nhau"
       },
       "RoutingEntityBasePaginationResponse": {
         "type": "object",
@@ -60112,11 +60112,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -60124,17 +60124,17 @@
             "items": {
               "$ref": "#/components/schemas/ScriptDefinitionEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "ScriptDefinitionEntityValidationResult": {
         "type": "object",
@@ -60175,7 +60175,7 @@
           },
           "parameters": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {},
             "description": "Parameters to be passed to the script",
             "nullable": true
           }
@@ -60400,11 +60400,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -60412,17 +60412,17 @@
             "items": {
               "$ref": "#/components/schemas/ScriptVariantEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "ScriptVariantEntityValidationResult": {
         "type": "object",
@@ -60704,26 +60704,26 @@
             "items": {
               "$ref": "#/components/schemas/BreakDefinition"
             },
-            "description": "Danh sách các định nghĩa nghỉ trong ca",
+            "description": "Danh s\u00e1ch c\u00e1c \u0111\u1ecbnh ngh\u0129a ngh\u1ec9 trong ca",
             "nullable": true
           },
           "isOverTimeShift": {
             "type": "boolean",
-            "description": "Có phải ca làm thêm giờ hay không"
+            "description": "C\u00f3 ph\u1ea3i ca l\u00e0m th\u00eam gi\u1edd hay kh\u00f4ng"
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của ca làm việc",
+            "description": "T\u00ean m\u00f4 t\u1ea3 c\u1ee7a ca l\u00e0m vi\u1ec7c",
             "nullable": true
           },
           "normalizedName": {
             "type": "string",
-            "description": "Tên chuẩn hóa của ca làm việc (chuyển về chữ thường, bỏ dấu, thay khoảng trắng bằng gạch dưới).\r\nCó thể dùng để tạo mã.\r\nBE use case only.",
+            "description": "T\u00ean chu\u1ea9n h\u00f3a c\u1ee7a ca l\u00e0m vi\u1ec7c (chuy\u1ec3n v\u1ec1 ch\u1eef th\u01b0\u1eddng, b\u1ecf d\u1ea5u, thay kho\u1ea3ng tr\u1eafng b\u1eb1ng g\u1ea1ch d\u01b0\u1edbi).\r\nC\u00f3 th\u1ec3 d\u00f9ng \u0111\u1ec3 t\u1ea1o m\u00e3.\r\nBE use case only.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Định nghĩa ca làm việc cho một ngày cụ thể trong tuần.\r\nBao gồm giờ bắt đầu, giờ kết thúc và các khoảng nghỉ trong ca."
+        "description": "\u0110\u1ecbnh ngh\u0129a ca l\u00e0m vi\u1ec7c cho m\u1ed9t ng\u00e0y c\u1ee5 th\u1ec3 trong tu\u1ea7n.\r\nBao g\u1ed3m gi\u1edd b\u1eaft \u0111\u1ea7u, gi\u1edd k\u1ebft th\u00fac v\u00e0 c\u00e1c kho\u1ea3ng ngh\u1ec9 trong ca."
       },
       "ShiftTemplateEntity": {
         "type": "object",
@@ -60751,17 +60751,17 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "description": "M\u00e3 \u0111\u1ecbnh danh duy nh\u1ea5t do ng\u01b0\u1eddi d\u00f9ng \u0111\u1ecbnh ngh\u0129a. H\u1ed7 tr\u1ee3 thay \u0111\u1ed5i.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
+            "description": "T\u00ean m\u00f4 t\u1ea3 c\u1ee7a th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
+            "description": "M\u00f4 t\u1ea3 chi ti\u1ebft v\u1ec1 th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "shifts": {
@@ -60769,12 +60769,12 @@
             "items": {
               "$ref": "#/components/schemas/ShiftDefinition"
             },
-            "description": "Một mẫu ca là một tập hợp các ca làm việc trong tuần.",
+            "description": "M\u1ed9t m\u1eabu ca l\u00e0 m\u1ed9t t\u1eadp h\u1ee3p c\u00e1c ca l\u00e0m vi\u1ec7c trong tu\u1ea7n.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Mẫu ca làm việc, định nghĩa các ca làm việc áp dụng cho một lịch làm việc.\r\nMẫu ca có thể được tái sử dụng cho nhiều lịch làm việc khác nhau và áp dụng cụ thể cho từng ngày trong tuần."
+        "description": "M\u1eabu ca l\u00e0m vi\u1ec7c, \u0111\u1ecbnh ngh\u0129a c\u00e1c ca l\u00e0m vi\u1ec7c \u00e1p d\u1ee5ng cho m\u1ed9t l\u1ecbch l\u00e0m vi\u1ec7c.\r\nM\u1eabu ca c\u00f3 th\u1ec3 \u0111\u01b0\u1ee3c t\u00e1i s\u1eed d\u1ee5ng cho nhi\u1ec1u l\u1ecbch l\u00e0m vi\u1ec7c kh\u00e1c nhau v\u00e0 \u00e1p d\u1ee5ng c\u1ee5 th\u1ec3 cho t\u1eebng ng\u00e0y trong tu\u1ea7n."
       },
       "ShiftTemplateEntityBasePaginationResponse": {
         "type": "object",
@@ -60828,11 +60828,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -60840,17 +60840,17 @@
             "items": {
               "$ref": "#/components/schemas/ShiftTemplateEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "ShiftTemplateEntityValidationResult": {
         "type": "object",
@@ -61101,17 +61101,17 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã trạm/máy, người dùng định nghĩa, duy nhất (ví dụ: \"MAY_EP_01\", \"CHUYEN_LAPRAP_A_001\")",
+            "description": "M\u00e3 tr\u1ea1m/m\u00e1y, ng\u01b0\u1eddi d\u00f9ng \u0111\u1ecbnh ngh\u0129a, duy nh\u1ea5t (v\u00ed d\u1ee5: \"MAY_EP_01\", \"CHUYEN_LAPRAP_A_001\")",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của trạm (ví dụ: \"Máy ép nhựa số 1\", \"Chuyền lắp ráp A - Khu vực 1\")",
+            "description": "T\u00ean m\u00f4 t\u1ea3 c\u1ee7a tr\u1ea1m (v\u00ed d\u1ee5: \"M\u00e1y \u00e9p nh\u1ef1a s\u1ed1 1\", \"Chuy\u1ec1n l\u1eafp r\u00e1p A - Khu v\u1ef1c 1\")",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết hơn (nếu cần)",
+            "description": "M\u00f4 t\u1ea3 chi ti\u1ebft h\u01a1n (n\u1ebfu c\u1ea7n)",
             "nullable": true
           },
           "machineId": {
@@ -61122,12 +61122,12 @@
           },
           "numberOfIdenticalUnits": {
             "type": "integer",
-            "description": "Số lượng đơn vị máy móc giống hệt nhau tại trạm này có thể hoạt động song song\r\n(Thường là 1, nhưng nếu là một cụm máy giống nhau thì có thể lớn hơn 1)",
+            "description": "S\u1ed1 l\u01b0\u1ee3ng \u0111\u01a1n v\u1ecb m\u00e1y m\u00f3c gi\u1ed1ng h\u1ec7t nhau t\u1ea1i tr\u1ea1m n\u00e0y c\u00f3 th\u1ec3 ho\u1ea1t \u0111\u1ed9ng song song\r\n(Th\u01b0\u1eddng l\u00e0 1, nh\u01b0ng n\u1ebfu l\u00e0 m\u1ed9t c\u1ee5m m\u00e1y gi\u1ed1ng nhau th\u00ec c\u00f3 th\u1ec3 l\u1edbn h\u01a1n 1)",
             "format": "int32"
           },
           "imageUrl": {
             "type": "string",
-            "description": "Hình ảnh đại diện của trạm",
+            "description": "H\u00ecnh \u1ea3nh \u0111\u1ea1i di\u1ec7n c\u1ee7a tr\u1ea1m",
             "nullable": true
           }
         },
@@ -61185,11 +61185,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -61197,17 +61197,17 @@
             "items": {
               "$ref": "#/components/schemas/StationEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "StationEntityValidationResult": {
         "type": "object",
@@ -61322,11 +61322,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -61334,17 +61334,17 @@
             "items": {
               "$ref": "#/components/schemas/StationGroupEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "StationGroupEntityValidationResult": {
         "type": "object",
@@ -61600,7 +61600,7 @@
           "notScheduled"
         ],
         "type": "string",
-        "description": "Tác động khi dừng máy"
+        "description": "T\u00e1c \u0111\u1ed9ng khi d\u1eebng m\u00e1y"
       },
       "StopMachineReasonEntity": {
         "type": "object",
@@ -61628,22 +61628,22 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "description": "M\u00e3 \u0111\u1ecbnh danh duy nh\u1ea5t do ng\u01b0\u1eddi d\u00f9ng \u0111\u1ecbnh ngh\u0129a. H\u1ed7 tr\u1ee3 thay \u0111\u1ed5i.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
+            "description": "T\u00ean m\u00f4 t\u1ea3 c\u1ee7a th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
+            "description": "M\u00f4 t\u1ea3 chi ti\u1ebft v\u1ec1 th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "colorHex": {
             "type": "string",
-            "description": "Màu sắc hiển thị lý do dừng máy",
+            "description": "M\u00e0u s\u1eafc hi\u1ec3n th\u1ecb l\u00fd do d\u1eebng m\u00e1y",
             "nullable": true
           },
           "translations": {
@@ -61651,7 +61651,7 @@
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các bản dịch của tên lý do dừng máy",
+            "description": "C\u00e1c b\u1ea3n d\u1ecbch c\u1ee7a t\u00ean l\u00fd do d\u1eebng m\u00e1y",
             "nullable": true
           },
           "groupId": {
@@ -61659,23 +61659,23 @@
           },
           "requiresApproval": {
             "type": "boolean",
-            "description": "Lý do dừng máy có yêu cầu phê duyệt không"
+            "description": "L\u00fd do d\u1eebng m\u00e1y c\u00f3 y\u00eau c\u1ea7u ph\u00ea duy\u1ec7t kh\u00f4ng"
           },
           "requiresNote": {
             "type": "boolean",
-            "description": "Lý do dừng máy có yêu cầu ghi chú, tệp đính kèm hoặc bình luận không"
+            "description": "L\u00fd do d\u1eebng m\u00e1y c\u00f3 y\u00eau c\u1ea7u ghi ch\u00fa, t\u1ec7p \u0111\u00ednh k\u00e8m ho\u1eb7c b\u00ecnh lu\u1eadn kh\u00f4ng"
           },
           "requiresAttachment": {
             "type": "boolean",
-            "description": "Lý do dừng máy có yêu cầu tệp đính kèm không"
+            "description": "L\u00fd do d\u1eebng m\u00e1y c\u00f3 y\u00eau c\u1ea7u t\u1ec7p \u0111\u00ednh k\u00e8m kh\u00f4ng"
           },
           "requiresComment": {
             "type": "boolean",
-            "description": "Lý do dừng máy có yêu cầu bình luận không"
+            "description": "L\u00fd do d\u1eebng m\u00e1y c\u00f3 y\u00eau c\u1ea7u b\u00ecnh lu\u1eadn kh\u00f4ng"
           }
         },
         "additionalProperties": false,
-        "description": "Lý do dừng máy"
+        "description": "L\u00fd do d\u1eebng m\u00e1y"
       },
       "StopMachineReasonEntityBasePaginationResponse": {
         "type": "object",
@@ -61729,11 +61729,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -61741,17 +61741,17 @@
             "items": {
               "$ref": "#/components/schemas/StopMachineReasonEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "StopMachineReasonEntityValidationResult": {
         "type": "object",
@@ -61805,22 +61805,22 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "description": "M\u00e3 \u0111\u1ecbnh danh duy nh\u1ea5t do ng\u01b0\u1eddi d\u00f9ng \u0111\u1ecbnh ngh\u0129a. H\u1ed7 tr\u1ee3 thay \u0111\u1ed5i.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
+            "description": "T\u00ean m\u00f4 t\u1ea3 c\u1ee7a th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
+            "description": "M\u00f4 t\u1ea3 chi ti\u1ebft v\u1ec1 th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "colorHex": {
             "type": "string",
-            "description": "Màu sắc hiển thị lý do dừng máy",
+            "description": "M\u00e0u s\u1eafc hi\u1ec3n th\u1ecb l\u00fd do d\u1eebng m\u00e1y",
             "nullable": true
           },
           "translations": {
@@ -61828,7 +61828,7 @@
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các bản dịch của tên lý do dừng máy",
+            "description": "C\u00e1c b\u1ea3n d\u1ecbch c\u1ee7a t\u00ean l\u00fd do d\u1eebng m\u00e1y",
             "nullable": true
           },
           "impact": {
@@ -61836,7 +61836,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Nhóm lý do dừng máy"
+        "description": "Nh\u00f3m l\u00fd do d\u1eebng m\u00e1y"
       },
       "StopMachineReasonGroupEntityBasePaginationResponse": {
         "type": "object",
@@ -61890,11 +61890,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -61902,17 +61902,17 @@
             "items": {
               "$ref": "#/components/schemas/StopMachineReasonGroupEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "StopMachineReasonGroupEntityValidationResult": {
         "type": "object",
@@ -62650,12 +62650,12 @@
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các cài đặt linh hoạt, key/value, dùng cho mở rộng nhanh.",
+            "description": "C\u00e1c c\u00e0i \u0111\u1eb7t linh ho\u1ea1t, key/value, d\u00f9ng cho m\u1edf r\u1ed9ng nhanh.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Cấu hình hệ thống chung (ít liên quan đến các domain entity khác).\r\nLưu ý: các complex types bên trong có thể được lưu dưới dạng JSON trong cột DB."
+        "description": "C\u1ea5u h\u00ecnh h\u1ec7 th\u1ed1ng chung (\u00edt li\u00ean quan \u0111\u1ebfn c\u00e1c domain entity kh\u00e1c).\r\nL\u01b0u \u00fd: c\u00e1c complex types b\u00ean trong c\u00f3 th\u1ec3 \u0111\u01b0\u1ee3c l\u01b0u d\u01b0\u1edbi d\u1ea1ng JSON trong c\u1ed9t DB."
       },
       "SystemSettingEntityBasePaginationResponse": {
         "type": "object",
@@ -62752,22 +62752,22 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "description": "M\u00e3 \u0111\u1ecbnh danh duy nh\u1ea5t do ng\u01b0\u1eddi d\u00f9ng \u0111\u1ecbnh ngh\u0129a. H\u1ed7 tr\u1ee3 thay \u0111\u1ed5i.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
+            "description": "T\u00ean m\u00f4 t\u1ea3 c\u1ee7a th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
+            "description": "M\u00f4 t\u1ea3 chi ti\u1ebft v\u1ec1 th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "colorHex": {
             "type": "string",
-            "description": "Màu sắc hiển thị lý do dừng máy",
+            "description": "M\u00e0u s\u1eafc hi\u1ec3n th\u1ecb l\u00fd do d\u1eebng m\u00e1y",
             "nullable": true
           },
           "translations": {
@@ -62775,12 +62775,12 @@
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các bản dịch của tên lý do dừng máy",
+            "description": "C\u00e1c b\u1ea3n d\u1ecbch c\u1ee7a t\u00ean l\u00fd do d\u1eebng m\u00e1y",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Tên khối thời gian, được sử dụng để đặt tên cho các khối thời gian trong lịch trình làm việc."
+        "description": "T\u00ean kh\u1ed1i th\u1eddi gian, \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng \u0111\u1ec3 \u0111\u1eb7t t\u00ean cho c\u00e1c kh\u1ed1i th\u1eddi gian trong l\u1ecbch tr\u00ecnh l\u00e0m vi\u1ec7c."
       },
       "TimeBlockNameEntityBasePaginationResponse": {
         "type": "object",
@@ -62834,11 +62834,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -62846,17 +62846,17 @@
             "items": {
               "$ref": "#/components/schemas/TimeBlockNameEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "TimeBlockNameEntityValidationResult": {
         "type": "object",
@@ -63264,11 +63264,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -63276,17 +63276,17 @@
             "items": {
               "$ref": "#/components/schemas/UnitEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "UnitEntityValidationResult": {
         "type": "object",
@@ -64948,17 +64948,17 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
+            "description": "M\u00e3 \u0111\u1ecbnh danh duy nh\u1ea5t do ng\u01b0\u1eddi d\u00f9ng \u0111\u1ecbnh ngh\u0129a. H\u1ed7 tr\u1ee3 thay \u0111\u1ed5i.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
+            "description": "T\u00ean m\u00f4 t\u1ea3 c\u1ee7a th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
+            "description": "M\u00f4 t\u1ea3 chi ti\u1ebft v\u1ec1 th\u1ef1c th\u1ec3.",
             "nullable": true
           },
           "type": {
@@ -65023,11 +65023,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -65035,17 +65035,17 @@
             "items": {
               "$ref": "#/components/schemas/WarehouseEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "WarehouseEntityValidationResult": {
         "type": "object",
@@ -65143,17 +65143,17 @@
           },
           "name": {
             "type": "string",
-            "description": "Tên gọi để người dùng dễ nhận biết Webhook.",
+            "description": "T\u00ean g\u1ecdi \u0111\u1ec3 ng\u01b0\u1eddi d\u00f9ng d\u1ec5 nh\u1eadn bi\u1ebft Webhook.",
             "nullable": true
           },
           "targetUrl": {
             "type": "string",
-            "description": "URL của điểm cuối (endpoint) sẽ nhận dữ liệu từ Webhook.",
+            "description": "URL c\u1ee7a \u0111i\u1ec3m cu\u1ed1i (endpoint) s\u1ebd nh\u1eadn d\u1eef li\u1ec7u t\u1eeb Webhook.",
             "nullable": true
           },
           "eventName": {
             "type": "string",
-            "description": "Tên sự kiện sẽ kích hoạt Webhook này (ví dụ: \"order.created\", \"user.updated\").",
+            "description": "T\u00ean s\u1ef1 ki\u1ec7n s\u1ebd k\u00edch ho\u1ea1t Webhook n\u00e0y (v\u00ed d\u1ee5: \"order.created\", \"user.updated\").",
             "nullable": true
           },
           "status": {
@@ -65161,7 +65161,7 @@
           },
           "secret": {
             "type": "string",
-            "description": "Chuỗi bí mật dùng để tạo chữ ký HMAC, giúp phía nhận xác thực yêu cầu.\r\nCần được mã hóa khi lưu trong cơ sở dữ liệu.",
+            "description": "Chu\u1ed7i b\u00ed m\u1eadt d\u00f9ng \u0111\u1ec3 t\u1ea1o ch\u1eef k\u00fd HMAC, gi\u00fap ph\u00eda nh\u1eadn x\u00e1c th\u1ef1c y\u00eau c\u1ea7u.\r\nC\u1ea7n \u0111\u01b0\u1ee3c m\u00e3 h\u00f3a khi l\u01b0u trong c\u01a1 s\u1edf d\u1eef li\u1ec7u.",
             "nullable": true
           },
           "pluginId": {
@@ -65169,48 +65169,48 @@
           },
           "successCount": {
             "type": "integer",
-            "description": "Tổng số lần gửi thành công.",
+            "description": "T\u1ed5ng s\u1ed1 l\u1ea7n g\u1eedi th\u00e0nh c\u00f4ng.",
             "format": "int64"
           },
           "failureCount": {
             "type": "integer",
-            "description": "Tổng số lần gửi thất bại.",
+            "description": "T\u1ed5ng s\u1ed1 l\u1ea7n g\u1eedi th\u1ea5t b\u1ea1i.",
             "format": "int64"
           },
           "averageResponseTimeMs": {
             "type": "number",
-            "description": "Thời gian trung bình (ms) mà TargetUrl phản hồi.\r\nHữu ích để phát hiện các webhook chậm.",
+            "description": "Th\u1eddi gian trung b\u00ecnh (ms) m\u00e0 TargetUrl ph\u1ea3n h\u1ed3i.\r\nH\u1eefu \u00edch \u0111\u1ec3 ph\u00e1t hi\u1ec7n c\u00e1c webhook ch\u1eadm.",
             "format": "double"
           },
           "lastAttemptAt": {
             "type": "string",
-            "description": "Thời điểm lần cuối cùng Webhook được thử gửi đi (bất kể thành công hay thất bại).",
+            "description": "Th\u1eddi \u0111i\u1ec3m l\u1ea7n cu\u1ed1i c\u00f9ng Webhook \u0111\u01b0\u1ee3c th\u1eed g\u1eedi \u0111i (b\u1ea5t k\u1ec3 th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i).",
             "format": "date-time",
             "nullable": true
           },
           "lastSuccessAt": {
             "type": "string",
-            "description": "Thời điểm lần cuối cùng Webhook được gửi thành công.",
+            "description": "Th\u1eddi \u0111i\u1ec3m l\u1ea7n cu\u1ed1i c\u00f9ng Webhook \u0111\u01b0\u1ee3c g\u1eedi th\u00e0nh c\u00f4ng.",
             "format": "date-time",
             "nullable": true
           },
           "lastErrorMessage": {
             "type": "string",
-            "description": "Thông báo lỗi của lần gửi thất bại gần nhất.\r\nRất quan trọng cho việc gỡ lỗi.",
+            "description": "Th\u00f4ng b\u00e1o l\u1ed7i c\u1ee7a l\u1ea7n g\u1eedi th\u1ea5t b\u1ea1i g\u1ea7n nh\u1ea5t.\r\nR\u1ea5t quan tr\u1ecdng cho vi\u1ec7c g\u1ee1 l\u1ed7i.",
             "nullable": true
           },
           "isPayloadEncrypted": {
             "type": "boolean",
-            "description": "Cờ xác định có mã hóa payload trước khi gửi hay không."
+            "description": "C\u1edd x\u00e1c \u0111\u1ecbnh c\u00f3 m\u00e3 h\u00f3a payload tr\u01b0\u1edbc khi g\u1eedi hay kh\u00f4ng."
           },
           "publicKey": {
             "type": "string",
-            "description": "Public Key (định dạng PEM) của người nhận, dùng để mã hóa payload.\r\nSẽ là null nếu IsPayloadEncrypted = false.",
+            "description": "Public Key (\u0111\u1ecbnh d\u1ea1ng PEM) c\u1ee7a ng\u01b0\u1eddi nh\u1eadn, d\u00f9ng \u0111\u1ec3 m\u00e3 h\u00f3a payload.\r\nS\u1ebd l\u00e0 null n\u1ebfu IsPayloadEncrypted = false.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Lớp đại diện cho một Webhook trong hệ thống.\r\nWebhook là một cơ chế cho phép hệ thống gửi dữ liệu đến một URL cụ thể\r\nkhi một sự kiện xảy ra. Nó thường được sử dụng để tích hợp với các dịch vụ bên ngoài\r\nhoặc để thông báo cho các hệ thống khác về các sự kiện quan trọng trong ứng dụng."
+        "description": "L\u1edbp \u0111\u1ea1i di\u1ec7n cho m\u1ed9t Webhook trong h\u1ec7 th\u1ed1ng.\r\nWebhook l\u00e0 m\u1ed9t c\u01a1 ch\u1ebf cho ph\u00e9p h\u1ec7 th\u1ed1ng g\u1eedi d\u1eef li\u1ec7u \u0111\u1ebfn m\u1ed9t URL c\u1ee5 th\u1ec3\r\nkhi m\u1ed9t s\u1ef1 ki\u1ec7n x\u1ea3y ra. N\u00f3 th\u01b0\u1eddng \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng \u0111\u1ec3 t\u00edch h\u1ee3p v\u1edbi c\u00e1c d\u1ecbch v\u1ee5 b\u00ean ngo\u00e0i\r\nho\u1eb7c \u0111\u1ec3 th\u00f4ng b\u00e1o cho c\u00e1c h\u1ec7 th\u1ed1ng kh\u00e1c v\u1ec1 c\u00e1c s\u1ef1 ki\u1ec7n quan tr\u1ecdng trong \u1ee9ng d\u1ee5ng."
       },
       "WebhookEntityBasePaginationResponse": {
         "type": "object",
@@ -65264,11 +65264,11 @@
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "description": "Trạng thái thành công hay thất bại"
+            "description": "Tr\u1ea1ng th\u00e1i th\u00e0nh c\u00f4ng hay th\u1ea5t b\u1ea1i"
           },
           "message": {
             "type": "string",
-            "description": "Thông điệp trả về",
+            "description": "Th\u00f4ng \u0111i\u1ec7p tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "data": {
@@ -65276,17 +65276,17 @@
             "items": {
               "$ref": "#/components/schemas/WebhookEntity"
             },
-            "description": "Dữ liệu trả về",
+            "description": "D\u1eef li\u1ec7u tr\u1ea3 v\u1ec1",
             "nullable": true
           },
           "total": {
             "type": "integer",
-            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "description": "T\u1ed5ng item kh\u1ea3 d\u1ee5ng. kh\u00f4ng ph\u1ea3i \u0111\u1ed9 d\u00e0i c\u1ee7a Data",
             "format": "int64"
           }
         },
         "additionalProperties": false,
-        "description": "Kết quả trả về dạng mảng"
+        "description": "K\u1ebft qu\u1ea3 tr\u1ea3 v\u1ec1 d\u1ea1ng m\u1ea3ng"
       },
       "WebhookEntityValidationResult": {
         "type": "object",
@@ -65321,7 +65321,7 @@
           "pausedDueToErrors"
         ],
         "type": "string",
-        "description": "Enum định nghĩa các trạng thái của Webhook."
+        "description": "Enum \u0111\u1ecbnh ngh\u0129a c\u00e1c tr\u1ea1ng th\u00e1i c\u1ee7a Webhook."
       },
       "WidgetConfig": {
         "type": "object",
@@ -65656,17 +65656,17 @@
           },
           "code": {
             "type": "string",
-            "description": "Mã ô sản xuất, VD: \"CELL_SHOE_X\"",
+            "description": "M\u00e3 \u00f4 s\u1ea3n xu\u1ea5t, VD: \"CELL_SHOE_X\"",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Tên, VD: \"Ô sản xuất giày X\"",
+            "description": "T\u00ean, VD: \"\u00d4 s\u1ea3n xu\u1ea5t gi\u00e0y X\"",
             "nullable": true
           },
           "description": {
             "type": "string",
-            "description": "Mô tả chi tiết về ô sản xuất",
+            "description": "M\u00f4 t\u1ea3 chi ti\u1ebft v\u1ec1 \u00f4 s\u1ea3n xu\u1ea5t",
             "nullable": true
           },
           "stationsInCell": {
@@ -65674,12 +65674,12 @@
             "items": {
               "$ref": "#/components/schemas/WorkCellStation"
             },
-            "description": "Danh sách các trạm thuộc về ô này, có thể kèm theo thứ tự",
+            "description": "Danh s\u00e1ch c\u00e1c tr\u1ea1m thu\u1ed9c v\u1ec1 \u00f4 n\u00e0y, c\u00f3 th\u1ec3 k\u00e8m theo th\u1ee9 t\u1ef1",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Đây là một concept mà chúng ta có thể dễ dàng mở rộng để quản lý. Chúng ta có thể tạo một thực thể mới gọi là WorkCellEntity hoặc ProductionLineEntity."
+        "description": "\u0110\u00e2y l\u00e0 m\u1ed9t concept m\u00e0 ch\u00fang ta c\u00f3 th\u1ec3 d\u1ec5 d\u00e0ng m\u1edf r\u1ed9ng \u0111\u1ec3 qu\u1ea3n l\u00fd. Ch\u00fang ta c\u00f3 th\u1ec3 t\u1ea1o m\u1ed9t th\u1ef1c th\u1ec3 m\u1edbi g\u1ecdi l\u00e0 WorkCellEntity ho\u1eb7c ProductionLineEntity."
       },
       "WorkCellEntityBasePaginationResponse": {
         "type": "object",

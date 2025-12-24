@@ -23,6 +23,7 @@ import { useRouter } from 'src/routes/hooks';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
+import { UnitSelector } from 'src/components/selectors/unit-selector';
 
 import { createProduct, updateProduct } from '../../../api';
 
@@ -34,6 +35,12 @@ interface ProductFormData {
   category: string;
   price: string;
   stock: string;
+  weight: string;
+  length: string;
+  width: string;
+  height: string;
+  unitOfMeasureId: string | null;
+  secondaryUnitOfMeasureId: string | null;
 }
 
 const CATEGORIES = [
@@ -56,6 +63,14 @@ interface ProductCreateEditViewProps {
     stock: number;
     coverUrl: string;
     publish: 'published' | 'draft';
+    weight?: number;
+    dimensions?: {
+      length?: number;
+      width?: number;
+      height?: number;
+    };
+    unitOfMeasureId?: string;
+    secondaryUnitOfMeasureId?: string;
   };
 }
 
@@ -74,6 +89,12 @@ export function ProductCreateEditView({
     category: currentProduct?.category?.toLowerCase() || '',
     price: currentProduct?.price?.toString() ?? '' ,
     stock: currentProduct?.stock?.toString() ?? '',
+    weight: currentProduct?.weight?.toString() ?? '',
+    length: currentProduct?.dimensions?.length?.toString() ?? '',
+    width: currentProduct?.dimensions?.width?.toString() ?? '',
+    height: currentProduct?.dimensions?.height?.toString() ?? '',
+    unitOfMeasureId: currentProduct?.unitOfMeasureId || null,
+    secondaryUnitOfMeasureId: currentProduct?.secondaryUnitOfMeasureId || null,
   });
 
   const handleCloseError = useCallback(() => {
@@ -122,6 +143,16 @@ export function ProductCreateEditView({
     []
   );
 
+  const handleUnitChange = useCallback(
+    (field: 'unitOfMeasureId' | 'secondaryUnitOfMeasureId') => (value: string | null) => {
+      setFormData((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    },
+    []
+  );
+
   const handleSubmit = useCallback(async () => {
     if (!formData.name) {
       setErrorMessage('Product name is required');
@@ -141,6 +172,10 @@ export function ProductCreateEditView({
     }
     const price = Number(formData.price);
     const stock = Number(formData.stock);
+    const weight = formData.weight ? Number(formData.weight) : undefined;
+    const length = formData.length ? Number(formData.length) : undefined;
+    const width = formData.width ? Number(formData.width) : undefined;
+    const height = formData.height ? Number(formData.height) : undefined;
 
     if (!Number.isFinite(price) || price < 0) {
       setErrorMessage('Valid price is required')
@@ -150,28 +185,49 @@ export function ProductCreateEditView({
       setErrorMessage('Valid stock quantity is required')
       return;
     };
+    if (weight !== undefined && (!Number.isFinite(weight) || weight < 0)) {
+      setErrorMessage('Valid weight is required')
+      return;
+    };
     try {
       if (isEdit && currentProduct?.id) {
-        await updateProduct(
-          currentProduct.id,
-          [
-            { key: 'name', value: formData.name },
-            { key: 'code', value: formData.code },
-            { key: 'category', value: formData.category },
-            { key: 'price', value: formData.price },
-            { key: 'stock', value: formData.stock },
-          ],
-        );
+        const updates = [
+          { key: 'name', value: formData.name },
+          { key: 'code', value: formData.code },
+          { key: 'category', value: formData.category },
+          { key: 'price', value: formData.price },
+          { key: 'stock', value: formData.stock },
+        ];
+        if (weight !== undefined) {
+          updates.push({ key: 'weight', value: weight.toString() });
+        }
+        if (length !== undefined || width !== undefined || height !== undefined) {
+          updates.push({ 
+            key: 'dimensions', 
+            value: JSON.stringify({ length, width, height }) 
+          });
+        }
+        if (formData.unitOfMeasureId) {
+          updates.push({ key: 'unitOfMeasureId', value: formData.unitOfMeasureId });
+        }
+        if (formData.secondaryUnitOfMeasureId) {
+          updates.push({ key: 'secondaryUnitOfMeasureId', value: formData.secondaryUnitOfMeasureId });
+        }
+        await updateProduct(currentProduct.id, updates);
       } else {
-        await createProduct(
-          {
-            name: formData.name,
-            code: formData.code,
-            price: Number(formData.price),
-            stockQuantity: Number(formData.stock),
-          }
-
-        );
+        const dimensions = (length !== undefined || width !== undefined || height !== undefined) 
+          ? { length, width, height } 
+          : undefined;
+        await createProduct({
+          name: formData.name,
+          code: formData.code,
+          price: Number(formData.price),
+          stockQuantity: Number(formData.stock),
+          weight,
+          dimensions,
+          unitOfMeasureId: formData.unitOfMeasureId || undefined,
+          secondaryUnitOfMeasureId: formData.secondaryUnitOfMeasureId || undefined,
+        });
       }
     router.push('/products');
   } catch (e: any) {
@@ -179,7 +235,7 @@ export function ProductCreateEditView({
   }
 
     // Navigate back to list after save
-  }, [formData.name, formData.category, formData.price, formData.stock, formData.code, isEdit, currentProduct?.id, router]);
+  }, [formData, isEdit, currentProduct?.id, router]);
 
   const handleCancel = useCallback(() => {
     router.push('/products');
@@ -297,78 +353,173 @@ export function ProductCreateEditView({
 
         {/* Right Section - Product Info Form */}
         <Grid size={{ xs: 12, md: 8 }}>
-          <Card sx={{ p: 3 }}>
-            <Grid container spacing={3}>
-              <Grid size={{ xs: 12 }}>
-                <TextField
-                  fullWidth
-                  label="Product name"
-                  value={formData.name}
-                  onChange={handleInputChange('name')}
-                />
-              </Grid>
+          <Stack spacing={3}>
+            <Card sx={{ p: 3 }}>
+              <Typography variant="h6" sx={{ mb: 3 }}>
+                Product Details
+              </Typography>
+              <Grid container spacing={3}>
+                <Grid size={{ xs: 12 }}>
+                  <TextField
+                    fullWidth
+                    label="Product name"
+                    value={formData.name}
+                    onChange={handleInputChange('name')}
+                  />
+                </Grid>
 
-              <Grid size={{ xs: 12 }}>
-                <TextField
-                  fullWidth
-                  label="Code"
-                  value={formData.code}
-                  onChange={handleInputChange('code')}
-                  multiline
-                  rows={3}
-                />
-              </Grid>
+                <Grid size={{ xs: 12 }}>
+                  <TextField
+                    fullWidth
+                    label="Code"
+                    value={formData.code}
+                    onChange={handleInputChange('code')}
+                    multiline
+                    rows={3}
+                  />
+                </Grid>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <FormControl fullWidth>
-                  <InputLabel>Category</InputLabel>
-                  <Select
-                    value={formData.category}
-                    label="Category"
-                    onChange={handleSelectChange('category')}
-                  >
-                    {CATEGORIES.map((category) => (
-                      <MenuItem key={category.value} value={category.value}>
-                        {category.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>Category</InputLabel>
+                    <Select
+                      value={formData.category}
+                      label="Category"
+                      onChange={handleSelectChange('category')}
+                    >
+                      {CATEGORIES.map((category) => (
+                        <MenuItem key={category.value} value={category.value}>
+                          {category.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
-                  fullWidth
-                  type="number"
-                  label="Stock"
-                  value={formData.stock}
-                  onChange={handleInputChange('stock')}
-                  slotProps={{
-                    input: {
-                      inputProps: { min: 0 },
-                    },
-                  }}
-                />
-              </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Stock"
+                    value={formData.stock}
+                    onChange={handleInputChange('stock')}
+                    slotProps={{
+                      input: {
+                        inputProps: { min: 0 },
+                      },
+                    }}
+                  />
+                </Grid>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
-                  fullWidth
-                  type="number"
-                  label="Price"
-                  value={formData.price}
-                  onChange={handleInputChange('price')}
-                  slotProps={{
-                    input: {
-                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                      inputProps: { min: 0, step: 0.01 },
-                    },
-                  }}
-                />
-              </Grid>
-            </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Price"
+                    value={formData.price}
+                    onChange={handleInputChange('price')}
+                    slotProps={{
+                      input: {
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        inputProps: { min: 0, step: 0.01 },
+                      },
+                    }}
+                  />
+                </Grid>
 
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Weight (kg)"
+                    value={formData.weight}
+                    onChange={handleInputChange('weight')}
+                    slotProps={{
+                      input: {
+                        inputProps: { min: 0, step: 0.01 },
+                      },
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            </Card>
+
+            <Card sx={{ p: 3 }}>
+              <Typography variant="h6" sx={{ mb: 3 }}>
+                Dimensions
+              </Typography>
+              <Grid container spacing={3}>
+                <Grid size={{ xs: 12, sm: 4 }}>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Length"
+                    value={formData.length}
+                    onChange={handleInputChange('length')}
+                    slotProps={{
+                      input: {
+                        inputProps: { min: 0, step: 0.01 },
+                      },
+                    }}
+                  />
+                </Grid>
+
+                <Grid size={{ xs: 12, sm: 4 }}>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Width"
+                    value={formData.width}
+                    onChange={handleInputChange('width')}
+                    slotProps={{
+                      input: {
+                        inputProps: { min: 0, step: 0.01 },
+                      },
+                    }}
+                  />
+                </Grid>
+
+                <Grid size={{ xs: 12, sm: 4 }}>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Height"
+                    value={formData.height}
+                    onChange={handleInputChange('height')}
+                    slotProps={{
+                      input: {
+                        inputProps: { min: 0, step: 0.01 },
+                      },
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            </Card>
+
+            <Card sx={{ p: 3 }}>
+              <Typography variant="h6" sx={{ mb: 3 }}>
+                Units of Measure
+              </Typography>
+              <Grid container spacing={3}>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <UnitSelector
+                    label="Unit of Measure"
+                    value={formData.unitOfMeasureId}
+                    onChange={handleUnitChange('unitOfMeasureId')}
+                  />
+                </Grid>
+
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <UnitSelector
+                    label="Secondary Unit of Measure"
+                    value={formData.secondaryUnitOfMeasureId}
+                    onChange={handleUnitChange('secondaryUnitOfMeasureId')}
+                  />
+                </Grid>
+              </Grid>
+            </Card>
+
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
               <Button variant="outlined" color="inherit" onClick={handleCancel}>
                 Cancel
               </Button>
@@ -387,7 +538,7 @@ export function ProductCreateEditView({
                 {isEdit ? 'Save changes' : 'Create product'}
               </Button>
             </Box>
-          </Card>
+          </Stack>
         </Grid>
       </Grid>
       <Snackbar
