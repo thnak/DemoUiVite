@@ -39,8 +39,6 @@ interface ProductFormData {
   secondaryUnitOfMeasureId: string | null;
 }
 
-const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3 MB
-const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 
 interface ProductCreateEditViewProps {
   isEdit?: boolean;
