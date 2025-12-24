@@ -178,17 +178,17 @@ export function ProductCreateEditView({
     const height = formData.height ? Number(formData.height) : undefined;
 
     if (!Number.isFinite(price) || price < 0) {
-      setErrorMessage('Valid price is required')
+      setErrorMessage('Valid price is required');
       return;
-    };
+    }
     if (!Number.isFinite(stock) || stock < 0) {
-      setErrorMessage('Valid stock quantity is required')
+      setErrorMessage('Valid stock quantity is required');
       return;
-    };
+    }
     if (weight !== undefined && (!Number.isFinite(weight) || weight < 0)) {
-      setErrorMessage('Valid weight is required')
+      setErrorMessage('Valid weight is required');
       return;
-    };
+    }
     try {
       if (isEdit && currentProduct?.id) {
         const updates = [
@@ -235,7 +235,22 @@ export function ProductCreateEditView({
   }
 
     // Navigate back to list after save
-  }, [formData, isEdit, currentProduct?.id, router]);
+  }, [
+    formData.name,
+    formData.code,
+    formData.category,
+    formData.price,
+    formData.stock,
+    formData.weight,
+    formData.length,
+    formData.width,
+    formData.height,
+    formData.unitOfMeasureId,
+    formData.secondaryUnitOfMeasureId,
+    isEdit,
+    currentProduct?.id,
+    router,
+  ]);
 
   const handleCancel = useCallback(() => {
     router.push('/products');
