@@ -209,7 +209,7 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
                     label="From Unit"
                     required
                     error={hasError('fromUnitId')}
-                    helperText={getFieldErrorMessage('fromUnitId')}
+                    helperText={getFieldErrorMessage('fromUnitId') || undefined}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
@@ -219,7 +219,7 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
                     label="To Unit"
                     required
                     error={hasError('toUnitId')}
-                    helperText={getFieldErrorMessage('toUnitId')}
+                    helperText={getFieldErrorMessage('toUnitId') || undefined}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>

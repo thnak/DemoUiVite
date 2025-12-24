@@ -338,7 +338,7 @@ export function IoTSensorCreateEditView({
                     required
                     disabled={isSubmitting}
                     error={hasError('deviceId')}
-                    helperText={getFieldErrorMessage('deviceId')}
+                    helperText={getFieldErrorMessage('deviceId') || undefined}
                   />
                 </Grid>
 
