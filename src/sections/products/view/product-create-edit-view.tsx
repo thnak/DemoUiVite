@@ -7,14 +7,9 @@ import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
-import Select from '@mui/material/Select';
-import Avatar from '@mui/material/Avatar';
-import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
@@ -22,8 +17,9 @@ import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { Iconify } from 'src/components/iconify';
 import { UnitSelector } from 'src/components/selectors/unit-selector';
+import { ImageEntityResourceUploader } from 'src/components/image-entity-resource-uploader';
+import { ProductCategorySelector } from 'src/components/selectors/product-category-selector';
 
 import { createProduct, updateProduct } from '../../../api';
 
@@ -32,7 +28,7 @@ import { createProduct, updateProduct } from '../../../api';
 interface ProductFormData {
   name: string;
   code: string;
-  category: string;
+  categoryId: string | null;
   price: string;
   stock: string;
   weight: string;
@@ -43,12 +39,6 @@ interface ProductFormData {
   secondaryUnitOfMeasureId: string | null;
 }
 
-const CATEGORIES = [
-  { value: 'shose', label: 'Shose' },
-  { value: 'apparel', label: 'Apparel' },
-  { value: 'accessories', label: 'Accessories' },
-];
-
 const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3 MB
 const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 
@@ -58,7 +48,7 @@ interface ProductCreateEditViewProps {
     id: string;
     name: string;
     code: string;
-    category: string;
+    categoryId?: string;
     price: number;
     stock: number;
     coverUrl: string;
@@ -86,7 +76,7 @@ export function ProductCreateEditView({
   const [formData, setFormData] = useState<ProductFormData>({
     name: currentProduct?.name || '',
     code: currentProduct?.code || '',
-    category: currentProduct?.category?.toLowerCase() || '',
+    categoryId: currentProduct?.categoryId || null,
     price: currentProduct?.price?.toString() ?? '' ,
     stock: currentProduct?.stock?.toString() ?? '',
     weight: currentProduct?.weight?.toString() ?? '',
@@ -101,25 +91,8 @@ export function ProductCreateEditView({
     setErrorMessage(null);
   }, []);
 
-  const handleImageChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-      setErrorMessage('Please select a valid image file (*.jpeg, *.jpg, *.png, *.gif, *.webp)');
-      return;
-    }
-
-    if (file.size > MAX_FILE_SIZE) {
-      setErrorMessage('File size must not exceed 3 MB');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      setImageUrl(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+  const handleImageUrlChange = useCallback((url: string) => {
+    setImageUrl(url);
   }, []);
 
   const handleInputChange = useCallback(
@@ -143,6 +116,13 @@ export function ProductCreateEditView({
     []
   );
 
+  const handleCategoryChange = useCallback((value: string | null) => {
+    setFormData((prev) => ({
+      ...prev,
+      categoryId: value,
+    }));
+  }, []);
+
   const handleUnitChange = useCallback(
     (field: 'unitOfMeasureId' | 'secondaryUnitOfMeasureId') => (value: string | null) => {
       setFormData((prev) => ({
@@ -158,7 +138,7 @@ export function ProductCreateEditView({
       setErrorMessage('Product name is required');
       return;
     }
-    if (!formData.category) {
+    if (!formData.categoryId) {
       setErrorMessage('Category is required');
       return;
     }
@@ -194,10 +174,12 @@ export function ProductCreateEditView({
         const updates = [
           { key: 'name', value: formData.name },
           { key: 'code', value: formData.code },
-          { key: 'category', value: formData.category },
           { key: 'price', value: formData.price },
           { key: 'stock', value: formData.stock },
         ];
+        if (formData.categoryId) {
+          updates.push({ key: 'productCategoryId', value: formData.categoryId });
+        }
         if (weight !== undefined) {
           updates.push({ key: 'weight', value: weight.toString() });
         }
@@ -225,6 +207,7 @@ export function ProductCreateEditView({
           stockQuantity: Number(formData.stock),
           weight,
           dimensions,
+          productCategoryId: formData.categoryId || undefined,
           unitOfMeasureId: formData.unitOfMeasureId || undefined,
           secondaryUnitOfMeasureId: formData.secondaryUnitOfMeasureId || undefined,
         });
@@ -238,13 +221,13 @@ export function ProductCreateEditView({
   }, [
     formData.name,
     formData.code,
-    formData.category,
     formData.price,
     formData.stock,
     formData.weight,
     formData.length,
     formData.width,
     formData.height,
+    formData.categoryId,
     formData.unitOfMeasureId,
     formData.secondaryUnitOfMeasureId,
     isEdit,
@@ -284,63 +267,15 @@ export function ProductCreateEditView({
         {/* Left Section - Image Upload & Publish */}
         <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ p: 3 }}>
-            <Stack alignItems="center" sx={{ mb: 3 }}>
-              <Box
-                sx={{
-                  position: 'relative',
-                  width: 200,
-                  height: 200,
-                  borderRadius: 2,
-                  border: '1px dashed',
-                  borderColor: 'divider',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  overflow: 'hidden',
-                  '&:hover': {
-                    opacity: 0.72,
-                  },
-                }}
-                component="label"
-              >
-                {imageUrl ? (
-                  <Avatar
-                    src={imageUrl}
-                    alt="Product"
-                    variant="rounded"
-                    sx={{ width: '100%', height: '100%' }}
-                  />
-                ) : (
-                  <Stack alignItems="center" spacing={0.5}>
-                    <Iconify icon="mingcute:add-line" width={24} sx={{ color: 'text.secondary' }} />
-                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                      Upload image
-                    </Typography>
-                  </Stack>
-                )}
-                <input
-                  type="file"
-                  hidden
-                  accept=".jpeg,.jpg,.png,.gif,.webp"
-                  onChange={handleImageChange}
-                />
-              </Box>
-            </Stack>
-
-            <Typography
-              variant="caption"
-              sx={{
-                display: 'block',
-                textAlign: 'center',
-                color: 'text.secondary',
-                mb: 3,
-              }}
-            >
-              Allowed *.jpeg, *.jpg, *.png, *.gif, *.webp
-              <br />
-              max size of 3 Mb
+            <Typography variant="subtitle2" sx={{ mb: 2 }}>
+              Product Image
             </Typography>
+            <ImageEntityResourceUploader
+              imageUrl={imageUrl || ''}
+              onImageUrlChange={handleImageUrlChange}
+              aspectRatio={1}
+              previewSize={300}
+            />
 
             <Box sx={{ mt: 3 }}>
               <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
@@ -374,7 +309,16 @@ export function ProductCreateEditView({
                 Product Details
               </Typography>
               <Grid container spacing={3}>
-                <Grid size={{ xs: 12 }}>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    label="Product code"
+                    value={formData.code}
+                    onChange={handleInputChange('code')}
+                  />
+                </Grid>
+
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="Product name"
@@ -383,32 +327,12 @@ export function ProductCreateEditView({
                   />
                 </Grid>
 
-                <Grid size={{ xs: 12 }}>
-                  <TextField
-                    fullWidth
-                    label="Code"
-                    value={formData.code}
-                    onChange={handleInputChange('code')}
-                    multiline
-                    rows={3}
-                  />
-                </Grid>
-
                 <Grid size={{ xs: 12, sm: 6 }}>
-                  <FormControl fullWidth>
-                    <InputLabel>Category</InputLabel>
-                    <Select
-                      value={formData.category}
-                      label="Category"
-                      onChange={handleSelectChange('category')}
-                    >
-                      {CATEGORIES.map((category) => (
-                        <MenuItem key={category.value} value={category.value}>
-                          {category.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                  <ProductCategorySelector
+                    label="Category"
+                    value={formData.categoryId}
+                    onChange={handleCategoryChange}
+                  />
                 </Grid>
 
                 <Grid size={{ xs: 12, sm: 6 }}>
