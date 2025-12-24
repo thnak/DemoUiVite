@@ -31071,6 +31071,91 @@
         }
       }
     },
+    "/api/role/search": {
+      "get": {
+        "tags": [
+          "Role"
+        ],
+        "summary": "Search Role entities",
+        "description": "Searches Role entities by text across searchable fields.",
+        "operationId": "SearchRole",
+        "parameters": [
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleEntityResultArray"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Role/{roleId}/permissions": {
+      "get": {
+        "tags": [
+          "Role"
+        ],
+        "summary": "Retrieves the permissions associated with a specific role.",
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRolePermissionsResultBasePaginationResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRolePermissionsResultBasePaginationResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRolePermissionsResultBasePaginationResponse"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRolePermissionsResultBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/rolepermissionmapping/{id}": {
       "get": {
         "tags": [
@@ -40749,6 +40834,121 @@
         }
       }
     },
+    "/api/User/get-user-pages": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Gets the user pages.",
+        "parameters": [
+          {
+            "name": "Roles",
+            "in": "query",
+            "description": "Roles to filter users by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserPageQueryResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserPageQueryResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserPageQueryResponse"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserPageQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/User/set-theme": {
       "post": {
         "tags": [
@@ -47945,13 +48145,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-22"
+            "example": "2025-12-24"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-22"
+            "example": "2025-12-24"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -48063,13 +48263,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-22"
+            "example": "2025-12-24"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-22"
+            "example": "2025-12-24"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -48225,12 +48425,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-22"
+            "example": "2025-12-24"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-22"
+            "example": "2025-12-24"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -50512,7 +50712,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-22"
+            "example": "2025-12-24"
           }
         },
         "additionalProperties": false
@@ -51737,6 +51937,69 @@
         "additionalProperties": false,
         "description": "Pagination response for queries."
       },
+      "GetRolePermissionsResult": {
+        "type": "object",
+        "properties": {
+          "permissionName": {
+            "type": "string",
+            "description": "Name of the permission.",
+            "nullable": true
+          },
+          "category": {
+            "$ref": "#/components/schemas/PermissionCategory"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the permission.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Result model representing a permission associated with a role."
+      },
+      "GetRolePermissionsResultBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetRolePermissionsResult"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
       "GetSensorEntityByIdDto": {
         "type": "object",
         "properties": {
@@ -51795,6 +52058,93 @@
         },
         "additionalProperties": false,
         "description": ""
+      },
+      "GetUserPageQueryResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetUserPageQueryResult"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          },
+          "roleCounts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Counts of users per role in the current query result.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response model for paginated user data."
+      },
+      "GetUserPageQueryResult": {
+        "type": "object",
+        "properties": {
+          "avatarUrl": {
+            "type": "string",
+            "description": "URL of the user's avatar image.",
+            "nullable": true
+          },
+          "username": {
+            "type": "string",
+            "description": "Username of the user.",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address of the user.",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Phone number of the user.",
+            "nullable": true
+          },
+          "roleNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Full name of the user.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Result model representing a user in the paginated response."
       },
       "IfElseClause": {
         "type": "object",
@@ -52345,7 +52695,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2025-12-22"
+            "example": "2025-12-24"
           },
           "lastServiceTime": {
             "type": "string",
@@ -56883,14 +57233,17 @@
           },
           "name": {
             "type": "string",
+            "description": "Name of the permission.",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "Description of the permission.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Represents a permission entity in the system."
       },
       "PermissionEntityBasePaginationResponse": {
         "type": "object",
@@ -59004,6 +59357,39 @@
         "additionalProperties": false,
         "description": "Base class for paginated responses"
       },
+      "RoleEntityResultArray": {
+        "required": [
+          "data",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Trạng thái thành công hay thất bại"
+          },
+          "message": {
+            "type": "string",
+            "description": "Thông điệp trả về",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoleEntity"
+            },
+            "description": "Dữ liệu trả về",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Kết quả trả về dạng mảng"
+      },
       "RoleEntityValidationResult": {
         "type": "object",
         "properties": {
@@ -60441,13 +60827,16 @@
         "properties": {
           "sortBy": {
             "type": "string",
+            "description": "Gets or sets the field to sort by.",
             "nullable": true
           },
           "descending": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the sorting is in descending order."
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Represents sorting criteria with a field to sort by and the order (ascending or descending)."
       },
       "StationEntity": {
         "type": "object",
@@ -65165,7 +65554,7 @@
             "type": "string",
             "description": "The specific work date this statistic applies to.",
             "format": "date",
-            "example": "2025-12-22"
+            "example": "2025-12-24"
           },
           "calendarId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -65832,7 +66221,8 @@
       "description": "Controller for managing report metadata and configuration\r\nAPI routes follow the pattern: /api/reports/*\r\n\r\nSECURITY NOTES:\r\n- All endpoints are READ-ONLY. No data modification is allowed.\r\n- Authentication is REQUIRED for all endpoints (add [Authorize] attribute in production)\r\n- Metadata endpoints provide read-only access to entity schemas\r\n- Field suggestion endpoint uses MongoDB $distinct for safe data retrieval"
     },
     {
-      "name": "Role"
+      "name": "Role",
+      "description": "Controller for managing roles and their associated permissions."
     },
     {
       "name": "RolePermissionMapping"
