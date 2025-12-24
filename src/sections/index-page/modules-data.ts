@@ -16,7 +16,7 @@ export const MODULES: ModuleItem[] = [
     title: 'User Management',
     subtitle: 'Manage users, roles, and permissions',
     icon: 'solar:user-circle-bold-duotone',
-    path: '/user',
+    path: '/users',
     color: 'secondary',
   },
   {
