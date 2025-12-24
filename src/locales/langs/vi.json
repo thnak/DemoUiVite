@@ -41,7 +41,8 @@
     "blog": "Blog",
     "other": "Khác",
     "signIn": "Đăng nhập",
-    "notFound": "Không tìm thấy"
+    "notFound": "Không tìm thấy",
+    "timeBlockName": "Tên khối thời gian"
   },
   "account": {
     "home": "Trang chủ",

@@ -30,6 +30,11 @@ export function useSettingsNavData(): NavData {
           path: '/settings/unit-conversions',
           icon: icon('ic-cart'),
         },
+        {
+          title: t('nav.timeBlockName'),
+          path: '/settings/time-block-names',
+          icon: icon('ic-cart'),
+        },
       ],
     },
   ];
