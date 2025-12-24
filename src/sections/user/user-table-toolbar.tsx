@@ -64,12 +64,12 @@ export function UserTableToolbar({
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Tooltip title="Import users">
             <IconButton>
-              <Iconify icon="eva:upload-fill" />
+              <Iconify icon="solar:cloud-upload-bold" />
             </IconButton>
           </Tooltip>
           <Tooltip title="Export users">
             <IconButton>
-              <Iconify icon="eva:download-fill" />
+              <Iconify icon="solar:share-bold" />
             </IconButton>
           </Tooltip>
           <Tooltip title="Filters">
