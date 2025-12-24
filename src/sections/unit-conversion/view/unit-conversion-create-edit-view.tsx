@@ -86,8 +86,15 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
       }
     },
     onError: (error) => {
+      // Error is also a ValidationResult type, handle it the same way
       setErrorMessage(error.message || 'Failed to create unit conversion');
-      setFieldErrors({});
+      if (error.errors) {
+        const errors: Record<string, string> = {};
+        Object.entries(error.errors).forEach(([key, validationError]) => {
+          errors[key] = validationError.message || 'Invalid value';
+        });
+        setFieldErrors(errors);
+      }
     },
   });
 
@@ -107,8 +114,15 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
       }
     },
     onError: (error) => {
+      // Error is also a ValidationResult type, handle it the same way
       setErrorMessage(error.message || 'Failed to update unit conversion');
-      setFieldErrors({});
+      if (error.errors) {
+        const errors: Record<string, string> = {};
+        Object.entries(error.errors).forEach(([key, validationError]) => {
+          errors[key] = validationError.message || 'Invalid value';
+        });
+        setFieldErrors(errors);
+      }
     },
   });
 

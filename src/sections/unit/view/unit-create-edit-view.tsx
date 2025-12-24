@@ -110,8 +110,15 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
       }
     },
     onError: (error) => {
+      // Error is also a ValidationResult type, handle it the same way
       setErrorMessage(error.message || 'Failed to create unit');
-      setFieldErrors({});
+      if (error.errors) {
+        const errors: Record<string, string> = {};
+        Object.entries(error.errors).forEach(([key, validationError]) => {
+          errors[key] = validationError.message || 'Invalid value';
+        });
+        setFieldErrors(errors);
+      }
     },
   });
 
@@ -132,8 +139,15 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
       }
     },
     onError: (error) => {
+      // Error is also a ValidationResult type, handle it the same way
       setErrorMessage(error.message || 'Failed to update unit');
-      setFieldErrors({});
+      if (error.errors) {
+        const errors: Record<string, string> = {};
+        Object.entries(error.errors).forEach(([key, validationError]) => {
+          errors[key] = validationError.message || 'Invalid value';
+        });
+        setFieldErrors(errors);
+      }
     },
   });
 
