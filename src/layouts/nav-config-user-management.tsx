@@ -17,7 +17,7 @@ export function useUserManagementNavData(): NavData {
       items: [
         {
           title: t('nav.user'),
-          path: '/user',
+          path: '/users',
           icon: icon('ic-user'),
         },
         {

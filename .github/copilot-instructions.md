@@ -515,24 +515,31 @@ All entity list pages that manage database entities (e.g., Units, Areas, Product
 
 Every entity list page must include:
 
-1. **Table Row Component** (`{entity}-table-row.tsx`)
+1. **Page Header with Action Buttons**
+   - Title and breadcrumbs on the left
+   - **Import, Export, and Add buttons on the right** in this order
+   - Import and Export buttons use `variant="outlined"`
+   - Add button uses `variant="contained"`
+   - Button gap: `1.5`
+   - Icons: `solar:cloud-upload-bold` (Import), `mdi:export` (Export), `mingcute:add-line` (Add)
+
+2. **Table Row Component** (`{entity}-table-row.tsx`)
    - Checkbox for selection
    - All entity fields
    - **Single action button** with popover menu containing Edit and Delete options
    - Use `Popover` with `MenuList` for the action menu
 
-2. **Table Toolbar Component** (`{entity}-table-toolbar.tsx`)
+3. **Table Toolbar Component** (`{entity}-table-toolbar.tsx`)
    - **Search input** with icon (always visible when no items selected)
    - Selection counter (visible when items are selected)
    - **Columns and Filters buttons** (visible when no items selected)
    - Delete button (visible when items are selected)
+   - **DO NOT** place Import/Export buttons here - they belong in the page header
 
-3. **List View Component** (`{entity}-list-view.tsx`)
-   - Page header with breadcrumbs and action buttons
+4. **List View Component** (`{entity}-list-view.tsx`)
+   - Page header with title, breadcrumbs and action buttons (Import, Export, Add)
    - Breadcrumb navigation: Dashboard • Settings • {Entity Name}
    - Title format: "{Entity} List" (e.g., "Unit List", "Unit Group List")
-   - Button with `variant="contained"` and `color="inherit"`
-   - Button text pattern: "Add {Entity}" (e.g., "Add Unit", "Add Unit Group")
    - Table toolbar with search and filters
    - Table with proper `TableHead` and `TableBody`
    - Checkbox column
@@ -555,6 +562,14 @@ Every entity list page must include:
     New Unit Group
   </Button>
 </Box>
+// WRONG: Import/Export buttons as icon buttons in toolbar
+<Toolbar>
+  <OutlinedInput placeholder="Search..." />
+  <Box sx={{ display: 'flex', gap: 1 }}>
+    <IconButton><Iconify icon="solar:cloud-upload-bold" /></IconButton>
+    <IconButton><Iconify icon="solar:share-bold" /></IconButton>
+  </Box>
+</Toolbar>
 
 // WRONG: Separate Edit and Delete buttons in Actions column
 <TableCell align="right">
@@ -570,12 +585,19 @@ Every entity list page must include:
 <Card>
   <Table>...</Table>
 </Card>
+
+// WRONG: Missing Import/Export buttons in header
+<Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+  <Typography variant="h4">Users</Typography>
+  <Button variant="contained">New user</Button>
+</Box>
 ```
 
 ### ✅ Do This Instead
 
 ```tsx
 // CORRECT: Page header with breadcrumbs and properly styled button
+// CORRECT: Import/Export buttons in page header
 <Box
   sx={{
     mb: 5,
@@ -586,34 +608,28 @@ Every entity list page must include:
 >
   <Box>
     <Typography variant="h4" sx={{ mb: 1 }}>
-      Unit Group List
+      List
     </Typography>
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      <Typography variant="body2" sx={{ color: 'text.primary' }}>
-        Dashboard
-      </Typography>
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        •
-      </Typography>
-      <Typography variant="body2" sx={{ color: 'text.primary' }}>
-        Settings
-      </Typography>
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        •
-      </Typography>
-      <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-        Unit Groups
-      </Typography>
-    </Box>
+    {/* Breadcrumbs */}
   </Box>
   <Box sx={{ display: 'flex', gap: 1.5 }}>
+    <Button
+      variant="outlined"
+      color="inherit"
+      startIcon={<Iconify icon="solar:cloud-upload-bold" />}
+    >
+      Import
+    </Button>
+    <Button variant="outlined" color="inherit" startIcon={<Iconify icon="mdi:export" />}>
+      Export
+    </Button>
     <Button
       variant="contained"
       color="inherit"
       startIcon={<Iconify icon="mingcute:add-line" />}
-      onClick={() => router.push('/settings/unit-groups/create')}
+      onClick={() => router.push('/entity/create')}
     >
-      Add Unit Group
+      New Entity
     </Button>
   </Box>
 </Box>

@@ -1,7 +1,3 @@
-import type { UserStatus } from 'src/_mock';
-
-import type { UserProps } from './user-table-row';
-
 // ----------------------------------------------------------------------
 
 export const visuallyHidden = {
@@ -50,50 +46,4 @@ export function getComparator<Key extends keyof any>(
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-// ----------------------------------------------------------------------
-
-type ApplyFilterProps = {
-  inputData: UserProps[];
-  filterName: string;
-  filterRole?: string;
-  filterStatus?: UserStatus | 'all';
-  comparator: (a: any, b: any) => number;
-};
-
-export function applyFilter({
-  inputData,
-  comparator,
-  filterName,
-  filterRole,
-  filterStatus,
-}: ApplyFilterProps) {
-  const stabilizedThis = inputData.map((el, index) => [el, index] as const);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  inputData = stabilizedThis.map((el) => el[0]);
-
-  if (filterName) {
-    inputData = inputData.filter(
-      (user) =>
-        user.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-        user.email.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
-  }
-
-  if (filterRole) {
-    inputData = inputData.filter((user) => user.role === filterRole);
-  }
-
-  if (filterStatus && filterStatus !== 'all') {
-    inputData = inputData.filter((user) => user.status === filterStatus);
-  }
-
-  return inputData;
 }
