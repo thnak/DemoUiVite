@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Rect, Text, Stage, Layer, Group } from 'react-konva';
+import { Rect, Text, Line, Stage, Layer, Group, Circle } from 'react-konva';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -126,8 +126,9 @@ export function FactoryCanvas2D({ areas, onMachineClick, onAreaClick }: FactoryC
 
   const isDarkMode = theme.palette.mode === 'dark';
   const areaColor = isDarkMode ? theme.palette.grey[800] : theme.palette.grey[100];
-  const areaStrokeColor = isDarkMode ? theme.palette.grey[700] : theme.palette.grey[300];
+  const areaStrokeColor = isDarkMode ? theme.palette.grey[700] : theme.palette.grey[400];
   const textColor = isDarkMode ? '#ffffff' : '#000000';
+  const gridColor = isDarkMode ? theme.palette.grey[700] : theme.palette.grey[200];
 
   return (
     <>
@@ -214,9 +215,42 @@ export function FactoryCanvas2D({ areas, onMachineClick, onAreaClick }: FactoryC
                 onWheel={handleWheel}
               >
                 <Layer>
+                  {/* Grid Background */}
+                  {Array.from({ length: 20 }).map((_, i) => (
+                    <Line
+                      key={`h-${i}`}
+                      points={[0, i * 40, canvasWidth, i * 40]}
+                      stroke={gridColor}
+                      strokeWidth={0.5}
+                      opacity={0.3}
+                    />
+                  ))}
+                  {Array.from({ length: 30 }).map((_, i) => (
+                    <Line
+                      key={`v-${i}`}
+                      points={[i * 40, 0, i * 40, canvasHeight]}
+                      stroke={gridColor}
+                      strokeWidth={0.5}
+                      opacity={0.3}
+                    />
+                  ))}
+                </Layer>
+
+                <Layer>
                   {/* Render Areas */}
                   {areas.map((area) => (
                     <Group key={area.id}>
+                      {/* Area Shadow */}
+                      <Rect
+                        x={area.position.x + 3}
+                        y={area.position.y + 3}
+                        width={area.width}
+                        height={area.height}
+                        fill="black"
+                        opacity={0.1}
+                        cornerRadius={6}
+                      />
+
                       {/* Area Rectangle */}
                       <Rect
                         x={area.position.x}
@@ -225,18 +259,31 @@ export function FactoryCanvas2D({ areas, onMachineClick, onAreaClick }: FactoryC
                         height={area.height}
                         fill={areaColor}
                         stroke={areaStrokeColor}
-                        strokeWidth={2}
-                        cornerRadius={4}
+                        strokeWidth={3}
+                        cornerRadius={6}
+                        shadowBlur={5}
+                        shadowColor="black"
+                        shadowOpacity={0.15}
                         onClick={() => onAreaClick?.(area.id)}
                         onTap={() => onAreaClick?.(area.id)}
                       />
 
+                      {/* Area Header Bar */}
+                      <Rect
+                        x={area.position.x}
+                        y={area.position.y}
+                        width={area.width}
+                        height={35}
+                        fill={isDarkMode ? theme.palette.grey[700] : theme.palette.grey[200]}
+                        cornerRadius={[6, 6, 0, 0]}
+                      />
+
                       {/* Area Label */}
                       <Text
-                        x={area.position.x + 10}
+                        x={area.position.x + 15}
                         y={area.position.y + 10}
                         text={area.name}
-                        fontSize={16}
+                        fontSize={14}
                         fontStyle="bold"
                         fill={textColor}
                       />
@@ -246,60 +293,132 @@ export function FactoryCanvas2D({ areas, onMachineClick, onAreaClick }: FactoryC
                         const absX = area.position.x + machine.position.x;
                         const absY = area.position.y + machine.position.y;
                         const isHovered = hoveredMachine === machine.id;
+                        const statusColor = getStatusColor(machine.status);
 
                         return (
                           <Group key={machine.id}>
-                            {/* Machine Rectangle */}
+                            {/* Machine Shadow */}
+                            <Rect
+                              x={absX + 2}
+                              y={absY + 2}
+                              width={90}
+                              height={70}
+                              fill="black"
+                              opacity={0.15}
+                              cornerRadius={6}
+                            />
+
+                            {/* Machine Background Rectangle */}
                             <Rect
                               x={absX}
                               y={absY}
-                              width={80}
-                              height={60}
-                              fill={getStatusColor(machine.status)}
-                              stroke={isHovered ? textColor : 'transparent'}
-                              strokeWidth={isHovered ? 3 : 0}
-                              cornerRadius={4}
-                              shadowBlur={isHovered ? 10 : 0}
+                              width={90}
+                              height={70}
+                              fill={statusColor}
+                              stroke={isHovered ? '#ffffff' : areaStrokeColor}
+                              strokeWidth={isHovered ? 3 : 2}
+                              cornerRadius={6}
+                              shadowBlur={isHovered ? 15 : 5}
                               shadowColor="black"
-                              shadowOpacity={0.3}
+                              shadowOpacity={isHovered ? 0.4 : 0.2}
                               onClick={() => onMachineClick?.(machine.id)}
                               onTap={() => onMachineClick?.(machine.id)}
                               onMouseEnter={() => setHoveredMachine(machine.id)}
                               onMouseLeave={() => setHoveredMachine(null)}
                             />
 
+                            {/* Machine Gradient Overlay */}
+                            <Rect
+                              x={absX}
+                              y={absY}
+                              width={90}
+                              height={35}
+                              fill={statusColor}
+                              opacity={0.3}
+                              cornerRadius={[6, 6, 0, 0]}
+                            />
+
+                            {/* Status Indicator Circle */}
+                            <Circle
+                              x={absX + 12}
+                              y={absY + 12}
+                              radius={5}
+                              fill="#ffffff"
+                              shadowBlur={3}
+                              shadowColor="black"
+                              shadowOpacity={0.3}
+                            />
+                            <Circle
+                              x={absX + 12}
+                              y={absY + 12}
+                              radius={3}
+                              fill={statusColor}
+                            />
+
+                            {/* Machine Icon (Gear representation) */}
+                            <Circle
+                              x={absX + 75}
+                              y={absY + 15}
+                              radius={8}
+                              stroke="#ffffff"
+                              strokeWidth={2}
+                              opacity={0.7}
+                            />
+                            <Line
+                              points={[absX + 75, absY + 7, absX + 75, absY + 23]}
+                              stroke="#ffffff"
+                              strokeWidth={2}
+                              opacity={0.7}
+                            />
+                            <Line
+                              points={[absX + 67, absY + 15, absX + 83, absY + 15]}
+                              stroke="#ffffff"
+                              strokeWidth={2}
+                              opacity={0.7}
+                            />
+
                             {/* Machine Name */}
                             <Text
                               x={absX + 5}
-                              y={absY + 10}
+                              y={absY + 28}
                               text={machine.name}
-                              fontSize={10}
+                              fontSize={11}
                               fontStyle="bold"
-                              fill="white"
-                              width={70}
+                              fill="#ffffff"
+                              width={80}
                               align="center"
                             />
 
                             {/* Machine Status */}
                             <Text
                               x={absX + 5}
-                              y={absY + 25}
+                              y={absY + 43}
                               text={getStatusLabel(machine.status)}
-                              fontSize={8}
-                              fill="white"
-                              width={70}
+                              fontSize={9}
+                              fill="#ffffff"
+                              width={80}
                               align="center"
+                              opacity={0.9}
                             />
 
-                            {/* Machine OEE */}
+                            {/* OEE Badge */}
+                            <Rect
+                              x={absX + 20}
+                              y={absY + 56}
+                              width={50}
+                              height={10}
+                              fill="#ffffff"
+                              cornerRadius={5}
+                              opacity={0.95}
+                            />
                             <Text
-                              x={absX + 5}
-                              y={absY + 40}
+                              x={absX + 20}
+                              y={absY + 57}
                               text={`OEE: ${machine.oee.toFixed(0)}%`}
-                              fontSize={9}
+                              fontSize={8}
                               fontStyle="bold"
-                              fill="white"
-                              width={70}
+                              fill={statusColor}
+                              width={50}
                               align="center"
                             />
                           </Group>
