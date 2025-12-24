@@ -52119,6 +52119,11 @@
             "description": "URL of the user's avatar image.",
             "nullable": true
           },
+          "displayName": {
+            "type": "string",
+            "description": "Display name of the user.",
+            "nullable": true
+          },
           "username": {
             "type": "string",
             "description": "Username of the user.",
