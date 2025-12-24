@@ -1,10 +1,14 @@
-import { useState, useCallback, useEffect } from 'react';
+import type { ProductCategoryEntity } from 'src/api/types/generated';
+
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
+import TableRow from '@mui/material/TableRow';
 import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
@@ -12,15 +16,12 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
-import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
-
 import { DashboardContent } from 'src/layouts/dashboard';
+import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import {
-  useGetProductCategoryPage,
   useDeleteProductCategory,
+  useGetProductCategoryPage,
 } from 'src/api/hooks/generated/use-product-category';
-
-import type { ProductCategoryEntity } from 'src/api/types/generated';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -29,8 +30,8 @@ import { ProductCategoryTableRow } from '../product-category-table-row';
 import { ProductCategoryTableHead } from '../product-category-table-head';
 import { ProductCategoryTableNoData } from '../product-category-table-no-data';
 import { ProductCategoryTableToolbar } from '../product-category-table-toolbar';
-import { ProductCategoryTableEmptyRows } from '../product-category-table-empty-rows';
 import { emptyRows, applyFilter, getComparator } from '../product-category-utils';
+import { ProductCategoryTableEmptyRows } from '../product-category-table-empty-rows';
 
 import type { ProductCategoryProps } from '../product-category-table-row';
 
@@ -54,7 +55,7 @@ export function ProductCategoryListView() {
           description: item.description || '',
         }));
         setProductCategories(formattedData);
-        setTotalCount(result.totalCount || 0);
+        setTotalCount(result.totalItems || 0);
       }
     },
   });
@@ -74,15 +75,18 @@ export function ProductCategoryListView() {
   });
 
   useEffect(() => {
-    fetchProductCategories({
-      data: [],
-      params: {
-        pageNumber: table.page,
-        pageSize: table.rowsPerPage,
-        searchTerm: filterName,
-      },
-    });
-  }, [table.page, table.rowsPerPage, filterName]);
+    const loadData = () => {
+      fetchProductCategories({
+        data: [],
+        params: {
+          pageNumber: table.page,
+          pageSize: table.rowsPerPage,
+          searchTerm: filterName,
+        },
+      });
+    };
+    loadData();
+  }, [table.page, table.rowsPerPage, filterName, fetchProductCategories]);
 
   const dataFiltered: ProductCategoryProps[] = applyFilter({
     inputData: productCategories,

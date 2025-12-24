@@ -1,8 +1,10 @@
-import { useState, useCallback, useEffect, type ChangeEvent } from 'react';
+import type { ProductCategoryEntity } from 'src/api/types/generated';
+
+import { useState, useEffect, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
@@ -24,8 +26,6 @@ import {
   useGetProductCategoryById,
   useGenerateNewProductCategoryCode,
 } from 'src/api/hooks/generated/use-product-category';
-
-import type { ProductCategoryEntity } from 'src/api/types/generated';
 
 // ----------------------------------------------------------------------
 
@@ -216,7 +216,7 @@ export function ProductCategoryCreateEditView({
       )}
 
       <Grid container spacing={3}>
-        {/* Right Section - Form */}
+        {/* Form Section */}
         <Grid size={{ xs: 12 }}>
           <Stack spacing={3}>
             {/* Main form card */}

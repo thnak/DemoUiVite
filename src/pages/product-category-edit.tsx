@@ -1,6 +1,6 @@
-import { CONFIG } from 'src/config-global';
+import { useParams } from 'react-router-dom';
 
-import { useParams } from 'src/routes/hooks';
+import { CONFIG } from 'src/config-global';
 
 import { ProductCategoryCreateEditView } from 'src/sections/product-category/view';
 
