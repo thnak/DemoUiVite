@@ -13,15 +13,19 @@ import { apiConfig } from './config';
 interface ApiResultError {
   /** Indicates whether the API operation was successful. Present in all Result types. */
   isSuccess?: boolean;
+  /** Indicates whether the validation was successful. Present in ValidationResult types. */
+  isValid?: boolean;
   /** The error or success message from the API. Present when the API returns a message. */
   message?: string | null;
   /** The type of error (e.g., 'validation', 'notFound'). Present in error responses. */
   errorType?: string;
+  /** The dictionary of property errors. Present in ValidationResult types. */
+  errors?: Record<string, { message?: string | null; severity?: string }> | null;
 }
 
 /**
  * Custom API error that preserves the original axios error properties
- * while exposing the API error message.
+ * while exposing the API error message and validation errors.
  */
 export class ApiError extends Error {
   /** The HTTP status code from the response */
@@ -30,13 +34,26 @@ export class ApiError extends Error {
   readonly errorType?: string;
   /** The original axios error, if available */
   readonly originalError?: AxiosError;
+  /** Indicates whether the validation was successful */
+  readonly isValid?: boolean;
+  /** The dictionary of property errors for ValidationResult responses */
+  readonly errors?: Record<string, { message?: string | null; severity?: string }> | null;
 
-  constructor(message: string, status?: number, errorType?: string, originalError?: AxiosError) {
+  constructor(
+    message: string,
+    status?: number,
+    errorType?: string,
+    originalError?: AxiosError,
+    isValid?: boolean,
+    errors?: Record<string, { message?: string | null; severity?: string }> | null
+  ) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
     this.errorType = errorType;
     this.originalError = originalError;
+    this.isValid = isValid;
+    this.errors = errors;
   }
 }
 
@@ -73,7 +90,7 @@ axiosInstance.interceptors.request.use(
 /**
  * Response interceptor
  * - Handles common error responses
- * - Extracts error messages from API response body (for 400 errors with Result type responses)
+ * - Extracts error messages and validation errors from API response body (for 400 errors with Result/ValidationResult type responses)
  */
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => response,
@@ -83,11 +100,14 @@ axiosInstance.interceptors.response.use(
     const apiMessage = error.response?.data?.message;
     if (apiMessage !== undefined && apiMessage !== null) {
       // Create an ApiError that preserves original error properties while using the API message
+      // Also include isValid and errors fields for ValidationResult responses
       const apiError = new ApiError(
         apiMessage,
         error.response?.status,
         error.response?.data?.errorType,
-        error
+        error,
+        error.response?.data?.isValid,
+        error.response?.data?.errors
       );
       return Promise.reject(apiError);
     }
