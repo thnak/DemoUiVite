@@ -156,14 +156,26 @@ export function UserView() {
             </Typography>
           </Box>
         </Box>
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-          onClick={() => router.push('/users/create')}
-        >
-          New user
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1.5 }}>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="solar:cloud-upload-bold" />}
+          >
+            Import
+          </Button>
+          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="mdi:export" />}>
+            Export
+          </Button>
+          <Button
+            variant="contained"
+            color="inherit"
+            startIcon={<Iconify icon="mingcute:add-line" />}
+            onClick={() => router.push('/users/create')}
+          >
+            New user
+          </Button>
+        </Box>
       </Box>
 
       <Card>

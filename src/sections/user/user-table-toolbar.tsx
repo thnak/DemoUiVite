@@ -61,23 +61,11 @@ export function UserTableToolbar({
           </IconButton>
         </Tooltip>
       ) : (
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <Tooltip title="Import users">
-            <IconButton>
-              <Iconify icon="solar:cloud-upload-bold" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Export users">
-            <IconButton>
-              <Iconify icon="solar:share-bold" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Filters">
-            <IconButton>
-              <Iconify icon="ic:round-filter-list" />
-            </IconButton>
-          </Tooltip>
-        </Box>
+        <Tooltip title="Filters">
+          <IconButton>
+            <Iconify icon="ic:round-filter-list" />
+          </IconButton>
+        </Tooltip>
       )}
     </Toolbar>
   );

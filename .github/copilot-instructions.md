@@ -515,20 +515,29 @@ All entity list pages that manage database entities (e.g., Units, Areas, Product
 
 Every entity list page must include:
 
-1. **Table Row Component** (`{entity}-table-row.tsx`)
+1. **Page Header with Action Buttons**
+   - Title and breadcrumbs on the left
+   - **Import, Export, and Add buttons on the right** in this order
+   - Import and Export buttons use `variant="outlined"`
+   - Add button uses `variant="contained"`
+   - Button gap: `1.5`
+   - Icons: `solar:cloud-upload-bold` (Import), `mdi:export` (Export), `mingcute:add-line` (Add)
+
+2. **Table Row Component** (`{entity}-table-row.tsx`)
    - Checkbox for selection
    - All entity fields
    - **Single action button** with popover menu containing Edit and Delete options
    - Use `Popover` with `MenuList` for the action menu
 
-2. **Table Toolbar Component** (`{entity}-table-toolbar.tsx`)
+3. **Table Toolbar Component** (`{entity}-table-toolbar.tsx`)
    - **Search input** with icon (always visible when no items selected)
    - Selection counter (visible when items are selected)
    - **Columns and Filters buttons** (visible when no items selected)
    - Delete button (visible when items are selected)
+   - **DO NOT** place Import/Export buttons here - they belong in the page header
 
-3. **List View Component** (`{entity}-list-view.tsx`)
-   - Page header with title and "New {Entity}" button
+4. **List View Component** (`{entity}-list-view.tsx`)
+   - Page header with title and action buttons (Import, Export, Add)
    - Table toolbar
    - Table with proper `TableHead` and `TableBody`
    - Checkbox column
@@ -537,6 +546,15 @@ Every entity list page must include:
 ### ❌ Don't Do This
 
 ```tsx
+// WRONG: Import/Export buttons as icon buttons in toolbar
+<Toolbar>
+  <OutlinedInput placeholder="Search..." />
+  <Box sx={{ display: 'flex', gap: 1 }}>
+    <IconButton><Iconify icon="solar:cloud-upload-bold" /></IconButton>
+    <IconButton><Iconify icon="solar:share-bold" /></IconButton>
+  </Box>
+</Toolbar>
+
 // WRONG: Separate Edit and Delete buttons in Actions column
 <TableCell align="right">
   <Button size="small" onClick={() => handleEdit(row.id)}>
@@ -551,11 +569,54 @@ Every entity list page must include:
 <Card>
   <Table>...</Table>
 </Card>
+
+// WRONG: Missing Import/Export buttons in header
+<Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+  <Typography variant="h4">Users</Typography>
+  <Button variant="contained">New user</Button>
+</Box>
 ```
 
 ### ✅ Do This Instead
 
 ```tsx
+// CORRECT: Import/Export buttons in page header
+<Box
+  sx={{
+    mb: 5,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  }}
+>
+  <Box>
+    <Typography variant="h4" sx={{ mb: 1 }}>
+      List
+    </Typography>
+    {/* Breadcrumbs */}
+  </Box>
+  <Box sx={{ display: 'flex', gap: 1.5 }}>
+    <Button
+      variant="outlined"
+      color="inherit"
+      startIcon={<Iconify icon="solar:cloud-upload-bold" />}
+    >
+      Import
+    </Button>
+    <Button variant="outlined" color="inherit" startIcon={<Iconify icon="mdi:export" />}>
+      Export
+    </Button>
+    <Button
+      variant="contained"
+      color="inherit"
+      startIcon={<Iconify icon="mingcute:add-line" />}
+      onClick={() => router.push('/entity/create')}
+    >
+      New Entity
+    </Button>
+  </Box>
+</Box>
+
 // CORRECT: Single button with popover menu for actions
 <TableCell align="right">
   <IconButton onClick={handleOpenPopover}>
