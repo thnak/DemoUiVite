@@ -20,7 +20,7 @@
     "product": "Product",
     "workingParameter": "Working Parameter",
     "stopMachineReason": "Stop Machine Reason",
-    "productGroup": "Product Group",
+    "productCategory": "Product Category",
     "machine": "Machine",
     "machineType": "Machine Type",
     "machineGroup": "Machine Group",

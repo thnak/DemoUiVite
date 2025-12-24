@@ -9,7 +9,7 @@ type TableNoDataProps = {
   searchQuery: string;
 };
 
-export function ProductGroupTableNoData({ searchQuery }: TableNoDataProps) {
+export function ProductCategoryTableNoData({ searchQuery }: TableNoDataProps) {
   return (
     <TableRow>
       <TableCell align="center" colSpan={5} sx={{ py: 3 }}>

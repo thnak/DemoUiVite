@@ -11,17 +11,17 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-type ProductGroupTableToolbarProps = {
+type ProductCategoryTableToolbarProps = {
   numSelected: number;
   filterName: string;
   onFilterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export function ProductGroupTableToolbar({
+export function ProductCategoryTableToolbar({
   numSelected,
   filterName,
   onFilterName,
-}: ProductGroupTableToolbarProps) {
+}: ProductCategoryTableToolbarProps) {
   return (
     <Toolbar
       sx={{

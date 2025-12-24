@@ -31,8 +31,8 @@ export function useMasterDataNavData(): NavData {
           icon: icon('ic-cart'),
         },
         {
-          title: t('nav.productGroup'),
-          path: '/product-groups',
+          title: t('nav.productCategory'),
+          path: '/product-categories',
           icon: icon('ic-cart'),
         },
         {
