@@ -1,17 +1,13 @@
-import { Helmet } from 'react-helmet-async';
+import { CONFIG } from 'src/config-global';
 
 import { TimeBlockNameListView } from 'src/sections/time-block-name/view';
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: 'Time Block Name List' };
-
 export default function TimeBlockNameListPage() {
   return (
     <>
-      <Helmet>
-        <title> {metadata.title}</title>
-      </Helmet>
+      <title>{`Time Block Name List - ${CONFIG.appName}`}</title>
 
       <TimeBlockNameListView />
     </>
