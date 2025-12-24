@@ -12,6 +12,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { useValidationResult } from 'src/hooks/use-validation-result';
+
+import { isValidationSuccess } from 'src/utils/validation-result';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
   useCreateDefectReasonGroup,
@@ -44,6 +48,16 @@ export function DefectReasonGroupCreateEditView({
 }: DefectReasonGroupCreateEditViewProps) {
   const router = useRouter();
 
+  // Use ValidationResult hook for form validation
+  const {
+    setValidationResult,
+    clearValidationResult,
+    getFieldErrorMessage,
+    hasError,
+    clearFieldError,
+    overallMessage,
+  } = useValidationResult();
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState<DefectReasonGroupFormData>({
     code: currentDefectReasonGroup?.code || '',
@@ -55,10 +69,13 @@ export function DefectReasonGroupCreateEditView({
   const { mutate: createDefectReasonGroupMutate, isPending: isCreating } =
     useCreateDefectReasonGroup({
       onSuccess: (result) => {
-        if (result.isValid) {
+        setValidationResult(result);
+        if (isValidationSuccess(result)) {
           router.push('/defect-reason-group');
         } else {
-          setErrorMessage(result.message || 'Failed to create defect reason group');
+          if (result.message) {
+            setErrorMessage(result.message);
+          }
         }
       },
       onError: (error) => {
@@ -69,10 +86,13 @@ export function DefectReasonGroupCreateEditView({
   const { mutate: updateDefectReasonGroupMutate, isPending: isUpdating } =
     useUpdateDefectReasonGroup({
       onSuccess: (result) => {
-        if (result.isValid) {
+        setValidationResult(result);
+        if (isValidationSuccess(result)) {
           router.push('/defect-reason-group');
         } else {
-          setErrorMessage(result.message || 'Failed to update defect reason group');
+          if (result.message) {
+            setErrorMessage(result.message);
+          }
         }
       },
       onError: (error) => {
@@ -93,11 +113,15 @@ export function DefectReasonGroupCreateEditView({
           ...prev,
           [field]: event.target.value,
         }));
+        clearFieldError(field);
       },
-    []
+    [clearFieldError]
   );
 
   const handleSubmit = useCallback(() => {
+    clearValidationResult();
+    setErrorMessage(null);
+
     if (!formData.name) {
       setErrorMessage('Name is required');
       return;
@@ -131,6 +155,7 @@ export function DefectReasonGroupCreateEditView({
     currentDefectReasonGroup?.id,
     createDefectReasonGroupMutate,
     updateDefectReasonGroupMutate,
+    clearValidationResult,
   ]);
 
   const handleCancel = useCallback(() => {
@@ -170,6 +195,8 @@ export function DefectReasonGroupCreateEditView({
               label="Code"
               value={formData.code}
               onChange={handleInputChange('code')}
+              error={hasError('code')}
+              helperText={getFieldErrorMessage('code')}
             />
 
             <TextField
@@ -177,6 +204,8 @@ export function DefectReasonGroupCreateEditView({
               label="Name"
               value={formData.name}
               onChange={handleInputChange('name')}
+              error={hasError('name')}
+              helperText={getFieldErrorMessage('name')}
             />
           </Box>
 
@@ -212,6 +241,8 @@ export function DefectReasonGroupCreateEditView({
                 onChange={handleInputChange('colorHex')}
                 placeholder="#000000"
                 sx={{ width: 120 }}
+                error={hasError('colorHex')}
+                helperText={getFieldErrorMessage('colorHex')}
               />
             </Box>
           </Box>
@@ -223,6 +254,8 @@ export function DefectReasonGroupCreateEditView({
             onChange={handleInputChange('description')}
             multiline
             rows={4}
+            error={hasError('description')}
+            helperText={getFieldErrorMessage('description')}
           />
         </Stack>
 
@@ -255,13 +288,13 @@ export function DefectReasonGroupCreateEditView({
       </Card>
 
       <Snackbar
-        open={!!errorMessage}
+        open={!!(errorMessage || overallMessage)}
         autoHideDuration={6000}
         onClose={handleCloseError}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
-          {errorMessage}
+          {errorMessage || overallMessage}
         </Alert>
       </Snackbar>
     </DashboardContent>

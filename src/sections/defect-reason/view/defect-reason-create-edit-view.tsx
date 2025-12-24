@@ -14,6 +14,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { useValidationResult } from 'src/hooks/use-validation-result';
+
+import { isValidationSuccess } from 'src/utils/validation-result';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
   useCreateDefectReason,
@@ -50,6 +54,16 @@ export function DefectReasonCreateEditView({
 }: DefectReasonCreateEditViewProps) {
   const router = useRouter();
 
+  // Use ValidationResult hook for form validation
+  const {
+    setValidationResult,
+    clearValidationResult,
+    getFieldErrorMessage,
+    hasError,
+    clearFieldError,
+    overallMessage,
+  } = useValidationResult();
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState<DefectReasonFormData>({
     code: currentDefectReason?.code || '',
@@ -63,10 +77,13 @@ export function DefectReasonCreateEditView({
 
   const { mutate: createDefectReasonMutate, isPending: isCreating } = useCreateDefectReason({
     onSuccess: (result) => {
-      if (result.isValid) {
+      setValidationResult(result);
+      if (isValidationSuccess(result)) {
         router.push('/defect-reasons');
       } else {
-        setErrorMessage(result.message || 'Failed to create defect reason');
+        if (result.message) {
+          setErrorMessage(result.message);
+        }
       }
     },
     onError: (error) => {
@@ -76,10 +93,13 @@ export function DefectReasonCreateEditView({
 
   const { mutate: updateDefectReasonMutate, isPending: isUpdating } = useUpdateDefectReason({
     onSuccess: (result) => {
-      if (result.isValid) {
+      setValidationResult(result);
+      if (isValidationSuccess(result)) {
         router.push('/defect-reasons');
       } else {
-        setErrorMessage(result.message || 'Failed to update defect reason');
+        if (result.message) {
+          setErrorMessage(result.message);
+        }
       }
     },
     onError: (error) => {
@@ -100,8 +120,9 @@ export function DefectReasonCreateEditView({
           ...prev,
           [field]: event.target.value,
         }));
+        clearFieldError(field);
       },
-    []
+    [clearFieldError]
   );
 
   const handleSwitchChange = useCallback(
@@ -110,11 +131,15 @@ export function DefectReasonCreateEditView({
         ...prev,
         [field]: event.target.checked,
       }));
+      clearFieldError(field);
     },
-    []
+    [clearFieldError]
   );
 
   const handleSubmit = useCallback(() => {
+    clearValidationResult();
+    setErrorMessage(null);
+
     if (!formData.name) {
       setErrorMessage('Defect reason name is required');
       return;
@@ -155,6 +180,7 @@ export function DefectReasonCreateEditView({
     currentDefectReason?.id,
     createDefectReasonMutate,
     updateDefectReasonMutate,
+    clearValidationResult,
   ]);
 
   const handleCancel = useCallback(() => {
@@ -194,6 +220,8 @@ export function DefectReasonCreateEditView({
               label="Defect reason code"
               value={formData.code}
               onChange={handleInputChange('code')}
+              error={hasError('code')}
+              helperText={getFieldErrorMessage('code')}
             />
 
             <TextField
@@ -201,6 +229,8 @@ export function DefectReasonCreateEditView({
               label="Defect reason name"
               value={formData.name}
               onChange={handleInputChange('name')}
+              error={hasError('name')}
+              helperText={getFieldErrorMessage('name')}
             />
           </Box>
 
@@ -256,6 +286,8 @@ export function DefectReasonCreateEditView({
                 onChange={handleInputChange('colorHex')}
                 placeholder="#000000"
                 sx={{ width: 120 }}
+                error={hasError('colorHex')}
+                helperText={getFieldErrorMessage('colorHex')}
               />
             </Box>
           </Box>
@@ -267,6 +299,8 @@ export function DefectReasonCreateEditView({
             onChange={handleInputChange('description')}
             multiline
             rows={4}
+            error={hasError('description')}
+            helperText={getFieldErrorMessage('description')}
           />
         </Stack>
 
@@ -299,13 +333,13 @@ export function DefectReasonCreateEditView({
       </Card>
 
       <Snackbar
-        open={!!errorMessage}
+        open={!!(errorMessage || overallMessage)}
         autoHideDuration={6000}
         onClose={handleCloseError}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
-          {errorMessage}
+          {errorMessage || overallMessage}
         </Alert>
       </Snackbar>
     </DashboardContent>
