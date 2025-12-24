@@ -24,7 +24,7 @@ export default function Page() {
                 id: currentProduct.id,
                 name: currentProduct.name,
                 code: currentProduct.code,
-                category: currentProduct.category,
+                categoryId: undefined, // Mock data doesn't have categoryId
                 price: currentProduct.price,
                 stock: currentProduct.stock,
                 coverUrl: currentProduct.coverUrl,

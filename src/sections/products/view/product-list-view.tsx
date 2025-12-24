@@ -1,5 +1,5 @@
+import type { ProductInfo } from 'src/api/types/generated';
 import type { StockStatus, ProductStatus } from 'src/_mock';
-import type { ProductEntity } from 'src/api/types/generated';
 
 import React, { useState, useEffect, useCallback } from 'react';
 
@@ -18,7 +18,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
-import { deleteProduct, getProductPage } from 'src/api/services/generated/product';
+import { deleteProduct, postapiProductgetproductpage } from 'src/api/services/generated/product';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -36,7 +36,7 @@ import type { ProductProps } from '../product-table-row';
 // ----------------------------------------------------------------------
 
 export function ProductListView() {
-  const [templates, setTemplates] = useState<ProductEntity[]>([]);
+  const [templates, setTemplates] = useState<ProductInfo[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(50);
@@ -58,7 +58,7 @@ export function ProductListView() {
     setLoading(true);
     setError(null);
     try {
-      const response = await getProductPage([], {
+      const response = await postapiProductgetproductpage([], {
         pageNumber: page,
         pageSize: rowsPerPage,
         searchTerm: filterName || undefined,
@@ -79,12 +79,12 @@ export function ProductListView() {
 
   // Chuyển đổi API data sang format hiển thị
   const apiProducts: ProductProps[] = templates.map((p) => ({
-    id: p.id ?? '',
+    id: p.code ?? '',
     name: p.name ?? '',
     coverUrl: p.imageUrl ?? '',
-    createdAt: p.createTime ?? new Date().toISOString(),
-    publish: p.isDraft ? 'draft' : 'published',
-    category: 'category',
+    createdAt: p.createdAt ?? new Date().toISOString(),
+    publish: 'published', // ProductInfo doesn't have draft status
+    category: p.categoryName ?? 'N/A',
     stockStatus: 'in_stock',
     stock: p.stockQuantity ?? 0,
     price: p.price ?? 0,
