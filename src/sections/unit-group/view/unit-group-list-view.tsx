@@ -127,17 +127,46 @@ export function UnitGroupListView() {
 
   return (
     <DashboardContent>
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 5 }}>
-        <Typography variant="h4" sx={{ flexGrow: 1 }}>
-          Unit Groups
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-          onClick={() => router.push('/settings/unit-groups/create')}
-        >
-          New Unit Group
-        </Button>
+      <Box
+        sx={{
+          mb: 5,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Box>
+          <Typography variant="h4" sx={{ mb: 1 }}>
+            Unit Group List
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" sx={{ color: 'text.primary' }}>
+              Dashboard
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              •
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.primary' }}>
+              Settings
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              •
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+              Unit Groups
+            </Typography>
+          </Box>
+        </Box>
+        <Box sx={{ display: 'flex', gap: 1.5 }}>
+          <Button
+            variant="contained"
+            color="inherit"
+            startIcon={<Iconify icon="mingcute:add-line" />}
+            onClick={() => router.push('/settings/unit-groups/create')}
+          >
+            Add Unit Group
+          </Button>
+        </Box>
       </Box>
 
       <Card>

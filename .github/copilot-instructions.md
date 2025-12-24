@@ -528,15 +528,34 @@ Every entity list page must include:
    - Delete button (visible when items are selected)
 
 3. **List View Component** (`{entity}-list-view.tsx`)
-   - Page header with title and "New {Entity}" button
-   - Table toolbar
+   - Page header with breadcrumbs and action buttons
+   - Breadcrumb navigation: Dashboard • Settings • {Entity Name}
+   - Title format: "{Entity} List" (e.g., "Unit List", "Unit Group List")
+   - Button with `variant="contained"` and `color="inherit"`
+   - Button text pattern: "Add {Entity}" (e.g., "Add Unit", "Add Unit Group")
+   - Table toolbar with search and filters
    - Table with proper `TableHead` and `TableBody`
    - Checkbox column
+   - Actions column with popover menu
    - Table pagination
 
 ### ❌ Don't Do This
 
 ```tsx
+// WRONG: No breadcrumbs, incorrect button color, wrong button text
+<Box sx={{ display: 'flex', alignItems: 'center', mb: 5 }}>
+  <Typography variant="h4" sx={{ flexGrow: 1 }}>
+    Unit Groups
+  </Typography>
+  <Button
+    variant="contained"
+    startIcon={<Iconify icon="mingcute:add-line" />}
+    onClick={() => router.push('/settings/unit-groups/create')}
+  >
+    New Unit Group
+  </Button>
+</Box>
+
 // WRONG: Separate Edit and Delete buttons in Actions column
 <TableCell align="right">
   <Button size="small" onClick={() => handleEdit(row.id)}>
@@ -556,6 +575,49 @@ Every entity list page must include:
 ### ✅ Do This Instead
 
 ```tsx
+// CORRECT: Page header with breadcrumbs and properly styled button
+<Box
+  sx={{
+    mb: 5,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  }}
+>
+  <Box>
+    <Typography variant="h4" sx={{ mb: 1 }}>
+      Unit Group List
+    </Typography>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Typography variant="body2" sx={{ color: 'text.primary' }}>
+        Dashboard
+      </Typography>
+      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        •
+      </Typography>
+      <Typography variant="body2" sx={{ color: 'text.primary' }}>
+        Settings
+      </Typography>
+      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        •
+      </Typography>
+      <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+        Unit Groups
+      </Typography>
+    </Box>
+  </Box>
+  <Box sx={{ display: 'flex', gap: 1.5 }}>
+    <Button
+      variant="contained"
+      color="inherit"
+      startIcon={<Iconify icon="mingcute:add-line" />}
+      onClick={() => router.push('/settings/unit-groups/create')}
+    >
+      Add Unit Group
+    </Button>
+  </Box>
+</Box>
+
 // CORRECT: Single button with popover menu for actions
 <TableCell align="right">
   <IconButton onClick={handleOpenPopover}>
@@ -611,6 +673,9 @@ src/sections/unit/
 ### Reference Implementation
 
 See the following files as reference examples:
+- `src/sections/unit/view/unit-list-view.tsx` - Complete example with breadcrumbs and proper styling
+- `src/sections/unit/unit-table-row.tsx` - Table row with action popover menu
+- `src/sections/unit/unit-table-toolbar.tsx` - Toolbar with search and filters
 - `src/sections/area/area-table-row.tsx`
 - `src/sections/area/area-table-toolbar.tsx`
 - `src/sections/area/view/area-view.tsx`
