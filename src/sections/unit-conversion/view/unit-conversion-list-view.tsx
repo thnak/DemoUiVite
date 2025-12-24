@@ -55,7 +55,7 @@ export function UnitConversionListView() {
   const { mutate: fetchConversions } = usePostapiUnitgetunitconversions({
     onSuccess: (data) => {
       const mappedConversions: UnitConversionProps[] = (data.items || []).map((item) => ({
-        id: item.fromUnitId?.toString() || '',
+        id: item.conversionId?.toString() || '',
         from: item.fromUnitName || '',
         to: item.toUnitName || '',
         conversionFactor: item.conversionFactor || 0,
