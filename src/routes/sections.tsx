@@ -85,6 +85,7 @@ export const DefectInputPage = lazy(() => import('src/pages/oi/defect-input'));
 export const RoleListPage = lazy(() => import('src/pages/role-list'));
 export const RoleCreatePage = lazy(() => import('src/pages/role-create'));
 export const RoleEditPage = lazy(() => import('src/pages/role-edit'));
+export const ReportPage = lazy(() => import('src/pages/report'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -182,6 +183,7 @@ export const routesSection: RouteObject[] = [
       { path: 'roles', element: <RoleListPage /> },
       { path: 'roles/create', element: <RoleCreatePage /> },
       { path: 'roles/:id/edit', element: <RoleEditPage /> },
+      { path: 'report', element: <ReportPage /> },
       {
         path: 'oi',
         element: (

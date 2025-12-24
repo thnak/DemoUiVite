@@ -36,6 +36,14 @@ export const MODULES: ModuleItem[] = [
     color: 'secondary',
   },
   {
+    id: 'report',
+    title: 'Report',
+    subtitle: 'Factory OEE metrics and 2D layout visualization',
+    icon: 'solar:chart-bold-duotone',
+    path: '/report',
+    color: 'primary',
+  },
+  {
     id: 'mms',
     title: 'MMS',
     subtitle: 'Machine monitoring system - tracking, production, alerts',
