@@ -6,7 +6,7 @@ import { Outlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
 
 import { AuthLayout } from 'src/layouts/auth';
-import { DashboardLayout } from 'src/layouts/dashboard';
+import { DashboardLayout, FullWidthLayout } from 'src/layouts/dashboard';
 
 import { MachineSelectorProvider } from 'src/sections/oi/context/machine-selector-context';
 
@@ -190,7 +190,6 @@ export const routesSection: RouteObject[] = [
       { path: 'roles', element: <RoleListPage /> },
       { path: 'roles/create', element: <RoleCreatePage /> },
       { path: 'roles/:id/edit', element: <RoleEditPage /> },
-      { path: 'report', element: <ReportPage /> },
       { path: 'factory-layout', element: <FactoryLayoutPage /> },
       {
         path: 'oi',
@@ -205,6 +204,19 @@ export const routesSection: RouteObject[] = [
           { path: 'defect-input', element: <DefectInputPage /> },
         ],
       },
+    ],
+  },
+  // Full-width layout for report page
+  {
+    element: (
+      <FullWidthLayout>
+        <Suspense fallback={renderFallback()}>
+          <Outlet />
+        </Suspense>
+      </FullWidthLayout>
+    ),
+    children: [
+      { path: 'report', element: <ReportPage /> },
     ],
   },
   {

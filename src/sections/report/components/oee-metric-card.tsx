@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import type { ChartOptions } from 'src/components/chart';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -7,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
 import { Iconify } from 'src/components/iconify';
+import { Chart, useChart } from 'src/components/chart';
 
 // ----------------------------------------------------------------------
 
@@ -24,6 +26,7 @@ type OEEMetricCardProps = {
   onClick?: () => void;
   size?: 'small' | 'medium' | 'large';
   children?: ReactNode;
+  chartData?: number[]; // Optional sparkline data
 };
 
 export function OEEMetricCard({
@@ -37,19 +40,9 @@ export function OEEMetricCard({
   onClick,
   size = 'medium',
   children,
+  chartData,
 }: OEEMetricCardProps) {
   const theme = useTheme();
-
-  const getCardHeight = () => {
-    switch (size) {
-      case 'small':
-        return 180;
-      case 'large':
-        return 320;
-      default:
-        return 240;
-    }
-  };
 
   const getValueSize = () => {
     switch (size) {
@@ -69,6 +62,35 @@ export function OEEMetricCard({
   };
 
   const statusColor = color === 'primary' ? getStatusColor() : theme.palette[color].main;
+
+  // Chart configuration for sparkline
+  const chartOptions: ChartOptions = useChart({
+    chart: {
+      sparkline: { enabled: true },
+      animations: { enabled: true },
+    },
+    stroke: {
+      width: 2,
+      curve: 'smooth',
+    },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        opacityFrom: 0.3,
+        opacityTo: 0.1,
+      },
+    },
+    colors: [statusColor],
+    tooltip: {
+      enabled: true,
+      x: { show: false },
+      y: {
+        formatter: (val: number) => `${val.toFixed(1)}%`,
+        title: { formatter: () => '' },
+      },
+      marker: { show: false },
+    },
+  });
 
   return (
     <Card
@@ -158,6 +180,18 @@ export function OEEMetricCard({
           </Stack>
         )}
       </Stack>
+
+      {/* Sparkline Chart */}
+      {chartData && chartData.length > 0 && (
+        <Box sx={{ mt: 2, mx: -1 }}>
+          <Chart
+            type="area"
+            series={[{ name: 'Trend', data: chartData }]}
+            options={chartOptions}
+            sx={{ height: size === 'large' ? 80 : size === 'small' ? 40 : 60 }}
+          />
+        </Box>
+      )}
 
       {/* Custom content */}
       {children && <Box sx={{ mt: 2 }}>{children}</Box>}
