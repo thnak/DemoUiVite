@@ -41,7 +41,8 @@
     "blog": "Blog",
     "other": "Other",
     "signIn": "Sign in",
-    "notFound": "Not found"
+    "notFound": "Not found",
+    "timeBlockName": "Time Block Name"
   },
   "account": {
     "home": "Home",

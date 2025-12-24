@@ -85,6 +85,9 @@ export const DefectInputPage = lazy(() => import('src/pages/oi/defect-input'));
 export const RoleListPage = lazy(() => import('src/pages/role-list'));
 export const RoleCreatePage = lazy(() => import('src/pages/role-create'));
 export const RoleEditPage = lazy(() => import('src/pages/role-edit'));
+export const TimeBlockNameListPage = lazy(() => import('src/pages/time-block-name-list'));
+export const TimeBlockNameCreatePage = lazy(() => import('src/pages/time-block-name-create'));
+export const TimeBlockNameEditPage = lazy(() => import('src/pages/time-block-name-edit'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -179,6 +182,9 @@ export const routesSection: RouteObject[] = [
       { path: 'settings/unit-conversions', element: <UnitConversionListPage /> },
       { path: 'settings/unit-conversions/create', element: <UnitConversionCreatePage /> },
       { path: 'settings/unit-conversions/:id/edit', element: <UnitConversionEditPage /> },
+      { path: 'settings/time-block-names', element: <TimeBlockNameListPage /> },
+      { path: 'settings/time-block-names/create', element: <TimeBlockNameCreatePage /> },
+      { path: 'settings/time-block-names/:id/edit', element: <TimeBlockNameEditPage /> },
       { path: 'roles', element: <RoleListPage /> },
       { path: 'roles/create', element: <RoleCreatePage /> },
       { path: 'roles/:id/edit', element: <RoleEditPage /> },
