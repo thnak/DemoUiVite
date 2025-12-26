@@ -88,7 +88,7 @@
   opacity: 1;
 }
 
-/* Modal overlay - clear the highlighted target element and dialog */
+/* Modal overlay - semi-transparent dark overlay that doesn't affect highlighted element */
 .shepherd-modal-overlay-container {
   z-index: 9998;
   /* Override default Shepherd background */
@@ -99,27 +99,16 @@
   opacity: 1 !important;
 }
 
-/* Dark semi-transparent overlay on the SVG path (the masked area) */
+/* Semi-transparent overlay on the SVG path (everything except the highlighted element) */
+/* The SVG mask creates a cutout for the highlighted element, so it stays clear */
 .shepherd-modal-overlay-container.shepherd-modal-is-visible path {
-  fill: rgba(0, 0, 0, 0.4);
+  fill: rgba(0, 0, 0, 0.5);
 }
 
 @media (prefers-color-scheme: dark) {
   .shepherd-modal-overlay-container.shepherd-modal-is-visible path {
-    fill: rgba(0, 0, 0, 0.6);
+    fill: rgba(0, 0, 0, 0.7);
   }
-}
-
-/* Apply blur to page content when tour is active */
-body:has(.shepherd-modal-is-visible) > *:not(.shepherd-modal-overlay-container):not(.shepherd-element) {
-  filter: blur(2px);
-  transition: filter 0.3s ease-out;
-}
-
-/* Ensure shepherd elements are never blurred */
-.shepherd-modal-overlay-container,
-.shepherd-element {
-  filter: none !important;
 }
 
 /* Arrow styles */
