@@ -88,7 +88,7 @@
   opacity: 1;
 }
 
-/* Modal overlay with blur effect instead of black background */
+/* Modal overlay - clear the highlighted target element and dialog */
 .shepherd-modal-overlay-container {
   z-index: 9998;
   /* Override default Shepherd background */
@@ -97,20 +97,29 @@
 
 .shepherd-modal-overlay-container.shepherd-modal-is-visible {
   opacity: 1 !important;
-  /* Apply blur effect */
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
 }
 
-/* Override the SVG fill to be transparent with subtle tint */
+/* Dark semi-transparent overlay on the SVG path (the masked area) */
 .shepherd-modal-overlay-container.shepherd-modal-is-visible path {
-  fill: rgba(255, 255, 255, 0.05);
+  fill: rgba(0, 0, 0, 0.4);
 }
 
 @media (prefers-color-scheme: dark) {
   .shepherd-modal-overlay-container.shepherd-modal-is-visible path {
-    fill: rgba(0, 0, 0, 0.15);
+    fill: rgba(0, 0, 0, 0.6);
   }
+}
+
+/* Apply blur to page content when tour is active */
+body:has(.shepherd-modal-is-visible) > *:not(.shepherd-modal-overlay-container):not(.shepherd-element) {
+  filter: blur(2px);
+  transition: filter 0.3s ease-out;
+}
+
+/* Ensure shepherd elements are never blurred */
+.shepherd-modal-overlay-container,
+.shepherd-element {
+  filter: none !important;
 }
 
 /* Arrow styles */
