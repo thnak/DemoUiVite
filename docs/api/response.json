@@ -1899,7 +1899,7 @@
           "Auth"
         ],
         "summary": "Generate a one-time use QR code token for authenticated user",
-        "description": "This endpoint generates a secure one-time use token that can be encoded in a QR code.\nThe token expires after 2 minutes and can only be used once.\nThe authenticated user on one device can scan this QR code on another device to log in without entering credentials.",
+        "description": "This endpoint generates a secure one-time use token that can be encoded in a QR code.\r\nThe token expires after 2 minutes and can only be used once.\r\nThe authenticated user on one device can scan this QR code on another device to log in without entering credentials.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1935,7 +1935,7 @@
           "Auth"
         ],
         "summary": "Login using a one-time QR code token",
-        "description": "This endpoint consumes a one-time use token (from QR code scan) and logs the user in.\nThe token is validated and then marked as consumed. If successful, returns authentication tokens.",
+        "description": "This endpoint consumes a one-time use token (from QR code scan) and logs the user in.\r\nThe token is validated and then marked as consumed. If successful, returns authentication tokens.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -18624,7 +18624,7 @@
         "tags": [
           "Localization"
         ],
-        "summary": "Retrieves all translations for a specific language code.\nGET /api/translations/{langCode}",
+        "summary": "Retrieves all translations for a specific language code.\r\nGET /api/translations/{langCode}",
         "parameters": [
           {
             "name": "langCode",
@@ -18806,7 +18806,7 @@
         "tags": [
           "Localization"
         ],
-        "summary": "upload excel file to update translations. the devault culture is vi-VN and it always have value while other culture can be empty\nif other culture is empty, it must be auto translated by Ollama",
+        "summary": "upload excel file to update translations. the devault culture is vi-VN and it always have value while other culture can be empty\r\nif other culture is empty, it must be auto translated by Ollama",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -30385,7 +30385,7 @@
         "tags": [
           "ReportQuery"
         ],
-        "summary": "Executes a complete report query and returns data\nEndpoint: POST /api/reports/query/data",
+        "summary": "Executes a complete report query and returns data\r\nEndpoint: POST /api/reports/query/data",
         "requestBody": {
           "description": "The query to execute",
           "content": {
@@ -30470,7 +30470,7 @@
         "tags": [
           "ReportQuery"
         ],
-        "summary": "Executes a preview of the report query with limited results (10-20 rows)\nEndpoint: POST /api/reports/query/preview",
+        "summary": "Executes a preview of the report query with limited results (10-20 rows)\r\nEndpoint: POST /api/reports/query/preview",
         "requestBody": {
           "description": "The query to preview",
           "content": {
@@ -30555,7 +30555,7 @@
         "tags": [
           "ReportQuery"
         ],
-        "summary": "Validates a report query without executing it\nEndpoint: POST /api/reports/query/validate",
+        "summary": "Validates a report query without executing it\r\nEndpoint: POST /api/reports/query/validate",
         "requestBody": {
           "description": "The query to validate",
           "content": {
@@ -30640,7 +30640,7 @@
         "tags": [
           "Reports"
         ],
-        "summary": "Gets complete metadata schema including entities, fields, relationships, and data types\nEndpoint: GET /api/reports/metadata",
+        "summary": "Gets complete metadata schema including entities, fields, relationships, and data types\r\nEndpoint: GET /api/reports/metadata",
         "responses": {
           "200": {
             "description": "OK",
@@ -30700,7 +30700,7 @@
         "tags": [
           "Reports"
         ],
-        "summary": "Gets metadata for a specific entity by name\nEndpoint: GET /api/reports/metadata/{entityName}",
+        "summary": "Gets metadata for a specific entity by name\r\nEndpoint: GET /api/reports/metadata/{entityName}",
         "parameters": [
           {
             "name": "entityName",
@@ -30771,7 +30771,7 @@
         "tags": [
           "Reports"
         ],
-        "summary": "Gets all relationships between entities\nEndpoint: GET /api/reports/metadata/relationships",
+        "summary": "Gets all relationships between entities\r\nEndpoint: GET /api/reports/metadata/relationships",
         "responses": {
           "200": {
             "description": "OK",
@@ -30831,7 +30831,7 @@
         "tags": [
           "Reports"
         ],
-        "summary": "Gets a list of entity categories for grouping\nEndpoint: GET /api/reports/metadata/categories",
+        "summary": "Gets a list of entity categories for grouping\r\nEndpoint: GET /api/reports/metadata/categories",
         "responses": {
           "200": {
             "description": "OK",
@@ -30891,7 +30891,7 @@
         "tags": [
           "Reports"
         ],
-        "summary": "Gets distinct values for a field to provide filter suggestions\nEndpoint: GET /api/reports/query/suggest/{entityName}/{field}",
+        "summary": "Gets distinct values for a field to provide filter suggestions\r\nEndpoint: GET /api/reports/query/suggest/{entityName}/{field}",
         "parameters": [
           {
             "name": "entityName",
@@ -34461,6 +34461,7 @@
         "tags": [
           "Sensor"
         ],
+        "summary": "Get paginated list of IoT sensor devices",
         "parameters": [
           {
             "name": "pageNumber",
@@ -34542,7 +34543,7 @@
         "tags": [
           "Sensor"
         ],
-        "summary": "Enable auto seed data generation for a sensor.\nValue will be the counter itself (0, 1, 2, 3...).\nDelay between records follows Gaussian distribution using Mean and Std in seconds.",
+        "summary": "Enable auto seed data generation for a sensor.\r\nValue will be the counter itself (0, 1, 2, 3...).\r\nDelay between records follows Gaussian distribution using Mean and Std in seconds.",
         "parameters": [
           {
             "name": "sensorId",
@@ -46550,6 +46551,71 @@
         }
       }
     },
+    "/api/WorkDateCalendarStatistic/by-calendar": {
+      "get": {
+        "tags": [
+          "WorkDateCalendarStatistic"
+        ],
+        "summary": "Get Work Date Calendar Statistics by Calendar within a specified date range.",
+        "parameters": [
+          {
+            "name": "calendarId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2025-12-26"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2025-12-26"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkDateCalendarStatisticByCalendarResultBasePaginationResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkDateCalendarStatisticByCalendarResultBasePaginationResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkDateCalendarStatisticByCalendarResultBasePaginationResponse"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkDateCalendarStatisticByCalendarResultBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/workingparameter/{id}": {
       "get": {
         "tags": [
@@ -47340,7 +47406,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -47374,7 +47440,7 @@
           },
           "enableMaintenanceMode": {
             "type": "boolean",
-            "description": "Gets or sets a value indicating whether the entire site is in maintenance mode.\nIf true, non-admin users should be redirected to a maintenance page.",
+            "description": "Gets or sets a value indicating whether the entire site is in maintenance mode.\r\nIf true, non-admin users should be redirected to a maintenance page.",
             "default": false
           },
           "maintenanceModeMessage": {
@@ -47397,7 +47463,7 @@
           },
           "backgroundTaskCronExpression": {
             "type": "string",
-            "description": "Gets or sets the CRON expression that defines the schedule for a recurring background job.\nExample: \"0 2 * * *\" for 2:00 AM daily.",
+            "description": "Gets or sets the CRON expression that defines the schedule for a recurring background job.\r\nExample: \"0 2 * * *\" for 2:00 AM daily.",
             "default": "0 3 * * *",
             "nullable": true
           },
@@ -47408,7 +47474,7 @@
           },
           "mailServer": {
             "type": "string",
-            "description": "Gets or sets the SMTP server address used for sending emails.\nFormat: \"smtp.server.com\"",
+            "description": "Gets or sets the SMTP server address used for sending emails.\r\nFormat: \"smtp.server.com\"",
             "nullable": true
           },
           "mailServerPort": {
@@ -47418,12 +47484,12 @@
           },
           "smtpUsername": {
             "type": "string",
-            "description": "Gets or sets the SMTP username for email authentication.\nUsually the same as SystemEmail but can be different for some providers.",
+            "description": "Gets or sets the SMTP username for email authentication.\r\nUsually the same as SystemEmail but can be different for some providers.",
             "nullable": true
           },
           "smtpPassword": {
             "type": "string",
-            "description": "Gets or sets the SMTP password for email authentication.\nStore app-specific passwords for providers like Gmail, Outlook, etc.",
+            "description": "Gets or sets the SMTP password for email authentication.\r\nStore app-specific passwords for providers like Gmail, Outlook, etc.",
             "nullable": true
           },
           "smtpEnableSsl": {
@@ -47457,7 +47523,7 @@
           },
           "allowedIpRangesForAdminAccess": {
             "type": "string",
-            "description": "Gets or sets a comma-separated list of Ip addresses or CIDR blocks allowed to access admin areas.\nAn empty or null string means access is not restricted by Ip.",
+            "description": "Gets or sets a comma-separated list of Ip addresses or CIDR blocks allowed to access admin areas.\r\nAn empty or null string means access is not restricted by Ip.",
             "nullable": true
           },
           "renderMode": {
@@ -47465,7 +47531,7 @@
           },
           "enableOnlinePayments": {
             "type": "boolean",
-            "description": "Gets or sets a value indicating whether online payment processing is enabled.\nThis can be used as a \"kill switch\" for the payment system.",
+            "description": "Gets or sets a value indicating whether online payment processing is enabled.\r\nThis can be used as a \"kill switch\" for the payment system.",
             "default": true
           },
           "enableNewUserRegistration": {
@@ -47475,12 +47541,12 @@
           },
           "enablePushNotifications": {
             "type": "boolean",
-            "description": "Gets or sets a value indicating whether the system should send push notifications.\nActs as a master \"kill switch\" for all push notifications.",
+            "description": "Gets or sets a value indicating whether the system should send push notifications.\r\nActs as a master \"kill switch\" for all push notifications.",
             "default": true
           },
           "logLevel": {
             "type": "string",
-            "description": "Gets or sets the desired logging level (e.g., \"Information\", \"Debug\", \"Warning\", \"Error\").\nThis should map to a LogLevel enum in your logging system.",
+            "description": "Gets or sets the desired logging level (e.g., \"Information\", \"Debug\", \"Warning\", \"Error\").\r\nThis should map to a LogLevel enum in your logging system.",
             "default": "Information",
             "nullable": true
           },
@@ -47565,7 +47631,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -47641,12 +47707,12 @@
             "items": {
               "$ref": "#/components/schemas/StringObjectKeyValuePair"
             },
-            "description": "Chuỗi JSON chứa các cấu hình đặc thù cho plugin.\nGiúp một plugin có thể hoạt động theo nhiều cách khác nhau cho các route khác nhau.",
+            "description": "Represents a collection of field parameters and their types.",
             "nullable": true
           },
           "authKey": {
             "type": "string",
-            "description": "Mã xác thực (API Key) mà client phải gửi trong header để truy cập route này.\n**Bảo mật**: Giá trị này NÊN được hash trước khi lưu vào DB.",
+            "description": "Mã xác thực (API Key) mà client phải gửi trong header để truy cập route này.\r\n**Bảo mật**: Giá trị này NÊN được hash trước khi lưu vào DB.",
             "nullable": true
           },
           "isPayloadValidationEnabled": {
@@ -47655,7 +47721,7 @@
           },
           "payloadValidationSecret": {
             "type": "string",
-            "description": "Chuỗi bí mật (secret) dùng để xác thực mã băm (HMAC) của payload.\nChỉ được sử dụng khi IsPayloadValidationEnabled = true.\n**Bảo mật**: Giá trị này KHÔNG NÊN được lưu dưới dạng plaintext. Hãy mã hóa nó.",
+            "description": "Chuỗi bí mật (secret) dùng để xác thực mã băm (HMAC) của payload.\r\nChỉ được sử dụng khi IsPayloadValidationEnabled = true.\r\n**Bảo mật**: Giá trị này KHÔNG NÊN được lưu dưới dạng plaintext. Hãy mã hóa nó.",
             "nullable": true
           },
           "status": {
@@ -47725,7 +47791,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -47964,7 +48030,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -48099,7 +48165,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -48400,7 +48466,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -48521,7 +48587,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -48640,7 +48706,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -48941,7 +49007,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -49060,7 +49126,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -49156,7 +49222,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -49384,7 +49450,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -49621,7 +49687,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -49854,7 +49920,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -49961,7 +50027,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -50182,7 +50248,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -50335,7 +50401,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -50487,7 +50553,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -50633,7 +50699,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -50741,7 +50807,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -51124,7 +51190,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -51229,7 +51295,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -51358,7 +51424,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -51485,7 +51551,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -51596,7 +51662,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -51742,7 +51808,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -51791,13 +51857,13 @@
           },
           "build": {
             "type": "integer",
-            "description": "Gets the optional Build version component. Often used for CI build numbers or revisions.\nReturns null if no build number was specified.",
+            "description": "Gets the optional Build version component. Often used for CI build numbers or revisions.\r\nReturns null if no build number was specified.",
             "format": "int32",
             "nullable": true
           },
           "preReleaseTag": {
             "type": "string",
-            "description": "Gets the optional Pre-release tag (e.g., \"alpha\", \"beta\", \"rc.1\").\nReturns null or empty if this is a stable release.",
+            "description": "Gets the optional Pre-release tag (e.g., \"alpha\", \"beta\", \"rc.1\").\r\nReturns null or empty if this is a stable release.",
             "nullable": true
           },
           "originalString": {
@@ -51831,7 +51897,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Represents a firmware version, typically following Major.Minor.Patch pattern,\npotentially including a Build number and/or a PreRelease tag.\nProvides functionality for parsing, comparison, string representation, and generation."
+        "description": "Represents a firmware version, typically following Major.Minor.Patch pattern,\r\npotentially including a Build number and/or a PreRelease tag.\r\nProvides functionality for parsing, comparison, string representation, and generation."
       },
       "FirmwareVersionEntityBasePaginationResponse": {
         "type": "object",
@@ -51894,7 +51960,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -52029,7 +52095,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -52134,7 +52200,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -52256,7 +52322,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -52783,6 +52849,87 @@
         "additionalProperties": false,
         "description": "Result model representing a user in the paginated response."
       },
+      "GetWorkDateCalendarStatisticByCalendarResult": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the work shift or break.",
+            "nullable": true
+          },
+          "startTime": {
+            "type": "string",
+            "description": "Start time of the work shift or break in UTC.",
+            "format": "date-time"
+          },
+          "endTime": {
+            "type": "string",
+            "description": "End time of the work shift or break in UTC.",
+            "format": "date-time"
+          },
+          "isBreakTime": {
+            "type": "boolean",
+            "description": "Indicates if this period is a break time."
+          },
+          "isOverTimeShift": {
+            "type": "boolean",
+            "description": "Indicates if this period is an overtime shift."
+          },
+          "isShiftTime": {
+            "type": "boolean",
+            "description": "Indicates if this period is a regular shift time."
+          },
+          "isPlannedStopTime": {
+            "type": "boolean",
+            "description": "Indicates if this period is a planned stop time."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Result model for Work Date Calendar Statistic by Calendar."
+      },
+      "GetWorkDateCalendarStatisticByCalendarResultBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetWorkDateCalendarStatisticByCalendarResult"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
       "IfElseClause": {
         "type": "object",
         "properties": {
@@ -52940,7 +53087,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -53098,7 +53245,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -53528,7 +53675,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -53706,7 +53853,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -53883,7 +54030,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -54133,7 +54280,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -54335,7 +54482,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -54446,7 +54593,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -54558,7 +54705,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -54885,7 +55032,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -55118,7 +55265,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -55263,7 +55410,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -55366,7 +55513,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -55530,7 +55677,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -55685,7 +55832,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -55918,7 +56065,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -56108,7 +56255,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -56261,7 +56408,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -56381,7 +56528,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -56523,7 +56670,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -56922,7 +57069,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -57100,7 +57247,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -57123,7 +57270,7 @@
           },
           "quantityPerSignal": {
             "type": "number",
-            "description": "TỈ LỆ: Số lượng sản phẩm được tạo ra cho mỗi tín hiệu từ IoT\nMặc định là 1.0",
+            "description": "TỈ LỆ: Số lượng sản phẩm được tạo ra cho mỗi tín hiệu từ IoT\r\nMặc định là 1.0",
             "format": "double"
           },
           "disposition": {
@@ -57263,7 +57410,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -57362,7 +57509,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -57477,7 +57624,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -57664,7 +57811,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -57768,7 +57915,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -57960,7 +58107,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -58207,7 +58354,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -58412,7 +58559,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -58647,7 +58794,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -58875,7 +59022,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -59191,7 +59338,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -59684,7 +59831,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -60184,7 +60331,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -60287,7 +60434,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -60436,7 +60583,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -60693,7 +60840,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -60981,7 +61128,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -61288,12 +61435,12 @@
           },
           "normalizedName": {
             "type": "string",
-            "description": "Tên chuẩn hóa của ca làm việc (chuyển về chữ thường, bỏ dấu, thay khoảng trắng bằng gạch dưới).\nCó thể dùng để tạo mã.\nBE use case only.",
+            "description": "Tên chuẩn hóa của ca làm việc (chuyển về chữ thường, bỏ dấu, thay khoảng trắng bằng gạch dưới).\r\nCó thể dùng để tạo mã.\r\nBE use case only.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Định nghĩa ca làm việc cho một ngày cụ thể trong tuần.\nBao gồm giờ bắt đầu, giờ kết thúc và các khoảng nghỉ trong ca."
+        "description": "Định nghĩa ca làm việc cho một ngày cụ thể trong tuần.\r\nBao gồm giờ bắt đầu, giờ kết thúc và các khoảng nghỉ trong ca."
       },
       "ShiftTemplateEntity": {
         "type": "object",
@@ -61344,7 +61491,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Mẫu ca làm việc, định nghĩa các ca làm việc áp dụng cho một lịch làm việc.\nMẫu ca có thể được tái sử dụng cho nhiều lịch làm việc khác nhau và áp dụng cụ thể cho từng ngày trong tuần."
+        "description": "Mẫu ca làm việc, định nghĩa các ca làm việc áp dụng cho một lịch làm việc.\r\nMẫu ca có thể được tái sử dụng cho nhiều lịch làm việc khác nhau và áp dụng cụ thể cho từng ngày trong tuần."
       },
       "ShiftTemplateEntityBasePaginationResponse": {
         "type": "object",
@@ -61440,7 +61587,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -61533,7 +61680,7 @@
             "items": {
               "$ref": "#/components/schemas/ObjectId"
             },
-            "description": "Collection of page IDs that belong to this slideshow.\nPages will be navigated in the order specified by their Order property.",
+            "description": "Collection of page IDs that belong to this slideshow.\r\nPages will be navigated in the order specified by their Order property.",
             "nullable": true
           },
           "pages": {
@@ -61541,7 +61688,7 @@
             "items": {
               "$ref": "#/components/schemas/PageEntity"
             },
-            "description": "Collection of pages that belong to this slideshow (populated when needed).\nThis is not stored in the database but can be populated via joins/lookups.",
+            "description": "Collection of pages that belong to this slideshow (populated when needed).\r\nThis is not stored in the database but can be populated via joins/lookups.",
             "nullable": true
           },
           "pageCount": {
@@ -61552,7 +61699,7 @@
           },
           "estimatedTotalDurationMs": {
             "type": "integer",
-            "description": "Gets the estimated total duration of the slideshow in milliseconds.\nThis considers individual page durations if set, otherwise uses the default duration.",
+            "description": "Gets the estimated total duration of the slideshow in milliseconds.\r\nThis considers individual page durations if set, otherwise uses the default duration.",
             "format": "int32",
             "readOnly": true
           }
@@ -61621,7 +61768,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -61692,7 +61839,7 @@
           },
           "numberOfIdenticalUnits": {
             "type": "integer",
-            "description": "Số lượng đơn vị máy móc giống hệt nhau tại trạm này có thể hoạt động song song\n(Thường là 1, nhưng nếu là một cụm máy giống nhau thì có thể lớn hơn 1)",
+            "description": "Số lượng đơn vị máy móc giống hệt nhau tại trạm này có thể hoạt động song song\r\n(Thường là 1, nhưng nếu là một cụm máy giống nhau thì có thể lớn hơn 1)",
             "format": "int32"
           },
           "imageUrl": {
@@ -61797,7 +61944,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -61934,7 +62081,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -62036,7 +62183,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -62154,7 +62301,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -62341,7 +62488,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -62502,7 +62649,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -62638,7 +62785,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -62699,7 +62846,7 @@
             "items": {
               "$ref": "#/components/schemas/CommentReaction"
             },
-            "description": "List of emoji reactions on this comment.\nEach reaction includes the emoji and the user who reacted.",
+            "description": "List of emoji reactions on this comment.\r\nEach reaction includes the emoji and the user who reacted.",
             "nullable": true
           },
           "deletedAt": {
@@ -62713,7 +62860,7 @@
           },
           "lastEditedAt": {
             "type": "string",
-            "description": "The timestamp of the last edit to this comment.\nNote: Edit history is not tracked as per requirements.",
+            "description": "The timestamp of the last edit to this comment.\r\nNote: Edit history is not tracked as per requirements.",
             "format": "date-time",
             "nullable": true
           },
@@ -62723,7 +62870,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Represents a comment/conversation entry for a SystemErrorReportEntity.\nComments can contain text, attachments (images/videos), and receive emoji reactions."
+        "description": "Represents a comment/conversation entry for a SystemErrorReportEntity.\r\nComments can contain text, attachments (images/videos), and receive emoji reactions."
       },
       "SystemErrorReportCommentEntityBasePaginationResponse": {
         "type": "object",
@@ -62786,7 +62933,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -63102,7 +63249,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -63225,7 +63372,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Cấu hình hệ thống chung (ít liên quan đến các domain entity khác).\nLưu ý: các complex types bên trong có thể được lưu dưới dạng JSON trong cột DB."
+        "description": "Cấu hình hệ thống chung (ít liên quan đến các domain entity khác).\r\nLưu ý: các complex types bên trong có thể được lưu dưới dạng JSON trong cột DB."
       },
       "SystemSettingEntityBasePaginationResponse": {
         "type": "object",
@@ -63288,7 +63435,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -63446,7 +63593,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -63668,7 +63815,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -63879,7 +64026,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -63994,7 +64141,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -64040,7 +64187,7 @@
             "items": {
               "$ref": "#/components/schemas/ValidationResult"
             },
-            "description": "Gets the collection of validation results from all commands.\nEmpty if no validation errors occurred.",
+            "description": "Gets the collection of validation results from all commands.\r\nEmpty if no validation errors occurred.",
             "nullable": true,
             "readOnly": true
           },
@@ -64051,7 +64198,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Represents the result of a Unit of Work commit operation.\nContains validation results from all commands executed during the commit."
+        "description": "Represents the result of a Unit of Work commit operation.\r\nContains validation results from all commands executed during the commit."
       },
       "UnitPageResponse": {
         "type": "object",
@@ -64338,7 +64485,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -64634,7 +64781,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -64803,7 +64950,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -64914,7 +65061,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -65123,7 +65270,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -65225,7 +65372,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -65328,7 +65475,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -65446,7 +65593,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -65487,7 +65634,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -65648,7 +65795,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -65744,7 +65891,7 @@
           },
           "secret": {
             "type": "string",
-            "description": "Chuỗi bí mật dùng để tạo chữ ký HMAC, giúp phía nhận xác thực yêu cầu.\nCần được mã hóa khi lưu trong cơ sở dữ liệu.",
+            "description": "Chuỗi bí mật dùng để tạo chữ ký HMAC, giúp phía nhận xác thực yêu cầu.\r\nCần được mã hóa khi lưu trong cơ sở dữ liệu.",
             "nullable": true
           },
           "pluginId": {
@@ -65762,7 +65909,7 @@
           },
           "averageResponseTimeMs": {
             "type": "number",
-            "description": "Thời gian trung bình (ms) mà TargetUrl phản hồi.\nHữu ích để phát hiện các webhook chậm.",
+            "description": "Thời gian trung bình (ms) mà TargetUrl phản hồi.\r\nHữu ích để phát hiện các webhook chậm.",
             "format": "double"
           },
           "lastAttemptAt": {
@@ -65779,7 +65926,7 @@
           },
           "lastErrorMessage": {
             "type": "string",
-            "description": "Thông báo lỗi của lần gửi thất bại gần nhất.\nRất quan trọng cho việc gỡ lỗi.",
+            "description": "Thông báo lỗi của lần gửi thất bại gần nhất.\r\nRất quan trọng cho việc gỡ lỗi.",
             "nullable": true
           },
           "isPayloadEncrypted": {
@@ -65788,12 +65935,12 @@
           },
           "publicKey": {
             "type": "string",
-            "description": "Public Key (định dạng PEM) của người nhận, dùng để mã hóa payload.\nSẽ là null nếu IsPayloadEncrypted = false.",
+            "description": "Public Key (định dạng PEM) của người nhận, dùng để mã hóa payload.\r\nSẽ là null nếu IsPayloadEncrypted = false.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Lớp đại diện cho một Webhook trong hệ thống.\nWebhook là một cơ chế cho phép hệ thống gửi dữ liệu đến một URL cụ thể\nkhi một sự kiện xảy ra. Nó thường được sử dụng để tích hợp với các dịch vụ bên ngoài\nhoặc để thông báo cho các hệ thống khác về các sự kiện quan trọng trong ứng dụng."
+        "description": "Lớp đại diện cho một Webhook trong hệ thống.\r\nWebhook là một cơ chế cho phép hệ thống gửi dữ liệu đến một URL cụ thể\r\nkhi một sự kiện xảy ra. Nó thường được sử dụng để tích hợp với các dịch vụ bên ngoài\r\nhoặc để thông báo cho các hệ thống khác về các sự kiện quan trọng trong ứng dụng."
       },
       "WebhookEntityBasePaginationResponse": {
         "type": "object",
@@ -65889,7 +66036,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -66191,7 +66338,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -66325,7 +66472,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -66417,7 +66564,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Work Date Calendar Statistic Entity. Stores statistics related to work date calendars.\nPre-computed for performance optimization."
+        "description": "Work Date Calendar Statistic Entity. Stores statistics related to work date calendars.\r\nPre-computed for performance optimization."
       },
       "WorkDateCalendarStatisticEntityBasePaginationResponse": {
         "type": "object",
@@ -66480,7 +66627,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -66625,7 +66772,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -66748,7 +66895,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/ValidationError"
             },
-            "description": "Gets the dictionary of property errors.\nKey is the property name, value is the validation error.",
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
             "nullable": true,
             "readOnly": true
           }
@@ -66941,7 +67088,7 @@
     },
     {
       "name": "Localization",
-      "description": "Controller for managing localization and translations.\nProvides endpoints to retrieve translations for different languages,\nincluding batch retrieval and file upload for updating translations."
+      "description": "Controller for managing localization and translations.\r\nProvides endpoints to retrieve translations for different languages,\r\nincluding batch retrieval and file upload for updating translations."
     },
     {
       "name": "Machine",
@@ -67039,11 +67186,11 @@
     },
     {
       "name": "ReportQuery",
-      "description": "Controller for executing report queries\nAPI routes follow the pattern: /api/reports/query/*\n\nSECURITY NOTES:\n- All endpoints are READ-ONLY. No data modification is allowed.\n- Authentication is REQUIRED for all endpoints (add [Authorize] attribute in production)\n- Queries are validated before execution to prevent injection attacks\n- Query complexity is limited to prevent DoS attacks"
+      "description": "Controller for executing report queries\r\nAPI routes follow the pattern: /api/reports/query/*\r\n\r\nSECURITY NOTES:\r\n- All endpoints are READ-ONLY. No data modification is allowed.\r\n- Authentication is REQUIRED for all endpoints (add [Authorize] attribute in production)\r\n- Queries are validated before execution to prevent injection attacks\r\n- Query complexity is limited to prevent DoS attacks"
     },
     {
       "name": "Reports",
-      "description": "Controller for managing report metadata and configuration\nAPI routes follow the pattern: /api/reports/*\n\nSECURITY NOTES:\n- All endpoints are READ-ONLY. No data modification is allowed.\n- Authentication is REQUIRED for all endpoints (add [Authorize] attribute in production)\n- Metadata endpoints provide read-only access to entity schemas\n- Field suggestion endpoint uses MongoDB $distinct for safe data retrieval"
+      "description": "Controller for managing report metadata and configuration\r\nAPI routes follow the pattern: /api/reports/*\r\n\r\nSECURITY NOTES:\r\n- All endpoints are READ-ONLY. No data modification is allowed.\r\n- Authentication is REQUIRED for all endpoints (add [Authorize] attribute in production)\r\n- Metadata endpoints provide read-only access to entity schemas\r\n- Field suggestion endpoint uses MongoDB $distinct for safe data retrieval"
     },
     {
       "name": "Role",
@@ -67071,7 +67218,8 @@
       "description": "Script Variant Controller"
     },
     {
-      "name": "Sensor"
+      "name": "Sensor",
+      "description": "Controller for managing IoT sensor devices"
     },
     {
       "name": "ShiftTemplate"
@@ -67185,7 +67333,8 @@
       "description": "Controller for managing workcenter in the system"
     },
     {
-      "name": "WorkDateCalendarStatistic"
+      "name": "WorkDateCalendarStatistic",
+      "description": "Controller for managing Work Date Calendar Statistics."
     },
     {
       "name": "WorkingParameter"
