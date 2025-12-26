@@ -27,7 +27,10 @@ import {
   getCalendarById,
 } from 'src/api/services/generated/calendar';
 
+import { useTour, TourButton } from 'src/components/tour';
 import { DurationTimePicker } from 'src/components/duration-time-picker';
+
+import { calendarTourSteps } from '../tour-steps';
 
 // ----------------------------------------------------------------------
 
@@ -76,6 +79,17 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Initialize tour
+  const { startTour } = useTour({
+    steps: calendarTourSteps(isEdit),
+    onComplete: () => {
+      console.log('Calendar tour completed');
+    },
+    onCancel: () => {
+      console.log('Calendar tour cancelled');
+    },
+  });
 
   // Fetch shift templates for autocomplete
   const fetchShiftTemplates = useCallback(async (searchText?: string) => {
@@ -255,27 +269,37 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
 
   return (
     <DashboardContent>
-      <Box sx={{ mb: 5 }}>
-        <Typography variant="h4" sx={{ mb: 1 }}>
-          {isEdit ? 'Edit Calendar' : 'Create Calendar'}
-        </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="body2" sx={{ color: 'text.primary' }}>
-            Dashboard
+      <Box
+        sx={{
+          mb: 5,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Box>
+          <Typography variant="h4" sx={{ mb: 1 }}>
+            {isEdit ? 'Edit Calendar' : 'Create Calendar'}
           </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            •
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.primary' }}>
-            Calendars
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            •
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-            {isEdit ? 'Edit' : 'Create'}
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" sx={{ color: 'text.primary' }}>
+              Dashboard
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              •
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.primary' }}>
+              Calendars
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              •
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+              {isEdit ? 'Edit' : 'Create'}
+            </Typography>
+          </Box>
         </Box>
+        <TourButton onStartTour={startTour} />
       </Box>
 
       <Card>
@@ -288,6 +312,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                 value={formData.code}
                 onChange={(e) => handleInputChange('code', e.target.value)}
                 required
+                data-tour="calendar-code"
               />
 
               <TextField
@@ -296,6 +321,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
                 required
+                data-tour="calendar-name"
               />
 
               <Autocomplete
@@ -313,6 +339,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                   option.id?.toString() === value.id?.toString()
                 }
                 loading={loadingShiftTemplates}
+                data-tour="calendar-shift-template"
                 renderInput={(inputParams) => (
                   <TextField
                     {...inputParams}
@@ -347,7 +374,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                 }}
               />
 
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} data-tour="calendar-dates">
                 <TextField
                   fullWidth
                   label="Apply From"
@@ -385,9 +412,10 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                   />
                 }
                 label="Plan to Infinite (when enabled, Apply To is not applicable)"
+                data-tour="calendar-infinite"
               />
 
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} data-tour="calendar-work-time">
                 <DurationTimePicker
                   fullWidth
                   label="Work Date Start Time"
@@ -410,9 +438,10 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 multiline
                 rows={3}
+                data-tour="calendar-description"
               />
 
-              <Stack direction="row" spacing={2} justifyContent="flex-end">
+              <Stack direction="row" spacing={2} justifyContent="flex-end" data-tour="calendar-actions">
                 <Button variant="outlined" onClick={handleCancel}>
                   Cancel
                 </Button>
