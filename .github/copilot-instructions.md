@@ -703,6 +703,167 @@ These patterns apply to ALL entity management pages including:
 - Users, Roles, Permissions
 - And any other entity list pages
 
+## Guided Tour Implementation Standard
+
+**MANDATORY REQUIREMENT**: All create/edit pages (except dashboard pages) **MUST** include Shepherd.js guided tours to help users understand the form fields and workflow.
+
+### When to Add Guided Tours
+
+- ✅ **REQUIRED** for:
+  - All entity create pages (e.g., `/entity-create`)
+  - All entity edit pages (e.g., `/entity-edit/:id`)
+  - Complex form pages with multiple fields
+  - Configuration and settings pages
+
+- ❌ **NOT REQUIRED** for:
+  - Dashboard pages
+  - List/table view pages
+  - Simple dialog forms with 1-2 fields
+  - Read-only detail pages
+
+### Implementation Requirements
+
+1. **Tour Button**: Add a "Help" button in the page header using `TourButton` component
+2. **Tour Steps**: Create comprehensive tour steps covering all form sections
+3. **Data Attributes**: Add `data-tour` attributes to all form elements
+4. **Blur Overlay**: Use blur backdrop (NOT black overlay) so users can see other fields
+
+### Standard Implementation Pattern
+
+```tsx
+import { useTour, TourButton } from 'src/components/tour';
+import { myEntityTourSteps } from '../tour-steps';
+
+export function MyEntityCreateEditView({ isEdit = false }: Props) {
+  // Initialize tour
+  const { startTour } = useTour({
+    steps: myEntityTourSteps(isEdit),
+    onComplete: () => console.log('Tour completed'),
+    onCancel: () => console.log('Tour cancelled'),
+  });
+
+  return (
+    <DashboardContent>
+      {/* Page Header with Tour Button */}
+      <Box
+        sx={{
+          mb: 5,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Box>
+          <Typography variant="h4" sx={{ mb: 1 }}>
+            {isEdit ? 'Edit Entity' : 'Create Entity'}
+          </Typography>
+          {/* Breadcrumbs */}
+        </Box>
+        <TourButton onStartTour={startTour} />
+      </Box>
+
+      {/* Form with data-tour attributes */}
+      <Card>
+        <CardContent>
+          <TextField
+            label="Code"
+            data-tour="entity-code"
+            // ... other props
+          />
+          <TextField
+            label="Name"
+            data-tour="entity-name"
+            // ... other props
+          />
+        </CardContent>
+      </Card>
+    </DashboardContent>
+  );
+}
+```
+
+### Tour Steps File Structure
+
+Create a `tour-steps.ts` file in the section directory:
+
+```typescript
+// src/sections/my-entity/tour-steps.ts
+import type { TourStep } from 'src/hooks/use-tour';
+
+export const myEntityTourSteps = (isEdit: boolean): TourStep[] => [
+  {
+    id: 'welcome',
+    title: isEdit ? 'Edit Entity Tour' : 'Create Entity Tour',
+    text: 'Welcome! This tour will guide you through...',
+    buttons: [
+      { text: 'Skip', secondary: true },
+      { text: 'Start Tour' },
+    ],
+  },
+  {
+    id: 'code',
+    title: 'Entity Code',
+    text: 'Enter a unique code to identify this entity.',
+    attachTo: {
+      element: '[data-tour="entity-code"]',
+      on: 'bottom',
+    },
+  },
+  // ... more steps for each form section
+  {
+    id: 'actions',
+    title: 'Save Your Changes',
+    text: 'Click Save to create/update the entity.',
+    attachTo: {
+      element: '[data-tour="entity-actions"]',
+      on: 'top',
+    },
+    buttons: [
+      { text: 'Back', secondary: true },
+      { text: 'Finish' },
+    ],
+  },
+];
+```
+
+### Tour Step Guidelines
+
+1. **Welcome Step**: Always start with a welcome step explaining the purpose
+2. **Field Steps**: Cover all major form fields and sections
+3. **Action Step**: End with save/cancel actions explanation
+4. **Clear Descriptions**: Provide helpful, concise descriptions (2-3 sentences max)
+5. **Logical Order**: Follow the natural form fill flow
+6. **Element Targeting**: Use unique `data-tour` attributes for reliable targeting
+
+### Data Attribute Naming Convention
+
+Use descriptive, hierarchical naming:
+- `data-tour="entity-code"` - Basic field
+- `data-tour="entity-dates"` - Group of related fields
+- `data-tour="entity-actions"` - Action buttons section
+
+### Reference Implementation
+
+See complete examples:
+- `src/sections/calendar/view/calendar-create-edit-view.tsx` - Calendar tour with 9 steps
+- `src/sections/calendar/tour-steps.ts` - Calendar tour definitions
+- `src/sections/shift-template/view/shift-template-create-edit-view.tsx` - Shift template tour with 11 steps
+- `src/sections/shift-template/tour-steps.ts` - Shift template tour definitions
+- `docs/guides/guided-tours.md` - Complete implementation guide
+- `docs/guides/guided-tours-reference.md` - Quick reference
+
+### Testing Checklist
+
+Before completing a create/edit page implementation:
+- [ ] Tour button appears in page header
+- [ ] All form sections have `data-tour` attributes
+- [ ] Tour steps are in logical order
+- [ ] Tour uses blur overlay (NOT black background)
+- [ ] Navigation buttons work (Skip, Back, Next, Finish)
+- [ ] Tour completes successfully
+- [ ] Tested in both light and dark modes
+- [ ] Responsive on mobile/tablet
+
 ## Your tools
 -- Use the mui-mcp server to answer any MUI questions --
 - 1. call the "useMuiDocs" tool to fetch the docs of the package relevant in the question

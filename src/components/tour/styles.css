@@ -88,13 +88,34 @@
   opacity: 1;
 }
 
-/* Modal overlay */
+/* Modal overlay with blur effect instead of black background */
 .shepherd-modal-overlay-container {
   z-index: 9998;
+  background: transparent !important;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .shepherd-modal-overlay-container.shepherd-modal-is-visible {
   opacity: 1;
+}
+
+/* Add subtle background tint for better visibility */
+.shepherd-modal-overlay-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .shepherd-modal-overlay-container::before {
+    background: rgba(0, 0, 0, 0.2);
+  }
 }
 
 /* Arrow styles */
