@@ -18,6 +18,9 @@
 /* chart */
 @import './components/chart/styles.css';
 
+/* tour */
+@import './components/tour/styles.css';
+
 /** **************************************
 * Baseline
 *************************************** */

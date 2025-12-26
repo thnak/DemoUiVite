@@ -303,7 +303,7 @@ export function ShiftTemplateForm({
   return (
     <Stack spacing={3}>
       {/* Mode Toggle */}
-      <Card>
+      <Card data-tour="shift-editor-mode">
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={mode} onChange={handleModeChange}>
             <Tab label="Normal Mode" value="normal" />
@@ -326,6 +326,7 @@ export function ShiftTemplateForm({
                 onChange={handleInputChange('code')}
                 error={!!errors.code}
                 helperText={errors.code}
+                data-tour="shift-code"
               />
               <TextField
                 fullWidth
@@ -334,6 +335,7 @@ export function ShiftTemplateForm({
                 onChange={handleInputChange('name')}
                 error={!!errors.name}
                 helperText={errors.name}
+                data-tour="shift-name"
               />
             </Stack>
 
@@ -344,6 +346,7 @@ export function ShiftTemplateForm({
               onChange={handleInputChange('description')}
               multiline
               rows={2}
+              data-tour="shift-description"
             />
           </Stack>
         </CardContent>
@@ -369,7 +372,7 @@ export function ShiftTemplateForm({
             </Typography>
             <Stack spacing={3}>
               {/* Shared Days Selector */}
-              <FormControl fullWidth error={!!errors.sharedDays}>
+              <FormControl fullWidth error={!!errors.sharedDays} data-tour="shift-days">
                 <InputLabel>Days of Week</InputLabel>
                 <Select
                   multiple
@@ -404,7 +407,7 @@ export function ShiftTemplateForm({
         )}
       </AnimatePresence>
       {/* Shift Definitions */}
-      <Card>
+      <Card data-tour="shift-definitions">
         <CardContent>
           <Box
             sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}
@@ -459,7 +462,7 @@ export function ShiftTemplateForm({
                     helperText={errors[`def-${defIndex}-name`]}
                   />
 
-                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} data-tour="shift-times">
                     <Box sx={{ flex: 1 }}>
                       <DurationTimePicker
                         label="Start Time"
@@ -483,7 +486,7 @@ export function ShiftTemplateForm({
                   </Stack>
 
                   {/* Breaks section - shown in both normal and advanced mode */}
-                  <Box>
+                  <Box data-tour="shift-breaks">
                     <Box
                       sx={{
                         display: 'flex',
@@ -568,7 +571,7 @@ export function ShiftTemplateForm({
 
                   {/* Advanced Mode: Per-shift Days */}
                   {mode === 'advanced' && (
-                    <FormControl fullWidth error={!!errors[`def-${defIndex}-days`]}>
+                    <FormControl fullWidth error={!!errors[`def-${defIndex}-days`]} data-tour="shift-days">
                       <InputLabel>Days of Week</InputLabel>
                       <Select
                         multiple
@@ -698,9 +701,11 @@ export function ShiftTemplateForm({
         )}
       </AnimatePresence>
       {/* Weekly Summary Chart */}
-      <WeekSummaryChart summary={weekSummary} title="Weekly Hours Summary" />
+      <Box data-tour="shift-summary">
+        <WeekSummaryChart summary={weekSummary} title="Weekly Hours Summary" />
+      </Box>
       {/* Action Buttons */}
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }} data-tour="shift-actions">
         <Button variant="outlined" color="inherit" onClick={onCancel}>
           Cancel
         </Button>

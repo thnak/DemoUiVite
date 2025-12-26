@@ -1,0 +1,194 @@
+/** **************************************
+* Shepherd.js Tour Styles
+*************************************** */
+
+/* Import Shepherd.js base styles */
+@import 'shepherd.js/dist/css/shepherd.css';
+
+/* Custom theme overrides */
+.shepherd-element {
+  z-index: 9999;
+  max-width: 420px;
+}
+
+.shepherd-theme-custom {
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.shepherd-theme-custom .shepherd-content {
+  padding: 24px;
+  border-radius: 8px;
+}
+
+.shepherd-theme-custom .shepherd-header {
+  padding: 0 0 16px 0;
+  border-bottom: 1px solid rgba(145, 158, 171, 0.2);
+}
+
+.shepherd-theme-custom .shepherd-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #212B36;
+  margin: 0;
+}
+
+.shepherd-theme-custom .shepherd-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #637381;
+  padding: 16px 0 0 0;
+}
+
+.shepherd-theme-custom .shepherd-footer {
+  padding: 16px 0 0 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.shepherd-theme-custom .shepherd-button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  outline: none;
+}
+
+.shepherd-theme-custom .shepherd-button-primary {
+  background-color: #212B36;
+  color: white;
+}
+
+.shepherd-theme-custom .shepherd-button-primary:hover {
+  background-color: #161C24;
+}
+
+.shepherd-theme-custom .shepherd-button-secondary {
+  background-color: transparent;
+  color: #637381;
+  border: 1px solid rgba(145, 158, 171, 0.32);
+}
+
+.shepherd-theme-custom .shepherd-button-secondary:hover {
+  background-color: rgba(145, 158, 171, 0.08);
+}
+
+.shepherd-theme-custom .shepherd-cancel-icon {
+  color: #637381;
+  font-size: 20px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.shepherd-theme-custom .shepherd-cancel-icon:hover {
+  opacity: 1;
+}
+
+/* Modal overlay - semi-transparent dark overlay that doesn't affect highlighted element */
+.shepherd-modal-overlay-container {
+  z-index: 9998;
+  /* Override default Shepherd background */
+  background: transparent !important;
+}
+
+.shepherd-modal-overlay-container.shepherd-modal-is-visible {
+  opacity: 1 !important;
+}
+
+/* Semi-transparent overlay on the SVG path (everything except the highlighted element) */
+/* The SVG mask creates a cutout for the highlighted element, so it stays clear */
+.shepherd-modal-overlay-container.shepherd-modal-is-visible path {
+  fill: rgba(0, 0, 0, 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
+  .shepherd-modal-overlay-container.shepherd-modal-is-visible path {
+    fill: rgba(0, 0, 0, 0.7);
+  }
+}
+
+/* Arrow styles */
+.shepherd-element[data-popper-placement^='top'] .shepherd-arrow::before {
+  border-top-color: white;
+}
+
+.shepherd-element[data-popper-placement^='bottom'] .shepherd-arrow::before {
+  border-bottom-color: white;
+}
+
+.shepherd-element[data-popper-placement^='left'] .shepherd-arrow::before {
+  border-left-color: white;
+}
+
+.shepherd-element[data-popper-placement^='right'] .shepherd-arrow::before {
+  border-right-color: white;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .shepherd-theme-custom {
+    background-color: #1C252E;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  .shepherd-theme-custom .shepherd-title {
+    color: #FFFFFF;
+  }
+
+  .shepherd-theme-custom .shepherd-text {
+    color: #919EAB;
+  }
+
+  .shepherd-theme-custom .shepherd-header {
+    border-bottom-color: rgba(145, 158, 171, 0.12);
+  }
+
+  .shepherd-theme-custom .shepherd-button-primary {
+    background-color: #FFFFFF;
+    color: #212B36;
+  }
+
+  .shepherd-theme-custom .shepherd-button-primary:hover {
+    background-color: #F4F6F8;
+  }
+
+  .shepherd-theme-custom .shepherd-button-secondary {
+    color: #919EAB;
+    border-color: rgba(145, 158, 171, 0.24);
+  }
+
+  .shepherd-theme-custom .shepherd-button-secondary:hover {
+    background-color: rgba(145, 158, 171, 0.12);
+  }
+
+  .shepherd-element[data-popper-placement^='top'] .shepherd-arrow::before {
+    border-top-color: #1C252E;
+  }
+
+  .shepherd-element[data-popper-placement^='bottom'] .shepherd-arrow::before {
+    border-bottom-color: #1C252E;
+  }
+
+  .shepherd-element[data-popper-placement^='left'] .shepherd-arrow::before {
+    border-left-color: #1C252E;
+  }
+
+  .shepherd-element[data-popper-placement^='right'] .shepherd-arrow::before {
+    border-right-color: #1C252E;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .shepherd-element {
+    max-width: calc(100vw - 32px);
+  }
+
+  .shepherd-theme-custom .shepherd-content {
+    padding: 20px;
+  }
+}

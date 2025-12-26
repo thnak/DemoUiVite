@@ -23,9 +23,12 @@ import {
   getShiftTemplateById,
 } from 'src/api/services/generated/shift-template';
 
+import { useTour, TourButton } from 'src/components/tour';
 import { ShiftTemplateForm } from 'src/components/ShiftTemplateForm';
 
 import { generateId } from 'src/types/shift';
+
+import { shiftTemplateTourSteps } from '../tour-steps';
 
 // ----------------------------------------------------------------------
 
@@ -115,6 +118,17 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
   const [loading, setLoading] = useState(isEdit);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Initialize tour
+  const { startTour } = useTour({
+    steps: shiftTemplateTourSteps(isEdit),
+    onComplete: () => {
+      console.log('Shift template tour completed');
+    },
+    onCancel: () => {
+      console.log('Shift template tour cancelled');
+    },
+  });
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -259,27 +273,37 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
 
   return (
     <DashboardContent>
-      <Box sx={{ mb: 5 }}>
-        <Typography variant="h4" sx={{ mb: 1 }}>
-          {isEdit ? 'Edit Shift Template' : 'Create Shift Template'}
-        </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="body2" sx={{ color: 'text.primary' }}>
-            Dashboard
+      <Box
+        sx={{
+          mb: 5,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Box>
+          <Typography variant="h4" sx={{ mb: 1 }}>
+            {isEdit ? 'Edit Shift Template' : 'Create Shift Template'}
           </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            •
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.primary' }}>
-            Shift Templates
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            •
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-            {isEdit ? 'Edit' : 'Create'}
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" sx={{ color: 'text.primary' }}>
+              Dashboard
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              •
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.primary' }}>
+              Shift Templates
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              •
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+              {isEdit ? 'Edit' : 'Create'}
+            </Typography>
+          </Box>
         </Box>
+        <TourButton onStartTour={startTour} />
       </Box>
 
       <ShiftTemplateForm
