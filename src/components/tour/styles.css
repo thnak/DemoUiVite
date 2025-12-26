@@ -91,30 +91,25 @@
 /* Modal overlay with blur effect instead of black background */
 .shepherd-modal-overlay-container {
   z-index: 9998;
+  /* Override default Shepherd background */
   background: transparent !important;
+}
+
+.shepherd-modal-overlay-container.shepherd-modal-is-visible {
+  opacity: 1 !important;
+  /* Apply blur effect */
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
 }
 
-.shepherd-modal-overlay-container.shepherd-modal-is-visible {
-  opacity: 1;
-}
-
-/* Add subtle background tint for better visibility */
-.shepherd-modal-overlay-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.1);
-  pointer-events: none;
+/* Override the SVG fill to be transparent with subtle tint */
+.shepherd-modal-overlay-container.shepherd-modal-is-visible path {
+  fill: rgba(255, 255, 255, 0.05);
 }
 
 @media (prefers-color-scheme: dark) {
-  .shepherd-modal-overlay-container::before {
-    background: rgba(0, 0, 0, 0.2);
+  .shepherd-modal-overlay-container.shepherd-modal-is-visible path {
+    fill: rgba(0, 0, 0, 0.15);
   }
 }
 
