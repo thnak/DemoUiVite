@@ -144,9 +144,10 @@ export function DowntimeInputView() {
     // Find the earliest start time and latest end time (or now if ongoing)
     const now = new Date();
     const earliestStart = stateRecords.reduce((min, record) => {
+      if (!record.startTime) return min;
       const start = new Date(record.startTime);
       return start < min ? start : min;
-    }, new Date(stateRecords[0].startTime));
+    }, new Date(stateRecords[0].startTime || now));
 
     const latestEnd = stateRecords.reduce((max, record) => {
       const end = record.endTime ? new Date(record.endTime) : now;
@@ -157,6 +158,14 @@ export function DowntimeInputView() {
 
     // Calculate position and width for each block
     return stateRecords.map((record) => {
+      if (!record.startTime) {
+        return {
+          record,
+          startPercent: 0,
+          widthPercent: 0,
+        };
+      }
+      
       const start = new Date(record.startTime);
       const end = record.endTime ? new Date(record.endTime) : now;
       const duration = end.getTime() - start.getTime();
@@ -178,7 +187,8 @@ export function DowntimeInputView() {
     return '#66bb6a'; // Green for running/other states
   };
 
-  const formatDuration = (startTime: string, endTime?: string | null) => {
+  const formatDuration = (startTime?: string, endTime?: string | null) => {
+    if (!startTime) return 'N/A';
     const start = dayjs(startTime);
     const end = endTime ? dayjs(endTime) : dayjs();
     const duration = end.diff(start, 'minute');
@@ -261,7 +271,7 @@ export function DowntimeInputView() {
               <Button
                 variant="contained"
                 onClick={loadStateRecords}
-                startIcon={<Iconify icon="eva:refresh-fill" />}
+                startIcon={<Iconify icon={"eva:refresh-fill" as any} />}
                 disabled={loading}
                 sx={{
                   minHeight: 56,
