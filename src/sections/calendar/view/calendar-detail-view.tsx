@@ -11,11 +11,16 @@ import Tabs from '@mui/material/Tabs';
 import Grid from '@mui/material/Grid';
 import Alert from '@mui/material/Alert';
 import Select from '@mui/material/Select';
+import Dialog from '@mui/material/Dialog';
+import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
+import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -132,6 +137,18 @@ export function CalendarDetailView() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Day detail dialog state
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [dayDetailOpen, setDayDetailOpen] = useState(false);
+  // Reserved for future resize functionality when API is complete
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [resizingBlock, setResizingBlock] = useState<{
+    index: number;
+    edge: 'start' | 'end';
+    originalStart: Date;
+    originalEnd: Date;
+  } | null>(null);
+
   // Date range state
   const today = new Date();
   const [fromDate, setFromDate] = useState(formatDateForAPI(today));
@@ -232,6 +249,20 @@ export function CalendarDetailView() {
 
   const handleToDateChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setToDate(event.target.value);
+  }, []);
+
+  // Handle day detail dialog
+  const handleDayClick = useCallback((date: Date, stats: GetWorkDateCalendarStatisticByCalendarResult[]) => {
+    if (stats.length > 0) {
+      setSelectedDate(date);
+      setDayDetailOpen(true);
+    }
+  }, []);
+
+  const handleCloseDayDetail = useCallback(() => {
+    setDayDetailOpen(false);
+    setSelectedDate(null);
+    setResizingBlock(null);
   }, []);
 
   // Group statistics by date
@@ -398,6 +429,7 @@ export function CalendarDetailView() {
     return (
       <Card
         key={dateKey}
+        onClick={() => handleDayClick(date, dayStats)}
         sx={{
           minHeight: 120,
           p: 1,
@@ -496,6 +528,266 @@ export function CalendarDetailView() {
           </Box>
         )}
       </Card>
+    );
+  };
+
+  // Render day detail dialog with timeline view
+  const renderDayDetailDialog = () => {
+    if (!selectedDate) return null;
+
+    const dateKey = formatDateKey(selectedDate);
+    const dayStats = statisticsByDateKey.get(dateKey) || [];
+
+    // Sort time blocks by start time
+    const sortedBlocks = [...dayStats].sort((a, b) => {
+      if (!a.startTime || !b.startTime) return 0;
+      return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
+    });
+
+    // Calculate timeline bounds (00:00 to 24:00)
+    const dayStart = new Date(selectedDate);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(selectedDate);
+    dayEnd.setHours(23, 59, 59, 999);
+    const totalMinutes = 24 * 60;
+
+    // Helper to calculate position and height in timeline
+    const getBlockPosition = (startTime: string, endTime: string) => {
+      const start = new Date(startTime);
+      const end = new Date(endTime);
+      
+      // Calculate minutes from day start
+      const startMinutes = start.getHours() * 60 + start.getMinutes();
+      const endMinutes = end.getHours() * 60 + end.getMinutes();
+      
+      // Calculate percentage of day
+      const topPercent = (startMinutes / totalMinutes) * 100;
+      const heightPercent = ((endMinutes - startMinutes) / totalMinutes) * 100;
+      
+      return { topPercent, heightPercent, startMinutes, endMinutes };
+    };
+
+    // Helper to format time
+    const formatTime = (dateString: string) => {
+      const date = new Date(dateString);
+      return date.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: false 
+      });
+    };
+
+    // Get block color based on type
+    const getBlockColor = (stat: GetWorkDateCalendarStatisticByCalendarResult) => {
+      if (stat.isShiftTime && !stat.isBreakTime) return 'primary.main';
+      if (stat.isBreakTime) return 'warning.main';
+      if (stat.isOverTimeShift) return 'info.main';
+      if (stat.isPlannedStopTime) return 'error.main';
+      return 'grey.500';
+    };
+
+    const getBlockBgColor = (stat: GetWorkDateCalendarStatisticByCalendarResult) => {
+      if (stat.isShiftTime && !stat.isBreakTime) return 'primary.lighter';
+      if (stat.isBreakTime) return 'warning.lighter';
+      if (stat.isOverTimeShift) return 'info.lighter';
+      if (stat.isPlannedStopTime) return 'error.lighter';
+      return 'grey.100';
+    };
+
+    return (
+      <Dialog
+        open={dayDetailOpen}
+        onClose={handleCloseDayDetail}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Typography variant="h6">
+              {selectedDate.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {sortedBlocks.length} time blocks
+            </Typography>
+          </Box>
+        </DialogTitle>
+        
+        <DialogContent>
+          {sortedBlocks.length === 0 ? (
+            <Alert severity="info">No time blocks scheduled for this day</Alert>
+          ) : (
+            <Box sx={{ position: 'relative', minHeight: 600 }}>
+              {/* Hour markers */}
+              <Box sx={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 60 }}>
+                {Array.from({ length: 25 }, (_, i) => (
+                  <Box
+                    key={i}
+                    sx={{
+                      position: 'absolute',
+                      top: `${(i / 24) * 100}%`,
+                      left: 0,
+                      right: 0,
+                      borderTop: 1,
+                      borderColor: 'divider',
+                      pt: 0.5,
+                    }}
+                  >
+                    <Typography variant="caption" color="text.secondary">
+                      {String(i).padStart(2, '0')}:00
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+
+              {/* Timeline blocks */}
+              <Box sx={{ position: 'relative', ml: 8, minHeight: 600 }}>
+                {sortedBlocks.map((block, index) => {
+                  if (!block.startTime || !block.endTime) return null;
+
+                  const { topPercent, heightPercent } = getBlockPosition(
+                    block.startTime,
+                    block.endTime
+                  );
+
+                  return (
+                    <Card
+                      key={index}
+                      sx={{
+                        position: 'absolute',
+                        top: `${topPercent}%`,
+                        left: 0,
+                        right: 0,
+                        height: `${heightPercent}%`,
+                        bgcolor: getBlockBgColor(block),
+                        borderLeft: 4,
+                        borderColor: getBlockColor(block),
+                        p: 1.5,
+                        cursor: 'default',
+                        transition: 'all 0.2s',
+                        '&:hover': {
+                          boxShadow: 2,
+                          zIndex: 10,
+                        },
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                        <Box sx={{ flex: 1 }}>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                            {block.name || 'Unnamed Block'}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+                            {formatTime(block.startTime)} - {formatTime(block.endTime)}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                            Duration: {calculateDuration(block.startTime, block.endTime).toFixed(2)}h
+                          </Typography>
+                        </Box>
+                        
+                        <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+                          {block.isShiftTime && (
+                            <Iconify icon="eva:briefcase-outline" width={16} />
+                          )}
+                          {block.isBreakTime && (
+                            <Iconify icon="solar:clock-circle-outline" width={16} />
+                          )}
+                          {block.isOverTimeShift && (
+                            <Iconify icon="solar:restart-bold" width={16} />
+                          )}
+                          {block.isPlannedStopTime && (
+                            <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                          )}
+                        </Box>
+                      </Box>
+
+                      {/* Resize handle at top */}
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          top: -2,
+                          left: 0,
+                          right: 0,
+                          height: 8,
+                          cursor: 'ns-resize',
+                          bgcolor: 'transparent',
+                          '&:hover': {
+                            bgcolor: getBlockColor(block),
+                            opacity: 0.3,
+                          },
+                        }}
+                        title="Drag to resize (API not implemented yet)"
+                      />
+
+                      {/* Resize handle at bottom */}
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          bottom: -2,
+                          left: 0,
+                          right: 0,
+                          height: 8,
+                          cursor: 'ns-resize',
+                          bgcolor: 'transparent',
+                          '&:hover': {
+                            bgcolor: getBlockColor(block),
+                            opacity: 0.3,
+                          },
+                        }}
+                        title="Drag to resize (API not implemented yet)"
+                      />
+                    </Card>
+                  );
+                })}
+              </Box>
+            </Box>
+          )}
+
+          {/* Legend */}
+          <Box sx={{ mt: 3, pt: 2, borderTop: 1, borderColor: 'divider' }}>
+            <Typography variant="subtitle2" sx={{ mb: 1.5 }}>
+              Legend
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 6, sm: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ width: 4, height: 24, bgcolor: 'primary.main', borderRadius: 0.5 }} />
+                  <Typography variant="caption">Shift Time</Typography>
+                </Box>
+              </Grid>
+              <Grid size={{ xs: 6, sm: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ width: 4, height: 24, bgcolor: 'warning.main', borderRadius: 0.5 }} />
+                  <Typography variant="caption">Break Time</Typography>
+                </Box>
+              </Grid>
+              <Grid size={{ xs: 6, sm: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ width: 4, height: 24, bgcolor: 'info.main', borderRadius: 0.5 }} />
+                  <Typography variant="caption">Overtime</Typography>
+                </Box>
+              </Grid>
+              <Grid size={{ xs: 6, sm: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ width: 4, height: 24, bgcolor: 'error.main', borderRadius: 0.5 }} />
+                  <Typography variant="caption">Planned Stop</Typography>
+                </Box>
+              </Grid>
+            </Grid>
+            
+            <Alert severity="info" sx={{ mt: 2 }}>
+              Resize functionality will be available when the API is complete. Resize handles are visible on hover at the top and bottom of each block.
+            </Alert>
+          </Box>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={handleCloseDayDetail}>Close</Button>
+        </DialogActions>
+      </Dialog>
     );
   };
 
@@ -794,6 +1086,9 @@ export function CalendarDetailView() {
           ))}
         </Box>
       )}
+      
+      {/* Day Detail Dialog */}
+      {renderDayDetailDialog()}
     </DashboardContent>
   );
 }
