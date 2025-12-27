@@ -17176,6 +17176,517 @@
         }
       }
     },
+    "/api/IotSensor/get-device-sensors": {
+      "post": {
+        "tags": [
+          "IotSensor"
+        ],
+        "summary": "Get paginated list of IoT sensor devices",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorDeviceDtoBasePaginationResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorDeviceDtoBasePaginationResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorDeviceDtoBasePaginationResponse"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorDeviceDtoBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/IotSensor/get-sensor-auto-seed-from-machine": {
+      "get": {
+        "tags": [
+          "IotSensor"
+        ],
+        "summary": "Get auto seed status for all sensors assigned to a machine",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SensorIdAutoSeedStatus"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SensorIdAutoSeedStatus"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SensorIdAutoSeedStatus"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SensorIdAutoSeedStatus"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/IotSensor/get-sensor-auto-seed-from-device": {
+      "get": {
+        "tags": [
+          "IotSensor"
+        ],
+        "summary": "Get auto seed status for all sensors assigned to a device",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SensorIdAutoSeedStatus"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SensorIdAutoSeedStatus"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SensorIdAutoSeedStatus"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SensorIdAutoSeedStatus"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/IotSensor/{sensorId}/auto-seed/enable": {
+      "post": {
+        "tags": [
+          "IotSensor"
+        ],
+        "summary": "Enable auto seed data generation for a sensor.\r\nValue will be the counter itself (0, 1, 2, 3...).\r\nDelay between records follows Gaussian distribution using Mean and Std in seconds.",
+        "parameters": [
+          {
+            "name": "sensorId",
+            "in": "path",
+            "description": "Sensor ObjectId",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Auto seed configuration",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnableAutoSeedRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnableAutoSeedRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnableAutoSeedRequest"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/EnableAutoSeedRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/IotSensor/{sensorId}/auto-seed/disable": {
+      "post": {
+        "tags": [
+          "IotSensor"
+        ],
+        "summary": "Disable auto seed data generation for a sensor",
+        "parameters": [
+          {
+            "name": "sensorId",
+            "in": "path",
+            "description": "Sensor ObjectId",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/IotSensor/{sensorId}/auto-seed/reset": {
+      "post": {
+        "tags": [
+          "IotSensor"
+        ],
+        "summary": "Reset the auto seed counter for a sensor",
+        "parameters": [
+          {
+            "name": "sensorId",
+            "in": "path",
+            "description": "Sensor ObjectId",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/IotSensor/{sensorId}/auto-seed/status": {
+      "get": {
+        "tags": [
+          "IotSensor"
+        ],
+        "summary": "Get auto seed status for a sensor",
+        "parameters": [
+          {
+            "name": "sensorId",
+            "in": "path",
+            "description": "Sensor ObjectId",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorAutoSeedStatus"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorAutoSeedStatus"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorAutoSeedStatus"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensorAutoSeedStatus"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/iotsensor/{id}": {
       "get": {
         "tags": [
@@ -20256,6 +20767,135 @@
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/MachineDowntime/{machineId}/current-run-state-records": {
+      "get": {
+        "tags": [
+          "MachineDowntime"
+        ],
+        "summary": "Gets the current downtime records from running machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "MongoDB ObjectId represented as a 24-character hexadecimal string",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CurrentMachineRunStateRecords"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CurrentMachineRunStateRecords"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CurrentMachineRunStateRecords"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CurrentMachineRunStateRecords"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/MachineDowntime/{machineId}/label-downtime-record": {
+      "post": {
+        "tags": [
+          "MachineDowntime"
+        ],
+        "summary": "Labels a downtime record for a machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LabelDowntimeRecordRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LabelDowntimeRecordRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LabelDowntimeRecordRequest"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/LabelDowntimeRecordRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
                 }
               }
             }
@@ -28764,6 +29404,331 @@
         }
       }
     },
+    "/api/productionreceipt/{id}": {
+      "get": {
+        "tags": [
+          "ProductionReceipt"
+        ],
+        "summary": "Get Production Receipt by ID",
+        "description": "Retrieves a specific Production Receipt entity by its unique identifier.",
+        "operationId": "GetProductionReceiptById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionReceiptEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/productionreceipt/get-page": {
+      "post": {
+        "tags": [
+          "ProductionReceipt"
+        ],
+        "summary": "Get paginated list of Production Receipt",
+        "description": "Retrieves a paginated list of Production Receipt entities.",
+        "operationId": "GetProductionReceiptPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionReceiptEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productionreceipt/create": {
+      "post": {
+        "tags": [
+          "ProductionReceipt"
+        ],
+        "summary": "Create a new Production Receipt",
+        "description": "Creates a new Production Receipt entity in the system.",
+        "operationId": "CreateProductionReceipt",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductionReceiptEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionReceiptEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionReceiptEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productionreceipt/update/{id}": {
+      "post": {
+        "tags": [
+          "ProductionReceipt"
+        ],
+        "summary": "Update an existing Production Receipt",
+        "description": "Updates specific fields of an existing Production Receipt entity by ID.",
+        "operationId": "UpdateProductionReceipt",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionReceiptEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionReceiptEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productionreceipt/delete/{id}": {
+      "delete": {
+        "tags": [
+          "ProductionReceipt"
+        ],
+        "summary": "Delete a Production Receipt",
+        "description": "Deletes a Production Receipt entity by its unique identifier.",
+        "operationId": "DeleteProductionReceipt",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionReceiptEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionReceiptEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productionreceipt/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "ProductionReceipt"
+        ],
+        "summary": "Soft delete a Production Receipt",
+        "description": "Soft deletes a Production Receipt entity by its unique identifier.",
+        "operationId": "SoftDeleteProductionReceipt",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productionreceipt/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "ProductionReceipt"
+        ],
+        "summary": "Soft restore delete a Production Receipt",
+        "description": "Soft restore deletes a Production Receipt entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteProductionReceipt",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productionreceipt/generate-new-code": {
+      "get": {
+        "tags": [
+          "ProductionReceipt"
+        ],
+        "summary": "Generate a new code for Production Receipt",
+        "description": "Generates a new unique code for a Production Receipt entity.",
+        "operationId": "GenerateNewProductionReceiptCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/productvariant/{id}": {
       "get": {
         "tags": [
@@ -34456,331 +35421,6 @@
         }
       }
     },
-    "/api/Sensor/get-device-sensors": {
-      "post": {
-        "tags": [
-          "Sensor"
-        ],
-        "summary": "Get paginated list of IoT sensor devices",
-        "parameters": [
-          {
-            "name": "pageNumber",
-            "in": "query",
-            "description": "Page number, starting from 0.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "description": "Number of items per page.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "searchTerm",
-            "in": "query",
-            "description": "Search term for filtering results.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Sensor/{sensorId}/auto-seed/enable": {
-      "post": {
-        "tags": [
-          "Sensor"
-        ],
-        "summary": "Enable auto seed data generation for a sensor.\r\nValue will be the counter itself (0, 1, 2, 3...).\r\nDelay between records follows Gaussian distribution using Mean and Std in seconds.",
-        "parameters": [
-          {
-            "name": "sensorId",
-            "in": "path",
-            "description": "Sensor ObjectId",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ObjectId"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Auto seed configuration",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EnableAutoSeedRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EnableAutoSeedRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/EnableAutoSeedRequest"
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "$ref": "#/components/schemas/EnableAutoSeedRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Sensor/{sensorId}/auto-seed/disable": {
-      "post": {
-        "tags": [
-          "Sensor"
-        ],
-        "summary": "Disable auto seed data generation for a sensor",
-        "parameters": [
-          {
-            "name": "sensorId",
-            "in": "path",
-            "description": "Sensor ObjectId",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ObjectId"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Sensor/{sensorId}/auto-seed/reset": {
-      "post": {
-        "tags": [
-          "Sensor"
-        ],
-        "summary": "Reset the auto seed counter for a sensor",
-        "parameters": [
-          {
-            "name": "sensorId",
-            "in": "path",
-            "description": "Sensor ObjectId",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ObjectId"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Sensor/{sensorId}/auto-seed/status": {
-      "get": {
-        "tags": [
-          "Sensor"
-        ],
-        "summary": "Get auto seed status for a sensor",
-        "parameters": [
-          {
-            "name": "sensorId",
-            "in": "path",
-            "description": "Sensor ObjectId",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ObjectId"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/SensorAutoSeedStatus"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SensorAutoSeedStatus"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SensorAutoSeedStatus"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/SensorAutoSeedStatus"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/shifttemplate/{id}": {
       "get": {
         "tags": [
@@ -37317,6 +37957,110 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/StopMachineReasonEntityResultArray"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/StopMachineReason/get-reason-page": {
+      "post": {
+        "tags": [
+          "StopMachineReason"
+        ],
+        "summary": "Lấy trang lý do dừng máy",
+        "parameters": [
+          {
+            "name": "Search",
+            "in": "query",
+            "description": "Search term to filter Stop Machine Reasons by name or description.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Array of Group IDs to filter the Stop Machine Reasons.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ObjectId"
+                },
+                "description": "Array of Group IDs to filter the Stop Machine Reasons."
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ObjectId"
+                },
+                "description": "Array of Group IDs to filter the Stop Machine Reasons."
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ObjectId"
+                },
+                "description": "Array of Group IDs to filter the Stop Machine Reasons."
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ObjectId"
+                },
+                "description": "Array of Group IDs to filter the Stop Machine Reasons."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStopMachineReasonPageResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStopMachineReasonPageResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStopMachineReasonPageResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStopMachineReasonPageResult"
                 }
               }
             }
@@ -46573,7 +47317,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2025-12-26"
+              "example": "2025-12-27"
             }
           },
           {
@@ -46583,7 +47327,25 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2025-12-26"
+              "example": "2025-12-27"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -46609,6 +47371,66 @@
               "application/vnd.msgpack": {
                 "schema": {
                   "$ref": "#/components/schemas/GetWorkDateCalendarStatisticByCalendarResultBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/WorkDateCalendarStatistic/resize-time-blocks": {
+      "post": {
+        "tags": [
+          "WorkDateCalendarStatistic"
+        ],
+        "summary": "Update Time Blocks based on the provided request.",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTimeBlockRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTimeBlockRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTimeBlockRequest"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTimeBlockRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
                 }
               }
             }
@@ -48769,13 +49591,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-26"
+            "example": "2025-12-27"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-26"
+            "example": "2025-12-27"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -48887,13 +49709,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-26"
+            "example": "2025-12-27"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-26"
+            "example": "2025-12-27"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -49049,12 +49871,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-26"
+            "example": "2025-12-27"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-26"
+            "example": "2025-12-27"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -49574,6 +50396,36 @@
         },
         "additionalProperties": false,
         "description": "Request model for creating a script definition"
+      },
+      "CurrentMachineRunStateRecords": {
+        "type": "object",
+        "properties": {
+          "stateId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "stateName": {
+            "type": "string",
+            "description": "Name of the state.",
+            "nullable": true
+          },
+          "isUnplannedDowntime": {
+            "type": "boolean",
+            "description": "Indicates if the downtime was unplanned. Here is what we need label"
+          },
+          "startTime": {
+            "type": "string",
+            "description": "Start time of the downtime period.",
+            "format": "date-time"
+          },
+          "endTime": {
+            "type": "string",
+            "description": "End time of the downtime period. Nullable if the downtime is ongoing.",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Model representing current downtime records for a machine."
       },
       "CustomerEntity": {
         "type": "object",
@@ -51358,7 +52210,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-26"
+            "example": "2025-12-27"
           }
         },
         "additionalProperties": false
@@ -52757,6 +53609,58 @@
         "additionalProperties": false,
         "description": ""
       },
+      "GetStopMachineReasonPageResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StopMachineReasonDto"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          },
+          "groupCounts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "Dictionary containing counts of stop machine reasons grouped by some criteria.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Result model for Stop Machine Reason pagination."
+      },
       "GetUserPageQueryResponse": {
         "type": "object",
         "properties": {
@@ -53479,7 +54383,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2025-12-26"
+            "example": "2025-12-27"
           },
           "locationId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -54600,6 +55504,26 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
+      },
+      "LabelDowntimeRecordRequest": {
+        "type": "object",
+        "properties": {
+          "startTime": {
+            "type": "string",
+            "description": "Start time of the downtime period to be labeled.",
+            "format": "date-time"
+          },
+          "reasonId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "note": {
+            "type": "string",
+            "description": "Optional note providing additional context about the downtime.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request to label a downtime record for a machine."
       },
       "LanguageKeyLangEntity": {
         "type": "object",
@@ -59030,6 +59954,158 @@
         "additionalProperties": false,
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
+      "ProductionReceiptEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "productionReceiptNumber": {
+            "type": "string",
+            "description": "Production receipt number.",
+            "nullable": true
+          },
+          "productionOrderNumber": {
+            "type": "string",
+            "description": "Production order number. Optional field.",
+            "nullable": true
+          },
+          "userId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "machineId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "productId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "workDate": {
+            "type": "string",
+            "description": "Date of the work.",
+            "format": "date",
+            "example": "2025-12-27"
+          },
+          "goodCount": {
+            "type": "integer",
+            "description": "Count of good products produced.",
+            "format": "int32"
+          },
+          "rejectCount": {
+            "type": "integer",
+            "description": "Count of rejected products.",
+            "format": "int32"
+          },
+          "totalProducedQuantity": {
+            "type": "number",
+            "description": "Total quantity produced.",
+            "format": "double"
+          },
+          "totalRuntime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "totalDowntime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "totalSpeedLossTime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          }
+        },
+        "additionalProperties": false,
+        "description": "View representing a production receipt."
+      },
+      "ProductionReceiptEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductionReceiptEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "ProductionReceiptEntityValidationResult": {
+        "type": "object",
+        "properties": {
+          "isValid": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the validation was successful.",
+            "readOnly": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets or sets the overall validation message.",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of a validation operation for a specific type with property-level error details."
+      },
       "ProductionSettings": {
         "type": "object",
         "properties": {
@@ -61287,6 +62363,49 @@
         "additionalProperties": false,
         "description": ""
       },
+      "SensorDeviceDtoBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SensorDeviceDto"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
       "SensorDeviceDtoPaginationQuery": {
         "type": "object",
         "properties": {
@@ -61399,6 +62518,42 @@
         },
         "additionalProperties": false,
         "description": "Pagination response for queries."
+      },
+      "SensorIdAutoSeedStatus": {
+        "type": "object",
+        "properties": {
+          "isEnabled": {
+            "type": "boolean",
+            "description": "Indicates whether auto seed is enabled."
+          },
+          "mean": {
+            "type": "number",
+            "description": "Mean delay time in seconds for Gaussian distribution of time between records.",
+            "format": "double"
+          },
+          "std": {
+            "type": "number",
+            "description": "Standard deviation in seconds for Gaussian distribution of time between records.",
+            "format": "double"
+          },
+          "intervalMs": {
+            "type": "integer",
+            "description": "Interval in milliseconds between data generation (deprecated - kept for compatibility).",
+            "format": "int32"
+          },
+          "counter": {
+            "type": "integer",
+            "description": "Current counter value. Never resets when enabled/disabled, only via explicit reset.",
+            "format": "int64"
+          },
+          "sensorId": {
+            "type": "string",
+            "description": "Sensor Id",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Sensor Id Auto Seed Status"
       },
       "ShiftDefinition": {
         "type": "object",
@@ -62318,6 +63473,50 @@
         ],
         "type": "string",
         "description": "Tác động khi dừng máy"
+      },
+      "StopMachineReasonDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the Stop Machine Reason.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the Stop Machine Reason.",
+            "nullable": true
+          },
+          "groupName": {
+            "type": "string",
+            "description": "Name of the associated Stop Machine Reason Group.",
+            "nullable": true
+          },
+          "impact": {
+            "$ref": "#/components/schemas/StopMachineImpact"
+          },
+          "requiresApproval": {
+            "type": "boolean",
+            "description": "Indicates if approval is required for this Stop Machine Reason."
+          },
+          "requiresNote": {
+            "type": "boolean",
+            "description": "Indicates if a note is required for this Stop Machine Reason."
+          },
+          "requiresAttachment": {
+            "type": "boolean",
+            "description": "Indicates if an attachment is required for this Stop Machine Reason."
+          },
+          "requiresComment": {
+            "type": "boolean",
+            "description": "Indicates if a comment is required for this Stop Machine Reason."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Data Transfer Object for Stop Machine Reason."
       },
       "StopMachineReasonEntity": {
         "type": "object",
@@ -64342,6 +65541,39 @@
           }
         },
         "additionalProperties": false
+      },
+      "UpdateTimeBlockRequest": {
+        "type": "object",
+        "properties": {
+          "blockId1": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "blockId2": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "block1Start": {
+            "type": "string",
+            "description": "Start and end times for the first and second time blocks",
+            "format": "date-time"
+          },
+          "block1End": {
+            "type": "string",
+            "description": "End time for the first time block",
+            "format": "date-time"
+          },
+          "block2Start": {
+            "type": "string",
+            "description": "Start time for the second time block",
+            "format": "date-time"
+          },
+          "block2End": {
+            "type": "string",
+            "description": "End time for the second time block",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request to update time blocks"
       },
       "UpdateUserInfoDto": {
         "type": "object",
@@ -66521,7 +67753,7 @@
             "type": "string",
             "description": "The specific work date this statistic applies to.",
             "format": "date",
-            "example": "2025-12-26"
+            "example": "2025-12-27"
           },
           "calendarId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -67098,6 +68330,10 @@
       "name": "MachineAreaMapping"
     },
     {
+      "name": "MachineDowntime",
+      "description": ""
+    },
+    {
       "name": "MachineGroup"
     },
     {
@@ -67169,6 +68405,9 @@
       "name": "ProductionOrder"
     },
     {
+      "name": "ProductionReceipt"
+    },
+    {
       "name": "ProductVariant"
     },
     {
@@ -67218,10 +68457,6 @@
       "description": "Script Variant Controller"
     },
     {
-      "name": "Sensor",
-      "description": "Controller for managing IoT sensor devices"
-    },
-    {
       "name": "ShiftTemplate"
     },
     {
@@ -67244,7 +68479,8 @@
       "name": "Stop"
     },
     {
-      "name": "StopMachineReason"
+      "name": "StopMachineReason",
+      "description": "Controller quản lý lý do dừng máy"
     },
     {
       "name": "StopMachineReasonGroup"
