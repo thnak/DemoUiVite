@@ -26,7 +26,7 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-type ViewType = 'date' | 'month' | 'year';
+type ViewType = 'date' | 'month' | 'year' | 'calendar';
 
 interface CalendarInfo {
   code: string;
@@ -68,6 +68,56 @@ function calculateDuration(startTime: string, endTime: string): number {
   const start = new Date(startTime).getTime();
   const end = new Date(endTime).getTime();
   return (end - start) / (1000 * 60 * 60); // Convert to hours
+}
+
+// Helper function to generate calendar grid for a month
+function generateCalendarGrid(year: number, month: number): Date[][] {
+  const firstDay = new Date(year, month - 1, 1);
+  const lastDay = new Date(year, month, 0);
+  const startDayOfWeek = firstDay.getDay(); // 0 = Sunday
+  const daysInMonth = lastDay.getDate();
+
+  const weeks: Date[][] = [];
+  let currentWeek: Date[] = [];
+
+  // Add empty slots for days before the month starts
+  for (let i = 0; i < startDayOfWeek; i += 1) {
+    const prevDate = new Date(year, month - 1, -startDayOfWeek + i + 1);
+    currentWeek.push(prevDate);
+  }
+
+  // Add all days in the month
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    currentWeek.push(new Date(year, month - 1, day));
+    if (currentWeek.length === 7) {
+      weeks.push(currentWeek);
+      currentWeek = [];
+    }
+  }
+
+  // Add empty slots for remaining days to complete the last week
+  if (currentWeek.length > 0) {
+    const remainingDays = 7 - currentWeek.length;
+    for (let i = 1; i <= remainingDays; i += 1) {
+      currentWeek.push(new Date(year, month, i));
+    }
+    weeks.push(currentWeek);
+  }
+
+  return weeks;
+}
+
+// Helper function to check if date is in current month
+function isCurrentMonth(date: Date, month: number): boolean {
+  return date.getMonth() === month - 1;
+}
+
+// Helper function to format date as YYYY-MM-DD for comparison
+function formatDateKey(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 // ----------------------------------------------------------------------
@@ -201,6 +251,30 @@ export function CalendarDetailView() {
     return grouped;
   }, [statistics]);
 
+  // Group statistics by date key (YYYY-MM-DD) for calendar view
+  const statisticsByDateKey = useMemo(() => {
+    const grouped = new Map<string, GetWorkDateCalendarStatisticByCalendarResult[]>();
+
+    statistics.forEach((stat) => {
+      if (stat.startTime) {
+        const date = new Date(stat.startTime);
+        const dateKey = formatDateKey(date);
+        if (!grouped.has(dateKey)) {
+          grouped.set(dateKey, []);
+        }
+        grouped.get(dateKey)!.push(stat);
+      }
+    });
+
+    return grouped;
+  }, [statistics]);
+
+  // Generate calendar grid for calendar view
+  const calendarGrid = useMemo(
+    () => generateCalendarGrid(selectedYear, selectedMonth),
+    [selectedYear, selectedMonth]
+  );
+
   // Calculate summary statistics
   const summaryStats = useMemo(() => {
     let totalShiftHours = 0;
@@ -289,6 +363,142 @@ export function CalendarDetailView() {
     );
   };
 
+  // Render calendar day cell
+  const renderCalendarDay = (date: Date) => {
+    const dateKey = formatDateKey(date);
+    const dayStats = statisticsByDateKey.get(dateKey) || [];
+    const isOtherMonth = !isCurrentMonth(date, selectedMonth);
+    const isToday =
+      date.toDateString() === new Date().toDateString();
+
+    // Calculate total hours for the day
+    let totalShiftHours = 0;
+    let totalBreakHours = 0;
+    let hasOvertime = false;
+    let hasPlannedStop = false;
+
+    dayStats.forEach((stat) => {
+      if (stat.startTime && stat.endTime) {
+        const duration = calculateDuration(stat.startTime, stat.endTime);
+        if (stat.isShiftTime && !stat.isBreakTime) {
+          totalShiftHours += duration;
+        }
+        if (stat.isBreakTime) {
+          totalBreakHours += duration;
+        }
+        if (stat.isOverTimeShift) {
+          hasOvertime = true;
+        }
+        if (stat.isPlannedStopTime) {
+          hasPlannedStop = true;
+        }
+      }
+    });
+
+    return (
+      <Card
+        key={dateKey}
+        sx={{
+          minHeight: 120,
+          p: 1,
+          bgcolor: isOtherMonth ? 'action.hover' : 'background.paper',
+          border: 1,
+          borderColor: isToday ? 'primary.main' : 'divider',
+          borderWidth: isToday ? 2 : 1,
+          opacity: isOtherMonth ? 0.5 : 1,
+          position: 'relative',
+          '&:hover': {
+            bgcolor: isOtherMonth ? 'action.hover' : 'action.hover',
+            cursor: dayStats.length > 0 ? 'pointer' : 'default',
+          },
+        }}
+      >
+        <Typography
+          variant="body2"
+          sx={{
+            fontWeight: isToday ? 'bold' : 'normal',
+            color: isToday ? 'primary.main' : 'text.primary',
+            mb: 0.5,
+          }}
+        >
+          {date.getDate()}
+        </Typography>
+
+        {dayStats.length > 0 && (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+            {totalShiftHours > 0 && (
+              <Box
+                sx={{
+                  bgcolor: 'primary.lighter',
+                  px: 0.5,
+                  py: 0.25,
+                  borderRadius: 0.5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
+                }}
+              >
+                <Iconify icon="eva:briefcase-outline" width={14} />
+                <Typography variant="caption">{totalShiftHours.toFixed(1)}h</Typography>
+              </Box>
+            )}
+
+            {totalBreakHours > 0 && (
+              <Box
+                sx={{
+                  bgcolor: 'warning.lighter',
+                  px: 0.5,
+                  py: 0.25,
+                  borderRadius: 0.5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
+                }}
+              >
+                <Iconify icon="solar:clock-circle-outline" width={14} />
+                <Typography variant="caption">{totalBreakHours.toFixed(1)}h</Typography>
+              </Box>
+            )}
+
+            {hasOvertime && (
+              <Box
+                sx={{
+                  bgcolor: 'info.lighter',
+                  px: 0.5,
+                  py: 0.25,
+                  borderRadius: 0.5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
+                }}
+              >
+                <Iconify icon="solar:restart-bold" width={14} />
+                <Typography variant="caption">OT</Typography>
+              </Box>
+            )}
+
+            {hasPlannedStop && (
+              <Box
+                sx={{
+                  bgcolor: 'error.lighter',
+                  px: 0.5,
+                  py: 0.25,
+                  borderRadius: 0.5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
+                }}
+              >
+                <Iconify icon="solar:trash-bin-trash-bold" width={14} />
+                <Typography variant="caption">Stop</Typography>
+              </Box>
+            )}
+          </Box>
+        )}
+      </Card>
+    );
+  };
+
   return (
     <DashboardContent>
       {/* Page Header */}
@@ -334,6 +544,7 @@ export function CalendarDetailView() {
       {/* View Type Tabs */}
       <Card sx={{ mb: 3 }}>
         <Tabs value={viewType} onChange={handleViewTypeChange} sx={{ px: 2, pt: 2 }}>
+          <Tab value="calendar" label="Calendar View" />
           <Tab value="date" label="Date Range View" />
           <Tab value="month" label="Month View" />
           <Tab value="year" label="Year View" />
@@ -410,6 +621,35 @@ export function CalendarDetailView() {
                 </FormControl>
               </Grid>
             )}
+
+            {viewType === 'calendar' && (
+              <>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>Year</InputLabel>
+                    <Select value={selectedYear} onChange={handleYearChange} label="Year">
+                      {availableYears.map((year) => (
+                        <MenuItem key={year} value={year}>
+                          {year}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>Month</InputLabel>
+                    <Select value={selectedMonth} onChange={handleMonthChange} label="Month">
+                      {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                        <MenuItem key={month} value={month}>
+                          {new Date(2000, month - 1).toLocaleString('en-US', { month: 'long' })}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </>
+            )}
           </Grid>
         </Box>
       </Card>
@@ -465,6 +705,77 @@ export function CalendarDetailView() {
         </Alert>
       ) : statistics.length === 0 ? (
         <Alert severity="info">No scheduled time periods found for the selected date range.</Alert>
+      ) : viewType === 'calendar' ? (
+        <Card sx={{ p: 3 }}>
+          <Typography variant="h6" sx={{ mb: 3 }}>
+            {new Date(selectedYear, selectedMonth - 1).toLocaleString('en-US', {
+              month: 'long',
+              year: 'numeric',
+            })}
+          </Typography>
+
+          {/* Calendar Header - Days of Week */}
+          <Grid container spacing={1} sx={{ mb: 1 }}>
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+              <Grid key={day} size={{ xs: 12 / 7 }}>
+                <Box
+                  sx={{
+                    textAlign: 'center',
+                    py: 1,
+                    fontWeight: 'bold',
+                    color: 'text.secondary',
+                  }}
+                >
+                  <Typography variant="body2">{day}</Typography>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+
+          {/* Calendar Grid - Weeks and Days */}
+          {calendarGrid.map((week, weekIndex) => (
+            <Grid container spacing={1} key={weekIndex} sx={{ mb: 1 }}>
+              {week.map((date) => (
+                <Grid key={formatDateKey(date)} size={{ xs: 12 / 7 }}>
+                  {renderCalendarDay(date)}
+                </Grid>
+              ))}
+            </Grid>
+          ))}
+
+          {/* Legend */}
+          <Box sx={{ mt: 3, pt: 3, borderTop: 1, borderColor: 'divider' }}>
+            <Typography variant="subtitle2" sx={{ mb: 2 }}>
+              Legend
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 6, sm: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ width: 16, height: 16, bgcolor: 'primary.lighter', borderRadius: 0.5 }} />
+                  <Typography variant="caption">Shift Time</Typography>
+                </Box>
+              </Grid>
+              <Grid size={{ xs: 6, sm: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ width: 16, height: 16, bgcolor: 'warning.lighter', borderRadius: 0.5 }} />
+                  <Typography variant="caption">Break Time</Typography>
+                </Box>
+              </Grid>
+              <Grid size={{ xs: 6, sm: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ width: 16, height: 16, bgcolor: 'info.lighter', borderRadius: 0.5 }} />
+                  <Typography variant="caption">Overtime</Typography>
+                </Box>
+              </Grid>
+              <Grid size={{ xs: 6, sm: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ width: 16, height: 16, bgcolor: 'error.lighter', borderRadius: 0.5 }} />
+                  <Typography variant="caption">Planned Stop</Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        </Card>
       ) : (
         <Box>
           {Array.from(groupedStatistics.entries()).map(([date, stats]) => (
