@@ -20,7 +20,7 @@ export const AUTH_ENDPOINTS = {
 /**
  * Generate a JWT token with optional custom expiration time
  *
- * @param data - The token generation request containing userName, password, and optional expirationMinutes
+ * @param data - The token generation request containing username, password, and optional expirationMinutes
  * @returns Promise with auth token response
  */
 export async function generateToken(data: GenerateTokenRequest): Promise<AuthTokenResponseResult> {

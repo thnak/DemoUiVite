@@ -24,7 +24,7 @@ import type { RefreshTokenRequest, GenerateTokenRequest, AuthTokenResponseResult
  *   },
  * });
  *
- * mutate({ userName: 'user', password: 'password' });
+ * mutate({ username: 'user', password: 'password' });
  * ```
  */
 export function useGenerateToken(
