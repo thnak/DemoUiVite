@@ -82,6 +82,7 @@ export function SignInView() {
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
+      event.preventDefault();
       handleSignIn();
     }
   };
