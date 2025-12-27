@@ -1,7 +1,10 @@
+import type { ChangeEvent } from 'react';
+
 import { useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
+import Alert from '@mui/material/Alert';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -9,6 +12,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { useRouter } from 'src/routes/hooks';
+
+import { useGenerateToken } from 'src/api/hooks/use-auth';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -18,9 +23,67 @@ export function SignInView() {
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    userName: '',
+    password: '',
+  });
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const { mutate: generateToken, isPending } = useGenerateToken({
+    onSuccess: (result) => {
+      if (result.isSuccess && result.value) {
+        // Store tokens in localStorage
+        if (result.value.accessToken) {
+          localStorage.setItem('accessToken', result.value.accessToken);
+        }
+        if (result.value.refreshToken) {
+          localStorage.setItem('refreshToken', result.value.refreshToken);
+        }
+        // Redirect to home page
+        router.push('/');
+      } else {
+        // Handle unsuccessful response
+        setErrorMessage(result.message || 'Login failed. Please try again.');
+      }
+    },
+    onError: (error) => {
+      setErrorMessage(error.message || 'An error occurred during login. Please try again.');
+    },
+  });
+
+  const handleChange = (field: keyof typeof formData) => (event: ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: event.target.value,
+    }));
+    // Clear error message when user starts typing
+    if (errorMessage) {
+      setErrorMessage(null);
+    }
+  };
 
   const handleSignIn = () => {
-    router.push('/');
+    // Validate form
+    if (!formData.userName.trim()) {
+      setErrorMessage('Username is required');
+      return;
+    }
+    if (!formData.password.trim()) {
+      setErrorMessage('Password is required');
+      return;
+    }
+
+    // Call API to generate token
+    generateToken({
+      userName: formData.userName,
+      password: formData.password,
+    });
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      handleSignIn();
+    }
   };
 
   return (
@@ -34,12 +97,31 @@ export function SignInView() {
           Get started
         </Link>
       </Typography>
-      <TextField name="email" label="Email address" defaultValue="hello@gmail.com" />
+
+      {errorMessage && (
+        <Alert severity="error" onClose={() => setErrorMessage(null)}>
+          {errorMessage}
+        </Alert>
+      )}
+
+      <TextField
+        name="userName"
+        label="Username"
+        value={formData.userName}
+        onChange={handleChange('userName')}
+        onKeyPress={handleKeyPress}
+        disabled={isPending}
+        autoComplete="username"
+      />
       <TextField
         name="password"
         label="Password"
-        defaultValue="@demo1234"
+        value={formData.password}
+        onChange={handleChange('password')}
+        onKeyPress={handleKeyPress}
+        disabled={isPending}
         type={showPassword ? 'text' : 'password'}
+        autoComplete="current-password"
         slotProps={{
           input: {
             endAdornment: (
@@ -62,6 +144,7 @@ export function SignInView() {
         color="inherit"
         variant="contained"
         onClick={handleSignIn}
+        loading={isPending}
       >
         Sign in
       </LoadingButton>
