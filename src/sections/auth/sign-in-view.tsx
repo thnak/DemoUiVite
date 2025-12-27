@@ -80,7 +80,7 @@ export function SignInView() {
     });
   };
 
-  const handleKeyPress = (event: React.KeyboardEvent) => {
+  const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
       handleSignIn();
     }
@@ -109,7 +109,7 @@ export function SignInView() {
         label="Username"
         value={formData.userName}
         onChange={handleChange('userName')}
-        onKeyPress={handleKeyPress}
+        onKeyDown={handleKeyDown}
         disabled={isPending}
         autoComplete="username"
       />
@@ -118,7 +118,7 @@ export function SignInView() {
         label="Password"
         value={formData.password}
         onChange={handleChange('password')}
-        onKeyPress={handleKeyPress}
+        onKeyDown={handleKeyDown}
         disabled={isPending}
         type={showPassword ? 'text' : 'password'}
         autoComplete="current-password"
