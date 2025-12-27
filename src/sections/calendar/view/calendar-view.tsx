@@ -151,6 +151,13 @@ export function CalendarView() {
     }
   }, [selectedCalendarId, router, handleClosePopover]);
 
+  const handleViewDetails = useCallback(() => {
+    if (selectedCalendarId) {
+      handleClosePopover();
+      router.push(`/calendars/${selectedCalendarId}/detail`);
+    }
+  }, [selectedCalendarId, router, handleClosePopover]);
+
   const handleDeleteCalendar = useCallback(() => {
     if (selectedCalendarId) {
       handleClosePopover();
@@ -458,6 +465,11 @@ export function CalendarView() {
             },
           }}
         >
+          <MenuItem onClick={handleViewDetails}>
+            <Iconify icon="solar:eye-bold" />
+            View Details
+          </MenuItem>
+
           <MenuItem onClick={handleEditCalendar}>
             <Iconify icon="solar:pen-bold" />
             Edit

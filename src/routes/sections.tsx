@@ -60,6 +60,7 @@ export const DefectReasonEditPage = lazy(() => import('src/pages/defect-reason-e
 export const CalendarListPage = lazy(() => import('src/pages/calendar-list'));
 export const CalendarCreatePage = lazy(() => import('src/pages/calendar-create'));
 export const CalendarEditPage = lazy(() => import('src/pages/calendar-edit'));
+export const CalendarDetailPage = lazy(() => import('src/pages/calendar-detail'));
 export const IoTDeviceListPage = lazy(() => import('src/pages/iot-device-list'));
 export const IoTDeviceCreatePage = lazy(() => import('src/pages/iot-device-create'));
 export const IoTDeviceEditPage = lazy(() => import('src/pages/iot-device-edit'));
@@ -165,6 +166,7 @@ export const routesSection: RouteObject[] = [
       { path: 'calendars', element: <CalendarListPage /> },
       { path: 'calendars/create', element: <CalendarCreatePage /> },
       { path: 'calendars/:id/edit', element: <CalendarEditPage /> },
+      { path: 'calendars/:id/detail', element: <CalendarDetailPage /> },
       { path: 'iot-devices', element: <IoTDeviceListPage /> },
       { path: 'iot-devices/create', element: <IoTDeviceCreatePage /> },
       { path: 'iot-devices/:id/edit', element: <IoTDeviceEditPage /> },
