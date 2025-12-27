@@ -10,6 +10,7 @@ export type GenerateTokenRequest = {
   username?: string;
   password?: string;
   expirationMinutes?: number;
+  setRefreshTokenInCookie?: boolean;
 };
 
 /**
