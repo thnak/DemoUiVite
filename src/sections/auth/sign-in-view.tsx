@@ -24,7 +24,7 @@ export function SignInView() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    userName: '',
+    username: '',
     password: '',
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -64,7 +64,7 @@ export function SignInView() {
 
   const handleSignIn = () => {
     // Validate form
-    if (!formData.userName.trim()) {
+    if (!formData.username.trim()) {
       setErrorMessage('Username is required');
       return;
     }
@@ -75,7 +75,7 @@ export function SignInView() {
 
     // Call API to generate token
     generateToken({
-      userName: formData.userName,
+      username: formData.username,
       password: formData.password,
     });
   };
@@ -105,10 +105,10 @@ export function SignInView() {
       )}
 
       <TextField
-        name="userName"
+        name="username"
         label="Username"
-        value={formData.userName}
-        onChange={handleChange('userName')}
+        value={formData.username}
+        onChange={handleChange('username')}
         onKeyDown={handleKeyDown}
         disabled={isPending}
         autoComplete="username"
