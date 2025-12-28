@@ -1,5 +1,3 @@
-import type { StopType } from 'src/_mock';
-
 import { useState, useCallback } from 'react';
 
 import Popover from '@mui/material/Popover';
@@ -10,7 +8,8 @@ import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
-import { Label } from 'src/components/label';
+import { useRouter } from 'src/routes/hooks';
+
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
@@ -20,7 +19,7 @@ export type StopMachineReasonProps = {
   code: string;
   name: string;
   stopGroup: string;
-  stopType: StopType;
+  stopType: 'planned' | 'unplanned';
   description: string;
 };
 
@@ -28,16 +27,16 @@ type StopMachineReasonTableRowProps = {
   row: StopMachineReasonProps;
   selected: boolean;
   onSelectRow: () => void;
+  onDeleteRow?: () => void;
 };
-
-const getStopTypeColor = (stopType: StopType): 'success' | 'error' =>
-  stopType === 'Plan' ? 'success' : 'error';
 
 export function StopMachineReasonTableRow({
   row,
   selected,
   onSelectRow,
+  onDeleteRow,
 }: StopMachineReasonTableRowProps) {
+  const router = useRouter();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -48,6 +47,18 @@ export function StopMachineReasonTableRow({
     setOpenPopover(null);
   }, []);
 
+  const handleEdit = useCallback(() => {
+    handleClosePopover();
+    router.push(`/stop-machine-reason/${row.id}/edit`);
+  }, [router, row.id]);
+
+  const handleDelete = useCallback(() => {
+    handleClosePopover();
+    if (onDeleteRow) {
+      onDeleteRow();
+    }
+  }, [onDeleteRow]);
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -55,15 +66,9 @@ export function StopMachineReasonTableRow({
           <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
         </TableCell>
 
-        <TableCell>{row.code}</TableCell>
-
         <TableCell>{row.name}</TableCell>
 
         <TableCell>{row.stopGroup}</TableCell>
-
-        <TableCell>
-          <Label color={getStopTypeColor(row.stopType)}>{row.stopType}</Label>
-        </TableCell>
 
         <TableCell sx={{ maxWidth: 300 }}>{row.description}</TableCell>
 
@@ -97,12 +102,12 @@ export function StopMachineReasonTableRow({
             },
           }}
         >
-          <MenuItem onClick={handleClosePopover}>
+          <MenuItem onClick={handleEdit}>
             <Iconify icon="solar:pen-bold" />
             Edit
           </MenuItem>
 
-          <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
+          <MenuItem onClick={handleDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete
           </MenuItem>

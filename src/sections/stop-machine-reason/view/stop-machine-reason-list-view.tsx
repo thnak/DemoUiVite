@@ -1,19 +1,27 @@
-import type { StopType } from 'src/_mock';
-
-import { useMemo, useState, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
+import Tabs from '@mui/material/Tabs';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
+import CircularProgress from '@mui/material/CircularProgress';
 
-import { _stopMachineReasons } from 'src/_mock';
+import { useRouter } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
+import {
+  postapiStopMachineReasongetreasonpage,
+  deleteStopMachineReason,
+} from 'src/api/services/generated/stop-machine-reason';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -22,7 +30,6 @@ import { StopMachineReasonTableRow } from '../stop-machine-reason-table-row';
 import { StopMachineReasonTableHead } from '../stop-machine-reason-table-head';
 import { StopMachineReasonTableNoData } from '../stop-machine-reason-table-no-data';
 import { StopMachineReasonTableToolbar } from '../stop-machine-reason-table-toolbar';
-import { emptyRows, applyFilter, getComparator } from '../stop-machine-reason-utils';
 import { StopMachineReasonTableEmptyRows } from '../stop-machine-reason-table-empty-rows';
 
 import type { StopMachineReasonProps } from '../stop-machine-reason-table-row';
@@ -30,44 +37,83 @@ import type { StopMachineReasonProps } from '../stop-machine-reason-table-row';
 // ----------------------------------------------------------------------
 
 export function StopMachineReasonListView() {
+  const router = useRouter();
   const table = useTable();
+  const queryClient = useQueryClient();
 
   const [filterName, setFilterName] = useState('');
-  const [filterStopGroup, setFilterStopGroup] = useState('');
-  const [filterStopType, setFilterStopType] = useState<StopType | 'all'>('all');
+  const [stopMachineReasons, setStopMachineReasons] = useState<StopMachineReasonProps[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedTab, setSelectedTab] = useState('all');
+  const [groupCounts, setGroupCounts] = useState<Record<string, number>>({});
+  const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>([]);
 
-  // Get unique stop groups from data
-  const stopGroups = useMemo(() => {
-    const uniqueGroups = [...new Set(_stopMachineReasons.map((item) => item.stopGroup))];
-    return uniqueGroups.sort();
-  }, []);
+  const fetchStopMachineReasons = useCallback(
+    async (groupIds: string[] = []) => {
+      setIsLoading(true);
+      try {
+        const response = await postapiStopMachineReasongetreasonpage(
+          groupIds.map((id) => ({ value: id })),
+          {
+            Search: filterName || undefined,
+            PageNumber: table.page,
+            PageSize: table.rowsPerPage,
+          }
+        );
 
-  const dataFiltered: StopMachineReasonProps[] = applyFilter({
-    inputData: _stopMachineReasons,
-    comparator: getComparator(table.order, table.orderBy),
-    filterName,
-    filterStopGroup,
-    filterStopType,
-  });
+        const mappedReasons: StopMachineReasonProps[] = (response.items || []).map((item) => ({
+          id: item.id?.toString() || '',
+          code: '',
+          name: item.name || '',
+          stopGroup: item.groupName || '',
+          stopType: 'planned',
+          description: item.description || '',
+        }));
 
-  const notFound =
-    !dataFiltered.length && (!!filterName || !!filterStopGroup || filterStopType !== 'all');
+        setStopMachineReasons(mappedReasons);
+        setTotalItems(response.totalItems || 0);
+        setGroupCounts(response.groupCounts || {});
+      } catch (error) {
+        console.error('Failed to fetch stop machine reasons:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [filterName, table.page, table.rowsPerPage]
+  );
 
-  const handleFilterStopGroup = useCallback(
-    (stopGroup: string) => {
-      setFilterStopGroup(stopGroup);
+  useEffect(() => {
+    fetchStopMachineReasons(selectedGroupIds);
+  }, [fetchStopMachineReasons, selectedGroupIds]);
+
+  const handleTabChange = useCallback(
+    (_event: React.SyntheticEvent, newValue: string) => {
+      setSelectedTab(newValue);
+      if (newValue === 'all') {
+        setSelectedGroupIds([]);
+      } else {
+        setSelectedGroupIds([newValue]);
+      }
       table.onResetPage();
     },
     [table]
   );
 
-  const handleFilterStopType = useCallback(
-    (stopType: StopType | 'all') => {
-      setFilterStopType(stopType);
-      table.onResetPage();
+  const handleDeleteRow = useCallback(
+    async (id: string) => {
+      try {
+        await deleteStopMachineReason(id);
+        // Refetch after deletion
+        fetchStopMachineReasons(selectedGroupIds);
+      } catch (error) {
+        console.error('Failed to delete stop machine reason:', error);
+      }
     },
-    [table]
+    [fetchStopMachineReasons, selectedGroupIds]
   );
+
+  const notFound = !stopMachineReasons.length && !!filterName;
 
   return (
     <DashboardContent>
@@ -81,7 +127,7 @@ export function StopMachineReasonListView() {
       >
         <Box>
           <Typography variant="h4" sx={{ mb: 1 }}>
-            List
+            Stop Machine Reason List
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Typography variant="body2" sx={{ color: 'text.primary' }}>
@@ -113,6 +159,8 @@ export function StopMachineReasonListView() {
             Export
           </Button>
           <Button
+            component={RouterLink}
+            href="/stop-machine-reason/create"
             variant="contained"
             color="inherit"
             startIcon={<Iconify icon="mingcute:add-line" />}
@@ -123,74 +171,85 @@ export function StopMachineReasonListView() {
       </Box>
 
       <Card>
+        <Tabs
+          value={selectedTab}
+          onChange={handleTabChange}
+          sx={{
+            px: 2,
+            pt: 2,
+            borderBottom: 1,
+            borderColor: 'divider',
+          }}
+        >
+          <Tab label={`All (${totalItems})`} value="all" />
+          {Object.entries(groupCounts).map(([groupId, count]) => (
+            <Tab key={groupId} label={`Group ${groupId} (${count})`} value={groupId} />
+          ))}
+        </Tabs>
+
         <StopMachineReasonTableToolbar
           numSelected={table.selected.length}
           filterName={filterName}
-          filterStopGroup={filterStopGroup}
-          filterStopType={filterStopType}
-          stopGroups={stopGroups}
           onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
             setFilterName(event.target.value);
             table.onResetPage();
           }}
-          onFilterStopGroup={handleFilterStopGroup}
-          onFilterStopType={handleFilterStopType}
         />
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <StopMachineReasonTableHead
-                order={table.order}
-                orderBy={table.orderBy}
-                rowCount={dataFiltered.length}
-                numSelected={table.selected.length}
-                onSort={table.onSort}
-                onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    dataFiltered.map((item) => item.id)
-                  )
-                }
-                headLabel={[
-                  { id: 'code', label: 'Code' },
-                  { id: 'name', label: 'Name' },
-                  { id: 'stopGroup', label: 'Stop Group' },
-                  { id: 'stopType', label: 'Stop Type' },
-                  { id: 'description', label: 'Description' },
-                  { id: '' },
-                ]}
-              />
-              <TableBody>
-                {dataFiltered
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row) => (
+            {isLoading ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <Table sx={{ minWidth: 800 }}>
+                <StopMachineReasonTableHead
+                  order={table.order}
+                  orderBy={table.orderBy}
+                  rowCount={totalItems}
+                  numSelected={table.selected.length}
+                  onSort={table.onSort}
+                  onSelectAllRows={(checked) =>
+                    table.onSelectAllRows(
+                      checked,
+                      stopMachineReasons.map((item) => item.id)
+                    )
+                  }
+                  headLabel={[
+                    { id: 'name', label: 'Name' },
+                    { id: 'groupName', label: 'Group' },
+                    { id: 'description', label: 'Description' },
+                    { id: '' },
+                  ]}
+                />
+                <TableBody>
+                  {stopMachineReasons.map((row) => (
                     <StopMachineReasonTableRow
                       key={row.id}
                       row={row}
                       selected={table.selected.includes(row.id)}
                       onSelectRow={() => table.onSelectRow(row.id)}
+                      onDeleteRow={() => handleDeleteRow(row.id)}
                     />
                   ))}
 
-                <StopMachineReasonTableEmptyRows
-                  height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
-                />
+                  <StopMachineReasonTableEmptyRows
+                    height={68}
+                    emptyRows={0}
+                  />
 
-                {notFound && <StopMachineReasonTableNoData searchQuery={filterName} />}
-              </TableBody>
-            </Table>
+                  {notFound && <StopMachineReasonTableNoData searchQuery={filterName} />}
+                </TableBody>
+              </Table>
+            )}
           </TableContainer>
         </Scrollbar>
 
         <TablePagination
           component="div"
           page={table.page}
-          count={dataFiltered.length}
+          count={totalItems}
           rowsPerPage={table.rowsPerPage}
           onPageChange={table.onChangePage}
           rowsPerPageOptions={[...STANDARD_ROWS_PER_PAGE_OPTIONS]}
