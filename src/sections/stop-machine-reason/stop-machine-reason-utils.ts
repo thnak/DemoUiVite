@@ -1,5 +1,3 @@
-import type { StopType } from 'src/_mock';
-
 import type { StopMachineReasonProps } from './stop-machine-reason-table-row';
 
 // ----------------------------------------------------------------------
@@ -57,18 +55,10 @@ export function getComparator<Key extends keyof any>(
 type ApplyFilterProps = {
   inputData: StopMachineReasonProps[];
   filterName: string;
-  filterStopGroup?: string;
-  filterStopType?: StopType | 'all';
   comparator: (a: any, b: any) => number;
 };
 
-export function applyFilter({
-  inputData,
-  comparator,
-  filterName,
-  filterStopGroup,
-  filterStopType,
-}: ApplyFilterProps) {
+export function applyFilter({ inputData, comparator, filterName }: ApplyFilterProps) {
   const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 
   stabilizedThis.sort((a, b) => {
@@ -83,17 +73,8 @@ export function applyFilter({
     inputData = inputData.filter(
       (item) =>
         item.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-        item.code.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
         item.description.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
-  }
-
-  if (filterStopGroup) {
-    inputData = inputData.filter((item) => item.stopGroup === filterStopGroup);
-  }
-
-  if (filterStopType && filterStopType !== 'all') {
-    inputData = inputData.filter((item) => item.stopType === filterStopType);
   }
 
   return inputData;

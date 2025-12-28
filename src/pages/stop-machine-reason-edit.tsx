@@ -1,5 +1,5 @@
-import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';

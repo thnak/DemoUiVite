@@ -19,8 +19,8 @@ import { RouterLink } from 'src/routes/components';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import {
-  postapiStopMachineReasongetreasonpage,
   deleteStopMachineReason,
+  postapiStopMachineReasongetreasonpage,
 } from 'src/api/services/generated/stop-machine-reason';
 
 import { Iconify } from 'src/components/iconify';
@@ -37,9 +37,7 @@ import type { StopMachineReasonProps } from '../stop-machine-reason-table-row';
 // ----------------------------------------------------------------------
 
 export function StopMachineReasonListView() {
-  const router = useRouter();
   const table = useTable();
-  const queryClient = useQueryClient();
 
   const [filterName, setFilterName] = useState('');
   const [stopMachineReasons, setStopMachineReasons] = useState<StopMachineReasonProps[]>([]);
@@ -54,7 +52,7 @@ export function StopMachineReasonListView() {
       setIsLoading(true);
       try {
         const response = await postapiStopMachineReasongetreasonpage(
-          groupIds.map((id) => ({ value: id })),
+          groupIds, // ObjectId[] is just string[]
           {
             Search: filterName || undefined,
             PageNumber: table.page,

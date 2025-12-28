@@ -180,7 +180,7 @@ export function StopMachineReasonCreateEditView({
 
   const handleRemoveTranslation = useCallback((key: string) => {
     setFormData((prev) => {
-      const { [key]: removed, ...rest } = prev.translations;
+      const { [key]: _, ...rest } = prev.translations;
       return {
         ...prev,
         translations: rest,
@@ -222,7 +222,7 @@ export function StopMachineReasonCreateEditView({
           name: formData.name,
           description: formData.description,
           colorHex: formData.colorHex,
-          groupId: formData.groupId ? { value: formData.groupId } : undefined,
+          groupId: formData.groupId || undefined,
           requiresApproval: formData.requiresApproval,
           requiresNote: formData.requiresNote,
           requiresAttachment: formData.requiresAttachment,
@@ -297,7 +297,7 @@ export function StopMachineReasonCreateEditView({
             onChange={handleGroupIdChange}
             label="Stop Machine Reason Group"
             error={hasError('groupId')}
-            helperText={getFieldErrorMessage('groupId')}
+            helperText={getFieldErrorMessage('groupId') || undefined}
           />
 
           <TextField

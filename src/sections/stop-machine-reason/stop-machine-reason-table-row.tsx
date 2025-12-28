@@ -50,14 +50,14 @@ export function StopMachineReasonTableRow({
   const handleEdit = useCallback(() => {
     handleClosePopover();
     router.push(`/stop-machine-reason/${row.id}/edit`);
-  }, [router, row.id]);
+  }, [router, row.id, handleClosePopover]);
 
   const handleDelete = useCallback(() => {
     handleClosePopover();
     if (onDeleteRow) {
       onDeleteRow();
     }
-  }, [onDeleteRow]);
+  }, [onDeleteRow, handleClosePopover]);
 
   return (
     <>
