@@ -94,11 +94,9 @@ export function StopMachineReasonGroupCreateEditView({
   });
 
   // Generate new code hook
-  const { mutate: generateCode, isPending: isGeneratingCode } =
+  const { data: generatedCode, isFetching: isGeneratingCode } =
     useGenerateNewStopMachineReasonGroupCode({
-      onSuccess: (newCode) => {
-        setFormData((prev) => ({ ...prev, code: newCode }));
-      },
+      enabled: !isEdit,
     });
 
   useEffect(() => {
@@ -112,11 +110,11 @@ export function StopMachineReasonGroupCreateEditView({
         translations: groupData.translations || {},
       });
       setIsLoadingData(false);
-    } else if (!isEdit) {
-      // Generate code for new group
-      generateCode();
+    } else if (!isEdit && generatedCode) {
+      // Set generated code for new group
+      setFormData((prev) => ({ ...prev, code: generatedCode }));
     }
-  }, [isEdit, groupData, generateCode]);
+  }, [isEdit, groupData, generatedCode]);
 
   const { mutate: createGroup, isPending: isCreating } = useCreateStopMachineReasonGroup({
     onSuccess: (result) => {

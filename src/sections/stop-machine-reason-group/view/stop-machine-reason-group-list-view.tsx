@@ -97,7 +97,9 @@ export function StopMachineReasonGroupListView() {
   // Calculate tabs from totalByImpact
   const tabs = useMemo(() => {
     const allCount = Object.values(totalByImpact).reduce((sum, count) => sum + count, 0);
-    const result = [{ value: 'all' as const, label: 'All', count: allCount }];
+    const result: Array<{ value: StopMachineImpact | 'all'; label: string; count: number }> = [
+      { value: 'all', label: 'All', count: allCount },
+    ];
 
     (['run', 'unPlanedStop', 'planedStop', 'notScheduled'] as StopMachineImpact[]).forEach(
       (impact) => {

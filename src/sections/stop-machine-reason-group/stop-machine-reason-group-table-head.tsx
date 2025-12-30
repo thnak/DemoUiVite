@@ -5,7 +5,17 @@ import TableHead from '@mui/material/TableHead';
 import TableCell from '@mui/material/TableCell';
 import TableSortLabel from '@mui/material/TableSortLabel';
 
-import { visuallyHidden } from './stop-machine-reason-utils';
+const visuallyHidden = {
+  border: 0,
+  margin: -1,
+  padding: 0,
+  width: '1px',
+  height: '1px',
+  overflow: 'hidden',
+  position: 'absolute',
+  whiteSpace: 'nowrap',
+  clip: 'rect(0 0 0 0)',
+} as const;
 
 // ----------------------------------------------------------------------
 
