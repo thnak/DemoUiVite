@@ -1,7 +1,7 @@
 import { AnimatePresence } from 'framer-motion';
 import { useOutlet, useLocation } from 'react-router-dom';
 
-import { PageTransition } from 'src/components/page-transition';
+import { PageTransition } from '../../components/page-transition';
 
 /**
  * AnimatedOutlet wraps the React Router Outlet with AnimatePresence
