@@ -1,4 +1,4 @@
-import type { StopType } from 'src/_mock';
+import type { StopMachineImpact } from 'src/api/types/generated';
 
 import { useState, useCallback } from 'react';
 
@@ -10,6 +10,8 @@ import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
+import { useRouter } from 'src/routes/hooks';
+
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 
@@ -19,9 +21,14 @@ export type StopMachineReasonProps = {
   id: string;
   code: string;
   name: string;
-  stopGroup: string;
-  stopType: StopType;
   description: string;
+  groupName: string;
+  color: string;
+  impact: StopMachineImpact;
+  requiresApproval: boolean;
+  requiresNote: boolean;
+  requiresAttachment: boolean;
+  requiresComment: boolean;
 };
 
 type StopMachineReasonTableRowProps = {
@@ -30,14 +37,42 @@ type StopMachineReasonTableRowProps = {
   onSelectRow: () => void;
 };
 
-const getStopTypeColor = (stopType: StopType): 'success' | 'error' =>
-  stopType === 'Plan' ? 'success' : 'error';
+const getImpactColor = (impact: StopMachineImpact): 'success' | 'error' | 'warning' | 'default' => {
+  switch (impact) {
+    case 'run':
+      return 'success';
+    case 'unPlanedStop':
+      return 'error';
+    case 'planedStop':
+      return 'warning';
+    case 'notScheduled':
+      return 'default';
+    default:
+      return 'default';
+  }
+};
+
+const getImpactLabel = (impact: StopMachineImpact): string => {
+  switch (impact) {
+    case 'run':
+      return 'Run';
+    case 'unPlanedStop':
+      return 'Unplanned Stop';
+    case 'planedStop':
+      return 'Planned Stop';
+    case 'notScheduled':
+      return 'Not Scheduled';
+    default:
+      return impact;
+  }
+};
 
 export function StopMachineReasonTableRow({
   row,
   selected,
   onSelectRow,
 }: StopMachineReasonTableRowProps) {
+  const router = useRouter();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -47,6 +82,11 @@ export function StopMachineReasonTableRow({
   const handleClosePopover = useCallback(() => {
     setOpenPopover(null);
   }, []);
+
+  const handleEdit = useCallback(() => {
+    handleClosePopover();
+    router.push(`/stop-machine-reason/edit/${row.id}`);
+  }, [router, row.id]);
 
   return (
     <>
@@ -59,10 +99,10 @@ export function StopMachineReasonTableRow({
 
         <TableCell>{row.name}</TableCell>
 
-        <TableCell>{row.stopGroup}</TableCell>
+        <TableCell>{row.groupName}</TableCell>
 
         <TableCell>
-          <Label color={getStopTypeColor(row.stopType)}>{row.stopType}</Label>
+          <Label color={getImpactColor(row.impact)}>{getImpactLabel(row.impact)}</Label>
         </TableCell>
 
         <TableCell sx={{ maxWidth: 300 }}>{row.description}</TableCell>
@@ -97,7 +137,7 @@ export function StopMachineReasonTableRow({
             },
           }}
         >
-          <MenuItem onClick={handleClosePopover}>
+          <MenuItem onClick={handleEdit}>
             <Iconify icon="solar:pen-bold" />
             Edit
           </MenuItem>
