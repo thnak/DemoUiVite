@@ -930,34 +930,32 @@ const heroVariants = {
 import { motion } from 'framer-motion';
 
 // Hero section
-<Box
-  component={motion.div}
+<motion.div
   variants={heroVariants}
   initial="hidden"
   animate="visible"
-  sx={{ /* styles */ }}
 >
-  {/* content */}
-</Box>
+  <Box sx={{ /* styles */ }}>
+    {/* content */}
+  </Box>
+</motion.div>
 
 // Grid container
-<Grid
-  container
-  component={motion.div}
+<motion.div
   variants={containerVariants}
   initial="hidden"
   animate="visible"
 >
-  {items.map((item) => (
-    <Grid
-      key={item.id}
-      component={motion.div}
-      variants={cardVariants}
-    >
-      {/* card content */}
-    </Grid>
-  ))}
-</Grid>
+  <Grid container>
+    {items.map((item) => (
+      <Grid key={item.id}>
+        <motion.div variants={cardVariants}>
+          {/* card content */}
+        </motion.div>
+      </Grid>
+    ))}
+  </Grid>
+</motion.div>
 ```
 
 ### Animation Best Practices
