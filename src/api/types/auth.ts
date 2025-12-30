@@ -7,9 +7,10 @@
  * Request payload for generating a JWT token
  */
 export type GenerateTokenRequest = {
-  userName?: string;
+  username?: string;
   password?: string;
   expirationMinutes?: number;
+  setRefreshTokenInCookie?: boolean;
 };
 
 /**

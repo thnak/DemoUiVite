@@ -30,6 +30,11 @@ export function useOINavData(): NavData {
           path: '/oi/defect-input',
           icon: icon('ic-disabled'),
         },
+        {
+          title: t('nav.downtimeInput'),
+          path: '/oi/downtime-input',
+          icon: icon('ic-clock'),
+        },
       ],
     },
   ];
