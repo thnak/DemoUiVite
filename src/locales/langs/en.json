@@ -150,7 +150,6 @@
     "loadingStateRecords": "Loading state records...",
     "unplannedDowntime": "Unplanned Downtime",
     "plannedDowntime": "Planned Downtime",
-    "running": "Running",
     "idle": "Idle",
     "labelDowntime": "Label Downtime",
     "selectReason": "Select Reason",
@@ -167,6 +166,10 @@
     "duration": "Duration",
     "state": "State",
     "clickToLabel": "Click to label",
-    "ongoing": "Ongoing"
+    "ongoing": "Ongoing",
+    "defectedItemsList": "Defected Items List",
+    "noDefectedItems": "No defected items recorded yet",
+    "quantity": "Quantity",
+    "notes": "Notes"
   }
 }

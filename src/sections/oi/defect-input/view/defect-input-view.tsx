@@ -1,4 +1,4 @@
-import type { DefectReasonEntity } from 'src/api/types/generated';
+import type { DefectReasonEntity, MachineDefectInputEntity } from 'src/api/types/generated';
 
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,26 +6,30 @@ import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
+import Chip from '@mui/material/Chip';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import TableRow from '@mui/material/TableRow';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import {
-  List,
-  ListItem,
-  ListItemText,
-  ListItemButton,
-  InputAdornment,
-  CircularProgress,
-} from '@mui/material';
+import TableContainer from '@mui/material/TableContainer';
+import { InputAdornment, CircularProgress } from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { searchDefectReason } from 'src/api/services/generated/defect-reason';
+import {
+  getapiMachinemachineIddefecteditems,
+  postapiMachinemachineIddefecteditemsaddnew,
+} from 'src/api/services/generated/machine';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -45,6 +49,8 @@ export function DefectInputView() {
   const [scrapQuantity, setScrapQuantity] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [defectedItems, setDefectedItems] = useState<MachineDefectInputEntity[]>([]);
+  const [loadingDefectedItems, setLoadingDefectedItems] = useState(false);
 
   const handleOpenDefectDialog = () => {
     if (!selectedMachine) {
@@ -80,29 +86,52 @@ export function DefectInputView() {
     handleCloseDefectDialog();
   };
 
+  const loadDefectedItems = async () => {
+    if (!selectedMachine || !selectedMachine.id) return;
+    
+    setLoadingDefectedItems(true);
+    try {
+      const response = await getapiMachinemachineIddefecteditems(selectedMachine.id, {
+        page: 1,
+        pageSize: 100,
+      });
+      setDefectedItems(response.items || []);
+    } catch (error) {
+      console.error('Failed to load defected items:', error);
+      setDefectedItems([]);
+    } finally {
+      setLoadingDefectedItems(false);
+    }
+  };
+
   const handleSubmit = async () => {
-    if (!selectedMachine || !selectedDefectReason || !scrapQuantity) {
+    if (!selectedMachine || !selectedMachine.id || !selectedDefectReason || !selectedDefectReason.id || !scrapQuantity) {
       return;
     }
 
-    // TODO: Implement API call to submit defect input
-    console.log('Submitting defect input:', {
-      machineId: selectedMachine.id,
-      defectReasonId: selectedDefectReason.id,
-      scrapQuantity: parseFloat(scrapQuantity),
-      notes,
-    });
+    try {
+      await postapiMachinemachineIddefecteditemsaddnew(selectedMachine.id, {
+        defectReasonId: selectedDefectReason.id,
+        quantity: parseFloat(scrapQuantity),
+        extraNote: notes || null,
+      });
 
-    // Show success message
-    setSubmitSuccess(true);
-    
-    // Reset form after 2 seconds
-    setTimeout(() => {
-      setSelectedDefectReason(null);
-      setScrapQuantity('');
-      setNotes('');
-      setSubmitSuccess(false);
-    }, 2000);
+      // Show success message
+      setSubmitSuccess(true);
+      
+      // Reload defected items list
+      await loadDefectedItems();
+      
+      // Reset form after 2 seconds
+      setTimeout(() => {
+        setSelectedDefectReason(null);
+        setScrapQuantity('');
+        setNotes('');
+        setSubmitSuccess(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Failed to submit defect input:', error);
+    }
   };
 
   const handleReset = () => {
@@ -120,6 +149,13 @@ export function DefectInputView() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
+
+  useEffect(() => {
+    if (selectedMachine) {
+      loadDefectedItems();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedMachine]);
 
   return (
     <DashboardContent maxWidth="xl">
@@ -298,6 +334,49 @@ export function DefectInputView() {
               </Grid>
             </Grid>
           </Card>
+
+          {/* Defected Items Table */}
+          <Card sx={{ p: 4 }}>
+            <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold' }}>
+              {t('oi.defectedItemsList')}
+            </Typography>
+            {loadingDefectedItems ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                <CircularProgress size={48} />
+              </Box>
+            ) : defectedItems.length === 0 ? (
+              <Box sx={{ textAlign: 'center', py: 4 }}>
+                <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '1.1rem' }}>
+                  {t('oi.noDefectedItems')}
+                </Typography>
+              </Box>
+            ) : (
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>{t('oi.defectReason')}</TableCell>
+                      <TableCell align="right">{t('oi.quantity')}</TableCell>
+                      <TableCell>{t('oi.notes')}</TableCell>
+                      <TableCell>{t('common.createdAt')}</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {defectedItems.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell>{item.defectReasonId}</TableCell>
+                        <TableCell align="right">{item.quantity}</TableCell>
+                        <TableCell>{item.extraNote || '-'}</TableCell>
+                        <TableCell>
+                          {item.createTime ? new Date(item.createTime).toLocaleString() : '-'}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
+          </Card>
         </Stack>
       )}
 
@@ -305,7 +384,7 @@ export function DefectInputView() {
       <Dialog 
         open={dialogOpen} 
         onClose={handleCloseDefectDialog}
-        maxWidth="md"
+        maxWidth="lg"
         fullWidth
         PaperProps={{
           sx: {
@@ -323,7 +402,7 @@ export function DefectInputView() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             sx={{ 
-              mb: 2,
+              mb: 3,
               mt: 1,
               '& .MuiInputBase-root': {
                 fontSize: '1.25rem',
@@ -339,55 +418,64 @@ export function DefectInputView() {
               <CircularProgress size={48} />
             </Box>
           ) : (
-            <List sx={{ pt: 0 }}>
+            <Grid container spacing={2}>
               {defectReasons.map((defectReason) => (
-                <ListItem key={defectReason.id} disablePadding sx={{ mb: 1 }}>
-                  <ListItemButton
-                    onClick={() => handleSelectDefectReason(defectReason)}
-                    selected={selectedDefectReason?.id === defectReason.id}
+                <Grid key={defectReason.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                  <Card
                     sx={{
-                      borderRadius: 1,
-                      border: 1,
-                      borderColor: 'divider',
-                      minHeight: 72,
-                      '&.Mui-selected': {
-                        bgcolor: 'action.selected',
-                        borderColor: 'primary.main',
-                        borderWidth: 2,
-                      },
+                      p: 2,
+                      cursor: 'pointer',
+                      border: 2,
+                      borderColor: selectedDefectReason?.id === defectReason.id ? 'primary.main' : 'divider',
+                      bgcolor: selectedDefectReason?.id === defectReason.id ? 'action.selected' : 'background.paper',
+                      transition: 'all 0.2s',
                       '&:hover': {
                         bgcolor: 'action.hover',
+                        borderColor: 'primary.main',
                       }
                     }}
+                    onClick={() => handleSelectDefectReason(defectReason)}
                   >
-                    <ListItemText
-                      primary={defectReason.code || defectReason.name}
-                      secondary={defectReason.name || 'N/A'}
-                      primaryTypographyProps={{
-                        fontSize: '1.25rem',
-                        fontWeight: 'bold',
-                      }}
-                      secondaryTypographyProps={{
-                        fontSize: '1rem',
-                      }}
-                    />
-                    {selectedDefectReason?.id === defectReason.id && (
-                      <Iconify 
-                        icon="eva:checkmark-fill" 
-                        sx={{ color: 'primary.main', fontSize: 32 }} 
-                      />
-                    )}
-                  </ListItemButton>
-                </ListItem>
+                    <Stack spacing={1.5}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Chip
+                          label={defectReason.code || defectReason.name}
+                          sx={{
+                            bgcolor: defectReason.colorHex || 'primary.main',
+                            color: 'white',
+                            fontWeight: 'bold',
+                            fontSize: '0.9rem',
+                          }}
+                        />
+                        {selectedDefectReason?.id === defectReason.id && (
+                          <Iconify 
+                            icon={"eva:checkmark-circle-fill" as any}
+                            sx={{ color: 'primary.main', fontSize: 24 }} 
+                          />
+                        )}
+                      </Box>
+                      <Typography variant="body1" sx={{ fontWeight: 'medium', fontSize: '1.1rem' }}>
+                        {defectReason.name || 'N/A'}
+                      </Typography>
+                      {defectReason.description && (
+                        <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.9rem' }}>
+                          {defectReason.description}
+                        </Typography>
+                      )}
+                    </Stack>
+                  </Card>
+                </Grid>
               ))}
               {defectReasons.length === 0 && !loading && (
-                <Box sx={{ textAlign: 'center', py: 4 }}>
-                  <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '1.1rem' }}>
-                    {t('oi.noDefectReasonsFound')}
-                  </Typography>
-                </Box>
+                <Grid size={{ xs: 12 }}>
+                  <Box sx={{ textAlign: 'center', py: 4 }}>
+                    <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '1.1rem' }}>
+                      {t('oi.noDefectReasonsFound')}
+                    </Typography>
+                  </Box>
+                </Grid>
               )}
-            </List>
+            </Grid>
           )}
         </DialogContent>
         <DialogActions sx={{ p: 3 }}>
