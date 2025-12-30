@@ -1,6 +1,7 @@
 import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
 
 import { useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
@@ -34,6 +35,19 @@ export type NavContentProps = {
   sx?: SxProps<Theme>;
 };
 
+// Animation variants for nav entrance
+const navVariants = {
+  hidden: { x: -280, opacity: 0 },
+  visible: {
+    x: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.4,
+      ease: [0.4, 0, 0.2, 1] as const,
+    },
+  },
+};
+
 export function NavDesktop({
   sx,
   data,
@@ -45,6 +59,10 @@ export function NavDesktop({
 
   return (
     <Box
+      component={motion.div}
+      variants={navVariants}
+      initial="hidden"
+      animate="visible"
       sx={{
         pt: 2.5,
         px: 2.5,

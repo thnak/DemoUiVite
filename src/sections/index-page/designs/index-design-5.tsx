@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
@@ -31,6 +33,42 @@ const CATEGORIES = [
   { key: 'monitoring', label: 'Monitoring', items: ['alert-management'] },
 ];
 
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.4,
+      ease: [0.4, 0, 0.2, 1] as const,
+    },
+  },
+};
+
+const categoryVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+      ease: [0.4, 0, 0.2, 1] as const,
+    },
+  },
+};
+
 export function IndexDesign5({ modules, viewMode }: Props) {
   const theme = useTheme();
   const router = useRouter();
@@ -44,21 +82,23 @@ export function IndexDesign5({ modules, viewMode }: Props) {
 
   if (viewMode === 'list') {
     return (
-      <Stack spacing={4}>
-        {CATEGORIES.map((category) => {
-          const categoryModules = getCategoryModules(category);
-          if (categoryModules.length === 0) return null;
+      <motion.div variants={containerVariants} initial="hidden" animate="visible">
+        <Stack spacing={4}>
+          {CATEGORIES.map((category) => {
+            const categoryModules = getCategoryModules(category);
+            if (categoryModules.length === 0) return null;
 
           return (
-            <Box key={category.key}>
-              <Typography
-                variant="overline"
-                sx={{
-                  display: 'block',
-                  mb: 2,
-                  px: 1,
-                  color: 'text.secondary',
-                  letterSpacing: 1.5,
+            <motion.div key={category.key} variants={categoryVariants}>
+              <Box>
+                <Typography
+                  variant="overline"
+                  sx={{
+                    display: 'block',
+                    mb: 2,
+                    px: 1,
+                    color: 'text.secondary',
+                    letterSpacing: 1.5,
                 }}
               >
                 {category.label}
@@ -114,9 +154,11 @@ export function IndexDesign5({ modules, viewMode }: Props) {
                 ))}
               </Stack>
             </Box>
+          </motion.div>
           );
         })}
       </Stack>
+    </motion.div>
     );
   }
 
@@ -223,16 +265,17 @@ export function IndexDesign5({ modules, viewMode }: Props) {
 
       {/* Main content grid */}
       <Grid size={{ xs: 12, md: 9 }}>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} component={motion.div} variants={containerVariants} initial="hidden" animate="visible">
           {modules.map((module, index) => (
             <Grid key={module.id} size={{ xs: 12, sm: 6, lg: 4 }}>
-              <Card
-                sx={{
-                  height: '100%',
-                  borderRadius: 3,
-                  border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
-                  boxShadow: 'none',
-                  position: 'relative',
+              <motion.div variants={cardVariants}>
+                <Card
+                  sx={{
+                    height: '100%',
+                    borderRadius: 3,
+                    border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+                    boxShadow: 'none',
+                    position: 'relative',
                   overflow: 'hidden',
                   transition: 'all 0.3s ease',
                   '&:hover': {
@@ -333,6 +376,7 @@ export function IndexDesign5({ modules, viewMode }: Props) {
                   </Box>
                 </CardActionArea>
               </Card>
+            </motion.div>
             </Grid>
           ))}
         </Grid>

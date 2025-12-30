@@ -2,6 +2,7 @@ import type { AppBarProps } from '@mui/material/AppBar';
 import type { ContainerProps } from '@mui/material/Container';
 import type { Theme, SxProps, CSSObject, Breakpoint } from '@mui/material/styles';
 
+import { motion } from 'framer-motion';
 import { useScrollOffsetTop } from 'minimal-shared/hooks';
 import { varAlpha, mergeClasses } from 'minimal-shared/utils';
 
@@ -30,6 +31,20 @@ export type HeaderSectionProps = AppBarProps & {
   };
 };
 
+// Animation variants for header entrance
+const headerVariants = {
+  hidden: { y: -80, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.4,
+      ease: [0.4, 0, 0.2, 1] as const,
+      delay: 0.1, // Slight delay after nav
+    },
+  },
+};
+
 export function HeaderSection({
   sx,
   slots,
@@ -43,35 +58,37 @@ export function HeaderSection({
   const { offsetTop: isOffset } = useScrollOffsetTop();
 
   return (
-    <HeaderRoot
-      position="sticky"
-      color="transparent"
-      isOffset={isOffset}
-      disableOffset={disableOffset}
-      disableElevation={disableElevation}
-      className={mergeClasses([layoutClasses.header, className])}
-      sx={[
-        (theme) => ({
-          ...(isOffset && {
-            '--color': `var(--offset-color, ${theme.vars.palette.text.primary})`,
+    <motion.div variants={headerVariants} initial="hidden" animate="visible">
+      <HeaderRoot
+        position="sticky"
+        color="transparent"
+        isOffset={isOffset}
+        disableOffset={disableOffset}
+        disableElevation={disableElevation}
+        className={mergeClasses([layoutClasses.header, className])}
+        sx={[
+          (theme) => ({
+            ...(isOffset && {
+              '--color': `var(--offset-color, ${theme.vars.palette.text.primary})`,
+            }),
           }),
-        }),
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
-      {...other}
-    >
-      {slots?.topArea}
+          ...(Array.isArray(sx) ? sx : [sx]),
+        ]}
+        {...other}
+      >
+        {slots?.topArea}
 
-      <HeaderContainer layoutQuery={layoutQuery} {...slotProps?.container}>
-        {slots?.leftArea}
+        <HeaderContainer layoutQuery={layoutQuery} {...slotProps?.container}>
+          {slots?.leftArea}
 
-        <HeaderCenterArea {...slotProps?.centerArea}>{slots?.centerArea}</HeaderCenterArea>
+          <HeaderCenterArea {...slotProps?.centerArea}>{slots?.centerArea}</HeaderCenterArea>
 
-        {slots?.rightArea}
-      </HeaderContainer>
+          {slots?.rightArea}
+        </HeaderContainer>
 
-      {slots?.bottomArea}
-    </HeaderRoot>
+        {slots?.bottomArea}
+      </HeaderRoot>
+    </motion.div>
   );
 }
 

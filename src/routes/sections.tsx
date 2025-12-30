@@ -1,7 +1,6 @@
 import type { RouteObject } from 'react-router';
 
 import { lazy, Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 
@@ -11,6 +10,7 @@ import { DashboardLayout, FullWidthLayout } from 'src/layouts/dashboard';
 import { MachineSelectorProvider } from 'src/sections/oi/context/machine-selector-context';
 
 import { SvgColor } from '../components/svg-color';
+import { AnimatedOutlet } from './components/animated-outlet';
 
 // ----------------------------------------------------------------------
 
@@ -121,7 +121,7 @@ export const routesSection: RouteObject[] = [
     element: (
       <DashboardLayout>
         <Suspense fallback={renderFallback()}>
-          <Outlet />
+          <AnimatedOutlet />
         </Suspense>
       </DashboardLayout>
     ),
@@ -200,7 +200,7 @@ export const routesSection: RouteObject[] = [
         path: 'oi',
         element: (
           <MachineSelectorProvider>
-            <Outlet />
+            <AnimatedOutlet />
           </MachineSelectorProvider>
         ),
         children: [
@@ -217,7 +217,7 @@ export const routesSection: RouteObject[] = [
     element: (
       <FullWidthLayout>
         <Suspense fallback={renderFallback()}>
-          <Outlet />
+          <AnimatedOutlet />
         </Suspense>
       </FullWidthLayout>
     ),

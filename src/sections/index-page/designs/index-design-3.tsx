@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -19,6 +21,30 @@ type Props = {
   viewMode: ViewMode;
 };
 
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+      ease: [0.4, 0, 0.2, 1] as const,
+    },
+  },
+};
+
 export function IndexDesign3({ modules, viewMode }: Props) {
   const theme = useTheme();
   const router = useRouter();
@@ -29,29 +55,30 @@ export function IndexDesign3({ modules, viewMode }: Props) {
 
   if (viewMode === 'list') {
     return (
-      <Stack spacing={3}>
-        {modules.map((module, index) => (
-          <Box
-            key={module.id}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 3,
-              p: 2.5,
-              borderRadius: 2,
-              cursor: 'pointer',
-              transition: 'all 0.25s ease',
-              borderBottom: `1px solid ${theme.palette.divider}`,
-              '&:hover': {
-                bgcolor: 'action.hover',
-                '& .arrow-icon': {
-                  opacity: 1,
-                  transform: 'translateX(0)',
-                },
-              },
-              '&:last-child': {
-                borderBottom: 'none',
-              },
+      <motion.div variants={containerVariants} initial="hidden" animate="visible">
+        <Stack spacing={3}>
+          {modules.map((module, index) => (
+            <motion.div key={module.id} variants={cardVariants}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 3,
+                  p: 2.5,
+                  borderRadius: 2,
+                  cursor: 'pointer',
+                  transition: 'all 0.25s ease',
+                  borderBottom: `1px solid ${theme.palette.divider}`,
+                  '&:hover': {
+                    bgcolor: 'action.hover',
+                    '& .arrow-icon': {
+                      opacity: 1,
+                      transform: 'translateX(0)',
+                    },
+                  },
+                  '&:last-child': {
+                    borderBottom: 'none',
+                  },
             }}
             onClick={() => handleClick(module.path)}
           >
@@ -119,23 +146,27 @@ export function IndexDesign3({ modules, viewMode }: Props) {
               }}
             />
           </Box>
+        </motion.div>
         ))}
       </Stack>
+    </motion.div>
     );
   }
 
   return (
-    <Grid container spacing={4}>
-      {modules.map((module) => (
-        <Grid key={module.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-          <Card
-            sx={{
-              height: '100%',
-              cursor: 'pointer',
-              bgcolor: 'background.paper',
-              borderRadius: 4,
-              border: 'none',
-              boxShadow: `0 4px 24px 0 ${alpha(theme.palette.common.black, 0.06)}`,
+    <motion.div variants={containerVariants} initial="hidden" animate="visible">
+      <Grid container spacing={4}>
+        {modules.map((module) => (
+          <Grid key={module.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+            <motion.div variants={cardVariants}>
+              <Card
+                sx={{
+                  height: '100%',
+                  cursor: 'pointer',
+                  bgcolor: 'background.paper',
+                  borderRadius: 4,
+                  border: 'none',
+                  boxShadow: `0 4px 24px 0 ${alpha(theme.palette.common.black, 0.06)}`,
               transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
               '&:hover': {
                 transform: 'translateY(-12px)',
@@ -219,8 +250,10 @@ export function IndexDesign3({ modules, viewMode }: Props) {
               </Box>
             </CardActionArea>
           </Card>
+        </motion.div>
         </Grid>
       ))}
     </Grid>
+  </motion.div>
   );
 }

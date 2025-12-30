@@ -864,6 +864,161 @@ Before completing a create/edit page implementation:
 - [ ] Tested in both light and dark modes
 - [ ] Responsive on mobile/tablet
 
+## Animation Standards
+
+This project uses framer-motion for smooth, professional animations throughout the application. **All animations must follow these standards** for consistency and performance.
+
+### Page Transition Animations
+
+**Implementation:** All route-based page transitions use the `PageTransition` and `AnimatedOutlet` components.
+
+**Standards:**
+- **Duration:** 300ms enter, 200ms exit
+- **Motion:** Fade (opacity 0 → 1 → 0) + 8px vertical slide
+- **Easing:** `[0.4, 0, 0.2, 1]` for enter, `[0.4, 0, 1, 1]` for exit
+- **Properties:** Only GPU-accelerated (opacity, transform)
+
+**Documentation:** See `docs/guides/page-transitions.md`
+
+### Module Grid/List Animations (Index Page)
+
+**Implementation:** Module cards on the home page use staggered animations for a polished appearance.
+
+**Standards:**
+```tsx
+// Container (Grid or Stack)
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,  // 80ms between cards
+      delayChildren: 0.1,     // Start after hero
+    },
+  },
+};
+
+// Individual cards
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+      ease: [0.4, 0, 0.2, 1],
+    },
+  },
+};
+
+// Hero/Header sections
+const heroVariants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.4, 0, 0.2, 1],
+    },
+  },
+};
+```
+
+**Usage:**
+```tsx
+import { motion } from 'framer-motion';
+
+// Hero section
+<motion.div
+  variants={heroVariants}
+  initial="hidden"
+  animate="visible"
+>
+  <Box sx={{ /* styles */ }}>
+    {/* content */}
+  </Box>
+</motion.div>
+
+// Grid container
+<motion.div
+  variants={containerVariants}
+  initial="hidden"
+  animate="visible"
+>
+  <Grid container>
+    {items.map((item) => (
+      <Grid key={item.id}>
+        <motion.div variants={cardVariants}>
+          {/* card content */}
+        </motion.div>
+      </Grid>
+    ))}
+  </Grid>
+</motion.div>
+```
+
+### Animation Best Practices
+
+**✅ Do:**
+- Use GPU-accelerated properties only (opacity, transform)
+- Keep animations under 500ms total
+- Use consistent easing curves across the app
+- Add `initial="hidden"` to prevent flash on mount
+- Use `staggerChildren` for list/grid animations
+- Test animations on slower devices
+
+**❌ Don't:**
+- Animate layout properties (width, height, margin, padding)
+- Use overly long durations (> 500ms feels sluggish)
+- Nest multiple AnimatePresence components unnecessarily
+- Forget to test with `prefers-reduced-motion` for accessibility
+- Add animations to every single element (keep it tasteful)
+
+### Animation Performance
+
+**GPU Acceleration:**
+All animations use GPU-accelerated CSS properties:
+- ✅ `opacity` - GPU accelerated
+- ✅ `transform: translateY()` - GPU accelerated
+- ✅ `transform: scale()` - GPU accelerated
+- ❌ Avoid: `height`, `width`, `top`, `left` - CPU bound
+
+**Bundle Impact:**
+- Framer Motion is shared across the app (already in dependencies)
+- Page transitions: ~2.1 KB minified
+- Module animations: Negligible (reuses existing imports)
+
+### When to Add Animations
+
+**Required:**
+- Page route transitions (handled automatically via AnimatedOutlet)
+- Module/feature grids on landing/index pages
+- Modal/dialog entrances and exits
+
+**Optional (but recommended):**
+- Table row hover effects (CSS transitions)
+- Button hover/press states (CSS transitions)
+- Loading states (use CircularProgress or skeleton)
+- Data transitions (charts updating, counters changing)
+
+**Not recommended:**
+- Every single component (creates visual noise)
+- Form inputs during typing (distracting)
+- Rapid state changes (loading → content → loading)
+
+### Reference Examples
+
+**Page Transitions:**
+- `src/components/page-transition/page-transition.tsx`
+- `src/routes/components/animated-outlet.tsx`
+
+**Module Grid Animations:**
+- `src/sections/index-page/designs/index-design-4.tsx`
+
+**Documentation:**
+- `docs/guides/page-transitions.md` - Complete animation guide
+
 ## Your tools
 -- Use the mui-mcp server to answer any MUI questions --
 - 1. call the "useMuiDocs" tool to fetch the docs of the package relevant in the question
