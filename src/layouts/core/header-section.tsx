@@ -2,6 +2,7 @@ import type { AppBarProps } from '@mui/material/AppBar';
 import type { ContainerProps } from '@mui/material/Container';
 import type { Theme, SxProps, CSSObject, Breakpoint } from '@mui/material/styles';
 
+import { motion } from 'framer-motion';
 import { useScrollOffsetTop } from 'minimal-shared/hooks';
 import { varAlpha, mergeClasses } from 'minimal-shared/utils';
 
@@ -30,6 +31,20 @@ export type HeaderSectionProps = AppBarProps & {
   };
 };
 
+// Animation variants for header entrance
+const headerVariants = {
+  hidden: { y: -80, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.4,
+      ease: [0.4, 0, 0.2, 1] as const,
+      delay: 0.1, // Slight delay after nav
+    },
+  },
+};
+
 export function HeaderSection({
   sx,
   slots,
@@ -44,6 +59,10 @@ export function HeaderSection({
 
   return (
     <HeaderRoot
+      component={motion.header}
+      variants={headerVariants}
+      initial="hidden"
+      animate="visible"
       position="sticky"
       color="transparent"
       isOffset={isOffset}

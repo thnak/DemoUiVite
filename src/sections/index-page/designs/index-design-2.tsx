@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -17,6 +19,30 @@ import type { ViewMode, ModuleItem } from '../types';
 type Props = {
   modules: ModuleItem[];
   viewMode: ViewMode;
+};
+
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.4,
+      ease: [0.4, 0, 0.2, 1] as const,
+    },
+  },
 };
 
 export function IndexDesign2({ modules, viewMode }: Props) {
@@ -44,10 +70,11 @@ export function IndexDesign2({ modules, viewMode }: Props) {
 
   if (viewMode === 'list') {
     return (
-      <Stack spacing={1.5}>
-        {modules.map((module, index) => (
-          <Card
-            key={module.id}
+      <motion.div variants={containerVariants} initial="hidden" animate="visible">
+        <Stack spacing={1.5}>
+          {modules.map((module, index) => (
+            <motion.div key={module.id} variants={cardVariants}>
+              <Card
             sx={{
               cursor: 'pointer',
               borderRadius: 2,
@@ -117,38 +144,42 @@ export function IndexDesign2({ modules, viewMode }: Props) {
               </Typography>
             </CardActionArea>
           </Card>
+        </motion.div>
         ))}
       </Stack>
+    </motion.div>
     );
   }
 
   return (
-    <Grid container spacing={2}>
-      {modules.map((module, index) => {
-        const gridSize = getGridSize(index);
-        const isLarge = gridSize.md === 8 || gridSize.md === 6;
+    <motion.div variants={containerVariants} initial="hidden" animate="visible">
+      <Grid container spacing={2}>
+        {modules.map((module, index) => {
+          const gridSize = getGridSize(index);
+          const isLarge = gridSize.md === 8 || gridSize.md === 6;
 
-        return (
-          <Grid key={module.id} size={gridSize}>
-            <Card
-              sx={{
-                height: isLarge ? { xs: 200, md: 240 } : { xs: 180, md: 200 },
-                cursor: 'pointer',
-                borderRadius: 3,
-                overflow: 'hidden',
-                position: 'relative',
-                transition: 'all 0.3s ease-in-out',
-                background:
-                  module.color === 'primary'
-                    ? `linear-gradient(145deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(theme.palette.primary.main, 0.12)} 100%)`
-                    : `linear-gradient(145deg, ${alpha(theme.palette.secondary.main, 0.05)} 0%, ${alpha(theme.palette.secondary.main, 0.12)} 100%)`,
-                border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
-                '&:hover': {
-                  transform: 'scale(1.02)',
-                  boxShadow: theme.customShadows.z20,
-                  '& .module-icon': {
-                    transform: 'scale(1.15) rotate(5deg)',
-                  },
+          return (
+            <Grid key={module.id} size={gridSize}>
+              <motion.div variants={cardVariants}>
+                <Card
+                  sx={{
+                    height: isLarge ? { xs: 200, md: 240 } : { xs: 180, md: 200 },
+                    cursor: 'pointer',
+                    borderRadius: 3,
+                    overflow: 'hidden',
+                    position: 'relative',
+                    transition: 'all 0.3s ease-in-out',
+                    background:
+                      module.color === 'primary'
+                        ? `linear-gradient(145deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(theme.palette.primary.main, 0.12)} 100%)`
+                        : `linear-gradient(145deg, ${alpha(theme.palette.secondary.main, 0.05)} 0%, ${alpha(theme.palette.secondary.main, 0.12)} 100%)`,
+                    border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+                    '&:hover': {
+                      transform: 'scale(1.02)',
+                      boxShadow: theme.customShadows.z20,
+                      '& .module-icon': {
+                        transform: 'scale(1.15) rotate(5deg)',
+                      },
                 },
               }}
             >
@@ -214,13 +245,15 @@ export function IndexDesign2({ modules, viewMode }: Props) {
                         : theme.palette.secondary.main,
                       0.06
                     ),
-                  }}
+                                  }}
                 />
               </CardActionArea>
             </Card>
+          </motion.div>
           </Grid>
         );
       })}
     </Grid>
+  </motion.div>
   );
 }
