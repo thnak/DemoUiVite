@@ -1,6 +1,6 @@
 import type { SensorAutoSeedStatus } from 'src/api/types/generated';
 
-import { useState, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -9,6 +9,7 @@ import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -17,13 +18,14 @@ import { useRouter } from 'src/routes/hooks';
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
   useGetapiIotSensorsensorIdautoseedstatus,
-  usePostapiIotSensorsensorIdautoseeddisable,
-  usePostapiIotSensorsensorIdautoseedenable,
   usePostapiIotSensorsensorIdautoseedreset,
+  usePostapiIotSensorsensorIdautoseedenable,
+  usePostapiIotSensorsensorIdautoseeddisable,
 } from 'src/api/hooks/generated/use-iot-sensor';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
+import { Chart, useChart } from 'src/components/chart';
 
 // ----------------------------------------------------------------------
 
@@ -43,6 +45,11 @@ export function IoTSensorDataSeedingView({
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Form state for enable auto-seed parameters
+  const [mean, setMean] = useState<number>(5);
+  const [std, setStd] = useState<number>(1);
+  const [intervalMs, setIntervalMs] = useState<number>(5000);
 
   // Fetch auto-seed status
   const {
@@ -95,9 +102,74 @@ export function IoTSensorDataSeedingView({
     setSuccessMessage(null);
   }, []);
 
+  // Generate Gaussian distribution data for chart (10 columns)
+  const gaussianData = useMemo(() => {
+    const columns = 10;
+    const data: number[] = [];
+    const categories: string[] = [];
+
+    // Generate x values (time intervals) centered around the mean
+    const rangeStart = mean - 3 * std;
+    const rangeEnd = mean + 3 * std;
+    const step = (rangeEnd - rangeStart) / (columns - 1);
+
+    for (let i = 0; i < columns; i += 1) {
+      const x = rangeStart + i * step;
+      categories.push(`${x.toFixed(1)}s`);
+
+      // Calculate Gaussian probability density function
+      const exponent = -((x - mean) ** 2) / (2 * std ** 2);
+      const coefficient = 1 / (std * Math.sqrt(2 * Math.PI));
+      const y = coefficient * Math.exp(exponent);
+
+      // Scale for better visualization (multiply by a constant to make values visible)
+      data.push(y * 100);
+    }
+
+    return { data, categories };
+  }, [mean, std]);
+
+  const chartOptions = useChart({
+    chart: {
+      toolbar: { show: false },
+    },
+    xaxis: {
+      categories: gaussianData.categories,
+      title: {
+        text: 'Time (seconds)',
+      },
+    },
+    yaxis: {
+      title: {
+        text: 'Probability Density',
+      },
+    },
+    tooltip: {
+      y: {
+        formatter: (value: number) => value.toFixed(2),
+      },
+    },
+    plotOptions: {
+      bar: {
+        columnWidth: '60%',
+        borderRadius: 4,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+  });
+
   const handleEnable = useCallback(() => {
-    enableAutoSeed({ sensorId, data: {} });
-  }, [enableAutoSeed, sensorId]);
+    enableAutoSeed({
+      sensorId,
+      data: {
+        mean,
+        std,
+        intervalMs,
+      },
+    });
+  }, [enableAutoSeed, sensorId, mean, std, intervalMs]);
 
   const handleDisable = useCallback(() => {
     disableAutoSeed({ sensorId });
@@ -239,6 +311,65 @@ export function IoTSensorDataSeedingView({
                       </Box>
                     )}
                   </Stack>
+                )}
+
+                {/* Configuration Inputs (only show when disabled) */}
+                {!status?.isEnabled && (
+                  <Box>
+                    <Typography variant="subtitle2" sx={{ mb: 2 }}>
+                      Gaussian Distribution Parameters
+                    </Typography>
+                    <Stack spacing={2}>
+                      <TextField
+                        fullWidth
+                        type="number"
+                        label="Mean (seconds)"
+                        value={mean}
+                        onChange={(e) => setMean(Number(e.target.value))}
+                        helperText="Average time delay between data generation"
+                        inputProps={{ step: 0.1, min: 0 }}
+                      />
+                      <TextField
+                        fullWidth
+                        type="number"
+                        label="Standard Deviation (seconds)"
+                        value={std}
+                        onChange={(e) => setStd(Number(e.target.value))}
+                        helperText="Variation in time delay"
+                        inputProps={{ step: 0.1, min: 0.1 }}
+                      />
+                      <TextField
+                        fullWidth
+                        type="number"
+                        label="Interval (milliseconds)"
+                        value={intervalMs}
+                        onChange={(e) => setIntervalMs(Number(e.target.value))}
+                        helperText="Base interval between data points (deprecated)"
+                        inputProps={{ step: 100, min: 0 }}
+                      />
+                    </Stack>
+                  </Box>
+                )}
+
+                {/* Gaussian Distribution Chart */}
+                {!status?.isEnabled && (
+                  <Box>
+                    <Typography variant="subtitle2" sx={{ mb: 2 }}>
+                      Gaussian Distribution Preview
+                    </Typography>
+                    <Chart
+                      type="bar"
+                      series={[
+                        {
+                          name: 'Probability Density',
+                          data: gaussianData.data,
+                        },
+                      ]}
+                      options={chartOptions}
+                      slotProps={{ loading: { p: 2.5 } }}
+                      sx={{ height: 250 }}
+                    />
+                  </Box>
                 )}
 
                 {/* Action Buttons */}
