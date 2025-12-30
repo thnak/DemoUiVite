@@ -20,9 +20,10 @@ import { AccountPopover } from '../components/account-popover';
 import { LanguagePopover } from '../components/language-popover';
 import { ThemeModeToggle } from '../components/theme-mode-toggle';
 import { NotificationsPopover } from '../components/notifications-popover';
-import { MainSection , layoutClasses , HeaderSection , LayoutSection } from '../core';
+import { useNavCollapse, NavCollapseProvider } from './nav-collapse-context';
+import { MainSection, layoutClasses, HeaderSection, LayoutSection } from '../core';
 
-import type { MainSectionProps , HeaderSectionProps , LayoutSectionProps } from '../core';
+import type { MainSectionProps, HeaderSectionProps, LayoutSectionProps } from '../core';
 
 
 
@@ -45,8 +46,30 @@ export function DashboardLayout({
   slotProps,
   layoutQuery = 'lg',
 }: DashboardLayoutProps) {
+  return (
+    <NavCollapseProvider>
+      <DashboardLayoutContent
+        sx={sx}
+        cssVars={cssVars}
+        slotProps={slotProps}
+        layoutQuery={layoutQuery}
+      >
+        {children}
+      </DashboardLayoutContent>
+    </NavCollapseProvider>
+  );
+}
+
+function DashboardLayoutContent({
+  sx,
+  cssVars,
+  children,
+  slotProps,
+  layoutQuery = 'lg',
+}: DashboardLayoutProps) {
   const theme = useTheme();
   const { navData } = useNav();
+  const { collapsed } = useNavCollapse();
 
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
 
@@ -133,10 +156,12 @@ export function DashboardLayout({
         {
           [`& .${layoutClasses.sidebarContainer}`]: {
             [theme.breakpoints.up(layoutQuery)]: {
-              pl: 'var(--layout-nav-vertical-width)',
+              pl: collapsed
+                ? 'var(--layout-nav-vertical-width-collapsed)'
+                : 'var(--layout-nav-vertical-width)',
               transition: theme.transitions.create(['padding-left'], {
-                easing: 'var(--layout-transition-easing)',
-                duration: 'var(--layout-transition-duration)',
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.enteringScreen,
               }),
             },
           },
