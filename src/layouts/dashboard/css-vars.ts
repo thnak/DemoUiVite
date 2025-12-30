@@ -7,6 +7,7 @@ export function dashboardLayoutVars(theme: Theme) {
     '--layout-transition-easing': 'linear',
     '--layout-transition-duration': '120ms',
     '--layout-nav-vertical-width': '300px',
+    '--layout-nav-vertical-width-collapsed': '72px',
     '--layout-dashboard-content-pt': theme.spacing(1),
     '--layout-dashboard-content-pb': theme.spacing(8),
     '--layout-dashboard-content-px': theme.spacing(5),
