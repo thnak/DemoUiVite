@@ -165,6 +165,10 @@
     "duration": "Thời lượng",
     "state": "Trạng thái",
     "clickToLabel": "Nhấn để gán nhãn",
-    "ongoing": "Đang diễn ra"
+    "ongoing": "Đang diễn ra",
+    "defectedItemsList": "Danh Sách Sản Phẩm Lỗi",
+    "noDefectedItems": "Chưa có sản phẩm lỗi nào được ghi nhận",
+    "quantity": "Số Lượng",
+    "notes": "Ghi Chú"
   }
 }
