@@ -80,6 +80,7 @@ export const UnitConversionEditPage = lazy(() => import('src/pages/unit-conversi
 export const IoTSensorListPage = lazy(() => import('src/pages/iot-sensor-list'));
 export const IoTSensorCreatePage = lazy(() => import('src/pages/iot-sensor-create'));
 export const IoTSensorEditPage = lazy(() => import('src/pages/iot-sensor-edit'));
+export const IoTSensorDataSeedingPage = lazy(() => import('src/pages/iot-sensor-data-seeding'));
 export const OperatorDashboardPage = lazy(() => import('src/pages/oi/operator-dashboard'));
 export const ChangeProductPage = lazy(() => import('src/pages/oi/change-product'));
 export const DefectInputPage = lazy(() => import('src/pages/oi/defect-input'));
@@ -172,6 +173,7 @@ export const routesSection: RouteObject[] = [
       { path: 'iot-devices/create', element: <IoTDeviceCreatePage /> },
       { path: 'iot-devices/:id/edit', element: <IoTDeviceEditPage /> },
       { path: 'iot-devices/:id/tracking', element: <IoTDeviceTrackingPage /> },
+      { path: 'iot-devices/:deviceId/sensors/:sensorId/data-seeding', element: <IoTSensorDataSeedingPage /> },
       { path: 'iot-sensors', element: <IoTSensorListPage /> },
       { path: 'iot-sensors/create', element: <IoTSensorCreatePage /> },
       { path: 'iot-sensors/:id/edit', element: <IoTSensorEditPage /> },
