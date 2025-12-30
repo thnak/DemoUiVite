@@ -10,6 +10,7 @@ docs/
 │   ├── quickstart.md                  # Getting started guide
 │   ├── creating-new-pages.md          # Complete page creation guide
 │   ├── navigation-patterns.md         # Navigation menu configuration
+│   ├── page-transitions.md            # Smooth page transition animations
 │   ├── appbar-patterns.md             # App bar customization
 │   ├── component-integration.md       # External component integration
 │   ├── i18n.md                        # Internationalization guide
@@ -38,6 +39,12 @@ New to the project? Start here:
   - Navigation integration
   - Translation setup
   - Examples and templates
+
+- **[Page Transitions](./guides/page-transitions.md)**
+  - Smooth fade and slide animations
+  - Framer Motion integration
+  - Performance optimization
+  - Troubleshooting guide
 
 ### Layout Customization
 
