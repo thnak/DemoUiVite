@@ -7221,6 +7221,121 @@
         }
       }
     },
+    "/api/DefectReason/get-defect-reasons": {
+      "get": {
+        "tags": [
+          "DefectReason"
+        ],
+        "summary": "Gets a paginated list of defect reasons.",
+        "parameters": [
+          {
+            "name": "Groups",
+            "in": "query",
+            "description": "Optional search term to filter defect reasons",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDefectPageResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDefectPageResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDefectPageResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDefectPageResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/defectreasongroup/{id}": {
       "get": {
         "tags": [
@@ -20760,6 +20875,547 @@
         "summary": "Generate a new code for Machine Area Mapping",
         "description": "Generates a new unique code for a Machine Area Mapping entity.",
         "operationId": "GenerateNewMachineAreaMappingCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reports/machine-computed/by-month": {
+      "post": {
+        "tags": [
+          "MachineComputedReport"
+        ],
+        "summary": "Gets production report aggregated by month.",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetProductionReportByMonthRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetProductionReportByMonthRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetProductionReportByMonthRequest"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/GetProductionReportByMonthRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetProductionReportByMonth"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetProductionReportByMonth"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetProductionReportByMonth"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetProductionReportByMonth"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reports/machine-computed/by-product": {
+      "post": {
+        "tags": [
+          "MachineComputedReport"
+        ],
+        "summary": "Gets production report aggregated by product.",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetProductionReportByProductRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetProductionReportByProductRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetProductionReportByProductRequest"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/GetProductionReportByProductRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetProductionReportByProduct"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetProductionReportByProduct"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetProductionReportByProduct"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetProductionReportByProduct"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reports/machine-computed/by-user": {
+      "post": {
+        "tags": [
+          "MachineComputedReport"
+        ],
+        "summary": "Gets production report aggregated by user.",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetProductionReportByUserRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetProductionReportByUserRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetProductionReportByUserRequest"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/GetProductionReportByUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetProductionReportByUser"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetProductionReportByUser"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetProductionReportByUser"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetProductionReportByUser"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machinedefectinput/{id}": {
+      "get": {
+        "tags": [
+          "MachineDefectInput"
+        ],
+        "summary": "Get Machine Defect Input by ID",
+        "description": "Retrieves a specific Machine Defect Input entity by its unique identifier.",
+        "operationId": "GetMachineDefectInputById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineDefectInputEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/machinedefectinput/get-page": {
+      "post": {
+        "tags": [
+          "MachineDefectInput"
+        ],
+        "summary": "Get paginated list of Machine Defect Input",
+        "description": "Retrieves a paginated list of Machine Defect Input entities.",
+        "operationId": "GetMachineDefectInputPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineDefectInputEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machinedefectinput/create": {
+      "post": {
+        "tags": [
+          "MachineDefectInput"
+        ],
+        "summary": "Create a new Machine Defect Input",
+        "description": "Creates a new Machine Defect Input entity in the system.",
+        "operationId": "CreateMachineDefectInput",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MachineDefectInputEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineDefectInputEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineDefectInputEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machinedefectinput/update/{id}": {
+      "post": {
+        "tags": [
+          "MachineDefectInput"
+        ],
+        "summary": "Update an existing Machine Defect Input",
+        "description": "Updates specific fields of an existing Machine Defect Input entity by ID.",
+        "operationId": "UpdateMachineDefectInput",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineDefectInputEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineDefectInputEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machinedefectinput/delete/{id}": {
+      "delete": {
+        "tags": [
+          "MachineDefectInput"
+        ],
+        "summary": "Delete a Machine Defect Input",
+        "description": "Deletes a Machine Defect Input entity by its unique identifier.",
+        "operationId": "DeleteMachineDefectInput",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineDefectInputEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineDefectInputEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machinedefectinput/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "MachineDefectInput"
+        ],
+        "summary": "Soft delete a Machine Defect Input",
+        "description": "Soft deletes a Machine Defect Input entity by its unique identifier.",
+        "operationId": "SoftDeleteMachineDefectInput",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machinedefectinput/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "MachineDefectInput"
+        ],
+        "summary": "Soft restore delete a Machine Defect Input",
+        "description": "Soft restore deletes a Machine Defect Input entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteMachineDefectInput",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machinedefectinput/generate-new-code": {
+      "get": {
+        "tags": [
+          "MachineDefectInput"
+        ],
+        "summary": "Generate a new code for Machine Defect Input",
+        "description": "Generates a new unique code for a Machine Defect Input entity.",
+        "operationId": "GenerateNewMachineDefectInputCode",
         "responses": {
           "200": {
             "description": "OK",
@@ -38432,6 +39088,80 @@
         }
       }
     },
+    "/api/StopMachineReasonGroup/get-reason-group-page": {
+      "get": {
+        "tags": [
+          "StopMachineReasonGroup"
+        ],
+        "summary": "Lấy trang nhóm lý do dừng máy",
+        "parameters": [
+          {
+            "name": "Search",
+            "in": "query",
+            "description": "Search term to filter Stop Machine Reasons by name or description.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Impacts",
+            "in": "query",
+            "description": "Impacts to filter Stop Machine Reason Groups.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/StopMachineImpact"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStopMachineReasonGroupPageResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStopMachineReasonGroupPageResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStopMachineReasonGroupPageResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStopMachineReasonGroupPageResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/supplier/{id}": {
       "get": {
         "tags": [
@@ -47317,7 +48047,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2025-12-27"
+              "example": "2025-12-30"
             }
           },
           {
@@ -47327,7 +48057,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2025-12-27"
+              "example": "2025-12-30"
             }
           },
           {
@@ -49591,13 +50321,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-27"
+            "example": "2025-12-30"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-27"
+            "example": "2025-12-30"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -49709,13 +50439,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-27"
+            "example": "2025-12-30"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-27"
+            "example": "2025-12-30"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -49730,6 +50460,21 @@
             "type": "string",
             "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
             "format": "duration"
+          },
+          "lateBufferMinutes": {
+            "type": "integer",
+            "description": "Threshold in minutes to distinguish between Case 5 (Overtime) and Case 6 (Night Run).\r\nActivity within this buffer after shift end is considered overtime (Case 5).\r\nDefault: 120 minutes (2 hours).",
+            "format": "int32"
+          },
+          "mergeCase4ToShift1": {
+            "type": "boolean",
+            "description": "Early Start Policy (Case 4): When true, runtime between WORKDAY_START and SHIFT_1_START \r\nis added to Shift 1 Performance. When false, logged as separate \"Early Production\" bucket."
+          },
+          "mergeCase5ToLatest": {
+            "type": "boolean"
+          },
+          "autoVirtualShift": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false,
@@ -49871,12 +50616,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-27"
+            "example": "2025-12-30"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-27"
+            "example": "2025-12-30"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -50941,6 +51686,44 @@
         ],
         "type": "string"
       },
+      "DefectReasonDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the defect reason",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "description": "Code of the defect reason",
+            "nullable": true
+          },
+          "defectGroupName": {
+            "type": "string",
+            "description": "Name of the defect group",
+            "nullable": true
+          },
+          "colorHex": {
+            "type": "string",
+            "description": "Color hex code of the defect group",
+            "nullable": true
+          },
+          "requireExtraNoteFromOperator": {
+            "type": "boolean",
+            "description": "Enable this in case you need the operators to add extra information when using this specific reason."
+          },
+          "addScrapAndIncreaseTotalQuantity": {
+            "type": "boolean",
+            "description": "if this is enabled, then this reason will add scrap and increase the total quantity by the same amount (as scrap)."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Data Transfer Object for Defect Reason"
+      },
       "DefectReasonEntity": {
         "type": "object",
         "properties": {
@@ -50967,21 +51750,34 @@
           },
           "code": {
             "type": "string",
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
             "nullable": true
           },
           "name": {
             "type": "string",
+            "description": "Tên mô tả của thực thể.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Mô tả chi tiết về thực thể.",
+            "nullable": true
+          },
+          "colorHex": {
+            "type": "string",
+            "description": "Màu sắc hiển thị lý do dừng máy",
+            "nullable": true
+          },
+          "translations": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Các bản dịch của tên lý do dừng máy",
             "nullable": true
           },
           "defectGroupId": {
             "$ref": "#/components/schemas/ObjectId"
-          },
-          "isActive": {
-            "type": "boolean"
-          },
-          "colorHex": {
-            "type": "string",
-            "nullable": true
           },
           "requireExtraNoteFromOperator": {
             "type": "boolean",
@@ -50990,21 +51786,10 @@
           "addScrapAndIncreaseTotalQuantity": {
             "type": "boolean",
             "description": "if this is enabled, then this reason will add scrap and increase the total quantity by the same amount (as scrap)."
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "translations": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "description": "Các bản dịch cho tên nhóm lỗi, key là mã ngôn ngữ, value là tên đã dịch.",
-            "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Lý do lỗi sản xuất"
       },
       "DefectReasonEntityBasePaginationResponse": {
         "type": "object",
@@ -51134,18 +51919,22 @@
           },
           "code": {
             "type": "string",
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "nullable": true
-          },
-          "colorHex": {
-            "type": "string",
+            "description": "Tên mô tả của thực thể.",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "Mô tả chi tiết về thực thể.",
+            "nullable": true
+          },
+          "colorHex": {
+            "type": "string",
+            "description": "Màu sắc hiển thị lý do dừng máy",
             "nullable": true
           },
           "translations": {
@@ -51153,11 +51942,12 @@
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các bản dịch cho tên nhóm lỗi, key là mã ngôn ngữ, value là tên đã dịch.",
+            "description": "Các bản dịch của tên lý do dừng máy",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Nhóm lý do lỗi sản xuất"
       },
       "DefectReasonGroupEntityBasePaginationResponse": {
         "type": "object",
@@ -52210,7 +53000,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-27"
+            "example": "2025-12-30"
           }
         },
         "additionalProperties": false
@@ -53289,6 +54079,58 @@
         "additionalProperties": false,
         "description": "Pagination response for queries."
       },
+      "GetDefectPageResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DefectReasonDto"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          },
+          "groupCounts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "Dictionary containing counts of defect reasons per group",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Result of the GetDefectPageQuery"
+      },
       "GetDeviceLogsResponse": {
         "type": "object",
         "properties": {
@@ -53408,6 +54250,272 @@
         },
         "additionalProperties": false,
         "description": "Response model for paginated permission data."
+      },
+      "GetProductionReportByMonth": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "description": "Period (month and year).",
+            "format": "date-time"
+          },
+          "availability": {
+            "type": "number",
+            "description": "Machine identifier.",
+            "format": "double"
+          },
+          "performance": {
+            "type": "number",
+            "description": "Performance metric.",
+            "format": "double"
+          },
+          "quality": {
+            "type": "number",
+            "description": "Quality metric.",
+            "format": "double"
+          },
+          "oee": {
+            "type": "number",
+            "description": "Overall Equipment Effectiveness (OEE).",
+            "format": "double"
+          },
+          "totalProducedQuantity": {
+            "type": "number",
+            "description": "Total produced quantity.",
+            "format": "double"
+          },
+          "plannedQuantity": {
+            "type": "number",
+            "description": "Planned quantity for production.",
+            "format": "double"
+          },
+          "goodCount": {
+            "type": "integer",
+            "description": "Count of good products produced.",
+            "format": "int32"
+          },
+          "scrapCount": {
+            "type": "integer",
+            "description": "Count of rejected products.",
+            "format": "int32"
+          },
+          "totalRuntime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Production report data aggregated by month."
+      },
+      "GetProductionReportByMonthRequest": {
+        "type": "object",
+        "properties": {
+          "fromMonth": {
+            "type": "string",
+            "description": "From month (inclusive).",
+            "format": "date-time"
+          },
+          "toMonth": {
+            "type": "string",
+            "description": "To month (inclusive).",
+            "format": "date-time"
+          },
+          "machineIds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "description": "List of machine IDs to filter the report.",
+            "nullable": true
+          },
+          "shiftNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of product IDs to filter the report.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request to get production report aggregated by month."
+      },
+      "GetProductionReportByProduct": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "availability": {
+            "type": "number",
+            "description": "Availability metric.",
+            "format": "double"
+          },
+          "performance": {
+            "type": "number",
+            "description": "Performance metric.",
+            "format": "double"
+          },
+          "quality": {
+            "type": "number",
+            "description": "Quality metric.",
+            "format": "double"
+          },
+          "oee": {
+            "type": "number",
+            "description": "Overall Equipment Effectiveness (OEE).",
+            "format": "double"
+          },
+          "totalProducedQuantity": {
+            "type": "number",
+            "description": "Total produced quantity.",
+            "format": "double"
+          },
+          "plannedQuantity": {
+            "type": "number",
+            "description": "Planned quantity for production.",
+            "format": "double"
+          },
+          "goodCount": {
+            "type": "integer",
+            "description": "Count of good products produced.",
+            "format": "int32"
+          },
+          "scrapCount": {
+            "type": "integer",
+            "description": "Count of rejected products.",
+            "format": "int32"
+          },
+          "totalRuntime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Production report data aggregated by product."
+      },
+      "GetProductionReportByProductRequest": {
+        "type": "object",
+        "properties": {
+          "fromDate": {
+            "type": "string",
+            "description": "From month (inclusive).",
+            "format": "date-time"
+          },
+          "toDate": {
+            "type": "string",
+            "description": "To month (inclusive).",
+            "format": "date-time"
+          },
+          "machineIds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "description": "List of machine IDs to filter the report.",
+            "nullable": true
+          },
+          "shiftNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of product IDs to filter the report.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request to get production report aggregated by product."
+      },
+      "GetProductionReportByUser": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "availability": {
+            "type": "number",
+            "description": "Availability metric.",
+            "format": "double"
+          },
+          "performance": {
+            "type": "number",
+            "description": "Performance metric.",
+            "format": "double"
+          },
+          "quality": {
+            "type": "number",
+            "description": "Quality metric.",
+            "format": "double"
+          },
+          "oee": {
+            "type": "number",
+            "description": "Overall Equipment Effectiveness (OEE).",
+            "format": "double"
+          },
+          "totalProducedQuantity": {
+            "type": "number",
+            "description": "Total produced quantity.",
+            "format": "double"
+          },
+          "plannedQuantity": {
+            "type": "number",
+            "description": "Planned quantity for production.",
+            "format": "double"
+          },
+          "goodCount": {
+            "type": "integer",
+            "description": "Count of good products produced.",
+            "format": "int32"
+          },
+          "scrapCount": {
+            "type": "integer",
+            "description": "Count of rejected products.",
+            "format": "int32"
+          },
+          "totalRuntime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Production report data aggregated by user."
+      },
+      "GetProductionReportByUserRequest": {
+        "type": "object",
+        "properties": {
+          "fromDate": {
+            "type": "string",
+            "description": "From date (inclusive).",
+            "format": "date-time"
+          },
+          "toDate": {
+            "type": "string",
+            "description": "To date (inclusive).",
+            "format": "date-time"
+          },
+          "machineIds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "description": "List of machine IDs to filter the report.",
+            "nullable": true
+          },
+          "shiftNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of shift names to filter the report.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request to get production report aggregated by user."
       },
       "GetRecordResponse": {
         "type": "object",
@@ -53608,6 +54716,58 @@
         },
         "additionalProperties": false,
         "description": ""
+      },
+      "GetStopMachineReasonGroupPageResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StopMachineReasonGroupDto"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          },
+          "totalByImpact": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "Total counts of Stop Machine Reason Groups categorized by their impact.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Result for paginated Stop Machine Reason Groups."
       },
       "GetStopMachineReasonPageResult": {
         "type": "object",
@@ -54383,7 +55543,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2025-12-27"
+            "example": "2025-12-30"
           },
           "locationId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -55939,6 +57099,122 @@
         "description": "Base class for paginated responses"
       },
       "MachineAreaMappingValidationResult": {
+        "type": "object",
+        "properties": {
+          "isValid": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the validation was successful.",
+            "readOnly": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets or sets the overall validation message.",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of a validation operation for a specific type with property-level error details."
+      },
+      "MachineDefectInputEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "machineId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "productId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "defectReasonId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "quantity": {
+            "type": "number",
+            "description": "Quantity of defects recorded",
+            "format": "double"
+          },
+          "extraNote": {
+            "type": "string",
+            "description": "Extra note provided for the defect input",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Entity representing machine defect input"
+      },
+      "MachineDefectInputEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MachineDefectInputEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "MachineDefectInputEntityValidationResult": {
         "type": "object",
         "properties": {
           "isValid": {
@@ -59997,18 +61273,49 @@
           "productId": {
             "$ref": "#/components/schemas/ObjectId"
           },
+          "idealCycleTime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "downtimeThreshold": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "speedLossThreshold": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
           "workDate": {
             "type": "string",
             "description": "Date of the work.",
             "format": "date",
-            "example": "2025-12-27"
+            "example": "2025-12-30"
+          },
+          "shiftName": {
+            "type": "string",
+            "description": "Name of the shift.",
+            "nullable": true
+          },
+          "startTime": {
+            "type": "string",
+            "description": "Start time of the production.",
+            "format": "date-time"
+          },
+          "endTime": {
+            "type": "string",
+            "description": "End time of the production.",
+            "format": "date-time",
+            "nullable": true
           },
           "goodCount": {
             "type": "integer",
             "description": "Count of good products produced.",
             "format": "int32"
           },
-          "rejectCount": {
+          "scrapCount": {
             "type": "integer",
             "description": "Count of rejected products.",
             "format": "int32"
@@ -60016,6 +61323,11 @@
           "totalProducedQuantity": {
             "type": "number",
             "description": "Total quantity produced.",
+            "format": "double"
+          },
+          "plannedQuantity": {
+            "type": "number",
+            "description": "Planned quantity for production.",
             "format": "double"
           },
           "totalRuntime": {
@@ -60032,6 +61344,26 @@
             "type": "string",
             "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
             "format": "duration"
+          },
+          "availability": {
+            "type": "number",
+            "description": "Availability percentage.",
+            "format": "double"
+          },
+          "performance": {
+            "type": "number",
+            "description": "Performance percentage.",
+            "format": "double"
+          },
+          "quality": {
+            "type": "number",
+            "description": "Quality percentage.",
+            "format": "double"
+          },
+          "oee": {
+            "type": "number",
+            "description": "Overall Equipment Effectiveness (OEE) percentage.",
+            "format": "double"
           }
         },
         "additionalProperties": false,
@@ -63695,6 +65027,39 @@
         "additionalProperties": false,
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
+      "StopMachineReasonGroupDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code of the Stop Machine Reason Group.",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the Stop Machine Reason Group.",
+            "nullable": true
+          },
+          "color": {
+            "type": "string",
+            "description": "Color of the Stop Machine Reason Group.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the Stop Machine Reason Group.",
+            "nullable": true
+          },
+          "impact": {
+            "$ref": "#/components/schemas/StopMachineImpact"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Data Transfer Object for Stop Machine Reason Group."
+      },
       "StopMachineReasonGroupEntity": {
         "type": "object",
         "properties": {
@@ -64799,6 +66164,21 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
+      },
+      "TimeShiftCaseType": {
+        "enum": [
+          "standard",
+          "case1_ShiftLoss",
+          "case2_PlannedBreak",
+          "case3_BreakRun",
+          "case4_EarlyStart",
+          "case5_Overtime",
+          "case6_NightRun",
+          "case7_Sunday",
+          "case8_Holiday"
+        ],
+        "type": "string",
+        "description": "Defines the categorization of equipment status against a standard work schedule.\r\nThese cases determine how runtime/downtime is computed for OEE calculations."
       },
       "TryRunMetricRequest": {
         "type": "object",
@@ -67753,7 +69133,7 @@
             "type": "string",
             "description": "The specific work date this statistic applies to.",
             "format": "date",
-            "example": "2025-12-27"
+            "example": "2025-12-30"
           },
           "calendarId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -67788,6 +69168,9 @@
           "isPlannedStopTime": {
             "type": "boolean",
             "description": "Indicates if this period is a planned stop time (before first shift of the day)."
+          },
+          "timeShiftCase": {
+            "$ref": "#/components/schemas/TimeShiftCaseType"
           },
           "description": {
             "type": "string",
@@ -68215,7 +69598,8 @@
       "name": "DataProtectionKey"
     },
     {
-      "name": "DefectReason"
+      "name": "DefectReason",
+      "description": "Controller for defect reason operations"
     },
     {
       "name": "DefectReasonGroup"
@@ -68330,8 +69714,15 @@
       "name": "MachineAreaMapping"
     },
     {
+      "name": "MachineComputedReport",
+      "description": "Controller for machine-computed reports"
+    },
+    {
+      "name": "MachineDefectInput"
+    },
+    {
       "name": "MachineDowntime",
-      "description": ""
+      "description": "Controller for machine downtime operations"
     },
     {
       "name": "MachineGroup"
@@ -68483,7 +69874,8 @@
       "description": "Controller quản lý lý do dừng máy"
     },
     {
-      "name": "StopMachineReasonGroup"
+      "name": "StopMachineReasonGroup",
+      "description": "Controller quản lý nhóm lý do dừng máy"
     },
     {
       "name": "Supplier"
