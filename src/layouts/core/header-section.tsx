@@ -58,39 +58,37 @@ export function HeaderSection({
   const { offsetTop: isOffset } = useScrollOffsetTop();
 
   return (
-    <HeaderRoot
-      component={motion.header}
-      variants={headerVariants}
-      initial="hidden"
-      animate="visible"
-      position="sticky"
-      color="transparent"
-      isOffset={isOffset}
-      disableOffset={disableOffset}
-      disableElevation={disableElevation}
-      className={mergeClasses([layoutClasses.header, className])}
-      sx={[
-        (theme) => ({
-          ...(isOffset && {
-            '--color': `var(--offset-color, ${theme.vars.palette.text.primary})`,
+    <motion.div variants={headerVariants} initial="hidden" animate="visible">
+      <HeaderRoot
+        position="sticky"
+        color="transparent"
+        isOffset={isOffset}
+        disableOffset={disableOffset}
+        disableElevation={disableElevation}
+        className={mergeClasses([layoutClasses.header, className])}
+        sx={[
+          (theme) => ({
+            ...(isOffset && {
+              '--color': `var(--offset-color, ${theme.vars.palette.text.primary})`,
+            }),
           }),
-        }),
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
-      {...other}
-    >
-      {slots?.topArea}
+          ...(Array.isArray(sx) ? sx : [sx]),
+        ]}
+        {...other}
+      >
+        {slots?.topArea}
 
-      <HeaderContainer layoutQuery={layoutQuery} {...slotProps?.container}>
-        {slots?.leftArea}
+        <HeaderContainer layoutQuery={layoutQuery} {...slotProps?.container}>
+          {slots?.leftArea}
 
-        <HeaderCenterArea {...slotProps?.centerArea}>{slots?.centerArea}</HeaderCenterArea>
+          <HeaderCenterArea {...slotProps?.centerArea}>{slots?.centerArea}</HeaderCenterArea>
 
-        {slots?.rightArea}
-      </HeaderContainer>
+          {slots?.rightArea}
+        </HeaderContainer>
 
-      {slots?.bottomArea}
-    </HeaderRoot>
+        {slots?.bottomArea}
+      </HeaderRoot>
+    </motion.div>
   );
 }
 
