@@ -1,4 +1,4 @@
-import type { StopMachineReasonDto } from 'src/api/types/generated';
+import type { StopMachineReasonGroupDto, StopMachineImpact } from 'src/api/types/generated';
 
 import { useMemo, useState, useCallback, useEffect } from 'react';
 
@@ -18,18 +18,18 @@ import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
-import { usePostapiStopMachineReasongetreasonpage } from 'src/api/hooks/generated/use-stop-machine-reason';
+import { useGetapiStopMachineReasonGroupgetreasongrouppage } from 'src/api/hooks/generated/use-stop-machine-reason-group';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
-import { StopMachineReasonTableRow } from '../stop-machine-reason-table-row';
-import { StopMachineReasonTableHead } from '../stop-machine-reason-table-head';
-import { StopMachineReasonTableNoData } from '../stop-machine-reason-table-no-data';
-import { StopMachineReasonTableToolbar } from '../stop-machine-reason-table-toolbar';
-import { StopMachineReasonTableEmptyRows } from '../stop-machine-reason-table-empty-rows';
+import { StopMachineReasonGroupTableRow } from '../stop-machine-reason-group-table-row';
+import { StopMachineReasonGroupTableHead } from '../stop-machine-reason-group-table-head';
+import { StopMachineReasonGroupTableNoData } from '../stop-machine-reason-group-table-no-data';
+import { StopMachineReasonGroupTableToolbar } from '../stop-machine-reason-group-table-toolbar';
+import { StopMachineReasonGroupTableEmptyRows } from '../stop-machine-reason-group-table-empty-rows';
 
-import type { StopMachineReasonProps } from '../stop-machine-reason-table-row';
+import type { StopMachineReasonGroupProps } from '../stop-machine-reason-group-table-row';
 
 // ----------------------------------------------------------------------
 
@@ -37,88 +37,93 @@ const emptyRows = (page: number, rowsPerPage: number, arrayLength: number) => {
   return page ? Math.max(0, (1 + page) * rowsPerPage - arrayLength) : 0;
 };
 
-export function StopMachineReasonListView() {
+const IMPACT_LABELS: Record<StopMachineImpact, string> = {
+  run: 'Run',
+  unPlanedStop: 'Unplanned Stop',
+  planedStop: 'Planned Stop',
+  notScheduled: 'Not Scheduled',
+};
+
+export function StopMachineReasonGroupListView() {
   const router = useRouter();
   const table = useTable();
 
   const [filterName, setFilterName] = useState('');
-  const [currentGroup, setCurrentGroup] = useState<string>('all');
-  const [reasons, setReasons] = useState<StopMachineReasonProps[]>([]);
+  const [currentImpact, setCurrentImpact] = useState<StopMachineImpact | 'all'>('all');
+  const [groups, setGroups] = useState<StopMachineReasonGroupProps[]>([]);
   const [totalItems, setTotalItems] = useState(0);
-  const [groupCounts, setGroupCounts] = useState<Record<string, number>>({});
+  const [totalByImpact, setTotalByImpact] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
 
-  // Determine which groups to query - 'all' means empty array
-  const groupsToQuery = currentGroup === 'all' ? [] : [currentGroup];
+  // Determine which impacts to query - 'all' means undefined
+  const impactsToQuery = currentImpact === 'all' ? undefined : [currentImpact];
 
-  const { mutate: fetchReasons } = usePostapiStopMachineReasongetreasonpage({
-    onSuccess: (data) => {
-      const mappedReasons: StopMachineReasonProps[] = (data.items || []).map((item: StopMachineReasonDto) => ({
-        id: item.id?.toString() || '',
-        code: item.code || '',
-        name: item.name || '',
-        description: item.description || '',
-        groupName: item.groupName || '',
-        color: item.color || '',
-        impact: item.impact || 'run',
-        requiresApproval: item.requiresApproval || false,
-        requiresNote: item.requiresNote || false,
-        requiresAttachment: item.requiresAttachment || false,
-        requiresComment: item.requiresComment || false,
-      }));
-      setReasons(mappedReasons);
-      setTotalItems(data.totalItems || 0);
-      
-      // Store group counts for tabs
-      if (data.groupCounts) {
-        setGroupCounts(data.groupCounts);
-      }
-      
-      setIsLoading(false);
+  const { data, isFetching } = useGetapiStopMachineReasonGroupgetreasongrouppage(
+    {
+      Search: filterName || undefined,
+      PageNumber: table.page,
+      PageSize: table.rowsPerPage,
+      Impacts: impactsToQuery,
     },
-    onError: () => {
-      setIsLoading(false);
-    },
-  });
+    {
+      enabled: true,
+    }
+  );
 
-  // Fetch data when filters change
   useEffect(() => {
-    setIsLoading(true);
-    fetchReasons({
-      data: groupsToQuery,
-      params: {
-        Search: filterName || undefined,
-        PageNumber: table.page,
-        PageSize: table.rowsPerPage,
-      },
-    });
-  }, [fetchReasons, table.page, table.rowsPerPage, filterName, groupsToQuery]);
+    if (data) {
+      const mappedGroups: StopMachineReasonGroupProps[] = (data.items || []).map(
+        (item: StopMachineReasonGroupDto) => ({
+          id: item.id?.toString() || '',
+          code: item.code || '',
+          name: item.name || '',
+          description: item.description || '',
+          color: item.color || '',
+          impact: item.impact || 'run',
+        })
+      );
+      setGroups(mappedGroups);
+      setTotalItems(data.totalItems || 0);
 
-  // Calculate tabs from groupCounts
+      // Store total by impact for tabs
+      if (data.totalByImpact) {
+        setTotalByImpact(data.totalByImpact);
+      }
+
+      setIsLoading(false);
+    }
+  }, [data]);
+
+  // Calculate tabs from totalByImpact
   const tabs = useMemo(() => {
-    const allCount = Object.values(groupCounts).reduce((sum, count) => sum + count, 0);
-    const result = [{ value: 'all', label: 'All', count: allCount }];
-    
-    Object.entries(groupCounts).forEach(([group, count]) => {
-      result.push({
-        value: group,
-        label: group,
-        count,
-      });
-    });
-    
+    const allCount = Object.values(totalByImpact).reduce((sum, count) => sum + count, 0);
+    const result: Array<{ value: StopMachineImpact | 'all'; label: string; count: number }> = [
+      { value: 'all', label: 'All', count: allCount },
+    ];
+
+    (['run', 'unPlanedStop', 'planedStop', 'notScheduled'] as StopMachineImpact[]).forEach(
+      (impact) => {
+        const count = totalByImpact[impact] || 0;
+        result.push({
+          value: impact,
+          label: IMPACT_LABELS[impact],
+          count,
+        });
+      }
+    );
+
     return result;
-  }, [groupCounts]);
+  }, [totalByImpact]);
 
   const handleChangeTab = useCallback(
-    (_event: React.SyntheticEvent, newValue: string) => {
-      setCurrentGroup(newValue);
+    (_event: React.SyntheticEvent, newValue: StopMachineImpact | 'all') => {
+      setCurrentImpact(newValue);
       table.onResetPage();
     },
     [table]
   );
 
-  const notFound = !isLoading && !reasons.length;
+  const notFound = !isFetching && !groups.length;
 
   return (
     <DashboardContent>
@@ -132,7 +137,7 @@ export function StopMachineReasonListView() {
       >
         <Box>
           <Typography variant="h4" sx={{ mb: 1 }}>
-            Stop Machine Reason List
+            Stop Machine Reason Group List
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Typography variant="body2" sx={{ color: 'text.primary' }}>
@@ -142,7 +147,7 @@ export function StopMachineReasonListView() {
               •
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.primary' }}>
-              Stop Machine Reason
+              Stop Machine Reason Group
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               •
@@ -167,17 +172,17 @@ export function StopMachineReasonListView() {
             variant="contained"
             color="inherit"
             startIcon={<Iconify icon="mingcute:add-line" />}
-            onClick={() => router.push('/stop-machine-reason/create')}
+            onClick={() => router.push('/stop-machine-reason-group/create')}
           >
-            Add reason
+            Add group
           </Button>
         </Box>
       </Box>
 
-      {/* Tabs for group filtering */}
+      {/* Tabs for impact filtering */}
       <Card sx={{ mb: 3 }}>
         <Tabs
-          value={currentGroup}
+          value={currentImpact}
           onChange={handleChangeTab}
           sx={{
             px: 2.5,
@@ -212,7 +217,7 @@ export function StopMachineReasonListView() {
       </Card>
 
       <Card>
-        <StopMachineReasonTableToolbar
+        <StopMachineReasonGroupTableToolbar
           numSelected={table.selected.length}
           filterName={filterName}
           onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -221,7 +226,7 @@ export function StopMachineReasonListView() {
           }}
         />
 
-        {isLoading ? (
+        {isFetching ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 10 }}>
             <CircularProgress />
           </Box>
@@ -230,30 +235,29 @@ export function StopMachineReasonListView() {
             <Scrollbar>
               <TableContainer sx={{ overflow: 'unset' }}>
                 <Table sx={{ minWidth: 800 }}>
-                  <StopMachineReasonTableHead
+                  <StopMachineReasonGroupTableHead
                     order={table.order}
                     orderBy={table.orderBy}
-                    rowCount={reasons.length}
+                    rowCount={groups.length}
                     numSelected={table.selected.length}
                     onSort={table.onSort}
                     onSelectAllRows={(checked) =>
                       table.onSelectAllRows(
                         checked,
-                        reasons.map((item) => item.id)
+                        groups.map((item) => item.id)
                       )
                     }
                     headLabel={[
                       { id: 'code', label: 'Code' },
                       { id: 'name', label: 'Name' },
-                      { id: 'groupName', label: 'Group' },
                       { id: 'impact', label: 'Impact' },
                       { id: 'description', label: 'Description' },
                       { id: '' },
                     ]}
                   />
                   <TableBody>
-                    {reasons.map((row) => (
-                      <StopMachineReasonTableRow
+                    {groups.map((row) => (
+                      <StopMachineReasonGroupTableRow
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(row.id)}
@@ -261,12 +265,12 @@ export function StopMachineReasonListView() {
                       />
                     ))}
 
-                    <StopMachineReasonTableEmptyRows
+                    <StopMachineReasonGroupTableEmptyRows
                       height={68}
-                      emptyRows={emptyRows(table.page, table.rowsPerPage, reasons.length)}
+                      emptyRows={emptyRows(table.page, table.rowsPerPage, groups.length)}
                     />
 
-                    {notFound && <StopMachineReasonTableNoData searchQuery={filterName} />}
+                    {notFound && <StopMachineReasonGroupTableNoData searchQuery={filterName} />}
                   </TableBody>
                 </Table>
               </TableContainer>

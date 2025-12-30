@@ -17,22 +17,17 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export type StopMachineReasonProps = {
+export type StopMachineReasonGroupProps = {
   id: string;
   code: string;
   name: string;
   description: string;
-  groupName: string;
   color: string;
   impact: StopMachineImpact;
-  requiresApproval: boolean;
-  requiresNote: boolean;
-  requiresAttachment: boolean;
-  requiresComment: boolean;
 };
 
-type StopMachineReasonTableRowProps = {
-  row: StopMachineReasonProps;
+type StopMachineReasonGroupTableRowProps = {
+  row: StopMachineReasonGroupProps;
   selected: boolean;
   onSelectRow: () => void;
 };
@@ -67,11 +62,11 @@ const getImpactLabel = (impact: StopMachineImpact): string => {
   }
 };
 
-export function StopMachineReasonTableRow({
+export function StopMachineReasonGroupTableRow({
   row,
   selected,
   onSelectRow,
-}: StopMachineReasonTableRowProps) {
+}: StopMachineReasonGroupTableRowProps) {
   const router = useRouter();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
@@ -85,7 +80,7 @@ export function StopMachineReasonTableRow({
 
   const handleEdit = useCallback(() => {
     handleClosePopover();
-    router.push(`/stop-machine-reason/edit/${row.id}`);
+    router.push(`/stop-machine-reason-group/edit/${row.id}`);
   }, [router, row.id]);
 
   return (
@@ -98,8 +93,6 @@ export function StopMachineReasonTableRow({
         <TableCell>{row.code}</TableCell>
 
         <TableCell>{row.name}</TableCell>
-
-        <TableCell>{row.groupName}</TableCell>
 
         <TableCell>
           <Label color={getImpactColor(row.impact)}>{getImpactLabel(row.impact)}</Label>

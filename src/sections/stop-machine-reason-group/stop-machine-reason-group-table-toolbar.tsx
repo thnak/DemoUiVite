@@ -11,17 +11,17 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-type StopMachineReasonTableToolbarProps = {
+type StopMachineReasonGroupTableToolbarProps = {
   numSelected: number;
   filterName: string;
   onFilterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export function StopMachineReasonTableToolbar({
+export function StopMachineReasonGroupTableToolbar({
   numSelected,
   filterName,
   onFilterName,
-}: StopMachineReasonTableToolbarProps) {
+}: StopMachineReasonGroupTableToolbarProps) {
   return (
     <Toolbar
       sx={{
