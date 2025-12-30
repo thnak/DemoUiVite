@@ -11,7 +11,9 @@ import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import Divider from '@mui/material/Divider';
+import Popover from '@mui/material/Popover';
 import Snackbar from '@mui/material/Snackbar';
+import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
@@ -100,6 +102,10 @@ export function IoTDeviceCreateEditView({
   const [mappedSensors, setMappedSensors] = useState<IoTSensorEntity[]>([]);
   const [sensorSearchText, setSensorSearchText] = useState('');
   const [selectedSensorToAdd, setSelectedSensorToAdd] = useState<IoTSensorEntity | null>(null);
+  const [openPopover, setOpenPopover] = useState<{
+    anchorEl: HTMLButtonElement | null;
+    sensorId: string;
+  } | null>(null);
 
   // API hooks
   const { data: sensorSearchResult, isLoading: isSearchingSensors } = useSearchIoTSensor(
@@ -153,19 +159,18 @@ export function IoTDeviceCreateEditView({
     },
   });
 
-  const { mutate: removeSensorFromDevice, isPending: isRemovingSensor } =
-    useRemoveSensorFromDevice({
-      onSuccess: (result) => {
-        if (result.isSuccess) {
-          refetchSensors();
-        } else {
-          setErrorMessage(result.message || 'Failed to remove sensor');
-        }
-      },
-      onError: (error) => {
-        setErrorMessage(error.message || 'Failed to remove sensor');
-      },
-    });
+  const { mutate: removeSensorFromDevice } = useRemoveSensorFromDevice({
+    onSuccess: (result) => {
+      if (result.isSuccess) {
+        refetchSensors();
+      } else {
+        setErrorMessage(result.message || 'Failed to remove sensor');
+      }
+    },
+    onError: (error) => {
+      setErrorMessage(error.message || 'Failed to remove sensor');
+    },
+  });
 
   // Load device sensors when in edit mode
   useEffect(() => {
@@ -235,6 +240,40 @@ export function IoTDeviceCreateEditView({
       }
     },
     [currentDevice?.id, removeSensorFromDevice]
+  );
+
+  const handleOpenPopover = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>, sensorId: string) => {
+      setOpenPopover({ anchorEl: event.currentTarget, sensorId });
+    },
+    []
+  );
+
+  const handleClosePopover = useCallback(() => {
+    setOpenPopover(null);
+  }, []);
+
+  const handleNavigateToDataSeeding = useCallback(
+    (sensorId: string) => {
+      handleClosePopover();
+      const sensor = mappedSensors.find((s) => s.id?.toString() === sensorId);
+      const params = new URLSearchParams();
+      if (currentDevice?.code) params.set('deviceCode', currentDevice.code);
+      if (sensor?.code) params.set('sensorCode', sensor.code);
+      const queryString = params.toString();
+      router.push(
+        `/iot-devices/${currentDevice?.id}/sensors/${sensorId}/data-seeding${queryString ? `?${queryString}` : ''}`
+      );
+    },
+    [router, currentDevice?.id, currentDevice?.code, mappedSensors, handleClosePopover]
+  );
+
+  const handleRemoveFromMenu = useCallback(
+    (sensorId: string) => {
+      handleClosePopover();
+      handleRemoveSensor(sensorId);
+    },
+    [handleClosePopover, handleRemoveSensor]
   );
 
   const handleSubmit = useCallback(() => {
@@ -560,11 +599,11 @@ export function IoTDeviceCreateEditView({
                             <TableCell align="right">
                               <IconButton
                                 size="small"
-                                color="error"
-                                onClick={() => handleRemoveSensor(sensor.id?.toString() || '')}
-                                disabled={isRemovingSensor}
+                                onClick={(e) =>
+                                  handleOpenPopover(e, sensor.id?.toString() || '')
+                                }
                               >
-                                <Iconify icon="solar:trash-bin-trash-bold" />
+                                <Iconify icon="eva:more-vertical-fill" />
                               </IconButton>
                             </TableCell>
                           </TableRow>
@@ -574,6 +613,47 @@ export function IoTDeviceCreateEditView({
                   </TableContainer>
                 </Scrollbar>
               )}
+
+              <Popover
+                open={!!openPopover}
+                anchorEl={openPopover?.anchorEl}
+                onClose={handleClosePopover}
+                anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+              >
+                <MenuList
+                  disablePadding
+                  sx={{
+                    p: 0.5,
+                    gap: 0.5,
+                    width: 180,
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      if (openPopover?.sensorId) {
+                        handleNavigateToDataSeeding(openPopover.sensorId);
+                      }
+                    }}
+                  >
+                    <Iconify icon="solar:database-bold-duotone" />
+                    Data Seeding
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      if (openPopover?.sensorId) {
+                        handleRemoveFromMenu(openPopover.sensorId);
+                      }
+                    }}
+                    sx={{ color: 'error.main' }}
+                  >
+                    <Iconify icon="solar:trash-bin-trash-bold" />
+                    Remove
+                  </MenuItem>
+                </MenuList>
+              </Popover>
             </Card>
           )}
         </Grid>
