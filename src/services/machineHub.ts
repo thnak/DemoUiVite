@@ -106,8 +106,12 @@ export class MachineHubService {
   }
 
   async stop(): Promise<void> {
-    await this.connection.stop();
-    console.log('MachineHub disconnected');
+    if (this.connection.state !== 'Disconnected') {
+      await this.connection.stop();
+      console.log('MachineHub disconnected');
+    } else {
+      console.log('MachineHub already disconnected');
+    }
   }
 
   async subscribeToMachine(
@@ -131,12 +135,18 @@ export class MachineHubService {
   async unsubscribeFromMachine(machineId: string): Promise<void> {
     this.callbacks.delete(machineId);
     this.runtimeBlockCallbacks.delete(machineId);
-    try {
-      await this.connection.invoke('UnsubscribeFromMachine', machineId);
-      console.log(`Unsubscribed from machine: ${machineId}`);
-    } catch (err) {
-      console.error(`Error unsubscribing from machine ${machineId}:`, err);
-      throw err;
+    
+    // Only attempt to unsubscribe if connection is active
+    if (this.connection.state === 'Connected') {
+      try {
+        await this.connection.invoke('UnsubscribeFromMachine', machineId);
+        console.log(`Unsubscribed from machine: ${machineId}`);
+      } catch (err) {
+        console.error(`Error unsubscribing from machine ${machineId}:`, err);
+        throw err;
+      }
+    } else {
+      console.log(`Skipped unsubscribe for machine ${machineId} - connection not active (${this.connection.state})`);
     }
   }
 

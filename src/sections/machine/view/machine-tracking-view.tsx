@@ -148,10 +148,21 @@ export function MachineTrackingView() {
     return () => {
       // Unsubscribe and stop connection
       if (id) {
-        hubService
-          .unsubscribeFromMachine(id)
-          .then(() => hubService.stop())
-          .catch((err) => console.error('Error during cleanup:', err));
+        const cleanup = async () => {
+          try {
+            await hubService.unsubscribeFromMachine(id);
+          } catch (err) {
+            console.error('Error unsubscribing:', err);
+          }
+          
+          try {
+            await hubService.stop();
+          } catch (err) {
+            console.error('Error stopping hub:', err);
+          }
+        };
+        
+        cleanup();
       }
     };
   }, [id, hubService, handleRuntimeBlockUpdate, machine?.name]);
