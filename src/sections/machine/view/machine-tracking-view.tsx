@@ -1,5 +1,4 @@
-import type { MachineOeeUpdate, MachineRuntimeBlock, MachineRunStateTimeBlock } from 'src/services/machineHub';
-import { MachineRunState } from 'src/services/machineHub';
+import type { MachineOeeUpdate, MachineRuntimeBlock } from 'src/services/machineHub';
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -20,8 +19,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { apiConfig } from 'src/api/config';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { MachineHubService } from 'src/services/machineHub';
 import { useGetMachineById } from 'src/api/hooks/generated/use-machine';
+import { MachineRunState , MachineHubService } from 'src/services/machineHub';
 
 import { Iconify } from 'src/components/iconify';
 
