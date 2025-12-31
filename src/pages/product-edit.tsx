@@ -57,7 +57,7 @@ export default function Page() {
           id: productData.id?.toString() || '',
           name: productData.name || '',
           code: productData.code || '',
-          categoryId: productData.productCategoryId?.toString(),
+          categoryId: productData.productCategoryId?.toString() ?? undefined,
           price: productData.price || 0,
           stock: productData.stockQuantity || 0,
           coverUrl: productData.imageUrl || '',
@@ -68,8 +68,8 @@ export default function Page() {
             width: productData.dimensions?.width,
             height: productData.dimensions?.height,
           },
-          unitOfMeasureId: productData.unitOfMeasureId?.toString(),
-          secondaryUnitOfMeasureId: productData.secondaryUnitOfMeasureId?.toString(),
+          unitOfMeasureId: productData.unitOfMeasureId?.toString() ?? undefined,
+          secondaryUnitOfMeasureId: productData.secondaryUnitOfMeasureId?.toString() ?? undefined,
         }}
       />
     </>
