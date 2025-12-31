@@ -27,8 +27,8 @@ import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 
 import { Iconify } from 'src/components/iconify';
-import { WeekSummaryChart } from 'src/components/WeekSummaryChart';
 import { TimeBlockNameSelector } from 'src/components/selectors';
+import { WeekSummaryChart } from 'src/components/WeekSummaryChart';
 import { DurationTimePicker, partsToIsoDuration } from 'src/components/duration-time-picker';
 
 import {
