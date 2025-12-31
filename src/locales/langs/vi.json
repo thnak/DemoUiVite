@@ -20,6 +20,7 @@
     "product": "Sản phẩm",
     "workingParameter": "Thông số làm việc",
     "stopMachineReason": "Lý do dừng máy",
+    "stopMachineReasonGroup": "Nhóm lý do dừng máy",
     "productCategory": "Danh mục sản phẩm",
     "machine": "Máy móc",
     "machineType": "Loại máy",
