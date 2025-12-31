@@ -98,7 +98,7 @@ export function MachineTrackingView() {
         if (mounted && initialAggregation) {
           // Convert aggregation to update format
           setMachineState({
-            machineId: machine?.id || id,
+            machineId: id,
             machineName: machine?.name || id,
             availability: initialAggregation.availability * 100,
             availabilityVsLastPeriod: 0,
