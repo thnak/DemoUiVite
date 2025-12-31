@@ -59,19 +59,38 @@ export interface MachineAggregation {
   lastUpdated: string; // ISO 8601 date string
 }
 
+/**
+ * Singleton MachineHub service that maintains a persistent SignalR connection
+ * Connection is established once and reused across the application
+ */
 export class MachineHubService {
+  private static instance: MachineHubService | null = null;
+
   private connection: signalR.HubConnection;
 
   private callbacks: Map<string, (update: MachineOeeUpdate) => void> = new Map();
 
   private runtimeBlockCallbacks: Map<string, (block: MachineRuntimeBlock) => void> = new Map();
 
-  constructor(baseUrl: string) {
+  private subscribedMachines: Set<string> = new Set();
+
+  private isStarting = false;
+
+  private constructor(baseUrl: string) {
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(`${baseUrl}/hubs/machine`, {
         transport: signalR.HttpTransportType.WebSockets,
       })
-      .withAutomaticReconnect()
+      .withAutomaticReconnect({
+        nextRetryDelayInMilliseconds: (retryContext) => {
+          // Exponential backoff: 0s, 2s, 10s, 30s, then 60s
+          if (retryContext.previousRetryCount === 0) return 0;
+          if (retryContext.previousRetryCount === 1) return 2000;
+          if (retryContext.previousRetryCount === 2) return 10000;
+          if (retryContext.previousRetryCount === 3) return 30000;
+          return 60000;
+        },
+      })
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
@@ -91,25 +110,72 @@ export class MachineHubService {
       // Broadcast to all runtime block callbacks
       this.runtimeBlockCallbacks.forEach((callback) => callback(block));
     });
+
+    // Handle reconnection - resubscribe to all machines
+    this.connection.onreconnected(async () => {
+      console.log('MachineHub reconnected, resubscribing to machines...');
+      const machines = Array.from(this.subscribedMachines);
+      for (const machineId of machines) {
+        try {
+          await this.connection.invoke('SubscribeToMachine', machineId);
+          console.log(`Resubscribed to machine: ${machineId}`);
+        } catch (err) {
+          console.error(`Error resubscribing to machine ${machineId}:`, err);
+        }
+      }
+    });
+
+    // Handle connection close
+    this.connection.onclose((error) => {
+      if (error) {
+        console.error('MachineHub connection closed with error:', error);
+      } else {
+        console.log('MachineHub connection closed');
+      }
+    });
   }
 
-  async start(): Promise<void> {
+  /**
+   * Get the singleton instance of MachineHubService
+   */
+  public static getInstance(baseUrl: string): MachineHubService {
+    if (!MachineHubService.instance) {
+      MachineHubService.instance = new MachineHubService(baseUrl);
+    }
+    return MachineHubService.instance;
+  }
+
+  /**
+   * Ensure the connection is started
+   * Safe to call multiple times - will only connect once
+   */
+  async ensureConnected(): Promise<void> {
+    if (this.connection.state === 'Connected') {
+      return;
+    }
+
+    if (this.isStarting) {
+      // Wait for the connection to be established
+      await new Promise<void>((resolve) => {
+        const checkInterval = setInterval(() => {
+          if (this.connection.state === 'Connected' || !this.isStarting) {
+            clearInterval(checkInterval);
+            resolve();
+          }
+        }, 100);
+      });
+      return;
+    }
+
+    this.isStarting = true;
     try {
-      if (this.connection.state === 'Disconnected') {
-        await this.connection.start();
-        console.log('MachineHub connected');
-      }
+      await this.connection.start();
+      console.log('MachineHub connected');
     } catch (err) {
       console.error('Error connecting to MachineHub:', err);
-    }
-  }
-
-  async stop(): Promise<void> {
-    if (this.connection.state !== 'Disconnected') {
-      await this.connection.stop();
-      console.log('MachineHub disconnected');
-    } else {
-      console.log('MachineHub already disconnected');
+      throw err;
+    } finally {
+      this.isStarting = false;
     }
   }
 
@@ -118,38 +184,54 @@ export class MachineHubService {
     callback: (update: MachineOeeUpdate) => void,
     runtimeBlockCallback?: (block: MachineRuntimeBlock) => void
   ): Promise<void> {
-    try {
-      await this.connection.invoke('SubscribeToMachine', machineId);
-      this.callbacks.set(machineId, callback);
-      if (runtimeBlockCallback) {
-        this.runtimeBlockCallbacks.set(machineId, runtimeBlockCallback);
+    // Ensure connection is active
+    await this.ensureConnected();
+
+    // Register callbacks
+    this.callbacks.set(machineId, callback);
+    if (runtimeBlockCallback) {
+      this.runtimeBlockCallbacks.set(machineId, runtimeBlockCallback);
+    }
+
+    // Only invoke if not already subscribed
+    if (!this.subscribedMachines.has(machineId)) {
+      try {
+        await this.connection.invoke('SubscribeToMachine', machineId);
+        this.subscribedMachines.add(machineId);
+        console.log(`Subscribed to machine: ${machineId}`);
+      } catch (err) {
+        console.error(`Error subscribing to machine ${machineId}:`, err);
+        throw err;
       }
-      console.log(`Subscribed to machine: ${machineId}`);
-    } catch (err) {
-      console.error(`Error subscribing to machine ${machineId}:`, err);
-      
+    } else {
+      console.log(`Already subscribed to machine: ${machineId}, only updating callbacks`);
     }
   }
 
   async unsubscribeFromMachine(machineId: string): Promise<void> {
+    // Remove callbacks
     this.callbacks.delete(machineId);
     this.runtimeBlockCallbacks.delete(machineId);
-    
-    // Only attempt to unsubscribe if connection is active
-    if (this.connection.state === 'Connected') {
-      try {
-        await this.connection.invoke('UnsubscribeFromMachine', machineId);
-        console.log(`Unsubscribed from machine: ${machineId}`);
-      } catch (err) {
-        console.error(`Error unsubscribing from machine ${machineId}:`, err);
-        
+
+    // Only unsubscribe if we were subscribed
+    if (this.subscribedMachines.has(machineId)) {
+      this.subscribedMachines.delete(machineId);
+
+      if (this.connection.state === 'Connected') {
+        try {
+          await this.connection.invoke('UnsubscribeFromMachine', machineId);
+          console.log(`Unsubscribed from machine: ${machineId}`);
+        } catch (err) {
+          console.error(`Error unsubscribing from machine ${machineId}:`, err);
+        }
+      } else {
+        console.log(`Skipped unsubscribe for machine ${machineId} - connection not active`);
       }
-    } else {
-      console.log(`Skipped unsubscribe for machine ${machineId} - connection not active (${this.connection.state})`);
     }
   }
 
   async getMachineAggregation(machineId: string): Promise<MachineAggregation | null> {
+    await this.ensureConnected();
     try {
       const aggregation = await this.connection.invoke<MachineAggregation>(
         'GetMachineAggregation',
@@ -163,6 +245,7 @@ export class MachineHubService {
   }
 
   async getMachineRuntimeBlocks(machineId: string): Promise<MachineRuntimeBlock[]> {
+    await this.ensureConnected();
     try {
       const blocks = await this.connection.invoke<MachineRuntimeBlock[]>(
         'GetMachineRuntimeBlocks',
@@ -176,6 +259,7 @@ export class MachineHubService {
   }
 
   async getSubscriberCount(machineId: string): Promise<number> {
+    await this.ensureConnected();
     try {
       const count = await this.connection.invoke<number>('GetSubscriberCount', machineId);
       return count;

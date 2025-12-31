@@ -20,7 +20,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { apiConfig } from 'src/api/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useGetMachineById } from 'src/api/hooks/generated/use-machine';
-import { MachineRunState , MachineHubService } from 'src/services/machineHub';
+import { MachineRunState, MachineHubService } from 'src/services/machineHub';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -32,7 +32,8 @@ export function MachineTrackingView() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const [hubService] = useState(() => new MachineHubService(apiConfig.baseUrl));
+  // Use singleton instance
+  const hubService = MachineHubService.getInstance(apiConfig.baseUrl);
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>('disconnected');
   const [machineState, setMachineState] = useState<MachineOeeUpdate | null>(null);
   const [runtimeBlocks, setRuntimeBlocks] = useState<MachineRuntimeBlock[]>([]);
@@ -61,20 +62,14 @@ export function MachineTrackingView() {
   useEffect(() => {
     if (!id) return undefined;
 
-    const mounted = true;
+    let mounted = true;
 
     const initializeConnection = async () => {
       try {
         setConnectionStatus('connecting');
 
-        // Start hub connection
-        await hubService.start();
-
-        if (!mounted) return;
-
-        setConnectionStatus('connected');
-
         // Subscribe to machine updates with runtime block callback
+        // Connection will be established automatically
         await hubService.subscribeToMachine(
           id,
           (update: MachineOeeUpdate) => {
@@ -89,6 +84,10 @@ export function MachineTrackingView() {
           },
           handleRuntimeBlockUpdate
         );
+
+        if (!mounted) return;
+
+        setConnectionStatus('connected');
 
         // Get initial machine aggregation and runtime blocks
         const [initialAggregation, initialBlocks] = await Promise.all([
@@ -144,25 +143,13 @@ export function MachineTrackingView() {
 
     initializeConnection();
 
-    // Cleanup function
+    // Cleanup function - only unsubscribe, don't stop the connection
     return () => {
-      // Unsubscribe and stop connection
+      mounted = false;
       if (id) {
-        const cleanup = async () => {
-          try {
-            await hubService.unsubscribeFromMachine(id);
-          } catch (err) {
-            console.error('Error unsubscribing:', err);
-          }
-          
-          try {
-            await hubService.stop();
-          } catch (err) {
-            console.error('Error stopping hub:', err);
-          }
-        };
-        
-        cleanup();
+        hubService.unsubscribeFromMachine(id).catch((err) => {
+          console.error('Error unsubscribing:', err);
+        });
       }
     };
   }, [id, hubService, handleRuntimeBlockUpdate, machine?.name]);
