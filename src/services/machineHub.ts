@@ -3,15 +3,9 @@ import * as signalR from '@microsoft/signalr';
 // ----------------------------------------------------------------------
 
 export enum MachineRunState {
-  Running = 0,
-  SpeedLoss = 1,
-  Downtime = 2,
-}
-
-export interface MachineRunStateTimeBlock {
-  startTime: string; // ISO 8601 date string
-  endTime: string; // ISO 8601 date string
-  state: MachineRunState;
+  Running = 'running',
+  SpeedLoss = 'speedloss',
+  Downtime = 'downtime',
 }
 
 export interface MachineRuntimeBlock {
@@ -25,6 +19,7 @@ export interface MachineRuntimeBlock {
 }
 
 export interface MachineOeeUpdate {
+  machineId: string,
   machineName: string; // Name of the machine
   availability: number; // Percentage (0-1)
   availabilityVsLastPeriod: number; // Percentage points difference
@@ -43,7 +38,6 @@ export interface MachineOeeUpdate {
   downtime: string; // ISO 8601 duration (e.g., "PT30M")
   speedLossTime: string; // ISO 8601 duration (e.g., "PT15M")
   currentProductName: string; // Name of current product
-  runStateHistory: MachineRunStateTimeBlock[]; // History of run states
 }
 
 export interface MachineAggregation {
@@ -96,9 +90,8 @@ export class MachineHubService {
 
     // Register the MachineUpdate event handler (OEE metrics)
     this.connection.on('MachineUpdate', (update: MachineOeeUpdate) => {
-      console.log('Machine OEE update received:', update);
       // Call the callback for this specific machine
-      const callback = this.callbacks.get(update.machineName);
+      const callback = this.callbacks.get(update.machineId);
       if (callback) {
         callback(update);
       }
@@ -106,14 +99,12 @@ export class MachineHubService {
 
     // Register the MachineRuntimeUpdateLastBlock event handler (runtime blocks)
     this.connection.on('MachineRuntimeUpdateLastBlock', (block: MachineRuntimeBlock) => {
-      console.log('Machine runtime block update received:', block);
       // Broadcast to all runtime block callbacks
       this.runtimeBlockCallbacks.forEach((callback) => callback(block));
     });
 
     // Handle reconnection - resubscribe to all machines
     this.connection.onreconnected(async () => {
-      console.log('MachineHub reconnected, resubscribing to machines...');
       const machines = Array.from(this.subscribedMachines);
       for (const machineId of machines) {
         try {
@@ -198,13 +189,10 @@ export class MachineHubService {
       try {
         await this.connection.invoke('SubscribeToMachine', machineId);
         this.subscribedMachines.add(machineId);
-        console.log(`Subscribed to machine: ${machineId}`);
       } catch (err) {
         console.error(`Error subscribing to machine ${machineId}:`, err);
         throw err;
       }
-    } else {
-      console.log(`Already subscribed to machine: ${machineId}, only updating callbacks`);
     }
   }
 
@@ -220,12 +208,9 @@ export class MachineHubService {
       if (this.connection.state === 'Connected') {
         try {
           await this.connection.invoke('UnsubscribeFromMachine', machineId);
-          console.log(`Unsubscribed from machine: ${machineId}`);
         } catch (err) {
           console.error(`Error unsubscribing from machine ${machineId}:`, err);
         }
-      } else {
-        console.log(`Skipped unsubscribe for machine ${machineId} - connection not active`);
       }
     }
   }
@@ -265,7 +250,9 @@ export class MachineHubService {
       return count;
     } catch (err) {
       console.error(`Error getting subscriber count for machine ${machineId}:`, err);
-      return 0;
+      await this.connection.start();
+      const count = await this.connection.invoke<number>('GetSubscriberCount', machineId);
+      return count;
     }
   }
 

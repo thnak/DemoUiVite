@@ -98,6 +98,7 @@ export function MachineTrackingView() {
         if (mounted && initialAggregation) {
           // Convert aggregation to update format
           setMachineState({
+            machineId: machine?.id || id,
             machineName: machine?.name || id,
             availability: initialAggregation.availability * 100,
             availabilityVsLastPeriod: 0,
@@ -115,8 +116,7 @@ export function MachineTrackingView() {
             runTime: initialAggregation.totalRunTime,
             downtime: initialAggregation.totalDowntime,
             speedLossTime: initialAggregation.totalSpeedLossTime,
-            currentProductName: '',
-            runStateHistory: [],
+            currentProductName: ''
           });
           setLastUpdateTime(new Date());
         }
@@ -152,7 +152,7 @@ export function MachineTrackingView() {
         });
       }
     };
-  }, [id, hubService, handleRuntimeBlockUpdate, machine?.name]);
+  }, [id, hubService, handleRuntimeBlockUpdate, machine?.name, machine?.id]);
 
   const handleCloseError = useCallback(() => {
     setErrorMessage(null);
