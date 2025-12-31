@@ -4,7 +4,7 @@ import * as signalR from '@microsoft/signalr';
 
 export enum MachineRunState {
   Running = 'running',
-  SpeedLoss = 'speedloss',
+  SpeedLoss = 'speedLoss',
   Downtime = 'downtime',
 }
 
