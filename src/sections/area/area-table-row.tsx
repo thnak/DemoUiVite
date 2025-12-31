@@ -27,9 +27,10 @@ type AreaTableRowProps = {
   selected: boolean;
   onSelectRow: () => void;
   onDeleteRow?: () => void;
+  returnUrl?: string;
 };
 
-export function AreaTableRow({ row, selected, onSelectRow, onDeleteRow }: AreaTableRowProps) {
+export function AreaTableRow({ row, selected, onSelectRow, onDeleteRow, returnUrl }: AreaTableRowProps) {
   const router = useRouter();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
@@ -42,8 +43,10 @@ export function AreaTableRow({ row, selected, onSelectRow, onDeleteRow }: AreaTa
   }, []);
 
   const handleEditRow = useCallback(() => {
-    router.push(`/area/${row.id}/edit`);
-  }, [router, row.id]);
+    const editUrl = `/area/${row.id}/edit`;
+    const urlWithReturn = returnUrl ? `${editUrl}?returnUrl=${encodeURIComponent(returnUrl)}` : editUrl;
+    router.push(urlWithReturn);
+  }, [router, row.id, returnUrl]);
 
   const handleEditFromMenu = useCallback(() => {
     handleClosePopover();

@@ -13,6 +13,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { RouterLink } from 'src/routes/components';
 
+import { usePaginationParams } from 'src/hooks';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import { areaKeys, useDeleteArea, useGetAreaPage } from 'src/api/hooks/generated/use-area';
@@ -33,16 +34,23 @@ import type { AreaProps } from '../area-table-row';
 // ----------------------------------------------------------------------
 
 export function AreaView() {
-  const table = useTable();
   const queryClient = useQueryClient();
 
-  const [filterName, setFilterName] = useState('');
+  // Use URL params for pagination state
+  const { params, setParams, getUrlWithParams } = usePaginationParams({
+    defaultPage: 0,
+    defaultRowsPerPage: 5,
+    defaultOrderBy: 'name',
+    defaultOrder: 'asc',
+  });
+
   const [areas, setAreas] = useState<AreaProps[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [selected, setSelected] = useState<string[]>([]);
 
   const { mutate: fetchAreas } = useGetAreaPage({
     onSuccess: (data) => {
@@ -64,11 +72,11 @@ export function AreaView() {
     onSuccess: () => {
       // Refetch areas after deletion
       fetchAreas({
-        data: [{ sortBy: table.orderBy, descending: table.order === 'desc' }],
+        data: [{ sortBy: params.orderBy, descending: params.order === 'desc' }],
         params: {
-          pageNumber: table.page,
-          pageSize: table.rowsPerPage,
-          searchTerm: filterName || undefined,
+          pageNumber: params.page,
+          pageSize: params.rowsPerPage,
+          searchTerm: params.filterName || undefined,
         },
       });
       queryClient.invalidateQueries({ queryKey: areaKeys.all });
@@ -84,15 +92,62 @@ export function AreaView() {
   useEffect(() => {
     setIsLoading(true);
     fetchAreas({
-      data: [{ sortBy: table.orderBy, descending: table.order === 'desc' }],
+      data: [{ sortBy: params.orderBy, descending: params.order === 'desc' }],
       params: {
-        pageNumber: table.page,
-        pageSize: table.rowsPerPage,
-        searchTerm: filterName || undefined,
+        pageNumber: params.page,
+        pageSize: params.rowsPerPage,
+        searchTerm: params.filterName || undefined,
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [table.page, table.rowsPerPage, table.orderBy, table.order, filterName]);
+  }, [params.page, params.rowsPerPage, params.orderBy, params.order, params.filterName]);
+
+  const handleSort = useCallback(
+    (id: string) => {
+      const isAsc = params.orderBy === id && params.order === 'asc';
+      setParams({
+        order: isAsc ? 'desc' : 'asc',
+        orderBy: id,
+      });
+    },
+    [params.orderBy, params.order, setParams]
+  );
+
+  const handleSelectAllRows = useCallback((checked: boolean, newSelecteds: string[]) => {
+    if (checked) {
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  }, []);
+
+  const handleSelectRow = useCallback(
+    (inputValue: string) => {
+      const newSelected = selected.includes(inputValue)
+        ? selected.filter((value) => value !== inputValue)
+        : [...selected, inputValue];
+
+      setSelected(newSelected);
+    },
+    [selected]
+  );
+
+  const handleChangePage = useCallback(
+    (_event: unknown, newPage: number) => {
+      setParams({ page: newPage });
+    },
+    [setParams]
+  );
+
+  const handleChangeRowsPerPage = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setParams({
+        rowsPerPage: parseInt(event.target.value, 10),
+        page: 0,
+      });
+    },
+    [setParams]
+  );
 
   const handleDeleteRow = useCallback(
     (id: string) => {
@@ -116,7 +171,7 @@ export function AreaView() {
     }
   }, [isDeleting]);
 
-  const notFound = !areas.length && !!filterName;
+  const notFound = !areas.length && !!params.filterName;
 
   return (
     <DashboardContent>
@@ -175,11 +230,10 @@ export function AreaView() {
 
       <Card>
         <AreaTableToolbar
-          numSelected={table.selected.length}
-          filterName={filterName}
+          numSelected={selected.length}
+          filterName={params.filterName || ''}
           onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setFilterName(event.target.value);
-            table.onResetPage();
+            setParams({ filterName: event.target.value, page: 0 });
           }}
         />
 
@@ -192,13 +246,13 @@ export function AreaView() {
             ) : (
               <Table sx={{ minWidth: 800 }}>
                 <AreaTableHead
-                  order={table.order}
-                  orderBy={table.orderBy}
+                  order={params.order}
+                  orderBy={params.orderBy}
                   rowCount={totalItems}
-                  numSelected={table.selected.length}
-                  onSort={table.onSort}
+                  numSelected={selected.length}
+                  onSort={handleSort}
                   onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(
+                    handleSelectAllRows(
                       checked,
                       areas.map((area) => area.id)
                     )
@@ -214,18 +268,19 @@ export function AreaView() {
                     <AreaTableRow
                       key={row.id}
                       row={row}
-                      selected={table.selected.includes(row.id)}
-                      onSelectRow={() => table.onSelectRow(row.id)}
+                      selected={selected.includes(row.id)}
+                      onSelectRow={() => handleSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRow(row.id)}
+                      returnUrl={getUrlWithParams('/area')}
                     />
                   ))}
 
                   <AreaTableEmptyRows
                     height={68}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, totalItems)}
+                    emptyRows={emptyRows(params.page, params.rowsPerPage, totalItems)}
                   />
 
-                  {notFound && <AreaTableNoData searchQuery={filterName} />}
+                  {notFound && <AreaTableNoData searchQuery={params.filterName || ''} />}
                 </TableBody>
               </Table>
             )}
@@ -234,12 +289,12 @@ export function AreaView() {
 
         <TablePagination
           component="div"
-          page={table.page}
+          page={params.page}
           count={totalItems}
-          rowsPerPage={table.rowsPerPage}
-          onPageChange={table.onChangePage}
+          rowsPerPage={params.rowsPerPage}
+          onPageChange={handleChangePage}
           rowsPerPageOptions={[...STANDARD_ROWS_PER_PAGE_OPTIONS]}
-          onRowsPerPageChange={table.onChangeRowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
 
@@ -252,72 +307,4 @@ export function AreaView() {
       />
     </DashboardContent>
   );
-}
-
-// ----------------------------------------------------------------------
-
-export function useTable() {
-  const [page, setPage] = useState(0);
-  const [orderBy, setOrderBy] = useState('name');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-
-  const onSort = useCallback(
-    (id: string) => {
-      const isAsc = orderBy === id && order === 'asc';
-      setOrder(isAsc ? 'desc' : 'asc');
-      setOrderBy(id);
-    },
-    [order, orderBy]
-  );
-
-  const onSelectAllRows = useCallback((checked: boolean, newSelecteds: string[]) => {
-    if (checked) {
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  }, []);
-
-  const onSelectRow = useCallback(
-    (inputValue: string) => {
-      const newSelected = selected.includes(inputValue)
-        ? selected.filter((value) => value !== inputValue)
-        : [...selected, inputValue];
-
-      setSelected(newSelected);
-    },
-    [selected]
-  );
-
-  const onResetPage = useCallback(() => {
-    setPage(0);
-  }, []);
-
-  const onChangePage = useCallback((event: unknown, newPage: number) => {
-    setPage(newPage);
-  }, []);
-
-  const onChangeRowsPerPage = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      onResetPage();
-    },
-    [onResetPage]
-  );
-
-  return {
-    page,
-    order,
-    onSort,
-    orderBy,
-    selected,
-    rowsPerPage,
-    onSelectRow,
-    onResetPage,
-    onChangePage,
-    onSelectAllRows,
-    onChangeRowsPerPage,
-  };
 }

@@ -29,9 +29,10 @@ type UnitTableRowProps = {
   selected: boolean;
   onSelectRow: () => void;
   onDeleteRow?: () => void;
+  returnUrl?: string;
 };
 
-export function UnitTableRow({ row, selected, onSelectRow, onDeleteRow }: UnitTableRowProps) {
+export function UnitTableRow({ row, selected, onSelectRow, onDeleteRow, returnUrl }: UnitTableRowProps) {
   const router = useRouter();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
@@ -44,8 +45,10 @@ export function UnitTableRow({ row, selected, onSelectRow, onDeleteRow }: UnitTa
   }, []);
 
   const handleEditRow = useCallback(() => {
-    router.push(`/settings/units/${row.id}/edit`);
-  }, [router, row.id]);
+    const editUrl = `/settings/units/${row.id}/edit`;
+    const urlWithReturn = returnUrl ? `${editUrl}?returnUrl=${encodeURIComponent(returnUrl)}` : editUrl;
+    router.push(urlWithReturn);
+  }, [router, row.id, returnUrl]);
 
   const handleEditFromMenu = useCallback(() => {
     handleClosePopover();

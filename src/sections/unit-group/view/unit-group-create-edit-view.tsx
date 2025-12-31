@@ -1,6 +1,7 @@
 import type { ChangeEvent } from 'react';
 import type { UnitGroupEntity } from 'src/api/types/generated';
 
+import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -43,6 +44,8 @@ export function UnitGroupCreateEditView({
   currentUnitGroup,
 }: UnitGroupCreateEditViewProps) {
   const router = useRouter();
+  const [searchParams] = useSearchParams();
+  const returnUrl = searchParams.get('returnUrl') || '/settings/unit-groups';
 
   // Use ValidationResult hook for form validation
   const {
@@ -73,7 +76,7 @@ export function UnitGroupCreateEditView({
     onSuccess: (result) => {
       setValidationResult(result);
       if (isValidationSuccess(result)) {
-        router.push('/settings/unit-groups');
+        router.push(returnUrl);
       } else {
         if (result.message) {
           setErrorMessage(result.message);
@@ -89,7 +92,7 @@ export function UnitGroupCreateEditView({
     onSuccess: (result) => {
       setValidationResult(result);
       if (isValidationSuccess(result)) {
-        router.push('/settings/unit-groups');
+        router.push(returnUrl);
       } else {
         if (result.message) {
           setErrorMessage(result.message);
@@ -142,8 +145,8 @@ export function UnitGroupCreateEditView({
   }, [isEdit, currentUnitGroup, formData, createUnitGroup, updateUnitGroup, clearValidationResult]);
 
   const handleCancel = useCallback(() => {
-    router.push('/settings/unit-groups');
-  }, [router]);
+    router.push(returnUrl);
+  }, [router, returnUrl]);
 
   const isSubmitting = isCreating || isUpdating;
 

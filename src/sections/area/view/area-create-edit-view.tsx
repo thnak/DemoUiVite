@@ -1,3 +1,4 @@
+import { useSearchParams } from 'react-router-dom';
 import { useState, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
@@ -39,6 +40,8 @@ interface AreaCreateEditViewProps {
 
 export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEditViewProps) {
   const router = useRouter();
+  const [searchParams] = useSearchParams();
+  const returnUrl = searchParams.get('returnUrl') || '/area';
 
   // Use ValidationResult hook for form validation
   const {
@@ -61,7 +64,7 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
     onSuccess: (result) => {
       setValidationResult(result);
       if (isValidationSuccess(result)) {
-        router.push('/area');
+        router.push(returnUrl);
       } else {
         if (result.message) {
           setErrorMessage(result.message);
@@ -77,7 +80,7 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
     onSuccess: (result) => {
       setValidationResult(result);
       if (isValidationSuccess(result)) {
-        router.push('/area');
+        router.push(returnUrl);
       } else {
         if (result.message) {
           setErrorMessage(result.message);
@@ -138,8 +141,8 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
   }, [formData, isEdit, currentArea?.id, createAreaMutate, updateAreaMutate, clearValidationResult]);
 
   const handleCancel = useCallback(() => {
-    router.push('/area');
-  }, [router]);
+    router.push(returnUrl);
+  }, [router, returnUrl]);
 
   return (
     <DashboardContent>

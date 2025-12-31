@@ -15,6 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { RouterLink } from 'src/routes/components';
 
+import { usePaginationParams } from 'src/hooks';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import { unitKeys, useDeleteUnit, usePostapiUnitgetunits } from 'src/api/hooks/generated/use-unit';
@@ -35,14 +36,19 @@ import type { UnitProps } from '../unit-table-row';
 // ----------------------------------------------------------------------
 
 export function UnitListView() {
-  const table = useTable();
   const queryClient = useQueryClient();
 
-  const [filterName, setFilterName] = useState('');
+  // Use URL params for pagination state
+  const { params, setParams, resetPage, getUrlWithParams } = usePaginationParams({
+    defaultPage: 0,
+    defaultRowsPerPage: 5,
+    defaultOrderBy: 'name',
+    defaultOrder: 'asc',
+  });
+
   const [units, setUnits] = useState<UnitProps[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentTab, setCurrentTab] = useState('all');
   const [groupCounts, setGroupCounts] = useState<Record<string, number>>({});
 
   const { mutate: fetchUnits } = usePostapiUnitgetunits({
@@ -64,8 +70,6 @@ export function UnitListView() {
       setIsLoading(false);
     },
   });
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selected, setSelected] = useState<string[]>([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
@@ -74,23 +78,15 @@ export function UnitListView() {
   const refetchUnits = useCallback(() => {
     setIsLoading(true);
     fetchUnits({
-      data: [{ sortBy: table.orderBy, descending: table.order === 'desc' }],
+      data: [{ sortBy: params.orderBy, descending: params.order === 'desc' }],
       params: {
-        pageNumber: table.page,
-        pageSize: table.rowsPerPage,
-        searchTerm: filterName || undefined,
-        UnitGroupName: currentTab !== 'all' ? currentTab : undefined,
+        pageNumber: params.page,
+        pageSize: params.rowsPerPage,
+        searchTerm: params.filterName || undefined,
+        UnitGroupName: params.currentTab !== 'all' ? params.currentTab : undefined,
       },
     });
-  }, [
-    fetchUnits,
-    table.orderBy,
-    table.order,
-    table.page,
-    table.rowsPerPage,
-    filterName,
-    currentTab,
-  ]);
+  }, [fetchUnits, params]);
 
   const { mutate: deleteUnitMutate } = useDeleteUnit({
     onSuccess: () => {
@@ -102,14 +98,60 @@ export function UnitListView() {
   useEffect(() => {
     refetchUnits();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [table.page, table.rowsPerPage, table.orderBy, table.order, filterName, currentTab]);
+  }, [params.page, params.rowsPerPage, params.orderBy, params.order, params.filterName, params.currentTab]);
 
   const handleTabChange = useCallback(
     (_event: React.SyntheticEvent, newValue: string) => {
-      setCurrentTab(newValue);
-      table.onResetPage();
+      setParams({ currentTab: newValue, page: 0 });
     },
-    [table]
+    [setParams]
+  );
+
+  const handleSort = useCallback(
+    (id: string) => {
+      const isAsc = params.orderBy === id && params.order === 'asc';
+      setParams({
+        order: isAsc ? 'desc' : 'asc',
+        orderBy: id,
+      });
+    },
+    [params.orderBy, params.order, setParams]
+  );
+
+  const handleSelectAllRows = useCallback((checked: boolean, newSelecteds: string[]) => {
+    if (checked) {
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  }, []);
+
+  const handleSelectRow = useCallback(
+    (inputValue: string) => {
+      const newSelected = selected.includes(inputValue)
+        ? selected.filter((value) => value !== inputValue)
+        : [...selected, inputValue];
+
+      setSelected(newSelected);
+    },
+    [selected]
+  );
+
+  const handleChangePage = useCallback(
+    (_event: unknown, newPage: number) => {
+      setParams({ page: newPage });
+    },
+    [setParams]
+  );
+
+  const handleChangeRowsPerPage = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setParams({
+        rowsPerPage: parseInt(event.target.value, 10),
+        page: 0,
+      });
+    },
+    [setParams]
   );
 
   const handleDeleteRow = useCallback(async (id: string) => {
@@ -136,10 +178,13 @@ export function UnitListView() {
     }
   }, [isDeleting]);
 
-  const notFound = !units.length && !!filterName;
+  const notFound = !units.length && !!params.filterName;
 
   // Get all unique group names from groupCounts
   const groupTabs = Object.keys(groupCounts).sort();
+
+  // Set default tab from URL or 'all'
+  const currentTab = params.currentTab || 'all';
 
   return (
     <DashboardContent>
@@ -209,11 +254,10 @@ export function UnitListView() {
         )}
 
         <UnitTableToolbar
-          numSelected={table.selected.length}
-          filterName={filterName}
+          numSelected={selected.length}
+          filterName={params.filterName || ''}
           onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setFilterName(event.target.value);
-            table.onResetPage();
+            setParams({ filterName: event.target.value, page: 0 });
           }}
         />
 
@@ -226,13 +270,13 @@ export function UnitListView() {
             ) : (
               <Table sx={{ minWidth: 800 }}>
                 <UnitTableHead
-                  order={table.order}
-                  orderBy={table.orderBy}
+                  order={params.order}
+                  orderBy={params.orderBy}
                   rowCount={totalItems}
-                  numSelected={table.selected.length}
-                  onSort={table.onSort}
+                  numSelected={selected.length}
+                  onSort={handleSort}
                   onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(
+                    handleSelectAllRows(
                       checked,
                       units.map((unit) => unit.id)
                     )
@@ -249,18 +293,19 @@ export function UnitListView() {
                     <UnitTableRow
                       key={row.id}
                       row={row}
-                      selected={table.selected.includes(row.id)}
-                      onSelectRow={() => table.onSelectRow(row.id)}
+                      selected={selected.includes(row.id)}
+                      onSelectRow={() => handleSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRow(row.id)}
+                      returnUrl={getUrlWithParams('/settings/units')}
                     />
                   ))}
 
                   <UnitTableEmptyRows
                     height={68}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, totalItems)}
+                    emptyRows={emptyRows(params.page, params.rowsPerPage, totalItems)}
                   />
 
-                  {notFound && <UnitTableNoData searchQuery={filterName} />}
+                  {notFound && <UnitTableNoData searchQuery={params.filterName || ''} />}
                 </TableBody>
               </Table>
             )}
@@ -269,12 +314,12 @@ export function UnitListView() {
 
         <TablePagination
           component="div"
-          page={table.page}
+          page={params.page}
           count={totalItems}
-          rowsPerPage={table.rowsPerPage}
-          onPageChange={table.onChangePage}
+          rowsPerPage={params.rowsPerPage}
+          onPageChange={handleChangePage}
           rowsPerPageOptions={[...STANDARD_ROWS_PER_PAGE_OPTIONS]}
-          onRowsPerPageChange={table.onChangeRowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
 
@@ -287,72 +332,4 @@ export function UnitListView() {
       />
     </DashboardContent>
   );
-}
-
-// ----------------------------------------------------------------------
-
-export function useTable() {
-  const [page, setPage] = useState(0);
-  const [orderBy, setOrderBy] = useState('name');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-
-  const onSort = useCallback(
-    (id: string) => {
-      const isAsc = orderBy === id && order === 'asc';
-      setOrder(isAsc ? 'desc' : 'asc');
-      setOrderBy(id);
-    },
-    [order, orderBy]
-  );
-
-  const onSelectAllRows = useCallback((checked: boolean, newSelecteds: string[]) => {
-    if (checked) {
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  }, []);
-
-  const onSelectRow = useCallback(
-    (inputValue: string) => {
-      const newSelected = selected.includes(inputValue)
-        ? selected.filter((value) => value !== inputValue)
-        : [...selected, inputValue];
-
-      setSelected(newSelected);
-    },
-    [selected]
-  );
-
-  const onResetPage = useCallback(() => {
-    setPage(0);
-  }, []);
-
-  const onChangePage = useCallback((event: unknown, newPage: number) => {
-    setPage(newPage);
-  }, []);
-
-  const onChangeRowsPerPage = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      onResetPage();
-    },
-    [onResetPage]
-  );
-
-  return {
-    page,
-    order,
-    onSort,
-    orderBy,
-    selected,
-    rowsPerPage,
-    onSelectRow,
-    onResetPage,
-    onChangePage,
-    onSelectAllRows,
-    onChangeRowsPerPage,
-  };
 }

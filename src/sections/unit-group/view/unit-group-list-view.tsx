@@ -18,6 +18,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { usePaginationParams } from 'src/hooks';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import {
@@ -40,15 +41,18 @@ export function UnitGroupListView() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  // Use URL params for pagination state
+  const { params, setParams, getUrlWithParams } = usePaginationParams({
+    defaultPage: 0,
+    defaultRowsPerPage: 5,
+    defaultOrderBy: 'name',
+    defaultOrder: 'asc',
+  });
+
   const [unitGroups, setUnitGroups] = useState<UnitGroupProps[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [filterName, setFilterName] = useState('');
   const [selected, setSelected] = useState<string[]>([]);
-  const [orderBy, setOrderBy] = useState('name');
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
 
   const { mutate: fetchUnitGroups } = useGetUnitGroupPage({
     onSuccess: (data) => {
@@ -70,11 +74,11 @@ export function UnitGroupListView() {
     onSuccess: () => {
       // Refetch unit groups after deletion
       fetchUnitGroups({
-        data: [{ sortBy: orderBy, descending: order === 'desc' }],
+        data: [{ sortBy: params.orderBy, descending: params.order === 'desc' }],
         params: {
-          pageNumber: page,
-          pageSize: rowsPerPage,
-          searchTerm: filterName || undefined,
+          pageNumber: params.page,
+          pageSize: params.rowsPerPage,
+          searchTerm: params.filterName || undefined,
         },
       });
       queryClient.invalidateQueries({ queryKey: unitGroupKeys.all });
@@ -84,29 +88,30 @@ export function UnitGroupListView() {
   useEffect(() => {
     setIsLoading(true);
     fetchUnitGroups({
-      data: [{ sortBy: orderBy, descending: order === 'desc' }],
+      data: [{ sortBy: params.orderBy, descending: params.order === 'desc' }],
       params: {
-        pageNumber: page,
-        pageSize: rowsPerPage,
-        searchTerm: filterName || undefined,
+        pageNumber: params.page,
+        pageSize: params.rowsPerPage,
+        searchTerm: params.filterName || undefined,
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, rowsPerPage, orderBy, order, filterName]);
+  }, [params.page, params.rowsPerPage, params.orderBy, params.order, params.filterName]);
 
   const handleFilterName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setFilterName(event.target.value);
-    setPage(0);
-  }, []);
+    setParams({ filterName: event.target.value, page: 0 });
+  }, [setParams]);
 
   const handleChangePage = useCallback((_event: unknown, newPage: number) => {
-    setPage(newPage);
-  }, []);
+    setParams({ page: newPage });
+  }, [setParams]);
 
   const handleChangeRowsPerPage = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  }, []);
+    setParams({
+      rowsPerPage: parseInt(event.target.value, 10),
+      page: 0,
+    });
+  }, [setParams]);
 
   const handleSelectRow = useCallback(
     (id: string) => {
@@ -172,7 +177,7 @@ export function UnitGroupListView() {
       <Card>
         <UnitGroupTableToolbar
           numSelected={selected.length}
-          filterName={filterName}
+          filterName={params.filterName || ''}
           onFilterName={handleFilterName}
         />
 
@@ -201,6 +206,7 @@ export function UnitGroupListView() {
                       selected={selected.includes(row.id)}
                       onSelectRow={() => handleSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRow(row.id)}
+                      returnUrl={getUrlWithParams('/settings/unit-groups')}
                     />
                   ))}
                 </TableBody>
@@ -211,9 +217,9 @@ export function UnitGroupListView() {
 
         <TablePagination
           component="div"
-          page={page}
+          page={params.page}
           count={totalItems}
-          rowsPerPage={rowsPerPage}
+          rowsPerPage={params.rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[...STANDARD_ROWS_PER_PAGE_OPTIONS]}
           onRowsPerPageChange={handleChangeRowsPerPage}
