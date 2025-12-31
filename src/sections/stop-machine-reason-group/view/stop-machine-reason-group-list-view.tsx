@@ -54,7 +54,11 @@ export function StopMachineReasonGroupListView() {
   const [isLoading, setIsLoading] = useState(true);
 
   // Determine which impacts to query - 'all' means undefined
-  const impactsToQuery = currentImpact === 'all' ? undefined : [currentImpact];
+  // Memoize to prevent unnecessary re-fetches
+  const impactsToQuery = useMemo(
+    () => (currentImpact === 'all' ? undefined : [currentImpact]),
+    [currentImpact]
+  );
 
   const { data, isFetching } = useGetapiStopMachineReasonGroupgetreasongrouppage(
     {

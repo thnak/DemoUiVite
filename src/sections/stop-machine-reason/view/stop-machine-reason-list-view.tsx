@@ -47,7 +47,11 @@ export function StopMachineReasonListView() {
   const [isLoading, setIsLoading] = useState(true);
 
   // Determine which groups to query - 'all' means empty array
-  const groupsToQuery = currentGroup === 'all' ? [] : [currentGroup];
+  // Memoize to prevent infinite loops in useEffect
+  const groupsToQuery = useMemo(() => 
+    currentGroup === 'all' ? [] : [currentGroup],
+    [currentGroup]
+  );
 
   const { mutate: fetchReasons } = usePostapiStopMachineReasongetreasonpage({
     onSuccess: (data) => {
@@ -90,7 +94,8 @@ export function StopMachineReasonListView() {
         PageSize: table.rowsPerPage,
       },
     });
-  }, [fetchReasons, table.page, table.rowsPerPage, filterName, groupsToQuery]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [table.page, table.rowsPerPage, filterName, groupsToQuery]);
 
   // Calculate tabs from groupCounts
   const tabs = useMemo(() => {
