@@ -1,7 +1,7 @@
 import type { StopMachineReasonEntity } from 'src/api/types/generated';
 
 import { debounce } from 'es-toolkit';
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -33,6 +33,7 @@ export function StopMachineReasonSelector({
   const [inputValue, setInputValue] = useState('');
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
   const [selectedStopMachineReason, setSelectedStopMachineReason] = useState<StopMachineReasonEntity | null>(null);
+  const previousValueRef = useRef<string | null>(null);
 
   // Fetch entity by ID when value prop is provided
   const { data: entityById, isFetching: isFetchingById } = useGetStopMachineReasonById(
@@ -44,12 +45,23 @@ export function StopMachineReasonSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
+    // Only process if value has actually changed
+    if (previousValueRef.current === value) {
+      return;
+    }
+    
+    previousValueRef.current = value || null;
+    
     if (entityById && value) {
-      setSelectedStopMachineReason(entityById);
+      // Only update if the selected entity ID differs from the value
+      const currentId = selectedStopMachineReason?.id ? String(selectedStopMachineReason.id) : null;
+      if (currentId !== value) {
+        setSelectedStopMachineReason(entityById);
+      }
     } else if (!value) {
       setSelectedStopMachineReason(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedStopMachineReason]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
