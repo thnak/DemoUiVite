@@ -56,6 +56,11 @@ export function useMasterDataNavData(): NavData {
           icon: icon('ic-disabled'),
         },
         {
+          title: t('nav.stopMachineReasonGroup'),
+          path: '/stop-machine-reason-group',
+          icon: icon('ic-disabled'),
+        },
+        {
           title: t('nav.area'),
           path: '/area',
           icon: icon('space-two-tone'),
