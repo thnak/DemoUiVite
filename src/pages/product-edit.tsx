@@ -1,7 +1,12 @@
 import { useParams } from 'react-router-dom';
 
-import { _products } from 'src/_mock';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
+
 import { CONFIG } from 'src/config-global';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { useGetProductById } from 'src/api/hooks/generated/use-product';
 
 import { ProductCreateEditView } from 'src/sections/products/view';
 
@@ -10,7 +15,37 @@ import { ProductCreateEditView } from 'src/sections/products/view';
 export default function Page() {
   const { id } = useParams();
 
-  const currentProduct = _products.find((product) => product.id === id);
+  const {
+    data: productData,
+    isLoading,
+    error,
+  } = useGetProductById(id || '', {
+    enabled: !!id,
+  });
+
+  if (isLoading) {
+    return (
+      <DashboardContent>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
+          <CircularProgress />
+        </Box>
+      </DashboardContent>
+    );
+  }
+
+  if (error || !productData) {
+    return (
+      <DashboardContent>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
+          <Typography color="error">Product not found</Typography>
+        </Box>
+      </DashboardContent>
+    );
+  }
 
   return (
     <>
@@ -18,20 +53,24 @@ export default function Page() {
 
       <ProductCreateEditView
         isEdit
-        currentProduct={
-          currentProduct
-            ? {
-                id: currentProduct.id,
-                name: currentProduct.name,
-                code: currentProduct.code,
-                categoryId: undefined, // Mock data doesn't have categoryId
-                price: currentProduct.price,
-                stock: currentProduct.stock,
-                coverUrl: currentProduct.coverUrl,
-                publish: currentProduct.publish,
-              }
-            : undefined
-        }
+        currentProduct={{
+          id: productData.id?.toString() || '',
+          name: productData.name || '',
+          code: productData.code || '',
+          categoryId: productData.productCategoryId?.toString(),
+          price: productData.price || 0,
+          stock: productData.stockQuantity || 0,
+          coverUrl: productData.imageUrl || '',
+          publish: productData.isDraft ? 'draft' : 'published',
+          weight: productData.weight,
+          dimensions: {
+            length: productData.dimensions?.length,
+            width: productData.dimensions?.width,
+            height: productData.dimensions?.height,
+          },
+          unitOfMeasureId: productData.unitOfMeasureId?.toString(),
+          secondaryUnitOfMeasureId: productData.secondaryUnitOfMeasureId?.toString(),
+        }}
       />
     </>
   );
