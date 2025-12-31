@@ -1,8 +1,4 @@
-import type {
-  MachineRunState,
-  MachineOeeUpdate,
-  MachineRunStateTimeBlock,
-} from 'src/services/machineHub';
+import type { MachineOeeUpdate, MachineRuntimeBlock } from 'src/services/machineHub';
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -23,11 +19,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { apiConfig } from 'src/api/config';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { MachineHubService } from 'src/services/machineHub';
 import { useGetMachineById } from 'src/api/hooks/generated/use-machine';
+import { MachineRunState, MachineHubService } from 'src/services/machineHub';
 
 import { Iconify } from 'src/components/iconify';
-import { Chart, useChart } from 'src/components/chart';
 
 // ----------------------------------------------------------------------
 
@@ -37,9 +32,11 @@ export function MachineTrackingView() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const [hubService] = useState(() => new MachineHubService(apiConfig.baseUrl));
+  // Use singleton instance
+  const hubService = MachineHubService.getInstance(apiConfig.baseUrl);
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>('disconnected');
   const [machineState, setMachineState] = useState<MachineOeeUpdate | null>(null);
+  const [runtimeBlocks, setRuntimeBlocks] = useState<MachineRuntimeBlock[]>([]);
   const [subscriberCount, setSubscriberCount] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [lastUpdateTime, setLastUpdateTime] = useState<Date | null>(null);
@@ -49,53 +46,83 @@ export function MachineTrackingView() {
     enabled: !!id,
   });
 
+  // Handle runtime block updates
+  const handleRuntimeBlockUpdate = useCallback((block: MachineRuntimeBlock) => {
+    setRuntimeBlocks((prev) => {
+      // Replace the last block if it matches the start time, otherwise append
+      const lastBlock = prev[prev.length - 1];
+      if (lastBlock && lastBlock.startTime === block.startTime) {
+        return [...prev.slice(0, -1), block];
+      }
+      return [...prev, block];
+    });
+  }, []);
+
   // Initialize SignalR connection and subscribe to machine
   useEffect(() => {
     if (!id) return undefined;
 
-    const mounted = true;
+    let mounted = true;
 
     const initializeConnection = async () => {
       try {
         setConnectionStatus('connecting');
 
-        // Start hub connection
-        await hubService.start();
+        // Subscribe to machine updates with runtime block callback
+        // Connection will be established automatically
+        await hubService.subscribeToMachine(
+          id,
+          (update: MachineOeeUpdate) => {
+            if (!mounted) return;
+            // Convert from 0-1 to 0-100 for display
+            update.oee = update.oee * 100;
+            update.availability = update.availability * 100;
+            update.performance = update.performance * 100;
+            update.quality = update.quality * 100;
+            setMachineState(update);
+            setLastUpdateTime(new Date());
+          },
+          handleRuntimeBlockUpdate
+        );
 
         if (!mounted) return;
 
         setConnectionStatus('connected');
 
-        // Subscribe to machine updates
-        await hubService.subscribeToMachine(id, (update: MachineOeeUpdate) => {
-          if (!mounted) return;
-          update.oee = update.oee * 100;
-          update.availability = update.availability * 100;
-          update.performance = update.performance * 100;
-          update.quality = update.quality * 100;
-          setMachineState(update);
-          setLastUpdateTime(new Date());
-        });
+        // Get initial machine aggregation and runtime blocks
+        const [initialAggregation, initialBlocks] = await Promise.all([
+          hubService.getMachineAggregation(id),
+          hubService.getMachineRuntimeBlocks(id),
+        ]);
 
-        // Get initial machine aggregation
-        const initialAggregation = await hubService.getMachineAggregation(id);
         if (mounted && initialAggregation) {
           // Convert aggregation to update format
           setMachineState({
-            availability: initialAggregation.availability,
-            performance: initialAggregation.performance,
-            quality: initialAggregation.quality,
-            oee: initialAggregation.oee,
+            machineId: id,
+            machineName: machine?.name || id,
+            availability: initialAggregation.availability * 100,
+            availabilityVsLastPeriod: 0,
+            performance: initialAggregation.performance * 100,
+            performanceVsLastPeriod: 0,
+            quality: initialAggregation.quality * 100,
+            qualityVsLastPeriod: 0,
+            oee: initialAggregation.oee * 100,
+            oeeVsLastPeriod: 0,
             goodCount: initialAggregation.goodCount,
+            goodCountVsLastPeriod: 0,
             totalCount: initialAggregation.totalCount,
+            totalCountVsLastPeriod: 0,
             plannedProductionTime: '',
             runTime: initialAggregation.totalRunTime,
             downtime: initialAggregation.totalDowntime,
             speedLossTime: initialAggregation.totalSpeedLossTime,
-            currentProductName: '',
-            runStateHistory: [],
+            currentProductName: ''
           });
           setLastUpdateTime(new Date());
+        }
+
+        if (mounted && initialBlocks) {
+          setRuntimeBlocks(initialBlocks);
         }
 
         // Get subscriber count
@@ -116,17 +143,16 @@ export function MachineTrackingView() {
 
     initializeConnection();
 
-    // Cleanup function
+    // Cleanup function - only unsubscribe, don't stop the connection
     return () => {
-      // Unsubscribe and stop connection
+      mounted = false;
       if (id) {
-        hubService
-          .unsubscribeFromMachine(id)
-          .then(() => hubService.stop())
-          .catch((err) => console.error('Error during cleanup:', err));
+        hubService.unsubscribeFromMachine(id).catch((err) => {
+          console.error('Error unsubscribing:', err);
+        });
       }
     };
-  }, [id, hubService]);
+  }, [id, hubService, handleRuntimeBlockUpdate, machine?.name, machine?.id]);
 
   const handleCloseError = useCallback(() => {
     setErrorMessage(null);
@@ -159,11 +185,23 @@ export function MachineTrackingView() {
     }
   };
 
+  const getTrendIndicator = (value: number): string => {
+    if (value > 0) return '↑';
+    if (value < 0) return '↓';
+    return '→';
+  };
+
+  const getTrendColor = (value: number): string => {
+    if (value > 0) return 'success.main';
+    if (value < 0) return 'error.main';
+    return 'text.secondary';
+  };
+
   // State color constants
   const STATE_COLORS = {
-    running: '#4caf50', // Green
-    speedloss: '#ff9800', // Orange
-    downtime: '#f44336', // Red
+    [MachineRunState.Running]: '#4caf50', // Green
+    [MachineRunState.SpeedLoss]: '#ff9800', // Orange
+    [MachineRunState.Downtime]: '#f44336', // Red
     unknown: '#9e9e9e', // Gray
   } as const;
 
@@ -172,104 +210,16 @@ export function MachineTrackingView() {
 
   const getStateName = (state: MachineRunState): string => {
     switch (state) {
-      case 'running':
+      case MachineRunState.Running:
         return 'Running';
-      case 'speedloss':
+      case MachineRunState.SpeedLoss:
         return 'Speed Loss';
-      case 'downtime':
+      case MachineRunState.Downtime:
         return 'Downtime';
       default:
         return 'Unknown';
     }
   };
-
-  // Prepare data for range bar chart
-  const prepareRangeBarData = () => {
-    if (!machineState?.runStateHistory || machineState.runStateHistory.length === 0) {
-      return [];
-    }
-
-    return machineState.runStateHistory.map((block: MachineRunStateTimeBlock) => {
-      const startTime = new Date(block.startTime).getTime();
-      const endTime = new Date(block.endTime).getTime();
-
-      return {
-        x: 'Machine State',
-        y: [startTime, endTime],
-        fillColor: getStateColor(block.state),
-        stateName: getStateName(block.state),
-      };
-    });
-  };
-
-  const rangeBarChartOptions = useChart({
-    chart: {
-      type: 'rangeBar',
-      height: 150,
-    },
-    plotOptions: {
-      bar: {
-        horizontal: true,
-        borderRadius: 0,
-        rangeBarGroupRows: false,
-      },
-    },
-    dataLabels: {
-      enabled: false, // <--- HERE
-    },
-    stroke: {
-      show: false,
-      curve: 'straight',
-      lineCap: 'butt',
-      colors: undefined,
-      width: 2,
-      dashArray: 0,
-    },
-    xaxis: {
-      type: 'datetime',
-      labels: {
-        datetimeUTC: false,
-        format: 'HH:mm:ss',
-      },
-    },
-    yaxis: {
-      show: false,
-    },
-    tooltip: {
-      custom: (opts: {
-        seriesIndex: number;
-        dataPointIndex: number;
-        w: {
-          config: { series: Array<{ data: Array<{ y: [number, number]; stateName: string }> }> };
-        };
-      }) => {
-        const { dataPointIndex, w } = opts;
-        const data = w.config.series[0].data[dataPointIndex];
-        const startTime = new Date(data.y[0]).toLocaleTimeString();
-        const endTime = new Date(data.y[1]).toLocaleTimeString();
-        const duration = Math.round((data.y[1] - data.y[0]) / 1000 / 60); // minutes
-
-        return `
-          <div style="padding: 8px 12px; background: rgba(0, 0, 0, 0.8); color: white; border-radius: 4px;">
-            <div style="font-weight: 600; margin-bottom: 4px;">${data.stateName}</div>
-            <div style="font-size: 12px; opacity: 0.9;">${startTime} - ${endTime}</div>
-            <div style="font-size: 12px; opacity: 0.9;">Duration: ${duration} min</div>
-          </div>
-        `;
-      },
-    },
-    legend: {
-      show: false,
-    },
-    grid: {
-      padding: {
-        top: 0,
-        bottom: 0,
-        left: 10,
-        right: 10,
-      },
-    },
-  });
 
   const formatDuration = (duration: string): string => {
     if (!duration) return 'N/A';
@@ -482,6 +432,17 @@ export function MachineTrackingView() {
                           color={getOeeColor(machineState.oee)}
                           sx={{ mt: 1, height: 8, borderRadius: 1 }}
                         />
+                        {machineState.oeeVsLastPeriod !== 0 && (
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 1 }}>
+                            <Typography
+                              variant="caption"
+                              sx={{ color: getTrendColor(machineState.oeeVsLastPeriod) }}
+                            >
+                              {getTrendIndicator(machineState.oeeVsLastPeriod)}{' '}
+                              {Math.abs(machineState.oeeVsLastPeriod).toFixed(1)}pp
+                            </Typography>
+                          </Box>
+                        )}
                       </Box>
                     </Grid>
 
@@ -507,6 +468,19 @@ export function MachineTrackingView() {
                           value={machineState.availability}
                           sx={{ mt: 1, height: 6, borderRadius: 1 }}
                         />
+                        {machineState.availabilityVsLastPeriod !== 0 && (
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 1 }}>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: getTrendColor(machineState.availabilityVsLastPeriod),
+                              }}
+                            >
+                              {getTrendIndicator(machineState.availabilityVsLastPeriod)}{' '}
+                              {Math.abs(machineState.availabilityVsLastPeriod).toFixed(1)}pp
+                            </Typography>
+                          </Box>
+                        )}
                       </Box>
                     </Grid>
 
@@ -532,6 +506,17 @@ export function MachineTrackingView() {
                           value={machineState.performance}
                           sx={{ mt: 1, height: 6, borderRadius: 1 }}
                         />
+                        {machineState.performanceVsLastPeriod !== 0 && (
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 1 }}>
+                            <Typography
+                              variant="caption"
+                              sx={{ color: getTrendColor(machineState.performanceVsLastPeriod) }}
+                            >
+                              {getTrendIndicator(machineState.performanceVsLastPeriod)}{' '}
+                              {Math.abs(machineState.performanceVsLastPeriod).toFixed(1)}pp
+                            </Typography>
+                          </Box>
+                        )}
                       </Box>
                     </Grid>
 
@@ -555,6 +540,17 @@ export function MachineTrackingView() {
                           value={machineState.quality}
                           sx={{ mt: 1, height: 6, borderRadius: 1 }}
                         />
+                        {machineState.qualityVsLastPeriod !== 0 && (
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 1 }}>
+                            <Typography
+                              variant="caption"
+                              sx={{ color: getTrendColor(machineState.qualityVsLastPeriod) }}
+                            >
+                              {getTrendIndicator(machineState.qualityVsLastPeriod)}{' '}
+                              {Math.abs(machineState.qualityVsLastPeriod).toFixed(1)}pp
+                            </Typography>
+                          </Box>
+                        )}
                       </Box>
                     </Grid>
                   </Grid>
@@ -578,6 +574,17 @@ export function MachineTrackingView() {
                         <Typography variant="h4" sx={{ color: 'success.main' }}>
                           {machineState.goodCount.toLocaleString()}
                         </Typography>
+                        {machineState.goodCountVsLastPeriod !== 0 && (
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.5 }}>
+                            <Typography
+                              variant="caption"
+                              sx={{ color: getTrendColor(machineState.goodCountVsLastPeriod) }}
+                            >
+                              {getTrendIndicator(machineState.goodCountVsLastPeriod)}{' '}
+                              {Math.abs(machineState.goodCountVsLastPeriod).toLocaleString()}
+                            </Typography>
+                          </Box>
+                        )}
                       </Box>
                     </Grid>
 
@@ -592,6 +599,17 @@ export function MachineTrackingView() {
                         <Typography variant="h4">
                           {machineState.totalCount.toLocaleString()}
                         </Typography>
+                        {machineState.totalCountVsLastPeriod !== 0 && (
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.5 }}>
+                            <Typography
+                              variant="caption"
+                              sx={{ color: getTrendColor(machineState.totalCountVsLastPeriod) }}
+                            >
+                              {getTrendIndicator(machineState.totalCountVsLastPeriod)}{' '}
+                              {Math.abs(machineState.totalCountVsLastPeriod).toLocaleString()}
+                            </Typography>
+                          </Box>
+                        )}
                       </Box>
                     </Grid>
 
@@ -692,35 +710,86 @@ export function MachineTrackingView() {
                   </Grid>
                 </Card>
 
-                {/* Run State History */}
-                {machineState.runStateHistory && machineState.runStateHistory.length > 0 && (
+                {/* Runtime Blocks & Stop Tracking */}
+                {runtimeBlocks && runtimeBlocks.length > 0 && (
                   <Card sx={{ p: 3 }}>
                     <Typography variant="h6" sx={{ mb: 3 }}>
-                      Run State History
+                      Runtime Blocks & Stop Tracking
                     </Typography>
 
-                    <Box sx={{ mb: 2 }}>
-                      <Chart
-                        type="rangeBar"
-                        series={[
-                          {
-                            data: prepareRangeBarData(),
-                          },
-                        ]}
-                        options={rangeBarChartOptions}
-                        sx={{ height: 150 }}
-                      />
-                    </Box>
+                    <Stack spacing={2}>
+                      {runtimeBlocks.map((block, index) => (
+                        <Box
+                          key={`${block.startTime}-${index}`}
+                          sx={{
+                            p: 2,
+                            borderRadius: 1,
+                            border: (theme) => `1px solid ${theme.palette.divider}`,
+                            bgcolor: 'background.neutral',
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              mb: 1,
+                            }}
+                          >
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Box
+                                sx={{
+                                  width: 12,
+                                  height: 12,
+                                  borderRadius: '50%',
+                                  bgcolor: block.color || getStateColor(block.state),
+                                }}
+                              />
+                              <Typography variant="subtitle2">
+                                {getStateName(block.state)}
+                              </Typography>
+                              {block.isUnplannedDowntime && (
+                                <Chip
+                                  label="Unplanned"
+                                  size="small"
+                                  color="error"
+                                  sx={{ height: 20, fontSize: '0.7rem' }}
+                                />
+                              )}
+                            </Box>
+                            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                              {new Date(block.startTime).toLocaleTimeString()} -{' '}
+                              {block.endTime
+                                ? new Date(block.endTime).toLocaleTimeString()
+                                : 'Ongoing'}
+                            </Typography>
+                          </Box>
+                          {block.name && (
+                            <Typography variant="body2" sx={{ color: 'text.secondary', ml: 2.5 }}>
+                              {block.name}
+                            </Typography>
+                          )}
+                          {!block.name && block.isUnplannedDowntime && (
+                            <Typography
+                              variant="body2"
+                              sx={{ color: 'warning.main', ml: 2.5, fontStyle: 'italic' }}
+                            >
+                              ⚠️ Needs labeling
+                            </Typography>
+                          )}
+                        </Box>
+                      ))}
+                    </Stack>
 
                     {/* Legend */}
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mt: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mt: 3 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Box
                           sx={{
                             width: 16,
                             height: 16,
                             borderRadius: 0.5,
-                            bgcolor: STATE_COLORS.running,
+                            bgcolor: STATE_COLORS[MachineRunState.Running],
                           }}
                         />
                         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
@@ -733,7 +802,7 @@ export function MachineTrackingView() {
                             width: 16,
                             height: 16,
                             borderRadius: 0.5,
-                            bgcolor: STATE_COLORS.speedloss,
+                            bgcolor: STATE_COLORS[MachineRunState.SpeedLoss],
                           }}
                         />
                         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
@@ -746,7 +815,7 @@ export function MachineTrackingView() {
                             width: 16,
                             height: 16,
                             borderRadius: 0.5,
-                            bgcolor: STATE_COLORS.downtime,
+                            bgcolor: STATE_COLORS[MachineRunState.Downtime],
                           }}
                         />
                         <Typography variant="caption" sx={{ color: 'text.secondary' }}>

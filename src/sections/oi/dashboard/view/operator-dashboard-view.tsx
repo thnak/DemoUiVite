@@ -1,15 +1,19 @@
-import { useState, useEffect } from 'react';
+import type { MachineOeeUpdate } from 'src/services/machineHub';
+
 import { useTranslation } from 'react-i18next';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
-import { LinearProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import { LinearProgress, CircularProgress } from '@mui/material';
 
+import { apiConfig } from 'src/api/config';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { MachineHubService } from 'src/services/machineHub';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -153,27 +157,94 @@ export function OperatorDashboardView() {
   const { t } = useTranslation();
   const { selectedMachine } = useMachineSelector();
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [machineData, setMachineData] = useState<MachineOeeUpdate | null>(null);
+  const [isConnecting, setIsConnecting] = useState(false);
 
-  // Mock data - should be fetched from API based on selected machine
-  const mockData = {
-    output: 1250,
-    targetOutput: 1500,
-    defects: 23,
-    oee: 78.5,
-    availability: 85.2,
-    performance: 92.1,
-    quality: 98.5,
-    currentProduct: {
-      code: 'PROD-001',
-      name: 'Widget A',
-    },
-    shiftInfo: {
-      shift: 'Morning Shift',
-      startTime: '06:00',
-      endTime: '14:00',
-    },
-  };
+  // Get singleton hub service instance
+  const hubService = MachineHubService.getInstance(apiConfig.baseUrl);
 
+  // Handle real-time machine updates
+  const handleMachineUpdate = useCallback((update: MachineOeeUpdate) => {
+    // Convert from 0-1 to 0-100 for display
+    setMachineData({
+      ...update,
+      oee: update.oee * 100,
+      availability: update.availability * 100,
+      performance: update.performance * 100,
+      quality: update.quality * 100,
+    });
+  }, []);
+
+  // Subscribe to machine updates when machine is selected
+  useEffect(() => {
+    if (!selectedMachine?.id) {
+      setMachineData(null);
+      return undefined;
+    }
+
+    let mounted = true;
+
+    const connectToMachine = async () => {
+      try {
+        setIsConnecting(true);
+
+        // Subscribe to real-time updates
+        await hubService.subscribeToMachine(
+          selectedMachine.id || '',
+          handleMachineUpdate
+        );
+
+        if (!mounted) return;
+
+        // Get initial aggregation
+        const aggregation = await hubService.getMachineAggregation(
+          selectedMachine.id || ''
+        );
+        if (aggregation && mounted) {
+          setMachineData({
+            machineId: selectedMachine.id || '',
+            machineName: selectedMachine.name || selectedMachine.code || '',
+            availability: aggregation.availability * 100,
+            availabilityVsLastPeriod: 0,
+            performance: aggregation.performance * 100,
+            performanceVsLastPeriod: 0,
+            quality: aggregation.quality * 100,
+            qualityVsLastPeriod: 0,
+            oee: aggregation.oee * 100,
+            oeeVsLastPeriod: 0,
+            goodCount: aggregation.goodCount,
+            goodCountVsLastPeriod: 0,
+            totalCount: aggregation.totalCount,
+            totalCountVsLastPeriod: 0,
+            plannedProductionTime: '',
+            runTime: aggregation.totalRunTime,
+            downtime: aggregation.totalDowntime,
+            speedLossTime: aggregation.totalSpeedLossTime,
+            currentProductName: '',
+          });
+        }
+      } catch (error) {
+        console.error('Failed to connect to machine hub:', error);
+      } finally {
+        if (mounted) {
+          setIsConnecting(false);
+        }
+      }
+    };
+
+    connectToMachine();
+
+    return () => {
+      mounted = false;
+      if (selectedMachine?.id) {
+        hubService.unsubscribeFromMachine(selectedMachine.id).catch((err) => {
+          console.error('Error unsubscribing:', err);
+        });
+      }
+    };
+  }, [selectedMachine, hubService, handleMachineUpdate]);
+
+  // Update current time every second
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -209,7 +280,11 @@ export function OperatorDashboardView() {
         <Alert severity="info" sx={{ fontSize: '1.1rem', py: 3 }}>
           {t('oi.pleaseSelectMachine')}
         </Alert>
-      ) : (
+      ) : isConnecting && !machineData ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', p: 8 }}>
+          <CircularProgress size={64} />
+        </Box>
+      ) : machineData ? (
         <Stack spacing={3}>
           {/* Current Product & Shift Info */}
           <Grid container spacing={3}>
@@ -219,23 +294,23 @@ export function OperatorDashboardView() {
                   {t('oi.currentProduct')}
                 </Typography>
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'primary.main', mb: 0.5 }}>
-                  {mockData.currentProduct.code}
+                  {machineData.currentProductName || 'N/A'}
                 </Typography>
                 <Typography variant="h6" sx={{ color: 'text.secondary' }}>
-                  {mockData.currentProduct.name}
+                  {selectedMachine.name || ''}
                 </Typography>
               </Card>
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
               <Card sx={{ p: 4, bgcolor: 'info.lighter' }}>
                 <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '1rem', mb: 1 }}>
-                  {t('oi.currentShift')}
+                  {t('oi.machine')}
                 </Typography>
                 <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'info.main', mb: 0.5 }}>
-                  {mockData.shiftInfo.shift}
+                  {selectedMachine.code || selectedMachine.name}
                 </Typography>
                 <Typography variant="h6" sx={{ color: 'text.secondary' }}>
-                  {mockData.shiftInfo.startTime} - {mockData.shiftInfo.endTime}
+                  {t('oi.realtimeData')}
                 </Typography>
               </Card>
             </Grid>
@@ -244,8 +319,8 @@ export function OperatorDashboardView() {
           {/* Production Progress */}
           <ProgressCard
             title={t('oi.productionProgress')}
-            current={mockData.output}
-            target={mockData.targetOutput}
+            current={machineData.goodCount}
+            target={machineData.totalCount || machineData.goodCount}
             unit={t('oi.pieces')}
           />
 
@@ -254,41 +329,69 @@ export function OperatorDashboardView() {
             <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <MetricCard
                 title={t('oi.oee')}
-                value={mockData.oee}
+                value={machineData.oee.toFixed(1)}
                 unit="%"
                 icon="eva:trending-up-fill"
                 color="success"
-                trend={{ value: 2.5, isPositive: true }}
+                trend={
+                  machineData.oeeVsLastPeriod !== 0
+                    ? {
+                        value: Math.abs(machineData.oeeVsLastPeriod),
+                        isPositive: machineData.oeeVsLastPeriod > 0,
+                      }
+                    : undefined
+                }
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <MetricCard
                 title={t('oi.availability')}
-                value={mockData.availability}
+                value={machineData.availability.toFixed(1)}
                 unit="%"
                 icon="eva:clock-fill"
                 color="info"
-                trend={{ value: 1.8, isPositive: true }}
+                trend={
+                  machineData.availabilityVsLastPeriod !== 0
+                    ? {
+                        value: Math.abs(machineData.availabilityVsLastPeriod),
+                        isPositive: machineData.availabilityVsLastPeriod > 0,
+                      }
+                    : undefined
+                }
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <MetricCard
                 title={t('oi.performance')}
-                value={mockData.performance}
+                value={machineData.performance.toFixed(1)}
                 unit="%"
                 icon="eva:activity-fill"
                 color="primary"
-                trend={{ value: 3.2, isPositive: true }}
+                trend={
+                  machineData.performanceVsLastPeriod !== 0
+                    ? {
+                        value: Math.abs(machineData.performanceVsLastPeriod),
+                        isPositive: machineData.performanceVsLastPeriod > 0,
+                      }
+                    : undefined
+                }
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <MetricCard
                 title={t('oi.quality')}
-                value={mockData.quality}
+                value={machineData.quality.toFixed(1)}
                 unit="%"
                 icon="eva:shield-fill"
                 color="success"
-                trend={{ value: 0.5, isPositive: false }}
+                trend={
+                  machineData.qualityVsLastPeriod !== 0
+                    ? {
+                        value: Math.abs(machineData.qualityVsLastPeriod),
+                        isPositive: machineData.qualityVsLastPeriod > 0,
+                      }
+                    : undefined
+                }
               />
             </Grid>
           </Grid>
@@ -297,22 +400,36 @@ export function OperatorDashboardView() {
           <Grid container spacing={3}>
             <Grid size={{ xs: 12, md: 6 }}>
               <MetricCard
-                title={t('oi.totalOutput')}
-                value={mockData.output.toLocaleString()}
+                title={t('oi.goodCount')}
+                value={machineData.goodCount.toLocaleString()}
                 unit={t('oi.pieces')}
                 icon="eva:cube-fill"
                 color="primary"
-                trend={{ value: 5.2, isPositive: true }}
+                trend={
+                  machineData.goodCountVsLastPeriod !== 0
+                    ? {
+                        value: Math.abs(machineData.goodCountVsLastPeriod),
+                        isPositive: machineData.goodCountVsLastPeriod > 0,
+                      }
+                    : undefined
+                }
               />
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
               <MetricCard
-                title={t('oi.totalDefects')}
-                value={mockData.defects}
+                title={t('oi.totalCount')}
+                value={machineData.totalCount.toLocaleString()}
                 unit={t('oi.pieces')}
-                icon="eva:alert-circle-fill"
-                color="error"
-                trend={{ value: 1.2, isPositive: false }}
+                icon="eva:layers-fill"
+                color="info"
+                trend={
+                  machineData.totalCountVsLastPeriod !== 0
+                    ? {
+                        value: Math.abs(machineData.totalCountVsLastPeriod),
+                        isPositive: machineData.totalCountVsLastPeriod > 0,
+                      }
+                    : undefined
+                }
               />
             </Grid>
           </Grid>
@@ -323,7 +440,7 @@ export function OperatorDashboardView() {
               {t('oi.machineStatus')}
             </Typography>
             <Grid container spacing={3}>
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Box
                     sx={{
@@ -338,21 +455,25 @@ export function OperatorDashboardView() {
                       mb: 2,
                     }}
                   >
-                    <Iconify icon="eva:checkmark-fill" sx={{ fontSize: 48, color: 'white' }} />
+                    <Iconify icon={"eva:activity-fill" as any} sx={{ fontSize: 48, color: 'white' }} />
                   </Box>
                   <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                    {t('oi.running')}
+                    {t('oi.connected')}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    {t('oi.realtimeTracking')}
                   </Typography>
                 </Box>
               </Grid>
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Box
                     sx={{
                       width: 80,
                       height: 80,
                       borderRadius: '50%',
-                      bgcolor: 'background.neutral',
+                      bgcolor:
+                        machineData.availability >= 80 ? 'success.lighter' : 'warning.lighter',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -360,23 +481,29 @@ export function OperatorDashboardView() {
                       mb: 2,
                     }}
                   >
-                    <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                      0
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        fontWeight: 'bold',
+                        color: machineData.availability >= 80 ? 'success.main' : 'warning.main',
+                      }}
+                    >
+                      {machineData.availability.toFixed(0)}%
                     </Typography>
                   </Box>
                   <Typography variant="h6" sx={{ color: 'text.secondary' }}>
-                    {t('oi.warnings')}
+                    {t('oi.availability')}
                   </Typography>
                 </Box>
               </Grid>
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Box
                     sx={{
                       width: 80,
                       height: 80,
                       borderRadius: '50%',
-                      bgcolor: 'background.neutral',
+                      bgcolor: machineData.oee >= 85 ? 'success.lighter' : 'warning.lighter',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -384,42 +511,28 @@ export function OperatorDashboardView() {
                       mb: 2,
                     }}
                   >
-                    <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                      0
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        fontWeight: 'bold',
+                        color: machineData.oee >= 85 ? 'success.main' : 'warning.main',
+                      }}
+                    >
+                      {machineData.oee.toFixed(0)}%
                     </Typography>
                   </Box>
                   <Typography variant="h6" sx={{ color: 'text.secondary' }}>
-                    {t('oi.errors')}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                <Box sx={{ textAlign: 'center' }}>
-                  <Box
-                    sx={{
-                      width: 80,
-                      height: 80,
-                      borderRadius: '50%',
-                      bgcolor: 'success.lighter',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      margin: '0 auto',
-                      mb: 2,
-                    }}
-                  >
-                    <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'success.main' }}>
-                      98%
-                    </Typography>
-                  </Box>
-                  <Typography variant="h6" sx={{ color: 'text.secondary' }}>
-                    {t('oi.uptime')}
+                    {t('oi.oee')}
                   </Typography>
                 </Box>
               </Grid>
             </Grid>
           </Card>
         </Stack>
+      ) : (
+        <Alert severity="warning" sx={{ fontSize: '1.1rem', py: 3 }}>
+          {t('oi.noDataAvailable')}
+        </Alert>
       )}
     </DashboardContent>
   );
