@@ -3,7 +3,7 @@ import type { SelectChangeEvent } from '@mui/material/Select';
 import type { UnitGroupEntity } from 'src/api/types/generated';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -45,6 +45,8 @@ interface UnitCreateEditViewProps {
 export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const returnUrl = searchParams.get('returnUrl') || '/settings/units';
 
   // Use ValidationResult hook for form validation
   const {
@@ -110,7 +112,7 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
     onSuccess: (result) => {
       setValidationResult(result);
       if (isValidationSuccess(result)) {
-        navigate('/settings/units');
+        navigate(returnUrl);
       } else {
         if (result.message) {
           setErrorMessage(result.message);
@@ -126,7 +128,7 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
     onSuccess: (result) => {
       setValidationResult(result);
       if (isValidationSuccess(result)) {
-        navigate('/settings/units');
+        navigate(returnUrl);
       } else {
         if (result.message) {
           setErrorMessage(result.message);
@@ -194,8 +196,8 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
   }, [formData, isEdit, id, createUnit, updateUnit, clearValidationResult]);
 
   const handleCancel = useCallback(() => {
-    navigate('/settings/units');
-  }, [navigate]);
+    navigate(returnUrl);
+  }, [navigate, returnUrl]);
 
   if (isLoadingUnit || isLoadingGroups) {
     return (
