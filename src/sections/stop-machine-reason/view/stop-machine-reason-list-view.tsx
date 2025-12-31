@@ -1,6 +1,6 @@
 import type { StopMachineReasonDto } from 'src/api/types/generated';
 
-import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -33,9 +33,7 @@ import type { StopMachineReasonProps } from '../stop-machine-reason-table-row';
 
 // ----------------------------------------------------------------------
 
-const emptyRows = (page: number, rowsPerPage: number, arrayLength: number) => {
-  return page ? Math.max(0, (1 + page) * rowsPerPage - arrayLength) : 0;
-};
+const emptyRows = (page: number, rowsPerPage: number, arrayLength: number) => page ? Math.max(0, (1 + page) * rowsPerPage - arrayLength) : 0;
 
 export function StopMachineReasonListView() {
   const router = useRouter();

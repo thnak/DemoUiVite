@@ -1,6 +1,6 @@
-import type { StopMachineReasonGroupDto, StopMachineImpact } from 'src/api/types/generated';
+import type { StopMachineImpact, StopMachineReasonGroupDto } from 'src/api/types/generated';
 
-import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -33,9 +33,7 @@ import type { StopMachineReasonGroupProps } from '../stop-machine-reason-group-t
 
 // ----------------------------------------------------------------------
 
-const emptyRows = (page: number, rowsPerPage: number, arrayLength: number) => {
-  return page ? Math.max(0, (1 + page) * rowsPerPage - arrayLength) : 0;
-};
+const emptyRows = (page: number, rowsPerPage: number, arrayLength: number) => page ? Math.max(0, (1 + page) * rowsPerPage - arrayLength) : 0;
 
 const IMPACT_LABELS: Record<StopMachineImpact, string> = {
   run: 'Run',

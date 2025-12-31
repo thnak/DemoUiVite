@@ -86,7 +86,7 @@ export function StopMachineReasonTableRow({
   const handleEdit = useCallback(() => {
     handleClosePopover();
     router.push(`/stop-machine-reason/edit/${row.id}`);
-  }, [router, row.id]);
+  }, [handleClosePopover, router, row.id]);
 
   return (
     <>
