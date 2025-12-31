@@ -28,6 +28,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 
 import { Iconify } from 'src/components/iconify';
 import { WeekSummaryChart } from 'src/components/WeekSummaryChart';
+import { TimeBlockNameSelector } from 'src/components/selectors';
 import { DurationTimePicker, partsToIsoDuration } from 'src/components/duration-time-picker';
 
 import {
@@ -176,7 +177,7 @@ export function ShiftTemplateForm({
   }, []);
 
   const handleDefinitionChange = useCallback(
-    (defId: string, field: keyof ShiftDefinitionFormData, value: string | DayOfWeek[]) => {
+    (defId: string, field: keyof ShiftDefinitionFormData, value: string | null | DayOfWeek[]) => {
       setFormData((prev) => ({
         ...prev,
         definitions: prev.definitions.map((def) =>
@@ -252,9 +253,7 @@ export function ShiftTemplateForm({
     }
 
     formData.definitions.forEach((def, index) => {
-      if (!def.name.trim()) {
-        newErrors[`def-${index}-name`] = 'Shift name is required';
-      }
+      // timeBlockNameId is optional, no validation needed
       // In advanced mode, validate per-definition days
       if (mode === 'advanced' && def.days.length === 0) {
         newErrors[`def-${index}-days`] = 'Select at least one day';
@@ -452,14 +451,14 @@ export function ShiftTemplateForm({
                 </Box>
 
                 <Stack spacing={2}>
-                  <TextField
-                    fullWidth
+                  <TimeBlockNameSelector
+                    value={def.timeBlockNameId || null}
+                    onChange={(value) => handleDefinitionChange(def.id, 'timeBlockNameId', value)}
+                    label="Time Block Name"
                     size="small"
-                    label="Shift Name"
-                    value={def.name}
-                    onChange={(e) => handleDefinitionChange(def.id, 'name', e.target.value)}
-                    error={!!errors[`def-${defIndex}-name`]}
-                    helperText={errors[`def-${defIndex}-name`]}
+                    fullWidth
+                    error={!!errors[`def-${defIndex}-timeBlockNameId`]}
+                    helperText={errors[`def-${defIndex}-timeBlockNameId`]}
                   />
 
                   <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} data-tour="shift-times">
@@ -652,7 +651,7 @@ export function ShiftTemplateForm({
                   <Fragment key={def.id}>
                     <Box key={`${def.id}-name`} sx={{ p: 1, borderRadius: 1 }}>
                       <Typography variant="body2" noWrap>
-                        {def.name}
+                        {def.timeBlockNameId ? `Time Block: ${def.timeBlockNameId}` : 'Unnamed Shift'}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
                         {def.startTime} - {def.endTime}

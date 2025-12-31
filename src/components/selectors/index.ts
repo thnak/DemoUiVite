@@ -31,3 +31,4 @@ export * from './defect-reason-group-selector';
 export * from './stop-machine-reason-selector';
 export * from './stop-machine-reason-group-selector';
 export * from './information-decorator-base-selector';
+export * from './time-block-name-selector';
