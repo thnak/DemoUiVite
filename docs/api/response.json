@@ -48489,7 +48489,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2025-12-30"
+              "example": "2025-12-31"
             }
           },
           {
@@ -48499,7 +48499,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2025-12-30"
+              "example": "2025-12-31"
             }
           },
           {
@@ -50783,13 +50783,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-30"
+            "example": "2025-12-31"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-30"
+            "example": "2025-12-31"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -50901,13 +50901,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-30"
+            "example": "2025-12-31"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-30"
+            "example": "2025-12-31"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -51078,12 +51078,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-30"
+            "example": "2025-12-31"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-30"
+            "example": "2025-12-31"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -51612,12 +51612,15 @@
           },
           "stateName": {
             "type": "string",
-            "description": "Name of the state.",
+            "description": "Name of the state. When StateId is all zeros, this will be \"Normal Operation\". Otherwise, it will be the name of the state representing the stop machine reason.",
             "nullable": true
           },
           "isUnplannedDowntime": {
             "type": "boolean",
             "description": "Indicates if the downtime was unplanned. Here is what we need label"
+          },
+          "state": {
+            "$ref": "#/components/schemas/MachineOutputRunState"
           },
           "startTime": {
             "type": "string",
@@ -53602,7 +53605,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-30"
+            "example": "2025-12-31"
           }
         },
         "additionalProperties": false
@@ -56169,7 +56172,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2025-12-30"
+            "example": "2025-12-31"
           },
           "locationId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -58665,6 +58668,15 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
+      },
+      "MachineOutputRunState": {
+        "enum": [
+          "running",
+          "speedLoss",
+          "downtime"
+        ],
+        "type": "string",
+        "description": "Represents the run state of a machine output."
       },
       "MachinePageResponse": {
         "type": "object",
@@ -61918,7 +61930,7 @@
             "type": "string",
             "description": "Date of the work.",
             "format": "date",
-            "example": "2025-12-30"
+            "example": "2025-12-31"
           },
           "shiftName": {
             "type": "string",
@@ -69762,7 +69774,7 @@
             "type": "string",
             "description": "The specific work date this statistic applies to.",
             "format": "date",
-            "example": "2025-12-30"
+            "example": "2025-12-31"
           },
           "calendarId": {
             "$ref": "#/components/schemas/ObjectId"
