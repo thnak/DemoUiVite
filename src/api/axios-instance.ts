@@ -64,6 +64,11 @@ const axiosInstance: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  paramsSerializer: {
+    // Serialize array parameters by repeating the parameter name without brackets
+    // Example: Impacts=value1&Impacts=value2 instead of Impacts[]=value1&Impacts[]=value2
+    indexes: null, // This makes axios use 'repeat' format for arrays
+  },
 });
 
 /**
