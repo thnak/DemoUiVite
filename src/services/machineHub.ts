@@ -3,9 +3,9 @@ import * as signalR from '@microsoft/signalr';
 // ----------------------------------------------------------------------
 
 export enum MachineRunState {
-  Running = "running",
-  SpeedLoss = "speedloss",
-  Downtime = "downtime",
+  Running = 0,
+  SpeedLoss = 1,
+  Downtime = 2,
 }
 
 export interface MachineRunStateTimeBlock {
@@ -14,13 +14,30 @@ export interface MachineRunStateTimeBlock {
   state: MachineRunState;
 }
 
+export interface MachineRuntimeBlock {
+  startTime: string; // ISO 8601 date string
+  endTime: string | null; // ISO 8601 date string, null for ongoing blocks
+  stopReasonId: string; // ObjectId in string format, empty for normal operation
+  name: string; // Stop reason name or runtime block name
+  color: string; // Color code for visualization
+  isUnplannedDowntime: boolean; // True if this is an unplanned stop
+  state: MachineRunState; // Current run state
+}
+
 export interface MachineOeeUpdate {
-  availability: number; // Percentage (0-100)
-  performance: number; // Percentage (0-100)
-  quality: number; // Percentage (0-100)
-  oee: number; // Percentage (0-100) - Overall Equipment Effectiveness
+  machineName: string; // Name of the machine
+  availability: number; // Percentage (0-1)
+  availabilityVsLastPeriod: number; // Percentage points difference
+  performance: number; // Percentage (0-1)
+  performanceVsLastPeriod: number; // Percentage points difference
+  quality: number; // Percentage (0-1)
+  qualityVsLastPeriod: number; // Percentage points difference
+  oee: number; // Percentage (0-1) - Overall Equipment Effectiveness
+  oeeVsLastPeriod: number; // Percentage points difference
   goodCount: number; // Count of good products produced
+  goodCountVsLastPeriod: number; // Count difference
   totalCount: number; // Total count of products produced
+  totalCountVsLastPeriod: number; // Count difference
   plannedProductionTime: string; // ISO 8601 duration (e.g., "PT8H")
   runTime: string; // ISO 8601 duration (e.g., "PT7H30M")
   downtime: string; // ISO 8601 duration (e.g., "PT30M")
@@ -47,6 +64,8 @@ export class MachineHubService {
 
   private callbacks: Map<string, (update: MachineOeeUpdate) => void> = new Map();
 
+  private runtimeBlockCallbacks: Map<string, (block: MachineRuntimeBlock) => void> = new Map();
+
   constructor(baseUrl: string) {
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(`${baseUrl}/hubs/machine`, {
@@ -56,13 +75,21 @@ export class MachineHubService {
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
-    // Register the MachineUpdate event handler
+    // Register the MachineUpdate event handler (OEE metrics)
     this.connection.on('MachineUpdate', (update: MachineOeeUpdate) => {
       console.log('Machine OEE update received:', update);
-      // Trigger all callbacks (in case we support multiple subscriptions)
-      this.callbacks.forEach((callback) => {
+      // Call the callback for this specific machine
+      const callback = this.callbacks.get(update.machineName);
+      if (callback) {
         callback(update);
-      });
+      }
+    });
+
+    // Register the MachineRuntimeUpdateLastBlock event handler (runtime blocks)
+    this.connection.on('MachineRuntimeUpdateLastBlock', (block: MachineRuntimeBlock) => {
+      console.log('Machine runtime block update received:', block);
+      // Broadcast to all runtime block callbacks
+      this.runtimeBlockCallbacks.forEach((callback) => callback(block));
     });
   }
 
@@ -85,11 +112,15 @@ export class MachineHubService {
 
   async subscribeToMachine(
     machineId: string,
-    callback: (update: MachineOeeUpdate) => void
+    callback: (update: MachineOeeUpdate) => void,
+    runtimeBlockCallback?: (block: MachineRuntimeBlock) => void
   ): Promise<void> {
     try {
       await this.connection.invoke('SubscribeToMachine', machineId);
       this.callbacks.set(machineId, callback);
+      if (runtimeBlockCallback) {
+        this.runtimeBlockCallbacks.set(machineId, runtimeBlockCallback);
+      }
       console.log(`Subscribed to machine: ${machineId}`);
     } catch (err) {
       console.error(`Error subscribing to machine ${machineId}:`, err);
@@ -99,6 +130,7 @@ export class MachineHubService {
 
   async unsubscribeFromMachine(machineId: string): Promise<void> {
     this.callbacks.delete(machineId);
+    this.runtimeBlockCallbacks.delete(machineId);
     try {
       await this.connection.invoke('UnsubscribeFromMachine', machineId);
       console.log(`Unsubscribed from machine: ${machineId}`);
@@ -117,6 +149,19 @@ export class MachineHubService {
       return aggregation;
     } catch (err) {
       console.error(`Error getting aggregation for machine ${machineId}:`, err);
+      throw err;
+    }
+  }
+
+  async getMachineRuntimeBlocks(machineId: string): Promise<MachineRuntimeBlock[]> {
+    try {
+      const blocks = await this.connection.invoke<MachineRuntimeBlock[]>(
+        'GetMachineRuntimeBlocks',
+        machineId
+      );
+      return blocks;
+    } catch (err) {
+      console.error(`Error getting runtime blocks for machine ${machineId}:`, err);
       throw err;
     }
   }
