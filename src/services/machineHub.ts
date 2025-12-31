@@ -101,7 +101,6 @@ export class MachineHubService {
       }
     } catch (err) {
       console.error('Error connecting to MachineHub:', err);
-      throw err;
     }
   }
 
@@ -128,7 +127,7 @@ export class MachineHubService {
       console.log(`Subscribed to machine: ${machineId}`);
     } catch (err) {
       console.error(`Error subscribing to machine ${machineId}:`, err);
-      throw err;
+      
     }
   }
 
@@ -143,7 +142,7 @@ export class MachineHubService {
         console.log(`Unsubscribed from machine: ${machineId}`);
       } catch (err) {
         console.error(`Error unsubscribing from machine ${machineId}:`, err);
-        throw err;
+        
       }
     } else {
       console.log(`Skipped unsubscribe for machine ${machineId} - connection not active (${this.connection.state})`);
@@ -159,7 +158,7 @@ export class MachineHubService {
       return aggregation;
     } catch (err) {
       console.error(`Error getting aggregation for machine ${machineId}:`, err);
-      throw err;
+      return null;
     }
   }
 
@@ -172,7 +171,7 @@ export class MachineHubService {
       return blocks;
     } catch (err) {
       console.error(`Error getting runtime blocks for machine ${machineId}:`, err);
-      throw err;
+      return [];
     }
   }
 
@@ -182,7 +181,7 @@ export class MachineHubService {
       return count;
     } catch (err) {
       console.error(`Error getting subscriber count for machine ${machineId}:`, err);
-      throw err;
+      return 0;
     }
   }
 
