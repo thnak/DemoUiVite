@@ -81,7 +81,7 @@ export function StopMachineReasonGroupTableRow({
   const handleEdit = useCallback(() => {
     handleClosePopover();
     router.push(`/stop-machine-reason-group/edit/${row.id}`);
-  }, [router, row.id]);
+  }, [handleClosePopover, router, row.id]);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import type { DefectReasonEntity, MachineDefectInputEntity } from 'src/api/types/generated';
+import type { DefectReasonEntity, DefectedFromRunningMachineDto } from 'src/api/types/generated';
 
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -49,7 +49,7 @@ export function DefectInputView() {
   const [scrapQuantity, setScrapQuantity] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [defectedItems, setDefectedItems] = useState<MachineDefectInputEntity[]>([]);
+  const [defectedItems, setDefectedItems] = useState<DefectedFromRunningMachineDto[]>([]);
   const [loadingDefectedItems, setLoadingDefectedItems] = useState(false);
 
   const handleOpenDefectDialog = () => {
@@ -91,11 +91,8 @@ export function DefectInputView() {
     
     setLoadingDefectedItems(true);
     try {
-      const response = await getapiMachinemachineIddefecteditems(selectedMachine.id, {
-        page: 1,
-        pageSize: 100,
-      });
-      setDefectedItems(response.items || []);
+      const response = await getapiMachinemachineIddefecteditems(selectedMachine.id);
+      setDefectedItems(response.defectedItems || []);
     } catch (error) {
       console.error('Failed to load defected items:', error);
       setDefectedItems([]);
@@ -113,7 +110,7 @@ export function DefectInputView() {
       await postapiMachinemachineIddefecteditemsaddnew(selectedMachine.id, {
         defectReasonId: selectedDefectReason.id,
         quantity: parseFloat(scrapQuantity),
-        extraNote: notes || null,
+        remark: notes || null,
       });
 
       // Show success message
@@ -362,13 +359,13 @@ export function DefectInputView() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {defectedItems.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell>{item.defectReasonId}</TableCell>
+                    {defectedItems.map((item, index) => (
+                      <TableRow key={`${item.defectReasonName}-${item.createdAt}-${index}`}>
+                        <TableCell>{item.defectReasonName || '-'}</TableCell>
                         <TableCell align="right">{item.quantity}</TableCell>
                         <TableCell>{item.extraNote || '-'}</TableCell>
                         <TableCell>
-                          {item.createTime ? new Date(item.createTime).toLocaleString() : '-'}
+                          {item.createdAt ? new Date(item.createdAt).toLocaleString() : '-'}
                         </TableCell>
                       </TableRow>
                     ))}

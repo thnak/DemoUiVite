@@ -78,7 +78,7 @@ function formDataToApiEntity(data: ShiftTemplateFormData): ShiftTemplateEntity {
         applicableDay: day,
         startTime: def.startTime, // Already in ISO 8601 format from DurationTimePicker
         endTime: def.endTime, // Already in ISO 8601 format from DurationTimePicker
-        name: def.name,
+        timeBlockNameId: def.timeBlockNameId || undefined,
         breakDefinitions: def.breaks.map((b) => ({
           startTime: b.startTime, // Already in ISO 8601 format from DurationTimePicker
           endTime: b.endTime, // Already in ISO 8601 format from DurationTimePicker
@@ -136,23 +136,23 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
         try {
           const template = await getShiftTemplateById(templateId);
           if (template) {
-            // Group shifts by name to recreate definitions
-            const shiftsByName = new Map<string, { shift: ShiftDefinition; days: DayOfWeek[] }>();
+            // Group shifts by timeBlockNameId to recreate definitions
+            const shiftsByTimeBlockId = new Map<string, { shift: ShiftDefinition; days: DayOfWeek[] }>();
 
             for (const shift of template.shifts || []) {
-              const name = shift.name || 'Unnamed Shift';
-              if (!shiftsByName.has(name)) {
-                shiftsByName.set(name, { shift, days: [] });
+              const timeBlockId = shift.timeBlockNameId ? String(shift.timeBlockNameId) : 'unnamed';
+              if (!shiftsByTimeBlockId.has(timeBlockId)) {
+                shiftsByTimeBlockId.set(timeBlockId, { shift, days: [] });
               }
               if (shift.applicableDay) {
-                shiftsByName.get(name)!.days.push(shift.applicableDay as DayOfWeek);
+                shiftsByTimeBlockId.get(timeBlockId)!.days.push(shift.applicableDay as DayOfWeek);
               }
             }
 
-            const definitions = Array.from(shiftsByName.entries()).map(
-              ([name, { shift, days }]) => ({
+            const definitions = Array.from(shiftsByTimeBlockId.entries()).map(
+              ([timeBlockId, { shift, days }]) => ({
                 id: generateId(),
-                name,
+                timeBlockNameId: timeBlockId !== 'unnamed' ? timeBlockId : null,
                 startTime: shift.startTime || 'PT8H', // Keep as ISO 8601 for DurationTimePicker
                 endTime: shift.endTime || 'PT16H', // Keep as ISO 8601 for DurationTimePicker
                 breaks: (shift.breakDefinitions || []).map((b) => ({
@@ -177,7 +177,7 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
                   : [
                       {
                         id: generateId(),
-                        name: 'Shift 1',
+                        timeBlockNameId: null,
                         startTime: 'PT8H', // Use ISO 8601 for DurationTimePicker
                         endTime: 'PT16H', // Use ISO 8601 for DurationTimePicker
                         breaks: [],

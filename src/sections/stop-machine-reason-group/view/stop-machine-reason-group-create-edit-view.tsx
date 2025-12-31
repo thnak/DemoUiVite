@@ -1,5 +1,5 @@
-import type { StopMachineReasonGroupEntity, StopMachineImpact } from 'src/api/types/generated';
 import type { ChangeEvent } from 'react';
+import type { StopMachineImpact, StopMachineReasonGroupEntity } from 'src/api/types/generated';
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';

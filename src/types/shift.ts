@@ -42,7 +42,7 @@ export interface ShiftBreak {
 
 export interface ShiftDefinition {
   id: string;
-  name: string;
+  timeBlockNameId?: string | null;
   startTime: string; // HH:mm format
   endTime: string; // HH:mm format
   breaks: ShiftBreak[];
@@ -74,7 +74,7 @@ export interface ShiftBreakFormData {
 
 export interface ShiftDefinitionFormData {
   id: string;
-  name: string;
+  timeBlockNameId?: string | null;
   startTime: string;
   endTime: string;
   breaks: ShiftBreakFormData[];
@@ -192,10 +192,10 @@ export function minutesToHoursString(minutes: number): string {
   return `${hours}h ${mins}m`;
 }
 
-export function createDefaultShiftDefinition(name: string = 'Shift 1'): ShiftDefinitionFormData {
+export function createDefaultShiftDefinition(timeBlockNameId?: string | null): ShiftDefinitionFormData {
   return {
     id: generateId(),
-    name,
+    timeBlockNameId: timeBlockNameId || null,
     startTime: 'PT8H', // ISO 8601 format for 08:00
     endTime: 'PT16H', // ISO 8601 format for 16:00
     breaks: [],

@@ -50,7 +50,7 @@ export const shiftTemplateService = {
       shiftPattern: data.shiftPattern,
       definitions: data.definitions.map((def) => ({
         id: def.id,
-        name: def.name,
+        timeBlockNameId: def.timeBlockNameId,
         startTime: def.startTime,
         endTime: def.endTime,
         breaks: def.breaks.map((b) => ({
@@ -88,7 +88,7 @@ export const shiftTemplateService = {
       shiftPattern: data.shiftPattern,
       definitions: data.definitions.map((def) => ({
         id: def.id,
-        name: def.name,
+        timeBlockNameId: def.timeBlockNameId,
         startTime: def.startTime,
         endTime: def.endTime,
         breaks: def.breaks.map((b) => ({

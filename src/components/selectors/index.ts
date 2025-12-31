@@ -22,6 +22,7 @@ export * from './machine-group-selector';
 export * from './station-group-selector';
 export * from './script-variant-selector';
 export * from './shift-template-selector';
+export * from './time-block-name-selector';
 export * from './information-base-selector';
 export * from './io-tdevice-group-selector';
 export * from './io-tdevice-model-selector';
