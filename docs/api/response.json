@@ -20818,6 +20818,52 @@
         }
       }
     },
+    "/api/Machine/{machineId}/complete-current-product": {
+      "post": {
+        "tags": [
+          "Machine"
+        ],
+        "summary": "Completes the current product on a specific machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Machine/{machineId}/current-product": {
       "get": {
         "tags": [
@@ -21972,6 +22018,61 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/MachineDowntime/{machineId}/unlabel-downtime-record": {
+      "post": {
+        "tags": [
+          "MachineDowntime"
+        ],
+        "summary": "Unlabels a downtime record for a machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -48489,7 +48590,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2025-12-31"
+              "example": "2026-01-02"
             }
           },
           {
@@ -48499,7 +48600,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2025-12-31"
+              "example": "2026-01-02"
             }
           },
           {
@@ -50783,13 +50884,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-31"
+            "example": "2026-01-02"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-31"
+            "example": "2026-01-02"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -50901,13 +51002,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2025-12-31"
+            "example": "2026-01-02"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2025-12-31"
+            "example": "2026-01-02"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -51078,12 +51179,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-31"
+            "example": "2026-01-02"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-31"
+            "example": "2026-01-02"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -52808,6 +52909,14 @@
         "additionalProperties": false,
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
+      "DevicePinMode": {
+        "enum": [
+          "input",
+          "output"
+        ],
+        "type": "string",
+        "description": "Pin input modes"
+      },
       "DisconnectReason": {
         "enum": [
           "normalDisconnection",
@@ -52869,21 +52978,25 @@
           },
           "documentCode": {
             "type": "string",
+            "description": "Document Code",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "Description of the document",
             "nullable": true
           },
           "documentName": {
             "type": "string",
+            "description": "Name of the document",
             "nullable": true
           },
           "type": {
             "$ref": "#/components/schemas/DocumentType"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Represents a document entity in the system."
       },
       "DocumentEntityBasePaginationResponse": {
         "type": "object",
@@ -52989,9 +53102,32 @@
           "isDraft": {
             "type": "boolean",
             "description": "Indicates whether the entity is in draft status."
+          },
+          "machineId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "stopMachineReasonId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "startTime": {
+            "type": "string",
+            "description": "Thời gian bắt đầu ngừng hoạt động",
+            "format": "date-time"
+          },
+          "endTime": {
+            "type": "string",
+            "description": "Thời gian kết thúc ngừng hoạt động",
+            "format": "date-time",
+            "nullable": true
+          },
+          "extraNote": {
+            "type": "string",
+            "description": "Ghi chú bổ sung cho thời gian ngừng hoạt động",
+            "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Dữ liệu nhập cho thời gian ngừng hoạt động của máy"
       },
       "DowntimeInputBasePaginationResponse": {
         "type": "object",
@@ -53605,7 +53741,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2025-12-31"
+            "example": "2026-01-02"
           }
         },
         "additionalProperties": false
@@ -55314,8 +55450,8 @@
             "description": "Gets or sets pin number",
             "format": "int32"
           },
-          "pinInputMode": {
-            "$ref": "#/components/schemas/PinInputMode"
+          "devicePinMode": {
+            "$ref": "#/components/schemas/DevicePinMode"
           },
           "pinInterruptMode": {
             "$ref": "#/components/schemas/PinInterruptMode"
@@ -56172,7 +56308,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2025-12-31"
+            "example": "2026-01-02"
           },
           "locationId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -56591,14 +56727,17 @@
           },
           "code": {
             "type": "string",
+            "description": "Unique code identifying the IoT device model.",
             "nullable": true
           },
           "name": {
             "type": "string",
+            "description": "Name of the IoT device model.",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "Description of the IoT device model.",
             "nullable": true
           },
           "manufacturer": {
@@ -56606,10 +56745,12 @@
           },
           "modelNumber": {
             "type": "string",
+            "description": "Model number of the IoT device model.",
             "nullable": true
           },
           "hardwareVersion": {
             "type": "string",
+            "description": "Hardware version of the IoT device model.",
             "nullable": true
           },
           "supportedProtocols": {
@@ -56617,6 +56758,7 @@
             "items": {
               "type": "string"
             },
+            "description": "Supported protocols of the IoT device model.",
             "nullable": true
           },
           "supportedFeatures": {
@@ -56624,10 +56766,20 @@
             "items": {
               "type": "string"
             },
+            "description": "Supported features of the IoT device model.",
+            "nullable": true
+          },
+          "pinConfigurations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PinConfiguration"
+            },
+            "description": "Pin configurations of the IoT device model.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Represents an IoT device model entity in the system."
       },
       "IoTDeviceModelEntityBasePaginationResponse": {
         "type": "object",
@@ -56806,11 +56958,11 @@
           },
           "pinNumber": {
             "type": "integer",
-            "description": "Pin the sensor is connected to",
+            "description": "On device pin number where the sensor is connected",
             "format": "int32"
           },
-          "pinInputMode": {
-            "$ref": "#/components/schemas/PinInputMode"
+          "devicePinMode": {
+            "$ref": "#/components/schemas/DevicePinMode"
           },
           "pinInterruptMode": {
             "$ref": "#/components/schemas/PinInterruptMode"
@@ -58612,6 +58764,14 @@
         "description": "Defines the mode of mapping for machine output."
       },
       "MachineOutputMappingResponse": {
+        "required": [
+          "enabled",
+          "index",
+          "mappingMode",
+          "scalingFactor",
+          "sensorId",
+          "sensorName"
+        ],
         "type": "object",
         "properties": {
           "index": {
@@ -58620,9 +58780,9 @@
             "format": "int32"
           },
           "sensorName": {
+            "minLength": 1,
             "type": "string",
-            "description": "Output name",
-            "nullable": true
+            "description": "Output name"
           },
           "sensorId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -59681,25 +59841,25 @@
       },
       "MqttRecordDto": {
         "required": [
-          "clientId",
-          "sensorCode"
+          "deviceMacAddress",
+          "pinNumber"
         ],
         "type": "object",
         "properties": {
-          "sensorCode": {
-            "minLength": 1,
-            "type": "string",
-            "description": "Sensor code"
+          "pinNumber": {
+            "type": "integer",
+            "description": "Pin number",
+            "format": "int32"
           },
           "count": {
             "type": "integer",
             "description": "Count value",
             "format": "int32"
           },
-          "clientId": {
+          "deviceMacAddress": {
             "minLength": 1,
             "type": "string",
-            "description": "Client identifier"
+            "description": "Device MAC address"
           },
           "timeStamp": {
             "type": "string",
@@ -60963,21 +61123,20 @@
         "type": "string",
         "description": "Represents application claim types with associated localized text and RGB color attributes."
       },
-      "PinInputMode": {
-        "enum": [
-          "unspecified",
-          "input",
-          "output",
-          "pullUp",
-          "inputPullUp",
-          "pullDown",
-          "inputPullDown",
-          "openDrain",
-          "outputOpenDrain",
-          "analog"
-        ],
-        "type": "string",
-        "description": "Pin input modes"
+      "PinConfiguration": {
+        "type": "object",
+        "properties": {
+          "pinNum": {
+            "type": "integer",
+            "description": "The pin number.",
+            "format": "int32"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/DevicePinMode"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the configuration for a pin on an IoT device."
       },
       "PinInterruptMode": {
         "enum": [
@@ -61930,7 +62089,7 @@
             "type": "string",
             "description": "Date of the work.",
             "format": "date",
-            "example": "2025-12-31"
+            "example": "2026-01-02"
           },
           "shiftName": {
             "type": "string",
@@ -61949,14 +62108,14 @@
             "nullable": true
           },
           "goodCount": {
-            "type": "integer",
+            "type": "number",
             "description": "Count of good products produced.",
-            "format": "int32"
+            "format": "double"
           },
           "scrapCount": {
-            "type": "integer",
+            "type": "number",
             "description": "Count of rejected products.",
-            "format": "int32"
+            "format": "double"
           },
           "totalProducedQuantity": {
             "type": "number",
@@ -64301,8 +64460,8 @@
             "description": "Gets or sets pin number",
             "format": "int32"
           },
-          "pinInputMode": {
-            "$ref": "#/components/schemas/PinInputMode"
+          "devicePinMode": {
+            "$ref": "#/components/schemas/DevicePinMode"
           },
           "pinInterruptMode": {
             "$ref": "#/components/schemas/PinInterruptMode"
@@ -69774,7 +69933,7 @@
             "type": "string",
             "description": "The specific work date this statistic applies to.",
             "format": "date",
-            "example": "2025-12-31"
+            "example": "2026-01-02"
           },
           "calendarId": {
             "$ref": "#/components/schemas/ObjectId"

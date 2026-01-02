@@ -376,16 +376,16 @@ export function MachineCreateEditView({
     const allMappings: MachineOutputMappingResponse[] = [
       ...goodOutputMappings.map((m) => ({
         index: m.index,
-        outputName: m.sensorName,
-        outputId: m.outputId,
+        sensorName: m.sensorName,
+        sensorId: m.outputId,
         scalingFactor: m.scalingFactor,
         mappingMode: 'outputGood' as const,
         enabled: m.enabled,
       })),
       ...scrapOutputMappings.map((m) => ({
         index: m.index,
-        outputName: m.sensorName,
-        outputId: m.outputId,
+        sensorName: m.sensorName,
+        sensorId: m.outputId,
         scalingFactor: m.scalingFactor,
         mappingMode: 'outputScrap' as const,
         enabled: m.enabled,
