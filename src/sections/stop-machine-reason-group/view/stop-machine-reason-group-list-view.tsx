@@ -6,8 +6,10 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Tabs from '@mui/material/Tabs';
+import Alert from '@mui/material/Alert';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
@@ -59,6 +61,8 @@ export function StopMachineReasonGroupListView() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Determine which impacts to query - 'all' means undefined
   // Memoize to prevent unnecessary re-fetches
@@ -81,8 +85,12 @@ export function StopMachineReasonGroupListView() {
 
   const { mutate: deleteStopMachineReasonGroupMutate } = useDeleteStopMachineReasonGroup({
     onSuccess: () => {
+      setSuccessMessage('Stop machine reason group deleted successfully');
       // Refetch data after deletion
       refetch();
+    },
+    onError: (error: any) => {
+      setErrorMessage(error?.message || 'Failed to delete stop machine reason group');
     },
   });
 
@@ -160,6 +168,14 @@ export function StopMachineReasonGroupListView() {
       setItemToDelete(null);
     }
   }, [isDeleting]);
+
+  const handleCloseSuccess = useCallback(() => {
+    setSuccessMessage(null);
+  }, []);
+
+  const handleCloseError = useCallback(() => {
+    setErrorMessage(null);
+  }, []);
 
   const notFound = !isFetching && !groups.length;
 
@@ -335,6 +351,28 @@ export function StopMachineReasonGroupListView() {
         entityName="stop machine reason group"
         loading={isDeleting}
       />
+
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </DashboardContent>
   );
 }

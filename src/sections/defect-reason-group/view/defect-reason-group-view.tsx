@@ -4,7 +4,9 @@ import { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
@@ -47,6 +49,8 @@ export function DefectReasonGroupView() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { mutate: fetchDefectReasonGroups } = useGetDefectReasonGroupPage({
     onSuccess: (data) => {
@@ -68,6 +72,7 @@ export function DefectReasonGroupView() {
 
   const { mutate: deleteDefectReasonGroupMutate } = useDeleteDefectReasonGroup({
     onSuccess: () => {
+      setSuccessMessage('Defect reason group deleted successfully');
       // Refetch after deletion
       fetchDefectReasonGroups({
         data: [{ sortBy: table.orderBy, descending: table.order === 'desc' }],
@@ -78,6 +83,9 @@ export function DefectReasonGroupView() {
         },
       });
       queryClient.invalidateQueries({ queryKey: defectReasonGroupKeys.all });
+    },
+    onError: (error: any) => {
+      setErrorMessage(error?.message || 'Failed to delete defect reason group');
     },
   });
 
@@ -115,6 +123,14 @@ export function DefectReasonGroupView() {
       setItemToDelete(null);
     }
   }, [isDeleting]);
+
+  const handleCloseSuccess = useCallback(() => {
+    setSuccessMessage(null);
+  }, []);
+
+  const handleCloseError = useCallback(() => {
+    setErrorMessage(null);
+  }, []);
 
   const notFound = !defectReasonGroups.length && !!filterName;
 
@@ -252,6 +268,28 @@ export function DefectReasonGroupView() {
         entityName="defect reason group"
         loading={isDeleting}
       />
+
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </DashboardContent>
   );
 }

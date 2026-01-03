@@ -5,8 +5,10 @@ import { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import TableRow from '@mui/material/TableRow';
+import Snackbar from '@mui/material/Snackbar';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
@@ -48,6 +50,8 @@ export function ProductCategoryListView() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { mutate: fetchProductCategories, isPending: isLoading } = useGetProductCategoryPage({
     onSuccess: (result) => {
@@ -66,6 +70,7 @@ export function ProductCategoryListView() {
 
   const { mutate: deleteProductCategory } = useDeleteProductCategory({
     onSuccess: () => {
+      setSuccessMessage('Product category deleted successfully');
       // Refetch data after deletion
       fetchProductCategories({
         data: [],
@@ -75,6 +80,9 @@ export function ProductCategoryListView() {
           searchTerm: filterName,
         },
       });
+    },
+    onError: (error: any) => {
+      setErrorMessage(error?.message || 'Failed to delete product category');
     },
   });
 
@@ -128,6 +136,14 @@ export function ProductCategoryListView() {
       setItemToDelete(null);
     }
   }, [isDeleting]);
+
+  const handleCloseSuccess = useCallback(() => {
+    setSuccessMessage(null);
+  }, []);
+
+  const handleCloseError = useCallback(() => {
+    setErrorMessage(null);
+  }, []);
 
   const handleImport = useCallback(() => {
     console.log('Import product categories');
@@ -291,6 +307,28 @@ export function ProductCategoryListView() {
         entityName="product category"
         loading={isDeleting}
       />
+
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </DashboardContent>
   );
 }

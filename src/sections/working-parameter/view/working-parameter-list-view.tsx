@@ -3,7 +3,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
@@ -52,6 +54,8 @@ export function WorkingParameterListView() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 
   function unwrapArray<T>(res: any): T[] {
@@ -147,7 +151,11 @@ export function WorkingParameterListView() {
 
   const { mutate: deleteWorkingParameterMutate } = useDeleteWorkingParameter({
     onSuccess: () => {
+      setSuccessMessage('Working parameter deleted successfully');
       fetchWorkingParameter();
+    },
+    onError: (error: any) => {
+      setErrorMessage(error?.message || 'Failed to delete working parameter');
     },
   });
 
@@ -172,6 +180,14 @@ export function WorkingParameterListView() {
       setItemToDelete(null);
     }
   }, [isDeleting]);
+
+  const handleCloseSuccess = useCallback(() => {
+    setSuccessMessage(null);
+  }, []);
+
+  const handleCloseError = useCallback(() => {
+    setErrorMessage(null);
+  }, []);
 
   // Apply filter and sorting to the templates
   const dataFiltered: WorkingParameterProps[] = applyFilter({
@@ -285,6 +301,28 @@ export function WorkingParameterListView() {
         entityName="working parameter"
         loading={isDeleting}
       />
+
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </DashboardContent>
   );
 }
