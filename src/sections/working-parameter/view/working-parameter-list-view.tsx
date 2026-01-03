@@ -13,9 +13,11 @@ import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
+import { useDeleteWorkingParameter } from 'src/api/hooks/generated/use-working-parameter';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { WorkingParameterTableHead } from '../working-parameter-table-head';
 import { WorkingParameterTableNoData } from '../working-parameter-table-no-data';
@@ -47,6 +49,9 @@ export function WorkingParameterListView() {
   const [entities, setEntities] = useState<WorkingParameterEntity[]>([]);
   const [productMap, setProductMap] = useState<Record<string, string>>({});
   const [machineMap, setMachineMap] = useState<Record<string, string>>({});
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
 
   function unwrapArray<T>(res: any): T[] {
@@ -140,6 +145,34 @@ export function WorkingParameterListView() {
     setPage(0);
   }, []);
 
+  const { mutate: deleteWorkingParameterMutate } = useDeleteWorkingParameter({
+    onSuccess: () => {
+      fetchWorkingParameter();
+    },
+  });
+
+  const handleDeleteWorkingParameter = useCallback((id: string) => {
+    setItemToDelete(id);
+    setDeleteDialogOpen(true);
+  }, []);
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (itemToDelete) {
+      setIsDeleting(true);
+      deleteWorkingParameterMutate({ id: itemToDelete });
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [deleteWorkingParameterMutate, itemToDelete]);
+
+  const handleCloseDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [isDeleting]);
+
   // Apply filter and sorting to the templates
   const dataFiltered: WorkingParameterProps[] = applyFilter({
     inputData: templates,  // Now templates are of type WorkingParameterProps[]
@@ -219,7 +252,7 @@ export function WorkingParameterListView() {
                       selected={table.selected.includes(row.id)}
                       onSelectRow={() => table.onSelectRow(row.id)}
                       onEditRow={() => handleEditWorkingParameter(row.id)}
-                      onDeleteRow={() => console.log('Delete working parameter:', row.id)}
+                      onDeleteRow={() => handleDeleteWorkingParameter(row.id)}
                     />
                   ))}
 
@@ -244,6 +277,14 @@ export function WorkingParameterListView() {
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
       </Card>
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        entityName="working parameter"
+        loading={isDeleting}
+      />
     </DashboardContent>
   );
 }

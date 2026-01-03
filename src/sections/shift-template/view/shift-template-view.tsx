@@ -34,6 +34,7 @@ import {
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { ShiftTemplateTableToolbar } from '../shift-template-table-toolbar';
 
@@ -148,6 +149,9 @@ export function ShiftTemplateView() {
   const [filterName, setFilterName] = useState('');
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchTemplates = useCallback(async () => {
     setLoading(true);
@@ -207,9 +211,27 @@ export function ShiftTemplateView() {
   const handleDeleteTemplate = useCallback(() => {
     if (selectedTemplateId) {
       handleClosePopover();
-      handleDelete(selectedTemplateId);
+      setItemToDelete(selectedTemplateId);
+      setDeleteDialogOpen(true);
     }
-  }, [selectedTemplateId, handleDelete, handleClosePopover]);
+  }, [selectedTemplateId, handleClosePopover]);
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (itemToDelete) {
+      setIsDeleting(true);
+      await handleDelete(itemToDelete);
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [itemToDelete, handleDelete]);
+
+  const handleCloseDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [isDeleting]);
 
   const handleDeleteSelected = useCallback(async () => {
     try {
@@ -465,6 +487,14 @@ export function ShiftTemplateView() {
           </MenuItem>
         </MenuList>
       </Popover>
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        entityName="shift template"
+        loading={isDeleting}
+      />
     </DashboardContent>
   );
 }

@@ -25,6 +25,7 @@ import {
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { ProductCategoryTableRow } from '../product-category-table-row';
 import { ProductCategoryTableHead } from '../product-category-table-head';
@@ -44,6 +45,9 @@ export function ProductCategoryListView() {
   const [filterName, setFilterName] = useState('');
   const [productCategories, setProductCategories] = useState<ProductCategoryProps[]>([]);
   const [totalCount, setTotalCount] = useState(0);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { mutate: fetchProductCategories, isPending: isLoading } = useGetProductCategoryPage({
     onSuccess: (result) => {
@@ -103,14 +107,27 @@ export function ProductCategoryListView() {
     [router]
   );
 
-  const handleDeleteProductCategory = useCallback(
-    (id: string) => {
-      if (window.confirm('Are you sure you want to delete this product category?')) {
-        deleteProductCategory({ id });
-      }
-    },
-    [deleteProductCategory]
-  );
+  const handleDeleteProductCategory = useCallback((id: string) => {
+    setItemToDelete(id);
+    setDeleteDialogOpen(true);
+  }, []);
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (itemToDelete) {
+      setIsDeleting(true);
+      deleteProductCategory({ id: itemToDelete });
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [deleteProductCategory, itemToDelete]);
+
+  const handleCloseDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [isDeleting]);
 
   const handleImport = useCallback(() => {
     console.log('Import product categories');
@@ -266,6 +283,14 @@ export function ProductCategoryListView() {
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
       </Card>
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        entityName="product category"
+        loading={isDeleting}
+      />
     </DashboardContent>
   );
 }

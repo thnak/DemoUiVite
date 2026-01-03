@@ -35,6 +35,7 @@ type StopMachineReasonTableRowProps = {
   row: StopMachineReasonProps;
   selected: boolean;
   onSelectRow: () => void;
+  onDeleteRow?: () => void;
 };
 
 const getImpactColor = (impact: StopMachineImpact): 'success' | 'error' | 'warning' | 'default' => {
@@ -71,6 +72,7 @@ export function StopMachineReasonTableRow({
   row,
   selected,
   onSelectRow,
+  onDeleteRow,
 }: StopMachineReasonTableRowProps) {
   const router = useRouter();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
@@ -87,6 +89,13 @@ export function StopMachineReasonTableRow({
     handleClosePopover();
     router.push(`/stop-machine-reason/edit/${row.id}`);
   }, [handleClosePopover, router, row.id]);
+
+  const handleDelete = useCallback(() => {
+    handleClosePopover();
+    if (onDeleteRow) {
+      onDeleteRow();
+    }
+  }, [handleClosePopover, onDeleteRow]);
 
   return (
     <>
@@ -142,7 +151,7 @@ export function StopMachineReasonTableRow({
             Edit
           </MenuItem>
 
-          <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
+          <MenuItem onClick={handleDelete} sx={{ color: 'error.main' }}>
             <Iconify icon="solar:trash-bin-trash-bold" />
             Delete
           </MenuItem>
