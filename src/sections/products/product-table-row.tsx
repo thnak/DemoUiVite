@@ -22,6 +22,7 @@ import { Iconify } from 'src/components/iconify';
 
 export type ProductProps = {
   id: string;
+  code: string;
   name: string;
   coverUrl: string;
   category: string;

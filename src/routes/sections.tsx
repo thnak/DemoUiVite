@@ -9,8 +9,8 @@ import { DashboardLayout, FullWidthLayout } from 'src/layouts/dashboard';
 
 import { MachineSelectorProvider } from 'src/sections/oi/context/machine-selector-context';
 
+import { AnimatedOutlet } from './components';
 import { SvgColor } from '../components/svg-color';
-import { AnimatedOutlet } from './components/animated-outlet';
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +24,6 @@ export const AreaPage = lazy(() => import('src/pages/area'));
 export const AreaCreatePage = lazy(() => import('src/pages/area-create'));
 export const AreaEditPage = lazy(() => import('src/pages/area-edit'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
-export const ProductsPage = lazy(() => import('src/pages/products'));
 export const ProductListPage = lazy(() => import('src/pages/product-list'));
 export const ProductCreatePage = lazy(() => import('src/pages/product-create'));
 export const ProductEditPage = lazy(() => import('src/pages/product-edit'));

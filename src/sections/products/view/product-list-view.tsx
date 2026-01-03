@@ -79,7 +79,8 @@ export function ProductListView() {
 
   // Chuyển đổi API data sang format hiển thị
   const apiProducts: ProductProps[] = templates.map((p) => ({
-    id: p.code ?? '',
+    id: p.id ?? '',
+    code: p.code ?? '',
     name: p.name ?? '',
     coverUrl: p.imageUrl ?? '',
     createdAt: p.createdAt ?? new Date().toISOString(),
