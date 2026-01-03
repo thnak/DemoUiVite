@@ -23,6 +23,7 @@ import {
 } from 'src/api/hooks/generated/use-time-block-name';
 
 import { Iconify } from 'src/components/iconify';
+import { ImageEntityResourceUploader } from 'src/components/image-entity-resource-uploader';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +32,7 @@ interface TimeBlockNameFormData {
   name: string;
   description: string;
   colorHex: string;
+  imageUrl: string;
   translations: Record<string, string>;
 }
 
@@ -47,6 +49,7 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
     name: '',
     description: '',
     colorHex: '#1976d2',
+    imageUrl: '',
     translations: {},
   });
   const [isLoadingData, setIsLoadingData] = useState(isEdit);
@@ -67,6 +70,7 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
         name: timeBlockNameData.name || '',
         description: timeBlockNameData.description || '',
         colorHex: timeBlockNameData.colorHex || '#1976d2',
+        imageUrl: timeBlockNameData.imageUrl || '',
         translations: timeBlockNameData.translations || {},
       });
       setIsLoadingData(false);
@@ -142,6 +146,13 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
     []
   );
 
+  const handleImageUrlChange = useCallback((newImageUrl: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      imageUrl: newImageUrl,
+    }));
+  }, []);
+
   const handleAddTranslation = useCallback(() => {
     if (translationKey && translationValue) {
       setFormData((prev) => ({
@@ -186,6 +197,7 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
           { key: 'name', value: formData.name },
           { key: 'description', value: formData.description },
           { key: 'colorHex', value: formData.colorHex },
+          { key: 'imageUrl', value: formData.imageUrl },
           { key: 'translations', value: JSON.stringify(formData.translations) },
         ],
       });
@@ -197,6 +209,7 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
           name: formData.name,
           description: formData.description,
           colorHex: formData.colorHex,
+          imageUrl: formData.imageUrl,
           translations: formData.translations,
         },
       });
@@ -227,32 +240,46 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 4 }}>
-          <Card sx={{ p: 3 }}>
-            <Typography variant="h6" sx={{ mb: 3 }}>
-              Color
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <TextField
-                fullWidth
-                type="color"
-                label="Color"
-                value={formData.colorHex}
-                onChange={handleChange('colorHex')}
-                error={!!fieldErrors.colorHex}
-                helperText={fieldErrors.colorHex}
+          <Stack spacing={3}>
+            <Card sx={{ p: 3 }}>
+              <Typography variant="h6" sx={{ mb: 3 }}>
+                Image
+              </Typography>
+              <ImageEntityResourceUploader
+                imageUrl={formData.imageUrl}
+                onImageUrlChange={handleImageUrlChange}
+                aspectRatio={1}
+                previewSize={300}
               />
-              <Box
-                sx={{
-                  width: '100%',
-                  height: 100,
-                  borderRadius: 1,
-                  bgcolor: formData.colorHex,
-                  border: '1px solid',
-                  borderColor: 'divider',
-                }}
-              />
-            </Box>
-          </Card>
+            </Card>
+
+            <Card sx={{ p: 3 }}>
+              <Typography variant="h6" sx={{ mb: 3 }}>
+                Color
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <TextField
+                  fullWidth
+                  type="color"
+                  label="Color"
+                  value={formData.colorHex}
+                  onChange={handleChange('colorHex')}
+                  error={!!fieldErrors.colorHex}
+                  helperText={fieldErrors.colorHex}
+                />
+                <Box
+                  sx={{
+                    width: '100%',
+                    height: 100,
+                    borderRadius: 1,
+                    bgcolor: formData.colorHex,
+                    border: '1px solid',
+                    borderColor: 'divider',
+                  }}
+                />
+              </Box>
+            </Card>
+          </Stack>
         </Grid>
 
         <Grid size={{ xs: 12, md: 8 }}>

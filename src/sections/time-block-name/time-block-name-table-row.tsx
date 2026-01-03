@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
+import Avatar from '@mui/material/Avatar';
 import Popover from '@mui/material/Popover';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
@@ -12,6 +13,8 @@ import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { apiConfig } from 'src/api';
+
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
@@ -22,6 +25,7 @@ export type TimeBlockNameProps = {
   name: string;
   description: string;
   colorHex: string;
+  imageUrl?: string;
 };
 
 type TimeBlockNameTableRowProps = {
@@ -57,11 +61,22 @@ export function TimeBlockNameTableRow({
     handleEditRow();
   }, [handleClosePopover, handleEditRow]);
 
+  const imageUrl = row.imageUrl || `${apiConfig.baseUrl}/api/TimeBlockName/${row.id}/image`;
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
         <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={onSelectRow} />
+        </TableCell>
+
+        <TableCell>
+          <Avatar
+            alt={row.name}
+            src={imageUrl}
+            variant="rounded"
+            sx={{ width: 48, height: 48 }}
+          />
         </TableCell>
 
         <TableCell component="th" scope="row">
