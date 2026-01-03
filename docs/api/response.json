@@ -1899,7 +1899,7 @@
           "Auth"
         ],
         "summary": "Generate a one-time use QR code token for authenticated user",
-        "description": "This endpoint generates a secure one-time use token that can be encoded in a QR code.\r\nThe token expires after 2 minutes and can only be used once.\r\nThe authenticated user on one device can scan this QR code on another device to log in without entering credentials.",
+        "description": "This endpoint generates a secure one-time use token that can be encoded in a QR code.\r\nThe token expires after 2 minutes and can only be used once.\r\nThe authenticated user on one device can scan this QR code on another device to log in without entering\r\ncredentials.",
         "responses": {
           "200": {
             "description": "OK",
@@ -19757,7 +19757,7 @@
         "tags": [
           "Localization"
         ],
-        "summary": "upload excel file to update translations. the devault culture is vi-VN and it always have value while other culture can be empty\r\nif other culture is empty, it must be auto translated by Ollama",
+        "summary": "upload excel file to update translations. the devault culture is vi-VN and it always have value while other culture\r\ncan be empty\r\nif other culture is empty, it must be auto translated by Ollama",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -41770,6 +41770,55 @@
         }
       }
     },
+    "/api/TimeBlockName/{id}/image": {
+      "get": {
+        "tags": [
+          "TimeBlockName"
+        ],
+        "summary": "Lấy URL hình ảnh đại diện của tên khối thời gian theo Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Found"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/unit/{id}": {
       "get": {
         "tags": [
@@ -43601,175 +43650,100 @@
         }
       }
     },
-    "/api/User/upload-avatar": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Uploads and sets the user's avatar image.",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "description": "",
-                    "format": "binary"
-                  }
-                }
-              },
-              "encoding": {
-                "file": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserEntityValidationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserEntityValidationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserEntityValidationResult"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserEntityValidationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/User/upload-banner": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Uploads and sets the user's banner image.",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "description": "",
-                    "format": "binary"
-                  }
-                }
-              },
-              "encoding": {
-                "file": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserEntityValidationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserEntityValidationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserEntityValidationResult"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserEntityValidationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/User/get-user-avatar/{file}": {
+    "/api/User/{id}/avatar-image": {
       "get": {
         "tags": [
           "User"
         ],
-        "summary": "Gets the user's avatar image.",
+        "summary": "Lấy URL hình ảnh đại diện của người dùng theo Id",
         "parameters": [
           {
-            "name": "file",
+            "name": "id",
             "in": "path",
             "description": "",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/ObjectId"
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "302": {
+            "description": "Found"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/User/get-user-banner/{file}": {
+    "/api/User/{id}/avatar-banner": {
       "get": {
         "tags": [
           "User"
         ],
-        "summary": "Gets the user's banner image.",
+        "summary": "Lấy URL hình ảnh bìa của người dùng theo Id",
         "parameters": [
           {
-            "name": "file",
+            "name": "id",
             "in": "path",
             "description": "",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/ObjectId"
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/User/get-user-image": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Gets the user's avatar and banner image URLs.",
-        "responses": {
-          "200": {
-            "description": "OK"
+          "302": {
+            "description": "Found"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -48590,7 +48564,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2026-01-02"
+              "example": "2026-01-03"
             }
           },
           {
@@ -48600,7 +48574,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2026-01-02"
+              "example": "2026-01-03"
             }
           },
           {
@@ -49793,6 +49767,9 @@
             "type": "boolean",
             "description": "Indicates whether the entity is in draft status."
           },
+          "status": {
+            "$ref": "#/components/schemas/RouteStatus"
+          },
           "name": {
             "type": "string",
             "description": "Tên gọi để người dùng dễ nhận biết mục đích của route.",
@@ -49838,9 +49815,6 @@
             "type": "string",
             "description": "Chuỗi bí mật (secret) dùng để xác thực mã băm (HMAC) của payload.\r\nChỉ được sử dụng khi IsPayloadValidationEnabled = true.\r\n**Bảo mật**: Giá trị này KHÔNG NÊN được lưu dưới dạng plaintext. Hãy mã hóa nó.",
             "nullable": true
-          },
-          "status": {
-            "$ref": "#/components/schemas/RouteStatus"
           }
         },
         "additionalProperties": false
@@ -50884,13 +50858,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2026-01-02"
+            "example": "2026-01-03"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2026-01-02"
+            "example": "2026-01-03"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -51002,13 +50976,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2026-01-02"
+            "example": "2026-01-03"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2026-01-02"
+            "example": "2026-01-03"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -51031,7 +51005,7 @@
           },
           "mergeCase4ToShift1": {
             "type": "boolean",
-            "description": "Early Start Policy (Case 4): When true, runtime between WORKDAY_START and SHIFT_1_START \r\nis added to Shift 1 Performance. When false, logged as separate \"Early Production\" bucket."
+            "description": "Early Start Policy (Case 4): When true, runtime between WORKDAY_START and SHIFT_1_START\r\nis added to Shift 1 Performance. When false, logged as separate \"Early Production\" bucket."
           },
           "mergeCase5ToLatest": {
             "type": "boolean"
@@ -51179,12 +51153,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-02"
+            "example": "2026-01-03"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-02"
+            "example": "2026-01-03"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -51713,7 +51687,7 @@
           },
           "stateName": {
             "type": "string",
-            "description": "Name of the state. When StateId is all zeros, this will be \"Normal Operation\". Otherwise, it will be the name of the state representing the stop machine reason.",
+            "description": "Name of the state. When StateId is all zeros, this will be \"Normal Operation\". Otherwise, it will be the name of\r\nthe state representing the stop machine reason.",
             "nullable": true
           },
           "isUnplannedDowntime": {
@@ -53741,7 +53715,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-02"
+            "example": "2026-01-03"
           }
         },
         "additionalProperties": false
@@ -56308,7 +56282,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2026-01-02"
+            "example": "2026-01-03"
           },
           "locationId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -58698,7 +58672,7 @@
           },
           "scalingFactor": {
             "type": "number",
-            "description": "Scaling factor to be applied to the final output value. Default is 1.0 (no scaling). Negative values are allowed for scrap computing.",
+            "description": "Scaling factor to be applied to the final output value. Default is 1.0 (no scaling). Negative values are allowed\r\nfor scrap computing.",
             "format": "double"
           },
           "mappingMode": {
@@ -58789,7 +58763,7 @@
           },
           "scalingFactor": {
             "type": "number",
-            "description": "Scaling factor to be applied to the final output value. Default is 1.0 (no scaling). Negative values are allowed for scrap computing.",
+            "description": "Scaling factor to be applied to the final output value. Default is 1.0 (no scaling). Negative values are allowed\r\nfor scrap computing.",
             "format": "double"
           },
           "mappingMode": {
@@ -61567,6 +61541,9 @@
       "ProductInfo": {
         "type": "object",
         "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
           "code": {
             "type": "string",
             "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
@@ -62089,7 +62066,7 @@
             "type": "string",
             "description": "Date of the work.",
             "format": "date",
-            "example": "2026-01-02"
+            "example": "2026-01-03"
           },
           "shiftName": {
             "type": "string",
@@ -63868,7 +63845,7 @@
           },
           "returnFullQualifiedName": {
             "type": "string",
-            "description": "Gets the assembly-qualified name of the type, which includes the name of the assembly from which this Type object was loaded",
+            "description": "Gets the assembly-qualified name of the type, which includes the name of the assembly from which this Type object\r\nwas loaded",
             "nullable": true
           },
           "returnQualifiedName": {
@@ -66858,6 +66835,11 @@
             },
             "description": "Các bản dịch của tên lý do dừng máy",
             "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "URL hình ảnh đại diện cho tên khối thời gian",
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -67666,7 +67648,7 @@
             "items": {
               "type": "string"
             },
-            "description": "Gets or sets a list of connection strings for the replica set members, e.g., [\"host1:27017\", \"host2:27017\", \"host3:27017\"].",
+            "description": "Gets or sets a list of connection strings for the replica set members, e.g., [\"host1:27017\", \"host2:27017\",\r\n\"host3:27017\"].",
             "nullable": true
           },
           "replicaSetName": {
@@ -69278,6 +69260,9 @@
             "type": "boolean",
             "description": "Indicates whether the entity is in draft status."
           },
+          "pluginId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
           "code": {
             "type": "string",
             "description": "",
@@ -69305,9 +69290,6 @@
             "type": "string",
             "description": "Chuỗi bí mật dùng để tạo chữ ký HMAC, giúp phía nhận xác thực yêu cầu.\r\nCần được mã hóa khi lưu trong cơ sở dữ liệu.",
             "nullable": true
-          },
-          "pluginId": {
-            "$ref": "#/components/schemas/ObjectId"
           },
           "successCount": {
             "type": "integer",
@@ -69821,7 +69803,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "Đây là một concept mà chúng ta có thể dễ dàng mở rộng để quản lý. Chúng ta có thể tạo một thực thể mới gọi là WorkCellEntity hoặc ProductionLineEntity."
+        "description": "Đây là một concept mà chúng ta có thể dễ dàng mở rộng để quản lý. Chúng ta có thể tạo một thực thể mới gọi là\r\nWorkCellEntity hoặc ProductionLineEntity."
       },
       "WorkCellEntityBasePaginationResponse": {
         "type": "object",
@@ -69933,7 +69915,7 @@
             "type": "string",
             "description": "The specific work date this statistic applies to.",
             "format": "date",
-            "example": "2026-01-02"
+            "example": "2026-01-03"
           },
           "calendarId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -70619,11 +70601,11 @@
     },
     {
       "name": "ReportQuery",
-      "description": "Controller for executing report queries\r\nAPI routes follow the pattern: /api/reports/query/*\r\n\r\nSECURITY NOTES:\r\n- All endpoints are READ-ONLY. No data modification is allowed.\r\n- Authentication is REQUIRED for all endpoints (add [Authorize] attribute in production)\r\n- Queries are validated before execution to prevent injection attacks\r\n- Query complexity is limited to prevent DoS attacks"
+      "description": "Controller for executing report queries\r\nAPI routes follow the pattern: /api/reports/query/*\r\nSECURITY NOTES:\r\n- All endpoints are READ-ONLY. No data modification is allowed.\r\n- Authentication is REQUIRED for all endpoints (add [Authorize] attribute in production)\r\n- Queries are validated before execution to prevent injection attacks\r\n- Query complexity is limited to prevent DoS attacks"
     },
     {
       "name": "Reports",
-      "description": "Controller for managing report metadata and configuration\r\nAPI routes follow the pattern: /api/reports/*\r\n\r\nSECURITY NOTES:\r\n- All endpoints are READ-ONLY. No data modification is allowed.\r\n- Authentication is REQUIRED for all endpoints (add [Authorize] attribute in production)\r\n- Metadata endpoints provide read-only access to entity schemas\r\n- Field suggestion endpoint uses MongoDB $distinct for safe data retrieval"
+      "description": "Controller for managing report metadata and configuration\r\nAPI routes follow the pattern: /api/reports/*\r\nSECURITY NOTES:\r\n- All endpoints are READ-ONLY. No data modification is allowed.\r\n- Authentication is REQUIRED for all endpoints (add [Authorize] attribute in production)\r\n- Metadata endpoints provide read-only access to entity schemas\r\n- Field suggestion endpoint uses MongoDB $distinct for safe data retrieval"
     },
     {
       "name": "Role",
@@ -70704,7 +70686,8 @@
       "name": "Test"
     },
     {
-      "name": "TimeBlockName"
+      "name": "TimeBlockName",
+      "description": "Controller để xử lý các yêu cầu liên quan đến tên khối thời gian"
     },
     {
       "name": "Unit",
