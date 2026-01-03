@@ -53,6 +53,7 @@ export function TimeBlockNameListView() {
         name: item.name || '',
         description: item.description || '',
         colorHex: item.colorHex || '',
+        imageUrl: item.imageUrl || '',
       }));
       setTimeBlockNames(mappedTimeBlockNames);
       setTotalItems(data.totalItems || 0);
@@ -204,6 +205,7 @@ export function TimeBlockNameListView() {
                     )
                   }
                   headLabel={[
+                    { id: '', label: 'Image' },
                     { id: 'code', label: 'Code' },
                     { id: 'name', label: 'Name' },
                     { id: 'description', label: 'Description' },
