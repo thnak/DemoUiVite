@@ -154,8 +154,8 @@ export function WorkingParameterListView() {
       setSuccessMessage('Working parameter deleted successfully');
       fetchWorkingParameter();
     },
-    onError: (error: any) => {
-      setErrorMessage(error?.message || 'Failed to delete working parameter');
+    onError: () => {
+      setErrorMessage( 'Failed to delete working parameter');
     },
   });
 
