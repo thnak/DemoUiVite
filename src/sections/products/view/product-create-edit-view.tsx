@@ -104,15 +104,6 @@ export function ProductCreateEditView({
     []
   );
 
-  const handleSelectChange = useCallback(
-    (field: keyof ProductFormData) => (event: { target: { value: string } }) => {
-      setFormData((prev) => ({
-        ...prev,
-        [field]: event.target.value,
-      }));
-    },
-    []
-  );
 
   const handleCategoryChange = useCallback((value: string | null) => {
     setFormData((prev) => ({
@@ -193,6 +184,10 @@ export function ProductCreateEditView({
         if (formData.secondaryUnitOfMeasureId) {
           updates.push({ key: 'secondaryUnitOfMeasureId', value: formData.secondaryUnitOfMeasureId });
         }
+        if (imageUrl !== null) {
+          updates.push({ key: 'imageUrl', value: imageUrl });
+        }
+        updates.push({ key: 'isDraft', value: (!published).toString() });
         await updateProduct(currentProduct.id, updates);
       } else {
         const dimensions = (length !== undefined || width !== undefined || height !== undefined) 
@@ -208,6 +203,8 @@ export function ProductCreateEditView({
           productCategoryId: formData.categoryId || undefined,
           unitOfMeasureId: formData.unitOfMeasureId || undefined,
           secondaryUnitOfMeasureId: formData.secondaryUnitOfMeasureId || undefined,
+          imageUrl: imageUrl || undefined,
+          isDraft: !published,
         });
       }
     router.push('/products');
@@ -231,6 +228,8 @@ export function ProductCreateEditView({
     isEdit,
     currentProduct?.id,
     router,
+    imageUrl,
+    published,
   ]);
 
   const handleCancel = useCallback(() => {
