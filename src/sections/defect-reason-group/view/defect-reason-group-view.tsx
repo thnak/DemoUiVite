@@ -4,7 +4,9 @@ import { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
@@ -23,6 +25,7 @@ import {
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { emptyRows } from '../defect-reason-group-utils';
 import { DefectReasonGroupTableRow } from '../defect-reason-group-table-row';
@@ -43,6 +46,11 @@ export function DefectReasonGroupView() {
   const [defectReasonGroups, setDefectReasonGroups] = useState<DefectReasonGroupProps[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { mutate: fetchDefectReasonGroups } = useGetDefectReasonGroupPage({
     onSuccess: (data) => {
@@ -64,6 +72,7 @@ export function DefectReasonGroupView() {
 
   const { mutate: deleteDefectReasonGroupMutate } = useDeleteDefectReasonGroup({
     onSuccess: () => {
+      setSuccessMessage('Defect reason group deleted successfully');
       // Refetch after deletion
       fetchDefectReasonGroups({
         data: [{ sortBy: table.orderBy, descending: table.order === 'desc' }],
@@ -74,6 +83,9 @@ export function DefectReasonGroupView() {
         },
       });
       queryClient.invalidateQueries({ queryKey: defectReasonGroupKeys.all });
+    },
+    onError: (error: any) => {
+      setErrorMessage(error?.message || 'Failed to delete defect reason group');
     },
   });
 
@@ -90,12 +102,35 @@ export function DefectReasonGroupView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table.page, table.rowsPerPage, table.orderBy, table.order, filterName]);
 
-  const handleDeleteRow = useCallback(
-    (id: string) => {
-      deleteDefectReasonGroupMutate({ id });
-    },
-    [deleteDefectReasonGroupMutate]
-  );
+  const handleDeleteRow = useCallback((id: string) => {
+    setItemToDelete(id);
+    setDeleteDialogOpen(true);
+  }, []);
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (itemToDelete) {
+      setIsDeleting(true);
+      deleteDefectReasonGroupMutate({ id: itemToDelete });
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [deleteDefectReasonGroupMutate, itemToDelete]);
+
+  const handleCloseDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [isDeleting]);
+
+  const handleCloseSuccess = useCallback(() => {
+    setSuccessMessage(null);
+  }, []);
+
+  const handleCloseError = useCallback(() => {
+    setErrorMessage(null);
+  }, []);
 
   const notFound = !defectReasonGroups.length && !!filterName;
 
@@ -225,6 +260,36 @@ export function DefectReasonGroupView() {
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
       </Card>
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        entityName="defect reason group"
+        loading={isDeleting}
+      />
+
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </DashboardContent>
   );
 }

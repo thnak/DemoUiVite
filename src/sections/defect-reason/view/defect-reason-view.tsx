@@ -4,7 +4,9 @@ import { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
@@ -23,6 +25,7 @@ import {
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { emptyRows } from '../defect-reason-utils';
 import { DefectReasonTableRow } from '../defect-reason-table-row';
@@ -43,6 +46,11 @@ export function DefectReasonView() {
   const [defectReasons, setDefectReasons] = useState<DefectReasonProps[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { mutate: fetchDefectReasons } = useGetDefectReasonPage({
     onSuccess: (data) => {
@@ -66,6 +74,7 @@ export function DefectReasonView() {
 
   const { mutate: deleteDefectReasonMutate } = useDeleteDefectReason({
     onSuccess: () => {
+      setSuccessMessage('Defect reason deleted successfully');
       // Refetch defect reasons after deletion
       fetchDefectReasons({
         data: [{ sortBy: table.orderBy, descending: table.order === 'desc' }],
@@ -76,6 +85,9 @@ export function DefectReasonView() {
         },
       });
       queryClient.invalidateQueries({ queryKey: defectReasonKeys.all });
+    },
+    onError: (error: any) => {
+      setErrorMessage(error?.message || 'Failed to delete defect reason');
     },
   });
 
@@ -92,12 +104,35 @@ export function DefectReasonView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table.page, table.rowsPerPage, table.orderBy, table.order, filterName]);
 
-  const handleDeleteRow = useCallback(
-    (id: string) => {
-      deleteDefectReasonMutate({ id });
-    },
-    [deleteDefectReasonMutate]
-  );
+  const handleDeleteRow = useCallback((id: string) => {
+    setItemToDelete(id);
+    setDeleteDialogOpen(true);
+  }, []);
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (itemToDelete) {
+      setIsDeleting(true);
+      deleteDefectReasonMutate({ id: itemToDelete });
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [deleteDefectReasonMutate, itemToDelete]);
+
+  const handleCloseDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [isDeleting]);
+
+  const handleCloseSuccess = useCallback(() => {
+    setSuccessMessage(null);
+  }, []);
+
+  const handleCloseError = useCallback(() => {
+    setErrorMessage(null);
+  }, []);
 
   const notFound = !defectReasons.length && !!filterName;
 
@@ -229,6 +264,36 @@ export function DefectReasonView() {
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
       </Card>
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        entityName="defect reason"
+        loading={isDeleting}
+      />
+
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </DashboardContent>
   );
 }

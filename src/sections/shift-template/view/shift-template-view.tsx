@@ -5,10 +5,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
+import Alert from '@mui/material/Alert';
 import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Popover from '@mui/material/Popover';
+import Snackbar from '@mui/material/Snackbar';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import MenuList from '@mui/material/MenuList';
@@ -34,6 +36,7 @@ import {
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { ShiftTemplateTableToolbar } from '../shift-template-table-toolbar';
 
@@ -148,6 +151,11 @@ export function ShiftTemplateView() {
   const [filterName, setFilterName] = useState('');
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const fetchTemplates = useCallback(async () => {
     setLoading(true);
@@ -175,9 +183,11 @@ export function ShiftTemplateView() {
     async (id: string) => {
       try {
         await deleteShiftTemplate(id);
+        setSuccessMessage('Shift template deleted successfully');
         await fetchTemplates();
         setSelected((prev) => prev.filter((i) => i !== id));
-      } catch (err) {
+      } catch (err: any) {
+        setErrorMessage(err?.message || 'Failed to delete shift template');
         console.error('Error deleting shift template:', err);
       }
     },
@@ -207,9 +217,35 @@ export function ShiftTemplateView() {
   const handleDeleteTemplate = useCallback(() => {
     if (selectedTemplateId) {
       handleClosePopover();
-      handleDelete(selectedTemplateId);
+      setItemToDelete(selectedTemplateId);
+      setDeleteDialogOpen(true);
     }
-  }, [selectedTemplateId, handleDelete, handleClosePopover]);
+  }, [selectedTemplateId, handleClosePopover]);
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (itemToDelete) {
+      setIsDeleting(true);
+      await handleDelete(itemToDelete);
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [itemToDelete, handleDelete]);
+
+  const handleCloseDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [isDeleting]);
+
+  const handleCloseSuccess = useCallback(() => {
+    setSuccessMessage(null);
+  }, []);
+
+  const handleCloseError = useCallback(() => {
+    setErrorMessage(null);
+  }, []);
 
   const handleDeleteSelected = useCallback(async () => {
     try {
@@ -465,6 +501,36 @@ export function ShiftTemplateView() {
           </MenuItem>
         </MenuList>
       </Popover>
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        entityName="shift template"
+        loading={isDeleting}
+      />
+
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </DashboardContent>
   );
 }

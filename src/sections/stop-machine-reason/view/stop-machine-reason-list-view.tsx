@@ -6,8 +6,10 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Tabs from '@mui/material/Tabs';
+import Alert from '@mui/material/Alert';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
@@ -18,10 +20,14 @@ import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
-import { usePostapiStopMachineReasongetreasonpage } from 'src/api/hooks/generated/use-stop-machine-reason';
+import {
+  useDeleteStopMachineReason,
+  usePostapiStopMachineReasongetreasonpage,
+} from 'src/api/hooks/generated/use-stop-machine-reason';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { StopMachineReasonTableRow } from '../stop-machine-reason-table-row';
 import { StopMachineReasonTableHead } from '../stop-machine-reason-table-head';
@@ -45,6 +51,11 @@ export function StopMachineReasonListView() {
   const [totalItems, setTotalItems] = useState(0);
   const [groupCounts, setGroupCounts] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Determine which groups to query - 'all' means empty array
   // Memoize to prevent infinite loops in useEffect
@@ -80,6 +91,24 @@ export function StopMachineReasonListView() {
     },
     onError: () => {
       setIsLoading(false);
+    },
+  });
+
+  const { mutate: deleteStopMachineReasonMutate } = useDeleteStopMachineReason({
+    onSuccess: () => {
+      setSuccessMessage('Stop machine reason deleted successfully');
+      // Refetch data after deletion
+      fetchReasons({
+        data: groupsToQuery,
+        params: {
+          Search: filterName || undefined,
+          PageNumber: table.page,
+          PageSize: table.rowsPerPage,
+        },
+      });
+    },
+    onError: (error: any) => {
+      setErrorMessage(error?.message || 'Failed to delete stop machine reason');
     },
   });
 
@@ -120,6 +149,36 @@ export function StopMachineReasonListView() {
     },
     [table]
   );
+
+  const handleDeleteRow = useCallback((id: string) => {
+    setItemToDelete(id);
+    setDeleteDialogOpen(true);
+  }, []);
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (itemToDelete) {
+      setIsDeleting(true);
+      deleteStopMachineReasonMutate({ id: itemToDelete });
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [deleteStopMachineReasonMutate, itemToDelete]);
+
+  const handleCloseDeleteDialog = useCallback(() => {
+    if (!isDeleting) {
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
+  }, [isDeleting]);
+
+  const handleCloseSuccess = useCallback(() => {
+    setSuccessMessage(null);
+  }, []);
+
+  const handleCloseError = useCallback(() => {
+    setErrorMessage(null);
+  }, []);
 
   const notFound = !isLoading && !reasons.length;
 
@@ -261,6 +320,7 @@ export function StopMachineReasonListView() {
                         row={row}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
+                        onDeleteRow={() => handleDeleteRow(row.id)}
                       />
                     ))}
 
@@ -287,6 +347,36 @@ export function StopMachineReasonListView() {
           </>
         )}
       </Card>
+
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        entityName="stop machine reason"
+        loading={isDeleting}
+      />
+
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </DashboardContent>
   );
 }
