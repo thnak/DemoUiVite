@@ -1,4 +1,3 @@
-import type { StopType } from 'src/_mock';
 
 import type { StopMachineReasonProps } from './stop-machine-reason-table-row';
 

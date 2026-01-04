@@ -1,3 +1,5 @@
+import type { MappedMachine, AvailableMachine } from 'src/components/machine-mapping';
+
 import { useState, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
@@ -22,7 +24,13 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import {
   useCreateDefectReason,
   useUpdateDefectReason,
+  usePostapiDefectReasonaddmachinedefectreasonmapping,
+  useGetapiDefectReasongetdefectmappingsbydefectiddefectId,
+  useDeleteapiDefectReasondeletemachinedefectreasonmappingmappingId,
+  useGetapiDefectReasongetavailablemachinesfordefectreasondefectReasonId,
 } from 'src/api/hooks/generated/use-defect-reason';
+
+import { MachineMappingSection } from 'src/components/machine-mapping';
 
 // ----------------------------------------------------------------------
 
@@ -73,6 +81,50 @@ export function DefectReasonCreateEditView({
       currentDefectReason?.addScrapAndIncreaseTotalQuantity || false,
     colorHex: currentDefectReason?.colorHex || '',
     description: currentDefectReason?.description || '',
+  });
+
+  // Machine mapping state
+  const [availableMachines, setAvailableMachines] = useState<AvailableMachine[]>([]);
+
+  // Fetch mapped machines
+  const { data: mappedMachinesData, isLoading: isLoadingMapped, refetch: refetchMappedMachines } =
+    useGetapiDefectReasongetdefectmappingsbydefectiddefectId(currentDefectReason?.id || '', {
+      enabled: isEdit && !!currentDefectReason?.id,
+    });
+
+  // Get available machines mutation
+  const { mutate: getAvailableMachinesMutate, isPending: isLoadingAvailable } =
+    useGetapiDefectReasongetavailablemachinesfordefectreasondefectReasonId({
+      onSuccess: (data) => {
+        setAvailableMachines(
+          data.map((machine) => ({
+            machineId: String(machine.machineId),
+            machineName: machine.machineName || '',
+          }))
+        );
+      },
+    });
+
+  // Delete mapping mutation
+  const { mutate: deleteMappingMutate } =
+    useDeleteapiDefectReasondeletemachinedefectreasonmappingmappingId({
+      onSuccess: () => {
+        refetchMappedMachines();
+      },
+      onError: (error) => {
+        throw error;
+      },
+    });
+
+  // Add mapping mutation
+  const { mutate: addMappingMutate } = usePostapiDefectReasonaddmachinedefectreasonmapping({
+    onSuccess: () => {
+      refetchMappedMachines();
+      setAvailableMachines([]);
+    },
+    onError: (error) => {
+      throw error;
+    },
   });
 
   const { mutate: createDefectReasonMutate, isPending: isCreating } = useCreateDefectReason({
@@ -186,6 +238,68 @@ export function DefectReasonCreateEditView({
   const handleCancel = useCallback(() => {
     router.push('/defect-reasons');
   }, [router]);
+
+  // Machine mapping handlers
+  const handleSearchAvailable = useCallback(
+    (machineTypeId: string | null, machineGroupId: string | null) => {
+      if (currentDefectReason?.id && (machineTypeId || machineGroupId)) {
+        getAvailableMachinesMutate({
+          defectReasonId: currentDefectReason.id,
+          data: {
+            machineTypeId: machineTypeId || undefined,
+            machineGroupId: machineGroupId || undefined,
+          },
+        });
+      } else {
+        setAvailableMachines([]);
+      }
+    },
+    [currentDefectReason?.id, getAvailableMachinesMutate]
+  );
+
+  const handleAddMachines = useCallback(
+    async (machineIds: string[]) => {
+      if (!currentDefectReason?.id) {
+        throw new Error('Defect reason ID is required');
+      }
+
+      return new Promise<void>((resolve, reject) => {
+        addMappingMutate(
+          {
+            data: {
+              defectReasonId: currentDefectReason.id,
+              machineIds,
+            },
+          },
+          {
+            onSuccess: () => resolve(),
+            onError: (error) => reject(error),
+          }
+        );
+      });
+    },
+    [currentDefectReason?.id, addMappingMutate]
+  );
+
+  const handleRemoveMapping = useCallback(
+    async (mappingId: string) =>
+      new Promise<void>((resolve, reject) => {
+        deleteMappingMutate(
+          { mappingId },
+          {
+            onSuccess: () => resolve(),
+            onError: (error) => reject(error),
+          }
+        );
+      }),
+    [deleteMappingMutate]
+  );
+
+  const mappedMachines: MappedMachine[] =
+    mappedMachinesData?.map((machine) => ({
+      mappingId: String(machine.mappingId),
+      machineName: machine.machineName || '',
+    })) || [];
 
   return (
     <DashboardContent>
@@ -331,6 +445,19 @@ export function DefectReasonCreateEditView({
           </Button>
         </Box>
       </Card>
+
+      {/* Machine Mapping Section */}
+      <MachineMappingSection
+        disabled={!isEdit}
+        entityId={currentDefectReason?.id}
+        mappedMachines={mappedMachines}
+        isLoadingMapped={isLoadingMapped}
+        availableMachines={availableMachines}
+        isLoadingAvailable={isLoadingAvailable}
+        onSearchAvailable={handleSearchAvailable}
+        onAddMachines={handleAddMachines}
+        onRemoveMapping={handleRemoveMapping}
+      />
 
       <Snackbar
         open={!!(errorMessage || overallMessage)}
