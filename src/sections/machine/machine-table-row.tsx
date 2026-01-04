@@ -40,9 +40,9 @@ type MachineTableRowProps = {
 
 const getInputTypeColor = (inputType: MachineInputType): 'info' | 'warning' => {
   switch (inputType) {
-    case 'WeightChannels':
+    case 'weightedChannels':
       return 'info';
-    case 'PairChannel':
+    case 'pairParallel':
       return 'warning';
     default:
       return 'info';

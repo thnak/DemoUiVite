@@ -43,8 +43,8 @@ import type { MachineProps } from '../machine-table-row';
 
 const INPUT_TYPE_OPTIONS: { value: MachineInputType | 'all'; label: string }[] = [
   { value: 'all', label: 'All' },
-  { value: 'WeightChannels', label: 'Weight Channels' },
-  { value: 'PairChannel', label: 'Pair Channel' },
+  { value: 'weightedChannels', label: 'Weight Channels' },
+  { value: 'pairParallel', label: 'Pair Channel' },
 ];
 
 // Easing constants
@@ -238,12 +238,12 @@ export function MachineView() {
   const inputTypeCounts = useMemo(() => {
     const counts: Record<'all' | MachineInputType, number> = {
       all: machineProps.length,
-      WeightChannels: 0,
-      PairChannel: 0,
+      weightedChannels: 0,
+      pairParallel: 0,
     };
 
     machineProps.forEach((machine) => {
-      if (machine.inputType === 'WeightChannels' || machine.inputType === 'PairChannel') {
+      if (machine.inputType === 'weightedChannels' || machine.inputType === 'pairParallel') {
         counts[machine.inputType] += 1;
       }
     });
@@ -386,8 +386,8 @@ export function MachineView() {
                     ((tab.value === 'all' || tab.value === filterInputType) && 'filled') || 'soft'
                   }
                   color={
-                    (tab.value === 'WeightChannels' && 'info') ||
-                    (tab.value === 'PairChannel' && 'warning') ||
+                    (tab.value === 'weightedChannels' && 'info') ||
+                    (tab.value === 'pairParallel' && 'warning') ||
                     'default'
                   }
                 >

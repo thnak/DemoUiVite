@@ -522,9 +522,9 @@ export const _workingParameters = [...Array(20)].map((_, index) => ({
   speedLossThreshold: _speedLossThreshold(index),
 }));
 
-export type MachineInputType = 'WeightChannels' | 'PairChannel';
+export type MachineInputType = 'weightedChannels' | 'pairParallel';
 
-const MACHINE_INPUT_TYPES: MachineInputType[] = ['WeightChannels', 'PairChannel'];
+const MACHINE_INPUT_TYPES: MachineInputType[] = ['weightedChannels', 'pairParallel'];
 
 // OEE Data Types
 export type OEEData = {
