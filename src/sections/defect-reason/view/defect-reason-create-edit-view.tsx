@@ -1,6 +1,6 @@
 import type { MappedMachine, AvailableMachine } from 'src/components/machine-mapping';
 
-import { useState, useCallback, type ChangeEvent } from 'react';
+import { useState, useEffect, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -85,6 +85,10 @@ export function DefectReasonCreateEditView({
 
   // Machine mapping state
   const [availableMachines, setAvailableMachines] = useState<AvailableMachine[]>([]);
+  const [searchParams, setSearchParams] = useState<{
+    machineTypeId?: string;
+    machineGroupId?: string;
+  } | null>(null);
 
   // Fetch mapped machines
   const { data: mappedMachinesData, isLoading: isLoadingMapped, refetch: refetchMappedMachines } =
@@ -92,18 +96,30 @@ export function DefectReasonCreateEditView({
       enabled: isEdit && !!currentDefectReason?.id,
     });
 
-  // Get available machines mutation
-  const { mutate: getAvailableMachinesMutate, isPending: isLoadingAvailable } =
-    useGetapiDefectReasongetavailablemachinesfordefectreasondefectReasonId({
-      onSuccess: (data) => {
-        setAvailableMachines(
-          data.map((machine) => ({
-            machineId: String(machine.machineId),
-            machineName: machine.machineName || '',
-          }))
-        );
-      },
-    });
+  // Get available machines query
+  const {
+    data: availableMachinesData,
+    isLoading: isLoadingAvailable,
+    refetch: refetchAvailableMachines,
+  } = useGetapiDefectReasongetavailablemachinesfordefectreasondefectReasonId(
+    currentDefectReason?.id || '',
+    searchParams || undefined,
+    {
+      enabled: false, // We'll manually trigger this with refetch
+    }
+  );
+
+  // Update available machines when data changes
+  useEffect(() => {
+    if (availableMachinesData) {
+      setAvailableMachines(
+        availableMachinesData.map((machine) => ({
+          machineId: String(machine.machineId),
+          machineName: machine.machineName || '',
+        }))
+      );
+    }
+  }, [availableMachinesData]);
 
   // Delete mapping mutation
   const { mutate: deleteMappingMutate } =
@@ -243,18 +259,18 @@ export function DefectReasonCreateEditView({
   const handleSearchAvailable = useCallback(
     (machineTypeId: string | null, machineGroupId: string | null) => {
       if (currentDefectReason?.id && (machineTypeId || machineGroupId)) {
-        getAvailableMachinesMutate({
-          defectReasonId: currentDefectReason.id,
-          data: {
-            machineTypeId: machineTypeId || undefined,
-            machineGroupId: machineGroupId || undefined,
-          },
+        setSearchParams({
+          machineTypeId: machineTypeId || undefined,
+          machineGroupId: machineGroupId || undefined,
         });
+        // Trigger the query manually
+        refetchAvailableMachines();
       } else {
         setAvailableMachines([]);
+        setSearchParams(null);
       }
     },
-    [currentDefectReason?.id, getAvailableMachinesMutate]
+    [currentDefectReason?.id, refetchAvailableMachines]
   );
 
   const handleAddMachines = useCallback(

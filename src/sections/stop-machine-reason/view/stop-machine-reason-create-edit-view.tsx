@@ -96,6 +96,10 @@ export function StopMachineReasonCreateEditView({
 
   // Machine mapping state
   const [availableMachines, setAvailableMachines] = useState<AvailableMachine[]>([]);
+  const [searchParams, setSearchParams] = useState<{
+    machineTypeId?: string;
+    machineGroupId?: string;
+  } | null>(null);
 
   // Fetch stop machine reason data if editing
   const { data: reasonData } = useGetStopMachineReasonById(id || '', {
@@ -108,18 +112,30 @@ export function StopMachineReasonCreateEditView({
       enabled: isEdit && !!id,
     });
 
-  // Get available machines mutation
-  const { mutate: getAvailableMachinesMutate, isPending: isLoadingAvailable } =
-    useGetapiStopMachineReasongetavailablemachinesforstopreasonstopReasonId({
-      onSuccess: (data) => {
-        setAvailableMachines(
-          data.map((machine) => ({
-            machineId: String(machine.machineId),
-            machineName: machine.machineName || '',
-          }))
-        );
-      },
-    });
+  // Get available machines query
+  const {
+    data: availableMachinesData,
+    isLoading: isLoadingAvailable,
+    refetch: refetchAvailableMachines,
+  } = useGetapiStopMachineReasongetavailablemachinesforstopreasonstopReasonId(
+    id || '',
+    searchParams || undefined,
+    {
+      enabled: false, // We'll manually trigger this with refetch
+    }
+  );
+
+  // Update available machines when data changes
+  useEffect(() => {
+    if (availableMachinesData) {
+      setAvailableMachines(
+        availableMachinesData.map((machine) => ({
+          machineId: String(machine.machineId),
+          machineName: machine.machineName || '',
+        }))
+      );
+    }
+  }, [availableMachinesData]);
 
   // Delete mapping mutation
   const { mutate: deleteMappingMutate } =
@@ -330,18 +346,18 @@ export function StopMachineReasonCreateEditView({
   const handleSearchAvailable = useCallback(
     (machineTypeId: string | null, machineGroupId: string | null) => {
       if (id && (machineTypeId || machineGroupId)) {
-        getAvailableMachinesMutate({
-          stopReasonId: id,
-          data: {
-            machineTypeId: machineTypeId || undefined,
-            machineGroupId: machineGroupId || undefined,
-          },
+        setSearchParams({
+          machineTypeId: machineTypeId || undefined,
+          machineGroupId: machineGroupId || undefined,
         });
+        // Trigger the query manually
+        refetchAvailableMachines();
       } else {
         setAvailableMachines([]);
+        setSearchParams(null);
       }
     },
-    [id, getAvailableMachinesMutate]
+    [id, refetchAvailableMachines]
   );
 
   const handleAddMachines = useCallback(
