@@ -1,11 +1,13 @@
 import type { MachineInputType } from 'src/_mock';
 
-import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
 import Popover from '@mui/material/Popover';
+import Skeleton from '@mui/material/Skeleton';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import MenuList from '@mui/material/MenuList';
@@ -13,6 +15,8 @@ import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
+
+import { getapiMachinemachineIdproductstotalmapped } from 'src/api/services/generated/machine';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -28,6 +32,7 @@ export type MachineProps = {
   inputType: MachineInputType;
   numberOfInputChannels: number;
   workCalendar: string;
+  mappedProductsCount?: number;
 };
 
 type MachineTableRowProps = {
@@ -58,6 +63,26 @@ export function MachineTableRow({
 }: MachineTableRowProps) {
   const navigate = useNavigate();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
+  const [productCount, setProductCount] = useState<number | null>(null);
+  const [isLoadingCount, setIsLoadingCount] = useState(true);
+
+  // Lazy load product count
+  useEffect(() => {
+    const fetchProductCount = async () => {
+      try {
+        setIsLoadingCount(true);
+        const count = await getapiMachinemachineIdproductstotalmapped(row.id);
+        setProductCount(count);
+      } catch (error) {
+        console.error('Failed to fetch product count:', error);
+        setProductCount(0);
+      } finally {
+        setIsLoadingCount(false);
+      }
+    };
+
+    fetchProductCount();
+  }, [row.id]);
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     setOpenPopover(event.currentTarget);
@@ -128,6 +153,19 @@ export function MachineTableRow({
         <TableCell align="center">{row.numberOfInputChannels}</TableCell>
 
         <TableCell>{row.workCalendar}</TableCell>
+
+        <TableCell align="center">
+          {isLoadingCount ? (
+            <Skeleton variant="rectangular" width={40} height={24} sx={{ mx: 'auto', borderRadius: 1 }} />
+          ) : (
+            <Chip
+              label={productCount ?? 0}
+              size="small"
+              color={productCount && productCount > 0 ? 'success' : 'default'}
+              sx={{ minWidth: 40 }}
+            />
+          )}
+        </TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenPopover}>
