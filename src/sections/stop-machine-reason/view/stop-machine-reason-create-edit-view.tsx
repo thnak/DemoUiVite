@@ -1,5 +1,6 @@
 import type { ChangeEvent } from 'react';
 import type { StopMachineReasonEntity } from 'src/api/types/generated';
+import type { MappedMachine, AvailableMachine } from 'src/components/machine-mapping';
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -24,10 +25,15 @@ import {
   useUpdateStopMachineReason,
   useGetStopMachineReasonById,
   useGenerateNewStopMachineReasonCode,
+  usePostapiStopMachineReasonaddmachinestopreasonmapping,
+  useGetapiStopMachineReasongetstopreasonmappingsbyreasonidreasonId,
+  useDeleteapiStopMachineReasondeletestopmachinereasonmappingmappingId,
+  useGetapiStopMachineReasongetavailablemachinesforstopreasonstopReasonId,
 } from 'src/api/hooks/generated/use-stop-machine-reason';
 
 import { Iconify } from 'src/components/iconify';
 import { ColorPicker } from 'src/components/color-utils';
+import { MachineMappingSection } from 'src/components/machine-mapping';
 import { StopMachineReasonGroupSelector } from 'src/components/selectors/stop-machine-reason-group-selector';
 
 // ----------------------------------------------------------------------
@@ -88,9 +94,53 @@ export function StopMachineReasonCreateEditView({
   const [translationKey, setTranslationKey] = useState('');
   const [translationValue, setTranslationValue] = useState('');
 
+  // Machine mapping state
+  const [availableMachines, setAvailableMachines] = useState<AvailableMachine[]>([]);
+
   // Fetch stop machine reason data if editing
   const { data: reasonData } = useGetStopMachineReasonById(id || '', {
     enabled: isEdit && !!id,
+  });
+
+  // Fetch mapped machines
+  const { data: mappedMachinesData, isLoading: isLoadingMapped, refetch: refetchMappedMachines } =
+    useGetapiStopMachineReasongetstopreasonmappingsbyreasonidreasonId(id || '', {
+      enabled: isEdit && !!id,
+    });
+
+  // Get available machines mutation
+  const { mutate: getAvailableMachinesMutate, isPending: isLoadingAvailable } =
+    useGetapiStopMachineReasongetavailablemachinesforstopreasonstopReasonId({
+      onSuccess: (data) => {
+        setAvailableMachines(
+          data.map((machine) => ({
+            machineId: String(machine.machineId),
+            machineName: machine.machineName || '',
+          }))
+        );
+      },
+    });
+
+  // Delete mapping mutation
+  const { mutate: deleteMappingMutate } =
+    useDeleteapiStopMachineReasondeletestopmachinereasonmappingmappingId({
+      onSuccess: () => {
+        refetchMappedMachines();
+      },
+      onError: (error) => {
+        throw error;
+      },
+    });
+
+  // Add mapping mutation
+  const { mutate: addMappingMutate } = usePostapiStopMachineReasonaddmachinestopreasonmapping({
+    onSuccess: () => {
+      refetchMappedMachines();
+      setAvailableMachines([]);
+    },
+    onError: (error) => {
+      throw error;
+    },
   });
 
   // Generate new code hook
@@ -275,6 +325,68 @@ export function StopMachineReasonCreateEditView({
       createReason({ data: entityData });
     }
   }, [isEdit, id, formData, createReason, updateReason]);
+
+  // Machine mapping handlers
+  const handleSearchAvailable = useCallback(
+    (machineTypeId: string | null, machineGroupId: string | null) => {
+      if (id && (machineTypeId || machineGroupId)) {
+        getAvailableMachinesMutate({
+          stopReasonId: id,
+          data: {
+            machineTypeId: machineTypeId || undefined,
+            machineGroupId: machineGroupId || undefined,
+          },
+        });
+      } else {
+        setAvailableMachines([]);
+      }
+    },
+    [id, getAvailableMachinesMutate]
+  );
+
+  const handleAddMachines = useCallback(
+    async (machineIds: string[]) => {
+      if (!id) {
+        throw new Error('Stop reason ID is required');
+      }
+
+      return new Promise<void>((resolve, reject) => {
+        addMappingMutate(
+          {
+            data: {
+              stopReasonId: id,
+              machineIds,
+            },
+          },
+          {
+            onSuccess: () => resolve(),
+            onError: (error) => reject(error),
+          }
+        );
+      });
+    },
+    [id, addMappingMutate]
+  );
+
+  const handleRemoveMapping = useCallback(
+    async (mappingId: string) =>
+      new Promise<void>((resolve, reject) => {
+        deleteMappingMutate(
+          { mappingId },
+          {
+            onSuccess: () => resolve(),
+            onError: (error) => reject(error),
+          }
+        );
+      }),
+    [deleteMappingMutate]
+  );
+
+  const mappedMachines: MappedMachine[] =
+    mappedMachinesData?.map((machine) => ({
+      mappingId: String(machine.mappingId),
+      machineName: machine.machineName || '',
+    })) || [];
 
   if (isLoadingData) {
     return (
@@ -501,6 +613,19 @@ export function StopMachineReasonCreateEditView({
             </Stack>
           )}
         </Card>
+
+        {/* Machine Mapping Section */}
+        <MachineMappingSection
+          disabled={!isEdit}
+          entityId={id}
+          mappedMachines={mappedMachines}
+          isLoadingMapped={isLoadingMapped}
+          availableMachines={availableMachines}
+          isLoadingAvailable={isLoadingAvailable}
+          onSearchAvailable={handleSearchAvailable}
+          onAddMachines={handleAddMachines}
+          onRemoveMapping={handleRemoveMapping}
+        />
 
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
           <Button
