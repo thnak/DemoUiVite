@@ -1,8 +1,5 @@
 import type { MachineInputType } from 'src/_mock';
-import type {
-  MachineDto,
-  OutputCalculationMode,
-} from 'src/api/types/generated';
+import type { MachineDto, OutputCalculationMode } from 'src/api/types/generated';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
@@ -93,7 +90,12 @@ export function MachineView() {
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-
+  const [inputTypeCounts, setInputTypeCounts] =
+    useState<Record<MachineInputType | 'all', number>>({
+      all: 0,
+      weightedChannels: 0,
+      pairParallel: 0,
+    });
   // Map MachineEntity (API) -> MachineProps (UI)
   const machineProps: MachineProps[] = useMemo(
     () =>
@@ -127,7 +129,64 @@ export function MachineView() {
 
       setMachines(response.items || []);
       setTotalItems(response.totalItems || 0);
+      // Robustly parse outputCalculationModeCounts which may be an array of objects,
+      // a record/object map, or null/undefined. Populate the UI counts with sensible
+      // fallbacks and prefer typed numeric values.
+      (() => {
+        const outputCounts = response.outputCalculationModeCounts as unknown;
+
+        let allCount = 0;
+        let weightedChannelsCount = 0;
+        let pairParallelCount = 0;
+
+        if (Array.isArray(outputCounts)) {
+          // Expecting items like: { mode: string, count: number }
+          for (const item of outputCounts) {
+            if (item && typeof item === 'object') {
+              const mode = (item as any).mode as string | undefined;
+              const count = Number((item as any).count ?? 0);
+              allCount += count;
+              if (mode === 'WeightChannels' || mode === 'weightedChannels') {
+                weightedChannelsCount = count;
+              }
+              if (mode === 'PairParallel' || mode === 'pairParallel') {
+                pairParallelCount = count;
+              }
+            }
+          }
+        } else if (outputCounts && typeof outputCounts === 'object') {
+          // Could be a record like { WeightChannels: 5, PairParallel: 2 } or similar
+          for (const [key, val] of Object.entries(outputCounts as Record<string, unknown>)) {
+            const count = Number(val ?? 0);
+            allCount += count;
+            const normalizedKey = key.toLowerCase();
+            if (normalizedKey === 'weightedChannels') {
+              weightedChannelsCount = count;
+            }
+            if (normalizedKey === 'pairParallel') {
+              pairParallelCount = count;
+            }
+          }
+        }
+
+        // Fallback: some backend responses expose pairParallelCount separately
+        if (!pairParallelCount && typeof (response as any).pairParallelCount === 'number') {
+          pairParallelCount = (response as any).pairParallelCount as number;
+        }
+
+        // If allCount is still zero but totalItems exists, use that as a fallback for "all"
+        if (!allCount && typeof response.totalItems === 'number') {
+          allCount = response.totalItems;
+        }
+
+        setInputTypeCounts({
+          all: allCount || 0,
+          weightedChannels: weightedChannelsCount || 0,
+          pairParallel: pairParallelCount || 0,
+        });
+      })();
     } catch (err) {
+      console.error('Failed to fetch machines:', err);
       setError('Failed to load machines');
     } finally {
       setLoading(false);
@@ -143,7 +202,7 @@ export function MachineView() {
       try {
         setIsDeleting(true);
         const result = await deleteMachine(id);
-        
+
         // Check if deletion was successful
         if (isValidationSuccess(result)) {
           await fetchMachines();
@@ -166,27 +225,25 @@ export function MachineView() {
     [fetchMachines]
   );
 
-  const handleDeleteSelected = useCallback(async () => {
-    setBulkDeleteDialogOpen(true);
-  }, []);
+  // Bulk delete flow is triggered from the table toolbar/actions. Open confirmation dialog directly where needed.
 
   const handleConfirmBulkDelete = useCallback(async () => {
     try {
       setIsDeleting(true);
-      
+
       // Delete all selected machines and collect results
       const results = await Promise.all(selected.map((id) => deleteMachine(id)));
-      
+
       // Check if any deletions failed
       const failedDeletions = results.filter((result) => !isValidationSuccess(result));
-      
+
       if (failedDeletions.length > 0) {
         // Show error for failed deletions
         const errorMsg = `Failed to delete ${failedDeletions.length} machine(s)`;
         console.error('Bulk delete validation failed:', errorMsg);
         setError(errorMsg);
       }
-      
+
       await fetchMachines();
       setSelected([]);
       setBulkDeleteDialogOpen(false);
@@ -199,10 +256,10 @@ export function MachineView() {
   }, [selected, fetchMachines]);
 
   const handleCloseBulkDeleteDialog = useCallback(() => {
-    if (!isDeleting) {
-      setBulkDeleteDialogOpen(false);
-    }
-  }, [isDeleting]);
+     if (!isDeleting) {
+       setBulkDeleteDialogOpen(false);
+     }
+   }, [isDeleting]);
 
   const handleSelectAll = useCallback(
     (checked: boolean) => {
@@ -232,23 +289,6 @@ export function MachineView() {
   const areas = useMemo(() => {
     const uniqueAreas = [...new Set(machineProps.map((m) => m.area).filter(Boolean))];
     return uniqueAreas.sort();
-  }, [machineProps]);
-
-  // Calculate input type counts
-  const inputTypeCounts = useMemo(() => {
-    const counts: Record<'all' | MachineInputType, number> = {
-      all: machineProps.length,
-      weightedChannels: 0,
-      pairParallel: 0,
-    };
-
-    machineProps.forEach((machine) => {
-      if (machine.inputType === 'weightedChannels' || machine.inputType === 'pairParallel') {
-        counts[machine.inputType] += 1;
-      }
-    });
-
-    return counts;
   }, [machineProps]);
 
   // Apply client-side filters (sorting only, search is done server-side)
@@ -283,18 +323,18 @@ export function MachineView() {
     setPage(0);
   }, []);
 
-  const handleEditMachine = useCallback((id: string) => {
-    // Navigate to edit page
-    router.push(`/machines/${id}/edit`);
-  }, [router]);
-
-  const handleDeleteMachine = useCallback(
+  const handleEditMachine = useCallback(
     (id: string) => {
-      setItemToDelete(id);
-      setDeleteDialogOpen(true);
+      // Navigate to edit page
+      router.push(`/machines/${id}/edit`);
     },
-    []
+    [router]
   );
+
+  const handleDeleteMachine = useCallback((id: string) => {
+    setItemToDelete(id);
+    setDeleteDialogOpen(true);
+  }, []);
 
   const handleConfirmDelete = useCallback(() => {
     if (itemToDelete) {
@@ -424,77 +464,77 @@ export function MachineView() {
             exit="exit"
           >
             <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <MachineTableHead
-                order={table.order}
-                orderBy={table.orderBy}
-                rowCount={dataFiltered.length}
-                numSelected={selected.length}
-                onSort={table.onSort}
-                onSelectAllRows={handleSelectAll}
-                headLabel={[
-                  { id: 'name', label: 'Machine' },
-                  { id: 'area', label: 'Area' },
-                  { id: 'inputType', label: 'Input Type' },
-                  { id: 'numberOfInputChannels', label: 'Channels', align: 'center' },
-                  { id: 'workCalendar', label: 'Work Calendar' },
-                  { id: '' },
-                ]}
-              />
-              <TableBody>
-                {loading ? (
-                  <tr>
-                    <td colSpan={6} style={{ textAlign: 'center', padding: 20 }}>
-                      Loading...
-                    </td>
-                  </tr>
-                ) : error ? (
-                  <tr>
-                    <td colSpan={6} style={{ textAlign: 'center', padding: 20, color: 'red' }}>
-                      {error}
-                    </td>
-                  </tr>
-                ) : dataFiltered.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} style={{ textAlign: 'center', padding: 20 }}>
-                      {notFound ? (
-                        <MachineTableNoData searchQuery={filterName} />
-                      ) : (
-                        'No data available'
-                      )}
-                    </td>
-                  </tr>
-                ) : (
-                  <>
-                    {dataFiltered.map((row) => (
-                      <MachineTableRow
-                        key={row.id}
-                        row={row}
-                        selected={selected.includes(row.id)}
-                        onSelectRow={() => handleSelectOne(row.id)}
-                        onEditRow={() => handleEditMachine(row.id)}
-                        onDeleteRow={() => handleDeleteMachine(row.id)}
-                      />
-                    ))}
+              <TableContainer sx={{ overflow: 'unset' }}>
+                <Table sx={{ minWidth: 800 }}>
+                  <MachineTableHead
+                    order={table.order}
+                    orderBy={table.orderBy}
+                    rowCount={dataFiltered.length}
+                    numSelected={selected.length}
+                    onSort={table.onSort}
+                    onSelectAllRows={handleSelectAll}
+                    headLabel={[
+                      { id: 'name', label: 'Machine' },
+                      { id: 'area', label: 'Area' },
+                      { id: 'inputType', label: 'Input Type' },
+                      { id: 'numberOfInputChannels', label: 'Channels', align: 'center' },
+                      { id: 'workCalendar', label: 'Work Calendar' },
+                      { id: '' },
+                    ]}
+                  />
+                  <TableBody>
+                    {loading ? (
+                      <tr>
+                        <td colSpan={6} style={{ textAlign: 'center', padding: 20 }}>
+                          Loading...
+                        </td>
+                      </tr>
+                    ) : error ? (
+                      <tr>
+                        <td colSpan={6} style={{ textAlign: 'center', padding: 20, color: 'red' }}>
+                          {error}
+                        </td>
+                      </tr>
+                    ) : dataFiltered.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} style={{ textAlign: 'center', padding: 20 }}>
+                          {notFound ? (
+                            <MachineTableNoData searchQuery={filterName} />
+                          ) : (
+                            'No data available'
+                          )}
+                        </td>
+                      </tr>
+                    ) : (
+                      <>
+                        {dataFiltered.map((row) => (
+                          <MachineTableRow
+                            key={row.id}
+                            row={row}
+                            selected={selected.includes(row.id)}
+                            onSelectRow={() => handleSelectOne(row.id)}
+                            onEditRow={() => handleEditMachine(row.id)}
+                            onDeleteRow={() => handleDeleteMachine(row.id)}
+                          />
+                        ))}
 
-                    <MachineTableEmptyRows height={68} emptyRows={emptyRowsCount} />
-                  </>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Scrollbar>
+                        <MachineTableEmptyRows height={68} emptyRows={emptyRowsCount} />
+                      </>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Scrollbar>
 
-        <TablePagination
-          component="div"
-          page={page}
-          count={totalItems}
-          rowsPerPage={rowsPerPage}
-          onPageChange={handleChangePage}
-          rowsPerPageOptions={[...STANDARD_ROWS_PER_PAGE_OPTIONS]}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+            <TablePagination
+              component="div"
+              page={page}
+              count={totalItems}
+              rowsPerPage={rowsPerPage}
+              onPageChange={handleChangePage}
+              rowsPerPageOptions={[...STANDARD_ROWS_PER_PAGE_OPTIONS]}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
           </motion.div>
         </AnimatePresence>
       </Card>
