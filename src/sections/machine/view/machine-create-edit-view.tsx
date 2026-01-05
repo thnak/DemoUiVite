@@ -34,10 +34,10 @@ import { isValidationSuccess } from 'src/utils/validation-result';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
-  getapiMachinemachineIdproductsunmapped,
-  getapiMachinemachineIdproductsmapped,
   postapiMachinemachineIdproductsadd,
+  getapiMachinemachineIdproductsmapped,
   postapiMachinemachineIdproductsremove,
+  getapiMachinemachineIdproductsunmapped,
 } from 'src/api/services/generated/machine';
 import {
   useCreateMachine,
@@ -52,8 +52,8 @@ import { CalendarSelector } from 'src/components/selectors/calendar-selector';
 import { MachineTypeSelector } from 'src/components/selectors/machine-type-selector';
 import { ImageEntityResourceUploader } from 'src/components/image-entity-resource-uploader';
 import {
-  ProductMappingSection,
   type MappedProduct,
+  ProductMappingSection,
   type AvailableProduct,
 } from 'src/components/product-mapping';
 
@@ -518,7 +518,7 @@ export function MachineCreateEditView({
       }
 
       const result = await postapiMachinemachineIdproductsadd(currentMachine.id, productIds);
-      if (!result.isValid) {
+      if (!result.isSuccess) {
         throw new Error(result.message || 'Failed to add products');
       }
 
@@ -536,7 +536,7 @@ export function MachineCreateEditView({
       }
 
       const result = await postapiMachinemachineIdproductsremove(currentMachine.id, [productId]);
-      if (!result.isValid) {
+      if (!result.isSuccess) {
         throw new Error(result.message || 'Failed to remove product');
       }
 
