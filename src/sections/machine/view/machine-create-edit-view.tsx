@@ -34,6 +34,12 @@ import { isValidationSuccess } from 'src/utils/validation-result';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
+  getapiMachinemachineIdproductsunmapped,
+  getapiMachinemachineIdproductsmapped,
+  postapiMachinemachineIdproductsadd,
+  postapiMachinemachineIdproductsremove,
+} from 'src/api/services/generated/machine';
+import {
   useCreateMachine,
   useUpdateMachine,
   useGetapiMachinemachineIddevicemappings,
@@ -45,6 +51,11 @@ import { AreaSelector } from 'src/components/selectors/area-selector';
 import { CalendarSelector } from 'src/components/selectors/calendar-selector';
 import { MachineTypeSelector } from 'src/components/selectors/machine-type-selector';
 import { ImageEntityResourceUploader } from 'src/components/image-entity-resource-uploader';
+import {
+  ProductMappingSection,
+  type MappedProduct,
+  type AvailableProduct,
+} from 'src/components/product-mapping';
 
 // ----------------------------------------------------------------------
 
@@ -115,6 +126,12 @@ export function MachineCreateEditView({
   const [goodOutputMappings, setGoodOutputMappings] = useState<SensorOutputMapping[]>([]);
   const [scrapOutputMappings, setScrapOutputMappings] = useState<SensorOutputMapping[]>([]);
   const [draggedItem, setDraggedItem] = useState<DraggedSensorMapping | null>(null);
+
+  // Product mapping state
+  const [mappedProducts, setMappedProducts] = useState<MappedProduct[]>([]);
+  const [availableProducts, setAvailableProducts] = useState<AvailableProduct[]>([]);
+  const [isLoadingMappedProducts, setIsLoadingMappedProducts] = useState(false);
+  const [isLoadingAvailableProducts, setIsLoadingAvailableProducts] = useState(false);
 
   // Fetch device mappings for edit mode
   const { data: deviceMappings, isLoading: isLoadingDevices } =
@@ -447,6 +464,94 @@ export function MachineCreateEditView({
   const handleCancel = useCallback(() => {
     router.push('/machines');
   }, [router]);
+
+  // Product mapping handlers
+  const fetchMappedProducts = useCallback(async () => {
+    if (!isEdit || !currentMachine?.id) return;
+
+    setIsLoadingMappedProducts(true);
+    try {
+      const response = await getapiMachinemachineIdproductsmapped(currentMachine.id, {
+        page: 0,
+        pageSize: 100,
+      });
+      const products: MappedProduct[] = (response.items || []).map((item) => ({
+        productId: String(item.productId),
+        productName: item.productName || '',
+        imageUrl: item.imageUrl,
+      }));
+      setMappedProducts(products);
+    } catch (error) {
+      console.error('Failed to fetch mapped products:', error);
+    } finally {
+      setIsLoadingMappedProducts(false);
+    }
+  }, [isEdit, currentMachine?.id]);
+
+  const handleSearchAvailableProducts = useCallback(async () => {
+    if (!isEdit || !currentMachine?.id) return;
+
+    setIsLoadingAvailableProducts(true);
+    try {
+      const response = await getapiMachinemachineIdproductsunmapped(currentMachine.id, {
+        page: 0,
+        pageSize: 100,
+      });
+      const products: AvailableProduct[] = (response.items || []).map((item) => ({
+        productId: String(item.productId),
+        productName: item.productName || '',
+        imageUrl: item.imageUrl,
+      }));
+      setAvailableProducts(products);
+    } catch (error) {
+      console.error('Failed to fetch available products:', error);
+      setErrorMessage('Failed to load available products');
+    } finally {
+      setIsLoadingAvailableProducts(false);
+    }
+  }, [isEdit, currentMachine?.id]);
+
+  const handleAddProducts = useCallback(
+    async (productIds: string[]) => {
+      if (!currentMachine?.id) {
+        throw new Error('Machine ID is required');
+      }
+
+      const result = await postapiMachinemachineIdproductsadd(currentMachine.id, productIds);
+      if (!result.isValid) {
+        throw new Error(result.message || 'Failed to add products');
+      }
+
+      // Refresh both lists
+      await fetchMappedProducts();
+      setAvailableProducts([]);
+    },
+    [currentMachine?.id, fetchMappedProducts]
+  );
+
+  const handleRemoveProduct = useCallback(
+    async (productId: string) => {
+      if (!currentMachine?.id) {
+        throw new Error('Machine ID is required');
+      }
+
+      const result = await postapiMachinemachineIdproductsremove(currentMachine.id, [productId]);
+      if (!result.isValid) {
+        throw new Error(result.message || 'Failed to remove product');
+      }
+
+      // Refresh mapped products
+      await fetchMappedProducts();
+    },
+    [currentMachine?.id, fetchMappedProducts]
+  );
+
+  // Fetch mapped products on load for edit mode
+  useEffect(() => {
+    if (isEdit && currentMachine?.id) {
+      fetchMappedProducts();
+    }
+  }, [isEdit, currentMachine?.id, fetchMappedProducts]);
 
   return (
     <DashboardContent>
@@ -805,6 +910,19 @@ export function MachineCreateEditView({
                 </Button>
               </Box>
             )}
+
+            {/* Product Mapping Section */}
+            <ProductMappingSection
+              disabled={!isEdit}
+              entityId={currentMachine?.id}
+              mappedProducts={mappedProducts}
+              isLoadingMapped={isLoadingMappedProducts}
+              availableProducts={availableProducts}
+              isLoadingAvailable={isLoadingAvailableProducts}
+              onSearchAvailable={handleSearchAvailableProducts}
+              onAddProducts={handleAddProducts}
+              onRemoveProduct={handleRemoveProduct}
+            />
 
             {/* Action Buttons */}
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>

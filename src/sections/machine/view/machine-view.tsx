@@ -479,25 +479,26 @@ export function MachineView() {
                       { id: 'inputType', label: 'Input Type' },
                       { id: 'numberOfInputChannels', label: 'Channels', align: 'center' },
                       { id: 'workCalendar', label: 'Work Calendar' },
+                      { id: 'mappedProducts', label: 'Mapped Products', align: 'center' },
                       { id: '' },
                     ]}
                   />
                   <TableBody>
                     {loading ? (
                       <tr>
-                        <td colSpan={6} style={{ textAlign: 'center', padding: 20 }}>
+                        <td colSpan={7} style={{ textAlign: 'center', padding: 20 }}>
                           Loading...
                         </td>
                       </tr>
                     ) : error ? (
                       <tr>
-                        <td colSpan={6} style={{ textAlign: 'center', padding: 20, color: 'red' }}>
+                        <td colSpan={7} style={{ textAlign: 'center', padding: 20, color: 'red' }}>
                           {error}
                         </td>
                       </tr>
                     ) : dataFiltered.length === 0 ? (
                       <tr>
-                        <td colSpan={6} style={{ textAlign: 'center', padding: 20 }}>
+                        <td colSpan={7} style={{ textAlign: 'center', padding: 20 }}>
                           {notFound ? (
                             <MachineTableNoData searchQuery={filterName} />
                           ) : (
