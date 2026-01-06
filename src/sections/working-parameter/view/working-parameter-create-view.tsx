@@ -35,7 +35,11 @@ import {
   postapiWorkingParameterproductIdcreateupfrommappedproducts,
 } from '../../../api';
 
-import type { ObjectId, GetCreatedWorkingParaResult, GetMappedMachineByProductIdResult } from '../../../api/types/generated';
+import type {
+  ObjectId,
+  GetCreatedWorkingParaResult,
+  GetMappedMachineByProductIdResult,
+} from '../../../api/types/generated';
 
 // ----------------------------------------------------------------------
 
@@ -231,12 +235,7 @@ export function WorkingParameterCreateView() {
             <Typography variant="h6" sx={{ mb: 3 }}>
               Select Product
             </Typography>
-            <ProductSelector
-              value={productId}
-              onChange={setProductId}
-              label="Product"
-              required
-            />
+            <ProductSelector value={productId} onChange={setProductId} label="Product" required />
           </Card>
         </Grid>
 
@@ -301,19 +300,28 @@ export function WorkingParameterCreateView() {
 
             <Grid size={{ xs: 12 }}>
               <Card sx={{ p: 3 }}>
-                <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box
+                  sx={{
+                    mb: 2,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
                   <Typography variant="h6">Select Machines</Typography>
                   <TextField
                     size="small"
                     placeholder="Search machines..."
                     value={machineSearch}
                     onChange={(e) => setMachineSearch(e.target.value)}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Iconify icon="eva:search-fill" />
-                        </InputAdornment>
-                      ),
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Iconify icon="eva:search-fill" />
+                          </InputAdornment>
+                        ),
+                      },
                     }}
                     sx={{ width: 300 }}
                   />
@@ -374,7 +382,14 @@ export function WorkingParameterCreateView() {
                     </Table>
                   </TableContainer>
                 </Scrollbar>
-                <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box
+                  sx={{
+                    mt: 2,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
                   <Typography variant="body2" color="text.secondary">
                     {selectedMachineIds.length} machine(s) selected
                   </Typography>
@@ -426,7 +441,9 @@ export function WorkingParameterCreateView() {
                                 <IconButton
                                   color="error"
                                   onClick={() =>
-                                    handleDeleteParameter(param.workingParameterId?.toString() || '')
+                                    handleDeleteParameter(
+                                      param.workingParameterId?.toString() || ''
+                                    )
                                   }
                                 >
                                   <Iconify icon="solar:trash-bin-trash-bold" />
