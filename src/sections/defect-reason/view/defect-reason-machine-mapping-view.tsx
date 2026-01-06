@@ -51,6 +51,7 @@ export function DefectReasonMachineMappingView(props: DefectReasonMachineMapping
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [availableMachines, setAvailableMachines] = useState<AvailableMachine[]>([]);
+  const [mappedSearchText, setMappedSearchText] = useState('');
   const [searchParams, setSearchParams] = useState<{
     machineTypeId?: string;
     machineGroupId?: string;
@@ -63,9 +64,13 @@ export function DefectReasonMachineMappingView(props: DefectReasonMachineMapping
 
   // Fetch mapped machines
   const { data: mappedMachinesData, isLoading: isLoadingMapped, refetch: refetchMappedMachines } =
-    useGetapiDefectReasongetdefectmappingsbydefectiddefectId(id || '', {
-      enabled: !!id,
-    });
+    useGetapiDefectReasongetdefectmappingsbydefectiddefectId(
+      id || '',
+      { search: mappedSearchText },
+      {
+        enabled: !!id,
+      }
+    );
 
   // Get available machines query
   const {
@@ -343,9 +348,29 @@ export function DefectReasonMachineMappingView(props: DefectReasonMachineMapping
             <Typography variant="h6" sx={{ mb: 2 }}>
               Mapped Machines ({mappedMachines.length})
             </Typography>
+            
+            {/* Search for mapped machines */}
+            <TextField
+              fullWidth
+              size="small"
+              placeholder="Search mapped machines..."
+              value={mappedSearchText}
+              onChange={(e) => setMappedSearchText(e.target.value)}
+              sx={{ mb: 2 }}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+            
             <Box
               sx={{
-                height: 'calc(100% - 50px)',
+                height: 'calc(100% - 110px)',
                 border: 1,
                 borderColor: 'divider',
                 borderRadius: 1,
@@ -371,7 +396,7 @@ export function DefectReasonMachineMappingView(props: DefectReasonMachineMapping
                 </Box>
               ) : (
                 <List
-                  style={{ height: window.innerHeight - 350, width: '100%' }}
+                  style={{ height: window.innerHeight - 410, width: '100%' }}
                   rowCount={mappedMachines.length}
                   rowHeight={ITEM_HEIGHT}
                   rowComponent={MappedMachineRow}
