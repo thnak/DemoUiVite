@@ -93984,6 +93984,9 @@
       "GetWorkingParaByMachineIdResult": {
         "type": "object",
         "properties": {
+          "workingParameterId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
           "productName": {
             "type": "string",
             "description": "Product Name",
@@ -94016,6 +94019,9 @@
       "GetWorkingParaByProductIdResult": {
         "type": "object",
         "properties": {
+          "workingParameterId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
           "machineName": {
             "type": "string",
             "description": "Machine Name",
