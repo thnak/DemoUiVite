@@ -46,6 +46,7 @@ export function MachineProductMappingView(props: MachineProductMappingViewProps)
   const [availableProducts, setAvailableProducts] = useState<AvailableProduct[]>([]);
   const [selectedProductIds, setSelectedProductIds] = useState<string[]>([]);
   const [searchText, setSearchText] = useState('');
+  const [mappedSearchText, setMappedSearchText] = useState('');
   const [isLoadingMapped, setIsLoadingMapped] = useState(false);
   const [isLoadingAvailable, setIsLoadingAvailable] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
@@ -66,6 +67,7 @@ export function MachineProductMappingView(props: MachineProductMappingViewProps)
       const response = await getapiMachinemachineIdproductsmapped(id, {
         page: 0,
         pageSize: 1000, // Fetch more for virtual rendering
+        search: mappedSearchText || undefined,
       });
       const products: MappedProduct[] = (response.items || []).map((item) => ({
         productId: String(item.productId),
@@ -79,7 +81,7 @@ export function MachineProductMappingView(props: MachineProductMappingViewProps)
     } finally {
       setIsLoadingMapped(false);
     }
-  }, [id]);
+  }, [id, mappedSearchText]);
 
   // Fetch available products
   const handleSearchAvailable = useCallback(async () => {
@@ -316,9 +318,29 @@ export function MachineProductMappingView(props: MachineProductMappingViewProps)
             <Typography variant="h6" sx={{ mb: 2 }}>
               Mapped Products ({mappedProducts.length})
             </Typography>
+            
+            {/* Search for mapped products */}
+            <TextField
+              fullWidth
+              size="small"
+              placeholder="Search mapped products..."
+              value={mappedSearchText}
+              onChange={(e) => setMappedSearchText(e.target.value)}
+              sx={{ mb: 2 }}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+            
             <Box
               sx={{
-                height: 'calc(100% - 50px)',
+                height: 'calc(100% - 110px)',
                 border: 1,
                 borderColor: 'divider',
                 borderRadius: 1,
@@ -344,7 +366,7 @@ export function MachineProductMappingView(props: MachineProductMappingViewProps)
                 </Box>
               ) : (
                 <List
-                  style={{ height: window.innerHeight - 350, width: '100%' }}
+                  style={{ height: window.innerHeight - 410, width: '100%' }}
                   rowCount={mappedProducts.length}
                   rowHeight={ITEM_HEIGHT}
                   rowComponent={MappedProductRow}
