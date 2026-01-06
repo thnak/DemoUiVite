@@ -521,7 +521,7 @@ Every entity list page must include:
    - Import and Export buttons use `variant="outlined"`
    - Add button uses `variant="contained"`
    - Button gap: `1.5`
-   - Icons: `solar:cloud-upload-bold` (Import), `mdi:export` (Export), `mingcute:add-line` (Add)
+   - Icons: `solar:cloud-upload-bold` (Import), `solar:cloud-download-bold` (Export), `mingcute:add-line` (Add)
 
 2. **Table Row Component** (`{entity}-table-row.tsx`)
    - Checkbox for selection
@@ -620,7 +620,7 @@ Every entity list page must include:
     >
       Import
     </Button>
-    <Button variant="outlined" color="inherit" startIcon={<Iconify icon="mdi:export" />}>
+    <Button variant="outlined" color="inherit" startIcon={<Iconify icon="solar:cloud-download-bold" />}>
       Export
     </Button>
     <Button

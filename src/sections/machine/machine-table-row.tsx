@@ -112,6 +112,11 @@ export function MachineTableRow({
     navigate(`/machines/${row.id}/tracking`);
   }, [navigate, row.id, handleClosePopover]);
 
+  const handleManageProductMapping = useCallback(() => {
+    handleClosePopover();
+    navigate(`/machines/${row.id}/product-mapping`);
+  }, [navigate, row.id, handleClosePopover]);
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -205,6 +210,11 @@ export function MachineTableRow({
           <MenuItem onClick={handleViewOEE} sx={{ color: 'primary.main' }}>
             <Iconify icon="mdi:gauge" />
             OEE Dashboard
+          </MenuItem>
+
+          <MenuItem onClick={handleManageProductMapping} sx={{ color: 'secondary.main' }}>
+            <Iconify icon="solar:settings-bold-duotone" />
+            Product Mapping
           </MenuItem>
 
           <MenuItem onClick={handleEdit}>

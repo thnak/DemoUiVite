@@ -33,6 +33,7 @@ export const WorkingParameterEditPage = lazy(() => import('src/pages/working-par
 export const StopMachineReasonListPage = lazy(() => import('src/pages/stop-machine-reason-list'));
 export const StopMachineReasonCreatePage = lazy(() => import('src/pages/stop-machine-reason-create'));
 export const StopMachineReasonEditPage = lazy(() => import('src/pages/stop-machine-reason-edit'));
+export const StopMachineReasonMachineMappingPage = lazy(() => import('src/pages/stop-machine-reason-machine-mapping'));
 export const StopMachineReasonGroupListPage = lazy(() => import('src/pages/stop-machine-reason-group-list'));
 export const StopMachineReasonGroupCreatePage = lazy(() => import('src/pages/stop-machine-reason-group-create'));
 export const StopMachineReasonGroupEditPage = lazy(() => import('src/pages/stop-machine-reason-group-edit'));
@@ -42,6 +43,7 @@ export const ProductCategoryEditPage = lazy(() => import('src/pages/product-cate
 export const MachineListPage = lazy(() => import('src/pages/machine-list'));
 export const MachineCreatePage = lazy(() => import('src/pages/machine-create'));
 export const MachineEditPage = lazy(() => import('src/pages/machine-edit'));
+export const MachineProductMappingPage = lazy(() => import('src/pages/machine-product-mapping'));
 export const MachineOEEPage = lazy(() => import('src/pages/machine-oee'));
 export const MachineTrackingPage = lazy(() => import('src/pages/machine-tracking'));
 export const DemoDashboardPage = lazy(() => import('src/pages/demo/dashboard'));
@@ -61,6 +63,7 @@ export const DefectReasonGroupEditPage = lazy(() => import('src/pages/defect-rea
 export const DefectReasonPage = lazy(() => import('src/pages/defect-reason'));
 export const DefectReasonCreatePage = lazy(() => import('src/pages/defect-reason-create'));
 export const DefectReasonEditPage = lazy(() => import('src/pages/defect-reason-edit'));
+export const DefectReasonMachineMappingPage = lazy(() => import('src/pages/defect-reason-machine-mapping'));
 export const CalendarListPage = lazy(() => import('src/pages/calendar-list'));
 export const CalendarCreatePage = lazy(() => import('src/pages/calendar-create'));
 export const CalendarEditPage = lazy(() => import('src/pages/calendar-edit'));
@@ -146,6 +149,7 @@ export const routesSection: RouteObject[] = [
       { path: 'stop-machine-reason', element: <StopMachineReasonListPage /> },
       { path: 'stop-machine-reason/create', element: <StopMachineReasonCreatePage /> },
       { path: 'stop-machine-reason/edit/:id', element: <StopMachineReasonEditPage /> },
+      { path: 'stop-machine-reason/:id/machine-mapping', element: <StopMachineReasonMachineMappingPage /> },
       { path: 'stop-machine-reason-group', element: <StopMachineReasonGroupListPage /> },
       { path: 'stop-machine-reason-group/create', element: <StopMachineReasonGroupCreatePage /> },
       { path: 'stop-machine-reason-group/edit/:id', element: <StopMachineReasonGroupEditPage /> },
@@ -155,6 +159,7 @@ export const routesSection: RouteObject[] = [
       { path: 'machines', element: <MachineListPage /> },
       { path: 'machines/create', element: <MachineCreatePage /> },
       { path: 'machines/:id/edit', element: <MachineEditPage /> },
+      { path: 'machines/:id/product-mapping', element: <MachineProductMappingPage /> },
       { path: 'machines/:id/oee', element: <MachineOEEPage /> },
       { path: 'machines/:id/tracking', element: <MachineTrackingPage /> },
       { path: 'downtime-report', element: <DowntimeReportPage /> },
@@ -174,6 +179,7 @@ export const routesSection: RouteObject[] = [
       { path: 'defect-reasons', element: <DefectReasonPage /> },
       { path: 'defect-reasons/create', element: <DefectReasonCreatePage /> },
       { path: 'defect-reasons/:id/edit', element: <DefectReasonEditPage /> },
+      { path: 'defect-reasons/:id/machine-mapping', element: <DefectReasonMachineMappingPage /> },
       { path: 'calendars', element: <CalendarListPage /> },
       { path: 'calendars/create', element: <CalendarCreatePage /> },
       { path: 'calendars/:id/edit', element: <CalendarEditPage /> },

@@ -213,7 +213,7 @@ export function WorkingParameterListView() {
         </Box>
         <Box sx={{ display: 'flex', gap: 1.5 }}>
           <Button variant="outlined" color="inherit" startIcon={<Iconify icon="solar:cloud-upload-bold" />}>Import</Button>
-          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="mdi:export" />}>Export</Button>
+          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="solar:cloud-download-bold" />}>Export</Button>
           <Button
             variant="contained"
             color="inherit"

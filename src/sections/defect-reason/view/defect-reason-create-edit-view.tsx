@@ -1,6 +1,5 @@
-import type { MappedMachine, AvailableMachine } from 'src/components/machine-mapping';
 
-import { useState, useEffect, useCallback, type ChangeEvent } from 'react';
+import { useState, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -24,13 +23,10 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import {
   useCreateDefectReason,
   useUpdateDefectReason,
-  usePostapiDefectReasonaddmachinedefectreasonmapping,
-  useGetapiDefectReasongetdefectmappingsbydefectiddefectId,
-  useDeleteapiDefectReasondeletemachinedefectreasonmappingmappingId,
-  useGetapiDefectReasongetavailablemachinesfordefectreasondefectReasonId,
 } from 'src/api/hooks/generated/use-defect-reason';
 
-import { MachineMappingSection } from 'src/components/machine-mapping';
+import { Iconify } from 'src/components/iconify';
+
 
 // ----------------------------------------------------------------------
 
@@ -81,66 +77,6 @@ export function DefectReasonCreateEditView({
       currentDefectReason?.addScrapAndIncreaseTotalQuantity || false,
     colorHex: currentDefectReason?.colorHex || '',
     description: currentDefectReason?.description || '',
-  });
-
-  // Machine mapping state
-  const [availableMachines, setAvailableMachines] = useState<AvailableMachine[]>([]);
-  const [searchParams, setSearchParams] = useState<{
-    machineTypeId?: string;
-    machineGroupId?: string;
-  } | null>(null);
-
-  // Fetch mapped machines
-  const { data: mappedMachinesData, isLoading: isLoadingMapped, refetch: refetchMappedMachines } =
-    useGetapiDefectReasongetdefectmappingsbydefectiddefectId(currentDefectReason?.id || '', {
-      enabled: isEdit && !!currentDefectReason?.id,
-    });
-
-  // Get available machines query
-  const {
-    data: availableMachinesData,
-    isLoading: isLoadingAvailable,
-    refetch: refetchAvailableMachines,
-  } = useGetapiDefectReasongetavailablemachinesfordefectreasondefectReasonId(
-    currentDefectReason?.id || '',
-    searchParams || undefined,
-    {
-      enabled: false, // We'll manually trigger this with refetch
-    }
-  );
-
-  // Update available machines when data changes
-  useEffect(() => {
-    if (availableMachinesData) {
-      setAvailableMachines(
-        availableMachinesData.map((machine) => ({
-          machineId: String(machine.machineId),
-          machineName: machine.machineName || '',
-        }))
-      );
-    }
-  }, [availableMachinesData]);
-
-  // Delete mapping mutation
-  const { mutate: deleteMappingMutate } =
-    useDeleteapiDefectReasondeletemachinedefectreasonmappingmappingId({
-      onSuccess: () => {
-        refetchMappedMachines();
-      },
-      onError: (error) => {
-        throw error;
-      },
-    });
-
-  // Add mapping mutation
-  const { mutate: addMappingMutate } = usePostapiDefectReasonaddmachinedefectreasonmapping({
-    onSuccess: () => {
-      refetchMappedMachines();
-      setAvailableMachines([]);
-    },
-    onError: (error) => {
-      throw error;
-    },
   });
 
   const { mutate: createDefectReasonMutate, isPending: isCreating } = useCreateDefectReason({
@@ -254,68 +190,6 @@ export function DefectReasonCreateEditView({
   const handleCancel = useCallback(() => {
     router.push('/defect-reasons');
   }, [router]);
-
-  // Machine mapping handlers
-  const handleSearchAvailable = useCallback(
-    (machineTypeId: string | null, machineGroupId: string | null) => {
-      if (currentDefectReason?.id && (machineTypeId || machineGroupId)) {
-        setSearchParams({
-          machineTypeId: machineTypeId || undefined,
-          machineGroupId: machineGroupId || undefined,
-        });
-        // Trigger the query manually
-        refetchAvailableMachines();
-      } else {
-        setAvailableMachines([]);
-        setSearchParams(null);
-      }
-    },
-    [currentDefectReason?.id, refetchAvailableMachines]
-  );
-
-  const handleAddMachines = useCallback(
-    async (machineIds: string[]) => {
-      if (!currentDefectReason?.id) {
-        throw new Error('Defect reason ID is required');
-      }
-
-      return new Promise<void>((resolve, reject) => {
-        addMappingMutate(
-          {
-            data: {
-              defectReasonId: currentDefectReason.id,
-              machineIds,
-            },
-          },
-          {
-            onSuccess: () => resolve(),
-            onError: (error) => reject(error),
-          }
-        );
-      });
-    },
-    [currentDefectReason?.id, addMappingMutate]
-  );
-
-  const handleRemoveMapping = useCallback(
-    async (mappingId: string) =>
-      new Promise<void>((resolve, reject) => {
-        deleteMappingMutate(
-          { mappingId },
-          {
-            onSuccess: () => resolve(),
-            onError: (error) => reject(error),
-          }
-        );
-      }),
-    [deleteMappingMutate]
-  );
-
-  const mappedMachines: MappedMachine[] =
-    mappedMachinesData?.map((machine) => ({
-      mappingId: String(machine.mappingId),
-      machineName: machine.machineName || '',
-    })) || [];
 
   return (
     <DashboardContent>
@@ -463,17 +337,33 @@ export function DefectReasonCreateEditView({
       </Card>
 
       {/* Machine Mapping Section */}
-      <MachineMappingSection
-        disabled={!isEdit}
-        entityId={currentDefectReason?.id}
-        mappedMachines={mappedMachines}
-        isLoadingMapped={isLoadingMapped}
-        availableMachines={availableMachines}
-        isLoadingAvailable={isLoadingAvailable}
-        onSearchAvailable={handleSearchAvailable}
-        onAddMachines={handleAddMachines}
-        onRemoveMapping={handleRemoveMapping}
-      />
+      {isEdit && currentDefectReason?.id ? (
+        <Card sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+            <Typography variant="h6">Machine Mapping</Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<Iconify icon="solar:settings-bold-duotone" />}
+              onClick={() => router.push(`/defect-reasons/${currentDefectReason.id}/machine-mapping`)}
+            >
+              Manage Machine Mapping
+            </Button>
+          </Box>
+          <Typography variant="body2" color="text.secondary">
+            Click the button above to manage machine mappings for this defect reason on a dedicated page with better performance.
+          </Typography>
+        </Card>
+      ) : (
+        <Card sx={{ p: 3, bgcolor: 'background.neutral' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+            <Iconify icon="solar:bell-bing-bold-duotone" width={24} />
+            <Typography variant="body2" color="text.secondary">
+              Machine mapping will be available after creating the defect reason. Please save the form first.
+            </Typography>
+          </Box>
+        </Card>
+      )}
 
       <Snackbar
         open={!!(errorMessage || overallMessage)}
