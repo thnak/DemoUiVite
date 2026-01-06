@@ -169,7 +169,7 @@ export function WorkingParameterCreateView() {
     } finally {
       setLoading(false);
     }
-  }, [productId, selectedMachineIds, formData]);
+  }, [productId, selectedMachineIds, formData, fetchCreatedParameters]);
 
   const handleDeleteParameter = useCallback((id: string) => {
     setItemToDelete(id);
