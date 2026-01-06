@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 import type { MappedMachine, AvailableMachine } from 'src/components/machine-mapping';
 
-import { FixedSizeList } from 'react-window';
+import { List } from 'react-window';
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -177,7 +177,7 @@ export function StopMachineReasonMachineMappingView(
 
   const handleSelectOne = useCallback((machineId: string) => {
     setSelectedMachineIds((prev) =>
-      prev.includes(machineId) ? prev.filter((id) => id !== machineId) : [...prev, machineId]
+      prev.includes(machineId) ? prev.filter((mid) => mid !== machineId) : [...prev, machineId]
     );
   }, []);
 
@@ -239,12 +239,12 @@ export function StopMachineReasonMachineMappingView(
     filteredAvailableMachines.length > 0 &&
     filteredAvailableMachines.every((machine) => selectedMachineIds.includes(machine.machineId));
 
-  // Render row for mapped machines
-  const renderMappedRow = ({ index, style }: { index: number; style: React.CSSProperties }) => {
+  // Render row for mapped machines - component for List
+  const MappedMachineRow = ({ index, style, ariaAttributes }: any) => {
     const machine = mappedMachines[index];
     return (
       <Box
-        key={machine.mappingId}
+        {...ariaAttributes}
         style={style}
         sx={{
           display: 'flex',
@@ -270,14 +270,14 @@ export function StopMachineReasonMachineMappingView(
     );
   };
 
-  // Render row for available machines
-  const renderAvailableRow = ({ index, style }: { index: number; style: React.CSSProperties }) => {
+  // Render row for available machines - component for List
+  const AvailableMachineRow = ({ index, style, ariaAttributes }: any) => {
     const machine = filteredAvailableMachines[index];
     const isSelected = selectedMachineIds.includes(machine.machineId);
 
     return (
       <Box
-        key={machine.machineId}
+        {...ariaAttributes}
         style={style}
         sx={{
           display: 'flex',
@@ -374,14 +374,13 @@ export function StopMachineReasonMachineMappingView(
                   </Typography>
                 </Box>
               ) : (
-                <FixedSizeList
-                  height={window.innerHeight - 350}
-                  itemCount={mappedMachines.length}
-                  itemSize={ITEM_HEIGHT}
-                  width="100%"
-                >
-                  {renderMappedRow}
-                </FixedSizeList>
+                <List
+                  style={{ height: window.innerHeight - 350, width: '100%' }}
+                  rowCount={mappedMachines.length}
+                  rowHeight={ITEM_HEIGHT}
+                  rowComponent={MappedMachineRow}
+                  rowProps={{}}
+                />
               )}
             </Box>
           </Card>
@@ -478,14 +477,13 @@ export function StopMachineReasonMachineMappingView(
                   </Typography>
                 </Box>
               ) : (
-                <FixedSizeList
-                  height={window.innerHeight - 530}
-                  itemCount={filteredAvailableMachines.length}
-                  itemSize={ITEM_HEIGHT}
-                  width="100%"
-                >
-                  {renderAvailableRow}
-                </FixedSizeList>
+                <List
+                  style={{ height: window.innerHeight - 530, width: '100%' }}
+                  rowCount={filteredAvailableMachines.length}
+                  rowHeight={ITEM_HEIGHT}
+                  rowComponent={AvailableMachineRow}
+                  rowProps={{}}
+                />
               )}
             </Box>
 

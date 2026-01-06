@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 import type { MappedProduct, AvailableProduct } from 'src/components/product-mapping';
 
-import { FixedSizeList } from 'react-window';
+import { List } from 'react-window';
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -20,13 +20,13 @@ import InputAdornment from '@mui/material/InputAdornment';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { useGetMachineById } from 'src/api/hooks/generated/use-machine';
 import {
   postapiMachinemachineIdproductsadd,
   getapiMachinemachineIdproductsmapped,
   postapiMachinemachineIdproductsremove,
   getapiMachinemachineIdproductsunmapped,
 } from 'src/api/services/generated/machine';
-import { useGetMachineById } from 'src/api/hooks/generated/use-machine';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -126,7 +126,7 @@ export function MachineProductMappingView(props: MachineProductMappingViewProps)
 
   const handleSelectOne = useCallback((productId: string) => {
     setSelectedProductIds((prev) =>
-      prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId]
+      prev.includes(productId) ? prev.filter((pid) => pid !== productId) : [...prev, productId]
     );
   }, []);
 
@@ -198,12 +198,12 @@ export function MachineProductMappingView(props: MachineProductMappingViewProps)
     filteredAvailableProducts.length > 0 &&
     filteredAvailableProducts.every((product) => selectedProductIds.includes(product.productId));
 
-  // Render row for mapped products
-  const renderMappedRow = ({ index, style }: { index: number; style: React.CSSProperties }) => {
+  // Render row for mapped products - component for List
+  const MappedProductRow = ({ index, style, ariaAttributes }: any) => {
     const product = mappedProducts[index];
     return (
       <Box
-        key={product.productId}
+        {...ariaAttributes}
         style={style}
         sx={{
           display: 'flex',
@@ -233,14 +233,14 @@ export function MachineProductMappingView(props: MachineProductMappingViewProps)
     );
   };
 
-  // Render row for available products
-  const renderAvailableRow = ({ index, style }: { index: number; style: React.CSSProperties }) => {
+  // Render row for available products - component for List
+  const AvailableProductRow = ({ index, style, ariaAttributes }: any) => {
     const product = filteredAvailableProducts[index];
     const isSelected = selectedProductIds.includes(product.productId);
 
     return (
       <Box
-        key={product.productId}
+        {...ariaAttributes}
         style={style}
         sx={{
           display: 'flex',
@@ -343,14 +343,13 @@ export function MachineProductMappingView(props: MachineProductMappingViewProps)
                   </Typography>
                 </Box>
               ) : (
-                <FixedSizeList
-                  height={window.innerHeight - 350}
-                  itemCount={mappedProducts.length}
-                  itemSize={ITEM_HEIGHT}
-                  width="100%"
-                >
-                  {renderMappedRow}
-                </FixedSizeList>
+                <List
+                  style={{ height: window.innerHeight - 350, width: '100%' }}
+                  rowCount={mappedProducts.length}
+                  rowHeight={ITEM_HEIGHT}
+                  rowComponent={MappedProductRow}
+                  rowProps={{}}
+                />
               )}
             </Box>
           </Card>
@@ -441,14 +440,13 @@ export function MachineProductMappingView(props: MachineProductMappingViewProps)
                   </Typography>
                 </Box>
               ) : (
-                <FixedSizeList
-                  height={window.innerHeight - 450}
-                  itemCount={filteredAvailableProducts.length}
-                  itemSize={ITEM_HEIGHT}
-                  width="100%"
-                >
-                  {renderAvailableRow}
-                </FixedSizeList>
+                <List
+                  style={{ height: window.innerHeight - 450, width: '100%' }}
+                  rowCount={filteredAvailableProducts.length}
+                  rowHeight={ITEM_HEIGHT}
+                  rowComponent={AvailableProductRow}
+                  rowProps={{}}
+                />
               )}
             </Box>
 

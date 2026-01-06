@@ -28,8 +28,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
-import { Iconify } from 'src/components/iconify';
-
 import { useValidationResult } from 'src/hooks/use-validation-result';
 
 import { isValidationSuccess } from 'src/utils/validation-result';
@@ -43,6 +41,7 @@ import {
   usePutapiMachinemachineIdupdatemachineoutputmappings,
 } from 'src/api/hooks/generated/use-machine';
 
+import { Iconify } from 'src/components/iconify';
 import { AreaSelector } from 'src/components/selectors/area-selector';
 import { CalendarSelector } from 'src/components/selectors/calendar-selector';
 import { MachineTypeSelector } from 'src/components/selectors/machine-type-selector';
