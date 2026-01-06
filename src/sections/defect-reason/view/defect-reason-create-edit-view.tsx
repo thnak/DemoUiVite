@@ -344,7 +344,7 @@ export function DefectReasonCreateEditView({
             <Button
               variant="contained"
               color="primary"
-              startIcon={<Iconify icon="solar:settings-bold" />}
+              startIcon={<Iconify icon="solar:settings-bold-duotone" />}
               onClick={() => router.push(`/defect-reasons/${currentDefectReason.id}/machine-mapping`)}
             >
               Manage Machine Mapping

@@ -823,7 +823,7 @@ export function MachineCreateEditView({
                   <Button
                     variant="contained"
                     color="primary"
-                    startIcon={<Iconify icon="solar:settings-bold" />}
+                    startIcon={<Iconify icon="solar:settings-bold-duotone" />}
                     onClick={handleNavigateToProductMapping}
                   >
                     Manage Product Mapping

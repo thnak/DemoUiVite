@@ -330,9 +330,7 @@ export function StopMachineReasonCreateEditView({
                 disabled={isGeneratingCode}
                 slotProps={{
                   input: {
-                    endAdornment: isGeneratingCode ? (
-                      <CircularProgress size={20} />
-                    ) : null,
+                    endAdornment: isGeneratingCode ? <CircularProgress size={20} /> : null,
                   },
                 }}
               />
@@ -505,19 +503,22 @@ export function StopMachineReasonCreateEditView({
         {/* Machine Mapping Section */}
         {isEdit && id ? (
           <Card sx={{ p: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}
+            >
               <Typography variant="h6">Machine Mapping</Typography>
               <Button
                 variant="contained"
                 color="primary"
-                startIcon={<Iconify icon="solar:settings-bold" />}
+                startIcon={<Iconify icon="solar:settings-bold-duotone" />}
                 onClick={() => navigate(`/stop-machine-reason/${id}/machine-mapping`)}
               >
                 Manage Machine Mapping
               </Button>
             </Box>
             <Typography variant="body2" color="text.secondary">
-              Click the button above to manage machine mappings for this stop reason on a dedicated page with better performance.
+              Click the button above to manage machine mappings for this stop reason on a dedicated
+              page with better performance.
             </Typography>
           </Card>
         ) : (
@@ -525,7 +526,8 @@ export function StopMachineReasonCreateEditView({
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
               <Iconify icon="solar:bell-bing-bold-duotone" width={24} />
               <Typography variant="body2" color="text.secondary">
-                Machine mapping will be available after creating the stop reason. Please save the form first.
+                Machine mapping will be available after creating the stop reason. Please save the
+                form first.
               </Typography>
             </Box>
           </Card>
