@@ -87,7 +87,7 @@ export function WorkingParameterCreateView() {
       const machines = await getapiProductproductIdmappedmachines(productId as ObjectId, {
         search: machineSearch || undefined,
       });
-      setMappedMachines(machines || []);
+      setMappedMachines(machines?.items || []);
     } catch (err) {
       console.error('Error fetching mapped machines:', err);
       setErrorMessage('Failed to load mapped machines');

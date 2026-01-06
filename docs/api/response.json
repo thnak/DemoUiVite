@@ -63804,34 +63804,22 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetMappedMachineByProductIdResult"
-                  }
+                  "$ref": "#/components/schemas/GetMappedMachineByProductIdResultBasePaginationResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetMappedMachineByProductIdResult"
-                  }
+                  "$ref": "#/components/schemas/GetMappedMachineByProductIdResultBasePaginationResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetMappedMachineByProductIdResult"
-                  }
+                  "$ref": "#/components/schemas/GetMappedMachineByProductIdResultBasePaginationResponse"
                 }
               },
               "application/vnd.msgpack": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetMappedMachineByProductIdResult"
-                  }
+                  "$ref": "#/components/schemas/GetMappedMachineByProductIdResultBasePaginationResponse"
                 }
               }
             }
@@ -93104,6 +93092,49 @@
         },
         "additionalProperties": false,
         "description": "Result for getting mapped machine by product id"
+      },
+      "GetMappedMachineByProductIdResultBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetMappedMachineByProductIdResult"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
       },
       "GetPermissionPageResponse": {
         "type": "object",
