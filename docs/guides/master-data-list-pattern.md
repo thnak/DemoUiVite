@@ -57,7 +57,7 @@ Master data list pages (Products, Machines, Defects, Devices, Sensors, Working P
     <Button
       variant="outlined"
       color="inherit"
-      startIcon={<Iconify icon="mdi:export" />}
+      startIcon={<Iconify icon="solar:cloud-download-bold" />}
     >
       Export
     </Button>
@@ -77,7 +77,7 @@ Master data list pages (Products, Machines, Defects, Devices, Sensors, Working P
 - **Left side**: Title and breadcrumbs
 - **Right side**: Import (outlined) → Export (outlined) → Add (contained)
 - Button gap: 1.5
-- Icons: `solar:cloud-upload-bold`, `mdi:export`, `mingcute:add-line`
+- Icons: `solar:cloud-upload-bold`, `solar:cloud-download-bold`, `mingcute:add-line`
 
 ### 2. Table Toolbar
 
@@ -328,7 +328,7 @@ export function ProductListView() {
           <Button
             variant="outlined"
             color="inherit"
-            startIcon={<Iconify icon="mdi:export" />}
+            startIcon={<Iconify icon="solar:cloud-download-bold" />}
           >
             Export
           </Button>

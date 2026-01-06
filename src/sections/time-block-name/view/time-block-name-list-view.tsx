@@ -159,7 +159,7 @@ export function TimeBlockNameListView() {
           >
             Import
           </Button>
-          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="mdi:export" />}>
+          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="solar:cloud-download-bold" />}>
             Export
           </Button>
           <Button

@@ -718,7 +718,7 @@ export function DashboardBuilderView() {
 
           <Tooltip title="Export as JSON (Ctrl+E)">
             <IconButton onClick={handleExport}>
-              <Iconify icon="mdi:export" />
+              <Iconify icon="solar:cloud-download-bold" />
             </IconButton>
           </Tooltip>
 

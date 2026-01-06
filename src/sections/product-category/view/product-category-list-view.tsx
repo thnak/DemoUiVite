@@ -199,7 +199,7 @@ export function ProductCategoryListView() {
           <Button
             variant="outlined"
             color="inherit"
-            startIcon={<Iconify icon="mdi:export" />}
+            startIcon={<Iconify icon="solar:cloud-download-bold" />}
             onClick={handleExport}
           >
             Export
