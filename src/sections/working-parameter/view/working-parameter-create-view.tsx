@@ -31,14 +31,14 @@ import { ConfirmDeleteDialog } from '../../../components/confirm-delete-dialog';
 import {
   deleteWorkingParameter,
   getapiProductproductIdmappedmachines,
-  postapiWorkingParametercreatedworkingparameters,
+  getapiWorkingParameterbyproductproductId,
   postapiWorkingParameterproductIdcreateupfrommappedproducts,
 } from '../../../api';
 
 import type {
-  ObjectId,
-  GetCreatedWorkingParaResult,
   GetMappedMachineByProductIdResult,
+  GetWorkingParaByProductIdResult,
+  ObjectId,
 } from '../../../api/types/generated';
 
 // ----------------------------------------------------------------------
@@ -55,9 +55,12 @@ export function WorkingParameterCreateView() {
   const [productId, setProductId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [mappedMachines, setMappedMachines] = useState<GetMappedMachineByProductIdResult[]>([]);
-  const [createdParameters, setCreatedParameters] = useState<GetCreatedWorkingParaResult[]>([]);
+  const [createdParameters, setCreatedParameters] = useState<GetWorkingParaByProductIdResult[]>(
+    []
+  );
   const [selectedMachineIds, setSelectedMachineIds] = useState<string[]>([]);
   const [machineSearch, setMachineSearch] = useState('');
+  const [createdParamsSearch, setCreatedParamsSearch] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -103,17 +106,14 @@ export function WorkingParameterCreateView() {
   const fetchCreatedParameters = useCallback(async () => {
     if (!productId) return;
     try {
-      const response = await postapiWorkingParametercreatedworkingparameters({
-        pageNumber: 0,
-        pageSize: 1000,
-        search: null,
-        productCategories: [productId as ObjectId],
+      const params = await getapiWorkingParameterbyproductproductId(productId as ObjectId, {
+        search: createdParamsSearch || undefined,
       });
-      setCreatedParameters(response.items || []);
+      setCreatedParameters(params || []);
     } catch (fetchErr) {
       console.error('Error fetching created parameters:', fetchErr);
     }
-  }, [productId]);
+  }, [productId, createdParamsSearch]);
 
   useEffect(() => {
     if (productId && machineSearch !== undefined) {
@@ -125,6 +125,18 @@ export function WorkingParameterCreateView() {
     return undefined;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [machineSearch]);
+
+  // Debounced search for created parameters
+  useEffect(() => {
+    if (productId) {
+      const timer = setTimeout(() => {
+        fetchCreatedParameters();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createdParamsSearch, productId]);
 
   const handleSelectAllMachines = useCallback(
     (checked: boolean) => {
@@ -406,9 +418,30 @@ export function WorkingParameterCreateView() {
 
             <Grid size={{ xs: 12 }}>
               <Card sx={{ p: 3 }}>
-                <Typography variant="h6" sx={{ mb: 2 }}>
-                  Created Working Parameters
-                </Typography>
+                <Box
+                  sx={{
+                    mb: 2,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Typography variant="h6">Created Working Parameters</Typography>
+                  <TextField
+                    size="small"
+                    placeholder="Search created parameters..."
+                    value={createdParamsSearch}
+                    onChange={(e) => setCreatedParamsSearch(e.target.value)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Iconify icon="eva:search-fill" />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{ width: 300 }}
+                  />
+                </Box>
                 <Scrollbar>
                   <TableContainer sx={{ overflow: 'unset' }}>
                     <Table>
