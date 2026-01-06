@@ -59,6 +59,11 @@ export function DefectReasonTableRow({
     handleEditRow();
   }, [handleClosePopover, handleEditRow]);
 
+  const handleManageMachineMapping = useCallback(() => {
+    handleClosePopover();
+    router.push(`/defect-reasons/${row.id}/machine-mapping`);
+  }, [handleClosePopover, router, row.id]);
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -152,6 +157,11 @@ export function DefectReasonTableRow({
             },
           }}
         >
+          <MenuItem onClick={handleManageMachineMapping} sx={{ color: 'secondary.main' }}>
+            <Iconify icon="solar:settings-bold-duotone" />
+            Machine Mapping
+          </MenuItem>
+
           <MenuItem onClick={handleEditFromMenu}>
             <Iconify icon="solar:pen-bold" />
             Edit

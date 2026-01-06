@@ -97,6 +97,11 @@ export function StopMachineReasonTableRow({
     }
   }, [handleClosePopover, onDeleteRow]);
 
+  const handleManageMachineMapping = useCallback(() => {
+    handleClosePopover();
+    router.push(`/stop-machine-reason/${row.id}/machine-mapping`);
+  }, [handleClosePopover, router, row.id]);
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -146,6 +151,11 @@ export function StopMachineReasonTableRow({
             },
           }}
         >
+          <MenuItem onClick={handleManageMachineMapping} sx={{ color: 'secondary.main' }}>
+            <Iconify icon="solar:settings-bold-duotone" />
+            Machine Mapping
+          </MenuItem>
+
           <MenuItem onClick={handleEdit}>
             <Iconify icon="solar:pen-bold" />
             Edit
