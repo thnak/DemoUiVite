@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
@@ -14,10 +13,9 @@ import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { createWorkingParameter, updateWorkingParameter } from '../../../api';
+import { updateWorkingParameter } from '../../../api';
 import { DurationTimePicker } from '../../../components/duration-time-picker';
 import { MachineSelector, ProductSelector } from '../../../components/selectors';
-
 
 interface WorkingFormData {
   machine: string | null;
@@ -33,53 +31,44 @@ interface WorkingParameterCreateEditViewProps {
     id: string;
     machine: string;
     product: string;
-    idealCycleTime: string | null ;
+    idealCycleTime: string | null;
     downtimeThreshold: string | null;
     speedLossThreshold: string | null;
     quantityPerCycle: string | null;
   };
 }
 const getDefaultForm = (
-    wp?: WorkingParameterCreateEditViewProps['currentWorkingParameter']
+  wp?: WorkingParameterCreateEditViewProps['currentWorkingParameter']
 ): WorkingFormData => ({
-    machine: wp?.machine ?? '',
-    product: wp?.product ?? '',
-    idealCycleTime: wp?.idealCycleTime ?? '',
-    downtimeThreshold: wp?.downtimeThreshold ?? '',
-    speedLossThreshold: wp?.speedLossThreshold ?? '',
-    quantityPerCycle: wp?.quantityPerCycle ?? '1',
+  machine: wp?.machine ?? '',
+  product: wp?.product ?? '',
+  idealCycleTime: wp?.idealCycleTime ?? '',
+  downtimeThreshold: wp?.downtimeThreshold ?? '',
+  speedLossThreshold: wp?.speedLossThreshold ?? '',
+  quantityPerCycle: wp?.quantityPerCycle ?? '1',
 });
 
 export function WorkingParameterCreateEditView({
-isEdit = false,
-currentWorkingParameter,
-}: WorkingParameterCreateEditViewProps){
+  isEdit = false,
+  currentWorkingParameter,
+}: WorkingParameterCreateEditViewProps) {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [formData, setFormData] = useState<WorkingFormData>(() => getDefaultForm(currentWorkingParameter));   
-    useEffect(() => {
-        if (!isEdit) return;
+  const [formData, setFormData] = useState<WorkingFormData>(() =>
+    getDefaultForm(currentWorkingParameter)
+  );
+  useEffect(() => {
+    if (!isEdit) return;
 
-        setFormData(getDefaultForm(currentWorkingParameter));
-    }, [isEdit, currentWorkingParameter?.id, currentWorkingParameter]);
+    setFormData(getDefaultForm(currentWorkingParameter));
+  }, [isEdit, currentWorkingParameter?.id, currentWorkingParameter]);
   const handleCloseError = useCallback(() => {
     setErrorMessage(null);
   }, []);
-  const handleInputChange = useCallback(
-    (field: keyof WorkingFormData, value: string | boolean) => {
-      setFormData((prev) => ({ ...prev, [field]: value }));
-    },
-    []
-  );
-  const handleSelectChange = useCallback(
-    (field: keyof WorkingFormData) => (event: { target: { value: string } }) => {
-      setFormData((prev) => ({
-        ...prev,
-        [field]: event.target.value,
-      }));
-    },
-    []
-  );
+  const handleInputChange = useCallback((field: keyof WorkingFormData, value: string | boolean) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  }, []);
+
   const handleCancel = useCallback(() => {
     router.push('/working-parameter');
   }, [router]);
@@ -91,53 +80,66 @@ currentWorkingParameter,
   };
 
   const handleSubmit = useCallback(async () => {
-    if (!formData.machine) { setErrorMessage('machine is required'); return; }
-    if (!formData.product) { setErrorMessage('product is required'); return; }
-    if (!formData.quantityPerCycle) { setErrorMessage('quantityPerCycle is required'); return; }
-    if (!formData.downtimeThreshold) { setErrorMessage('downtimeThreshold is required'); return; }
-    if (!formData.idealCycleTime) { setErrorMessage('idealCycleTime is required'); return; }
+    if (!formData.machine) {
+      setErrorMessage('machine is required');
+      return;
+    }
+    if (!formData.product) {
+      setErrorMessage('product is required');
+      return;
+    }
+    if (!formData.quantityPerCycle) {
+      setErrorMessage('quantityPerCycle is required');
+      return;
+    }
+    if (!formData.downtimeThreshold) {
+      setErrorMessage('downtimeThreshold is required');
+      return;
+    }
+    if (!formData.idealCycleTime) {
+      setErrorMessage('idealCycleTime is required');
+      return;
+    }
 
     try {
       if (isEdit && currentWorkingParameter?.id) {
-        await updateWorkingParameter(
-          currentWorkingParameter.id,
-           [
-            { key: 'machine', value: formData.machine },
-            { key: 'product', value: formData.product },
-            { key: 'idealCycleTime', value: formData.idealCycleTime },
-            { key: 'quantityPerCycle', value: toNumberOrUndefined(formData.quantityPerCycle) },
-            { key: 'downtimeThreshold', value: formData.downtimeThreshold },
-            { key: 'speedLossThreshold', value: formData.speedLossThreshold },
-          ],
-        );
-      } else {
-        await createWorkingParameter({
-          machineId: formData.machine,
-          productId: formData.product,
-          idealCycleTime: formData.idealCycleTime,
-          quantityPerCycle: toNumberOrUndefined(formData.quantityPerCycle),
-          downtimeThreshold: formData.downtimeThreshold,
-          speedLossThreshold: formData.speedLossThreshold,
-        });
+        await updateWorkingParameter(currentWorkingParameter.id, [
+          { key: 'machineId', value: formData.machine },
+          { key: 'productId', value: formData.product },
+          { key: 'idealCycleTime', value: formData.idealCycleTime },
+          { key: 'quantityPerCycle', value: toNumberOrUndefined(formData.quantityPerCycle) },
+          { key: 'downtimeThreshold', value: formData.downtimeThreshold },
+          { key: 'speedLossThreshold', value: formData.speedLossThreshold },
+        ]);
       }
 
       router.push('/working-parameter');
     } catch (e: any) {
       setErrorMessage(e?.message ?? 'Something went wrong');
     }
-  }, [formData.machine, formData.product, formData.quantityPerCycle, formData.downtimeThreshold, formData.idealCycleTime, formData.speedLossThreshold, isEdit, currentWorkingParameter?.id, router]);
+  }, [
+    formData.machine,
+    formData.product,
+    formData.quantityPerCycle,
+    formData.downtimeThreshold,
+    formData.idealCycleTime,
+    formData.speedLossThreshold,
+    isEdit,
+    currentWorkingParameter?.id,
+    router,
+  ]);
 
   const handleMachineChange = useCallback((machine: string | null) => {
-      setFormData((prev) => ({
-          ...prev,
-          machine,
-      }));
+    setFormData((prev) => ({
+      ...prev,
+      machine,
+    }));
   }, []);
   const handleProductChange = useCallback((product: string | null) => {
-      setFormData((prev) => ({
-          ...prev,
-          product,
-      }));
+    setFormData((prev) => ({
+      ...prev,
+      product,
+    }));
   }, []);
   return (
     <DashboardContent>
@@ -173,6 +175,7 @@ currentWorkingParameter,
                   value={formData.machine}
                   onChange={handleMachineChange}
                   label="Machine"
+                  disabled={isEdit}
                 />
               </Grid>
 
@@ -181,10 +184,11 @@ currentWorkingParameter,
                   value={formData.product}
                   onChange={handleProductChange}
                   label="Product"
+                  disabled={isEdit}
                 />
               </Grid>
 
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+              <Grid size={{ xs: 12 }}>
                 <DurationTimePicker
                   fullWidth
                   label="Ideal Cycle Time"
@@ -192,9 +196,9 @@ currentWorkingParameter,
                   onChange={(duration) => handleInputChange('idealCycleTime', duration)}
                   precision="seconds"
                 />
-              </Stack>
+              </Grid>
 
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+              <Grid size={{ xs: 12 }}>
                 <DurationTimePicker
                   fullWidth
                   label="SpeedLoss Threshold"
@@ -202,9 +206,9 @@ currentWorkingParameter,
                   onChange={(duration) => handleInputChange('speedLossThreshold', duration)}
                   precision="seconds"
                 />
-              </Stack>
+              </Grid>
 
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+              <Grid size={{ xs: 12 }}>
                 <DurationTimePicker
                   fullWidth
                   label="Downtime Threshold"
@@ -212,7 +216,7 @@ currentWorkingParameter,
                   onChange={(duration) => handleInputChange('downtimeThreshold', duration)}
                   precision="seconds"
                 />
-              </Stack>
+              </Grid>
 
               <Grid size={{ xs: 12 }}>
                 <TextField
@@ -228,19 +232,8 @@ currentWorkingParameter,
               <Button variant="outlined" color="inherit" onClick={handleCancel}>
                 Cancel
               </Button>
-              <Button
-                variant="contained"
-                color="inherit"
-                onClick={handleSubmit}
-                sx={{
-                  bgcolor: 'grey.900',
-                  color: 'common.white',
-                  '&:hover': {
-                    bgcolor: 'grey.800',
-                  },
-                }}
-              >
-                {isEdit ? 'Save changes' : 'Create product'}
+              <Button variant="contained" color="inherit" onClick={handleSubmit}>
+                {isEdit ? 'Save changes' : 'Create parameter'}
               </Button>
             </Box>
           </Card>
