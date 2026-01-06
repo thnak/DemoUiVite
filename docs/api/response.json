@@ -39876,6 +39876,14 @@
             "schema": {
               "$ref": "#/components/schemas/ObjectId"
             }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -73197,6 +73205,14 @@
             "schema": {
               "$ref": "#/components/schemas/ObjectId"
             }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -82643,7 +82659,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2026-01-05"
+              "example": "2026-01-06"
             }
           },
           {
@@ -82653,7 +82669,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2026-01-05"
+              "example": "2026-01-06"
             }
           },
           {
@@ -83089,7 +83105,7 @@
         }
       }
     },
-    "/api/WorkingParameter/{productId}/working-para/create-up-from-mapped-products": {
+    "/api/WorkingParameter/{productId}/create-up-from-mapped-products": {
       "post": {
         "tags": [
           "WorkingParameter"
@@ -83133,7 +83149,155 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int64Result"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int64Result"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int64Result"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int64Result"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/WorkingParameter/{productId}/mapped-machines": {
+      "get": {
+        "tags": [
+          "WorkingParameter"
+        ],
+        "summary": "Get mapped machines from product id",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetMappedMachineByProductIdResult"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetMappedMachineByProductIdResult"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetMappedMachineByProductIdResult"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetMappedMachineByProductIdResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/WorkingParameter/created-working-parameters": {
+      "post": {
+        "tags": [
+          "WorkingParameter"
+        ],
+        "summary": "Get created working parameters with pagination and filters",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetCreatedWorkingParametersRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetCreatedWorkingParametersRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetCreatedWorkingParametersRequest"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/GetCreatedWorkingParametersRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCreatedWorkingParaResultBasePaginationResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCreatedWorkingParaResultBasePaginationResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCreatedWorkingParaResultBasePaginationResponse"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCreatedWorkingParaResultBasePaginationResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -85862,13 +86026,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2026-01-05"
+            "example": "2026-01-06"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2026-01-05"
+            "example": "2026-01-06"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -85980,13 +86144,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2026-01-05"
+            "example": "2026-01-06"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2026-01-05"
+            "example": "2026-01-06"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -86262,12 +86426,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-05"
+            "example": "2026-01-06"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-05"
+            "example": "2026-01-06"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -90334,7 +90498,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-05"
+            "example": "2026-01-06"
           }
         },
         "additionalProperties": false
@@ -92346,6 +92510,135 @@
         "additionalProperties": false,
         "description": "Base class for paginated responses"
       },
+      "GetCreatedWorkingParaResult": {
+        "type": "object",
+        "properties": {
+          "workingParameterId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "productName": {
+            "type": "string",
+            "description": "Product Name",
+            "nullable": true
+          },
+          "machineName": {
+            "type": "string",
+            "description": "Machine Name",
+            "nullable": true
+          },
+          "idealCycleTime": {
+            "type": "number",
+            "description": "Ideal Cycle Time",
+            "format": "double"
+          },
+          "downtimeThreshold": {
+            "type": "number",
+            "description": "Downtime Threshold",
+            "format": "double"
+          },
+          "speedLossThreshold": {
+            "type": "number",
+            "description": "Speed Loss Threshold",
+            "format": "double"
+          },
+          "quantityPerCycle": {
+            "type": "number",
+            "description": "Quantity Per Cycle",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Result for getting created working parameters"
+      },
+      "GetCreatedWorkingParaResultBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetCreatedWorkingParaResult"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "GetCreatedWorkingParametersRequest": {
+        "type": "object",
+        "properties": {
+          "pageNumber": {
+            "type": "integer",
+            "description": "",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "",
+            "format": "int32"
+          },
+          "search": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "machineTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "description": "",
+            "nullable": true
+          },
+          "machineGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "description": "",
+            "nullable": true
+          },
+          "productCategories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "description": "",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request to get created working parameters with pagination and filters"
+      },
       "GetDefectMappingFormDefectIdResult": {
         "type": "object",
         "properties": {
@@ -92540,6 +92833,21 @@
         },
         "additionalProperties": false,
         "description": "Pagination response for queries."
+      },
+      "GetMappedMachineByProductIdResult": {
+        "type": "object",
+        "properties": {
+          "machineId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "machineName": {
+            "type": "string",
+            "description": "Machine Name",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Result for getting mapped machine by product id"
       },
       "GetPermissionPageResponse": {
         "type": "object",
@@ -94179,7 +94487,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2026-01-05"
+            "example": "2026-01-06"
           },
           "locationId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -103845,7 +104153,7 @@
             "type": "string",
             "description": "Date of the work.",
             "format": "date",
-            "example": "2026-01-05"
+            "example": "2026-01-06"
           },
           "shiftName": {
             "type": "string",
@@ -115487,7 +115795,7 @@
             "type": "string",
             "description": "The specific work date this statistic applies to.",
             "format": "date",
-            "example": "2026-01-05"
+            "example": "2026-01-06"
           },
           "calendarId": {
             "$ref": "#/components/schemas/ObjectId"
