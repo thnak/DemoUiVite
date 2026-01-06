@@ -92689,19 +92689,19 @@
             "nullable": true
           },
           "idealCycleTime": {
-            "type": "number",
-            "description": "Ideal Cycle Time",
-            "format": "double"
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
           },
           "downtimeThreshold": {
-            "type": "number",
-            "description": "Downtime Threshold",
-            "format": "double"
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
           },
           "speedLossThreshold": {
-            "type": "number",
-            "description": "Speed Loss Threshold",
-            "format": "double"
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
           },
           "quantityPerCycle": {
             "type": "number",
