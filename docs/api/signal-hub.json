@@ -1,0 +1,391 @@
+[
+  {
+    "name": "DeviceHub",
+    "description": "SignalR Hub for real-time Device state streaming Handles client subscriptions using SignalR Groups",
+    "isObsolete": false,
+    "endpoint": "/hubs/device",
+    "methods": [
+      {
+        "name": "GetDeviceState",
+        "description": "Get current device state",
+        "returnType": "DeviceGrainState?",
+        "payloadExample": "{\"code\":\"example\",\"name\":\"example\",\"macAddress\":\"example\",\"assignedSensorIds\":null,\"currentState\":null,\"lastSeen\":\"2000-01-01T00:00:00Z\",\"firmwareVersion\":\"example\",\"lastError\":\"example\"}",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "type": "string",
+            "description": "",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "name": "GetSubscriberCount",
+        "description": "",
+        "returnType": "int",
+        "payloadExample": "0",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "type": "string",
+            "description": "",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "name": "SubscribeToDevice",
+        "description": "Subscribe to device state updates Client will receive real-time device state via \"DeviceUpdate\" event",
+        "returnType": "Task",
+        "payloadExample": null,
+        "parameters": [
+          {
+            "name": "deviceId",
+            "type": "string",
+            "description": "",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "name": "UnsubscribeFromDevice",
+        "description": "Unsubscribe from device updates",
+        "returnType": "Task",
+        "payloadExample": null,
+        "parameters": [
+          {
+            "name": "deviceId",
+            "type": "string",
+            "description": "",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      }
+    ],
+    "clientEvents": [
+      {
+        "clientMethodName": "DeviceUpdate",
+        "messageType": "DeviceStateUpdate",
+        "schema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"deviceId\": {\n      \"type\": \"string\",\n      \"description\": \"Device ID this update belongs to.\",\n      \"nullable\": true\n    },\n    \"currentState\": ,\n    \"lastSeen\": {\n      \"type\": \"string\",\n      \"description\": \"The last time the device was seen online.\",\n      \"format\": \"date-time\"\n    },\n    \"firmwareVersion\": {\n      \"type\": \"string\",\n      \"description\": \"The firmware version of the device.\",\n      \"nullable\": true\n    },\n    \"lastError\": {\n      \"type\": \"string\",\n      \"description\": \"The last error message encountered by the device.\",\n      \"nullable\": true\n    }\n  },\n  \"additionalProperties\": false,\n  \"description\": \"Represents a device state update for streaming.\\r\\nOptimized with Orleans serialization for maximum performance.\"\n}",
+        "description": "Broadcasts device state changes including connection status, firmware version, and sensor assignments",
+        "payloadExample": {
+          "deviceId": "device-123",
+          "currentState": "online",
+          "lastSeen": "2026-01-07T04:54:52.2009569Z",
+          "firmwareVersion": "1.0.3",
+          "lastError": ""
+        }
+      }
+    ]
+  },
+  {
+    "name": "MachineHub",
+    "description": "SignalR Hub for real-time Machine data streaming Handles client subscriptions and provides machine aggregations",
+    "isObsolete": false,
+    "endpoint": "/hubs/machine",
+    "methods": [
+      {
+        "name": "GetMachineAggregation",
+        "description": "Get current machine aggregation (pre-computed OEE metrics)",
+        "returnType": "MachineAggregation",
+        "payloadExample": "{\"availability\":0.0,\"performance\":0.0,\"quality\":0.0,\"oee\":0.0,\"goodCount\":0.0,\"totalCount\":0.0,\"totalRunTime\":\"00:00:00\",\"totalDowntime\":\"00:00:00\",\"totalSpeedLossTime\":\"00:00:00\",\"lastUpdated\":\"2000-01-01T00:00:00Z\"}",
+        "parameters": [
+          {
+            "name": "machineId",
+            "type": "string",
+            "description": "",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "name": "GetMachineRuntimeBlocks",
+        "description": "Get machine runtime blocks.",
+        "returnType": "IReadOnlyList<MachineRuntimeBlock>",
+        "payloadExample": "[{\"startTime\":\"2000-01-01T00:00:00Z\",\"endTime\":null,\"stopReasonId\":\"example\",\"name\":\"example\",\"extraNote\":\"example\",\"isUnplannedDowntime\":false,\"state\":null}]",
+        "parameters": [
+          {
+            "name": "machineId",
+            "type": "string",
+            "description": "",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "name": "GetSubscriberCount",
+        "description": "Get current machine aggregation (pre-computed OEE metrics)",
+        "returnType": "int",
+        "payloadExample": "0",
+        "parameters": [
+          {
+            "name": "machineId",
+            "type": "string",
+            "description": "",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "name": "SubscribeToMachine",
+        "description": "Subscribe to machine OEE updates Client will receive real-time machine data via \"MachineUpdate\" event",
+        "returnType": "Task",
+        "payloadExample": null,
+        "parameters": [
+          {
+            "name": "machineId",
+            "type": "string",
+            "description": "",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "name": "UnsubscribeFromMachine",
+        "description": "Unsubscribe from machine updates",
+        "returnType": "Task",
+        "payloadExample": null,
+        "parameters": [
+          {
+            "name": "machineId",
+            "type": "string",
+            "description": "",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      }
+    ],
+    "clientEvents": [
+      {
+        "clientMethodName": "MachineUpdate",
+        "messageType": "MachineOeeUpdate",
+        "schema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"machineId\": {\n      \"type\": \"string\",\n      \"description\": \"Identifier of the machine\",\n      \"nullable\": true\n    },\n    \"machineName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the machine\",\n      \"nullable\": true\n    },\n    \"availability\": {\n      \"type\": \"number\",\n      \"description\": \"Overall Equipment Effectiveness (OEE) percentage\",\n      \"format\": \"double\"\n    },\n    \"availabilityVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"Availability percentage compared to the last period. Percentage points difference.\",\n      \"format\": \"double\"\n    },\n    \"performance\": {\n      \"type\": \"number\",\n      \"description\": \"Performance percentage\",\n      \"format\": \"double\"\n    },\n    \"performanceVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"Performance percentage compared to the last period. Percentage points difference.\",\n      \"format\": \"double\"\n    },\n    \"quality\": {\n      \"type\": \"number\",\n      \"description\": \"Quality percentage\",\n      \"format\": \"double\"\n    },\n    \"qualityVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"Quality percentage compared to the last period. Percentage points difference.\",\n      \"format\": \"double\"\n    },\n    \"oee\": {\n      \"type\": \"number\",\n      \"description\": \"Overall Equipment Effectiveness (OEE)\",\n      \"format\": \"double\"\n    },\n    \"oeeVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"OEE compared to the last period. Percentage points difference.\",\n      \"format\": \"double\"\n    },\n    \"goodCount\": {\n      \"type\": \"number\",\n      \"description\": \"Count of good products produced\",\n      \"format\": \"double\"\n    },\n    \"goodCountVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"Good count compared to the last period. Difference in count.\",\n      \"format\": \"double\"\n    },\n    \"totalCount\": {\n      \"type\": \"number\",\n      \"description\": \"Total count of products produced\",\n      \"format\": \"double\"\n    },\n    \"totalCountVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"Total count compared to the last period. Difference in count.\",\n      \"format\": \"double\"\n    },\n    \"plannedProductionTime\": {\n      \"type\": \"string\",\n      \"description\": \"Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)\",\n      \"format\": \"duration\"\n    },\n    \"runTime\": {\n      \"type\": \"string\",\n      \"description\": \"Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)\",\n      \"format\": \"duration\"\n    },\n    \"downtime\": {\n      \"type\": \"string\",\n      \"description\": \"Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)\",\n      \"format\": \"duration\"\n    },\n    \"speedLossTime\": {\n      \"type\": \"string\",\n      \"description\": \"Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)\",\n      \"format\": \"duration\"\n    },\n    \"currentProductName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the current product running on the machine\",\n      \"nullable\": true\n    }\n  },\n  \"additionalProperties\": false,\n  \"description\": \"Result of OEE calculation for a machine\"\n}",
+        "description": "Broadcasts machine OEE updates including availability, performance, quality metrics",
+        "payloadExample": {
+          "machineId": "machine-123",
+          "machineName": "CNC Lathe 1",
+          "availability": 92.5,
+          "availabilityVsLastPeriod": 1.5,
+          "performance": 88.3,
+          "performanceVsLastPeriod": -0.8,
+          "quality": 95,
+          "qualityVsLastPeriod": 0.5,
+          "oee": 0,
+          "oeeVsLastPeriod": 0,
+          "goodCount": 0,
+          "goodCountVsLastPeriod": 0,
+          "totalCount": 0,
+          "totalCountVsLastPeriod": 0,
+          "plannedProductionTime": "PT0S",
+          "runTime": "PT0S",
+          "downtime": "PT0S",
+          "speedLossTime": "PT0S",
+          "currentProductName": ""
+        }
+      },
+      {
+        "clientMethodName": "MachineRuntimeUpdateLastBlock",
+        "messageType": "MachineRuntimeBlock",
+        "schema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"startTime\": {\n      \"type\": \"string\",\n      \"description\": \"Start time of the runtime block.\",\n      \"format\": \"date-time\"\n    },\n    \"endTime\": {\n      \"type\": \"string\",\n      \"description\": \"End time of the runtime block. Nullable to indicate ongoing blocks.\",\n      \"format\": \"date-time\",\n      \"nullable\": true\n    },\n    \"stopReasonId\": {\n      \"type\": \"string\",\n      \"description\": \"Identifier for the stop reason associated with this runtime block. ObjectId in string format. Empty string\\r\\nindicates normal operation.\",\n      \"nullable\": true\n    },\n    \"name\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the runtime block. Or stop reason name.\",\n      \"nullable\": true\n    },\n    \"extraNote\": {\n      \"type\": \"string\",\n      \"description\": \"Color associated with the runtime block. Or stop reason color.\",\n      \"nullable\": true\n    },\n    \"isUnplannedDowntime\": {\n      \"type\": \"boolean\",\n      \"description\": \"Indicates if the downtime was unplanned.\"\n    },\n    \"state\": \n  },\n  \"additionalProperties\": false,\n  \"description\": \"Represents a runtime block with start and end times, stop reason, name, and color.\"\n}",
+        "description": "Broadcasts machine runtime blocks showing start/stop times and downtime reasons",
+        "payloadExample": {
+          "startTime": "2026-01-07T04:39:52.1999827Z",
+          "endTime": "2026-01-07T04:54:52.2000634Z",
+          "stopReasonId": "reason-123",
+          "name": "Scheduled Maintenance",
+          "extraNote": "Quarterly checkup",
+          "isUnplannedDowntime": false,
+          "state": "downtime"
+        }
+      }
+    ]
+  },
+  {
+    "name": "MainHub",
+    "description": "Main hub for handling client connections and group management.",
+    "isObsolete": true,
+    "endpoint": "/DefaultHub",
+    "methods": [
+      {
+        "name": "GetOnlineUsers",
+        "description": "Handles the connection of a user to the hub.",
+        "returnType": "List<UserInfo>",
+        "payloadExample": "[{\"userId\":\"example\",\"userName\":\"example\",\"displayName\":\"example\",\"email\":\"example\",\"phoneNumber\":\"example\",\"isActive\":false,\"createdAt\":\"2000-01-01T00:00:00Z\",\"updatedAt\":\"2000-01-01T00:00:00Z\",\"avatarUrl\":null,\"language\":null}]",
+        "parameters": []
+      },
+      {
+        "name": "JoinGroup",
+        "description": "",
+        "returnType": "Task",
+        "payloadExample": null,
+        "parameters": [
+          {
+            "name": "groupName",
+            "type": "string",
+            "description": "",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "name": "LeaveGroup",
+        "description": "",
+        "returnType": "Task",
+        "payloadExample": null,
+        "parameters": [
+          {
+            "name": "groupName",
+            "type": "string",
+            "description": "",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "name": "ListenUserLogin",
+        "description": "Subscribes the current connection to the user login group.",
+        "returnType": "Task",
+        "payloadExample": null,
+        "parameters": []
+      },
+      {
+        "name": "WidgetJoinGroup",
+        "description": "",
+        "returnType": "Task",
+        "payloadExample": null,
+        "parameters": [
+          {
+            "name": "groupName",
+            "type": "string",
+            "description": "",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "name": "WidgetJoinGroups",
+        "description": "",
+        "returnType": "Task",
+        "payloadExample": null,
+        "parameters": [
+          {
+            "name": "groupNames",
+            "type": "string[]",
+            "description": "",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "name": "WidgetLeaveGroup",
+        "description": "",
+        "returnType": "Task",
+        "payloadExample": null,
+        "parameters": [
+          {
+            "name": "groupName",
+            "type": "string",
+            "description": "",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "name": "WidgetLeaveGroups",
+        "description": "",
+        "returnType": "Task",
+        "payloadExample": null,
+        "parameters": [
+          {
+            "name": "groupNames",
+            "type": "string[]",
+            "description": "",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      }
+    ],
+    "clientEvents": []
+  },
+  {
+    "name": "SensorHub",
+    "description": "SignalR Hub for real-time sensor data streaming. Clients can subscribe to sensor updates using SignalR Groups.",
+    "isObsolete": false,
+    "endpoint": "/hubs/sensor",
+    "methods": [
+      {
+        "name": "GetSensorAggregation",
+        "description": "Get current sensor aggregation.",
+        "returnType": "SensorAggregation?",
+        "payloadExample": "{\"min\":0.0,\"max\":0.0,\"average\":0.0,\"sum\":0.0,\"count\":0,\"first\":0.0,\"last\":0.0,\"computedAt\":\"2000-01-01T00:00:00Z\"}",
+        "parameters": [
+          {
+            "name": "sensorId",
+            "type": "string",
+            "description": "The sensor ID",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "name": "SubscribeToSensor",
+        "description": "Subscribe to sensor updates. Client will receive real-time sensor data via \"SensorDataUpdate\" event",
+        "returnType": "Task",
+        "payloadExample": null,
+        "parameters": [
+          {
+            "name": "sensorId",
+            "type": "string",
+            "description": "The sensor ID to subscribe to",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      },
+      {
+        "name": "UnsubscribeFromSensor",
+        "description": "Unsubscribe from sensor updates.",
+        "returnType": "Task",
+        "payloadExample": null,
+        "parameters": [
+          {
+            "name": "sensorId",
+            "type": "string",
+            "description": "The sensor ID to unsubscribe from",
+            "isOptional": false,
+            "defaultValue": null
+          }
+        ]
+      }
+    ],
+    "clientEvents": [
+      {
+        "clientMethodName": "SensorDataUpdate",
+        "messageType": "SensorDataUpdate",
+        "schema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"sensorId\": {\n      \"type\": \"string\",\n      \"description\": \"Sensor ID this update belongs to.\",\n      \"nullable\": true\n    },\n    \"value\": {\n      \"type\": \"number\",\n      \"description\": \"Sensor value.\",\n      \"format\": \"double\"\n    },\n    \"timestamp\": {\n      \"type\": \"string\",\n      \"description\": \"Timestamp when the reading was taken.\",\n      \"format\": \"date-time\"\n    }\n  },\n  \"additionalProperties\": false,\n  \"description\": \"Represents a sensor data update for streaming.\\r\\nOptimized with Orleans serialization for maximum performance.\"\n}",
+        "description": "Broadcasts sensor data updates including min, max, average values and aggregations",
+        "payloadExample": {
+          "sensorId": "sensor-456",
+          "value": 23.5,
+          "timestamp": "2026-01-07T04:54:52.2006892Z"
+        }
+      }
+    ]
+  }
+]
