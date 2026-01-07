@@ -6,35 +6,39 @@ import Table from '@mui/material/Table';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
+import TableRow from '@mui/material/TableRow';
 import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
-import { useDeleteWorkingParameter } from 'src/api/hooks/generated/use-working-parameter';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
+import { applyFilter, getComparator } from '../working-parameter-utils';
 import { WorkingParameterTableHead } from '../working-parameter-table-head';
 import { WorkingParameterTableNoData } from '../working-parameter-table-no-data';
 import { WorkingParameterTableToolbar } from '../working-parameter-table-toolbar';
-import { emptyRows, applyFilter, getComparator } from '../working-parameter-utils';
-import { searchMachine, searchProduct, getWorkingParameterPage } from '../../../api';
-import { WorkingParameterTableEmptyRows } from '../working-parameter-table-empty-rows';
+import {
+  deleteWorkingParameter,
+  postapiWorkingParametercreatedworkingparameters,
+} from '../../../api';
 import {
   formatSecondsHms,
   timeSpanToSeconds,
   WorkingParameterTableRow,
 } from '../working-parameter-table-row';
 
-import type { WorkingParameterEntity } from '../../../api/types/generated';
 import type { WorkingParameterProps } from '../working-parameter-table-row';
+import type { ObjectId, GetCreatedWorkingParaResult } from '../../../api/types/generated';
 
 // ----------------------------------------------------------------------
 
@@ -42,91 +46,63 @@ export function WorkingParameterListView() {
   const [totalItems, setTotalItems] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [selected, setSelected] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [filterName, setFilterName] = useState('');
   const router = useRouter();
   const table = useTable();
-  const [entities, setEntities] = useState<WorkingParameterEntity[]>([]);
-  const [productMap, setProductMap] = useState<Record<string, string>>({});
-  const [machineMap, setMachineMap] = useState<Record<string, string>>({});
+  const [entities, setEntities] = useState<GetCreatedWorkingParaResult[]>([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [machineTypes] = useState<ObjectId[]>([]);
+  const [machineGroups] = useState<ObjectId[]>([]);
+  const [productCategories] = useState<ObjectId[]>([]);
 
-
-  function unwrapArray<T>(res: any): T[] {
-    if (Array.isArray(res)) return res;
-    // các case phổ biến trong codegen
-    return res?.value ?? res?.data ?? res?.items ?? res?.result ?? [];
-  }
-  useEffect(() => {
-    (async () => {
-      const [pRes, mRes] = await Promise.all([
-        searchProduct({ maxResults: 5000 }),
-        searchMachine({ maxResults: 5000 }),
-      ]);
-
-      const products = unwrapArray<any>(pRes);
-      const machines = unwrapArray<any>(mRes);
-
-      setProductMap(Object.fromEntries(products.map(p => [p.id?.toString?.() ?? `${p.id}`, p.productName ?? p.name ?? ''])));
-      setMachineMap(Object.fromEntries(machines.map(m => [m.id?.toString?.() ?? `${m.id}`, m.machineName ?? m.name ?? ''])));
-    })();
-  }, []);
-
-
-  // Function to map WorkingParameterEntity to WorkingParameterProps
+  // Function to map GetCreatedWorkingParaResult to WorkingParameterProps
   const templates: WorkingParameterProps[] = React.useMemo(
     () =>
       entities.map((entity) => {
-        const productId = entity.productId?.toString() || '';
-        const machineId = entity.machineId?.toString() || '';
         const idealSeconds = timeSpanToSeconds(entity.idealCycleTime);
         const downSeconds  = timeSpanToSeconds(entity.downtimeThreshold);
-        const speedLossThreshold = timeSpanToSeconds(entity.speedLossThreshold)
-        console.log('idealCycleTime raw =', entity.idealCycleTime, typeof entity.idealCycleTime);
-        console.log('downtimeThreshold raw =', entity.downtimeThreshold, typeof entity.downtimeThreshold);
+        const speedLossSeconds = timeSpanToSeconds(entity.speedLossThreshold);
 
         return {
-          id: entity.id?.toString() || '',
-          product: productId,
-          machine: machineId,
-          productName: productMap[productId] ?? productId,
-          machineName: machineMap[machineId] ?? machineId,
+          id: entity.workingParameterId?.toString() || '',
+          product: '',
+          machine: '',
+          productName: entity.productName || '',
+          machineName: entity.machineName || '',
           quantityPerSignal: entity.quantityPerCycle || 0,
           idealCycleTime: formatSecondsHms(idealSeconds) || '',
           downtimeThreshold: formatSecondsHms(downSeconds) || '',
-          speedLossThreshold: formatSecondsHms(speedLossThreshold) || '',
+          speedLossThreshold: formatSecondsHms(speedLossSeconds) || '',
         };
       }),
-    [entities, productMap, machineMap]
+    [entities]
   );
-
-
-
 
   // Fetch working parameters and map to WorkingParameterProps[]
   const fetchWorkingParameter = useCallback(async () => {
     setLoading(true);
-    setError(null);
     try {
-      const response = await getWorkingParameterPage([], {
+      const response = await postapiWorkingParametercreatedworkingparameters({
         pageNumber: page,
         pageSize: rowsPerPage,
+        search: filterName || null,
+        machineTypes: machineTypes.length > 0 ? machineTypes : null,
+        machineGroups: machineGroups.length > 0 ? machineGroups : null,
+        productCategories: productCategories.length > 0 ? productCategories : null,
       });
       setEntities(response.items ?? []);
       setTotalItems(response.totalItems || 0);
     } catch (err) {
-      setError('Failed to load shift templates');
-      console.error('Error fetching shift templates:', err);
+      console.error('Error fetching working parameters:', err);
     } finally {
       setLoading(false);
     }
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage, filterName, machineTypes, machineGroups, productCategories]);
 
   useEffect(() => {
     fetchWorkingParameter();
@@ -149,16 +125,6 @@ export function WorkingParameterListView() {
     setPage(0);
   }, []);
 
-  const { mutate: deleteWorkingParameterMutate } = useDeleteWorkingParameter({
-    onSuccess: () => {
-      setSuccessMessage('Working parameter deleted successfully');
-      fetchWorkingParameter();
-    },
-    onError: () => {
-      setErrorMessage( 'Failed to delete working parameter');
-    },
-  });
-
   const handleDeleteWorkingParameter = useCallback((id: string) => {
     setItemToDelete(id);
     setDeleteDialogOpen(true);
@@ -167,12 +133,20 @@ export function WorkingParameterListView() {
   const handleConfirmDelete = useCallback(async () => {
     if (itemToDelete) {
       setIsDeleting(true);
-      deleteWorkingParameterMutate({ id: itemToDelete });
-      setIsDeleting(false);
-      setDeleteDialogOpen(false);
-      setItemToDelete(null);
+      try {
+        await deleteWorkingParameter(itemToDelete);
+        setSuccessMessage('Working parameter deleted successfully');
+        fetchWorkingParameter();
+      } catch (deleteErr) {
+        console.error('Error deleting working parameter:', deleteErr);
+        setErrorMessage('Failed to delete working parameter');
+      } finally {
+        setIsDeleting(false);
+        setDeleteDialogOpen(false);
+        setItemToDelete(null);
+      }
     }
-  }, [deleteWorkingParameterMutate, itemToDelete]);
+  }, [itemToDelete, fetchWorkingParameter]);
 
   const handleCloseDeleteDialog = useCallback(() => {
     if (!isDeleting) {
@@ -191,12 +165,12 @@ export function WorkingParameterListView() {
 
   // Apply filter and sorting to the templates
   const dataFiltered: WorkingParameterProps[] = applyFilter({
-    inputData: templates,  // Now templates are of type WorkingParameterProps[]
+    inputData: templates,
     comparator: getComparator(table.order, table.orderBy),
-    filterName,
+    filterName: '', // No client-side filtering since we're using server-side
   });
 
-  const notFound = !dataFiltered.length && !!filterName;
+  const notFound = !loading && templates.length === 0;
 
   return (
     <DashboardContent>
@@ -232,7 +206,7 @@ export function WorkingParameterListView() {
           filterName={filterName}
           onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
             setFilterName(event.target.value);
-            table.onResetPage();
+            setPage(0); // Reset to first page when filtering
           }}
         />
 
@@ -259,9 +233,20 @@ export function WorkingParameterListView() {
                 ]}
               />
               <TableBody>
-                {dataFiltered
-                  .slice(table.page * table.rowsPerPage, table.page * table.rowsPerPage + table.rowsPerPage)
-                  .map((row) => (
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={7} align="center">
+                      <CircularProgress />
+                    </TableCell>
+                  </TableRow>
+                ) : templates.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} align="center">
+                      No data available
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  templates.map((row) => (
                     <WorkingParameterTableRow
                       key={row.id}
                       row={row}
@@ -270,12 +255,8 @@ export function WorkingParameterListView() {
                       onEditRow={() => handleEditWorkingParameter(row.id)}
                       onDeleteRow={() => handleDeleteWorkingParameter(row.id)}
                     />
-                  ))}
-
-                <WorkingParameterTableEmptyRows
-                  height={72}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
-                />
+                  ))
+                )}
 
                 {notFound && <WorkingParameterTableNoData searchQuery={filterName} />}
               </TableBody>
@@ -285,12 +266,12 @@ export function WorkingParameterListView() {
 
         <TablePagination
           component="div"
-          page={table.page}
-          count={dataFiltered.length}
-          rowsPerPage={table.rowsPerPage}
-          onPageChange={table.onChangePage}
+          page={page}
+          count={totalItems}
+          rowsPerPage={rowsPerPage}
+          onPageChange={handleChangePage}
           rowsPerPageOptions={[...STANDARD_ROWS_PER_PAGE_OPTIONS]}
-          onRowsPerPageChange={table.onChangeRowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
 
