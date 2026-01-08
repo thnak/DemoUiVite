@@ -88,6 +88,8 @@ export const IoTSensorListPage = lazy(() => import('src/pages/iot-sensor-list'))
 export const IoTSensorCreatePage = lazy(() => import('src/pages/iot-sensor-create'));
 export const IoTSensorEditPage = lazy(() => import('src/pages/iot-sensor-edit'));
 export const IoTSensorDataSeedingPage = lazy(() => import('src/pages/iot-sensor-data-seeding'));
+export const MachineSelectionPage = lazy(() => import('src/pages/oi/machine-selection'));
+export const MachineOperationPage = lazy(() => import('src/pages/oi/machine-operation'));
 export const OperatorDashboardPage = lazy(() => import('src/pages/oi/operator-dashboard'));
 export const ChangeProductPage = lazy(() => import('src/pages/oi/change-product'));
 export const DefectInputPage = lazy(() => import('src/pages/oi/defect-input'));
@@ -219,6 +221,8 @@ export const routesSection: RouteObject[] = [
           </MachineSelectorProvider>
         ),
         children: [
+          { path: 'select-machine', element: <MachineSelectionPage /> },
+          { path: 'operation', element: <MachineOperationPage /> },
           { path: 'dashboard', element: <OperatorDashboardPage /> },
           { path: 'change-product', element: <ChangeProductPage /> },
           { path: 'defect-input', element: <DefectInputPage /> },
