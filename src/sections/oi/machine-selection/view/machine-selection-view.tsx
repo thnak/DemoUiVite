@@ -68,7 +68,7 @@ export function MachineSelectionView() {
         }
       );
       
-      let filteredMachines = response.data || [];
+      let filteredMachines = response.items || [];
       
       // Filter by selected areas if any
       if (selectedAreas.length > 0) {

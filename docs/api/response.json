@@ -70850,7 +70850,7 @@
     "/api/hubs/documentation": {
       "get": {
         "tags": [
-          "SignalR Hubs Documentation"
+          "SignalRHubsDocumentation"
         ],
         "summary": "Get comprehensive documentation for all SignalR hubs",
         "description": "Returns detailed documentation including hub endpoints, methods, parameters, return types, and JSON payload examples",
@@ -70870,7 +70870,7 @@
     "/api/hubs/documentation/markdown": {
       "get": {
         "tags": [
-          "SignalR Hubs Documentation"
+          "SignalRHubsDocumentation"
         ],
         "summary": "Get SignalR hubs documentation in Markdown format",
         "description": "Returns the complete documentation as a Markdown document",
@@ -70885,7 +70885,7 @@
     "/api/hubs/{hubName}": {
       "get": {
         "tags": [
-          "SignalR Hubs Documentation"
+          "SignalRHubsDocumentation"
         ],
         "summary": "Get documentation for a specific SignalR hub",
         "description": "Returns detailed documentation for a single hub by name",
@@ -104454,6 +104454,11 @@
           "productId": {
             "$ref": "#/components/schemas/ObjectId"
           },
+          "productionOrderNumber": {
+            "type": "string",
+            "description": "Production order number associated with the product.",
+            "nullable": true
+          },
           "userId": {
             "$ref": "#/components/schemas/ObjectId"
           },
@@ -104486,6 +104491,23 @@
             "type": "number",
             "description": "Planned quantity for the new product after changeover.",
             "format": "double"
+          },
+          "currentQuantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "goodQuantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "scrapQuantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "actualCycleTime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
           }
         },
         "additionalProperties": false,
@@ -117662,7 +117684,7 @@
       "name": "ShiftTemplate"
     },
     {
-      "name": "SignalR Hubs Documentation"
+      "name": "SignalRHubsDocumentation"
     },
     {
       "name": "SlideShow"
