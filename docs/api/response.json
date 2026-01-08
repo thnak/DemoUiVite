@@ -1381,6 +1381,121 @@
         }
       }
     },
+    "/api/Area/minimal-names": {
+      "get": {
+        "tags": [
+          "Area"
+        ],
+        "summary": "Gets minimal area information (IDs and Names)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetAreaNamesResult"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetAreaNamesResult"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetAreaNamesResult"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetAreaNamesResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Area/search-machines": {
+      "get": {
+        "tags": [
+          "Area"
+        ],
+        "summary": "Searches machines by area and optional search text",
+        "parameters": [
+          {
+            "name": "areaIds",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ObjectId"
+              }
+            }
+          },
+          {
+            "name": "searchText",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SearchMachineByAreaResult"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SearchMachineByAreaResult"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SearchMachineByAreaResult"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SearchMachineByAreaResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/assemblyhashinfo/{id}": {
       "get": {
         "tags": [
@@ -46365,174 +46480,6 @@
         }
       }
     },
-    "/api/Firmware/publish": {
-      "post": {
-        "tags": [
-          "Firmware"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "202": {
-            "description": "Accepted",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/firmwareversion/{id}": {
       "get": {
         "tags": [
@@ -59067,7 +59014,9 @@
         "tags": [
           "Mqtt"
         ],
+        "summary": "Disconnect a specific MQTT client",
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -59128,6 +59077,7 @@
         "tags": [
           "Mqtt"
         ],
+        "summary": "Get connected MQTT clients with pagination and optional search",
         "parameters": [
           {
             "name": "search",
@@ -70897,6 +70847,74 @@
         }
       }
     },
+    "/api/hubs/documentation": {
+      "get": {
+        "tags": [
+          "SignalR Hubs Documentation"
+        ],
+        "summary": "Get comprehensive documentation for all SignalR hubs",
+        "description": "Returns detailed documentation including hub endpoints, methods, parameters, return types, and JSON payload examples",
+        "operationId": "GetSignalRHubsDocumentation",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/hubs/documentation/markdown": {
+      "get": {
+        "tags": [
+          "SignalR Hubs Documentation"
+        ],
+        "summary": "Get SignalR hubs documentation in Markdown format",
+        "description": "Returns the complete documentation as a Markdown document",
+        "operationId": "GetSignalRHubsMarkdownDocumentation",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/hubs/{hubName}": {
+      "get": {
+        "tags": [
+          "SignalR Hubs Documentation"
+        ],
+        "summary": "Get documentation for a specific SignalR hub",
+        "description": "Returns detailed documentation for a single hub by name",
+        "operationId": "GetSignalRHubDocumentation",
+        "parameters": [
+          {
+            "name": "hubName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/slideshow/{id}": {
       "get": {
         "tags": [
@@ -77750,6 +77768,204 @@
         }
       }
     },
+    "/api/User/get-user-role-table-by-user-id/{userId}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Gets user role table data by user ID.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserRoleTableByUserIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserRoleTableByUserIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserRoleTableByUserIdResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserRoleTableByUserIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/User/get-user-and-role-table-data": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Gets user and role table data.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserAndRoleTableDataResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserAndRoleTableDataResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserAndRoleTableDataResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserAndRoleTableDataResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/User/update-user-roles": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Updates user roles based on the provided request.",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRolesRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRolesRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRolesRequest"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRolesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int64Result"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int64Result"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int64Result"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int64Result"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/User/search-operator-users": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Searches for operator users based on the provided search term.",
+        "parameters": [
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SearchOperatorUserResult"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SearchOperatorUserResult"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SearchOperatorUserResult"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SearchOperatorUserResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/User/set-dark-mode": {
       "post": {
         "tags": [
@@ -82731,7 +82947,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2026-01-06"
+              "example": "2026-01-08"
             }
           },
           {
@@ -82741,7 +82957,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2026-01-06"
+              "example": "2026-01-08"
             }
           },
           {
@@ -84813,6 +85029,19 @@
             "description": "Mô tả chi tiết về thực thể.",
             "nullable": true
           },
+          "colorHex": {
+            "type": "string",
+            "description": "Màu sắc hiển thị lý do dừng máy",
+            "nullable": true
+          },
+          "translations": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Các bản dịch của tên lý do dừng máy",
+            "nullable": true
+          },
           "address": {
             "type": "string",
             "description": "can be address or GPS coordinates or any location identifier",
@@ -84870,7 +85099,7 @@
           },
           "imageUrl": {
             "type": "string",
-            "description": "",
+            "description": "URL of the area image",
             "nullable": true
           }
         },
@@ -86235,13 +86464,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2026-01-06"
+            "example": "2026-01-08"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2026-01-06"
+            "example": "2026-01-08"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -86353,13 +86582,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2026-01-06"
+            "example": "2026-01-08"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2026-01-06"
+            "example": "2026-01-08"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -86635,12 +86864,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-06"
+            "example": "2026-01-08"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-06"
+            "example": "2026-01-08"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -87055,6 +87284,14 @@
         "properties": {
           "productId": {
             "$ref": "#/components/schemas/ObjectId"
+          },
+          "userId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "productionOrderNumber": {
+            "type": "string",
+            "description": "Production order number for the new product. Optional.",
+            "nullable": true
           },
           "plannedQuantity": {
             "type": "number",
@@ -90742,7 +90979,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-06"
+            "example": "2026-01-08"
           }
         },
         "additionalProperties": false
@@ -92661,6 +92898,21 @@
         "additionalProperties": false,
         "description": "Pagination response for queries."
       },
+      "GetAreaNamesResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the area",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Result for GetAreaNamesQuery"
+      },
       "GetAvailableMachinesToMapStopReasonResult": {
         "type": "object",
         "properties": {
@@ -92915,6 +93167,11 @@
           "imageUrl": {
             "type": "string",
             "description": "Hình ảnh minh họa cho lý do lỗi",
+            "nullable": true
+          },
+          "colorHex": {
+            "type": "string",
+            "description": "Màu sắc hiển thị cho lý do lỗi (dạng mã hex)",
             "nullable": true
           },
           "defectGroupName": {
@@ -93803,10 +94060,46 @@
           "requiresComment": {
             "type": "boolean",
             "description": "Lý do dừng máy có yêu cầu bình luận không"
+          },
+          "colorHex": {
+            "type": "string",
+            "description": "Hình ảnh minh họa cho lý do dừng máy",
+            "nullable": true
           }
         },
         "additionalProperties": false,
         "description": "Kết quả lấy bản đồ lý do dừng từ Id máy móc thiết bị"
+      },
+      "GetUserAndRoleTableDataResult": {
+        "type": "object",
+        "properties": {
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoleInfo"
+            },
+            "description": "Roles information",
+            "nullable": true
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserInfo"
+            },
+            "description": "Users information",
+            "nullable": true
+          },
+          "userRoles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserRoleInfo"
+            },
+            "description": "User roles information",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Result for user and role table data"
       },
       "GetUserPageQueryResponse": {
         "type": "object",
@@ -93899,6 +94192,29 @@
         },
         "additionalProperties": false,
         "description": "Result model representing a user in the paginated response."
+      },
+      "GetUserRoleTableByUserIdResult": {
+        "type": "object",
+        "properties": {
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoleInfo"
+            },
+            "description": "Roles information",
+            "nullable": true
+          },
+          "userRoles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "description": "User roles information",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Result for user role table by user id"
       },
       "GetWorkDateCalendarStatisticByCalendarResult": {
         "type": "object",
@@ -94844,7 +95160,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2026-01-06"
+            "example": "2026-01-08"
           },
           "locationId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -100842,6 +101158,7 @@
         "properties": {
           "clientId": {
             "type": "string",
+            "description": "Unique identifier of the MQTT client to disconnect.",
             "nullable": true
           },
           "reason": {
@@ -100849,13 +101166,15 @@
           },
           "reasonString": {
             "type": "string",
+            "description": "Optional reason string providing additional context for the disconnection.",
             "nullable": true
           },
           "disconnectReasonCode": {
             "$ref": "#/components/schemas/MqttDisconnectReasonCode"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Request model for disconnecting an MQTT client"
       },
       "MqttControllerGetClientsResponse": {
         "required": [
@@ -100867,58 +101186,72 @@
         "properties": {
           "id": {
             "type": "string",
+            "description": "Unique identifier of the MQTT client.",
             "nullable": true
           },
           "bytesReceived": {
             "type": "integer",
+            "description": "Total number of bytes received from the client.",
             "format": "int64"
           },
           "bytesSent": {
             "type": "integer",
+            "description": "Total number of bytes sent to the client.",
             "format": "int64"
           },
           "connectedTimestamp": {
             "type": "string",
+            "description": "Timestamp when the client connected.",
             "format": "date-time"
           },
           "remoteEndPoint": {
             "type": "string",
+            "description": "Remote endpoint of the client.",
             "nullable": true
           },
           "lastNonKeepAlivePacketReceivedTimestamp": {
             "type": "string",
+            "description": "Timestamp of the last non-keep-alive packet received from the client.",
             "format": "date-time"
           },
           "lastPacketReceivedTimestamp": {
             "type": "string",
+            "description": "Timestamp of the last packet received from the client.",
             "format": "date-time"
           },
           "lastPacketSentTimestamp": {
             "type": "string",
+            "description": "Timestamp of the last packet sent to the client.",
             "format": "date-time"
           },
           "protocolVersion": {
             "type": "string",
+            "description": "MQTT Protocol Version used by the client.",
             "nullable": true
           },
           "receivedApplicationMessagesCount": {
             "type": "integer",
+            "description": "Total number of application messages received from the client.",
             "format": "int64"
           },
           "receivedPacketsCount": {
             "type": "integer",
+            "description": "Total number of packets received from the client.",
             "format": "int64"
           },
           "sentApplicationMessagesCount": {
             "type": "integer",
+            "description": "Total number of application messages sent to the client.",
             "format": "int64"
           },
           "sentPacketsCount": {
             "type": "integer",
+            "description": "Total number of packets sent to the client.",
             "format": "int64"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Response model for MQTT controller to get client information"
       },
       "MqttControllerGetClientsResponsePaginationQuery": {
         "type": "object",
@@ -104121,6 +104454,9 @@
           "productId": {
             "$ref": "#/components/schemas/ObjectId"
           },
+          "userId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
           "quantityPerCycle": {
             "type": "number",
             "description": "Quantity produced per signal for the product.",
@@ -104510,7 +104846,7 @@
             "type": "string",
             "description": "Date of the work.",
             "format": "date",
-            "example": "2026-01-06"
+            "example": "2026-01-08"
           },
           "shiftName": {
             "type": "string",
@@ -106394,6 +106730,21 @@
         "additionalProperties": false,
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
+      "RoleInfo": {
+        "type": "object",
+        "properties": {
+          "roleId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "roleName": {
+            "type": "string",
+            "description": "Role Name",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Role information"
+      },
       "RolePermissionMapping": {
         "type": "object",
         "properties": {
@@ -107610,6 +107961,56 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
+      },
+      "SearchMachineByAreaResult": {
+        "type": "object",
+        "properties": {
+          "machineId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "machineName": {
+            "type": "string",
+            "description": "Name of the machine",
+            "nullable": true
+          },
+          "areaName": {
+            "type": "string",
+            "description": "Name of the area the machine belongs to",
+            "nullable": true
+          },
+          "areaHexColor": {
+            "type": "string",
+            "description": "Hex color code of the area the machine belongs to",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Result for SearchMachineByAreaQuery"
+      },
+      "SearchOperatorUserResult": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "userName": {
+            "type": "string",
+            "description": "Username of the user.",
+            "nullable": true
+          },
+          "fullName": {
+            "type": "string",
+            "description": "Full name of the user.",
+            "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "Image URL of the user.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Result structure for operator user search"
       },
       "SecuritySettings": {
         "type": "object",
@@ -112746,6 +113147,37 @@
         "additionalProperties": false,
         "description": "Data transfer object for updating user information"
       },
+      "UpdateUserRolesRequest": {
+        "type": "object",
+        "properties": {
+          "roleIdsToAdd": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "description": "Role Ids to add",
+            "nullable": true
+          },
+          "roleIdsToRemove": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "description": "Role Ids to remove",
+            "nullable": true
+          },
+          "userIds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "description": "User Ids to update",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request to update user roles"
+      },
       "UpstreamHttpMethod": {
         "enum": [
           "get",
@@ -113366,6 +113798,21 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
+      },
+      "UserInfo": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "userName": {
+            "type": "string",
+            "description": "User Name",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "User information"
       },
       "UserInfoDto": {
         "required": [
@@ -114380,6 +114827,19 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
+      },
+      "UserRoleInfo": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "roleId": {
+            "$ref": "#/components/schemas/ObjectId"
+          }
+        },
+        "additionalProperties": false,
+        "description": "User role information"
       },
       "UserRoleMapping": {
         "type": "object",
@@ -116152,7 +116612,7 @@
             "type": "string",
             "description": "The specific work date this statistic applies to.",
             "format": "date",
-            "example": "2026-01-06"
+            "example": "2026-01-08"
           },
           "calendarId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -116876,7 +117336,8 @@
       "name": "AppVersion"
     },
     {
-      "name": "Area"
+      "name": "Area",
+      "description": "Controller for managing areas"
     },
     {
       "name": "AssemblyHashInfo"
@@ -116984,7 +117445,8 @@
       "name": "FileVersions"
     },
     {
-      "name": "Firmware"
+      "name": "Firmware",
+      "description": ""
     },
     {
       "name": "FirmwareVersion"
@@ -117198,6 +117660,9 @@
     },
     {
       "name": "ShiftTemplate"
+    },
+    {
+      "name": "SignalR Hubs Documentation"
     },
     {
       "name": "SlideShow"
