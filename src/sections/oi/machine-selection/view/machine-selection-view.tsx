@@ -230,15 +230,15 @@ export function MachineSelectionView() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     overflow: 'hidden',
+                    position: 'relative',
                   }}
                 >
-                  <Box
-                    component="img"
+                  <img
                     src={`${apiConfig.baseUrl}/api/Machine/${machine.id}/image`}
-                    alt={machine.name || machine.code}
-                    onError={(e) => {
+                    alt={machine.name || machine.code || ''}
+                    onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
                       // Fallback to icon if image fails to load
-                      const target = e.target as HTMLImageElement;
+                      const target = e.currentTarget;
                       target.style.display = 'none';
                       const parent = target.parentElement;
                       if (parent && !parent.querySelector('.fallback-icon')) {
@@ -250,7 +250,7 @@ export function MachineSelectionView() {
                         parent.appendChild(icon);
                       }
                     }}
-                    sx={{
+                    style={{
                       width: '100%',
                       height: '100%',
                       objectFit: 'cover',
