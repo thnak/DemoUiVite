@@ -1,4 +1,4 @@
-import type { MachineEntity, AreaEntity } from 'src/api/types/generated';
+import type { AreaEntity, MachineEntity } from 'src/api/types/generated';
 
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useCallback } from 'react';
@@ -21,10 +21,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useRouter } from 'src/routes/hooks';
 
 import { apiConfig } from 'src/api/config';
+import { DashboardContent } from 'src/layouts/dashboard';
 import { searchArea } from 'src/api/services/generated/area';
 import { postapiMachinesearchmachines } from 'src/api/services/generated/machine';
-
-import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
 
