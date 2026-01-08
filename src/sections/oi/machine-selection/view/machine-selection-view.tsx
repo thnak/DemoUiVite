@@ -1,7 +1,7 @@
 import type { MachineEntity, AreaEntity } from 'src/api/types/generated';
 
-import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -14,8 +14,9 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import CardActionArea from '@mui/material/CardActionArea';
-import { CircularProgress, OutlinedInput } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -23,8 +24,9 @@ import { apiConfig } from 'src/api/config';
 import { searchArea } from 'src/api/services/generated/area';
 import { postapiMachinesearchmachines } from 'src/api/services/generated/machine';
 
-import { Iconify } from 'src/components/iconify';
 import { DashboardContent } from 'src/layouts/dashboard';
+
+import { Iconify } from 'src/components/iconify';
 
 import { useMachineSelector } from '../../context';
 

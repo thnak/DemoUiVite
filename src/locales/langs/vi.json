@@ -69,7 +69,8 @@
     "search": "Tìm kiếm",
     "logout": "Đăng xuất",
     "cancel": "Hủy",
-    "confirm": "Xác nhận"
+    "confirm": "Xác nhận",
+    "unknown": "Không xác định"
   },
   "oi": {
     "selectedMachine": "Máy đã chọn",
