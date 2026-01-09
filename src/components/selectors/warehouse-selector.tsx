@@ -49,7 +49,8 @@ export function WarehouseSelector({
     } else if (!value && selectedWarehouse !== null) {
       setSelectedWarehouse(null);
     }
-  }, [entityById, value, selectedWarehouse]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entityById, value]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

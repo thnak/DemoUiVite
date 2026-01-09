@@ -49,7 +49,8 @@ export function InformationBaseSelector({
     } else if (!value && selectedInformationBase !== null) {
       setSelectedInformationBase(null);
     }
-  }, [entityById, value, selectedInformationBase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entityById, value]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

@@ -49,7 +49,8 @@ export function ManufacturerSelector({
     } else if (!value && selectedManufacturer !== null) {
       setSelectedManufacturer(null);
     }
-  }, [entityById, value, selectedManufacturer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entityById, value]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

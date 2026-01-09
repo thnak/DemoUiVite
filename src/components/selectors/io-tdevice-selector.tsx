@@ -49,7 +49,8 @@ export function IoTDeviceSelector({
     } else if (!value && selectedIoTDevice !== null) {
       setSelectedIoTDevice(null);
     }
-  }, [entityById, value, selectedIoTDevice]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entityById, value]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

@@ -49,7 +49,8 @@ export function ScriptVariantSelector({
     } else if (!value && selectedScriptVariant !== null) {
       setSelectedScriptVariant(null);
     }
-  }, [entityById, value, selectedScriptVariant]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entityById, value]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

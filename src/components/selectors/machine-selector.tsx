@@ -49,7 +49,8 @@ export function MachineSelector({
     } else if (!value && selectedMachine !== null) {
       setSelectedMachine(null);
     }
-  }, [entityById, value, selectedMachine]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entityById, value]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

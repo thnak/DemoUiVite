@@ -53,7 +53,8 @@ export function TimeBlockNameSelector({
     } else if (!value && selectedTimeBlockName !== null) {
       setSelectedTimeBlockName(null);
     }
-  }, [entityById, value, selectedTimeBlockName]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entityById, value]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

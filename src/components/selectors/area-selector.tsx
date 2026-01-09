@@ -49,7 +49,8 @@ export function AreaSelector({
     } else if (!value && selectedArea !== null) {
       setSelectedArea(null);
     }
-  }, [entityById, value, selectedArea]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entityById, value]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

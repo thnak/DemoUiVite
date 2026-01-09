@@ -49,7 +49,8 @@ export function DepartmentSelector({
     } else if (!value && selectedDepartment !== null) {
       setSelectedDepartment(null);
     }
-  }, [entityById, value, selectedDepartment]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entityById, value]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

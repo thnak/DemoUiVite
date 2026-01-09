@@ -49,7 +49,8 @@ export function StationGroupSelector({
     } else if (!value && selectedStationGroup !== null) {
       setSelectedStationGroup(null);
     }
-  }, [entityById, value, selectedStationGroup]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entityById, value]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
