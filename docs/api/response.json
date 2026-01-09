@@ -109111,6 +109111,9 @@
             "minLength": 1,
             "type": "string",
             "description": "Hex color code of the area the machine belongs to"
+          },
+          "currentRunState": {
+            "$ref": "#/components/schemas/MachineOutputRunState"
           }
         },
         "additionalProperties": false,
