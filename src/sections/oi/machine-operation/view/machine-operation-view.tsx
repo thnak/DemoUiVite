@@ -1243,7 +1243,7 @@ export function MachineOperationView() {
 
           {/* Tab 1: Add Quantity */}
           {addQuantityTabValue === 0 && (
-            <Stack spacing={3}>
+            <Stack spacing={3} height='700px'>
               <TextField
                 fullWidth
                 label="Số lượng"
@@ -1290,7 +1290,7 @@ export function MachineOperationView() {
 
           {/* Tab 2: History */}
           {addQuantityTabValue === 1 && (
-            <TableContainer>
+            <TableContainer style={{ height: '700px' }}>
               <Table>
                 <TableHead>
                   <TableRow>
