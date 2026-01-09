@@ -820,7 +820,6 @@ export function CalendarDetailView() {
           </Typography>
         </Box>
       </Box>
-
       {/* Calendar Info */}
       {calendarInfo && (
         <Card sx={{ p: 3, mb: 3 }}>
@@ -832,7 +831,6 @@ export function CalendarDetailView() {
           </Typography>
         </Card>
       )}
-
       {/* View Type Tabs */}
       <Card sx={{ mb: 3 }}>
         <Tabs value={viewType} onChange={handleViewTypeChange} sx={{ px: 2, pt: 2 }}>
@@ -854,7 +852,9 @@ export function CalendarDetailView() {
                     type="date"
                     value={fromDate}
                     onChange={handleFromDateChange}
-                    InputLabelProps={{ shrink: true }}
+                    slotProps={{
+                      inputLabel: { shrink: true }
+                    }}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
@@ -864,7 +864,9 @@ export function CalendarDetailView() {
                     type="date"
                     value={toDate}
                     onChange={handleToDateChange}
-                    InputLabelProps={{ shrink: true }}
+                    slotProps={{
+                      inputLabel: { shrink: true }
+                    }}
                   />
                 </Grid>
               </>
@@ -945,7 +947,6 @@ export function CalendarDetailView() {
           </Grid>
         </Box>
       </Card>
-
       {/* Summary Statistics */}
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
@@ -985,7 +986,6 @@ export function CalendarDetailView() {
           </Card>
         </Grid>
       </Grid>
-
       {/* Statistics Content */}
       {loading ? (
         <Card sx={{ p: 10, display: 'flex', justifyContent: 'center' }}>
@@ -1086,7 +1086,6 @@ export function CalendarDetailView() {
           ))}
         </Box>
       )}
-      
       {/* Day Detail Dialog */}
       {renderDayDetailDialog()}
     </DashboardContent>

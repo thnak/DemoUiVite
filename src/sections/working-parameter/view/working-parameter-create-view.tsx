@@ -390,7 +390,6 @@ export function WorkingParameterCreateView() {
           </Typography>
         </Box>
       </Box>
-
       <Card sx={{ mb: 3 }}>
         <Tabs
           value={tabValue}
@@ -413,7 +412,6 @@ export function WorkingParameterCreateView() {
           />
         </Tabs>
       </Card>
-
       {/* Product Tab */}
       {tabValue === 0 && (
         <Grid container spacing={3}>
@@ -612,14 +610,16 @@ export function WorkingParameterCreateView() {
                     placeholder="Search created parameters..."
                     value={productParamsSearch}
                     onChange={(e) => setProductParamsSearch(e.target.value)}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Iconify icon="eva:search-fill" />
-                        </InputAdornment>
-                      ),
-                    }}
                     sx={{ width: 300 }}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Iconify icon="eva:search-fill" />
+                          </InputAdornment>
+                        ),
+                      }
+                    }}
                   />
                 </Box>
                 <Scrollbar>
@@ -675,7 +675,6 @@ export function WorkingParameterCreateView() {
         )}
         </Grid>
       )}
-
       {/* Machine Tab */}
       {tabValue === 1 && (
         <Grid container spacing={3}>
@@ -874,14 +873,16 @@ export function WorkingParameterCreateView() {
                       placeholder="Search created parameters..."
                       value={machineParamsSearch}
                       onChange={(e) => setMachineParamsSearch(e.target.value)}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Iconify icon="eva:search-fill" />
-                          </InputAdornment>
-                        ),
-                      }}
                       sx={{ width: 300 }}
+                      slotProps={{
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <Iconify icon="eva:search-fill" />
+                            </InputAdornment>
+                          ),
+                        }
+                      }}
                     />
                   </Box>
                   <Scrollbar>
@@ -937,13 +938,11 @@ export function WorkingParameterCreateView() {
           )}
         </Grid>
       )}
-
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
         <Button variant="outlined" color="inherit" onClick={handleCancel}>
           Cancel
         </Button>
       </Box>
-
       <ConfirmDeleteDialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
@@ -951,7 +950,6 @@ export function WorkingParameterCreateView() {
         entityName="working parameter"
         loading={isDeleting}
       />
-
       <Snackbar
         open={!!successMessage}
         autoHideDuration={3000}
@@ -962,7 +960,6 @@ export function WorkingParameterCreateView() {
           {successMessage}
         </Alert>
       </Snackbar>
-
       <Snackbar
         open={!!errorMessage}
         autoHideDuration={6000}

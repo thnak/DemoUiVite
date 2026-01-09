@@ -125,7 +125,6 @@ export function OEESummaryFilters({
           <MenuItem value="years">Years</MenuItem>
         </Select>
       </FormControl>
-
       {/* Start Date */}
       <TextField
         type="date"
@@ -133,10 +132,11 @@ export function OEESummaryFilters({
         size="small"
         value={formatDateForInput(startDate)}
         onChange={handleStartDateChange}
-        InputLabelProps={{ shrink: true }}
         sx={{ minWidth: 160 }}
+        slotProps={{
+          inputLabel: { shrink: true }
+        }}
       />
-
       {/* End Date */}
       <TextField
         type="date"
@@ -144,10 +144,11 @@ export function OEESummaryFilters({
         size="small"
         value={formatDateForInput(endDate)}
         onChange={handleEndDateChange}
-        InputLabelProps={{ shrink: true }}
         sx={{ minWidth: 160 }}
+        slotProps={{
+          inputLabel: { shrink: true }
+        }}
       />
-
       {/* Machines Multi-Select */}
       <FormControl size="small" sx={{ minWidth: 200 }}>
         <InputLabel>Machines</InputLabel>
@@ -178,7 +179,6 @@ export function OEESummaryFilters({
           ))}
         </Select>
       </FormControl>
-
       {/* Areas Multi-Select */}
       <FormControl size="small" sx={{ minWidth: 180 }}>
         <InputLabel>Areas</InputLabel>
@@ -209,7 +209,6 @@ export function OEESummaryFilters({
           ))}
         </Select>
       </FormControl>
-
       {/* Shifts Multi-Select */}
       <FormControl size="small" sx={{ minWidth: 180 }}>
         <InputLabel>Shifts</InputLabel>

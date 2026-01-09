@@ -187,15 +187,17 @@ export function MachineSelectionView() {
                 placeholder="Tìm kiếm máy..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <Iconify icon="eva:search-fill" sx={{ mr: 1, color: 'text.disabled', width: 24, height: 24 }} />
-                  ),
-                }}
                 sx={{
                   '& .MuiInputBase-root': {
                     fontSize: '1.125rem',
                   },
+                }}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <Iconify icon="eva:search-fill" sx={{ mr: 1, color: 'text.disabled', width: 24, height: 24 }} />
+                    ),
+                  }
                 }}
               />
 
