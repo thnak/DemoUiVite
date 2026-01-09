@@ -74,12 +74,12 @@ type ProductTableRowProps = {
 //       return 100;
 //     case 'low_stock':
 //       return 30;
-    case 'out_of_stock':
-      return 10;
-    default:
-      return 100;
-  }
-};
+//     case 'out_of_stock':
+//       return 10;
+//     default:
+//       return 100;
+//   }
+// };
 
 export function ProductTableRow({
   row,
