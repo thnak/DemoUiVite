@@ -13,6 +13,7 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
+import { MuiColorInput } from 'mui-color-input';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -27,7 +28,6 @@ import {
 } from 'src/api/hooks/generated/use-stop-machine-reason';
 
 import { Iconify } from 'src/components/iconify';
-import { ColorPicker } from 'src/components/color-utils';
 import { StopMachineReasonGroupSelector } from 'src/components/selectors/stop-machine-reason-group-selector';
 
 // ----------------------------------------------------------------------
@@ -195,10 +195,10 @@ export function StopMachineReasonCreateEditView({
     []
   );
 
-  const handleColorChange = useCallback((color: string | string[]) => {
+  const handleColorChange = useCallback((color: string) => {
     setFormData((prev) => ({
       ...prev,
-      colorHex: typeof color === 'string' ? color : color[0] || '#1976d2',
+      colorHex: color,
     }));
   }, []);
 
@@ -375,12 +375,36 @@ export function StopMachineReasonCreateEditView({
           <Typography variant="h6" sx={{ mb: 3 }}>
             Color
           </Typography>
-          <ColorPicker
+          <MuiColorInput
+            fullWidth
+            format="hex"
             value={formData.colorHex}
             onChange={handleColorChange}
-            options={COLOR_OPTIONS}
-            size={40}
+            helperText="Choose a color to represent this reason"
           />
+          <Box
+            sx={{
+              mt: 2,
+              p: 2,
+              bgcolor: formData.colorHex,
+              borderRadius: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minHeight: 60,
+            }}
+          >
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'white',
+                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                fontWeight: 'medium',
+              }}
+            >
+              Preview: {formData.name || 'Reason Name'}
+            </Typography>
+          </Box>
         </Card>
 
         <Card sx={{ p: 3 }}>

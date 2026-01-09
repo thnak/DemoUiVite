@@ -14,6 +14,7 @@ import Select from '@mui/material/Select';
 import Snackbar from '@mui/material/Snackbar';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import { MuiColorInput } from 'mui-color-input';
 import InputLabel from '@mui/material/InputLabel';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -29,7 +30,6 @@ import {
 } from 'src/api/hooks/generated/use-stop-machine-reason-group';
 
 import { Iconify } from 'src/components/iconify';
-import { ColorPicker } from 'src/components/color-utils';
 
 // ----------------------------------------------------------------------
 
@@ -188,10 +188,10 @@ export function StopMachineReasonGroupCreateEditView({
     }));
   }, []);
 
-  const handleColorChange = useCallback((color: string | string[]) => {
+  const handleColorChange = useCallback((color: string) => {
     setFormData((prev) => ({
       ...prev,
-      colorHex: typeof color === 'string' ? color : color[0] || '#1976d2',
+      colorHex: color,
     }));
   }, []);
 
@@ -366,12 +366,36 @@ export function StopMachineReasonGroupCreateEditView({
           <Typography variant="h6" sx={{ mb: 3 }}>
             Color
           </Typography>
-          <ColorPicker
+          <MuiColorInput
+            fullWidth
+            format="hex"
             value={formData.colorHex}
             onChange={handleColorChange}
-            options={COLOR_OPTIONS}
-            size={40}
+            helperText="Choose a color to represent this group"
           />
+          <Box
+            sx={{
+              mt: 2,
+              p: 2,
+              bgcolor: formData.colorHex,
+              borderRadius: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minHeight: 60,
+            }}
+          >
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'white',
+                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                fontWeight: 'medium',
+              }}
+            >
+              Preview: {formData.name || 'Group Name'}
+            </Typography>
+          </Box>
         </Card>
 
         <Card sx={{ p: 3 }}>
