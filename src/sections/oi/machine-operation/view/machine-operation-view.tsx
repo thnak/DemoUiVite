@@ -34,11 +34,9 @@ interface MachineStatus {
 }
 
 const getMachineStatus = (machineData: MachineOeeUpdate | null): MachineStatus => {
-  // This is a simplified logic - should be based on actual machine state
   if (!machineData) {
     return { status: 'unplanstop', label: 'Dừng không kế hoạch', color: 'error' };
   }
-  
   return { status: 'running', label: 'Đang chạy', color: 'success' };
 };
 
@@ -55,10 +53,8 @@ export function MachineOperationView() {
   const [testMode, setTestMode] = useState(false);
   const [timelineView, setTimelineView] = useState<'current' | 'shift' | 'day'>('current');
 
-  // Get singleton hub service instance
   const hubService = MachineHubService.getInstance(apiConfig.baseUrl);
 
-  // Handle real-time machine updates
   const handleMachineUpdate = useCallback((update: MachineOeeUpdate) => {
     setMachineData({
       ...update,
@@ -69,7 +65,6 @@ export function MachineOperationView() {
     });
   }, []);
 
-  // Subscribe to machine updates
   useEffect(() => {
     if (!selectedMachine?.id) {
       router.push('/oi/select-machine');
@@ -81,17 +76,11 @@ export function MachineOperationView() {
     const connectToMachine = async () => {
       try {
         setIsConnecting(true);
-
-        await hubService.subscribeToMachine(
-          selectedMachine.id || '',
-          handleMachineUpdate
-        );
+        await hubService.subscribeToMachine(selectedMachine.id || '', handleMachineUpdate);
 
         if (!mounted) return;
 
-        const aggregation = await hubService.getMachineAggregation(
-          selectedMachine.id || ''
-        );
+        const aggregation = await hubService.getMachineAggregation(selectedMachine.id || '');
         if (aggregation && mounted) {
           setMachineData({
             machineId: selectedMachine.id || '',
@@ -134,7 +123,6 @@ export function MachineOperationView() {
     };
   }, [selectedMachine, hubService, handleMachineUpdate, router]);
 
-  // Update current time every second
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -169,7 +157,6 @@ export function MachineOperationView() {
           gap: 2,
         }}
       >
-        {/* Left: Back button, Machine name, Action buttons */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
           <IconButton onClick={handleBack} size="large">
             <Iconify icon="eva:arrow-back-fill" />
@@ -193,7 +180,6 @@ export function MachineOperationView() {
           </Stack>
         </Box>
 
-        {/* Right: Test/Run switch, Update time, Status */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Typography variant="body2">RUN</Typography>
@@ -204,12 +190,7 @@ export function MachineOperationView() {
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               {currentTime.toLocaleTimeString()}
             </Typography>
-            <Chip
-              label={machineStatus.label}
-              color={machineStatus.color}
-              size="small"
-              sx={{ mt: 0.5 }}
-            />
+            <Chip label={machineStatus.label} color={machineStatus.color} size="small" sx={{ mt: 0.5 }} />
           </Box>
         </Box>
       </Box>
@@ -220,7 +201,7 @@ export function MachineOperationView() {
         </Box>
       ) : (
         <Stack spacing={3}>
-          {/* Timeline Container - Placeholder */}
+          {/* Timeline Container */}
           <Card sx={{ p: 3 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
@@ -250,7 +231,6 @@ export function MachineOperationView() {
                 </Button>
               </Box>
             </Box>
-            {/* Timeline visualization would go here */}
             <Box
               sx={{
                 height: 120,
@@ -270,7 +250,7 @@ export function MachineOperationView() {
             </Alert>
           </Card>
 
-          {/* Bottom Section: Metrics and Production Info */}
+          {/* Bottom Section */}
           <Grid container spacing={3}>
             {/* Left: OEE Metrics */}
             <Grid size={{ xs: 12, md: 6 }}>
@@ -300,9 +280,7 @@ export function MachineOperationView() {
                       <Typography variant="body2" color="text.secondary">
                         Downtime (giờ)
                       </Typography>
-                      <Typography variant="h6">
-                        {machineData?.downtime || '0'}
-                      </Typography>
+                      <Typography variant="h6">{machineData?.downtime || '0'}</Typography>
                     </Grid>
                     <Grid size={6}>
                       <Typography variant="body2" color="text.secondary">
