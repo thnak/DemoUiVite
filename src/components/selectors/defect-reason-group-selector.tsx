@@ -44,12 +44,12 @@ export function DefectReasonGroupSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedDefectReasonGroup?.id?.toString()) {
       setSelectedDefectReasonGroup(entityById);
-    } else if (!value) {
+    } else if (!value && selectedDefectReasonGroup !== null) {
       setSelectedDefectReasonGroup(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedDefectReasonGroup]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

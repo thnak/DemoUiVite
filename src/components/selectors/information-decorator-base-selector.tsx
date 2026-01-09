@@ -44,12 +44,12 @@ export function InformationDecoratorBaseSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedInformationDecoratorBase?.id?.toString()) {
       setSelectedInformationDecoratorBase(entityById);
-    } else if (!value) {
+    } else if (!value && selectedInformationDecoratorBase !== null) {
       setSelectedInformationDecoratorBase(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedInformationDecoratorBase]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

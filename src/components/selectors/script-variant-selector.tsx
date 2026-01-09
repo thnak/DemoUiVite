@@ -44,12 +44,12 @@ export function ScriptVariantSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedScriptVariant?.id?.toString()) {
       setSelectedScriptVariant(entityById);
-    } else if (!value) {
+    } else if (!value && selectedScriptVariant !== null) {
       setSelectedScriptVariant(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedScriptVariant]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

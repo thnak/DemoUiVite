@@ -58,7 +58,7 @@ export function StopMachineReasonGroupSelector({
       if (currentId !== value) {
         setSelectedStopMachineReasonGroup(entityById);
       }
-    } else if (!value) {
+    } else if (!value && selectedStopMachineReasonGroup !== null) {
       setSelectedStopMachineReasonGroup(null);
     }
   }, [entityById, value, selectedStopMachineReasonGroup]);

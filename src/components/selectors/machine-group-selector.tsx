@@ -44,12 +44,12 @@ export function MachineGroupSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedMachineGroup?.id?.toString()) {
       setSelectedMachineGroup(entityById);
-    } else if (!value) {
+    } else if (!value && selectedMachineGroup !== null) {
       setSelectedMachineGroup(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedMachineGroup]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

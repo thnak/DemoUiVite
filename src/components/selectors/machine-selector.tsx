@@ -44,12 +44,12 @@ export function MachineSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedMachine?.id?.toString()) {
       setSelectedMachine(entityById);
-    } else if (!value) {
+    } else if (!value && selectedMachine !== null) {
       setSelectedMachine(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedMachine]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

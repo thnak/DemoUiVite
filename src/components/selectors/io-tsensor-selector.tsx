@@ -44,12 +44,12 @@ export function IoTSensorSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedIoTSensor?.id?.toString()) {
       setSelectedIoTSensor(entityById);
-    } else if (!value) {
+    } else if (!value && selectedIoTSensor !== null) {
       setSelectedIoTSensor(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedIoTSensor]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

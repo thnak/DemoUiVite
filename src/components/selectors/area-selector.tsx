@@ -44,12 +44,12 @@ export function AreaSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedArea?.id?.toString()) {
       setSelectedArea(entityById);
-    } else if (!value) {
+    } else if (!value && selectedArea !== null) {
       setSelectedArea(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedArea]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

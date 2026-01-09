@@ -44,12 +44,12 @@ export function OperationSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedOperation?.id?.toString()) {
       setSelectedOperation(entityById);
-    } else if (!value) {
+    } else if (!value && selectedOperation !== null) {
       setSelectedOperation(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedOperation]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

@@ -44,12 +44,12 @@ export function StationGroupSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedStationGroup?.id?.toString()) {
       setSelectedStationGroup(entityById);
-    } else if (!value) {
+    } else if (!value && selectedStationGroup !== null) {
       setSelectedStationGroup(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedStationGroup]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

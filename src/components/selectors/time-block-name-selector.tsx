@@ -48,12 +48,12 @@ export function TimeBlockNameSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedTimeBlockName?.id?.toString()) {
       setSelectedTimeBlockName(entityById);
-    } else if (!value) {
+    } else if (!value && selectedTimeBlockName !== null) {
       setSelectedTimeBlockName(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedTimeBlockName]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

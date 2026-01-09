@@ -44,12 +44,12 @@ export function UnitSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedUnit?.id?.toString()) {
       setSelectedUnit(entityById);
-    } else if (!value) {
+    } else if (!value && selectedUnit !== null) {
       setSelectedUnit(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedUnit]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

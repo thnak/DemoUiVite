@@ -44,12 +44,12 @@ export function CalendarSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedCalendar?.id?.toString()) {
       setSelectedCalendar(entityById);
-    } else if (!value) {
+    } else if (!value && selectedCalendar !== null) {
       setSelectedCalendar(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedCalendar]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

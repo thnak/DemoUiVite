@@ -257,7 +257,7 @@ export function DurationTimePicker({
   const [secondsStr, setSecondsStr] = useState(() => (parts.seconds > 0 ? String(parts.seconds) : ''));
 
   // Update local state when value prop changes externally
-  useMemo(() => {
+  useEffect(() => {
     if (precision === 'seconds') {
       setTotalSecondsStr(totalSeconds > 0 ? String(totalSeconds) : '');
     } else {

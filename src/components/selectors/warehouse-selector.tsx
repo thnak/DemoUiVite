@@ -44,12 +44,12 @@ export function WarehouseSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedWarehouse?.id?.toString()) {
       setSelectedWarehouse(entityById);
-    } else if (!value) {
+    } else if (!value && selectedWarehouse !== null) {
       setSelectedWarehouse(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedWarehouse]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

@@ -44,12 +44,12 @@ export function IoTDeviceGroupSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedIoTDeviceGroup?.id?.toString()) {
       setSelectedIoTDeviceGroup(entityById);
-    } else if (!value) {
+    } else if (!value && selectedIoTDeviceGroup !== null) {
       setSelectedIoTDeviceGroup(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedIoTDeviceGroup]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

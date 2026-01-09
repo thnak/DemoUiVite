@@ -38,12 +38,16 @@ export function DowntimeParetoChart({
 
   // Calculate cumulative percentage (handle empty data or all zeros)
   const total = sortedData.reduce((sum, item) => sum + item.value, 0);
-  let cumulative = 0;
-  const cumulativeData = sortedData.map((item) => {
-    if (total === 0) return 0;
-    cumulative += item.value;
-    return Math.round((cumulative / total) * 100);
-  });
+  const cumulativeData = sortedData.reduce<number[]>((acc, item) => {
+    if (total === 0) {
+      acc.push(0);
+    } else {
+      const prevCumulative = acc.length > 0 ? (acc[acc.length - 1] * total) / 100 : 0;
+      const newCumulative = prevCumulative + item.value;
+      acc.push(Math.round((newCumulative / total) * 100));
+    }
+    return acc;
+  }, []);
 
   const categories = sortedData.map((item) => item.name);
   const values = sortedData.map((item) => Math.round((item.value / 60) * 10) / 10);

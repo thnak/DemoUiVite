@@ -44,12 +44,12 @@ export function ScriptDefinitionSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedScriptDefinition?.id?.toString()) {
       setSelectedScriptDefinition(entityById);
-    } else if (!value) {
+    } else if (!value && selectedScriptDefinition !== null) {
       setSelectedScriptDefinition(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedScriptDefinition]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

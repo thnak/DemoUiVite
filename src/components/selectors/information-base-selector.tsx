@@ -44,12 +44,12 @@ export function InformationBaseSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedInformationBase?.id?.toString()) {
       setSelectedInformationBase(entityById);
-    } else if (!value) {
+    } else if (!value && selectedInformationBase !== null) {
       setSelectedInformationBase(null);
     }
-  }, [entityById, value]);
+  }, [entityById, value, selectedInformationBase]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
