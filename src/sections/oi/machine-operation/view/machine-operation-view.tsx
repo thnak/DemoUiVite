@@ -207,7 +207,7 @@ function OEEAPQCombinedChart({
         endAngle: 135,
         track: {
           background: '#e7e7e7',
-          strokeWidth: '97%',
+          strokeWidth: '70%',
           margin: 12, // Space between bars
         },
         dataLabels: {
@@ -231,7 +231,7 @@ function OEEAPQCombinedChart({
           },
         },
         hollow: {
-          size: '50%',
+          size: '20%',
         },
       },
     },
@@ -244,7 +244,8 @@ function OEEAPQCombinedChart({
       fontSize: '14px',
       markers: {
         size: 6,
-        radius: 12, // Rounded markers
+        strokeWidth: 4
+        // radius: 12, // Rounded markers
       },
       itemMargin: {
         horizontal: 12,
