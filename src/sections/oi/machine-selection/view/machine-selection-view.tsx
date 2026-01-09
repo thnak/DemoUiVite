@@ -1,4 +1,4 @@
-import type { SearchMachineByAreaResult, GetAreaNamesResult } from 'src/api/types/generated';
+import type { GetAreaNamesResult, SearchMachineByAreaResult } from 'src/api/types/generated';
 
 import { motion } from 'framer-motion';
 import { useState, useEffect, useCallback } from 'react';
@@ -14,8 +14,8 @@ import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
+import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import CardActionArea from '@mui/material/CardActionArea';
 import CircularProgress from '@mui/material/CircularProgress';
