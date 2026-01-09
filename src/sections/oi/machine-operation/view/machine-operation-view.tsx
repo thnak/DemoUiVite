@@ -187,8 +187,8 @@ const getMachineStatus = (machineData: MachineOeeUpdate | null): MachineStatus =
   return { status: 'running', label: 'Đang chạy', color: 'success' };
 };
 
-// Semi-Circle Donut Chart Component for OEE Metrics
-function SemiCircleMetric({ value, label, color }: { value: number; label: string; color: string }) {
+// Single OEE Semi-Circle Donut Chart Component
+function OEESemiCircleMetric({ value, label, color }: { value: number; label: string; color: string }) {
   const chartOptions: ApexOptions = {
     chart: {
       type: 'radialBar',
@@ -233,11 +233,75 @@ function SemiCircleMetric({ value, label, color }: { value: number; label: strin
   const series = [value];
 
   return (
-    <Box sx={{ textAlign: 'center' }}>
+    <Box sx={{ textAlign: 'center', maxWidth: 200 }}>
       <Chart options={chartOptions} series={series} type="radialBar" height={180} />
       <Typography variant="caption" sx={{ mt: -2, color: 'text.secondary', fontWeight: 'medium', display: 'block' }}>
         {label}
       </Typography>
+    </Box>
+  );
+}
+
+// Combined APQ Chart with Categories (Availability, Performance, Quality)
+function APQCategorizedChart({
+  availability,
+  performance,
+  quality,
+}: {
+  availability: number;
+  performance: number;
+  quality: number;
+}) {
+  const chartOptions: ApexOptions = {
+    chart: {
+      type: 'radialBar',
+      height: 300,
+    },
+    plotOptions: {
+      radialBar: {
+        startAngle: -90,
+        endAngle: 90,
+        track: {
+          background: '#e7e7e7',
+          strokeWidth: '97%',
+          margin: 8,
+        },
+        dataLabels: {
+          name: {
+            fontSize: '14px',
+            color: '#666',
+            offsetY: 80,
+          },
+          value: {
+            offsetY: 40,
+            fontSize: '18px',
+            fontWeight: 'bold',
+            formatter: (val: number) => `${Math.round(val)}%`,
+          },
+        },
+        hollow: {
+          size: '45%',
+        },
+      },
+    },
+    colors: ['#3b82f6', '#f59e0b', '#8b5cf6'],
+    labels: ['Availability', 'Performance', 'Quality'],
+    legend: {
+      show: true,
+      position: 'bottom',
+      horizontalAlign: 'center',
+      fontSize: '13px',
+      markers: {
+        size: 5,
+      },
+    },
+  };
+
+  const series = [availability, performance, quality];
+
+  return (
+    <Box sx={{ width: '100%', maxWidth: 400, mx: 'auto' }}>
+      <Chart options={chartOptions} series={series} type="radialBar" height={300} />
     </Box>
   );
 }
@@ -560,9 +624,25 @@ export function MachineOperationView() {
         event.preventDefault();
         setProductChangeDialogOpen(true);
       }
+      // F2 for add quantity dialog
+      if (event.key === 'F2') {
+        event.preventDefault();
+        setAddQuantityDialogOpen(true);
+      }
+      // F3 for add defect/scrap (placeholder - can be implemented later)
+      if (event.key === 'F3') {
+        event.preventDefault();
+        console.log('F3: Add defect/scrap - to be implemented');
+      }
+      // F4 for label downtime (placeholder - can be implemented later)
+      if (event.key === 'F4') {
+        event.preventDefault();
+        console.log('F4: Label downtime - to be implemented');
+      }
       // Escape to close dialogs
       if (event.key === 'Escape') {
         setProductChangeDialogOpen(false);
+        setAddQuantityDialogOpen(false);
         setShowKeyboardHelp(false);
       }
       // F12 for keyboard help
@@ -574,7 +654,7 @@ export function MachineOperationView() {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [showKeyboardHelp]);
+  }, [showKeyboardHelp, addQuantityDialogOpen]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -678,45 +758,97 @@ export function MachineOperationView() {
                 },
               }}
             >
+              <Badge
+                badgeContent="F1"
+                color="primary"
+                sx={{
+                  '& .MuiBadge-badge': {
+                    fontSize: '0.65rem',
+                    height: 18,
+                    minWidth: 24,
+                    borderRadius: 0.5,
+                  },
+                }}
+              >
+                <Button 
+                  variant="contained" 
+                  size="large"
+                  color="primary" 
+                  startIcon={<Iconify icon="eva:swap-fill" />}
+                  onClick={() => setProductChangeDialogOpen(true)}
+                  sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
+                >
+                  Đổi mã hàng
+                </Button>
+              </Badge>
+            </Badge>
+            <Badge
+              badgeContent="F2"
+              color="primary"
+              sx={{
+                '& .MuiBadge-badge': {
+                  fontSize: '0.65rem',
+                  height: 18,
+                  minWidth: 24,
+                  borderRadius: 0.5,
+                },
+              }}
+            >
               <Button 
-                variant="contained" 
+                variant="outlined" 
                 size="large"
                 color="primary" 
-                startIcon={<Iconify icon="eva:swap-fill" />}
-                onClick={() => setProductChangeDialogOpen(true)}
+                startIcon={<Iconify icon="eva:plus-fill" />}
+                onClick={() => setAddQuantityDialogOpen(true)}
                 sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
               >
-                Đổi mã hàng
+                Thêm sản phẩm
               </Button>
             </Badge>
-            <Button 
-              variant="outlined" 
-              size="large"
-              color="primary" 
-              startIcon={<Iconify icon="eva:plus-fill" />}
-              onClick={() => setAddQuantityDialogOpen(true)}
-              sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
+            <Badge
+              badgeContent="F3"
+              color="error"
+              sx={{
+                '& .MuiBadge-badge': {
+                  fontSize: '0.65rem',
+                  height: 18,
+                  minWidth: 24,
+                  borderRadius: 0.5,
+                },
+              }}
             >
-              Thêm sản phẩm
-            </Button>
-            <Button 
-              variant="outlined" 
-              size="large"
-              color="error" 
-              startIcon={<Iconify icon="eva:alert-triangle-fill" />}
-              sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
+              <Button 
+                variant="outlined" 
+                size="large"
+                color="error" 
+                startIcon={<Iconify icon="eva:alert-triangle-fill" />}
+                sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
+              >
+                Nhập lỗi
+              </Button>
+            </Badge>
+            <Badge
+              badgeContent="F4"
+              color="warning"
+              sx={{
+                '& .MuiBadge-badge': {
+                  fontSize: '0.65rem',
+                  height: 18,
+                  minWidth: 24,
+                  borderRadius: 0.5,
+                },
+              }}
             >
-              Nhập lỗi
-            </Button>
-            <Button 
-              variant="outlined" 
-              size="large"
-              color="warning" 
-              startIcon={<Iconify icon="eva:stop-circle-fill" />}
-              sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
-            >
-              Lý do dừng máy
-            </Button>
+              <Button 
+                variant="outlined" 
+                size="large"
+                color="warning" 
+                startIcon={<Iconify icon="eva:stop-circle-fill" />}
+                sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
+              >
+                Lý do dừng máy
+              </Button>
+            </Badge>
             <IconButton 
               onClick={() => setShowKeyboardHelp(!showKeyboardHelp)}
               sx={{ border: 1, borderColor: 'divider' }}
@@ -814,28 +946,25 @@ export function MachineOperationView() {
                   Chỉ số OEE
                 </Typography>
                 
-                {/* Semi-Circle Donut Charts */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-around', mb: 3 }}>
-                  <SemiCircleMetric 
-                    value={machineData?.oee || 85} 
-                    label="OEE" 
-                    color="#22c55e" 
-                  />
-                  <SemiCircleMetric 
-                    value={machineData?.availability || 92} 
-                    label="Availability" 
-                    color="#3b82f6" 
-                  />
-                  <SemiCircleMetric 
-                    value={machineData?.performance || 95} 
-                    label="Performance" 
-                    color="#f59e0b" 
-                  />
-                  <SemiCircleMetric 
-                    value={machineData?.quality || 97} 
-                    label="Quality" 
-                    color="#8b5cf6" 
-                  />
+                {/* OEE Semi-Circle Chart and APQ Categorized Chart */}
+                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3, mb: 3, alignItems: 'center' }}>
+                  {/* OEE Single Chart */}
+                  <Box sx={{ flex: '0 0 auto' }}>
+                    <OEESemiCircleMetric 
+                      value={machineData?.oee || 85} 
+                      label="OEE" 
+                      color="#22c55e" 
+                    />
+                  </Box>
+                  
+                  {/* APQ Combined Chart */}
+                  <Box sx={{ flex: '1 1 auto', minWidth: 0 }}>
+                    <APQCategorizedChart
+                      availability={machineData?.availability || 92}
+                      performance={machineData?.performance || 95}
+                      quality={machineData?.quality || 97}
+                    />
+                  </Box>
                 </Box>
 
                 {/* OEE Formula */}
@@ -1359,6 +1488,18 @@ export function MachineOperationView() {
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Typography variant="body2">Đổi mã hàng</Typography>
               <Chip label="F1" size="small" />
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="body2">Thêm sản phẩm</Typography>
+              <Chip label="F2" size="small" />
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="body2">Nhập lỗi</Typography>
+              <Chip label="F3" size="small" />
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="body2">Lý do dừng máy</Typography>
+              <Chip label="F4" size="small" />
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Typography variant="body2">Đóng dialog</Typography>
