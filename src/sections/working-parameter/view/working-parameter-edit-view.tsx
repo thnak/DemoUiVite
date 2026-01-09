@@ -61,7 +61,9 @@ export function WorkingParameterCreateEditView({
     if (!isEdit) return;
 
     setFormData(getDefaultForm(currentWorkingParameter));
-  }, [isEdit, currentWorkingParameter?.id, currentWorkingParameter]);
+    // Form initialization effect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEdit, currentWorkingParameter?.id]);
   const handleCloseError = useCallback(() => {
     setErrorMessage(null);
   }, []);

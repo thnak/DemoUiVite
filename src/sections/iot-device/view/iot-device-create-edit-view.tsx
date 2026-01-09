@@ -177,7 +177,9 @@ export function IoTDeviceCreateEditView({
     if (deviceSensors && isEdit) {
       setMappedSensors(deviceSensors);
     }
-  }, [deviceSensors, isEdit]);
+    // Initialize mapped sensors from API data
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deviceSensors?.length, isEdit]);
 
   const isSubmitting = isCreating || isUpdating;
 

@@ -266,6 +266,8 @@ export function DurationTimePicker({
       setMinutesStr(parts.minutes > 0 ? String(parts.minutes) : '');
       setSecondsStr(parts.seconds > 0 ? String(parts.seconds) : '');
     }
+    // Sync internal state with external value changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [parts.days, parts.hours, parts.minutes, parts.seconds, totalSeconds, precision]);
 
   // Handle seconds-only input change
