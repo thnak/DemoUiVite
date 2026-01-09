@@ -145,7 +145,7 @@ export function TimeShiftCaseVisualization({
       <CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Iconify icon="solar:diagram-up-bold-duotone" width={24} />
+            <Iconify icon="solar:chart-bold" width={24} />
             <Typography variant="h6">Time-Shift Case Overview</Typography>
           </Box>
           <Button
@@ -153,7 +153,7 @@ export function TimeShiftCaseVisualization({
             onClick={handleToggleExpanded}
             endIcon={
               <Iconify
-                icon={expanded ? 'solar:alt-arrow-up-bold' : 'solar:alt-arrow-down-bold'}
+                icon={expanded ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'}
                 width={20}
               />
             }
@@ -459,19 +459,19 @@ export function TimeShiftCaseVisualization({
                 </Typography>
                 <Stack spacing={1}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Iconify icon="solar:clock-circle-bold-duotone" width={20} />
+                    <Iconify icon="solar:clock-circle-bold" width={20} />
                     <Typography variant="body2">
                       Late Buffer: <strong>{lateBufferMinutes} minutes</strong>
                     </Typography>
                     <Chip
-                      label={`Cases 5 & 6`}
+                      label="Cases 5 & 6"
                       size="small"
                       sx={{ ml: 1 }}
                       color={lateBufferMinutes !== 120 ? 'primary' : 'default'}
                     />
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Iconify icon="solar:play-circle-bold-duotone" width={20} />
+                    <Iconify icon="solar:play-circle-bold" width={20} />
                     <Typography variant="body2">
                       Merge Case 4 (Early Start): <strong>{mergeCase4ToShift1 ? 'Yes' : 'No'}</strong>
                     </Typography>
@@ -483,7 +483,7 @@ export function TimeShiftCaseVisualization({
                     />
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Iconify icon="solar:stop-circle-bold-duotone" width={20} />
+                    <Iconify icon="solar:restart-bold" width={20} />
                     <Typography variant="body2">
                       Merge Case 5 (Overtime): <strong>{mergeCase5ToLatest ? 'Yes' : 'No'}</strong>
                     </Typography>
@@ -495,7 +495,7 @@ export function TimeShiftCaseVisualization({
                     />
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Iconify icon="solar:calendar-mark-bold-duotone" width={20} />
+                    <Iconify icon="solar:calendar-mark-bold" width={20} />
                     <Typography variant="body2">
                       Auto Virtual Shift: <strong>{autoVirtualShift ? 'Enabled' : 'Disabled'}</strong>
                     </Typography>

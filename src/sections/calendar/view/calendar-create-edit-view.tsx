@@ -167,7 +167,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
   }, [isEdit, calendarId]);
 
   const handleInputChange = useCallback(
-    (field: keyof CalendarFormData, value: string | boolean) => {
+    (field: keyof CalendarFormData, value: string | boolean | number) => {
       setFormData((prev) => ({ ...prev, [field]: value }));
     },
     []
@@ -496,7 +496,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                     data-tour="calendar-case4-merge"
                   />
                   <Typography variant="caption" color="text.secondary" sx={{ mt: -2, mb: 1 }}>
-                    When enabled, runtime between work day start and first shift start is added to Shift 1 performance. When disabled, logged as separate "Early Production" bucket.
+                    When enabled, runtime between work day start and first shift start is added to Shift 1 performance. When disabled, logged as separate &quot;Early Production&quot; bucket.
                   </Typography>
 
                   <FormControlLabel
@@ -510,7 +510,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                     data-tour="calendar-case5-merge"
                   />
                   <Typography variant="caption" color="text.secondary" sx={{ mt: -2, mb: 1 }}>
-                    When enabled, overtime within the late buffer is appended to the last shift. When disabled, tracked as separate "Overtime Production" bucket.
+                    When enabled, overtime within the late buffer is appended to the last shift. When disabled, tracked as separate &quot;Overtime Production&quot; bucket.
                   </Typography>
 
                   <FormControlLabel
