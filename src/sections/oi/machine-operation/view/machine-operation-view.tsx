@@ -184,67 +184,14 @@ const getMachineStatus = (machineData: MachineOeeUpdate | null): MachineStatus =
   return { status: 'running', label: 'Đang chạy', color: 'success' };
 };
 
-// Single OEE Semi-Circle Donut Chart Component
-function OEESemiCircleMetric({ value, label, color }: { value: number; label: string; color: string }) {
-  const chartOptions: ApexOptions = {
-    chart: {
-      type: 'radialBar',
-      sparkline: {
-        enabled: true,
-      },
-    },
-    plotOptions: {
-      radialBar: {
-        startAngle: -90,
-        endAngle: 90,
-        track: {
-          background: '#e0e0e0',
-          strokeWidth: '100%',
-          margin: 5,
-        },
-        dataLabels: {
-          name: {
-            show: false,
-          },
-          value: {
-            offsetY: -10,
-            fontSize: '22px',
-            fontWeight: 'bold',
-            color: '#333',
-            formatter: (val: number) => `${Math.round(val)}%`,
-          },
-        },
-        hollow: {
-          size: '60%',
-        },
-      },
-    },
-    fill: {
-      colors: [color],
-    },
-    stroke: {
-      lineCap: 'round',
-    },
-  };
-
-  const series = [value];
-
-  return (
-    <Box sx={{ textAlign: 'center' }}>
-      <Chart options={chartOptions} series={series} type="radialBar" height={180} />
-      <Typography variant="caption" sx={{ mt: -2, color: 'text.secondary', fontWeight: 'medium', display: 'block' }}>
-        {label}
-      </Typography>
-    </Box>
-  );
-}
-
-// Combined APQ Chart with Categories (Availability, Performance, Quality)
-function APQCategorizedChart({
+// Combined OEE + APQ Chart with 270-degree coverage
+function OEEAPQCombinedChart({
+  oee,
   availability,
   performance,
   quality,
 }: {
+  oee: number;
   availability: number;
   performance: number;
   quality: number;
@@ -252,53 +199,76 @@ function APQCategorizedChart({
   const chartOptions: ApexOptions = {
     chart: {
       type: 'radialBar',
-      height: "100%",
+      height: 400,
     },
     plotOptions: {
       radialBar: {
-        startAngle: -90,
-        endAngle: 90,
+        startAngle: -135, // 270-degree: -135 to 135
+        endAngle: 135,
         track: {
           background: '#e7e7e7',
           strokeWidth: '97%',
-          margin: 8,
+          margin: 12, // Space between bars
         },
         dataLabels: {
           name: {
-            fontSize: '14px',
+            fontSize: '16px',
             color: '#666',
-            offsetY: 80,
+            offsetY: 120,
           },
           value: {
-            offsetY: 40,
-            fontSize: '18px',
+            offsetY: 76,
+            fontSize: '28px',
             fontWeight: 'bold',
             formatter: (val: number) => `${Math.round(val)}%`,
           },
+          total: {
+            show: true,
+            label: 'OEE',
+            fontSize: '18px',
+            color: '#666',
+            formatter: () => `${Math.round(oee)}%`,
+          },
         },
         hollow: {
-          size: '45%',
+          size: '50%',
         },
       },
     },
-    colors: ['#3b82f6', '#f59e0b', '#8b5cf6'],
-    labels: ['Availability', 'Performance', 'Quality'],
+    colors: ['#22c55e', '#3b82f6', '#f59e0b', '#8b5cf6'], // OEE (Green), Availability (Blue), Performance (Orange), Quality (Purple)
+    labels: ['OEE', 'Availability', 'Performance', 'Quality'],
     legend: {
       show: true,
       position: 'bottom',
       horizontalAlign: 'center',
-      fontSize: '13px',
+      fontSize: '14px',
       markers: {
-        size: 5,
+        size: 6,
+        radius: 12, // Rounded markers
       },
+      itemMargin: {
+        horizontal: 12,
+        vertical: 8,
+      },
+    },
+    stroke: {
+      lineCap: 'round', // Rounded corners
     },
   };
 
-  const series = [availability, performance, quality];
+  const series = [oee, availability, performance, quality];
 
   return (
-    <Box sx={{ width: '100%', mx: 'auto' }}>
-      <Chart options={chartOptions} series={series} type="radialBar" height={300} />
+    <Box 
+      sx={{ 
+        width: '100%', 
+        maxWidth: 500, 
+        mx: 'auto',
+        borderRadius: 3, // Rounded container corners
+        p: 2,
+      }}
+    >
+      <Chart options={chartOptions} series={series} type="radialBar" height={400} />
     </Box>
   );
 }
@@ -855,25 +825,14 @@ export function MachineOperationView() {
                   Chỉ số OEE
                 </Typography>
                 
-                {/* OEE Semi-Circle Chart and APQ Categorized Chart */}
-                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3, mb: 3, alignItems: 'center' }}>
-                  {/* OEE Single Chart */}
-                  <Box sx={{ flex: '1' }}>
-                    <OEESemiCircleMetric 
-                      value={machineData?.oee || 85} 
-                      label="OEE" 
-                      color="#22c55e" 
-                    />
-                  </Box>
-                  
-                  {/* APQ Combined Chart */}
-                  <Box sx={{ flex: '1', minWidth: 0 }}>
-                    <APQCategorizedChart
-                      availability={machineData?.availability || 92}
-                      performance={machineData?.performance || 95}
-                      quality={machineData?.quality || 97}
-                    />
-                  </Box>
+                {/* Combined OEE + APQ Chart with 270-degree coverage */}
+                <Box sx={{ mb: 3 }}>
+                  <OEEAPQCombinedChart
+                    oee={machineData?.oee || 85}
+                    availability={machineData?.availability || 92}
+                    performance={machineData?.performance || 95}
+                    quality={machineData?.quality || 97}
+                  />
                 </Box>
 
                 {/* OEE Formula */}
