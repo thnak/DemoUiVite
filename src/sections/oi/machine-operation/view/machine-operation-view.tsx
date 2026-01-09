@@ -1,9 +1,12 @@
 import type { MachineOeeUpdate } from 'src/services/machineHub';
 import type { ProductWorkingStateByMachine, CurrentMachineRunStateRecords } from 'src/api/types/generated';
-import type { ApexOptions } from 'apexcharts';
 
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useCallback } from 'react';
+
+import type { ApexOptions } from 'apexcharts';
+
+import Chart from 'react-apexcharts';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -35,8 +38,6 @@ import LinearProgress from '@mui/material/LinearProgress';
 import TableContainer from '@mui/material/TableContainer';
 import InputAdornment from '@mui/material/InputAdornment';
 import CircularProgress from '@mui/material/CircularProgress';
-
-import Chart from 'react-apexcharts';
 
 import { useRouter } from 'src/routes/hooks';
 
