@@ -58,6 +58,7 @@ export function AreaView() {
         id: item.id?.toString() || '',
         name: item.name || '',
         description: item.description || '',
+        colorHex: item.colorHex || undefined,
       }));
       setAreas(mappedAreas);
       setTotalItems(data.totalItems || 0);
@@ -260,6 +261,7 @@ export function AreaView() {
                   headLabel={[
                     { id: 'name', label: 'Name' },
                     { id: 'description', label: 'Description' },
+                    { id: 'color', label: 'Color', width: 180 },
                     { id: '' },
                   ]}
                 />

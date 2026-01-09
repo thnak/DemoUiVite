@@ -2,12 +2,14 @@ import type { StopMachineImpact } from 'src/api/types/generated';
 
 import { useState, useCallback } from 'react';
 
+import Box from '@mui/material/Box';
 import Popover from '@mui/material/Popover';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import MenuList from '@mui/material/MenuList';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
 import { useRouter } from 'src/routes/hooks';
@@ -105,6 +107,32 @@ export function StopMachineReasonGroupTableRow({
 
         <TableCell>
           <Label color={getImpactColor(row.impact)}>{getImpactLabel(row.impact)}</Label>
+        </TableCell>
+
+        <TableCell>
+          {row.color && (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+              }}
+            >
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: 0.5,
+                  bgcolor: row.color,
+                  border: '1px solid',
+                  borderColor: 'divider',
+                }}
+              />
+              <Typography variant="body2" noWrap>
+                {row.color}
+              </Typography>
+            </Box>
+          )}
         </TableCell>
 
         <TableCell sx={{ maxWidth: 300 }}>{row.description}</TableCell>

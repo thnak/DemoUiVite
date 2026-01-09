@@ -309,6 +309,7 @@ export function StopMachineReasonListView() {
                       { id: 'name', label: 'Name' },
                       { id: 'groupName', label: 'Group' },
                       { id: 'impact', label: 'Impact' },
+                      { id: 'color', label: 'Color', width: 180 },
                       { id: 'description', label: 'Description' },
                       { id: '' },
                     ]}

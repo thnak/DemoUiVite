@@ -20,6 +20,7 @@ export type AreaProps = {
   id: string;
   name: string;
   description: string;
+  colorHex?: string;
 };
 
 type AreaTableRowProps = {
@@ -77,6 +78,32 @@ export function AreaTableRow({ row, selected, onSelectRow, onDeleteRow, returnUr
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {row.description}
           </Typography>
+        </TableCell>
+
+        <TableCell>
+          {row.colorHex && (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+              }}
+            >
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: 0.5,
+                  bgcolor: row.colorHex,
+                  border: '1px solid',
+                  borderColor: 'divider',
+                }}
+              />
+              <Typography variant="body2" noWrap>
+                {row.colorHex}
+              </Typography>
+            </Box>
+          )}
         </TableCell>
 
         <TableCell align="right">

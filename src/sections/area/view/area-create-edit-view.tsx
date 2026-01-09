@@ -27,7 +27,7 @@ interface AreaFormData {
   code: string;
   name: string;
   description: string;
-  hexColor: string;
+  colorHex: string;
 }
 
 interface AreaCreateEditViewProps {
@@ -37,7 +37,7 @@ interface AreaCreateEditViewProps {
     code: string;
     name: string;
     description: string;
-    hexColor?: string;
+    colorHex?: string;
   };
 }
 
@@ -61,7 +61,7 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
     code: currentArea?.code || '',
     name: currentArea?.name || '',
     description: currentArea?.description || '',
-    hexColor: currentArea?.hexColor || '#1976d2',
+    colorHex: currentArea?.colorHex || '#1976d2',
   });
 
   const { mutate: createAreaMutate, isPending: isCreating } = useCreateArea({
@@ -117,9 +117,9 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
     (newColor: string) => {
       setFormData((prev) => ({
         ...prev,
-        hexColor: newColor,
+        colorHex: newColor,
       }));
-      clearFieldError('hexColor');
+      clearFieldError('colorHex');
     },
     [clearFieldError]
   );
@@ -141,7 +141,7 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
           { key: 'code', value: formData.code },
           { key: 'name', value: formData.name },
           { key: 'description', value: formData.description },
-          { key: 'hexColor', value: formData.hexColor },
+          { key: 'colorHex', value: formData.colorHex },
         ],
       });
     } else {
@@ -151,7 +151,7 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
           code: formData.code,
           name: formData.name,
           description: formData.description,
-          hexColor: formData.hexColor,
+          colorHex: formData.colorHex,
         } as any, // Cast to any to bypass strict type checking for required fields
       });
     }
@@ -225,16 +225,16 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
             <MuiColorInput
               fullWidth
               format="hex"
-              value={formData.hexColor}
+              value={formData.colorHex}
               onChange={handleColorChange}
-              error={hasError('hexColor')}
-              helperText={getFieldErrorMessage('hexColor') || 'Choose a color to represent this area'}
+              error={hasError('colorHex')}
+              helperText={getFieldErrorMessage('colorHex') || 'Choose a color to represent this area'}
             />
             <Box
               sx={{
                 mt: 2,
                 p: 2,
-                bgcolor: formData.hexColor,
+                bgcolor: formData.colorHex,
                 borderRadius: 1,
                 display: 'flex',
                 alignItems: 'center',
