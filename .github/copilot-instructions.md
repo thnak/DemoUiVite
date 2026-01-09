@@ -2,6 +2,12 @@
 
 This document provides guidelines for creating and organizing documentation in this repository.
 
+You have access to these tools. use it to search a new one icon when needed. solar doutone is priority. icon must add to src/components/iconify/icon-sets.ts ad then resuse it.
+- iconify/get_all_icon_sets
+- iconify/get_icon_set
+- iconify/search_icons
+- iconify/get_icon
+
 ## Documentation Structure
 
 All documentation should be placed in the `docs/` folder with the following structure:
