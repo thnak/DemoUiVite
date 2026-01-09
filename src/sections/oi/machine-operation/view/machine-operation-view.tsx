@@ -1,13 +1,16 @@
 import type { MachineOeeUpdate } from 'src/services/machineHub';
 import type { ProductWorkingStateByMachine, CurrentMachineRunStateRecords } from 'src/api/types/generated';
+import type { ApexOptions } from 'apexcharts';
 
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
+import Tabs from '@mui/material/Tabs';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Badge from '@mui/material/Badge';
@@ -32,6 +35,8 @@ import LinearProgress from '@mui/material/LinearProgress';
 import TableContainer from '@mui/material/TableContainer';
 import InputAdornment from '@mui/material/InputAdornment';
 import CircularProgress from '@mui/material/CircularProgress';
+
+import Chart from 'react-apexcharts';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -143,6 +148,31 @@ const getMockMappedProducts = (): MappedProduct[] => [
   },
 ];
 
+// Quantity add history interface
+interface QuantityAddHistory {
+  id: string;
+  timestamp: string;
+  addedQuantity: number;
+  addedBy: string;
+  note?: string;
+}
+
+const getMockQuantityHistory = (): QuantityAddHistory[] => [
+  {
+    id: '1',
+    timestamp: '2026-01-09T06:30:00Z',
+    addedQuantity: 100,
+    addedBy: 'WIBU - 01234',
+    note: 'Initial batch',
+  },
+  {
+    id: '2',
+    timestamp: '2026-01-09T07:00:00Z',
+    addedQuantity: 50,
+    addedBy: 'WIBU - 01234',
+  },
+];
+
 interface MachineStatus {
   status: 'running' | 'planstop' | 'unplanstop' | 'testing';
   label: string;
@@ -156,61 +186,171 @@ const getMachineStatus = (machineData: MachineOeeUpdate | null): MachineStatus =
   return { status: 'running', label: 'Đang chạy', color: 'success' };
 };
 
-// Circular Progress Component for OEE Metrics
-function CircularMetric({ value, label, color }: { value: number; label: string; color: string }) {
-  const size = 100;
-  const thickness = 6;
-  
+// Semi-Circle Donut Chart Component for OEE Metrics
+function SemiCircleMetric({ value, label, color }: { value: number; label: string; color: string }) {
+  const chartOptions: ApexOptions = {
+    chart: {
+      type: 'radialBar',
+      sparkline: {
+        enabled: true,
+      },
+    },
+    plotOptions: {
+      radialBar: {
+        startAngle: -90,
+        endAngle: 90,
+        track: {
+          background: '#e0e0e0',
+          strokeWidth: '100%',
+          margin: 5,
+        },
+        dataLabels: {
+          name: {
+            show: false,
+          },
+          value: {
+            offsetY: -10,
+            fontSize: '22px',
+            fontWeight: 'bold',
+            color: '#333',
+            formatter: (val: number) => `${Math.round(val)}%`,
+          },
+        },
+        hollow: {
+          size: '60%',
+        },
+      },
+    },
+    fill: {
+      colors: [color],
+    },
+    stroke: {
+      lineCap: 'round',
+    },
+  };
+
+  const series = [value];
+
   return (
-    <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
-      <Box sx={{ position: 'relative' }}>
-        <CircularProgress
-          variant="determinate"
-          value={100}
-          size={size}
-          thickness={thickness}
-          sx={{ color: 'action.disabled', opacity: 0.2 }}
-        />
-        <CircularProgress
-          variant="determinate"
-          value={value}
-          size={size}
-          thickness={thickness}
-          sx={{
-            color,
-            position: 'absolute',
-            left: 0,
-            [`& .MuiCircularProgress-circle`]: {
-              strokeLinecap: 'round',
-            },
-          }}
-        />
-        <Box
-          sx={{
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0,
-            position: 'absolute',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
-          }}
-        >
-          <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
-            {`${Math.round(value)}%`}
-          </Typography>
-        </Box>
-      </Box>
-      <Typography variant="caption" sx={{ mt: 1, color: 'text.secondary', fontWeight: 'medium' }}>
+    <Box sx={{ textAlign: 'center' }}>
+      <Chart options={chartOptions} series={series} type="radialBar" height={180} />
+      <Typography variant="caption" sx={{ mt: -2, color: 'text.secondary', fontWeight: 'medium', display: 'block' }}>
         {label}
       </Typography>
     </Box>
   );
 }
 
-// Timeline Visualization Component
+// ApexCharts Timeline Visualization Component
+function ApexTimelineVisualization({ records }: { records: CurrentMachineRunStateRecords[] }) {
+  const getStateColor = (state?: string, isUnlabeled?: boolean) => {
+    if (isUnlabeled) return '#ef4444'; // Red for unlabeled downtime
+    if (state === 'running') return '#22c55e'; // Green
+    if (state === 'speedLoss') return '#f59e0b'; // Orange
+    if (state === 'downtime') return '#64748b'; // Gray for labeled downtime
+    return '#94a3b8'; // Light gray default
+  };
+
+  // Convert records to ApexCharts timeline format
+  const timelineData = records.map((record, index) => {
+    const isUnlabeled = record.stateId === '000000000000000000000000' && record.state === 'downtime';
+    const color = getStateColor(record.state, isUnlabeled);
+    const stateName = record.stateName || (isUnlabeled ? 'Unlabeled Downtime' : 'Unknown');
+    
+    return {
+      x: stateName,
+      y: [
+        new Date(record.startTime || '').getTime(),
+        record.endTime ? new Date(record.endTime).getTime() : new Date().getTime(),
+      ],
+      fillColor: color,
+    };
+  });
+
+  const chartOptions: ApexOptions = {
+    chart: {
+      type: 'rangeBar',
+      height: 150,
+      toolbar: {
+        show: false,
+      },
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        barHeight: '80%',
+        rangeBarGroupRows: true,
+      },
+    },
+    colors: ['#22c55e', '#f59e0b', '#ef4444', '#64748b'],
+    fill: {
+      type: 'solid',
+    },
+    xaxis: {
+      type: 'datetime',
+      labels: {
+        datetimeFormatter: {
+          hour: 'HH:mm',
+        },
+      },
+    },
+    yaxis: {
+      show: true,
+    },
+    tooltip: {
+      custom: ({ seriesIndex, dataPointIndex, w }) => {
+        const data = w.config.series[seriesIndex].data[dataPointIndex];
+        const start = new Date(data.y[0]);
+        const end = new Date(data.y[1]);
+        const duration = Math.round((end.getTime() - start.getTime()) / 60000); // minutes
+        
+        return `<div style="padding: 10px;">
+          <strong>${data.x}</strong><br/>
+          Start: ${start.toLocaleTimeString()}<br/>
+          End: ${end.toLocaleTimeString()}<br/>
+          Duration: ${duration} minutes
+        </div>`;
+      },
+    },
+    legend: {
+      show: false,
+    },
+  };
+
+  const series = [
+    {
+      data: timelineData,
+    },
+  ];
+
+  return (
+    <Box>
+      <Chart options={chartOptions} series={series} type="rangeBar" height={150} />
+      
+      {/* Legend */}
+      <Stack direction="row" spacing={2} flexWrap="wrap" sx={{ mt: 2 }}>
+        <Stack direction="row" spacing={0.5} alignItems="center">
+          <Box sx={{ width: 16, height: 16, bgcolor: '#22c55e', borderRadius: 0.5 }} />
+          <Typography variant="caption">Running</Typography>
+        </Stack>
+        <Stack direction="row" spacing={0.5} alignItems="center">
+          <Box sx={{ width: 16, height: 16, bgcolor: '#f59e0b', borderRadius: 0.5 }} />
+          <Typography variant="caption">Speed Loss</Typography>
+        </Stack>
+        <Stack direction="row" spacing={0.5} alignItems="center">
+          <Box sx={{ width: 16, height: 16, bgcolor: '#64748b', borderRadius: 0.5 }} />
+          <Typography variant="caption">Labeled Downtime</Typography>
+        </Stack>
+        <Stack direction="row" spacing={0.5} alignItems="center">
+          <Box sx={{ width: 16, height: 16, bgcolor: '#ef4444', borderRadius: 0.5 }} />
+          <Typography variant="caption">Unlabeled Downtime</Typography>
+        </Stack>
+      </Stack>
+    </Box>
+  );
+}
+
+// Timeline Visualization Component (fallback - keeping for compatibility)
 function TimelineVisualization({ records }: { records: CurrentMachineRunStateRecords[] }) {
   const getStateColor = (state?: string, isUnlabeled?: boolean) => {
     if (isUnlabeled) return '#ef4444'; // Red for unlabeled downtime
@@ -313,6 +453,11 @@ export function MachineOperationView() {
   
   // Dialog states
   const [productChangeDialogOpen, setProductChangeDialogOpen] = useState(false);
+  const [addQuantityDialogOpen, setAddQuantityDialogOpen] = useState(false);
+  const [addQuantityTabValue, setAddQuantityTabValue] = useState(0);
+  const [quantityToAdd, setQuantityToAdd] = useState<string>('');
+  const [quantityNote, setQuantityNote] = useState<string>('');
+  const [quantityHistory, setQuantityHistory] = useState<QuantityAddHistory[]>([]);
   const [mappedProducts, setMappedProducts] = useState<MappedProduct[]>([]);
   const [productSearchTerm, setProductSearchTerm] = useState('');
   const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
@@ -346,6 +491,7 @@ export function MachineOperationView() {
           setProductData(getMockProductData());
           setTimelineRecords(getMockTimelineData());
           setMappedProducts(getMockMappedProducts());
+          setQuantityHistory(getMockQuantityHistory());
         } else {
           // Load real timeline data in production
           try {
@@ -451,6 +597,34 @@ export function MachineOperationView() {
     console.log('Update target:', productId, newTarget);
   };
 
+  const handleAddQuantity = () => {
+    const qty = parseInt(quantityToAdd, 10);
+    if (qty > 0 && productData) {
+      // Add to history
+      const newHistory: QuantityAddHistory = {
+        id: `${Date.now()}`,
+        timestamp: new Date().toISOString(),
+        addedQuantity: qty,
+        addedBy: 'WIBU - 01234', // TODO: Get from user context
+        note: quantityNote,
+      };
+      setQuantityHistory([newHistory, ...quantityHistory]);
+
+      // Update product data
+      setProductData({
+        ...productData,
+        currentQuantity: (productData.currentQuantity || 0) + qty,
+        goodQuantity: (productData.goodQuantity || 0) + qty,
+      });
+
+      // Reset form
+      setQuantityToAdd('');
+      setQuantityNote('');
+      setAddQuantityDialogOpen(false);
+      setAddQuantityTabValue(0);
+    }
+  };
+
   const filteredProducts = mappedProducts.filter(product =>
     product.productName.toLowerCase().includes(productSearchTerm.toLowerCase()) ||
     product.productionOrderNumber.toLowerCase().includes(productSearchTerm.toLowerCase())
@@ -519,6 +693,7 @@ export function MachineOperationView() {
               size="large"
               color="primary" 
               startIcon={<Iconify icon="eva:plus-fill" />}
+              onClick={() => setAddQuantityDialogOpen(true)}
               sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
             >
               Thêm sản phẩm
@@ -604,7 +779,7 @@ export function MachineOperationView() {
             
             {/* Timeline Visualization */}
             {timelineRecords.length > 0 ? (
-              <TimelineVisualization records={timelineRecords} />
+              <ApexTimelineVisualization records={timelineRecords} />
             ) : (
               <Box
                 sx={{
@@ -638,24 +813,24 @@ export function MachineOperationView() {
                   Chỉ số OEE
                 </Typography>
                 
-                {/* Circular Progress Indicators */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-around', mb: 4 }}>
-                  <CircularMetric 
+                {/* Semi-Circle Donut Charts */}
+                <Box sx={{ display: 'flex', justifyContent: 'space-around', mb: 3 }}>
+                  <SemiCircleMetric 
                     value={machineData?.oee || 85} 
                     label="OEE" 
                     color="#22c55e" 
                   />
-                  <CircularMetric 
+                  <SemiCircleMetric 
                     value={machineData?.availability || 92} 
                     label="Availability" 
                     color="#3b82f6" 
                   />
-                  <CircularMetric 
+                  <SemiCircleMetric 
                     value={machineData?.performance || 95} 
                     label="Performance" 
                     color="#f59e0b" 
                   />
-                  <CircularMetric 
+                  <SemiCircleMetric 
                     value={machineData?.quality || 97} 
                     label="Quality" 
                     color="#8b5cf6" 
@@ -1038,6 +1213,130 @@ export function MachineOperationView() {
             Đóng (ESC)
           </Button>
         </DialogActions>
+      </Dialog>
+
+      {/* Add Quantity Dialog */}
+      <Dialog 
+        open={addQuantityDialogOpen} 
+        onClose={() => setAddQuantityDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+              Thêm sản phẩm
+            </Typography>
+            <IconButton onClick={() => setAddQuantityDialogOpen(false)}>
+              <Iconify icon="eva:close-outline" />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          <Tabs 
+            value={addQuantityTabValue} 
+            onChange={(e, newValue) => setAddQuantityTabValue(newValue)}
+            sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}
+          >
+            <Tab label="Thêm số lượng" />
+            <Tab label="Lịch sử" />
+          </Tabs>
+
+          {/* Tab 1: Add Quantity */}
+          {addQuantityTabValue === 0 && (
+            <Stack spacing={3}>
+              <TextField
+                fullWidth
+                label="Số lượng"
+                type="number"
+                value={quantityToAdd}
+                onChange={(e) => setQuantityToAdd(e.target.value)}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Iconify icon="eva:plus-fill" />
+                      </InputAdornment>
+                    ),
+                  }
+                }}
+                helperText="Nhập số lượng sản phẩm muốn thêm vào tổng số"
+              />
+              <TextField
+                fullWidth
+                label="Ghi chú (tùy chọn)"
+                multiline
+                rows={3}
+                value={quantityNote}
+                onChange={(e) => setQuantityNote(e.target.value)}
+                placeholder="Nhập ghi chú nếu cần..."
+              />
+              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+                <Button 
+                  variant="outlined" 
+                  onClick={() => setAddQuantityDialogOpen(false)}
+                >
+                  Hủy
+                </Button>
+                <Button 
+                  variant="contained" 
+                  onClick={handleAddQuantity}
+                  disabled={!quantityToAdd || parseInt(quantityToAdd, 10) <= 0}
+                >
+                  Thêm
+                </Button>
+              </Box>
+            </Stack>
+          )}
+
+          {/* Tab 2: History */}
+          {addQuantityTabValue === 1 && (
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Thời gian</TableCell>
+                    <TableCell align="center">Số lượng</TableCell>
+                    <TableCell>Người thêm</TableCell>
+                    <TableCell>Ghi chú</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {quantityHistory.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={4} align="center">
+                        <Typography variant="body2" color="text.secondary">
+                          Chưa có lịch sử thêm số lượng
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    quantityHistory.map((history) => (
+                      <TableRow key={history.id} hover>
+                        <TableCell>
+                          {new Date(history.timestamp).toLocaleString('vi-VN')}
+                        </TableCell>
+                        <TableCell align="center">
+                          <Chip 
+                            label={`+${history.addedQuantity}`} 
+                            size="small" 
+                            color="success"
+                          />
+                        </TableCell>
+                        <TableCell>{history.addedBy}</TableCell>
+                        <TableCell>
+                          <Typography variant="body2" color="text.secondary">
+                            {history.note || '-'}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </DialogContent>
       </Dialog>
 
       {/* Keyboard Help Dialog */}
