@@ -1,5 +1,5 @@
 import type { MachineOeeUpdate } from 'src/services/machineHub';
-import type { ProductWorkingStateByMachine } from 'src/api/types/generated';
+import type { ProductWorkingStateByMachine, CurrentMachineRunStateRecords } from 'src/api/types/generated';
 
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useCallback } from 'react';
@@ -10,19 +10,34 @@ import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
 import Switch from '@mui/material/Switch';
 import Container from '@mui/material/Container';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import DialogTitle from '@mui/material/DialogTitle';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 import LinearProgress from '@mui/material/LinearProgress';
 import CircularProgress from '@mui/material/CircularProgress';
+import InputAdornment from '@mui/material/InputAdornment';
+import TableContainer from '@mui/material/TableContainer';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
 
 import { useRouter } from 'src/routes/hooks';
 
 import { apiConfig } from 'src/api/config';
 import { MachineHubService } from 'src/services/machineHub';
+import { getapiMachineDowntimemachineIdcurrentrunstaterecords } from 'src/api/services/generated/machine-downtime';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -46,6 +61,87 @@ const getMockProductData = (): ProductWorkingStateByMachine => ({
   scrapQuantity: 19,
   actualCycleTime: 'PT10.2S', // 10.2 seconds
 });
+
+// Mock timeline data for development
+const getMockTimelineData = (): CurrentMachineRunStateRecords[] => [
+  {
+    stateId: '000000000000000000000000',
+    stateName: 'Normal Operation',
+    isUnplannedDowntime: false,
+    state: 'running',
+    startTime: '2026-01-09T06:00:00Z',
+    endTime: '2026-01-09T07:15:00Z',
+  },
+  {
+    stateId: '000000000000000000000000',
+    stateName: null,
+    isUnplannedDowntime: true,
+    state: 'downtime',
+    startTime: '2026-01-09T07:15:00Z',
+    endTime: '2026-01-09T07:25:00Z',
+  },
+  {
+    stateId: '507f1f77bcf86cd799439011',
+    stateName: 'Maintenance',
+    isUnplannedDowntime: false,
+    state: 'downtime',
+    startTime: '2026-01-09T07:25:00Z',
+    endTime: '2026-01-09T07:45:00Z',
+  },
+  {
+    stateId: '000000000000000000000000',
+    stateName: 'Normal Operation',
+    isUnplannedDowntime: false,
+    state: 'running',
+    startTime: '2026-01-09T07:45:00Z',
+    endTime: null,
+  },
+];
+
+// Mock mapped products for product change dialog
+interface MappedProduct {
+  id: string;
+  productId: string;
+  productName: string;
+  productionOrderNumber: string;
+  targetQuantity: number;
+  currentQuantity: number;
+  isActive: boolean;
+  startTime: string;
+}
+
+const getMockMappedProducts = (): MappedProduct[] => [
+  {
+    id: '1',
+    productId: 'prod-1',
+    productName: 'THACAL83737146TRDU',
+    productionOrderNumber: 'PO-LSX-20260109-001',
+    targetQuantity: 1500,
+    currentQuantity: 1359,
+    isActive: true,
+    startTime: '2026-01-09T06:00:00Z',
+  },
+  {
+    id: '2',
+    productId: 'prod-2',
+    productName: 'CABLE-PRO-X2000',
+    productionOrderNumber: 'PO-LSX-20260109-002',
+    targetQuantity: 2000,
+    currentQuantity: 0,
+    isActive: false,
+    startTime: '2026-01-09T08:00:00Z',
+  },
+  {
+    id: '3',
+    productId: 'prod-3',
+    productName: 'CONNECTOR-MINI-500',
+    productionOrderNumber: 'PO-LSX-20260109-003',
+    targetQuantity: 800,
+    currentQuantity: 0,
+    isActive: false,
+    startTime: '2026-01-09T10:00:00Z',
+  },
+];
 
 interface MachineStatus {
   status: 'running' | 'planstop' | 'unplanstop' | 'testing';
@@ -114,6 +210,92 @@ function CircularMetric({ value, label, color }: { value: number; label: string;
   );
 }
 
+// Timeline Visualization Component
+function TimelineVisualization({ records }: { records: CurrentMachineRunStateRecords[] }) {
+  const getStateColor = (state?: string, isUnlabeled?: boolean) => {
+    if (isUnlabeled) return '#ef4444'; // Red for unlabeled downtime
+    if (state === 'running') return '#22c55e'; // Green
+    if (state === 'speedLoss') return '#f59e0b'; // Orange
+    if (state === 'downtime') return '#64748b'; // Gray for labeled downtime
+    return '#94a3b8'; // Light gray default
+  };
+
+  const getStateDuration = (start: string, end: string | null | undefined) => {
+    const startTime = new Date(start);
+    const endTime = end ? new Date(end) : new Date();
+    const durationMs = endTime.getTime() - startTime.getTime();
+    const minutes = Math.floor(durationMs / 60000);
+    const hours = Math.floor(minutes / 60);
+    if (hours > 0) return `${hours}h ${minutes % 60}m`;
+    return `${minutes}m`;
+  };
+
+  return (
+    <Box>
+      {/* Timeline Bar */}
+      <Box
+        sx={{
+          height: 60,
+          bgcolor: 'background.neutral',
+          borderRadius: 1,
+          display: 'flex',
+          overflow: 'hidden',
+          mb: 2,
+        }}
+      >
+        {records.map((record, index) => {
+          const isUnlabeled = record.stateId === '000000000000000000000000' && record.state === 'downtime';
+          const color = getStateColor(record.state, isUnlabeled);
+          
+          return (
+            <Box
+              key={index}
+              sx={{
+                flex: 1,
+                bgcolor: color,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRight: index < records.length - 1 ? '2px solid white' : 'none',
+                position: 'relative',
+                '&:hover': {
+                  opacity: 0.9,
+                  cursor: 'pointer',
+                },
+              }}
+              title={`${record.stateName || 'Unlabeled Downtime'} - ${getStateDuration(record.startTime || '', record.endTime)}`}
+            >
+              <Typography variant="caption" sx={{ color: 'white', fontWeight: 'bold' }}>
+                {getStateDuration(record.startTime || '', record.endTime)}
+              </Typography>
+            </Box>
+          );
+        })}
+      </Box>
+
+      {/* Legend */}
+      <Stack direction="row" spacing={2} flexWrap="wrap">
+        <Stack direction="row" spacing={0.5} alignItems="center">
+          <Box sx={{ width: 16, height: 16, bgcolor: '#22c55e', borderRadius: 0.5 }} />
+          <Typography variant="caption">Running</Typography>
+        </Stack>
+        <Stack direction="row" spacing={0.5} alignItems="center">
+          <Box sx={{ width: 16, height: 16, bgcolor: '#f59e0b', borderRadius: 0.5 }} />
+          <Typography variant="caption">Speed Loss</Typography>
+        </Stack>
+        <Stack direction="row" spacing={0.5} alignItems="center">
+          <Box sx={{ width: 16, height: 16, bgcolor: '#64748b', borderRadius: 0.5 }} />
+          <Typography variant="caption">Labeled Downtime</Typography>
+        </Stack>
+        <Stack direction="row" spacing={0.5} alignItems="center">
+          <Box sx={{ width: 16, height: 16, bgcolor: '#ef4444', borderRadius: 0.5 }} />
+          <Typography variant="caption">Unlabeled Downtime</Typography>
+        </Stack>
+      </Stack>
+    </Box>
+  );
+}
+
 // ----------------------------------------------------------------------
 
 export function MachineOperationView() {
@@ -124,9 +306,16 @@ export function MachineOperationView() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [machineData, setMachineData] = useState<MachineOeeUpdate | null>(null);
   const [productData, setProductData] = useState<ProductWorkingStateByMachine | null>(null);
+  const [timelineRecords, setTimelineRecords] = useState<CurrentMachineRunStateRecords[]>([]);
   const [isConnecting, setIsConnecting] = useState(false);
   const [testMode, setTestMode] = useState(false);
   const [timelineView, setTimelineView] = useState<'current' | 'shift' | 'day'>('current');
+  
+  // Dialog states
+  const [productChangeDialogOpen, setProductChangeDialogOpen] = useState(false);
+  const [mappedProducts, setMappedProducts] = useState<MappedProduct[]>([]);
+  const [productSearchTerm, setProductSearchTerm] = useState('');
+  const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
 
   const hubService = MachineHubService.getInstance(apiConfig.baseUrl);
 
@@ -155,6 +344,18 @@ export function MachineOperationView() {
         // Load mock product data in dev mode
         if (import.meta.env.DEV) {
           setProductData(getMockProductData());
+          setTimelineRecords(getMockTimelineData());
+          setMappedProducts(getMockMappedProducts());
+        } else {
+          // Load real timeline data in production
+          try {
+            const records = await getapiMachineDowntimemachineIdcurrentrunstaterecords(selectedMachine.id || '');
+            if (mounted && records) {
+              setTimelineRecords(Array.isArray(records) ? records : []);
+            }
+          } catch (error) {
+            console.error('Failed to load timeline data:', error);
+          }
         }
         
         await hubService.subscribeToMachine(selectedMachine.id || '', handleMachineUpdate);
@@ -204,6 +405,30 @@ export function MachineOperationView() {
     };
   }, [selectedMachine, hubService, handleMachineUpdate, router]);
 
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // F1 for product change dialog
+      if (event.key === 'F1') {
+        event.preventDefault();
+        setProductChangeDialogOpen(true);
+      }
+      // Escape to close dialogs
+      if (event.key === 'Escape') {
+        setProductChangeDialogOpen(false);
+        setShowKeyboardHelp(false);
+      }
+      // F12 for keyboard help
+      if (event.key === 'F12') {
+        event.preventDefault();
+        setShowKeyboardHelp(!showKeyboardHelp);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [showKeyboardHelp]);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -214,6 +439,26 @@ export function MachineOperationView() {
   const handleBack = () => {
     router.push('/oi/select-machine');
   };
+
+  const handleProductSelect = (product: MappedProduct) => {
+    // TODO: Implement product selection logic
+    console.log('Selected product:', product);
+    setProductChangeDialogOpen(false);
+  };
+
+  const handleUpdateTarget = (productId: string, newTarget: number) => {
+    // TODO: Implement target update logic
+    console.log('Update target:', productId, newTarget);
+  };
+
+  const filteredProducts = mappedProducts.filter(product =>
+    product.productName.toLowerCase().includes(productSearchTerm.toLowerCase()) ||
+    product.productionOrderNumber.toLowerCase().includes(productSearchTerm.toLowerCase())
+  );
+
+  const unlabeledDowntimeCount = timelineRecords.filter(
+    record => record.stateId === '000000000000000000000000' && record.state === 'downtime'
+  ).length;
 
   const machineStatus = getMachineStatus(machineData);
 
@@ -245,19 +490,63 @@ export function MachineOperationView() {
           <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
             {selectedMachine.code || selectedMachine.name}
           </Typography>
-          <Stack direction="row" spacing={1}>
-            <Button variant="contained" color="primary" startIcon={<Iconify icon="eva:swap-fill" />}>
-              Đổi mã hàng
-            </Button>
-            <Button variant="outlined" color="primary" startIcon={<Iconify icon="eva:plus-fill" />}>
+          <Stack direction="row" spacing={1} flexWrap="wrap">
+            <Badge
+              badgeContent="F1"
+              color="primary"
+              sx={{
+                '& .MuiBadge-badge': {
+                  fontSize: '0.625rem',
+                  height: 16,
+                  minWidth: 16,
+                  padding: '0 4px',
+                },
+              }}
+            >
+              <Button 
+                variant="contained" 
+                size="large"
+                color="primary" 
+                startIcon={<Iconify icon="eva:swap-fill" />}
+                onClick={() => setProductChangeDialogOpen(true)}
+                sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
+              >
+                Đổi mã hàng
+              </Button>
+            </Badge>
+            <Button 
+              variant="outlined" 
+              size="large"
+              color="primary" 
+              startIcon={<Iconify icon="eva:plus-fill" />}
+              sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
+            >
               Thêm sản phẩm
             </Button>
-            <Button variant="outlined" color="error" startIcon={<Iconify icon="eva:alert-triangle-fill" />}>
+            <Button 
+              variant="outlined" 
+              size="large"
+              color="error" 
+              startIcon={<Iconify icon="eva:alert-triangle-fill" />}
+              sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
+            >
               Nhập lỗi
             </Button>
-            <Button variant="outlined" color="warning" startIcon={<Iconify icon="eva:stop-circle-fill" />}>
+            <Button 
+              variant="outlined" 
+              size="large"
+              color="warning" 
+              startIcon={<Iconify icon="eva:stop-circle-fill" />}
+              sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
+            >
               Lý do dừng máy
             </Button>
+            <IconButton 
+              onClick={() => setShowKeyboardHelp(!showKeyboardHelp)}
+              sx={{ border: 1, borderColor: 'divider' }}
+            >
+              <Iconify icon="eva:question-mark-circle-outline" />
+            </IconButton>
           </Stack>
         </Box>
 
@@ -312,23 +601,32 @@ export function MachineOperationView() {
                 </Button>
               </Box>
             </Box>
-            <Box
-              sx={{
-                height: 120,
-                bgcolor: 'background.neutral',
-                borderRadius: 1,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Typography variant="body2" color="text.secondary">
-                Timeline visualization (to be implemented)
-              </Typography>
-            </Box>
-            <Alert severity="warning" sx={{ mt: 2 }}>
-              2 DOWNTIME CHƯA PHÂN LOẠI
-            </Alert>
+            
+            {/* Timeline Visualization */}
+            {timelineRecords.length > 0 ? (
+              <TimelineVisualization records={timelineRecords} />
+            ) : (
+              <Box
+                sx={{
+                  height: 120,
+                  bgcolor: 'background.neutral',
+                  borderRadius: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Typography variant="body2" color="text.secondary">
+                  No timeline data available
+                </Typography>
+              </Box>
+            )}
+            
+            {unlabeledDowntimeCount > 0 && (
+              <Alert severity="warning" sx={{ mt: 2 }}>
+                {unlabeledDowntimeCount} DOWNTIME CHƯA PHÂN LOẠI
+              </Alert>
+            )}
           </Card>
 
           {/* Bottom Section */}
@@ -379,7 +677,7 @@ export function MachineOperationView() {
                   <Grid size={6}>
                     <Box sx={{ p: 2, bgcolor: 'error.lighter', borderRadius: 1 }}>
                       <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
-                        <Iconify icon="solar:danger-triangle-bold" width={20} sx={{ color: 'error.main' }} />
+                        <Iconify icon="solar:danger-triangle-bold-duotone" width={20} sx={{ color: 'error.main' }} />
                         <Typography variant="body2" color="error.main" sx={{ fontWeight: 'bold' }}>
                           Downtime
                         </Typography>
@@ -593,6 +891,186 @@ export function MachineOperationView() {
           </Grid>
         </Stack>
       )}
+
+      {/* Product Change Dialog */}
+      <Dialog 
+        open={productChangeDialogOpen} 
+        onClose={() => setProductChangeDialogOpen(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+              Đổi mã hàng
+            </Typography>
+            <IconButton onClick={() => setProductChangeDialogOpen(false)}>
+              <Iconify icon="eva:close-outline" />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          {/* Search Box */}
+          <TextField
+            fullWidth
+            placeholder="Tìm kiếm sản phẩm hoặc PO..."
+            value={productSearchTerm}
+            onChange={(e) => setProductSearchTerm(e.target.value)}
+            sx={{ mb: 3 }}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              }
+            }}
+          />
+
+          {/* Product Table */}
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Thời gian</TableCell>
+                  <TableCell>Sản phẩm</TableCell>
+                  <TableCell>PO</TableCell>
+                  <TableCell align="center">Mục tiêu</TableCell>
+                  <TableCell align="center">Hành động</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredProducts.map((product) => (
+                  <TableRow key={product.id} hover>
+                    <TableCell>
+                      {new Date(product.startTime).toLocaleTimeString('vi-VN', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      })}
+                    </TableCell>
+                    <TableCell>
+                      <Stack direction="row" spacing={2} alignItems="center">
+                        <Box
+                          sx={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: 1,
+                            overflow: 'hidden',
+                            bgcolor: 'background.neutral',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <img
+                            src={`${apiConfig.baseUrl}/api/Product/${product.productId}/image`}
+                            alt={product.productName}
+                            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                              const target = e.currentTarget;
+                              target.style.display = 'none';
+                              const parent = target.parentElement;
+                              if (parent && !parent.querySelector('.fallback-icon')) {
+                                const icon = document.createElement('div');
+                                icon.className = 'fallback-icon';
+                                icon.style.fontSize = '20px';
+                                icon.innerHTML = '📦';
+                                parent.appendChild(icon);
+                              }
+                            }}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
+                            }}
+                          />
+                        </Box>
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                            {product.productName}
+                          </Typography>
+                          {product.isActive && (
+                            <Chip 
+                              label="Đang chạy" 
+                              size="small" 
+                              color="success" 
+                              sx={{ mt: 0.5 }}
+                            />
+                          )}
+                        </Box>
+                      </Stack>
+                    </TableCell>
+                    <TableCell>{product.productionOrderNumber}</TableCell>
+                    <TableCell align="center">
+                      <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                        {product.currentQuantity} / {product.targetQuantity}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Stack direction="row" spacing={1} justifyContent="center">
+                        <Button
+                          size="small"
+                          variant="contained"
+                          onClick={() => handleProductSelect(product)}
+                          disabled={product.isActive}
+                        >
+                          Chọn
+                        </Button>
+                        {product.isActive && (
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            onClick={() => handleUpdateTarget(product.productId, product.targetQuantity)}
+                          >
+                            Cập nhật
+                          </Button>
+                        )}
+                      </Stack>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setProductChangeDialogOpen(false)} variant="outlined">
+            Đóng (ESC)
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Keyboard Help Dialog */}
+      <Dialog 
+        open={showKeyboardHelp} 
+        onClose={() => setShowKeyboardHelp(false)}
+        maxWidth="sm"
+      >
+        <DialogTitle>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="h6">Phím tắt</Typography>
+            <IconButton onClick={() => setShowKeyboardHelp(false)}>
+              <Iconify icon="eva:close-outline" />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          <Stack spacing={2}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="body2">Đổi mã hàng</Typography>
+              <Chip label="F1" size="small" />
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="body2">Đóng dialog</Typography>
+              <Chip label="ESC" size="small" />
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="body2">Hiển thị phím tắt</Typography>
+              <Chip label="F12" size="small" />
+            </Box>
+          </Stack>
+        </DialogContent>
+      </Dialog>
     </Container>
   );
 }

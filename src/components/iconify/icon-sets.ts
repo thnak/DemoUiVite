@@ -211,6 +211,12 @@ export default {
       '  <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4 12.75A1.25 1.25 0 0 1 14.75 16h-5.5A1.25 1.25 0 0 1 8 14.75v-5.5A1.25 1.25 0 0 1 9.25 8h5.5A1.25 1.25 0 0 1 16 9.25v5.5Z"></path>\n' +
       '  <path d="M14 10h-4v4h4v-4Z"></path>\n',
   },
+  'eva:question-mark-circle-outline': {
+    body: '<path fill="currentColor" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2m0 18a8 8 0 1 1 8-8a8 8 0 0 1-8 8"/><path fill="currentColor" d="M12 6a3.5 3.5 0 0 0-3.5 3.5a1 1 0 0 0 2 0A1.5 1.5 0 1 1 12 11a1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-1.16A3.49 3.49 0 0 0 12 6"/><circle cx="12" cy="17" r="1" fill="currentColor"/>',
+  },
+  'eva:close-outline': {
+    body: '<path fill="currentColor" d="m13.41 12l4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29l-4.3 4.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0l4.29-4.3l4.29 4.3a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.42Z"/>',
+  },
   'eva:swap-fill': {
     body:
       '  <path d="M4 9.001h13l-1.6 1.2a1 1 0 1 0 1.2 1.6l4-3a1.001 1.001 0 0 0 0-1.59l-3.86-3a1.001 1.001 0 1 0-1.23 1.58l1.57 1.21H4a1 1 0 1 0 0 2Z"></path>\n' +
