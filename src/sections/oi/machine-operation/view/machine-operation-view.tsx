@@ -11,6 +11,7 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
+import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -18,7 +19,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useRouter } from 'src/routes/hooks';
 
 import { apiConfig } from 'src/api/config';
-import { DashboardContent } from 'src/layouts/dashboard';
 import { MachineHubService } from 'src/services/machineHub';
 
 import { Iconify } from 'src/components/iconify';
@@ -150,14 +150,14 @@ export function MachineOperationView() {
 
   if (!selectedMachine) {
     return (
-      <DashboardContent maxWidth="xl">
+      <Container maxWidth="xl" sx={{ py: 5 }}>
         <Alert severity="warning">Please select a machine first</Alert>
-      </DashboardContent>
+      </Container>
     );
   }
 
   return (
-    <DashboardContent maxWidth="xl">
+    <Container maxWidth="xl" sx={{ py: 3 }}>
       {/* Header Section */}
       <Box
         sx={{
@@ -408,6 +408,6 @@ export function MachineOperationView() {
           </Grid>
         </Stack>
       )}
-    </DashboardContent>
+    </Container>
   );
 }

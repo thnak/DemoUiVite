@@ -9,6 +9,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Select from '@mui/material/Select';
+import Container from '@mui/material/Container';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -21,7 +22,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useRouter } from 'src/routes/hooks';
 
 import { apiConfig } from 'src/api/config';
-import { DashboardContent } from 'src/layouts/dashboard';
 import { searchArea } from 'src/api/services/generated/area';
 import { postapiMachinesearchmachines } from 'src/api/services/generated/machine';
 
@@ -103,7 +103,7 @@ export function MachineSelectionView() {
   };
 
   return (
-    <DashboardContent maxWidth="xl">
+    <Container maxWidth="xl" sx={{ py: 5 }}>
       {/* Header */}
       <Box sx={{ mb: 5 }}>
         <Typography variant="h3" sx={{ mb: 1, fontWeight: 'bold' }}>
@@ -277,6 +277,6 @@ export function MachineSelectionView() {
           ))}
         </Box>
       )}
-    </DashboardContent>
+    </Container>
   );
 }

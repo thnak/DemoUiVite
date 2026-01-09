@@ -5,6 +5,7 @@ import { lazy, Suspense } from 'react';
 import Box from '@mui/material/Box';
 
 import { AuthLayout } from 'src/layouts/auth';
+import { FullscreenLayout } from 'src/layouts/fullscreen';
 import { DashboardLayout, FullWidthLayout } from 'src/layouts/dashboard';
 
 import { MachineSelectorProvider } from 'src/sections/oi/context/machine-selector-context';
@@ -213,13 +214,22 @@ export const routesSection: RouteObject[] = [
       { path: 'roles/create', element: <RoleCreatePage /> },
       { path: 'roles/:id/edit', element: <RoleEditPage /> },
       { path: 'factory-layout', element: <FactoryLayoutPage /> },
+    ],
+  },
+  // Fullscreen layout for OI module (no header, no sidebar)
+  {
+    element: (
+      <FullscreenLayout>
+        <MachineSelectorProvider>
+          <Suspense fallback={renderFallback()}>
+            <AnimatedOutlet />
+          </Suspense>
+        </MachineSelectorProvider>
+      </FullscreenLayout>
+    ),
+    children: [
       {
         path: 'oi',
-        element: (
-          <MachineSelectorProvider>
-            <AnimatedOutlet />
-          </MachineSelectorProvider>
-        ),
         children: [
           { path: 'select-machine', element: <MachineSelectionPage /> },
           { path: 'operation', element: <MachineOperationPage /> },
