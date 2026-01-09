@@ -1,4 +1,5 @@
 
+import { MuiColorInput } from 'mui-color-input';
 import { useState, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
@@ -10,7 +11,6 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { MuiColorInput } from 'mui-color-input';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import CircularProgress from '@mui/material/CircularProgress';
 

@@ -1,6 +1,7 @@
 import type { ChangeEvent } from 'react';
 import type { StopMachineReasonEntity } from 'src/api/types/generated';
 
+import { MuiColorInput } from 'mui-color-input';
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -13,7 +14,6 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
-import { MuiColorInput } from 'mui-color-input';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -31,22 +31,6 @@ import { Iconify } from 'src/components/iconify';
 import { StopMachineReasonGroupSelector } from 'src/components/selectors/stop-machine-reason-group-selector';
 
 // ----------------------------------------------------------------------
-
-const COLOR_OPTIONS = [
-  '#FF4842',
-  '#1890FF',
-  '#94D82D',
-  '#FFC107',
-  '#00AB55',
-  '#FF6F00',
-  '#7635DC',
-  '#212B36',
-  '#454F5B',
-  '#637381',
-  '#919EAB',
-  '#C4CDD5',
-];
-
 interface StopMachineReasonFormData {
   code: string;
   name: string;

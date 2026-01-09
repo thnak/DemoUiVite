@@ -1,6 +1,7 @@
 import type { ChangeEvent } from 'react';
 import type { StopMachineImpact, StopMachineReasonGroupEntity } from 'src/api/types/generated';
 
+import { MuiColorInput } from 'mui-color-input';
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -14,7 +15,6 @@ import Select from '@mui/material/Select';
 import Snackbar from '@mui/material/Snackbar';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { MuiColorInput } from 'mui-color-input';
 import InputLabel from '@mui/material/InputLabel';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
