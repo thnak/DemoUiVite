@@ -17,23 +17,8 @@ export function useOINavData(): NavData {
       items: [
         {
           title: t('nav.operatorDashboard'),
-          path: '/oi/dashboard',
+          path: '/oi/select-machine',
           icon: icon('ic-analytics'),
-        },
-        {
-          title: t('nav.changeProduct'),
-          path: '/oi/change-product',
-          icon: icon('ic-cart'),
-        },
-        {
-          title: t('nav.addDefect'),
-          path: '/oi/defect-input',
-          icon: icon('ic-disabled'),
-        },
-        {
-          title: t('nav.downtimeInput'),
-          path: '/oi/downtime-input',
-          icon: icon('ic-clock'),
         },
       ],
     },

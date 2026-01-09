@@ -57,6 +57,7 @@ export default function Page() {
           id: areaData.id?.toString() || '',
           code: areaData.code || '',
           name: areaData.name || '',
+          colorHex: areaData.colorHex || '',
           description: areaData.description || '',
         }}
       />

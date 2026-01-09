@@ -118,14 +118,13 @@ export function OEESummaryFilters({
           value={timeRange}
           label="Time Range"
           onChange={handleTimeRangeChange}
-          startAdornment={<Iconify icon={'solar:calendar-mark-bold' as any} sx={{ mr: 1, ml: 0.5 }} />}
+          startAdornment={<Iconify icon="solar:calendar-mark-bold" sx={{ mr: 1, ml: 0.5 }} />}
         >
           <MenuItem value="days">Days</MenuItem>
           <MenuItem value="months">Months</MenuItem>
           <MenuItem value="years">Years</MenuItem>
         </Select>
       </FormControl>
-
       {/* Start Date */}
       <TextField
         type="date"
@@ -133,10 +132,11 @@ export function OEESummaryFilters({
         size="small"
         value={formatDateForInput(startDate)}
         onChange={handleStartDateChange}
-        InputLabelProps={{ shrink: true }}
         sx={{ minWidth: 160 }}
+        slotProps={{
+          inputLabel: { shrink: true }
+        }}
       />
-
       {/* End Date */}
       <TextField
         type="date"
@@ -144,10 +144,11 @@ export function OEESummaryFilters({
         size="small"
         value={formatDateForInput(endDate)}
         onChange={handleEndDateChange}
-        InputLabelProps={{ shrink: true }}
         sx={{ minWidth: 160 }}
+        slotProps={{
+          inputLabel: { shrink: true }
+        }}
       />
-
       {/* Machines Multi-Select */}
       <FormControl size="small" sx={{ minWidth: 200 }}>
         <InputLabel>Machines</InputLabel>
@@ -168,7 +169,7 @@ export function OEESummaryFilters({
               )}
             </Box>
           )}
-          startAdornment={<Iconify icon={'solar:widget-2-bold' as any} sx={{ mr: 1, ml: 0.5 }} />}
+          startAdornment={<Iconify icon="solar:widget-2-bold" sx={{ mr: 1, ml: 0.5 }} />}
         >
           {machines.map((machine) => (
             <MenuItem key={machine.id} value={machine.id}>
@@ -178,7 +179,6 @@ export function OEESummaryFilters({
           ))}
         </Select>
       </FormControl>
-
       {/* Areas Multi-Select */}
       <FormControl size="small" sx={{ minWidth: 180 }}>
         <InputLabel>Areas</InputLabel>
@@ -199,7 +199,7 @@ export function OEESummaryFilters({
               )}
             </Box>
           )}
-          startAdornment={<Iconify icon={'solar:map-bold' as any} sx={{ mr: 1, ml: 0.5 }} />}
+          startAdornment={<Iconify icon="solar:map-bold" sx={{ mr: 1, ml: 0.5 }} />}
         >
           {areas.map((area) => (
             <MenuItem key={area.id} value={area.id}>
@@ -209,7 +209,6 @@ export function OEESummaryFilters({
           ))}
         </Select>
       </FormControl>
-
       {/* Shifts Multi-Select */}
       <FormControl size="small" sx={{ minWidth: 180 }}>
         <InputLabel>Shifts</InputLabel>
@@ -230,7 +229,7 @@ export function OEESummaryFilters({
               )}
             </Box>
           )}
-          startAdornment={<Iconify icon={'solar:clock-circle-bold' as any} sx={{ mr: 1, ml: 0.5 }} />}
+          startAdornment={<Iconify icon="solar:clock-circle-bold" sx={{ mr: 1, ml: 0.5 }} />}
         >
           {shifts.map((shift) => (
             <MenuItem key={shift.id} value={shift.id}>

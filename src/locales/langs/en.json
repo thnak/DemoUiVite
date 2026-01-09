@@ -70,7 +70,8 @@
     "search": "Search",
     "logout": "Logout",
     "cancel": "Cancel",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "unknown": "Unknown"
   },
   "oi": {
     "selectedMachine": "Selected Machine",

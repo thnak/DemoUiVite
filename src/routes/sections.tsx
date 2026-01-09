@@ -5,6 +5,7 @@ import { lazy, Suspense } from 'react';
 import Box from '@mui/material/Box';
 
 import { AuthLayout } from 'src/layouts/auth';
+import { FullscreenLayout } from 'src/layouts/fullscreen';
 import { DashboardLayout, FullWidthLayout } from 'src/layouts/dashboard';
 
 import { MachineSelectorProvider } from 'src/sections/oi/context/machine-selector-context';
@@ -88,10 +89,8 @@ export const IoTSensorListPage = lazy(() => import('src/pages/iot-sensor-list'))
 export const IoTSensorCreatePage = lazy(() => import('src/pages/iot-sensor-create'));
 export const IoTSensorEditPage = lazy(() => import('src/pages/iot-sensor-edit'));
 export const IoTSensorDataSeedingPage = lazy(() => import('src/pages/iot-sensor-data-seeding'));
-export const OperatorDashboardPage = lazy(() => import('src/pages/oi/operator-dashboard'));
-export const ChangeProductPage = lazy(() => import('src/pages/oi/change-product'));
-export const DefectInputPage = lazy(() => import('src/pages/oi/defect-input'));
-export const DowntimeInputPage = lazy(() => import('src/pages/oi/downtime-input'));
+export const MachineSelectionPage = lazy(() => import('src/pages/oi/machine-selection'));
+export const MachineOperationPage = lazy(() => import('src/pages/oi/machine-operation'));
 export const RoleListPage = lazy(() => import('src/pages/role-list'));
 export const RoleCreatePage = lazy(() => import('src/pages/role-create'));
 export const RoleEditPage = lazy(() => import('src/pages/role-edit'));
@@ -211,18 +210,25 @@ export const routesSection: RouteObject[] = [
       { path: 'roles/create', element: <RoleCreatePage /> },
       { path: 'roles/:id/edit', element: <RoleEditPage /> },
       { path: 'factory-layout', element: <FactoryLayoutPage /> },
+    ],
+  },
+  // Fullscreen layout for OI module (no header, no sidebar)
+  {
+    element: (
+      <FullscreenLayout>
+        <MachineSelectorProvider>
+          <Suspense fallback={renderFallback()}>
+            <AnimatedOutlet />
+          </Suspense>
+        </MachineSelectorProvider>
+      </FullscreenLayout>
+    ),
+    children: [
       {
         path: 'oi',
-        element: (
-          <MachineSelectorProvider>
-            <AnimatedOutlet />
-          </MachineSelectorProvider>
-        ),
         children: [
-          { path: 'dashboard', element: <OperatorDashboardPage /> },
-          { path: 'change-product', element: <ChangeProductPage /> },
-          { path: 'defect-input', element: <DefectInputPage /> },
-          { path: 'downtime-input', element: <DowntimeInputPage /> },
+          { path: 'select-machine', element: <MachineSelectionPage /> },
+          { path: 'operation', element: <MachineOperationPage /> },
         ],
       },
     ],

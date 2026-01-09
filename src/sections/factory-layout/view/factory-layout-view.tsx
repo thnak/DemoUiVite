@@ -334,12 +334,7 @@ export function FactoryLayoutView() {
         }}
       >
         {/* Controls Bar */}
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ mb: 2 }}
-        >
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
           {/* Legend */}
           <Stack direction="row" spacing={3}>
             <Stack direction="row" spacing={1} alignItems="center">
@@ -372,7 +367,7 @@ export function FactoryLayoutView() {
             </Tooltip>
             <Tooltip title="Zoom Out">
               <IconButton onClick={handleZoomOut} size="small">
-                <Iconify icon={"eva:minus-outline" as any} />
+                <Iconify icon="eva:minus-outline" />
               </IconButton>
             </Tooltip>
             <Tooltip title="Reset Zoom">
@@ -384,9 +379,7 @@ export function FactoryLayoutView() {
               <IconButton onClick={handleFullscreen} size="small">
                 <Iconify
                   icon={
-                    (isFullscreen
-                      ? 'solar:quit-full-screen-bold'
-                      : 'solar:full-screen-bold') as any
+                    (isFullscreen ? 'solar:quit-full-screen-bold' : 'solar:full-screen-bold') as any
                   }
                 />
               </IconButton>
@@ -548,12 +541,7 @@ export function FactoryLayoutView() {
                           shadowColor="black"
                           shadowOpacity={0.3}
                         />
-                        <Circle
-                          x={absX + 12}
-                          y={absY + 12}
-                          radius={3}
-                          fill={statusColor}
-                        />
+                        <Circle x={absX + 12} y={absY + 12} radius={3} fill={statusColor} />
 
                         {/* Machine Icon (Gear representation) */}
                         <Circle

@@ -220,7 +220,6 @@ export function IoTSensorDataSeedingView({
           </Typography>
         </Box>
       </Box>
-
       <Grid container spacing={3}>
         {/* Sensor Info Card */}
         <Grid size={{ xs: 12, md: 4 }}>
@@ -327,7 +326,9 @@ export function IoTSensorDataSeedingView({
                         value={mean}
                         onChange={(e) => setMean(Number(e.target.value))}
                         helperText="Average time delay between data generation"
-                        inputProps={{ step: 0.1, min: 0 }}
+                        slotProps={{
+                          htmlInput: { step: 0.1, min: 0 }
+                        }}
                       />
                       <TextField
                         fullWidth
@@ -336,7 +337,9 @@ export function IoTSensorDataSeedingView({
                         value={std}
                         onChange={(e) => setStd(Number(e.target.value))}
                         helperText="Variation in time delay"
-                        inputProps={{ step: 0.1, min: 0.1 }}
+                        slotProps={{
+                          htmlInput: { step: 0.1, min: 0.1 }
+                        }}
                       />
                       <TextField
                         fullWidth
@@ -345,7 +348,9 @@ export function IoTSensorDataSeedingView({
                         value={intervalMs}
                         onChange={(e) => setIntervalMs(Number(e.target.value))}
                         helperText="Base interval between data points (deprecated)"
-                        inputProps={{ step: 100, min: 0 }}
+                        slotProps={{
+                          htmlInput: { step: 100, min: 0 }
+                        }}
                       />
                     </Stack>
                   </Box>
@@ -417,7 +422,6 @@ export function IoTSensorDataSeedingView({
           </Card>
         </Grid>
       </Grid>
-
       <Snackbar
         open={!!errorMessage}
         autoHideDuration={6000}
@@ -428,7 +432,6 @@ export function IoTSensorDataSeedingView({
           {errorMessage}
         </Alert>
       </Snackbar>
-
       <Snackbar
         open={!!successMessage}
         autoHideDuration={3000}

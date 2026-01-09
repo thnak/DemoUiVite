@@ -382,7 +382,7 @@ export function ShiftTemplateForm({
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                       {selected.map((day) => (
                         // Guard DAY_LABELS access in case the key is missing
-                        <Chip key={day} label={(DAY_LABELS[day] ?? '').slice(0, 3)} size="small" />
+                        (<Chip key={day} label={(DAY_LABELS[day] ?? '').slice(0, 3)} size="small" />)
                       ))}
                     </Box>
                   )}

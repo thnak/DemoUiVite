@@ -2,6 +2,12 @@
 
 This document provides guidelines for creating and organizing documentation in this repository.
 
+You have access to these tools. use it to search a new one icon when needed. solar doutone is priority. icon must add to src/components/iconify/icon-sets.ts ad then resuse it.
+- iconify/get_all_icon_sets
+- iconify/get_icon_set
+- iconify/search_icons
+- iconify/get_icon
+
 ## Documentation Structure
 
 All documentation should be placed in the `docs/` folder with the following structure:
@@ -1018,6 +1024,163 @@ All animations use GPU-accelerated CSS properties:
 
 **Documentation:**
 - `docs/guides/page-transitions.md` - Complete animation guide
+
+## Color Selector Standard - MuiColorInput
+
+**MANDATORY**: All entities with color fields (hexColor, colorHex) **MUST** use the `MuiColorInput` component for color selection.
+
+### Package Information
+
+- **Package**: `mui-color-input` (v4.0.0+)
+- **Import**: `import { MuiColorInput } from 'mui-color-input';`
+- **Documentation**: https://viclafouch.github.io/mui-color-input/
+
+### Required Implementation
+
+**In Create/Edit Views:**
+
+```typescript
+import { MuiColorInput } from 'mui-color-input';
+
+// Form state
+const [formData, setFormData] = useState({
+  // ... other fields
+  hexColor: currentEntity?.hexColor || '#1976d2', // Default MUI blue
+});
+
+// Color change handler
+const handleColorChange = useCallback(
+  (newColor: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      hexColor: newColor,
+    }));
+    clearFieldError('hexColor');
+  },
+  [clearFieldError]
+);
+
+// In form JSX
+<Box>
+  <Typography variant="subtitle2" sx={{ mb: 1 }}>
+    Color
+  </Typography>
+  <MuiColorInput
+    fullWidth
+    format="hex"
+    value={formData.hexColor}
+    onChange={handleColorChange}
+    error={hasError('hexColor')}
+    helperText={getFieldErrorMessage('hexColor') || 'Choose a color to represent this entity'}
+  />
+  <Box
+    sx={{
+      mt: 2,
+      p: 2,
+      bgcolor: formData.hexColor,
+      borderRadius: 1,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: 60,
+    }}
+  >
+    <Typography
+      variant="body2"
+      sx={{
+        color: 'white',
+        textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+        fontWeight: 'medium',
+      }}
+    >
+      Preview: {formData.name || 'Entity Name'}
+    </Typography>
+  </Box>
+</Box>
+```
+
+**In List Views (Table Rows):**
+
+```typescript
+// Add to table row type
+export type EntityProps = {
+  id: string;
+  name: string;
+  hexColor?: string; // or colorHex depending on API
+  // ... other fields
+};
+
+// In TableRow component
+<TableCell>
+  {row.hexColor && (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 1,
+      }}
+    >
+      <Box
+        sx={{
+          width: 20,
+          height: 20,
+          borderRadius: 0.5,
+          bgcolor: row.hexColor,
+          border: '1px solid',
+          borderColor: 'divider',
+        }}
+      />
+      <Typography variant="body2" noWrap>
+        {row.hexColor}
+      </Typography>
+    </Box>
+  )}
+</TableCell>
+```
+
+**In Table Head:**
+
+```typescript
+// Add color column to headLabel array
+const TABLE_HEAD = [
+  { id: 'name', label: 'Name' },
+  { id: 'color', label: 'Color', width: 180 },
+  { id: 'description', label: 'Description' },
+  { id: '', label: '' },
+];
+```
+
+### Entities Requiring Color Selector
+
+The following entities **MUST** have color selectors and color columns:
+
+1. **Area** (`hexColor`) - For area-based visual theming
+2. **Defect Reason** (`colorHex`) - For defect categorization
+3. **Defect Reason Group** (`colorHex`) - For group identification
+4. **Stop Machine Reason** (`colorHex`) - For stop reason visualization
+5. **Stop Machine Reason Group** (`colorHex`) - For group categorization
+6. **Time Block Name** (`colorHex`) - For timeline visualization
+
+### Standard Pattern
+
+✅ **DO:**
+- Use `MuiColorInput` with `format="hex"`
+- Provide default color `#1976d2` (MUI primary blue)
+- Show live preview box below color picker
+- Display color swatch + hex value in list views
+- Add color column to table (width: 180)
+
+❌ **DON'T:**
+- Use custom color pickers or `<input type="color">`
+- Skip the preview box in create/edit forms
+- Omit color column from list views
+- Use different default colors across entities
+
+### Example Reference
+
+See implementation in:
+- `src/sections/area/view/area-create-edit-view.tsx` - Color picker with preview
+- `src/sections/defect-reason/defect-reason-table-row.tsx` - Color column display
 
 ## Your tools
 -- Use the mui-mcp server to answer any MUI questions --

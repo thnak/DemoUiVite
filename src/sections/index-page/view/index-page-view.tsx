@@ -10,6 +10,10 @@ import IconButton from '@mui/material/IconButton';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
+import { useRouter } from 'src/routes/hooks';
+
+import { isOperator } from 'src/utils/jwt';
+
 import { Iconify } from 'src/components/iconify';
 
 import { MODULES } from '../modules-data';
@@ -32,9 +36,17 @@ const DESIGN_OPTIONS: { value: DesignOption; label: string; description: string 
 const DESIGN_STORAGE_KEY = 'index-page-design';
 
 export function IndexPageView() {
+  const router = useRouter();
   const [selectedDesign, setSelectedDesign] = useState<DesignOption>(4); // Default to Design 4
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  // Redirect Operator role users to OI module
+  useEffect(() => {
+    if (isOperator()) {
+      router.push('/oi/select-machine');
+    }
+  }, [router]);
 
   // Load saved design preference from localStorage
   useEffect(() => {

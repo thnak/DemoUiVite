@@ -70850,7 +70850,7 @@
     "/api/hubs/documentation": {
       "get": {
         "tags": [
-          "SignalR Hubs Documentation"
+          "SignalRHubsDocumentation"
         ],
         "summary": "Get comprehensive documentation for all SignalR hubs",
         "description": "Returns detailed documentation including hub endpoints, methods, parameters, return types, and JSON payload examples",
@@ -70870,7 +70870,7 @@
     "/api/hubs/documentation/markdown": {
       "get": {
         "tags": [
-          "SignalR Hubs Documentation"
+          "SignalRHubsDocumentation"
         ],
         "summary": "Get SignalR hubs documentation in Markdown format",
         "description": "Returns the complete documentation as a Markdown document",
@@ -70885,7 +70885,7 @@
     "/api/hubs/{hubName}": {
       "get": {
         "tags": [
-          "SignalR Hubs Documentation"
+          "SignalRHubsDocumentation"
         ],
         "summary": "Get documentation for a specific SignalR hub",
         "description": "Returns detailed documentation for a single hub by name",
@@ -82947,7 +82947,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2026-01-08"
+              "example": "2026-01-09"
             }
           },
           {
@@ -82957,7 +82957,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2026-01-08"
+              "example": "2026-01-09"
             }
           },
           {
@@ -84082,6 +84082,13 @@
         "description": "Enum representing the type of value monitored by the adaptive rule (Ip or UserId)."
       },
       "AdaptiveRuleConfigEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -84175,6 +84182,13 @@
         "description": "Base class for paginated responses"
       },
       "AdaptiveRuleConfigEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -84362,6 +84376,13 @@
         "description": "Add mapping between a stop reason and multiple machines. if a mapping already exists, it will be ignored."
       },
       "AdminGlobalSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -84561,6 +84582,13 @@
         "description": "Base class for paginated responses"
       },
       "AdminGlobalSettingEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -84707,6 +84735,13 @@
         "description": "Specifies the available time intervals for data aggregation in the system."
       },
       "ApiGatewayEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -84826,6 +84861,13 @@
         "description": "Base class for paginated responses"
       },
       "ApiGatewayEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -84957,6 +84999,11 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "AreaDimensions": {
+        "required": [
+          "height",
+          "length",
+          "width"
+        ],
         "type": "object",
         "properties": {
           "length": {
@@ -84991,6 +85038,18 @@
         "description": "Dimensions of an area"
       },
       "AreaEntity": {
+        "required": [
+          "code",
+          "colorHex",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name",
+          "translations"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -85015,32 +85074,31 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           },
           "colorHex": {
+            "minLength": 1,
             "type": "string",
-            "description": "Màu sắc hiển thị lý do dừng máy",
-            "nullable": true
+            "description": "Màu sắc hiển thị lý do dừng máy"
           },
           "translations": {
             "type": "object",
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các bản dịch của tên lý do dừng máy",
-            "nullable": true
+            "description": "Các bản dịch của tên lý do dừng máy"
           },
           "address": {
             "type": "string",
@@ -85150,6 +85208,13 @@
         "description": "Base class for paginated responses"
       },
       "AreaEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -85337,6 +85402,13 @@
         "description": "Loại vị trí trong kho hoặc nhà xưởng"
       },
       "AssemblyHashInfoEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -85423,6 +85495,13 @@
         "description": "Base class for paginated responses"
       },
       "AssemblyHashInfoEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -85731,6 +85810,13 @@
         "additionalProperties": false
       },
       "BomHeaderEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -85829,6 +85915,13 @@
         "description": "Base class for paginated responses"
       },
       "BomHeaderEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -85960,6 +86053,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "BomLineEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -86055,6 +86155,13 @@
         "description": "Base class for paginated responses"
       },
       "BomLineEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -86209,6 +86316,13 @@
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
       "BrandEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -86279,6 +86393,13 @@
         "description": "Base class for paginated responses"
       },
       "BrandEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -86464,13 +86585,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2026-01-08"
+            "example": "2026-01-09"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2026-01-08"
+            "example": "2026-01-09"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -86534,6 +86655,16 @@
         "description": "Base class for paginated responses"
       },
       "CalendarEntity": {
+        "required": [
+          "code",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -86558,19 +86689,19 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           },
           "parentCalendarId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -86582,13 +86713,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2026-01-08"
+            "example": "2026-01-09"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2026-01-08"
+            "example": "2026-01-09"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -86667,6 +86798,13 @@
         "description": "Base class for paginated responses"
       },
       "CalendarEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -86831,6 +86969,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "CalendarExceptionEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -86864,12 +87009,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-08"
+            "example": "2026-01-09"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-08"
+            "example": "2026-01-09"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -86924,6 +87069,13 @@
         "description": "Base class for paginated responses"
       },
       "CalendarExceptionEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -87055,6 +87207,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "CategoryEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -87125,6 +87284,13 @@
         "description": "Base class for paginated responses"
       },
       "CategoryEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -87360,6 +87526,13 @@
         "description": "Type of changes for an entity"
       },
       "ChildWidgetConfigEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -87466,6 +87639,13 @@
         "description": "Base class for paginated responses"
       },
       "ChildWidgetConfigEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -87817,6 +87997,13 @@
         "description": "Model representing current downtime records for a machine."
       },
       "CustomerEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -87911,6 +88098,13 @@
         "description": "Base class for paginated responses"
       },
       "CustomerEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -88112,6 +88306,13 @@
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
       "DashboardTemplateEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -88206,6 +88407,13 @@
         "description": "Base class for paginated responses"
       },
       "DashboardTemplateEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -88380,6 +88588,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "DataProtectionKeyEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -88461,6 +88676,13 @@
         "description": "Base class for paginated responses"
       },
       "DataProtectionKeyEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -88646,6 +88868,13 @@
         "type": "string"
       },
       "DefectInputEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -88733,6 +88962,13 @@
         "description": "Base class for paginated responses"
       },
       "DefectInputEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -88902,6 +89138,18 @@
         "description": "Data Transfer Object for Defect Reason"
       },
       "DefectReasonEntity": {
+        "required": [
+          "code",
+          "colorHex",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name",
+          "translations"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -88926,32 +89174,31 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           },
           "colorHex": {
+            "minLength": 1,
             "type": "string",
-            "description": "Màu sắc hiển thị lý do dừng máy",
-            "nullable": true
+            "description": "Màu sắc hiển thị lý do dừng máy"
           },
           "translations": {
             "type": "object",
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các bản dịch của tên lý do dừng máy",
-            "nullable": true
+            "description": "Các bản dịch của tên lý do dừng máy"
           },
           "defectGroupId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -89017,6 +89264,13 @@
         "description": "Base class for paginated responses"
       },
       "DefectReasonEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -89181,6 +89435,18 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "DefectReasonGroupEntity": {
+        "required": [
+          "code",
+          "colorHex",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name",
+          "translations"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -89205,32 +89471,31 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           },
           "colorHex": {
+            "minLength": 1,
             "type": "string",
-            "description": "Màu sắc hiển thị lý do dừng máy",
-            "nullable": true
+            "description": "Màu sắc hiển thị lý do dừng máy"
           },
           "translations": {
             "type": "object",
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các bản dịch của tên lý do dừng máy",
-            "nullable": true
+            "description": "Các bản dịch của tên lý do dừng máy"
           }
         },
         "additionalProperties": false,
@@ -89280,6 +89545,13 @@
         "description": "Base class for paginated responses"
       },
       "DefectReasonGroupEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -89471,6 +89743,13 @@
         "description": "Data Transfer Object cho lỗi phát sinh từ máy đang chạy"
       },
       "DepartmentEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -89564,6 +89843,13 @@
         "description": "Base class for paginated responses"
       },
       "DepartmentEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -89771,6 +90057,13 @@
         "description": "Represents the reason for a disconnection event in the system."
       },
       "DocumentEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -89860,6 +90153,13 @@
         "description": "Base class for paginated responses"
       },
       "DocumentEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -90003,6 +90303,13 @@
         "description": "Represents the type of document in the system."
       },
       "DowntimeInput": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -90096,6 +90403,13 @@
         "description": "Base class for paginated responses"
       },
       "DowntimeInputCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -90470,6 +90784,13 @@
         "description": "phân loại file"
       },
       "FileInfoEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -90584,6 +90905,13 @@
         "description": "Base class for paginated responses"
       },
       "FileInfoEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -90715,6 +91043,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "FileLocationHistoryEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -90794,6 +91129,13 @@
         "description": "Base class for paginated responses"
       },
       "FileLocationHistoryEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -90925,6 +91267,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "FileMetadataEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -90979,7 +91328,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-08"
+            "example": "2026-01-09"
           }
         },
         "additionalProperties": false
@@ -91028,6 +91377,13 @@
         "description": "Base class for paginated responses"
       },
       "FileMetadataEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -91159,6 +91515,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "FilePermissionEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -91260,6 +91623,13 @@
         "description": "Base class for paginated responses"
       },
       "FilePermissionEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -91391,6 +91761,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "FilePublicLinkEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -91476,6 +91853,13 @@
         "description": "Base class for paginated responses"
       },
       "FilePublicLinkEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -91618,6 +92002,13 @@
         "description": "Represents different statuses of a file in the file system."
       },
       "FileVersions": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -91727,6 +92118,13 @@
         "description": "Base class for paginated responses"
       },
       "FileVersionsCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -91858,6 +92256,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "FirmwareVersionEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -91984,6 +92389,13 @@
         "description": "Base class for paginated responses"
       },
       "FirmwareVersionEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -92115,6 +92527,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "FolderInfoEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -92224,6 +92643,13 @@
         "description": "Base class for paginated responses"
       },
       "FolderInfoEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -92355,6 +92781,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "FolderLocationHistoryEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -92434,6 +92867,13 @@
         "description": "Base class for paginated responses"
       },
       "FolderLocationHistoryEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -92565,6 +93005,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "FolderPermissionEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -92661,6 +93108,13 @@
         "description": "Base class for paginated responses"
       },
       "FolderPermissionEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -94398,6 +94852,16 @@
         "description": "defines how the code should be incremented"
       },
       "InformationBaseEntity": {
+        "required": [
+          "code",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -94422,19 +94886,19 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           }
         },
         "additionalProperties": false,
@@ -94484,6 +94948,13 @@
         "description": "Base class for paginated responses"
       },
       "InformationBaseEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -94648,6 +95119,18 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "InformationDecoratorBaseEntity": {
+        "required": [
+          "code",
+          "colorHex",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name",
+          "translations"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -94672,32 +95155,31 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           },
           "colorHex": {
+            "minLength": 1,
             "type": "string",
-            "description": "Màu sắc hiển thị lý do dừng máy",
-            "nullable": true
+            "description": "Màu sắc hiển thị lý do dừng máy"
           },
           "translations": {
             "type": "object",
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các bản dịch của tên lý do dừng máy",
-            "nullable": true
+            "description": "Các bản dịch của tên lý do dừng máy"
           }
         },
         "additionalProperties": false,
@@ -94747,6 +95229,13 @@
         "description": "Base class for paginated responses"
       },
       "InformationDecoratorBaseEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -95104,6 +95593,13 @@
         "description": "Base class for paginated responses"
       },
       "IoTDeviceEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -95160,7 +95656,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2026-01-08"
+            "example": "2026-01-09"
           },
           "locationId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -95234,6 +95730,13 @@
         "description": "Base class for paginated responses"
       },
       "IoTDeviceEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -95470,6 +95973,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "IoTDeviceGroupEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -95589,6 +96099,13 @@
         "description": "Base class for paginated responses"
       },
       "IoTDeviceGroupEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -95764,6 +96281,13 @@
         "description": "Represents the status of an IoT device group."
       },
       "IoTDeviceModelEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -95887,6 +96411,13 @@
         "description": "Base class for paginated responses"
       },
       "IoTDeviceModelEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -96079,6 +96610,16 @@
         "description": "Types of IoT devices"
       },
       "IoTSensorEntity": {
+        "required": [
+          "code",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -96103,19 +96644,19 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           },
           "type": {
             "$ref": "#/components/schemas/IoTSensorType"
@@ -96199,6 +96740,13 @@
         "description": "Base class for paginated responses"
       },
       "IoTSensorEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -96469,6 +97017,13 @@
         "additionalProperties": false
       },
       "JobEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -96582,6 +97137,13 @@
         "description": "Base class for paginated responses"
       },
       "JobEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -96713,6 +97275,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "JtiTokenEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -96798,6 +97367,13 @@
         "description": "Base class for paginated responses"
       },
       "JtiTokenEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -96949,6 +97525,13 @@
         "description": "Request to label a downtime record for a machine."
       },
       "LanguageKeyLangEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -97035,6 +97618,13 @@
         "description": "Base class for paginated responses"
       },
       "LanguageKeyLangEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -97391,6 +97981,13 @@
         "description": "Base class for paginated responses"
       },
       "MachineAreaMapping": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -97467,6 +98064,13 @@
         "description": "Base class for paginated responses"
       },
       "MachineAreaMappingCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -97598,6 +98202,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "MachineDefectInputEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -97688,6 +98299,13 @@
         "description": "Base class for paginated responses"
       },
       "MachineDefectInputEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -97819,6 +98437,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "MachineDefectReasonMapping": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -97896,6 +98521,13 @@
         "description": "Base class for paginated responses"
       },
       "MachineDefectReasonMappingCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -98094,6 +98726,16 @@
         "description": ""
       },
       "MachineEntity": {
+        "required": [
+          "code",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -98118,19 +98760,19 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           },
           "machineTypeId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -98201,6 +98843,13 @@
         "description": "Base class for paginated responses"
       },
       "MachineEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -98365,6 +99014,16 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "MachineGroupEntity": {
+        "required": [
+          "code",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -98389,19 +99048,19 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           },
           "groupType": {
             "$ref": "#/components/schemas/MachineGroupType"
@@ -98454,6 +99113,13 @@
         "description": "Base class for paginated responses"
       },
       "MachineGroupEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -98618,6 +99284,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "MachineGroupMachineMapping": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -98695,6 +99368,13 @@
         "description": "Base class for paginated responses"
       },
       "MachineGroupMachineMappingCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -98835,6 +99515,13 @@
         "description": "Loại nhóm máy"
       },
       "MachineOeeHourStatistic": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -98964,6 +99651,13 @@
         "description": "Base class for paginated responses"
       },
       "MachineOeeHourStatisticCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -99095,6 +99789,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "MachineOutputMapping": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -99184,6 +99885,13 @@
         "description": "Base class for paginated responses"
       },
       "MachineOutputMappingCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -99431,6 +100139,13 @@
         "description": "Paginated response for machines"
       },
       "MachineProductMapping": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -99508,6 +100223,13 @@
         "description": "Base class for paginated responses"
       },
       "MachineProductMappingCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -99668,6 +100390,13 @@
         "additionalProperties": false
       },
       "MachineStopMachineReasonMapping": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -99745,6 +100474,13 @@
         "description": "Base class for paginated responses"
       },
       "MachineStopMachineReasonMappingCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -99876,6 +100612,16 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "MachineTypeEntity": {
+        "required": [
+          "code",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -99900,19 +100646,19 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           }
         },
         "additionalProperties": false,
@@ -99962,6 +100708,13 @@
         "description": "Base class for paginated responses"
       },
       "MachineTypeEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -100164,6 +100917,13 @@
         "additionalProperties": false
       },
       "MaintenanceThresholdEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -100290,6 +101050,13 @@
         "description": "Base class for paginated responses"
       },
       "MaintenanceThresholdEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -100421,6 +101188,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "ManufacturerEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -100515,6 +101289,13 @@
         "description": "Base class for paginated responses"
       },
       "ManufacturerEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -100679,6 +101460,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "MemorySchemaEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -100773,6 +101561,13 @@
         "description": "Base class for paginated responses"
       },
       "MemorySchemaEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -100904,6 +101699,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "MongoBlob": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -101020,6 +101822,13 @@
         "description": "Base class for paginated responses"
       },
       "MongoBlobCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -101421,6 +102230,13 @@
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
       "OneTimeLoginTokenEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -101541,6 +102357,13 @@
         "description": "Base class for paginated responses"
       },
       "OneTimeLoginTokenEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -101672,6 +102495,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "OperationEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -101791,6 +102621,13 @@
         "description": "Base class for paginated responses"
       },
       "OperationEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -101980,6 +102817,13 @@
         "description": "Lớp định nghĩa quy tắc ánh xạ cho một điểm IoT trong một công đoạn"
       },
       "OperationParameterSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -102092,6 +102936,13 @@
         "description": "Base class for paginated responses"
       },
       "OperationParameterSettingEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -102223,6 +103074,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "OperationVariantEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -102296,6 +103154,13 @@
         "description": "Base class for paginated responses"
       },
       "OperationVariantEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -102427,6 +103292,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "OperatorStationLogEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -102516,6 +103388,13 @@
         "description": "Base class for paginated responses"
       },
       "OperatorStationLogEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -102695,6 +103574,13 @@
         "description": "Specifies how the final output quantity of a machine is calculated."
       },
       "PageEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -102808,6 +103694,13 @@
         "description": "Base class for paginated responses"
       },
       "PageEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -102939,6 +103832,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "ParaphraseMapEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -103017,6 +103917,13 @@
         "description": "Base class for paginated responses"
       },
       "ParaphraseMapEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -103227,6 +104134,13 @@
         "description": "Data transfer object for Permission entity"
       },
       "PermissionEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -103314,6 +104228,13 @@
         "description": "Base class for paginated responses"
       },
       "PermissionEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -103484,6 +104405,11 @@
         "description": "Pin interrupt modes"
       },
       "Position": {
+        "required": [
+          "x",
+          "y",
+          "z"
+        ],
         "type": "object",
         "properties": {
           "x": {
@@ -103533,6 +104459,18 @@
         "additionalProperties": { }
       },
       "ProductCategoryEntity": {
+        "required": [
+          "code",
+          "colorHex",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name",
+          "translations"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -103557,32 +104495,31 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           },
           "colorHex": {
+            "minLength": 1,
             "type": "string",
-            "description": "Màu sắc hiển thị lý do dừng máy",
-            "nullable": true
+            "description": "Màu sắc hiển thị lý do dừng máy"
           },
           "translations": {
             "type": "object",
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các bản dịch của tên lý do dừng máy",
-            "nullable": true
+            "description": "Các bản dịch của tên lý do dừng máy"
           }
         },
         "additionalProperties": false,
@@ -103632,6 +104569,13 @@
         "description": "Base class for paginated responses"
       },
       "ProductCategoryEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -103824,6 +104768,16 @@
         "description": "Product dimensions data"
       },
       "ProductEntity": {
+        "required": [
+          "code",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -103848,19 +104802,19 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           },
           "unitOfMeasureId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -103942,6 +104896,13 @@
         "description": "Base class for paginated responses"
       },
       "ProductEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -104226,6 +105187,13 @@
         "description": "Response model for paginated product data."
       },
       "ProductVariantEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -104318,6 +105286,13 @@
         "description": "Base class for paginated responses"
       },
       "ProductVariantEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -104454,6 +105429,11 @@
           "productId": {
             "$ref": "#/components/schemas/ObjectId"
           },
+          "productionOrderNumber": {
+            "type": "string",
+            "description": "Production order number associated with the product.",
+            "nullable": true
+          },
           "userId": {
             "$ref": "#/components/schemas/ObjectId"
           },
@@ -104486,6 +105466,23 @@
             "type": "number",
             "description": "Planned quantity for the new product after changeover.",
             "format": "double"
+          },
+          "currentQuantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "goodQuantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "scrapQuantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "actualCycleTime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
           }
         },
         "additionalProperties": false,
@@ -104544,6 +105541,13 @@
         "description": "Enum để phân loại sản lượng"
       },
       "ProductionOrderEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -104654,6 +105658,13 @@
         "description": "Base class for paginated responses"
       },
       "ProductionOrderEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -104785,6 +105796,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "ProductionReceiptEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -104846,7 +105864,7 @@
             "type": "string",
             "description": "Date of the work.",
             "format": "date",
-            "example": "2026-01-08"
+            "example": "2026-01-09"
           },
           "shiftName": {
             "type": "string",
@@ -104967,6 +105985,13 @@
         "description": "Base class for paginated responses"
       },
       "ProductionReceiptEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -105269,6 +106294,13 @@
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
       "QualityCheckPointEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -105388,6 +106420,13 @@
         "description": "Base class for paginated responses"
       },
       "QualityCheckPointEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -105880,6 +106919,13 @@
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
       "RefreshTokenEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -105995,6 +107041,13 @@
         "description": "Base class for paginated responses"
       },
       "RefreshTokenEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -106477,6 +107530,13 @@
         "additionalProperties": false
       },
       "RoleEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -106567,6 +107627,13 @@
         "description": "Base class for paginated responses"
       },
       "RoleEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -106746,6 +107813,13 @@
         "description": "Role information"
       },
       "RolePermissionMapping": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -106823,6 +107897,13 @@
         "description": "Base class for paginated responses"
       },
       "RolePermissionMappingCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -106971,6 +108052,13 @@
         "description": "Represents the type of a route in the API Gateway."
       },
       "RoutingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -107077,6 +108165,13 @@
         "description": "Base class for paginated responses"
       },
       "RoutingEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -107229,6 +108324,13 @@
         "description": "Represents the classification of scripts in the system."
       },
       "ScriptDefinitionEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -107341,6 +108443,13 @@
         "description": "Base class for paginated responses"
       },
       "ScriptDefinitionEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -107637,6 +108746,13 @@
         "additionalProperties": false
       },
       "ScriptVariantEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -107734,6 +108850,13 @@
         "description": "Base class for paginated responses"
       },
       "ScriptVariantEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -107963,25 +109086,31 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "SearchMachineByAreaResult": {
+        "required": [
+          "areaHexColor",
+          "areaName",
+          "machineId",
+          "machineName"
+        ],
         "type": "object",
         "properties": {
           "machineId": {
             "$ref": "#/components/schemas/ObjectId"
           },
           "machineName": {
+            "minLength": 1,
             "type": "string",
-            "description": "Name of the machine",
-            "nullable": true
+            "description": "Name of the machine"
           },
           "areaName": {
+            "minLength": 1,
             "type": "string",
-            "description": "Name of the area the machine belongs to",
-            "nullable": true
+            "description": "Name of the area the machine belongs to"
           },
           "areaHexColor": {
+            "minLength": 1,
             "type": "string",
-            "description": "Hex color code of the area the machine belongs to",
-            "nullable": true
+            "description": "Hex color code of the area the machine belongs to"
           }
         },
         "additionalProperties": false,
@@ -108391,6 +109520,16 @@
         "description": "Định nghĩa ca làm việc cho một ngày cụ thể trong tuần.\r\nBao gồm giờ bắt đầu, giờ kết thúc và các khoảng nghỉ trong ca."
       },
       "ShiftTemplateEntity": {
+        "required": [
+          "code",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -108415,19 +109554,19 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           },
           "shifts": {
             "type": "array",
@@ -108485,6 +109624,13 @@
         "description": "Base class for paginated responses"
       },
       "ShiftTemplateEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -108667,6 +109813,13 @@
         "additionalProperties": false
       },
       "SlideShowEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -108804,6 +109957,13 @@
         "description": "Base class for paginated responses"
       },
       "SlideShowEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -108951,6 +110111,13 @@
         "description": "Represents sorting criteria with a field to sort by and the order (ascending or descending)."
       },
       "StationEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -109052,6 +110219,13 @@
         "description": "Base class for paginated responses"
       },
       "StationEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -109216,6 +110390,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "StationGroupEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -109294,6 +110475,13 @@
         "description": "Base class for paginated responses"
       },
       "StationGroupEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -109458,6 +110646,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "StationGroupStationMapping": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -109534,6 +110729,13 @@
         "description": "Base class for paginated responses"
       },
       "StationGroupStationMappingCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -109679,6 +110881,13 @@
         "description": "Status of a production job at a station"
       },
       "StopEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -109757,6 +110966,13 @@
         "description": "Base class for paginated responses"
       },
       "StopEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -109952,6 +111168,18 @@
         "description": "Data Transfer Object for Stop Machine Reason."
       },
       "StopMachineReasonEntity": {
+        "required": [
+          "code",
+          "colorHex",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name",
+          "translations"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -109976,32 +111204,31 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           },
           "colorHex": {
+            "minLength": 1,
             "type": "string",
-            "description": "Màu sắc hiển thị lý do dừng máy",
-            "nullable": true
+            "description": "Màu sắc hiển thị lý do dừng máy"
           },
           "translations": {
             "type": "object",
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các bản dịch của tên lý do dừng máy",
-            "nullable": true
+            "description": "Các bản dịch của tên lý do dừng máy"
           },
           "groupId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -110070,6 +111297,13 @@
         "description": "Base class for paginated responses"
       },
       "StopMachineReasonEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -110267,6 +111501,18 @@
         "description": "Data Transfer Object for Stop Machine Reason Group."
       },
       "StopMachineReasonGroupEntity": {
+        "required": [
+          "code",
+          "colorHex",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name",
+          "translations"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -110291,32 +111537,31 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           },
           "colorHex": {
+            "minLength": 1,
             "type": "string",
-            "description": "Màu sắc hiển thị lý do dừng máy",
-            "nullable": true
+            "description": "Màu sắc hiển thị lý do dừng máy"
           },
           "translations": {
             "type": "object",
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các bản dịch của tên lý do dừng máy",
-            "nullable": true
+            "description": "Các bản dịch của tên lý do dừng máy"
           },
           "impact": {
             "$ref": "#/components/schemas/StopMachineImpact"
@@ -110369,6 +111614,13 @@
         "description": "Base class for paginated responses"
       },
       "StopMachineReasonGroupEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -110573,6 +111825,13 @@
         "additionalProperties": false
       },
       "SupplierEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -110643,6 +111902,13 @@
         "description": "Base class for paginated responses"
       },
       "SupplierEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -110776,7 +112042,12 @@
       "SystemErrorReportCommentEntity": {
         "required": [
           "content",
+          "createTime",
           "errorReportId",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
           "userId"
         ],
         "type": "object",
@@ -110896,6 +112167,13 @@
         "description": "Base class for paginated responses"
       },
       "SystemErrorReportCommentEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -111148,8 +112426,13 @@
       },
       "SystemErrorReportEntity": {
         "required": [
+          "createTime",
           "errorMessage",
-          "errorType"
+          "errorType",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
         ],
         "type": "object",
         "properties": {
@@ -111317,6 +112600,13 @@
         "description": "Base class for paginated responses"
       },
       "SystemErrorReportEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -111482,6 +112772,13 @@
         "description": "System error type"
       },
       "SystemSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -111608,6 +112905,13 @@
         "description": "Base class for paginated responses"
       },
       "SystemSettingEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -111739,6 +113043,18 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "TimeBlockNameEntity": {
+        "required": [
+          "code",
+          "colorHex",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name",
+          "translations"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -111763,32 +113079,31 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           },
           "colorHex": {
+            "minLength": 1,
             "type": "string",
-            "description": "Màu sắc hiển thị lý do dừng máy",
-            "nullable": true
+            "description": "Màu sắc hiển thị lý do dừng máy"
           },
           "translations": {
             "type": "object",
             "additionalProperties": {
               "type": "string"
             },
-            "description": "Các bản dịch của tên lý do dừng máy",
-            "nullable": true
+            "description": "Các bản dịch của tên lý do dừng máy"
           },
           "imageUrl": {
             "type": "string",
@@ -111843,6 +113158,13 @@
         "description": "Base class for paginated responses"
       },
       "TimeBlockNameEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -112126,6 +113448,13 @@
         "description": "Base class for paginated responses"
       },
       "UnitConversionEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -112218,6 +113547,13 @@
         "description": "Base class for paginated responses"
       },
       "UnitConversionEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -112408,6 +113744,13 @@
         "description": "Data Transfer Object for Unit"
       },
       "UnitEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -112501,6 +113844,13 @@
         "description": "Base class for paginated responses"
       },
       "UnitEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -112665,6 +114015,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "UnitGroupEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -112754,6 +114111,13 @@
         "description": "Base class for paginated responses"
       },
       "UnitGroupEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -113191,6 +114555,13 @@
         "description": "Represents the supported HTTP methods for upstream API gateway routing."
       },
       "UserDepartmentMapping": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -113268,6 +114639,13 @@
         "description": "Base class for paginated responses"
       },
       "UserDepartmentMappingCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -113480,6 +114858,13 @@
         "description": "User dto role"
       },
       "UserEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -113669,6 +115054,13 @@
         "description": "Base class for paginated responses"
       },
       "UserEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -113882,6 +115274,13 @@
         "description": "Data transfer object for user information including settings"
       },
       "UserLogHistoryEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -113960,6 +115359,13 @@
         "description": "Base class for paginated responses"
       },
       "UserLogHistoryEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -114091,6 +115497,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "UserLoginInfoPocoEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -114176,6 +115589,13 @@
         "description": "Base class for paginated responses"
       },
       "UserLoginInfoPocoEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -114359,6 +115779,13 @@
         "description": "Paginated response for users"
       },
       "UserPasskeyEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -114490,6 +115917,13 @@
         "description": "Base class for paginated responses"
       },
       "UserPasskeyEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -114621,6 +116055,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "UserPermissionMapping": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -114698,6 +116139,13 @@
         "description": "Base class for paginated responses"
       },
       "UserPermissionMappingCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -114842,6 +116290,13 @@
         "description": "User role information"
       },
       "UserRoleMapping": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -114919,6 +116374,13 @@
         "description": "Base class for paginated responses"
       },
       "UserRoleMappingCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -115050,6 +116512,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "UserSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -115142,6 +116611,13 @@
         "description": "Base class for paginated responses"
       },
       "UserSettingEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -115324,6 +116800,16 @@
         "description": "Specifies the severity level of a validation error."
       },
       "WarehouseEntity": {
+        "required": [
+          "code",
+          "createTime",
+          "description",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -115348,19 +116834,19 @@
             "description": "Indicates whether the entity is in draft status."
           },
           "code": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi.",
-            "nullable": true
+            "description": "Mã định danh duy nhất do người dùng định nghĩa. Hỗ trợ thay đổi."
           },
           "name": {
+            "minLength": 1,
             "type": "string",
-            "description": "Tên mô tả của thực thể.",
-            "nullable": true
+            "description": "Tên mô tả của thực thể."
           },
           "description": {
+            "minLength": 1,
             "type": "string",
-            "description": "Mô tả chi tiết về thực thể.",
-            "nullable": true
+            "description": "Mô tả chi tiết về thực thể."
           },
           "type": {
             "$ref": "#/components/schemas/WarehouseType"
@@ -115416,6 +116902,13 @@
         "description": "Base class for paginated responses"
       },
       "WarehouseEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -115619,6 +117112,13 @@
         "additionalProperties": false
       },
       "WebhookEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -115762,6 +117262,13 @@
         "description": "Base class for paginated responses"
       },
       "WebhookEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -116053,6 +117560,13 @@
         "additionalProperties": false
       },
       "WidgetConfigEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -116159,6 +117673,13 @@
         "description": "Base class for paginated responses"
       },
       "WidgetConfigEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -116347,6 +117868,13 @@
         "additionalProperties": false
       },
       "WorkCellEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -116441,6 +117969,13 @@
         "description": "Base class for paginated responses"
       },
       "WorkCellEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -116585,6 +118120,13 @@
         "additionalProperties": false
       },
       "WorkDateCalendarStatisticEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -116612,7 +118154,7 @@
             "type": "string",
             "description": "The specific work date this statistic applies to.",
             "format": "date",
-            "example": "2026-01-08"
+            "example": "2026-01-09"
           },
           "calendarId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -116704,6 +118246,13 @@
         "description": "Base class for paginated responses"
       },
       "WorkDateCalendarStatisticEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -116835,6 +118384,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "WorkOrderEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -116954,6 +118510,13 @@
         "description": "Base class for paginated responses"
       },
       "WorkOrderEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -117085,6 +118648,13 @@
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
       "WorkingParameterEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -117182,6 +118752,13 @@
         "description": "Base class for paginated responses"
       },
       "WorkingParameterEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -117662,7 +119239,7 @@
       "name": "ShiftTemplate"
     },
     {
-      "name": "SignalR Hubs Documentation"
+      "name": "SignalRHubsDocumentation"
     },
     {
       "name": "SlideShow"

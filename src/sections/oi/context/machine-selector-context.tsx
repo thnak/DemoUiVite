@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { MachineEntity } from 'src/api/types/generated';
 
-import { useState, useContext, useCallback, createContext } from 'react';
+import { useState, useEffect, useContext, useCallback, createContext } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -21,9 +21,23 @@ interface MachineSelectorProviderProps {
 export function MachineSelectorProvider({ children }: MachineSelectorProviderProps) {
   const [selectedMachine, setSelectedMachineState] = useState<MachineEntity | null>(null);
 
+  // Restore selected machine from localStorage on mount
+  useEffect(() => {
+    const savedMachine = localStorage.getItem('oi-selected-machine');
+    if (savedMachine) {
+      try {
+        const machine = JSON.parse(savedMachine) as MachineEntity;
+        setSelectedMachineState(machine);
+      } catch (error) {
+        console.error('Failed to restore selected machine:', error);
+        localStorage.removeItem('oi-selected-machine');
+      }
+    }
+  }, []);
+
   const setSelectedMachine = useCallback((machine: MachineEntity | null) => {
     setSelectedMachineState(machine);
-    // Optionally persist to localStorage
+    // Persist to localStorage
     if (machine) {
       localStorage.setItem('oi-selected-machine', JSON.stringify(machine));
     } else {
