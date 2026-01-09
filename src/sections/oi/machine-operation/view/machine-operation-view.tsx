@@ -155,6 +155,77 @@ interface QuantityAddHistory {
   note?: string;
 }
 
+interface DefectType {
+  defectId: string;
+  defectName: string;
+  imageUrl?: string;
+  colorHex: string;
+}
+
+interface DefectEntry {
+  defectId: string;
+  quantity: number;
+}
+
+interface DefectSubmission {
+  id: string;
+  timestamp: string;
+  defects: Array<{ defectId: string; defectName: string; quantity: number; colorHex: string }>;
+  submittedBy: string;
+}
+
+// Mock defect types
+const getMockDefectTypes = (): DefectType[] => [
+  {
+    defectId: 'defect-1',
+    defectName: 'Scratch',
+    imageUrl: undefined, // Will use fallback
+    colorHex: '#ef4444', // Red
+  },
+  {
+    defectId: 'defect-2',
+    defectName: 'Dent',
+    imageUrl: undefined,
+    colorHex: '#f59e0b', // Orange
+  },
+  {
+    defectId: 'defect-3',
+    defectName: 'Discoloration',
+    imageUrl: undefined,
+    colorHex: '#eab308', // Yellow
+  },
+  {
+    defectId: 'defect-4',
+    defectName: 'Crack',
+    imageUrl: undefined,
+    colorHex: '#dc2626', // Dark red
+  },
+  {
+    defectId: 'defect-5',
+    defectName: 'Missing Part',
+    imageUrl: undefined,
+    colorHex: '#7c2d12', // Brown
+  },
+  {
+    defectId: 'defect-6',
+    defectName: 'Wrong Dimension',
+    imageUrl: undefined,
+    colorHex: '#ea580c', // Orange-red
+  },
+  {
+    defectId: 'defect-7',
+    defectName: 'Surface Defect',
+    imageUrl: undefined,
+    colorHex: '#f97316', // Bright orange
+  },
+  {
+    defectId: 'defect-8',
+    defectName: 'Assembly Error',
+    imageUrl: undefined,
+    colorHex: '#b91c1c', // Crimson
+  },
+];
+
 const getMockQuantityHistory = (): QuantityAddHistory[] => [
   {
     id: '1',
@@ -407,6 +478,13 @@ export function MachineOperationView() {
   const [productSearchTerm, setProductSearchTerm] = useState('');
   const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
 
+  // Defect/Scrap dialog states
+  const [addDefectDialogOpen, setAddDefectDialogOpen] = useState(false);
+  const [defectTabValue, setDefectTabValue] = useState(0);
+  const [defectTypes, setDefectTypes] = useState<DefectType[]>([]);
+  const [defectEntries, setDefectEntries] = useState<Map<string, number>>(new Map());
+  const [defectHistory, setDefectHistory] = useState<DefectSubmission[]>([]);
+
   const hubService = MachineHubService.getInstance(apiConfig.baseUrl);
 
   const handleMachineUpdate = useCallback((update: MachineOeeUpdate) => {
@@ -437,6 +515,7 @@ export function MachineOperationView() {
           setTimelineRecords(getMockTimelineData());
           setMappedProducts(getMockMappedProducts());
           setQuantityHistory(getMockQuantityHistory());
+          setDefectTypes(getMockDefectTypes());
         } else {
           // Load real timeline data in production
           try {
@@ -509,10 +588,10 @@ export function MachineOperationView() {
         event.preventDefault();
         setAddQuantityDialogOpen(true);
       }
-      // F3 for add defect/scrap (placeholder - can be implemented later)
+      // F3 for add defect/scrap
       if (event.key === 'F3') {
         event.preventDefault();
-        console.log('F3: Add defect/scrap - to be implemented');
+        setAddDefectDialogOpen(true);
       }
       // F4 for label downtime (placeholder - can be implemented later)
       if (event.key === 'F4') {
@@ -523,6 +602,7 @@ export function MachineOperationView() {
       if (event.key === 'Escape') {
         setProductChangeDialogOpen(false);
         setAddQuantityDialogOpen(false);
+        setAddDefectDialogOpen(false);
         setShowKeyboardHelp(false);
       }
       // F12 for keyboard help
@@ -584,6 +664,71 @@ export function MachineOperationView() {
       setAddQuantityDialogOpen(false);
       setAddQuantityTabValue(0);
     }
+  };
+
+  // Defect handling functions
+  const handleDefectQuantityChange = (defectId: string, value: string) => {
+    const qty = parseInt(value, 10);
+    if (!Number.isNaN(qty) && qty > 0) {
+      setDefectEntries(new Map(defectEntries.set(defectId, qty)));
+    } else {
+      const newMap = new Map(defectEntries);
+      newMap.delete(defectId);
+      setDefectEntries(newMap);
+    }
+  };
+
+  const handleDefectIncrement = (defectId: string) => {
+    const current = defectEntries.get(defectId) || 0;
+    setDefectEntries(new Map(defectEntries.set(defectId, current + 1)));
+  };
+
+  const handleDefectDecrement = (defectId: string) => {
+    const current = defectEntries.get(defectId) || 0;
+    if (current > 1) {
+      setDefectEntries(new Map(defectEntries.set(defectId, current - 1)));
+    } else {
+      const newMap = new Map(defectEntries);
+      newMap.delete(defectId);
+      setDefectEntries(newMap);
+    }
+  };
+
+  const handleSubmitDefects = () => {
+    if (defectEntries.size === 0) return;
+
+    const defectsToSubmit = Array.from(defectEntries.entries()).map(([defectId, quantity]) => {
+      const defectType = defectTypes.find(d => d.defectId === defectId);
+      return {
+        defectId,
+        defectName: defectType?.defectName || 'Unknown',
+        quantity,
+        colorHex: defectType?.colorHex || '#gray',
+      };
+    });
+
+    const newSubmission: DefectSubmission = {
+      id: `${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      defects: defectsToSubmit,
+      submittedBy: 'WIBU - 01234',
+    };
+
+    setDefectHistory([newSubmission, ...defectHistory]);
+
+    // Update scrap quantity
+    const totalDefects = defectsToSubmit.reduce((sum, d) => sum + d.quantity, 0);
+    if (productData) {
+      setProductData({
+        ...productData,
+        scrapQuantity: (productData.scrapQuantity || 0) + totalDefects,
+      });
+    }
+
+    // Reset form
+    setDefectEntries(new Map());
+    setAddDefectDialogOpen(false);
+    setDefectTabValue(0);
   };
 
   const filteredProducts = mappedProducts.filter(product =>
@@ -702,6 +847,7 @@ export function MachineOperationView() {
                 size="large"
                 color="error" 
                 startIcon={<Iconify icon="eva:alert-triangle-fill" />}
+                onClick={() => setAddDefectDialogOpen(true)}
                 sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
               >
                 Nhập lỗi
@@ -1334,6 +1480,250 @@ export function MachineOperationView() {
                 </TableBody>
               </Table>
             </TableContainer>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Defect/Scrap Dialog */}
+      <Dialog 
+        open={addDefectDialogOpen} 
+        onClose={() => setAddDefectDialogOpen(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+              Nhập lỗi/Scrap
+            </Typography>
+            <IconButton onClick={() => setAddDefectDialogOpen(false)}>
+              <Iconify icon="eva:close-outline" />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          <Tabs 
+            value={defectTabValue} 
+            onChange={(e, newValue) => setDefectTabValue(newValue)}
+            sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}
+          >
+            <Tab label="Nhập lỗi" />
+            <Tab label="Lịch sử" />
+          </Tabs>
+
+          {/* Tab 1: Add Defects Grid */}
+          {defectTabValue === 0 && (
+            <Box sx={{ height: 600, overflow: 'auto' }}>
+              <Grid container spacing={2}>
+                {defectTypes.map((defect) => {
+                  const quantity = defectEntries.get(defect.defectId) || 0;
+                  
+                  return (
+                    <Grid key={defect.defectId} size={{ xs: 12, sm: 6, md: 4 }}>
+                      <Card 
+                        sx={{ 
+                          p: 2,
+                          borderLeft: 4,
+                          borderColor: defect.colorHex,
+                          height: '100%',
+                          display: 'flex',
+                          flexDirection: 'column',
+                        }}
+                      >
+                        {/* Defect image/icon */}
+                        <Box
+                          sx={{
+                            width: '100%',
+                            height: 100,
+                            borderRadius: 1,
+                            bgcolor: defect.colorHex,
+                            opacity: 0.15,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            mb: 2,
+                            position: 'relative',
+                          }}
+                        >
+                          {defect.imageUrl ? (
+                            <img 
+                              src={defect.imageUrl} 
+                              alt={defect.defectName}
+                              style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                            />
+                          ) : (
+                            <Typography 
+                              variant="h1" 
+                              sx={{ 
+                                color: defect.colorHex,
+                                opacity: 0.7,
+                              }}
+                            >
+                              ⚠️
+                            </Typography>
+                          )}
+                        </Box>
+
+                        {/* Defect name */}
+                        <Typography 
+                          variant="subtitle1" 
+                          sx={{ 
+                            fontWeight: 'bold',
+                            mb: 2,
+                            color: defect.colorHex,
+                          }}
+                        >
+                          {defect.defectName}
+                        </Typography>
+
+                        {/* Quantity controls */}
+                        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 'auto' }}>
+                          <IconButton 
+                            size="small"
+                            onClick={() => handleDefectDecrement(defect.defectId)}
+                            disabled={quantity === 0}
+                            sx={{ 
+                              border: 1,
+                              borderColor: defect.colorHex,
+                              color: defect.colorHex,
+                            }}
+                          >
+                            <Iconify icon="eva:minus-fill" />
+                          </IconButton>
+
+                          <TextField
+                            size="small"
+                            value={quantity || ''}
+                            onChange={(e) => handleDefectQuantityChange(defect.defectId, e.target.value)}
+                            type="number"
+                            sx={{ flex: 1 }}
+                            slotProps={{
+                              input: {
+                                sx: { textAlign: 'center' },
+                              },
+                            }}
+                            placeholder="0"
+                          />
+
+                          <IconButton 
+                            size="small"
+                            onClick={() => handleDefectIncrement(defect.defectId)}
+                            sx={{ 
+                              border: 1,
+                              borderColor: defect.colorHex,
+                              bgcolor: defect.colorHex,
+                              color: 'white',
+                              '&:hover': {
+                                bgcolor: defect.colorHex,
+                                opacity: 0.9,
+                              },
+                            }}
+                          >
+                            <Iconify icon="eva:plus-fill" />
+                          </IconButton>
+                        </Box>
+
+                        {/* Show current quantity if > 0 */}
+                        {quantity > 0 && (
+                          <Chip 
+                            label={`${quantity} lỗi`}
+                            size="small"
+                            sx={{ 
+                              mt: 1,
+                              bgcolor: defect.colorHex,
+                              color: 'white',
+                            }}
+                          />
+                        )}
+                      </Card>
+                    </Grid>
+                  );
+                })}
+              </Grid>
+
+              {/* Submit button */}
+              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mt: 3 }}>
+                <Button 
+                  variant="outlined" 
+                  onClick={() => setAddDefectDialogOpen(false)}
+                >
+                  Hủy
+                </Button>
+                <Button 
+                  variant="contained" 
+                  color="error"
+                  onClick={handleSubmitDefects}
+                  disabled={defectEntries.size === 0}
+                  startIcon={<Iconify icon="eva:checkmark-fill" />}
+                >
+                  Xác nhận ({Array.from(defectEntries.values()).reduce((sum, qty) => sum + qty, 0)} lỗi)
+                </Button>
+              </Box>
+            </Box>
+          )}
+
+          {/* Tab 2: History Grid */}
+          {defectTabValue === 1 && (
+            <Box sx={{ height: 600, overflow: 'auto' }}>
+              {defectHistory.length === 0 ? (
+                <Box sx={{ textAlign: 'center', py: 10 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Chưa có lịch sử nhập lỗi
+                  </Typography>
+                </Box>
+              ) : (
+                <Stack spacing={3}>
+                  {defectHistory.map((submission) => (
+                    <Card key={submission.id} sx={{ p: 2 }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                        <Typography variant="body2" color="text.secondary">
+                          {new Date(submission.timestamp).toLocaleString('vi-VN')}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {submission.submittedBy}
+                        </Typography>
+                      </Box>
+                      <Grid container spacing={2}>
+                        {submission.defects.map((defect) => (
+                          <Grid key={defect.defectId} size={{ xs: 12, sm: 6, md: 4 }}>
+                            <Box
+                              sx={{
+                                p: 2,
+                                borderLeft: 4,
+                                borderColor: defect.colorHex,
+                                bgcolor: 'background.neutral',
+                                borderRadius: 1,
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                              }}
+                            >
+                              <Typography 
+                                variant="body2" 
+                                sx={{ 
+                                  fontWeight: 'bold',
+                                  color: defect.colorHex,
+                                }}
+                              >
+                                {defect.defectName}
+                              </Typography>
+                              <Chip 
+                                label={`${defect.quantity}`}
+                                size="small"
+                                sx={{ 
+                                  bgcolor: defect.colorHex,
+                                  color: 'white',
+                                }}
+                              />
+                            </Box>
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </Card>
+                  ))}
+                </Stack>
+              )}
+            </Box>
           )}
         </DialogContent>
       </Dialog>
