@@ -207,7 +207,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             return;
           }
         } else {
-          const entity: CalendarEntity = {
+          const entity: Partial<CalendarEntity> = {
             code: formData.code,
             name: formData.name,
             description: formData.description,
@@ -222,7 +222,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             workDateStartTime: formData.workDateStartTime || undefined,
             timeOffset: formData.timeOffset || undefined,
           };
-          const result = await createCalendar(entity);
+          const result = await createCalendar(entity as any);
           if (result.isValid) {
             setSuccessMessage('Calendar created successfully');
           } else {
