@@ -103,7 +103,57 @@ export function MachineSelectionView() {
         searchText: searchTerm || undefined,
       });
 
-      setMachines(Array.isArray(response) ? response : []);
+      let machineData = Array.isArray(response) ? response : [];
+      
+      // Add mock data for visual testing if no real data (dev mode only)
+      if (machineData.length === 0 && import.meta.env.DEV) {
+        machineData = [
+          {
+            machineId: 'mock-1',
+            machineName: 'CNC Machine A1',
+            areaName: 'Production Line 1',
+            areaHexColor: '#3b82f6',
+            currentRunState: 'running' as const,
+          },
+          {
+            machineId: 'mock-2',
+            machineName: 'Injection Molding B2',
+            areaName: 'Production Line 2',
+            areaHexColor: '#10b981',
+            currentRunState: 'speedLoss' as const,
+          },
+          {
+            machineId: 'mock-3',
+            machineName: 'Assembly Robot C3',
+            areaName: 'Assembly Area',
+            areaHexColor: '#f59e0b',
+            currentRunState: 'running' as const,
+          },
+          {
+            machineId: 'mock-4',
+            machineName: 'Packaging Unit D4',
+            areaName: 'Packaging Area',
+            areaHexColor: '#8b5cf6',
+            currentRunState: 'downtime' as const,
+          },
+          {
+            machineId: 'mock-5',
+            machineName: 'Quality Check E5',
+            areaName: 'QC Department',
+            areaHexColor: '#ec4899',
+            currentRunState: 'running' as const,
+          },
+          {
+            machineId: 'mock-6',
+            machineName: 'Laser Cutter F6',
+            areaName: 'Cutting Area',
+            areaHexColor: '#06b6d4',
+            currentRunState: 'speedLoss' as const,
+          },
+        ];
+      }
+      
+      setMachines(machineData);
     } catch (error) {
       console.error('Failed to load machines:', error);
       setMachines([]);
