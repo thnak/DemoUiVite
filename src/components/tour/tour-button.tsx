@@ -16,9 +16,12 @@ interface TourButtonProps extends Omit<ButtonProps, 'onClick'> {
 
 /**
  * A button component to trigger guided tours
- * 
+ *
  * @param onStartTour - Function to start the tour
  * @param tooltip - Tooltip text to display on hover
+ * @param variant
+ * @param color
+ * @param other
  */
 export function TourButton({ 
   onStartTour, 
@@ -32,7 +35,7 @@ export function TourButton({
       <Button
         variant={variant}
         color={color}
-        startIcon={<Iconify icon={"solar:info-circle-bold" as any} width={20} />}
+        startIcon={<Iconify icon="solar:info-circle-bold" width={20} />}
         onClick={onStartTour}
         {...other}
       >

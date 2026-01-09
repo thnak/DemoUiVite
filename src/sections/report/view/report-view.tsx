@@ -334,7 +334,7 @@ export function ReportView() {
               </Button>
               <Button
                 variant="outlined"
-                startIcon={<Iconify icon={'solar:map-bold-duotone' as any} />}
+                startIcon={<Iconify icon='solar:map-bold' />}
                 onClick={() => navigate('/area')}
               >
                 Area Management
@@ -350,7 +350,7 @@ export function ReportView() {
           variant="contained"
           color="inherit"
           size="large"
-          startIcon={<Iconify icon={"solar:map-bold-duotone" as any} />}
+          startIcon={<Iconify icon="solar:map-bold" />}
           onClick={() => navigate('/factory-layout')}
           sx={{ mb: 3 }}
         >

@@ -118,7 +118,7 @@ export function OEESummaryFilters({
           value={timeRange}
           label="Time Range"
           onChange={handleTimeRangeChange}
-          startAdornment={<Iconify icon={'solar:calendar-mark-bold' as any} sx={{ mr: 1, ml: 0.5 }} />}
+          startAdornment={<Iconify icon="solar:calendar-mark-bold" sx={{ mr: 1, ml: 0.5 }} />}
         >
           <MenuItem value="days">Days</MenuItem>
           <MenuItem value="months">Months</MenuItem>
@@ -168,7 +168,7 @@ export function OEESummaryFilters({
               )}
             </Box>
           )}
-          startAdornment={<Iconify icon={'solar:widget-2-bold' as any} sx={{ mr: 1, ml: 0.5 }} />}
+          startAdornment={<Iconify icon="solar:widget-2-bold" sx={{ mr: 1, ml: 0.5 }} />}
         >
           {machines.map((machine) => (
             <MenuItem key={machine.id} value={machine.id}>
@@ -199,7 +199,7 @@ export function OEESummaryFilters({
               )}
             </Box>
           )}
-          startAdornment={<Iconify icon={'solar:map-bold' as any} sx={{ mr: 1, ml: 0.5 }} />}
+          startAdornment={<Iconify icon="solar:map-bold" sx={{ mr: 1, ml: 0.5 }} />}
         >
           {areas.map((area) => (
             <MenuItem key={area.id} value={area.id}>
@@ -230,7 +230,7 @@ export function OEESummaryFilters({
               )}
             </Box>
           )}
-          startAdornment={<Iconify icon={'solar:clock-circle-bold' as any} sx={{ mr: 1, ml: 0.5 }} />}
+          startAdornment={<Iconify icon="solar:clock-circle-bold" sx={{ mr: 1, ml: 0.5 }} />}
         >
           {shifts.map((shift) => (
             <MenuItem key={shift.id} value={shift.id}>

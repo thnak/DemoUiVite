@@ -135,7 +135,7 @@ export function FactoryCanvas2D({ areas, onMachineClick, onAreaClick }: FactoryC
       <Button
         variant="contained"
         color="inherit"
-        startIcon={<Iconify icon={"solar:map-bold-duotone" as any} />}
+        startIcon={<Iconify icon="solar:map-bold" />}
         onClick={handleOpen}
         sx={{ mb: 3 }}
       >
@@ -154,7 +154,7 @@ export function FactoryCanvas2D({ areas, onMachineClick, onAreaClick }: FactoryC
               </Tooltip>
               <Tooltip title="Zoom Out">
                 <IconButton onClick={handleZoomOut}>
-                  <Iconify icon={"eva:minus-outline" as any} />
+                  <Iconify icon="eva:minus-outline" />
                 </IconButton>
               </Tooltip>
               <Tooltip title="Reset Zoom">
