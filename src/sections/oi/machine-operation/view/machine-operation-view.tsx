@@ -1,11 +1,10 @@
+import type { ApexOptions } from 'apexcharts';
 import type { MachineOeeUpdate } from 'src/services/machineHub';
 import type { ProductWorkingStateByMachine, CurrentMachineRunStateRecords } from 'src/api/types/generated';
 
+import Chart from 'react-apexcharts';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useCallback } from 'react';
-
-import type { ApexOptions } from 'apexcharts';
-import Chart from 'react-apexcharts';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -30,7 +29,6 @@ import TableHead from '@mui/material/TableHead';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import DialogTitle from '@mui/material/DialogTitle';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -232,7 +230,7 @@ function OEESemiCircleMetric({ value, label, color }: { value: number; label: st
   const series = [value];
 
   return (
-    <Box sx={{ textAlign: 'center', maxWidth: 200 }}>
+    <Box sx={{ textAlign: 'center' }}>
       <Chart options={chartOptions} series={series} type="radialBar" height={180} />
       <Typography variant="caption" sx={{ mt: -2, color: 'text.secondary', fontWeight: 'medium', display: 'block' }}>
         {label}
@@ -254,7 +252,7 @@ function APQCategorizedChart({
   const chartOptions: ApexOptions = {
     chart: {
       type: 'radialBar',
-      height: 300,
+      height: "100%",
     },
     plotOptions: {
       radialBar: {
@@ -299,7 +297,7 @@ function APQCategorizedChart({
   const series = [availability, performance, quality];
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 400, mx: 'auto' }}>
+    <Box sx={{ width: '100%', mx: 'auto' }}>
       <Chart options={chartOptions} series={series} type="radialBar" height={300} />
     </Box>
   );
@@ -413,94 +411,6 @@ function ApexTimelineVisualization({ records }: { records: CurrentMachineRunStat
     </Box>
   );
 }
-
-// Timeline Visualization Component (fallback - keeping for compatibility)
-function TimelineVisualization({ records }: { records: CurrentMachineRunStateRecords[] }) {
-  const getStateColor = (state?: string, isUnlabeled?: boolean) => {
-    if (isUnlabeled) return '#ef4444'; // Red for unlabeled downtime
-    if (state === 'running') return '#22c55e'; // Green
-    if (state === 'speedLoss') return '#f59e0b'; // Orange
-    if (state === 'downtime') return '#64748b'; // Gray for labeled downtime
-    return '#94a3b8'; // Light gray default
-  };
-
-  const getStateDuration = (start: string, end: string | null | undefined) => {
-    const startTime = new Date(start);
-    const endTime = end ? new Date(end) : new Date();
-    const durationMs = endTime.getTime() - startTime.getTime();
-    const minutes = Math.floor(durationMs / 60000);
-    const hours = Math.floor(minutes / 60);
-    if (hours > 0) return `${hours}h ${minutes % 60}m`;
-    return `${minutes}m`;
-  };
-
-  return (
-    <Box>
-      {/* Timeline Bar */}
-      <Box
-        sx={{
-          height: 60,
-          bgcolor: 'background.neutral',
-          borderRadius: 1,
-          display: 'flex',
-          overflow: 'hidden',
-          mb: 2,
-        }}
-      >
-        {records.map((record, index) => {
-          const isUnlabeled = record.stateId === '000000000000000000000000' && record.state === 'downtime';
-          const color = getStateColor(record.state, isUnlabeled);
-          
-          return (
-            <Box
-              key={index}
-              sx={{
-                flex: 1,
-                bgcolor: color,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRight: index < records.length - 1 ? '2px solid white' : 'none',
-                position: 'relative',
-                '&:hover': {
-                  opacity: 0.9,
-                  cursor: 'pointer',
-                },
-              }}
-              title={`${record.stateName || 'Unlabeled Downtime'} - ${getStateDuration(record.startTime || '', record.endTime)}`}
-            >
-              <Typography variant="caption" sx={{ color: 'white', fontWeight: 'bold' }}>
-                {getStateDuration(record.startTime || '', record.endTime)}
-              </Typography>
-            </Box>
-          );
-        })}
-      </Box>
-
-      {/* Legend */}
-      <Stack direction="row" spacing={2} flexWrap="wrap">
-        <Stack direction="row" spacing={0.5} alignItems="center">
-          <Box sx={{ width: 16, height: 16, bgcolor: '#22c55e', borderRadius: 0.5 }} />
-          <Typography variant="caption">Running</Typography>
-        </Stack>
-        <Stack direction="row" spacing={0.5} alignItems="center">
-          <Box sx={{ width: 16, height: 16, bgcolor: '#f59e0b', borderRadius: 0.5 }} />
-          <Typography variant="caption">Speed Loss</Typography>
-        </Stack>
-        <Stack direction="row" spacing={0.5} alignItems="center">
-          <Box sx={{ width: 16, height: 16, bgcolor: '#64748b', borderRadius: 0.5 }} />
-          <Typography variant="caption">Labeled Downtime</Typography>
-        </Stack>
-        <Stack direction="row" spacing={0.5} alignItems="center">
-          <Box sx={{ width: 16, height: 16, bgcolor: '#ef4444', borderRadius: 0.5 }} />
-          <Typography variant="caption">Unlabeled Downtime</Typography>
-        </Stack>
-      </Stack>
-    </Box>
-  );
-}
-
-// ----------------------------------------------------------------------
 
 export function MachineOperationView() {
   const { t } = useTranslation();
@@ -948,7 +858,7 @@ export function MachineOperationView() {
                 {/* OEE Semi-Circle Chart and APQ Categorized Chart */}
                 <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3, mb: 3, alignItems: 'center' }}>
                   {/* OEE Single Chart */}
-                  <Box sx={{ flex: '0 0 auto' }}>
+                  <Box sx={{ flex: '1' }}>
                     <OEESemiCircleMetric 
                       value={machineData?.oee || 85} 
                       label="OEE" 
@@ -957,7 +867,7 @@ export function MachineOperationView() {
                   </Box>
                   
                   {/* APQ Combined Chart */}
-                  <Box sx={{ flex: '1 1 auto', minWidth: 0 }}>
+                  <Box sx={{ flex: '1', minWidth: 0 }}>
                     <APQCategorizedChart
                       availability={machineData?.availability || 92}
                       performance={machineData?.performance || 95}
