@@ -229,7 +229,7 @@ export function MachineSelectionView() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          <Card sx={{ p: 3, mb: 4 }}>
+          <Card sx={{ p: 2, mb: 4, ml: 4, mr: 4 }}>
             <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
               {/* Search Input */}
               <TextField
@@ -238,7 +238,7 @@ export function MachineSelectionView() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 sx={{
-                  flex: 1,
+                  flex: 3,
                   '& .MuiInputBase-root': {
                     fontSize: '1.125rem',
                   },
