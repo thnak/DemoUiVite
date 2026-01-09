@@ -1,3 +1,4 @@
+import { MuiColorInput } from 'mui-color-input';
 import { useSearchParams } from 'react-router-dom';
 import { useState, useCallback, type ChangeEvent } from 'react';
 
@@ -9,7 +10,6 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { MuiColorInput } from 'mui-color-input';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
