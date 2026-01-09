@@ -29,6 +29,7 @@ import {
 
 import { useTour, TourButton } from 'src/components/tour';
 import { DurationTimePicker } from 'src/components/duration-time-picker';
+import { TimeShiftCaseVisualization } from 'src/components/time-shift-case-visualization';
 
 import { calendarTourSteps } from '../tour-steps';
 
@@ -44,6 +45,10 @@ interface CalendarFormData {
   plan2Infinite: boolean;
   workDateStartTime: string;
   timeOffset: string;
+  lateBufferMinutes: number;
+  mergeCase4ToShift1: boolean;
+  mergeCase5ToLatest: boolean;
+  autoVirtualShift: boolean;
 }
 
 const defaultFormData: CalendarFormData = {
@@ -56,6 +61,10 @@ const defaultFormData: CalendarFormData = {
   plan2Infinite: false,
   workDateStartTime: '',
   timeOffset: 'PT7H',
+  lateBufferMinutes: 120,
+  mergeCase4ToShift1: false,
+  mergeCase5ToLatest: false,
+  autoVirtualShift: false,
 };
 
 // ----------------------------------------------------------------------
@@ -126,6 +135,10 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
               plan2Infinite: calendar.plan2Infinite || false,
               workDateStartTime: calendar.workDateStartTime || '',
               timeOffset: calendar.timeOffset || 'PT7H',
+              lateBufferMinutes: calendar.lateBufferMinutes ?? 120,
+              mergeCase4ToShift1: calendar.mergeCase4ToShift1 || false,
+              mergeCase5ToLatest: calendar.mergeCase5ToLatest || false,
+              autoVirtualShift: calendar.autoVirtualShift || false,
             });
 
             // Find and set the selected shift template
@@ -197,6 +210,10 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             { key: 'plan2Infinite', value: formData.plan2Infinite },
             { key: 'workDateStartTime', value: formData.workDateStartTime || undefined },
             { key: 'timeOffset', value: formData.timeOffset || undefined },
+            { key: 'lateBufferMinutes', value: formData.lateBufferMinutes },
+            { key: 'mergeCase4ToShift1', value: formData.mergeCase4ToShift1 },
+            { key: 'mergeCase5ToLatest', value: formData.mergeCase5ToLatest },
+            { key: 'autoVirtualShift', value: formData.autoVirtualShift },
           ];
           const updateResult = await updateCalendar(calendarId, updates);
           if (updateResult.isValid) {
@@ -221,6 +238,10 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             plan2Infinite: formData.plan2Infinite,
             workDateStartTime: formData.workDateStartTime || undefined,
             timeOffset: formData.timeOffset || undefined,
+            lateBufferMinutes: formData.lateBufferMinutes,
+            mergeCase4ToShift1: formData.mergeCase4ToShift1,
+            mergeCase5ToLatest: formData.mergeCase5ToLatest,
+            autoVirtualShift: formData.autoVirtualShift,
           };
           const result = await createCalendar(entity as any);
           if (result.isValid) {
@@ -440,6 +461,84 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                 rows={3}
                 data-tour="calendar-description"
               />
+
+              {/* Time-Shift Policy Configuration */}
+              <Box data-tour="calendar-policy">
+                <Typography variant="h6" sx={{ mb: 2, mt: 2 }}>
+                  Time-Shift Policy Configuration
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                  Configure how the 8 time-shift cases are handled for OEE computation. These policies control merging, thresholds, and virtual shift creation.
+                </Typography>
+
+                <Stack spacing={3}>
+                  <TextField
+                    fullWidth
+                    label="Late Buffer Minutes"
+                    type="number"
+                    value={formData.lateBufferMinutes}
+                    onChange={(e) => handleInputChange('lateBufferMinutes', parseInt(e.target.value, 10) || 0)}
+                    helperText="Threshold in minutes to distinguish Case 5 (Overtime) from Case 6 (Night Run). Default: 120 minutes (2 hours)."
+                    data-tour="calendar-late-buffer"
+                    slotProps={{
+                      htmlInput: { min: 0, max: 1440 },
+                    }}
+                  />
+
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={formData.mergeCase4ToShift1}
+                        onChange={(e) => handleInputChange('mergeCase4ToShift1', e.target.checked)}
+                      />
+                    }
+                    label="Merge Case 4 (Early Start) to Shift 1"
+                    data-tour="calendar-case4-merge"
+                  />
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: -2, mb: 1 }}>
+                    When enabled, runtime between work day start and first shift start is added to Shift 1 performance. When disabled, logged as separate "Early Production" bucket.
+                  </Typography>
+
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={formData.mergeCase5ToLatest}
+                        onChange={(e) => handleInputChange('mergeCase5ToLatest', e.target.checked)}
+                      />
+                    }
+                    label="Merge Case 5 (Overtime) to Latest Shift"
+                    data-tour="calendar-case5-merge"
+                  />
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: -2, mb: 1 }}>
+                    When enabled, overtime within the late buffer is appended to the last shift. When disabled, tracked as separate "Overtime Production" bucket.
+                  </Typography>
+
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={formData.autoVirtualShift}
+                        onChange={(e) => handleInputChange('autoVirtualShift', e.target.checked)}
+                      />
+                    }
+                    label="Auto Virtual Shift for Weekends/Holidays"
+                    data-tour="calendar-auto-virtual"
+                  />
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: -2, mb: 1 }}>
+                    When enabled, production on Sunday (Case 7) or holidays (Case 8) automatically generates a virtual shift with OEE calculation. When disabled, logged as unscheduled run.
+                  </Typography>
+                </Stack>
+              </Box>
+
+              {/* Time-Shift Case Visualization */}
+              <Box data-tour="calendar-visualization">
+                <TimeShiftCaseVisualization
+                  lateBufferMinutes={formData.lateBufferMinutes}
+                  mergeCase4ToShift1={formData.mergeCase4ToShift1}
+                  mergeCase5ToLatest={formData.mergeCase5ToLatest}
+                  autoVirtualShift={formData.autoVirtualShift}
+                  sx={{ mt: 3 }}
+                />
+              </Box>
 
               <Stack direction="row" spacing={2} justifyContent="flex-end" data-tour="calendar-actions">
                 <Button variant="outlined" onClick={handleCancel}>

@@ -86,6 +86,60 @@ export const calendarTourSteps = (isEdit: boolean): TourStep[] => [
     },
   },
   {
+    id: 'policy',
+    title: 'Time-Shift Policy Configuration',
+    text: 'Configure how the 8 time-shift cases are handled. These policies control OEE computation for early starts, overtime, night runs, and weekend/holiday production.',
+    attachTo: {
+      element: '[data-tour="calendar-policy"]',
+      on: 'bottom',
+    },
+  },
+  {
+    id: 'late-buffer',
+    title: 'Late Buffer Minutes',
+    text: 'Set the threshold in minutes to distinguish between Case 5 (Overtime) and Case 6 (Night Run). Activity within this buffer after shift end is considered overtime. Default is 120 minutes (2 hours).',
+    attachTo: {
+      element: '[data-tour="calendar-late-buffer"]',
+      on: 'bottom',
+    },
+  },
+  {
+    id: 'case4-merge',
+    title: 'Merge Case 4: Early Start',
+    text: 'Enable this to merge early start production (before first shift) into Shift 1 performance metrics. Disable to track it separately as "Early Production".',
+    attachTo: {
+      element: '[data-tour="calendar-case4-merge"]',
+      on: 'bottom',
+    },
+  },
+  {
+    id: 'case5-merge',
+    title: 'Merge Case 5: Overtime',
+    text: 'Enable this to append overtime (within buffer) to the last shift performance. Disable to track it separately as "Overtime Production".',
+    attachTo: {
+      element: '[data-tour="calendar-case5-merge"]',
+      on: 'bottom',
+    },
+  },
+  {
+    id: 'auto-virtual',
+    title: 'Auto Virtual Shift',
+    text: 'Enable this to automatically create virtual shifts for weekend (Case 7) and holiday (Case 8) production with OEE calculations. Disable to flag them as unscheduled runs.',
+    attachTo: {
+      element: '[data-tour="calendar-auto-virtual"]',
+      on: 'bottom',
+    },
+  },
+  {
+    id: 'visualization',
+    title: 'Time-Shift Case Visualization',
+    text: 'This interactive diagram shows the 8 time-shift cases and how your policy configuration affects them. Click "Expand" to see the full timeline and case details. Cases highlighted in color are actively affected by your policies.',
+    attachTo: {
+      element: '[data-tour="calendar-visualization"]',
+      on: 'top',
+    },
+  },
+  {
     id: 'actions',
     title: 'Save Your Calendar',
     text: isEdit
