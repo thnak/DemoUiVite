@@ -68,6 +68,18 @@ export default {
   'solar:star-bold': {
     body: '<path fill="currentColor" d="m12 16.068l-3.771 3.905c-.54.559-.81.839-1.04.935c-.52.22-1.099.032-1.373-.448c-.12-.21-.158-.59-.232-1.35c-.043-.43-.064-.644-.128-.824a1.43 1.43 0 0 0-.835-.864c-.173-.067-.38-.089-.795-.133c-.734-.077-1.101-.116-1.305-.24c-.463-.284-.646-.883-.433-1.422c.094-.237.364-.517.904-1.076L5.456 12l1.238-1.238zl5.306-5.306L18.544 12l2.464 2.55c.54.56.81.84.904 1.076c.213.54.03 1.139-.433 1.423c-.204.124-.57.163-1.305.24c-.414.044-.622.066-.795.133c-.389.149-.69.462-.835.864c-.064.18-.085.394-.128.823c-.075.76-.112 1.14-.232 1.351c-.274.48-.853.669-1.374.448c-.228-.096-.498-.376-1.038-.935z" opacity="0.5"/><path fill="currentColor" fill-rule="evenodd" d="M12 16a7 7 0 1 0 0-14a7 7 0 0 0 0 14m0-10c-.284 0-.474.34-.854 1.023l-.098.176c-.108.194-.162.29-.246.354c-.085.064-.19.088-.4.135l-.19.044c-.738.167-1.107.25-1.195.532s.164.577.667 1.165l.13.152c.143.167.215.25.247.354s.021.215 0 .438l-.02.203c-.076.785-.114 1.178.115 1.352c.23.174.576.015 1.267-.303l.178-.082c.197-.09.295-.135.399-.135s.202.045.399.135l.178.082c.691.319 1.037.477 1.267.303s.191-.567.115-1.352l-.02-.203c-.021-.223-.032-.334 0-.438s.104-.187.247-.354l.13-.152c.503-.588.755-.882.667-1.165c-.088-.282-.457-.365-1.195-.532l-.19-.044c-.21-.047-.315-.07-.4-.135c-.084-.064-.138-.16-.246-.354l-.098-.176C12.474 6.34 12.284 6 12 6" clip-rule="evenodd"/>',
   },
+  'eva:checkmark-square-2-fill': {
+    body: '<path fill="currentColor" d="M18 3H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3m-1.7 6.61l-4.57 6a1 1 0 0 1-.79.39a1 1 0 0 1-.79-.38l-2.44-3.11a1 1 0 0 1 1.58-1.23l1.63 2.08l3.78-5a1 1 0 1 1 1.6 1.22Z"/>',
+  },
+  'eva:square-outline': {
+    body: '<path fill="currentColor" d="M18 21H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3M6 5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1Z"/>',
+  },
+  'eva:clock-outline': {
+    body: '<path fill="currentColor" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2m0 18a8 8 0 1 1 8-8a8 8 0 0 1-8 8"/><path fill="currentColor" d="M16 11h-3V8a1 1 0 0 0-2 0v4a1 1 0 0 0 1 1h4a1 1 0 0 0 0-2"/>',
+  },
+  'eva:minus-fill': {
+    body: '<path fill="currentColor" d="M19 13H5a1 1 0 0 1 0-2h14a1 1 0 0 1 0 2"/>',
+  },
   'eva:minus-outline': {
     body: '<path fill="currentColor" d="M19 13H5a1 1 0 0 1 0-2h14a1 1 0 0 1 0 2"/>',
   },
@@ -179,6 +191,12 @@ export default {
   'solar:music-note-3-bold': {
     body: '<path fill="currentColor" d="M8.95 2.5c-.32 0-.59 0-.86.1a2 2 0 0 0-.77.47c-.2.2-.33.44-.5.75c-.15.3-.3.68-.49 1.13l-3.07 7.38c-.13.31-.24.58-.32.83a3 3 0 0 0-.15 1.1c.04 1.04.51 2.02 1.3 2.72c.8.7 1.85 1.07 2.91 1.02c.55-.03 1.07-.17 1.58-.32c.48-.14.91-.28 1.42-.44V7.63c0-.28.02-.54.08-.78c.08-.37.26-.7.52-.97c.26-.27.6-.45.96-.54c.23-.06.49-.08.77-.08h5c.28 0 .54.02.77.08c.36.09.7.27.96.54c.26.27.44.6.52.97c.06.24.08.5.08.78v4.08a2.49 2.49 0 0 0-.43-.22c-.37-.14-.78-.21-1.21-.21h-.1c-.43 0-.84.07-1.21.21c-.5.19-.93.51-1.27.9c-.44.53-.71 1.2-.77 1.88c-.04.39-.01.8.09 1.18c.11.52.36 1 .72 1.4c.36.4.82.7 1.33.87c.48.16 1.01.21 1.55.14c.41-.05.8-.18 1.15-.37s.66-.44.92-.75c.24-.28.43-.6.55-.95c.08-.24.14-.5.17-.77c.02-.2.03-.4.03-.63V4.79c0-.13 0-.24-.02-.35A2 2 0 0 0 21 3.21c-.17-.21-.38-.4-.62-.53c-.1-.05-.2-.09-.31-.12a3 3 0 0 0-.36-.06h-9.9q-.39 0-.71-.01h-.15Z"/><path fill="currentColor" d="M10 13.22c-.05-.01-.11-.02-.17-.02c-.31-.02-.69-.02-1.18-.01l-.15.01h-.09c-.48 0-.93.08-1.35.24c-.55.22-1.03.59-1.38 1.06c-.36.48-.57 1.04-.62 1.62a3 3 0 0 0 .12 1.13c.16.54.45 1.04.86 1.42c.4.39.9.66 1.45.78c.55.13 1.12.1 1.66-.07c.41-.13.78-.35 1.1-.63c.21-.18.4-.39.55-.62c.24-.37.4-.8.45-1.24c.03-.25.03-.52.03-.79v-1.64c0-.45-.01-.86-.05-1.21a.5.5 0 0 0-.04-.1a1.4 1.4 0 0 0-.61-.69c-.11-.07-.24-.12-.37-.16l-.21-.07Zm6.23 5.03c.03-.31.17-.6.4-.83c.2-.2.45-.32.72-.38l.15-.01c.3 0 .55.08.73.2c.18.11.32.27.42.45c.1.19.15.4.15.62v.1c-.02.27-.12.52-.3.73a1.2 1.2 0 0 1-.67.4h-.1c-.25 0-.49-.05-.7-.16a1.2 1.2 0 0 1-.61-.7a1.3 1.3 0 0 1-.06-.2c-.04-.08-.05-.15-.05-.22h.02Z"/>',
   },
+  'solar:test-tube-bold': {
+    body: '<path fill="currentColor" d="M8.267 1.618a.75.75 0 0 1 1.027-.264l.832.492l9.247 5.307a.75.75 0 1 1-.747 1.301l-.843-.484l-1.505 2.598l-.002-.002l-2.558-1.471a.75.75 0 1 0-.748 1.3l2.556 1.47l-.961 1.66l-.002-.001l-4.203-2.418a.75.75 0 1 0-.748 1.3l4.2 2.417l-.885 1.529l-.002-.002l-2.613-1.503a.75.75 0 0 0-.748 1.3l2.611 1.502l-1.12 1.932a4.86 4.86 0 0 1-6.628 1.77a4.827 4.827 0 0 1-1.776-6.605L9.373 3.143l-.006-.003l-.836-.494a.75.75 0 0 1-.264-1.028M20 17c1.105 0 2-.933 2-2.083c0-.72-.783-1.681-1.37-2.3a.86.86 0 0 0-1.26 0c-.587.619-1.37 1.58-1.37 2.3c0 1.15.895 2.083 2 2.083"/>',
+  },
+  'solar:user-circle-bold': {
+    body: '<circle cx="12" cy="9" r="3" fill="currentColor"/><circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.5"/><path fill="currentColor" d="M17.97 20c.16 0 .32-.02.47-.05a10 10 0 0 1-12.88 0c.15.03.31.05.47.05z"/>',
+  },
   'solar:cloud-upload-bold': {
     body: '<mask id="SVG8WOS9bWe"><g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="64" stroke-dashoffset="64" d="M7 19h11c2.21 0 4 -1.79 4 -4c0 -2.21 -1.79 -4 -4 -4h-1v-1c0 -2.76 -2.24 -5 -5 -5c-2.42 0 -4.44 1.72 -4.9 4h-0.1c-2.76 0 -5 2.24 -5 5c0 2.76 2.24 5 5 5Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="64;0"/><set fill="freeze" attributeName="opacity" begin="0.7s" to="0"/></path><g fill="#fff" stroke="none" opacity="0"><circle cx="12" cy="10" r="6"><animate attributeName="cx" begin="0.7s" dur="30s" repeatCount="indefinite" values="12;11;12;13;12"/></circle><rect width="9" height="8" x="8" y="12"/><rect width="15" height="12" x="1" y="8" rx="6"><animate attributeName="x" begin="0.7s" dur="21s" repeatCount="indefinite" values="1;0;1;2;1"/></rect><rect width="13" height="10" x="10" y="10" rx="5"><animate attributeName="x" begin="0.7s" dur="17s" repeatCount="indefinite" values="10;9;10;11;10"/></rect><set fill="freeze" attributeName="opacity" begin="0.7s" to="1"/></g><g fill="#000" fill-opacity="0" stroke="none"><circle cx="12" cy="10" r="4"><animate attributeName="cx" begin="0.7s" dur="30s" repeatCount="indefinite" values="12;11;12;13;12"/></circle><rect width="9" height="6" x="8" y="12"/><rect width="11" height="8" x="3" y="10" rx="4"><animate attributeName="x" begin="0.7s" dur="21s" repeatCount="indefinite" values="3;2;3;4;3"/></rect><rect width="9" height="6" x="12" y="12" rx="3"><animate attributeName="x" begin="0.7s" dur="17s" repeatCount="indefinite" values="12;11;12;13;12"/></rect><set fill="freeze" attributeName="fill-opacity" begin="0.7s" to="1"/><animate fill="freeze" attributeName="opacity" begin="0.7s" dur="0.15s" values="1;0.7"/></g><g fill="#fff" stroke="none"><path d="M10.5 16h3v0h-3z"><animate fill="freeze" attributeName="d" begin="0.95s" dur="0.2s" values="M10.5 16h3v0h-3z;M10.5 16h3v-4h-3z"/></path><path d="M8 13h8l-4 0z"><animate fill="freeze" attributeName="d" begin="1.15s" dur="0.1s" values="M8 13h8l-4 0z;M8 13h8l-4 -4z"/><animateMotion begin="1.25s" calcMode="linear" dur="1.5s" keyPoints="0;0.25;0.5;0.75;1" keyTimes="0;0.1;0.5;0.8;1" path="M0 0v-1v2z" repeatCount="indefinite"/></path></g></g></mask><rect width="24" height="24" fill="currentColor" mask="url(#SVG8WOS9bWe)"/>',
   },
@@ -204,6 +222,12 @@ export default {
     body:
       '  <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4 12.75A1.25 1.25 0 0 1 14.75 16h-5.5A1.25 1.25 0 0 1 8 14.75v-5.5A1.25 1.25 0 0 1 9.25 8h5.5A1.25 1.25 0 0 1 16 9.25v5.5Z"></path>\n' +
       '  <path d="M14 10h-4v4h4v-4Z"></path>\n',
+  },
+  'eva:question-mark-circle-outline': {
+    body: '<path fill="currentColor" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2m0 18a8 8 0 1 1 8-8a8 8 0 0 1-8 8"/><path fill="currentColor" d="M12 6a3.5 3.5 0 0 0-3.5 3.5a1 1 0 0 0 2 0A1.5 1.5 0 1 1 12 11a1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-1.16A3.49 3.49 0 0 0 12 6"/><circle cx="12" cy="17" r="1" fill="currentColor"/>',
+  },
+  'eva:close-outline': {
+    body: '<path fill="currentColor" d="m13.41 12l4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29l-4.3 4.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0l4.29-4.3l4.29 4.3a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.42Z"/>',
   },
   'eva:swap-fill': {
     body:

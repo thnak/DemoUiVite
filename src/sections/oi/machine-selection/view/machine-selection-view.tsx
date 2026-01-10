@@ -17,7 +17,6 @@ import InputLabel from '@mui/material/InputLabel';
 import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import CardActionArea from '@mui/material/CardActionArea';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
@@ -85,9 +84,10 @@ export function MachineSelectionView() {
     const loadAreas = async () => {
       try {
         const areaList = await getapiAreaminimalnames();
-        setAreas(areaList || []);
+        setAreas(Array.isArray(areaList) ? areaList : []);
       } catch (error) {
         console.error('Failed to load areas:', error);
+        setAreas([]);
       }
     };
     loadAreas();
@@ -102,7 +102,57 @@ export function MachineSelectionView() {
         searchText: searchTerm || undefined,
       });
 
-      setMachines(response || []);
+      let machineData = Array.isArray(response) ? response : [];
+      
+      // Add mock data for visual testing if no real data (dev mode only)
+      if (machineData.length === 0 && import.meta.env.DEV) {
+        machineData = [
+          {
+            machineId: 'mock-1',
+            machineName: 'CNC Machine A1',
+            areaName: 'Production Line 1',
+            areaHexColor: '#3b82f6',
+            currentRunState: 'running' as const,
+          },
+          {
+            machineId: 'mock-2',
+            machineName: 'Injection Molding B2',
+            areaName: 'Production Line 2',
+            areaHexColor: '#10b981',
+            currentRunState: 'speedLoss' as const,
+          },
+          {
+            machineId: 'mock-3',
+            machineName: 'Assembly Robot C3',
+            areaName: 'Assembly Area',
+            areaHexColor: '#f59e0b',
+            currentRunState: 'running' as const,
+          },
+          {
+            machineId: 'mock-4',
+            machineName: 'Packaging Unit D4',
+            areaName: 'Packaging Area',
+            areaHexColor: '#8b5cf6',
+            currentRunState: 'downtime' as const,
+          },
+          {
+            machineId: 'mock-5',
+            machineName: 'Quality Check E5',
+            areaName: 'QC Department',
+            areaHexColor: '#ec4899',
+            currentRunState: 'running' as const,
+          },
+          {
+            machineId: 'mock-6',
+            machineName: 'Laser Cutter F6',
+            areaName: 'Cutting Area',
+            areaHexColor: '#06b6d4',
+            currentRunState: 'speedLoss' as const,
+          },
+        ];
+      }
+      
+      setMachines(machineData);
     } catch (error) {
       console.error('Failed to load machines:', error);
       setMachines([]);
@@ -173,14 +223,14 @@ export function MachineSelectionView() {
           </Box>
         </motion.div>
 
-        {/* Search and Filter Section */}
+        {/* Search and Filter Section - Horizontal Layout */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          <Card sx={{ p: 3, mb: 4 }}>
-            <Stack spacing={3}>
+          <Card sx={{ p: 2, mb: 4, ml: 4, mr: 4 }}>
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
               {/* Search Input */}
               <TextField
                 fullWidth
@@ -188,6 +238,7 @@ export function MachineSelectionView() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 sx={{
+                  flex: 3,
                   '& .MuiInputBase-root': {
                     fontSize: '1.125rem',
                   },
@@ -202,7 +253,7 @@ export function MachineSelectionView() {
               />
 
               {/* Area Filter */}
-              <FormControl fullWidth>
+              <FormControl sx={{ flex: 1, minWidth: { xs: '100%', md: 300 } }}>
                 <InputLabel>Tất cả khu vực</InputLabel>
                 <Select
                   multiple
@@ -223,7 +274,7 @@ export function MachineSelectionView() {
                     </Box>
                   )}
                 >
-                  {areas.map((area) => (
+                  {Array.isArray(areas) && areas.map((area) => (
                     <MenuItem key={area.id} value={area.id}>
                       {area.name}
                     </MenuItem>
@@ -282,47 +333,31 @@ export function MachineSelectionView() {
                   pb: 2,
                 }}
               >
-                {machines.map((machine, index) => (
-                  <motion.div key={machine.machineId} variants={cardVariants as any}>
-                    <Card
-                      sx={{
-                        height: '100%',
-                        position: 'relative',
-                        overflow: 'visible',
-                        borderTop: 4,
-                        borderColor: machine.areaHexColor || 'primary.main',
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                          transform: 'translateY(-8px)',
-                          boxShadow: 6,
-                        },
-                      }}
-                    >
-                      <CardActionArea onClick={() => handleMachineSelect(machine)} sx={{ height: '100%' }}>
-                        {/* Sequential Number Badge */}
-                        <Box
-                          sx={{
-                            position: 'absolute',
-                            top: -16,
-                            right: 16,
-                            width: 48,
-                            height: 48,
-                            borderRadius: '50%',
-                            bgcolor: machine.areaHexColor || 'primary.main',
-                            color: 'white',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontWeight: 'bold',
-                            fontSize: '1.25rem',
-                            boxShadow: 3,
-                            zIndex: 1,
-                          }}
-                        >
-                          {String(index + 1).padStart(2, '0')}
-                        </Box>
-
-                        {/* Machine Icon/Image */}
+                {machines.map((machine) => {
+                  const runStateConfig = {
+                    running: { label: 'Running', color: '#22c55e', icon: 'solar:play-circle-bold' as const },
+                    speedLoss: { label: 'Speed Loss', color: '#f59e0b', icon: 'mdi:speedometer' as const },
+                    downtime: { label: 'Downtime', color: '#ef4444', icon: 'solar:danger-triangle-bold-duotone' as const },
+                  };
+                  const currentState = machine.currentRunState ? runStateConfig[machine.currentRunState] : null;
+                  
+                  return (
+                    <motion.div key={machine.machineId} variants={cardVariants as any}>
+                      <Card
+                        sx={{
+                          height: '100%',
+                          position: 'relative',
+                          overflow: 'hidden',
+                          borderTop: 4,
+                          borderColor: machine.areaHexColor || 'primary.main',
+                          transition: 'all 0.3s ease',
+                          '&:hover': {
+                            transform: 'translateY(-8px)',
+                            boxShadow: 6,
+                          },
+                        }}
+                      >
+                        {/* Machine Image with Curve/Cut Effect */}
                         <Box
                           sx={{
                             height: 180,
@@ -331,6 +366,8 @@ export function MachineSelectionView() {
                             alignItems: 'center',
                             justifyContent: 'center',
                             overflow: 'hidden',
+                            position: 'relative',
+                            clipPath: 'ellipse(100% 100% at 50% 0%)',
                           }}
                         >
                           <img
@@ -354,6 +391,31 @@ export function MachineSelectionView() {
                               objectFit: 'cover',
                             }}
                           />
+                          
+                          {/* Run State Badge */}
+                          {currentState && (
+                            <Box
+                              sx={{
+                                position: 'absolute',
+                                top: 12,
+                                right: 12,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 0.5,
+                                bgcolor: currentState.color,
+                                color: 'white',
+                                px: 1.5,
+                                py: 0.5,
+                                borderRadius: 2,
+                                fontSize: '0.75rem',
+                                fontWeight: 'bold',
+                                boxShadow: 2,
+                              }}
+                            >
+                              <Iconify icon={currentState.icon} width={16} />
+                              {currentState.label}
+                            </Box>
+                          )}
                         </Box>
 
                         {/* Machine Info */}
@@ -361,26 +423,52 @@ export function MachineSelectionView() {
                           <Typography variant="h5" sx={{ mb: 1, fontWeight: 'bold' }}>
                             {machine.machineName}
                           </Typography>
-                          <Chip
-                            label={machine.areaName || 'Unknown Area'}
-                            size="small"
-                            sx={{
-                              bgcolor: machine.areaHexColor ? `${machine.areaHexColor}20` : 'background.neutral',
-                              color: machine.areaHexColor || 'text.primary',
-                              fontWeight: 'medium',
+                          
+                          {/* Area Name - Small Text without Chip */}
+                          <Typography 
+                            variant="caption" 
+                            sx={{ 
+                              display: 'block',
+                              color: 'text.secondary',
+                              mb: 2
                             }}
-                          />
-                          <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', color: 'primary.main' }}>
-                            <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                          >
+                            {machine.areaName || 'Unknown Area'}
+                          </Typography>
+
+                          {/* Access Button with Area Color */}
+                          <Box
+                            onClick={() => handleMachineSelect(machine)}
+                            sx={{
+                              mt: 2,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: 1,
+                              bgcolor: machine.areaHexColor || 'primary.main',
+                              color: 'white',
+                              py: 1.5,
+                              px: 3,
+                              borderRadius: 1,
+                              fontWeight: 'medium',
+                              cursor: 'pointer',
+                              transition: 'all 0.3s ease',
+                              '&:hover': {
+                                opacity: 0.9,
+                                transform: 'scale(1.02)',
+                              },
+                            }}
+                          >
+                            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                               TRUY CẬP
                             </Typography>
-                            <Iconify icon="eva:arrow-ios-forward-fill" sx={{ ml: 0.5 }} />
+                            <Iconify icon="eva:arrow-ios-forward-fill" width={20} />
                           </Box>
                         </Box>
-                      </CardActionArea>
-                    </Card>
-                  </motion.div>
-                ))}
+                      </Card>
+                    </motion.div>
+                  );
+                })}
               </Box>
             </motion.div>
 
