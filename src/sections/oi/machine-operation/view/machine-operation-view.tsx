@@ -242,6 +242,77 @@ const getMockQuantityHistory = (): QuantityAddHistory[] => [
   },
 ];
 
+// Stop reason interfaces for downtime labeling
+interface StopReason {
+  reasonId: string;
+  reasonName: string;
+  imageUrl?: string;
+  colorHex: string;
+}
+
+interface DowntimeLabelHistory {
+  id: string;
+  timestamp: string;
+  startTime?: string;
+  endTime?: string | null;
+  duration: number; // in minutes
+  reasons: Array<{ reasonId: string; reasonName: string; colorHex: string }>;
+  note?: string;
+  labeledBy: string;
+}
+
+// Mock stop reasons
+const getMockStopReasons = (): StopReason[] => [
+  {
+    reasonId: 'stop-1',
+    reasonName: 'Material Shortage',
+    imageUrl: undefined,
+    colorHex: '#ef4444', // Red
+  },
+  {
+    reasonId: 'stop-2',
+    reasonName: 'Machine Breakdown',
+    imageUrl: undefined,
+    colorHex: '#dc2626', // Dark red
+  },
+  {
+    reasonId: 'stop-3',
+    reasonName: 'Tool Change',
+    imageUrl: undefined,
+    colorHex: '#f59e0b', // Orange
+  },
+  {
+    reasonId: 'stop-4',
+    reasonName: 'Quality Issue',
+    imageUrl: undefined,
+    colorHex: '#eab308', // Yellow
+  },
+  {
+    reasonId: 'stop-5',
+    reasonName: 'Setup/Changeover',
+    imageUrl: undefined,
+    colorHex: '#3b82f6', // Blue
+  },
+  {
+    reasonId: 'stop-6',
+    reasonName: 'Planned Maintenance',
+    imageUrl: undefined,
+    colorHex: '#22c55e', // Green
+  },
+  {
+    reasonId: 'stop-7',
+    reasonName: 'Operator Break',
+    imageUrl: undefined,
+    colorHex: '#8b5cf6', // Purple
+  },
+  {
+    reasonId: 'stop-8',
+    reasonName: 'Power Outage',
+    imageUrl: undefined,
+    colorHex: '#64748b', // Gray
+  },
+];
+
 interface MachineStatus {
   status: 'running' | 'planstop' | 'unplanstop' | 'testing';
   label: string;
@@ -485,6 +556,16 @@ export function MachineOperationView() {
   const [defectEntries, setDefectEntries] = useState<Map<string, number>>(new Map());
   const [defectHistory, setDefectHistory] = useState<DefectSubmission[]>([]);
 
+  // Label downtime dialog states
+  const [labelDowntimeDialogOpen, setLabelDowntimeDialogOpen] = useState(false);
+  const [downtimeTabValue, setDowntimeTabValue] = useState(0);
+  const [stopReasons, setStopReasons] = useState<StopReason[]>([]);
+  const [downtimeToLabel, setDowntimeToLabel] = useState<CurrentMachineRunStateRecords | null>(null);
+  const [showReasonGrid, setShowReasonGrid] = useState(false);
+  const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
+  const [labelNote, setLabelNote] = useState<string>('');
+  const [downtimeHistory, setDowntimeHistory] = useState<DowntimeLabelHistory[]>([]);
+
   const hubService = MachineHubService.getInstance(apiConfig.baseUrl);
 
   const handleMachineUpdate = useCallback((update: MachineOeeUpdate) => {
@@ -516,6 +597,7 @@ export function MachineOperationView() {
           setMappedProducts(getMockMappedProducts());
           setQuantityHistory(getMockQuantityHistory());
           setDefectTypes(getMockDefectTypes());
+          setStopReasons(getMockStopReasons());
         } else {
           // Load real timeline data in production
           try {
@@ -593,16 +675,18 @@ export function MachineOperationView() {
         event.preventDefault();
         setAddDefectDialogOpen(true);
       }
-      // F4 for label downtime (placeholder - can be implemented later)
+      // F4 for label downtime
       if (event.key === 'F4') {
         event.preventDefault();
-        console.log('F4: Label downtime - to be implemented');
+        setLabelDowntimeDialogOpen(true);
       }
       // Escape to close dialogs
       if (event.key === 'Escape') {
         setProductChangeDialogOpen(false);
         setAddQuantityDialogOpen(false);
         setAddDefectDialogOpen(false);
+        setLabelDowntimeDialogOpen(false);
+        setShowReasonGrid(false);
         setShowKeyboardHelp(false);
       }
       // F12 for keyboard help
@@ -614,7 +698,7 @@ export function MachineOperationView() {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [showKeyboardHelp, addQuantityDialogOpen]);
+  }, [showKeyboardHelp, addQuantityDialogOpen, addDefectDialogOpen, labelDowntimeDialogOpen]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -731,6 +815,69 @@ export function MachineOperationView() {
     setDefectTabValue(0);
   };
 
+  // Downtime label handlers
+  const calculateDuration = (start?: string, end?: string | null) => {
+    if (!start) return 0;
+    const startTime = new Date(start).getTime();
+    const endTime = end ? new Date(end).getTime() : Date.now();
+    return Math.round((endTime - startTime) / 60000); // Minutes
+  };
+
+  const handleLabelDowntime = (downtime: CurrentMachineRunStateRecords) => {
+    setDowntimeToLabel(downtime);
+    setShowReasonGrid(true);
+  };
+
+  const handleStopReasonToggle = (reasonId: string) => {
+    setSelectedReasons((prev) => {
+      if (prev.includes(reasonId)) {
+        return prev.filter((id) => id !== reasonId);
+      }
+      return [...prev, reasonId];
+    });
+  };
+
+  const handleSubmitLabel = () => {
+    if (selectedReasons.length === 0 || !downtimeToLabel) return;
+
+    const reasons = selectedReasons.map((id) => {
+      const reason = stopReasons.find((r) => r.reasonId === id);
+      return {
+        reasonId: id,
+        reasonName: reason?.reasonName || 'Unknown',
+        colorHex: reason?.colorHex || '#gray',
+      };
+    });
+
+    const newLabel: DowntimeLabelHistory = {
+      id: `${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      startTime: downtimeToLabel.startTime,
+      endTime: downtimeToLabel.endTime,
+      duration: calculateDuration(downtimeToLabel.startTime, downtimeToLabel.endTime),
+      reasons,
+      note: labelNote,
+      labeledBy: 'WIBU - 01234',
+    };
+
+    setDowntimeHistory([newLabel, ...downtimeHistory]);
+
+    // Remove from timeline records (marked as labeled)
+    setTimelineRecords(prev => 
+      prev.map(record => 
+        record === downtimeToLabel 
+          ? { ...record, stateId: '507f1f77bcf86cd799439011', stateName: 'Labeled' }
+          : record
+      )
+    );
+
+    // Reset and close
+    setSelectedReasons([]);
+    setLabelNote('');
+    setShowReasonGrid(false);
+    setDowntimeToLabel(null);
+  };
+
   const filteredProducts = mappedProducts.filter(product =>
     product.productName.toLowerCase().includes(productSearchTerm.toLowerCase()) ||
     product.productionOrderNumber.toLowerCase().includes(productSearchTerm.toLowerCase())
@@ -739,6 +886,15 @@ export function MachineOperationView() {
   const unlabeledDowntimeCount = timelineRecords.filter(
     record => record.stateId === '000000000000000000000000' && record.state === 'downtime'
   ).length;
+
+  // Get unlabeled downtimes sorted by newest first
+  const unlabeledDowntimes = timelineRecords
+    .filter(record => record.stateId === '000000000000000000000000' && record.state === 'downtime')
+    .sort((a, b) => {
+      const timeA = new Date(a.startTime || '').getTime();
+      const timeB = new Date(b.startTime || '').getTime();
+      return timeB - timeA; // Newest first
+    });
 
   const machineStatus = getMachineStatus(machineData);
 
@@ -870,6 +1026,7 @@ export function MachineOperationView() {
                 size="large"
                 color="warning" 
                 startIcon={<Iconify icon="eva:stop-circle-fill" />}
+                onClick={() => setLabelDowntimeDialogOpen(true)}
                 sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
               >
                 Lý do dừng máy
@@ -1719,6 +1876,256 @@ export function MachineOperationView() {
                           </Grid>
                         ))}
                       </Grid>
+                    </Card>
+                  ))}
+                </Stack>
+              )}
+            </Box>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Label Downtime Dialog */}
+      <Dialog
+        open={labelDowntimeDialogOpen}
+        onClose={() => {
+          setLabelDowntimeDialogOpen(false);
+          setDowntimeTabValue(0);
+          setShowReasonGrid(false);
+          setDowntimeToLabel(null);
+        }}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          sx: { height: 600 },
+        }}
+      >
+        <DialogTitle>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="h6">Lý do dừng máy</Typography>
+            <IconButton
+              onClick={() => {
+                setLabelDowntimeDialogOpen(false);
+                setDowntimeTabValue(0);
+                setShowReasonGrid(false);
+                setDowntimeToLabel(null);
+              }}
+            >
+              <Iconify icon="eva:close-outline" />
+            </IconButton>
+          </Box>
+          <Tabs value={downtimeTabValue} onChange={(e, value) => setDowntimeTabValue(value)}>
+            <Tab label="Cần gán nhãn" />
+            <Tab label="Lịch sử" />
+          </Tabs>
+        </DialogTitle>
+        <DialogContent dividers sx={{ minHeight: 400 }}>
+          {/* Tab 1: Unlabeled Downtimes */}
+          {downtimeTabValue === 0 && (
+            <Box>
+              {showReasonGrid && downtimeToLabel ? (
+                // Show reason selection grid
+                <Box>
+                  <Button
+                    startIcon={<Iconify icon="eva:arrow-back-fill" />}
+                    onClick={() => {
+                      setShowReasonGrid(false);
+                      setDowntimeToLabel(null);
+                      setSelectedReasons([]);
+                      setLabelNote('');
+                    }}
+                    sx={{ mb: 2 }}
+                  >
+                    Quay lại
+                  </Button>
+                  <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
+                    Thời gian: {downtimeToLabel.startTime ? new Date(downtimeToLabel.startTime).toLocaleString() : 'N/A'} - 
+                    {downtimeToLabel.endTime ? new Date(downtimeToLabel.endTime).toLocaleString() : ' Đang diễn ra'}
+                    {' '}({calculateDuration(downtimeToLabel.startTime, downtimeToLabel.endTime)} phút)
+                  </Typography>
+                  
+                  <Grid container spacing={2} sx={{ mb: 3 }}>
+                    {stopReasons.map((reason) => (
+                      <Grid key={reason.reasonId} size={{ xs: 12, sm: 6, md: 4 }}>
+                        <Card
+                          sx={{
+                            p: 2,
+                            cursor: 'pointer',
+                            borderLeft: 4,
+                            borderColor: reason.colorHex,
+                            bgcolor: selectedReasons.includes(reason.reasonId) 
+                              ? `${reason.colorHex}20` 
+                              : 'background.paper',
+                            '&:hover': {
+                              bgcolor: `${reason.colorHex}10`,
+                            },
+                          }}
+                          onClick={() => handleStopReasonToggle(reason.reasonId)}
+                        >
+                          <Box
+                            sx={{
+                              height: 100,
+                              bgcolor: `${reason.colorHex}15`,
+                              borderRadius: 1,
+                              mb: 1,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '2rem',
+                            }}
+                          >
+                            {reason.imageUrl ? (
+                              <img
+                                src={reason.imageUrl}
+                                alt={reason.reasonName}
+                                style={{ maxWidth: '100%', maxHeight: '100%' }}
+                              />
+                            ) : (
+                              '⚠️'
+                            )}
+                          </Box>
+                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <Typography
+                              variant="body2"
+                              sx={{ fontWeight: 'bold', color: reason.colorHex }}
+                            >
+                              {reason.reasonName}
+                            </Typography>
+                            <Iconify
+                              icon={
+                                selectedReasons.includes(reason.reasonId)
+                                  ? 'eva:checkmark-square-2-fill'
+                                  : 'eva:square-outline'
+                              }
+                              sx={{ color: reason.colorHex }}
+                            />
+                          </Box>
+                        </Card>
+                      </Grid>
+                    ))}
+                  </Grid>
+
+                  <TextField
+                    multiline
+                    rows={3}
+                    fullWidth
+                    label="Ghi chú (tùy chọn)"
+                    value={labelNote}
+                    onChange={(e) => setLabelNote(e.target.value)}
+                    sx={{ mb: 2 }}
+                  />
+
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={handleSubmitLabel}
+                    disabled={selectedReasons.length === 0}
+                  >
+                    Xác nhận ({selectedReasons.length} lý do)
+                  </Button>
+                </Box>
+              ) : (
+                // Show unlabeled downtimes list
+                <Stack spacing={2}>
+                  {unlabeledDowntimes.length === 0 ? (
+                    <Alert severity="success">Không có thời gian dừng cần gán nhãn</Alert>
+                  ) : (
+                    unlabeledDowntimes.map((downtime, index) => {
+                      const isOngoing = !downtime.endTime;
+                      const duration = calculateDuration(downtime.startTime, downtime.endTime);
+                      
+                      return (
+                        <Card key={`${downtime.startTime}-${index}`} sx={{ p: 2 }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                            <Box>
+                              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                                {downtime.startTime ? new Date(downtime.startTime).toLocaleString() : 'N/A'} - 
+                                {downtime.endTime ? new Date(downtime.endTime).toLocaleString() : ' Đang diễn ra'}
+                              </Typography>
+                              <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
+                                <Chip
+                                  icon={<Iconify icon="eva:clock-outline" />}
+                                  label={`${duration} phút`}
+                                  size="small"
+                                  color="default"
+                                />
+                                {isOngoing && (
+                                  <Chip
+                                    label="Đang diễn ra"
+                                    size="small"
+                                    color="error"
+                                  />
+                                )}
+                              </Box>
+                            </Box>
+                            <Button
+                              variant="contained"
+                              size="small"
+                              onClick={() => handleLabelDowntime(downtime)}
+                            >
+                              Gán nhãn
+                            </Button>
+                          </Box>
+                        </Card>
+                      );
+                    })
+                  )}
+                </Stack>
+              )}
+            </Box>
+          )}
+
+          {/* Tab 2: Labeled Downtime History */}
+          {downtimeTabValue === 1 && (
+            <Box>
+              {downtimeHistory.length === 0 ? (
+                <Alert severity="info">Chưa có lịch sử gán nhãn</Alert>
+              ) : (
+                <Stack spacing={2}>
+                  {downtimeHistory.map((history) => (
+                    <Card key={history.id} sx={{ p: 2 }}>
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 0.5 }}>
+                          {history.startTime ? new Date(history.startTime).toLocaleString() : 'N/A'} - 
+                          {history.endTime ? new Date(history.endTime).toLocaleString() : ' Đang diễn ra'}
+                          {' '}({history.duration} phút)
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                          Gán bởi: {history.labeledBy} • {new Date(history.timestamp).toLocaleString()}
+                        </Typography>
+                      </Box>
+                      
+                      <Grid container spacing={1} sx={{ mb: history.note ? 2 : 0 }}>
+                        {history.reasons.map((reason) => (
+                          <Grid key={reason.reasonId} size={{ xs: 12, sm: 6, md: 4 }}>
+                            <Box
+                              sx={{
+                                p: 1,
+                                borderLeft: 4,
+                                borderColor: reason.colorHex,
+                                bgcolor: `${reason.colorHex}10`,
+                                borderRadius: 1,
+                              }}
+                            >
+                              <Typography
+                                variant="body2"
+                                sx={{ fontWeight: 'bold', color: reason.colorHex }}
+                              >
+                                {reason.reasonName}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                        ))}
+                      </Grid>
+
+                      {history.note && (
+                        <Box sx={{ p: 1.5, bgcolor: 'background.neutral', borderRadius: 1 }}>
+                          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                            Ghi chú:
+                          </Typography>
+                          <Typography variant="body2">{history.note}</Typography>
+                        </Box>
+                      )}
                     </Card>
                   ))}
                 </Stack>
