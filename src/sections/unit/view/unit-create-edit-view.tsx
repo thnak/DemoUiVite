@@ -107,7 +107,7 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
       setIsLoadingUnit(false);
     }
     // Form initialization effect
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [isEdit, unitData]);
 
   const { mutate: createUnit, isPending: isCreating } = useCreateUnit({

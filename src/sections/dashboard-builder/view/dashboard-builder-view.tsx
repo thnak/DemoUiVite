@@ -1,10 +1,10 @@
 import 'react-grid-layout/css/styles.css';
 
-import type { Layout, ResponsiveLayouts, LayoutItem } from 'react-grid-layout/legacy';
+import type { Layout, LayoutItem, ResponsiveLayouts } from 'react-grid-layout/legacy';
 
 import { useParams, useNavigate } from 'react-router-dom';
-import { Responsive, WidthProvider } from 'react-grid-layout/legacy';
 import { useMemo, useState, useEffect, useCallback } from 'react';
+import { Responsive, WidthProvider } from 'react-grid-layout/legacy';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
