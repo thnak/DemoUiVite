@@ -89,7 +89,9 @@ export function ProductCategoryCreateEditView({
         code: generatedCode,
       }));
     }
-  }, [isEdit, currentProductCategory, generatedCode]);
+    // Form initialization effect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEdit, currentProductCategory?.id, generatedCode]);
 
   const { mutate: createProductCategoryMutate, isPending: isCreating } = useCreateProductCategory({
     onSuccess: (result) => {

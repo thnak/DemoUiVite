@@ -83,8 +83,11 @@ export function ThemeModeProvider({ children }: ThemeModeProviderProps) {
   // Update resolved mode when mode changes
   useEffect(() => {
     const newResolvedMode = resolveMode(mode);
-    setResolvedMode(newResolvedMode);
-    applyTheme(newResolvedMode);
+    if (newResolvedMode !== resolvedMode) {
+      setResolvedMode(newResolvedMode);
+      applyTheme(newResolvedMode);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 
   // Listen to system preference changes when mode is 'system'

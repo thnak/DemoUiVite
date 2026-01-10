@@ -44,11 +44,12 @@ export function ScriptDefinitionSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedScriptDefinition?.id?.toString()) {
       setSelectedScriptDefinition(entityById);
-    } else if (!value) {
+    } else if (!value && selectedScriptDefinition !== null) {
       setSelectedScriptDefinition(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entityById, value]);
 
   // Debounce search input with 500ms delay

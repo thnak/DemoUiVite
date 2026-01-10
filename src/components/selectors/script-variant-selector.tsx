@@ -44,11 +44,12 @@ export function ScriptVariantSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedScriptVariant?.id?.toString()) {
       setSelectedScriptVariant(entityById);
-    } else if (!value) {
+    } else if (!value && selectedScriptVariant !== null) {
       setSelectedScriptVariant(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entityById, value]);
 
   // Debounce search input with 500ms delay

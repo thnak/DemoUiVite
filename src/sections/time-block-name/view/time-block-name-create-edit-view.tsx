@@ -75,6 +75,8 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
       });
       setIsLoadingData(false);
     }
+    // Form initialization effect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, timeBlockNameData]);
 
   const { mutate: createTimeBlockName, isPending: isCreating } = useCreateTimeBlockName({

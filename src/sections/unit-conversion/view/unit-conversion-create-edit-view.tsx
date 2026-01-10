@@ -81,6 +81,8 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
       });
       setIsLoadingConversion(false);
     }
+    // Form initialization effect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, conversionData]);
 
   const { mutate: createConversion, isPending: isCreating } = useCreateUnitConversion({

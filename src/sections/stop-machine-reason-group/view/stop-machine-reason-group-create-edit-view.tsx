@@ -114,6 +114,8 @@ export function StopMachineReasonGroupCreateEditView({
       // Set generated code for new group
       setFormData((prev) => ({ ...prev, code: generatedCode }));
     }
+    // Form initialization effect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, groupData, generatedCode]);
 
   const { mutate: createGroup, isPending: isCreating } = useCreateStopMachineReasonGroup({
@@ -252,6 +254,8 @@ export function StopMachineReasonGroupCreateEditView({
       };
       createGroup({ data: entityData as any }); // Cast to any to bypass strict type checking
     }
+    // Form initialization effect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, id, formData, createGroup, updateGroup]);
 
   if (isLoadingData) {

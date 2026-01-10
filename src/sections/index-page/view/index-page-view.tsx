@@ -57,6 +57,8 @@ export function IndexPageView() {
         setSelectedDesign(designNumber as DesignOption);
       }
     }
+    // Only run once on mount to load saved preference
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDesignChange = (newDesign: DesignOption) => {

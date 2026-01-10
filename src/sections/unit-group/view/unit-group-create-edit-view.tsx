@@ -70,6 +70,8 @@ export function UnitGroupCreateEditView({
         description: currentUnitGroup.description || '',
       });
     }
+    // Form initialization effect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, currentUnitGroup]);
 
   const { mutate: createUnitGroup, isPending: isCreating } = useCreateUnitGroup({
@@ -142,6 +144,8 @@ export function UnitGroupCreateEditView({
         } as any, // Cast to any to bypass strict type checking for required fields,
       });
     }
+    // Form initialization effect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, currentUnitGroup, formData, createUnitGroup, updateUnitGroup, clearValidationResult]);
 
   const handleCancel = useCallback(() => {

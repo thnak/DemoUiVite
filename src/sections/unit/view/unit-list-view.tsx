@@ -39,7 +39,7 @@ export function UnitListView() {
   const queryClient = useQueryClient();
 
   // Use URL params for pagination state
-  const { params, setParams, resetPage, getUrlWithParams } = usePaginationParams({
+  const { params, setParams, getUrlWithParams } = usePaginationParams({
     defaultPage: 0,
     defaultRowsPerPage: 5,
     defaultOrderBy: 'name',
