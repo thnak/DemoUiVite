@@ -58,7 +58,7 @@ export function IndexPageView() {
       }
     }
     // Only run once on mount to load saved preference
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   const handleDesignChange = (newDesign: DesignOption) => {

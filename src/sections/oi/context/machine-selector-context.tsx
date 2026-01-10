@@ -34,7 +34,7 @@ export function MachineSelectorProvider({ children }: MachineSelectorProviderPro
       }
     }
     // Only run once on mount to restore saved machine
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   const setSelectedMachine = useCallback((machine: MachineEntity | null) => {

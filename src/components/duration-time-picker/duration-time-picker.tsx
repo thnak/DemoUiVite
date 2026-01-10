@@ -1,6 +1,6 @@
 import type { TextFieldProps } from '@mui/material/TextField';
 
-import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -267,7 +267,7 @@ export function DurationTimePicker({
       setSecondsStr(parts.seconds > 0 ? String(parts.seconds) : '');
     }
     // Sync internal state with external value changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [parts.days, parts.hours, parts.minutes, parts.seconds, totalSeconds, precision]);
 
   // Handle seconds-only input change

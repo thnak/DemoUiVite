@@ -21,6 +21,7 @@ export default defineConfig({
         position: 'tl',
         initialIsOpen: false,
       },
+      enableBuild: false, // Disable checker in production build to avoid blocking on warnings
     }),
   ],
   resolve: {

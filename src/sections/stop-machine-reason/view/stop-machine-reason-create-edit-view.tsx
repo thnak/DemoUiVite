@@ -103,7 +103,7 @@ export function StopMachineReasonCreateEditView({
       setFormData((prev) => ({ ...prev, code: generatedCode }));
     }
     // Form initialization effect
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [isEdit, reasonData, generatedCode]);
 
   const { mutate: createReason, isPending: isCreating } = useCreateStopMachineReason({
@@ -261,7 +261,7 @@ export function StopMachineReasonCreateEditView({
       createReason({ data: entityData as any }); // Cast to any to bypass strict type checking
     }
     // Form initialization effect
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [isEdit, id, formData, createReason, updateReason]);
 
   if (isLoadingData) {

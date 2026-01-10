@@ -1,5 +1,5 @@
-import type { Layout, ResponsiveLayouts, LayoutItem } from 'react-grid-layout/legacy';
 import type { ChartOptions } from 'src/components/chart';
+import type { LayoutItem, ResponsiveLayouts } from 'react-grid-layout/legacy';
 
 // ----------------------------------------------------------------------
 

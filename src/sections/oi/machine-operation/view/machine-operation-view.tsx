@@ -1,6 +1,5 @@
 import type { MachineOeeUpdate } from 'src/services/machineHub';
 
-import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
