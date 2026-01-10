@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 
-import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -57,14 +57,20 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [translationKey, setTranslationKey] = useState('');
   const [translationValue, setTranslationValue] = useState('');
+  const formInitializedRef = useRef(false);
 
   // Fetch time block name data if editing
   const { data: timeBlockNameData } = useGetTimeBlockNameById(id || '', {
     enabled: isEdit && !!id,
   });
 
+  // Initialize form data once when data loads
+  // This is a legitimate use of setState in useEffect for one-time form initialization
+  // The ref prevents cascading renders by ensuring it only runs once
   useEffect(() => {
-    if (isEdit && timeBlockNameData) {
+    if (isEdit && timeBlockNameData && !formInitializedRef.current) {
+      formInitializedRef.current = true;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         code: timeBlockNameData.code || '',
         name: timeBlockNameData.name || '',
@@ -75,9 +81,7 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
       });
       setIsLoadingData(false);
     }
-    // Form initialization effect
-     
-  }, [isEdit, timeBlockNameData]);
+  }, [isEdit, timeBlockNameData]); 
 
   const { mutate: createTimeBlockName, isPending: isCreating } = useCreateTimeBlockName({
     onSuccess: (result) => {

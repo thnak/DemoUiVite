@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 
-import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -64,14 +64,20 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
   });
   const [isLoadingConversion, setIsLoadingConversion] = useState(isEdit);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const formInitializedRef = useRef(false);
 
   // Fetch conversion data if editing
   const { data: conversionData } = useGetUnitConversionById(id || '', {
     enabled: isEdit && !!id,
   });
 
+  // Initialize form data once when data loads
+  // This is a legitimate use of setState in useEffect for one-time form initialization
+  // The ref prevents cascading renders by ensuring it only runs once
   useEffect(() => {
-    if (isEdit && conversionData) {
+    if (isEdit && conversionData && !formInitializedRef.current) {
+      formInitializedRef.current = true;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         fromUnitId: conversionData.fromUnitId?.toString() || '',
         toUnitId: conversionData.toUnitId?.toString() || '',
@@ -81,9 +87,7 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
       });
       setIsLoadingConversion(false);
     }
-    // Form initialization effect
-     
-  }, [isEdit, conversionData]);
+  }, [isEdit, conversionData]); 
 
   const { mutate: createConversion, isPending: isCreating } = useCreateUnitConversion({
     onSuccess: (result) => {

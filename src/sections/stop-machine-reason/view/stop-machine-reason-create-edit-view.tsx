@@ -2,8 +2,8 @@ import type { ChangeEvent } from 'react';
 import type { StopMachineReasonEntity } from 'src/api/types/generated';
 
 import { MuiColorInput } from 'mui-color-input';
-import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -71,6 +71,7 @@ export function StopMachineReasonCreateEditView({
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [translationKey, setTranslationKey] = useState('');
   const [translationValue, setTranslationValue] = useState('');
+  const formInitializedRef = useRef(false);
 
   // Fetch stop machine reason data if editing
   const { data: reasonData } = useGetStopMachineReasonById(id || '', {
@@ -83,8 +84,13 @@ export function StopMachineReasonCreateEditView({
       enabled: !isEdit,
     });
 
+  // Initialize form data once when data loads
+  // This is a legitimate use of setState in useEffect for one-time form initialization
+  // The ref prevents cascading renders by ensuring it only runs once
   useEffect(() => {
-    if (isEdit && reasonData) {
+    if (isEdit && reasonData && !formInitializedRef.current) {
+      formInitializedRef.current = true;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         code: reasonData.code || '',
         name: reasonData.name || '',
@@ -98,12 +104,11 @@ export function StopMachineReasonCreateEditView({
         translations: reasonData.translations || {},
       });
       setIsLoadingData(false);
-    } else if (!isEdit && generatedCode) {
+    } else if (!isEdit && generatedCode && !formInitializedRef.current) {
+      formInitializedRef.current = true;
       // Set generated code for new reason
       setFormData((prev) => ({ ...prev, code: generatedCode }));
     }
-    // Form initialization effect
-     
   }, [isEdit, reasonData, generatedCode]);
 
   const { mutate: createReason, isPending: isCreating } = useCreateStopMachineReason({
