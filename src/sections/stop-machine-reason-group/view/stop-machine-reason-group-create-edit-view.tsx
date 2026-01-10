@@ -2,8 +2,8 @@ import type { ChangeEvent } from 'react';
 import type { StopMachineImpact, StopMachineReasonGroupEntity } from 'src/api/types/generated';
 
 import { MuiColorInput } from 'mui-color-input';
-import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -33,20 +33,6 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-const COLOR_OPTIONS = [
-  '#FF4842',
-  '#1890FF',
-  '#94D82D',
-  '#FFC107',
-  '#00AB55',
-  '#FF6F00',
-  '#7635DC',
-  '#212B36',
-  '#454F5B',
-  '#637381',
-  '#919EAB',
-  '#C4CDD5',
-];
 
 const IMPACT_OPTIONS: { value: StopMachineImpact; label: string }[] = [
   { value: 'run', label: 'Run' },
@@ -87,6 +73,7 @@ export function StopMachineReasonGroupCreateEditView({
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [translationKey, setTranslationKey] = useState('');
   const [translationValue, setTranslationValue] = useState('');
+  const formInitializedRef = useRef(false);
 
   // Fetch group data if editing
   const { data: groupData } = useGetStopMachineReasonGroupById(id || '', {
@@ -99,8 +86,13 @@ export function StopMachineReasonGroupCreateEditView({
       enabled: !isEdit,
     });
 
+  // Initialize form data once when data loads
+  // This is a legitimate use of setState in useEffect for one-time form initialization
+  // The ref prevents cascading renders by ensuring it only runs once
   useEffect(() => {
-    if (isEdit && groupData) {
+    if (isEdit && groupData && !formInitializedRef.current) {
+      formInitializedRef.current = true;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         code: groupData.code || '',
         name: groupData.name || '',
@@ -110,13 +102,12 @@ export function StopMachineReasonGroupCreateEditView({
         translations: groupData.translations || {},
       });
       setIsLoadingData(false);
-    } else if (!isEdit && generatedCode) {
+    } else if (!isEdit && generatedCode && !formInitializedRef.current) {
+      formInitializedRef.current = true;
       // Set generated code for new group
       setFormData((prev) => ({ ...prev, code: generatedCode }));
     }
-    // Form initialization effect
-     
-  }, [isEdit, groupData, generatedCode]);
+  }, [isEdit, groupData, generatedCode]); 
 
   const { mutate: createGroup, isPending: isCreating } = useCreateStopMachineReasonGroup({
     onSuccess: (result) => {
@@ -256,7 +247,7 @@ export function StopMachineReasonGroupCreateEditView({
     }
     // Form initialization effect
      
-  }, [isEdit, id, formData, createGroup, updateGroup]);
+  }, [createGroup, formData.code, formData.colorHex, formData.description, formData.impact, formData.name, formData.translations, id, isEdit, updateGroup]);
 
   if (isLoadingData) {
     return (

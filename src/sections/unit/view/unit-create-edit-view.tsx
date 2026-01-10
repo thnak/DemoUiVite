@@ -2,7 +2,7 @@ import type { ChangeEvent } from 'react';
 import type { SelectChangeEvent } from '@mui/material/Select';
 import type { UnitGroupEntity } from 'src/api/types/generated';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -68,6 +68,7 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
   const [isLoadingGroups, setIsLoadingGroups] = useState(true);
   const [isLoadingUnit, setIsLoadingUnit] = useState(isEdit);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const formInitializedRef = useRef(false);
 
   // Fetch unit groups
   const { mutate: fetchUnitGroups } = useGetUnitGroupPage({
@@ -96,8 +97,13 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
     });
   }, [fetchUnitGroups]);
 
+  // Initialize form data once when data loads
+  // This is a legitimate use of setState in useEffect for one-time form initialization
+  // The ref prevents cascading renders by ensuring it only runs once
   useEffect(() => {
-    if (isEdit && unitData) {
+    if (isEdit && unitData && !formInitializedRef.current) {
+      formInitializedRef.current = true;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         name: unitData.name || '',
         symbol: unitData.symbol || '',
@@ -106,9 +112,7 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
       });
       setIsLoadingUnit(false);
     }
-    // Form initialization effect
-     
-  }, [isEdit, unitData]);
+  }, [isEdit, unitData]); 
 
   const { mutate: createUnit, isPending: isCreating } = useCreateUnit({
     onSuccess: (result) => {

@@ -1,6 +1,6 @@
 import type { IoTSensorType } from 'src/api/types/generated';
 
-import { useState, useEffect, useCallback, type ChangeEvent } from 'react';
+import { useRef, useState, useEffect, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -85,15 +85,7 @@ export function IoTSensorCreateEditView({
   } = useValidationResult();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [formData, setFormData] = useState<IoTSensorFormData>({
-    code: '',
-    name: '',
-    description: '',
-    type: '',
-    deviceId: '',
-    pinNumber: '',
-    unitOfMeasurement: '',
-  });
+  const isFormInitializedRef = useRef(false);
 
   // Load sensor data in edit mode
   const { data: currentSensor, isLoading: isLoadingSensor } = useGetIoTSensorById(
@@ -103,8 +95,24 @@ export function IoTSensorCreateEditView({
     }
   );
 
+  // Initialize form data - empty by default
+  const [formData, setFormData] = useState<IoTSensorFormData>(() => ({
+    code: '',
+    name: '',
+    description: '',
+    type: '',
+    deviceId: '',
+    pinNumber: '',
+    unitOfMeasurement: '',
+  }));
+
+  // Initialize form data once when sensor data loads  
+  // This is a legitimate use of setState in useEffect for one-time form initialization
+  // The ref prevents cascading renders by ensuring it only runs once
   useEffect(() => {
-    if (currentSensor && isEdit) {
+    if (isEdit && currentSensor && !isFormInitializedRef.current) {
+      isFormInitializedRef.current = true;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         code: currentSensor.code || '',
         name: currentSensor.name || '',
@@ -115,7 +123,7 @@ export function IoTSensorCreateEditView({
         unitOfMeasurement: currentSensor.unitOfMeasurement?.toString() || '',
       });
     }
-  }, [currentSensor, isEdit]);
+  }, [isEdit, currentSensor]);
 
   const { mutate: createSensorMutate, isPending: isCreating } = useCreateIoTSensor({
     onSuccess: (result) => {

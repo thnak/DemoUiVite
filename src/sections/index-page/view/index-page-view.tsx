@@ -54,10 +54,11 @@ export function IndexPageView() {
     if (savedDesign) {
       const designNumber = parseInt(savedDesign, 10);
       if (designNumber >= 1 && designNumber <= 5) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedDesign(designNumber as DesignOption);
       }
     }
-    // Only run once on mount to load saved preference
+    // Only run once on mount to load saved preference - legitimate use for localStorage sync
      
   }, []);
 

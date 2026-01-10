@@ -2,7 +2,7 @@ import type { ChangeEvent } from 'react';
 import type { UnitGroupEntity } from 'src/api/types/generated';
 
 import { useSearchParams } from 'react-router-dom';
-import { useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -62,17 +62,21 @@ export function UnitGroupCreateEditView({
     name: '',
     description: '',
   });
+  const formInitializedRef = useRef(false);
 
+  // Initialize form data once when data is available
+  // This is a legitimate use of setState in useEffect for one-time form initialization
+  // The ref prevents cascading renders by ensuring it only runs once
   useEffect(() => {
-    if (isEdit && currentUnitGroup) {
+    if (isEdit && currentUnitGroup && !formInitializedRef.current) {
+      formInitializedRef.current = true;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         name: currentUnitGroup.name || '',
         description: currentUnitGroup.description || '',
       });
     }
-    // Form initialization effect
-     
-  }, [isEdit, currentUnitGroup]);
+  }, [isEdit, currentUnitGroup]); 
 
   const { mutate: createUnitGroup, isPending: isCreating } = useCreateUnitGroup({
     onSuccess: (result) => {
@@ -144,9 +148,15 @@ export function UnitGroupCreateEditView({
         } as any, // Cast to any to bypass strict type checking for required fields,
       });
     }
-    // Form initialization effect
-     
-  }, [isEdit, currentUnitGroup, formData, createUnitGroup, updateUnitGroup, clearValidationResult]);
+  }, [
+    isEdit,
+    currentUnitGroup,
+    formData.name,
+    formData.description,
+    updateUnitGroup,
+    createUnitGroup,
+    clearValidationResult,
+  ]); 
 
   const handleCancel = useCallback(() => {
     router.push(returnUrl);

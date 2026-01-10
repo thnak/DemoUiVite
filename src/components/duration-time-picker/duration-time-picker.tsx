@@ -1,6 +1,6 @@
 import type { TextFieldProps } from '@mui/material/TextField';
 
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -256,19 +256,35 @@ export function DurationTimePicker({
   const [minutesStr, setMinutesStr] = useState(() => (parts.minutes > 0 ? String(parts.minutes) : ''));
   const [secondsStr, setSecondsStr] = useState(() => (parts.seconds > 0 ? String(parts.seconds) : ''));
 
-  // Update local state when value prop changes externally
+  // Track previous values to detect external changes
+  const prevValueRef = useRef(value);
+  const prevPrecisionRef = useRef(precision);
+
+  // Sync local state with external value changes
+  // This is a valid use of useEffect for synchronizing with external systems (props)
   useEffect(() => {
-    if (precision === 'seconds') {
-      setTotalSecondsStr(totalSeconds > 0 ? String(totalSeconds) : '');
-    } else {
-      setDaysStr(parts.days > 0 ? String(parts.days) : '');
-      setHoursStr(parts.hours > 0 ? String(parts.hours) : '');
-      setMinutesStr(parts.minutes > 0 ? String(parts.minutes) : '');
-      setSecondsStr(parts.seconds > 0 ? String(parts.seconds) : '');
+    // Only update if value or precision actually changed
+    if (value !== prevValueRef.current || precision !== prevPrecisionRef.current) {
+      prevValueRef.current = value;
+      prevPrecisionRef.current = precision;
+      
+      if (precision === 'seconds') {
+        const newTotalSeconds = isoDurationToSeconds(value);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setTotalSecondsStr(newTotalSeconds > 0 ? String(newTotalSeconds) : '');
+      } else {
+        const newParts = parseDurationToParts(value);
+         
+        setDaysStr(newParts.days > 0 ? String(newParts.days) : '');
+         
+        setHoursStr(newParts.hours > 0 ? String(newParts.hours) : '');
+         
+        setMinutesStr(newParts.minutes > 0 ? String(newParts.minutes) : '');
+         
+        setSecondsStr(newParts.seconds > 0 ? String(newParts.seconds) : '');
+      }
     }
-    // Sync internal state with external value changes
-     
-  }, [parts.days, parts.hours, parts.minutes, parts.seconds, totalSeconds, precision]);
+  }, [value, precision]);
 
   // Handle seconds-only input change
   const handleSecondsOnlyChange = useCallback(

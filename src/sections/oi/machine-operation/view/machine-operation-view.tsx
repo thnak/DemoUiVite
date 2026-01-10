@@ -3,7 +3,6 @@ import type { MachineOeeUpdate } from 'src/services/machineHub';
 import type { ProductWorkingStateByMachine, CurrentMachineRunStateRecords } from 'src/api/types/generated';
 
 import Chart from 'react-apexcharts';
-import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
