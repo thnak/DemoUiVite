@@ -106,6 +106,8 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
       });
       setIsLoadingUnit(false);
     }
+    // Form initialization effect
+     
   }, [isEdit, unitData]);
 
   const { mutate: createUnit, isPending: isCreating } = useCreateUnit({

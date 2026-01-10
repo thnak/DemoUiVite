@@ -526,7 +526,7 @@ function ApexTimelineVisualization({ records }: { records: CurrentMachineRunStat
 }
 
 export function MachineOperationView() {
-  const { t } = useTranslation();
+  // const { t } = useTranslation(); // TODO: Add translations when needed
   const router = useRouter();
   const { selectedMachine } = useMachineSelector();
   

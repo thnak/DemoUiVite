@@ -57,6 +57,8 @@ export function IndexPageView() {
         setSelectedDesign(designNumber as DesignOption);
       }
     }
+    // Only run once on mount to load saved preference
+     
   }, []);
 
   const handleDesignChange = (newDesign: DesignOption) => {

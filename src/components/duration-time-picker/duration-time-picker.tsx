@@ -1,6 +1,6 @@
 import type { TextFieldProps } from '@mui/material/TextField';
 
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -257,7 +257,7 @@ export function DurationTimePicker({
   const [secondsStr, setSecondsStr] = useState(() => (parts.seconds > 0 ? String(parts.seconds) : ''));
 
   // Update local state when value prop changes externally
-  useMemo(() => {
+  useEffect(() => {
     if (precision === 'seconds') {
       setTotalSecondsStr(totalSeconds > 0 ? String(totalSeconds) : '');
     } else {
@@ -266,6 +266,8 @@ export function DurationTimePicker({
       setMinutesStr(parts.minutes > 0 ? String(parts.minutes) : '');
       setSecondsStr(parts.seconds > 0 ? String(parts.seconds) : '');
     }
+    // Sync internal state with external value changes
+     
   }, [parts.days, parts.hours, parts.minutes, parts.seconds, totalSeconds, precision]);
 
   // Handle seconds-only input change

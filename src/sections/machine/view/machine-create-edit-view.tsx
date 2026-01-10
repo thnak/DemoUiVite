@@ -162,7 +162,9 @@ export function MachineCreateEditView({
       setGoodOutputMappings(goodMappings);
       setScrapOutputMappings(scrapMappings);
     }
-  }, [machineOutputMappings]);
+    // Initialize output mappings from API data
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [machineOutputMappings?.length]);
 
   const { mutate: createMachineMutate, isPending: isCreating } = useCreateMachine({
     onSuccess: (result) => {

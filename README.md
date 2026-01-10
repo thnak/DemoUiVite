@@ -23,7 +23,7 @@ The development server runs at `http://localhost:3039`.
 
 | Category | Technologies |
 |----------|-------------|
-| **Framework** | React 19, Vite 6 |
+| **Framework** | React 19, Vite 7 |
 | **UI Library** | MUI (Material UI) 7 |
 | **Styling** | Emotion (CSS-in-JS) |
 | **Routing** | React Router DOM 7 |

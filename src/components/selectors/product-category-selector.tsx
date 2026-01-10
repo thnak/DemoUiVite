@@ -44,11 +44,12 @@ export function ProductCategorySelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedProductCategory?.id?.toString()) {
       setSelectedProductCategory(entityById);
-    } else if (!value) {
+    } else if (!value && selectedProductCategory !== null) {
       setSelectedProductCategory(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entityById, value]);
 
   // Debounce search input with 500ms delay

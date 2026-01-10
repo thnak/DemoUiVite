@@ -75,6 +75,8 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
       });
       setIsLoadingData(false);
     }
+    // Form initialization effect
+     
   }, [isEdit, timeBlockNameData]);
 
   const { mutate: createTimeBlockName, isPending: isCreating } = useCreateTimeBlockName({

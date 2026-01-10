@@ -70,6 +70,8 @@ export function UnitGroupCreateEditView({
         description: currentUnitGroup.description || '',
       });
     }
+    // Form initialization effect
+     
   }, [isEdit, currentUnitGroup]);
 
   const { mutate: createUnitGroup, isPending: isCreating } = useCreateUnitGroup({
@@ -142,6 +144,8 @@ export function UnitGroupCreateEditView({
         } as any, // Cast to any to bypass strict type checking for required fields,
       });
     }
+    // Form initialization effect
+     
   }, [isEdit, currentUnitGroup, formData, createUnitGroup, updateUnitGroup, clearValidationResult]);
 
   const handleCancel = useCallback(() => {

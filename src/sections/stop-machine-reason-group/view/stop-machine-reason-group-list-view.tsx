@@ -116,7 +116,9 @@ export function StopMachineReasonGroupListView() {
 
       setIsLoading(false);
     }
-  }, [data]);
+    // Update local state from API data
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.totalItems, data?.totalByImpact]);
 
   // Calculate tabs from totalByImpact
   const tabs = useMemo(() => {

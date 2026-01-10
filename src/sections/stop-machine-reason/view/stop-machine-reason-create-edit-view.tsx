@@ -102,6 +102,8 @@ export function StopMachineReasonCreateEditView({
       // Set generated code for new reason
       setFormData((prev) => ({ ...prev, code: generatedCode }));
     }
+    // Form initialization effect
+     
   }, [isEdit, reasonData, generatedCode]);
 
   const { mutate: createReason, isPending: isCreating } = useCreateStopMachineReason({
@@ -258,6 +260,8 @@ export function StopMachineReasonCreateEditView({
       };
       createReason({ data: entityData as any }); // Cast to any to bypass strict type checking
     }
+    // Form initialization effect
+     
   }, [isEdit, id, formData, createReason, updateReason]);
 
   if (isLoadingData) {

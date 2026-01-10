@@ -1,10 +1,10 @@
 import 'react-grid-layout/css/styles.css';
 
-import type { Layout, Layouts } from 'react-grid-layout';
+import type { Layout, LayoutItem, ResponsiveLayouts } from 'react-grid-layout/legacy';
 
 import { useParams, useNavigate } from 'react-router-dom';
-import { Responsive, WidthProvider } from 'react-grid-layout';
 import { useMemo, useState, useEffect, useCallback } from 'react';
+import { Responsive, WidthProvider } from 'react-grid-layout/legacy';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -183,7 +183,7 @@ export function DashboardBuilderView() {
   const [dashboardName, setDashboardName] = useState('New Dashboard');
   const [dashboardDescription, setDashboardDescription] = useState('');
   const [widgets, setWidgets] = useState<WidgetItem[]>([]);
-  const [layouts, setLayouts] = useState<Layouts>({});
+  const [layouts, setLayouts] = useState<ResponsiveLayouts>({});
   const [currentBreakpoint, setCurrentBreakpoint] = useState('lg');
 
   // UI state
@@ -234,7 +234,7 @@ export function DashboardBuilderView() {
   }, [id]);
 
   // Handle layout changes
-  const handleLayoutChange = useCallback((_currentLayout: Layout[], allLayouts: Layouts) => {
+  const handleLayoutChange = useCallback((_currentLayout: Layout, allLayouts: ResponsiveLayouts) => {
     setLayouts(allLayouts);
   }, []);
 
@@ -254,10 +254,10 @@ export function DashboardBuilderView() {
       const updated = [...prev, newWidget];
       // Update layouts for the new widget
       setLayouts((prevLayouts) => {
-        const newLayouts: Layouts = {};
+        const newLayouts: ResponsiveLayouts = {};
         Object.keys(BREAKPOINT_CONFIGS).forEach((bp) => {
           const existing = prevLayouts[bp] ?? [];
-          const newItem: Layout = {
+          const newItem: LayoutItem = {
             i: newWidget.id,
             x: 0,
             y: Infinity, // Place at bottom
@@ -287,10 +287,10 @@ export function DashboardBuilderView() {
       const updated = [...prev, newWidget];
       // Update layouts for the new widget
       setLayouts((prevLayouts) => {
-        const newLayouts: Layouts = {};
+        const newLayouts: ResponsiveLayouts = {};
         Object.keys(BREAKPOINT_CONFIGS).forEach((bp) => {
           const existing = prevLayouts[bp] ?? [];
-          const newItem: Layout = {
+          const newItem: LayoutItem = {
             i: newWidget.id,
             x: 0,
             y: Infinity, // Place at bottom
@@ -317,9 +317,9 @@ export function DashboardBuilderView() {
   const handleRemoveWidget = useCallback((widgetId: string) => {
     setWidgets((prev) => prev.filter((w) => w.id !== widgetId));
     setLayouts((prev) => {
-      const newLayouts: Layouts = {};
+      const newLayouts: ResponsiveLayouts = {};
       Object.keys(prev).forEach((bp) => {
-        newLayouts[bp] = prev[bp].filter((l) => l.i !== widgetId);
+        newLayouts[bp] = (prev[bp] ?? []).filter((l) => l.i !== widgetId);
       });
       return newLayouts;
     });
@@ -504,10 +504,10 @@ export function DashboardBuilderView() {
 
     // Update layouts: keep primary widget's position, remove secondary
     setLayouts((prevLayouts) => {
-      const newLayouts: Layouts = {};
+      const newLayouts: ResponsiveLayouts = {};
       Object.keys(prevLayouts).forEach((bp) => {
-        const primaryLayout = prevLayouts[bp].find((l) => l.i === primaryWidget.id);
-        const filteredLayouts = prevLayouts[bp].filter(
+        const primaryLayout = (prevLayouts[bp] ?? []).find((l) => l.i === primaryWidget.id);
+        const filteredLayouts = (prevLayouts[bp] ?? []).filter(
           (l) => l.i !== primaryWidget.id && l.i !== secondaryWidget.id
         );
         if (primaryLayout) {
@@ -538,10 +538,10 @@ export function DashboardBuilderView() {
 
     // Restore layouts
     setLayouts((prevLayouts) => {
-      const newLayouts: Layouts = {};
+      const newLayouts: ResponsiveLayouts = {};
       Object.keys(prevLayouts).forEach((bp) => {
-        const mergedLayout = prevLayouts[bp].find((l) => l.i === entry.resultWidget.id);
-        const filteredLayouts = prevLayouts[bp].filter((l) => l.i !== entry.resultWidget.id);
+        const mergedLayout = (prevLayouts[bp] ?? []).find((l) => l.i === entry.resultWidget.id);
+        const filteredLayouts = (prevLayouts[bp] ?? []).filter((l) => l.i !== entry.resultWidget.id);
 
         const restoredLayouts = [
           ...filteredLayouts,

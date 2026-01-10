@@ -58,10 +58,11 @@ export function StopMachineReasonGroupSelector({
       if (currentId !== value) {
         setSelectedStopMachineReasonGroup(entityById);
       }
-    } else if (!value) {
+    } else if (!value && selectedStopMachineReasonGroup !== null) {
       setSelectedStopMachineReasonGroup(null);
     }
-  }, [entityById, value, selectedStopMachineReasonGroup]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entityById, value]);
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(

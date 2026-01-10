@@ -44,11 +44,12 @@ export function WebhookSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value) {
+    if (entityById && value && entityById.id?.toString() !== selectedWebhook?.id?.toString()) {
       setSelectedWebhook(entityById);
-    } else if (!value) {
+    } else if (!value && selectedWebhook !== null) {
       setSelectedWebhook(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entityById, value]);
 
   // Debounce search input with 500ms delay

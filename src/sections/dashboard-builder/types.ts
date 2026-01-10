@@ -1,5 +1,5 @@
-import type { Layout, Layouts } from 'react-grid-layout';
 import type { ChartOptions } from 'src/components/chart';
+import type { LayoutItem, ResponsiveLayouts } from 'react-grid-layout/legacy';
 
 // ----------------------------------------------------------------------
 
@@ -104,7 +104,7 @@ export interface DashboardState {
   name: string;
   description?: string;
   widgets: WidgetItem[];
-  layouts: Layouts;
+  layouts: ResponsiveLayouts;
   createdAt: string;
   updatedAt: string;
 }
@@ -142,7 +142,7 @@ export function canMergeWidgets(type1: WidgetType, type2: WidgetType): boolean {
 }
 
 // Get default layout item for a widget
-export function getDefaultLayoutItem(widgetId: string, index: number): Layout {
+export function getDefaultLayoutItem(widgetId: string, index: number): LayoutItem {
   return {
     i: widgetId,
     x: (index * 4) % 12,
@@ -155,8 +155,8 @@ export function getDefaultLayoutItem(widgetId: string, index: number): Layout {
 }
 
 // Create default layouts for all breakpoints
-export function createDefaultLayouts(widgets: WidgetItem[]): Layouts {
-  const layouts: Layouts = {};
+export function createDefaultLayouts(widgets: WidgetItem[]): ResponsiveLayouts {
+  const layouts: ResponsiveLayouts = {};
 
   Object.keys(BREAKPOINT_CONFIGS).forEach((breakpoint) => {
     layouts[breakpoint] = widgets.map((widget, index) => {

@@ -49,7 +49,9 @@ export function DashboardListView() {
 
   useEffect(() => {
     loadDashboards();
-  }, [loadDashboards]);
+    // Load dashboards on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Handle delete confirmation
   const handleDeleteClick = (dashboard: DashboardState) => {

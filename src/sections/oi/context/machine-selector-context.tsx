@@ -33,6 +33,8 @@ export function MachineSelectorProvider({ children }: MachineSelectorProviderPro
         localStorage.removeItem('oi-selected-machine');
       }
     }
+    // Only run once on mount to restore saved machine
+     
   }, []);
 
   const setSelectedMachine = useCallback((machine: MachineEntity | null) => {

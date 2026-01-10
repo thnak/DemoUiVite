@@ -41,44 +41,45 @@ type ProductTableRowProps = {
   onDeleteRow: () => void;
 };
 
-const getStockColor = (status: StockStatus): 'success' | 'warning' | 'error' => {
-  switch (status) {
-    case 'in_stock':
-      return 'success';
-    case 'low_stock':
-      return 'warning';
-    case 'out_of_stock':
-      return 'error';
-    default:
-      return 'success';
-  }
-};
+// TODO: Implement stock display when needed
+// const getStockColor = (status: StockStatus): 'success' | 'warning' | 'error' => {
+//   switch (status) {
+//     case 'in_stock':
+//       return 'success';
+//     case 'low_stock':
+//       return 'warning';
+//     case 'out_of_stock':
+//       return 'error';
+//     default:
+//       return 'success';
+//   }
+// };
 
-const getStockLabel = (status: StockStatus, quantity: number): string => {
-  switch (status) {
-    case 'in_stock':
-      return `${quantity} in stock`;
-    case 'low_stock':
-      return `${quantity} low stock`;
-    case 'out_of_stock':
-      return 'out of stock';
-    default:
-      return `${quantity} in stock`;
-  }
-};
+// const getStockLabel = (status: StockStatus, quantity: number): string => {
+//   switch (status) {
+//     case 'in_stock':
+//       return `${quantity} in stock`;
+//     case 'low_stock':
+//       return `${quantity} low stock`;
+//     case 'out_of_stock':
+//       return 'out of stock';
+//     default:
+//       return `${quantity} in stock`;
+//   }
+// };
 
-const getStockProgress = (status: StockStatus): number => {
-  switch (status) {
-    case 'in_stock':
-      return 100;
-    case 'low_stock':
-      return 30;
-    case 'out_of_stock':
-      return 10;
-    default:
-      return 100;
-  }
-};
+// const getStockProgress = (status: StockStatus): number => {
+//   switch (status) {
+//     case 'in_stock':
+//       return 100;
+//     case 'low_stock':
+//       return 30;
+//     case 'out_of_stock':
+//       return 10;
+//     default:
+//       return 100;
+//   }
+// };
 
 export function ProductTableRow({
   row,
