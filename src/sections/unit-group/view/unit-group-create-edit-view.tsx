@@ -2,7 +2,7 @@ import type { ChangeEvent } from 'react';
 import type { UnitGroupEntity } from 'src/api/types/generated';
 
 import { useSearchParams } from 'react-router-dom';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';

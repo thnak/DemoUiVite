@@ -2,8 +2,8 @@ import type { ChangeEvent } from 'react';
 import type { StopMachineImpact, StopMachineReasonGroupEntity } from 'src/api/types/generated';
 
 import { MuiColorInput } from 'mui-color-input';
-import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -33,20 +33,6 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-const COLOR_OPTIONS = [
-  '#FF4842',
-  '#1890FF',
-  '#94D82D',
-  '#FFC107',
-  '#00AB55',
-  '#FF6F00',
-  '#7635DC',
-  '#212B36',
-  '#454F5B',
-  '#637381',
-  '#919EAB',
-  '#C4CDD5',
-];
 
 const IMPACT_OPTIONS: { value: StopMachineImpact; label: string }[] = [
   { value: 'run', label: 'Run' },
@@ -261,7 +247,7 @@ export function StopMachineReasonGroupCreateEditView({
     }
     // Form initialization effect
      
-  }, [isEdit, 
+  }, [createGroup, formData.code, formData.colorHex, formData.description, formData.impact, formData.name, formData.translations, id, isEdit, updateGroup]);
 
   if (isLoadingData) {
     return (
