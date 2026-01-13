@@ -117,13 +117,15 @@ export function MachineProductMappingView(props: MachineProductMappingViewProps)
   const handleSelectAll = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       if (event.target.checked) {
-        const filteredProducts = filteredAvailableProducts;
+        const filteredProducts = availableProducts.filter((product) =>
+          product.productName?.toLowerCase().includes(searchText.toLowerCase())
+        );
         setSelectedProductIds(filteredProducts.map((p) => p.productId));
       } else {
         setSelectedProductIds([]);
       }
     },
-    [filteredAvailableProducts]
+    [availableProducts, searchText]
   );
 
   const handleSelectOne = useCallback((productId: string) => {

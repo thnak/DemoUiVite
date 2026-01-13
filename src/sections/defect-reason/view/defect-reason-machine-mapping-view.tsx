@@ -166,13 +166,15 @@ export function DefectReasonMachineMappingView(props: DefectReasonMachineMapping
   const handleSelectAll = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       if (event.target.checked) {
-        const filteredMachines = filteredAvailableMachines;
+        const filteredMachines = availableMachines.filter((machine) =>
+          machine.machineName?.toLowerCase().includes(searchText.toLowerCase())
+        );
         setSelectedMachineIds(filteredMachines.map((m) => m.machineId));
       } else {
         setSelectedMachineIds([]);
       }
     },
-    [filteredAvailableMachines]
+    [availableMachines, searchText]
   );
 
   const handleSelectOne = useCallback((machineId: string) => {
