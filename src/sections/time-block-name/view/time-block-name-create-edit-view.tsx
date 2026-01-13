@@ -70,7 +70,6 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
   useEffect(() => {
     if (isEdit && timeBlockNameData && !formInitializedRef.current) {
       formInitializedRef.current = true;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         code: timeBlockNameData.code || '',
         name: timeBlockNameData.name || '',

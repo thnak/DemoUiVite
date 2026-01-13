@@ -70,7 +70,6 @@ export function UnitGroupCreateEditView({
   useEffect(() => {
     if (isEdit && currentUnitGroup && !formInitializedRef.current) {
       formInitializedRef.current = true;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         name: currentUnitGroup.name || '',
         description: currentUnitGroup.description || '',

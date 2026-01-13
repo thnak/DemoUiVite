@@ -76,7 +76,7 @@ export function useTour({ steps, tourOptions, onComplete, onCancel }: UseTourOpt
           ...stepOptions,
           buttons: buttons?.map((btn) => ({
             text: btn.text,
-            action: btn.action || function(this: any) {
+            action: btn.action || function handleAction(this: any) {
               if (btn.text === 'Next' || btn.text === 'Start Tour' || btn.text === 'Finish') {
                 this.next();
               } else if (btn.text === 'Skip') {

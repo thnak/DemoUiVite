@@ -57,7 +57,7 @@ export function StopMachineReasonGroupListView() {
   const [groups, setGroups] = useState<StopMachineReasonGroupProps[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [totalByImpact, setTotalByImpact] = useState<Record<string, number>>({});
-  const [isLoading, setIsLoading] = useState(true);
+  const [_isLoading, setIsLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);

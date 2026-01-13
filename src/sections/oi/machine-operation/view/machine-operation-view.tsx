@@ -1,6 +1,6 @@
 import type { ApexOptions } from 'apexcharts';
 import type { MachineOeeUpdate } from 'src/services/machineHub';
-import type { ProductWorkingStateByMachine as BaseProductWorkingState, CurrentMachineRunStateRecords } from 'src/api/types/generated';
+import type { CurrentMachineRunStateRecords, ProductWorkingStateByMachine as BaseProductWorkingState } from 'src/api/types/generated';
 
 // Extended type with legacy fields for backward compatibility
 type ProductWorkingStateByMachine = BaseProductWorkingState & {
@@ -169,10 +169,11 @@ interface DefectType {
   colorHex: string;
 }
 
-interface DefectEntry {
-  defectId: string;
-  quantity: number;
-}
+// Commenting out unused interface to fix lint warning
+// interface DefectEntry {
+//   defectId: string;
+//   quantity: number;
+// }
 
 interface DefectSubmission {
   id: string;

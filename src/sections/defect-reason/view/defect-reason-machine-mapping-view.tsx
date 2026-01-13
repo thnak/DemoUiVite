@@ -172,7 +172,7 @@ export function DefectReasonMachineMappingView(props: DefectReasonMachineMapping
         setSelectedMachineIds([]);
       }
     },
-    [availableMachines, searchText]
+    [filteredAvailableMachines]
   );
 
   const handleSelectOne = useCallback((machineId: string) => {

@@ -103,7 +103,6 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
   useEffect(() => {
     if (isEdit && unitData && !formInitializedRef.current) {
       formInitializedRef.current = true;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         name: unitData.name || '',
         symbol: unitData.symbol || '',

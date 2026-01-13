@@ -270,7 +270,6 @@ export function DurationTimePicker({
       
       if (precision === 'seconds') {
         const newTotalSeconds = isoDurationToSeconds(value);
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setTotalSecondsStr(newTotalSeconds > 0 ? String(newTotalSeconds) : '');
       } else {
         const newParts = parseDurationToParts(value);

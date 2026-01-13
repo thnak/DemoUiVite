@@ -92,7 +92,6 @@ export function StopMachineReasonGroupCreateEditView({
   useEffect(() => {
     if (isEdit && groupData && !formInitializedRef.current) {
       formInitializedRef.current = true;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         code: groupData.code || '',
         name: groupData.name || '',

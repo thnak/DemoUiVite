@@ -32,40 +32,41 @@ import { shiftTemplateTourSteps } from '../tour-steps';
 
 // ----------------------------------------------------------------------
 
+// Commenting out unused utility functions to fix lint warnings
 // Parse ISO 8601 duration to HH:mm format (e.g., "PT8H30M" -> "08:30")
-function parseDurationToTime(duration: string | undefined): string {
-  if (!duration) return '00:00';
-
-  let hours = 0;
-  let minutes = 0;
-  const hourMatch = duration.match(/(\d+)H/);
-  const minuteMatch = duration.match(/(\d+)M/);
-
-  if (hourMatch) {
-    hours = parseInt(hourMatch[1], 10);
-  }
-  if (minuteMatch) {
-    minutes = parseInt(minuteMatch[1], 10);
-  }
-
-  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-}
+// function parseDurationToTime(duration: string | undefined): string {
+//   if (!duration) return '00:00';
+// 
+//   let hours = 0;
+//   let minutes = 0;
+//   const hourMatch = duration.match(/(\d+)H/);
+//   const minuteMatch = duration.match(/(\d+)M/);
+// 
+//   if (hourMatch) {
+//     hours = parseInt(hourMatch[1], 10);
+//   }
+//   if (minuteMatch) {
+//     minutes = parseInt(minuteMatch[1], 10);
+//   }
+// 
+//   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+// }
 
 // Convert HH:mm format to ISO 8601 duration (e.g., "08:30" -> "PT8H30M")
-function timeToIsoDuration(time: string): string {
-  const [hours, minutes] = time.split(':').map(Number);
-  let duration = 'PT';
-  if (hours > 0) {
-    duration += `${hours}H`;
-  }
-  if (minutes > 0) {
-    duration += `${minutes}M`;
-  }
-  if (duration === 'PT') {
-    duration = 'PT0M';
-  }
-  return duration;
-}
+// function timeToIsoDuration(time: string): string {
+//   const [hours, minutes] = time.split(':').map(Number);
+//   let duration = 'PT';
+//   if (hours > 0) {
+//     duration += `${hours}H`;
+//   }
+//   if (minutes > 0) {
+//     duration += `${minutes}M`;
+//   }
+//   if (duration === 'PT') {
+//     duration = 'PT0M';
+//   }
+//   return duration;
+// }
 
 // Convert form data to API ShiftTemplateEntity
 function formDataToApiEntity(data: ShiftTemplateFormData): ShiftTemplateEntity {

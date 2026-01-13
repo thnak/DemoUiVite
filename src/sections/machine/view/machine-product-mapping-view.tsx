@@ -123,7 +123,7 @@ export function MachineProductMappingView(props: MachineProductMappingViewProps)
         setSelectedProductIds([]);
       }
     },
-    [availableProducts, searchText]
+    [filteredAvailableProducts]
   );
 
   const handleSelectOne = useCallback((productId: string) => {

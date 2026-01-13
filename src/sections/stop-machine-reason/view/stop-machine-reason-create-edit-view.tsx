@@ -90,7 +90,6 @@ export function StopMachineReasonCreateEditView({
   useEffect(() => {
     if (isEdit && reasonData && !formInitializedRef.current) {
       formInitializedRef.current = true;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         code: reasonData.code || '',
         name: reasonData.name || '',

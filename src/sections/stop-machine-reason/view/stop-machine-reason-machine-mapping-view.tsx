@@ -177,7 +177,7 @@ export function StopMachineReasonMachineMappingView(
         setSelectedMachineIds([]);
       }
     },
-    [availableMachines, searchText]
+    [filteredAvailableMachines]
   );
 
   const handleSelectOne = useCallback((machineId: string) => {

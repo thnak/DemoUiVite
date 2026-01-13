@@ -112,7 +112,6 @@ export function IoTSensorCreateEditView({
   useEffect(() => {
     if (isEdit && currentSensor && !isFormInitializedRef.current) {
       isFormInitializedRef.current = true;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         code: currentSensor.code || '',
         name: currentSensor.name || '',

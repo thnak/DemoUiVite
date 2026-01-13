@@ -97,7 +97,7 @@ const itemVariants = {
 
 export function ReportView() {
   const navigate = useNavigate();
-  const [selectedArea, setSelectedArea] = useState<string | null>(null);
+  const [_selectedArea, setSelectedArea] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
 

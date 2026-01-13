@@ -77,7 +77,6 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
   useEffect(() => {
     if (isEdit && conversionData && !formInitializedRef.current) {
       formInitializedRef.current = true;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         fromUnitId: conversionData.fromUnitId?.toString() || '',
         toUnitId: conversionData.toUnitId?.toString() || '',
