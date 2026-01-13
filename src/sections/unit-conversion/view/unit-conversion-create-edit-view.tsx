@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 
-import { useParams, useNavigate } from 'react-router-dom';
 import { useMemo, useState, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -55,20 +55,16 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
     overallMessage,
   } = useValidationResult();
 
-  const [isLoadingConversion, setIsLoadingConversion] = useState(isEdit);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Fetch conversion data if editing
-  const { data: conversionData } = useGetUnitConversionById(id || '', {
+  const { data: conversionData, isLoading: isLoadingConversion } = useGetUnitConversionById(id || '', {
     enabled: isEdit && !!id,
   });
 
   // Initialize form data using useMemo - React Compiler friendly
   const initialFormData = useMemo<UnitConversionFormData>(() => {
     if (isEdit && conversionData) {
-      if (isLoadingConversion) {
-        setIsLoadingConversion(false);
-      }
       return {
         fromUnitId: conversionData.fromUnitId?.toString() || '',
         toUnitId: conversionData.toUnitId?.toString() || '',
@@ -84,7 +80,7 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
       offset: '0',
       formulaDescription: '',
     };
-  }, [isEdit, conversionData, isLoadingConversion]);
+  }, [isEdit, conversionData]);
 
   const [formData, setFormData] = useState<UnitConversionFormData>(initialFormData); 
 

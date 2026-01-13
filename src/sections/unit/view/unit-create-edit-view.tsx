@@ -60,7 +60,6 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
 
   const [unitGroups, setUnitGroups] = useState<UnitGroupEntity[]>([]);
   const [isLoadingGroups, setIsLoadingGroups] = useState(true);
-  const [isLoadingUnit, setIsLoadingUnit] = useState(isEdit);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Fetch unit groups
@@ -75,7 +74,7 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
   });
 
   // Fetch unit data if editing
-  const { data: unitData } = useGetUnitById(id || '', {
+  const { data: unitData, isLoading: isLoadingUnit } = useGetUnitById(id || '', {
     enabled: isEdit && !!id,
   });
 
@@ -93,9 +92,6 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
   // Initialize form data using useMemo - React Compiler friendly
   const initialFormData = useMemo<UnitFormData>(() => {
     if (isEdit && unitData) {
-      if (isLoadingUnit) {
-        setIsLoadingUnit(false);
-      }
       return {
         name: unitData.name || '',
         symbol: unitData.symbol || '',
@@ -109,7 +105,7 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
       unitGroupId: '',
       description: '',
     };
-  }, [isEdit, unitData, isLoadingUnit]);
+  }, [isEdit, unitData]);
 
   const [formData, setFormData] = useState<UnitFormData>(initialFormData); 
 

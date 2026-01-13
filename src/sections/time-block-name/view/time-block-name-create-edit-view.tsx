@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 
-import { useParams, useNavigate } from 'react-router-dom';
 import { useMemo, useState, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -44,23 +44,19 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [isLoadingData, setIsLoadingData] = useState(isEdit);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [translationKey, setTranslationKey] = useState('');
   const [translationValue, setTranslationValue] = useState('');
 
   // Fetch time block name data if editing
-  const { data: timeBlockNameData } = useGetTimeBlockNameById(id || '', {
+  const { data: timeBlockNameData, isLoading: isLoadingData } = useGetTimeBlockNameById(id || '', {
     enabled: isEdit && !!id,
   });
 
   // Initialize form data using useMemo - React Compiler friendly
   const initialFormData = useMemo<TimeBlockNameFormData>(() => {
     if (isEdit && timeBlockNameData) {
-      if (isLoadingData) {
-        setIsLoadingData(false);
-      }
       return {
         code: timeBlockNameData.code || '',
         name: timeBlockNameData.name || '',
@@ -78,7 +74,7 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
       imageUrl: '',
       translations: {},
     };
-  }, [isEdit, timeBlockNameData, isLoadingData]);
+  }, [isEdit, timeBlockNameData]);
 
   const [formData, setFormData] = useState<TimeBlockNameFormData>(initialFormData); 
 

@@ -54,14 +54,13 @@ export function StopMachineReasonCreateEditView({
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [isLoadingData, setIsLoadingData] = useState(isEdit);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [translationKey, setTranslationKey] = useState('');
   const [translationValue, setTranslationValue] = useState('');
 
   // Fetch stop machine reason data if editing
-  const { data: reasonData } = useGetStopMachineReasonById(id || '', {
+  const { data: reasonData, isLoading: isLoadingData } = useGetStopMachineReasonById(id || '', {
     enabled: isEdit && !!id,
   });
 
@@ -103,16 +102,12 @@ export function StopMachineReasonCreateEditView({
 
   const [formData, setFormData] = useState<StopMachineReasonFormData>(initialFormData);
 
-  // Update form data when initial data changes (for generated code in create mode)
+  // Update form code when generatedCode changes (for create mode only)
   useEffect(() => {
     if (!isEdit && generatedCode && formData.code !== generatedCode) {
       setFormData((prev) => ({ ...prev, code: generatedCode }));
     }
-    if (isEdit && reasonData && isLoadingData) {
-      setIsLoadingData(false);
-    }
-  }, [isEdit, generatedCode, reasonData, formData.code, isLoadingData]);
-  }, [isEdit, reasonData, generatedCode]);
+  }, [isEdit, generatedCode, formData.code]);
 
   const { mutate: createReason, isPending: isCreating } = useCreateStopMachineReason({
     onSuccess: (result) => {

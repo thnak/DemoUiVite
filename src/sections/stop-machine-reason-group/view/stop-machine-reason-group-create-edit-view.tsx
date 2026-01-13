@@ -60,14 +60,13 @@ export function StopMachineReasonGroupCreateEditView({
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [isLoadingData, setIsLoadingData] = useState(isEdit);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [translationKey, setTranslationKey] = useState('');
   const [translationValue, setTranslationValue] = useState('');
 
   // Fetch group data if editing
-  const { data: groupData } = useGetStopMachineReasonGroupById(id || '', {
+  const { data: groupData, isLoading: isLoadingData } = useGetStopMachineReasonGroupById(id || '', {
     enabled: isEdit && !!id,
   });
 
@@ -101,15 +100,12 @@ export function StopMachineReasonGroupCreateEditView({
 
   const [formData, setFormData] = useState<StopMachineReasonGroupFormData>(initialFormData);
 
-  // Update form data when initial data changes (for generated code in create mode)
+  // Update form code when generatedCode changes (for create mode only)
   useEffect(() => {
     if (!isEdit && generatedCode && formData.code !== generatedCode) {
       setFormData((prev) => ({ ...prev, code: generatedCode }));
     }
-    if (isEdit && groupData && isLoadingData) {
-      setIsLoadingData(false);
-    }
-  }, [isEdit, generatedCode, groupData, formData.code, isLoadingData]); 
+  }, [isEdit, generatedCode, formData.code]); 
 
   const { mutate: createGroup, isPending: isCreating } = useCreateStopMachineReasonGroup({
     onSuccess: (result) => {
