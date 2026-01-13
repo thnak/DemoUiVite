@@ -18,7 +18,7 @@ import { RouterLink } from 'src/routes/components';
 import { usePaginationParams } from 'src/hooks';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
-import { unitKeys, useDeleteUnit, usePostapiUnitgetunits } from 'src/api/hooks/generated/use-unit';
+import { unitKeys, useDeleteUnit, useGetapiUnitgetunits } from 'src/api/hooks/generated/use-unit';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -48,12 +48,25 @@ export function UnitListView() {
 
   const [units, setUnits] = useState<UnitProps[]>([]);
   const [totalItems, setTotalItems] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
   const [groupCounts, setGroupCounts] = useState<Record<string, number>>({});
 
-  const { mutate: fetchUnits } = usePostapiUnitgetunits({
-    onSuccess: (data) => {
-      const mappedUnits: UnitProps[] = (data.items || []).map((item) => ({
+  const { data: unitData, isLoading } = useGetapiUnitgetunits(
+    {
+      pageNumber: params.page,
+      pageSize: params.rowsPerPage,
+      searchTerm: params.filterName || undefined,
+      UnitGroupName: params.currentTab !== 'all' ? params.currentTab : undefined,
+      SortingFields: [params.orderBy],
+      DescendingFields: params.order === 'desc' ? [params.orderBy] : undefined,
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  useEffect(() => {
+    if (unitData) {
+      const mappedUnits: UnitProps[] = (unitData.items || []).map((item) => ({
         id: item.id?.toString() || '',
         name: item.name || '',
         symbol: item.symbol || '',
@@ -62,43 +75,21 @@ export function UnitListView() {
         description: '',
       }));
       setUnits(mappedUnits);
-      setTotalItems(data.totalItems || 0);
-      setGroupCounts(data.totalUnitsPerGroup || {});
-      setIsLoading(false);
-    },
-    onError: () => {
-      setIsLoading(false);
-    },
-  });
+      setTotalItems(unitData.totalItems || 0);
+      setGroupCounts(unitData.totalUnitsPerGroup || {});
+    }
+  }, [unitData]);
+
   const [selected, setSelected] = useState<string[]>([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const refetchUnits = useCallback(() => {
-    setIsLoading(true);
-    fetchUnits({
-      data: [{ sortBy: params.orderBy, descending: params.order === 'desc' }],
-      params: {
-        pageNumber: params.page,
-        pageSize: params.rowsPerPage,
-        searchTerm: params.filterName || undefined,
-        UnitGroupName: params.currentTab !== 'all' ? params.currentTab : undefined,
-      },
-    });
-  }, [fetchUnits, params]);
-
   const { mutate: deleteUnitMutate } = useDeleteUnit({
     onSuccess: () => {
-      refetchUnits();
       queryClient.invalidateQueries({ queryKey: unitKeys.all });
     },
   });
-
-  useEffect(() => {
-    refetchUnits();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.page, params.rowsPerPage, params.orderBy, params.order, params.filterName, params.currentTab]);
 
   const handleTabChange = useCallback(
     (_event: React.SyntheticEvent, newValue: string) => {

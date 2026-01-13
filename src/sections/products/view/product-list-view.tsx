@@ -18,7 +18,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
-import { deleteProduct, postapiProductgetproductpage } from 'src/api/services/generated/product';
+import { deleteProduct, getapiProductgetproductpage } from 'src/api/services/generated/product';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -58,7 +58,7 @@ export function ProductListView() {
     setLoading(true);
     setError(null);
     try {
-      const response = await postapiProductgetproductpage([], {
+      const response = await getapiProductgetproductpage({
         pageNumber: page,
         pageSize: rowsPerPage,
         searchTerm: filterName || undefined,

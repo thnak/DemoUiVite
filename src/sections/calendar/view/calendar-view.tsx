@@ -28,7 +28,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import {
   deleteCalendar,
-  postapiCalendarsearchcalendars,
+  getapiCalendarsearchcalendars,
 } from 'src/api/services/generated/calendar';
 
 import { Iconify } from 'src/components/iconify';
@@ -95,7 +95,7 @@ export function CalendarView() {
     setLoading(true);
     setError(null);
     try {
-      const response = await postapiCalendarsearchcalendars([], {
+      const response = await getapiCalendarsearchcalendars({
         pageNumber: page,
         pageSize: rowsPerPage,
       });

@@ -1,6 +1,14 @@
 import type { ApexOptions } from 'apexcharts';
 import type { MachineOeeUpdate } from 'src/services/machineHub';
-import type { ProductWorkingStateByMachine, CurrentMachineRunStateRecords } from 'src/api/types/generated';
+import type { ProductWorkingStateByMachine as BaseProductWorkingState, CurrentMachineRunStateRecords } from 'src/api/types/generated';
+
+// Extended type with legacy fields for backward compatibility
+type ProductWorkingStateByMachine = BaseProductWorkingState & {
+  currentQuantity?: number;
+  goodQuantity?: number;
+  scrapQuantity?: number;
+  actualCycleTime?: string;
+};
 
 import Chart from 'react-apexcharts';
 import { useState, useEffect, useCallback } from 'react';
@@ -39,7 +47,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { apiConfig } from 'src/api/config';
 import { MachineHubService } from 'src/services/machineHub';
-import { getapiMachineDowntimemachineIdcurrentrunstaterecords } from 'src/api/services/generated/machine-downtime';
+import { getapimachineproductionmachineIdcurrentrunstaterecords } from 'src/api/services/generated/machine-production';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -600,7 +608,7 @@ export function MachineOperationView() {
         } else {
           // Load real timeline data in production
           try {
-            const records = await getapiMachineDowntimemachineIdcurrentrunstaterecords(selectedMachine.id || '');
+            const records = await getapimachineproductionmachineIdcurrentrunstaterecords(selectedMachine.id || '');
             if (mounted && records) {
               setTimelineRecords(Array.isArray(records) ? records : []);
             }

@@ -66,11 +66,12 @@ export function IoTDeviceView() {
     onSuccess: () => {
       // Refetch devices after deletion
       fetchDevices({
-        data: [{ sortBy: table.orderBy, descending: table.order === 'desc' }],
         params: {
           pageNumber: table.page,
           pageSize: table.rowsPerPage,
           searchTerm: filterName || undefined,
+          SortingFields: [table.orderBy],
+          DescendingFields: table.order === 'desc' ? [table.orderBy] : undefined,
         },
       });
       queryClient.invalidateQueries({ queryKey: ioTDeviceKeys.all });
@@ -80,11 +81,12 @@ export function IoTDeviceView() {
   useEffect(() => {
     setIsLoading(true);
     fetchDevices({
-      data: [{ sortBy: table.orderBy, descending: table.order === 'desc' }],
       params: {
         pageNumber: table.page,
         pageSize: table.rowsPerPage,
         searchTerm: filterName || undefined,
+        SortingFields: [table.orderBy],
+        DescendingFields: table.order === 'desc' ? [table.orderBy] : undefined,
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

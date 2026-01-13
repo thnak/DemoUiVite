@@ -22,7 +22,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
 import {
   useDeleteStopMachineReason,
-  usePostapiStopMachineReasongetreasonpage,
+  useGetapiStopMachineReasongetreasonpage,
 } from 'src/api/hooks/generated/use-stop-machine-reason';
 
 import { Iconify } from 'src/components/iconify';
@@ -64,7 +64,7 @@ export function StopMachineReasonListView() {
     [currentGroup]
   );
 
-  const { mutate: fetchReasons } = usePostapiStopMachineReasongetreasonpage({
+  const { mutate: fetchReasons } = useGetapiStopMachineReasongetreasonpage({
     onSuccess: (data) => {
       const mappedReasons: StopMachineReasonProps[] = (data.items || []).map((item: StopMachineReasonDto) => ({
         id: item.id?.toString() || '',

@@ -15,7 +15,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
-import { deviceKeys, usePostapiDevicegetsensor } from 'src/api/hooks/generated/use-device';
+import { deviceKeys, useGetapiDevicegetsensor } from 'src/api/hooks/generated/use-device';
 import { ioTSensorKeys, useDeleteIoTSensor } from 'src/api/hooks/generated/use-io-tsensor';
 
 import { Iconify } from 'src/components/iconify';
@@ -39,11 +39,23 @@ export function IoTSensorView() {
   const [filterName, setFilterName] = useState('');
   const [sensors, setSensors] = useState<IoTSensorProps[]>([]);
   const [totalItems, setTotalItems] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
 
-  const { mutate: fetchSensors } = usePostapiDevicegetsensor({
-    onSuccess: (data) => {
-      const mappedSensors: IoTSensorProps[] = (data.items || []).map((item) => ({
+  const { data: sensorData, isLoading } = useGetapiDevicegetsensor(
+    {
+      pageNumber: table.page,
+      pageSize: table.rowsPerPage,
+      searchTerm: filterName || undefined,
+      SortingFields: [table.orderBy],
+      DescendingFields: table.order === 'desc' ? [table.orderBy] : undefined,
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  useEffect(() => {
+    if (sensorData) {
+      const mappedSensors: IoTSensorProps[] = (sensorData.items || []).map((item) => ({
         id: item.id?.toString() || '',
         code: item.sensorCode || '',
         name: item.sensorName || '',
@@ -53,42 +65,17 @@ export function IoTSensorView() {
         unitOfMeasurement: item.unitOfMeasurement?.toString() || '',
       }));
       setSensors(mappedSensors);
-      setTotalItems(data.totalItems || 0);
-      setIsLoading(false);
-    },
-    onError: () => {
-      setIsLoading(false);
-    },
-  });
+      setTotalItems(sensorData.totalItems || 0);
+    }
+  }, [sensorData]);
 
   const { mutate: deleteSensorMutate } = useDeleteIoTSensor({
     onSuccess: () => {
-      // Refetch sensors after deletion
-      fetchSensors({
-        data: [{ sortBy: table.orderBy, descending: table.order === 'desc' }],
-        params: {
-          pageNumber: table.page,
-          pageSize: table.rowsPerPage,
-          searchTerm: filterName || undefined,
-        },
-      });
+      // Invalidate queries to trigger refetch
       queryClient.invalidateQueries({ queryKey: ioTSensorKeys.all });
       queryClient.invalidateQueries({ queryKey: deviceKeys.all });
     },
   });
-
-  useEffect(() => {
-    setIsLoading(true);
-    fetchSensors({
-      data: [{ sortBy: table.orderBy, descending: table.order === 'desc' }],
-      params: {
-        pageNumber: table.page,
-        pageSize: table.rowsPerPage,
-        searchTerm: filterName || undefined,
-      },
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [table.page, table.rowsPerPage, table.orderBy, table.order, filterName]);
 
   const handleDeleteRow = useCallback(
     (id: string) => {
