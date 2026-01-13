@@ -17151,6 +17151,309 @@
         }
       }
     },
+    "/api/code-generator-setting/externalquantityinput/{id}": {
+      "get": {
+        "tags": [
+          "CodeGeneratorSetting"
+        ],
+        "summary": "Get code generator setting for External Quantity Input by ID",
+        "description": "Retrieves a specific code generator setting for External Quantity Input entity by its unique identifier.",
+        "operationId": "GetCodeGeneratorSettingForExternalQuantityInputEntityById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityCodeGeneratorSettingEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/code-generator-setting/externalquantityinput/get-page": {
+      "post": {
+        "tags": [
+          "CodeGeneratorSetting"
+        ],
+        "summary": "Get paginated list of code generator settings for External Quantity Input",
+        "description": "Retrieves a paginated list of code generator settings for External Quantity Input entities.",
+        "operationId": "GetCodeGeneratorSettingForExternalQuantityInputEntityPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityCodeGeneratorSettingEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/code-generator-setting/externalquantityinput/create": {
+      "post": {
+        "tags": [
+          "CodeGeneratorSetting"
+        ],
+        "summary": "Create a new code generator setting for External Quantity Input",
+        "description": "Creates a new code generator setting for External Quantity Input entity in the system.",
+        "operationId": "CreateCodeGeneratorSettingForExternalQuantityInputEntity",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExternalQuantityInputEntityCodeGeneratorSettingEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityCodeGeneratorSettingEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityCodeGeneratorSettingEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/code-generator-setting/externalquantityinput/update/{id}": {
+      "post": {
+        "tags": [
+          "CodeGeneratorSetting"
+        ],
+        "summary": "Update an existing code generator setting for External Quantity Input",
+        "description": "Updates specific fields of an existing code generator setting for External Quantity Input entity by ID.",
+        "operationId": "UpdateCodeGeneratorSettingForExternalQuantityInputEntity",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityCodeGeneratorSettingEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityCodeGeneratorSettingEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/code-generator-setting/externalquantityinput/delete/{id}": {
+      "delete": {
+        "tags": [
+          "CodeGeneratorSetting"
+        ],
+        "summary": "Delete a code generator setting for External Quantity Input",
+        "description": "Deletes a code generator setting for External Quantity Input entity by its unique identifier.",
+        "operationId": "DeleteCodeGeneratorSettingForExternalQuantityInputEntity",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityCodeGeneratorSettingEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityCodeGeneratorSettingEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/code-generator-setting/externalquantityinput/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "CodeGeneratorSetting"
+        ],
+        "summary": "Soft delete a code generator setting for External Quantity Input",
+        "description": "Soft deletes a code generator setting for External Quantity Input entity by its unique identifier.",
+        "operationId": "SoftDeleteCodeGeneratorSettingForExternalQuantityInputEntity",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/code-generator-setting/externalquantityinput/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "CodeGeneratorSetting"
+        ],
+        "summary": "Restore a soft deleted code generator setting for External Quantity Input",
+        "description": "Restores a previously soft deleted code generator setting for External Quantity Input entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteCodeGeneratorSettingForExternalQuantityInputEntity",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/code-generator-setting/job/{id}": {
       "get": {
         "tags": [
@@ -43135,6 +43438,331 @@
         }
       }
     },
+    "/api/externalquantityinput/{id}": {
+      "get": {
+        "tags": [
+          "ExternalQuantityInput"
+        ],
+        "summary": "Get External Quantity Input by ID",
+        "description": "Retrieves a specific External Quantity Input entity by its unique identifier.",
+        "operationId": "GetExternalQuantityInputById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/externalquantityinput/get-page": {
+      "get": {
+        "tags": [
+          "ExternalQuantityInput"
+        ],
+        "summary": "Get paginated list of External Quantity Input",
+        "description": "Retrieves a paginated list of External Quantity Input entities.",
+        "operationId": "GetExternalQuantityInputPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/externalquantityinput/create": {
+      "post": {
+        "tags": [
+          "ExternalQuantityInput"
+        ],
+        "summary": "Create a new External Quantity Input",
+        "description": "Creates a new External Quantity Input entity in the system.",
+        "operationId": "CreateExternalQuantityInput",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExternalQuantityInputEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/externalquantityinput/update/{id}": {
+      "post": {
+        "tags": [
+          "ExternalQuantityInput"
+        ],
+        "summary": "Update an existing External Quantity Input",
+        "description": "Updates specific fields of an existing External Quantity Input entity by ID.",
+        "operationId": "UpdateExternalQuantityInput",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/externalquantityinput/delete/{id}": {
+      "delete": {
+        "tags": [
+          "ExternalQuantityInput"
+        ],
+        "summary": "Delete a External Quantity Input",
+        "description": "Deletes a External Quantity Input entity by its unique identifier.",
+        "operationId": "DeleteExternalQuantityInput",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/externalquantityinput/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "ExternalQuantityInput"
+        ],
+        "summary": "Soft delete a External Quantity Input",
+        "description": "Soft deletes a External Quantity Input entity by its unique identifier.",
+        "operationId": "SoftDeleteExternalQuantityInput",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/externalquantityinput/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "ExternalQuantityInput"
+        ],
+        "summary": "Soft restore delete a External Quantity Input",
+        "description": "Soft restore deletes a External Quantity Input entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteExternalQuantityInput",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/externalquantityinput/generate-new-code": {
+      "get": {
+        "tags": [
+          "ExternalQuantityInput"
+        ],
+        "summary": "Generate a new code for External Quantity Input",
+        "description": "Generates a new unique code for a External Quantity Input entity.",
+        "operationId": "GenerateNewExternalQuantityInputCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/ExternalResource/upload-ui-resource": {
       "post": {
         "tags": [
@@ -55924,6 +56552,131 @@
                   "items": {
                     "$ref": "#/components/schemas/GetAddExternalQuantityHistoryResult"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine/production/{machineId}/update-external-quantity": {
+      "post": {
+        "tags": [
+          "MachineProduction"
+        ],
+        "summary": "Updates the external quantity for a specific machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateExternalQuantityRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateExternalQuantityRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateExternalQuantityRequest"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateExternalQuantityRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityValidationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityValidationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityValidationResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine/production/{machineId}/remove-external-quantity": {
+      "delete": {
+        "tags": [
+          "MachineProduction"
+        ],
+        "summary": "Removes an external quantity from a specific machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          },
+          {
+            "name": "externalQuantityId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityValidationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityValidationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityValidationResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuantityInputEntityValidationResult"
                 }
               }
             }
@@ -90475,6 +91228,238 @@
         },
         "additionalProperties": false
       },
+      "ExternalQuantityInputEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "machineId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "quantity": {
+            "type": "number",
+            "description": "Số lượng bên ngoài đã thêm",
+            "format": "double"
+          },
+          "userAddedId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "remark": {
+            "type": "string",
+            "description": "Ghi chú (nếu có)",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Đầu vào số lượng bên ngoài"
+      },
+      "ExternalQuantityInputEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalQuantityInputEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "ExternalQuantityInputEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "template": {
+            "type": "string",
+            "description": "    Code template.\r\nAvailable tokens:\r\n{Year} - Current year in 4 digits (e.g., 2023)\r\n{Month} - Current month in 2 digits (e.g., 01 to 12)\r\n{Day} - Current day in 2 digits (e.g., 01 to 31)\r\n{Hour} - Current hour in 2 digits (e.g., 00 to 23)\r\n{Minute} - Current minute in 2 digits (e.g., 00 to 59)\r\n{Second} - Current second in 2 digits (e.g., 00 to 59)\r\n{SortDate} - Current date in dd-MM-yyyy\r\n{LongDate} - Current date in dd-MM-yyyy HH:mm\r\n{LongTime} - Current time in HH:mm:ss\r\n{ShortTime} - Current time in HH:mm\r\n{Index} - Incremental index padded to 4 digits (e.g., 0001, 0002)",
+            "nullable": true
+          },
+          "indexIncrementalMode": {
+            "$ref": "#/components/schemas/IndexIncrementalMode"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Code generator setting entity"
+      },
+      "ExternalQuantityInputEntityCodeGeneratorSettingEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalQuantityInputEntityCodeGeneratorSettingEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "ExternalQuantityInputEntityCodeGeneratorSettingEntityValidationResult": {
+        "type": "object",
+        "properties": {
+          "isValid": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the validation was successful.",
+            "readOnly": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets or sets the overall validation message.",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of a validation operation for a specific type with property-level error details."
+      },
+      "ExternalQuantityInputEntityValidationResult": {
+        "type": "object",
+        "properties": {
+          "isValid": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the validation was successful.",
+            "readOnly": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets or sets the overall validation message.",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of a validation operation for a specific type with property-level error details."
+      },
       "FieldSuggestionResultDto": {
         "type": "object",
         "properties": {
@@ -93044,25 +94029,31 @@
       "GetAddExternalQuantityHistoryResult": {
         "type": "object",
         "properties": {
-          "userAdded": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "userAddedId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createdAt": {
             "type": "string",
-            "description": "Người thêm số lượng bên ngoài",
-            "nullable": true
+            "description": "Thời gian tạo bản ghi",
+            "format": "date-time"
           },
           "quantity": {
             "type": "number",
             "description": "Số lượng bên ngoài đã thêm",
             "format": "double"
           },
+          "userAdded": {
+            "type": "string",
+            "description": "Người thêm số lượng bên ngoài",
+            "nullable": true
+          },
           "remark": {
             "type": "string",
             "description": "Ghi chú (nếu có)",
             "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "description": "Thời gian tạo bản ghi",
-            "format": "date-time"
           }
         },
         "additionalProperties": false,
@@ -114253,6 +115244,30 @@
         ],
         "type": "string"
       },
+      "UpdateExternalQuantityRequest": {
+        "required": [
+          "externalQuantityId",
+          "newQuantity"
+        ],
+        "type": "object",
+        "properties": {
+          "externalQuantityId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "newQuantity": {
+            "type": "number",
+            "description": "Số lượng bên ngoài mới",
+            "format": "double"
+          },
+          "remark": {
+            "type": "string",
+            "description": "Ghi chú (nếu có)",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Yêu cầu cập nhật số lượng bên ngoài"
+      },
       "UpdateTimeBlockRequest": {
         "type": "object",
         "properties": {
@@ -118810,6 +119825,9 @@
     },
     {
       "name": "DowntimeInput"
+    },
+    {
+      "name": "ExternalQuantityInput"
     },
     {
       "name": "ExternalResource",
