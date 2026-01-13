@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -46,10 +46,6 @@ export function UnitListView() {
     defaultOrder: 'asc',
   });
 
-  const [units, setUnits] = useState<UnitProps[]>([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [groupCounts, setGroupCounts] = useState<Record<string, number>>({});
-
   const { data: unitData, isLoading } = useGetapiUnitgetunits(
     {
       pageNumber: params.page,
@@ -64,21 +60,21 @@ export function UnitListView() {
     }
   );
 
-  useEffect(() => {
-    if (unitData) {
-      const mappedUnits: UnitProps[] = (unitData.items || []).map((item) => ({
-        id: item.id?.toString() || '',
-        name: item.name || '',
-        symbol: item.symbol || '',
-        group: item.unitGroupName || '',
-        baseUnit: false,
-        description: '',
-      }));
-      setUnits(mappedUnits);
-      setTotalItems(unitData.totalItems || 0);
-      setGroupCounts(unitData.totalUnitsPerGroup || {});
-    }
+  // Derive units, totalItems, and groupCounts from unitData using useMemo - React Compiler friendly
+  const units = useMemo<UnitProps[]>(() => {
+    if (!unitData) return [];
+    return (unitData.items || []).map((item) => ({
+      id: item.id?.toString() || '',
+      name: item.name || '',
+      symbol: item.symbol || '',
+      group: item.unitGroupName || '',
+      baseUnit: false,
+      description: '',
+    }));
   }, [unitData]);
+
+  const totalItems = useMemo(() => unitData?.totalItems || 0, [unitData]);
+  const groupCounts = useMemo(() => unitData?.totalUnitsPerGroup || {}, [unitData]);
 
   const [selected, setSelected] = useState<string[]>([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);

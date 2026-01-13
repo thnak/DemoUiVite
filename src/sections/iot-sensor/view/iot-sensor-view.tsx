@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -37,8 +37,6 @@ export function IoTSensorView() {
   const queryClient = useQueryClient();
 
   const [filterName, setFilterName] = useState('');
-  const [sensors, setSensors] = useState<IoTSensorProps[]>([]);
-  const [totalItems, setTotalItems] = useState(0);
 
   const { data: sensorData, isLoading } = useGetapiDevicegetsensor(
     {
@@ -53,21 +51,21 @@ export function IoTSensorView() {
     }
   );
 
-  useEffect(() => {
-    if (sensorData) {
-      const mappedSensors: IoTSensorProps[] = (sensorData.items || []).map((item) => ({
-        id: item.id?.toString() || '',
-        code: item.sensorCode || '',
-        name: item.sensorName || '',
-        deviceName: item.deviceName || '',
-        pinNumber: item.pinNumber,
-        type: item.type || '',
-        unitOfMeasurement: item.unitOfMeasurement?.toString() || '',
-      }));
-      setSensors(mappedSensors);
-      setTotalItems(sensorData.totalItems || 0);
-    }
+  // Derive sensors and totalItems from sensorData using useMemo - React Compiler friendly
+  const sensors = useMemo<IoTSensorProps[]>(() => {
+    if (!sensorData) return [];
+    return (sensorData.items || []).map((item) => ({
+      id: item.id?.toString() || '',
+      code: item.sensorCode || '',
+      name: item.sensorName || '',
+      deviceName: item.deviceName || '',
+      pinNumber: item.pinNumber,
+      type: item.type || '',
+      unitOfMeasurement: item.unitOfMeasurement?.toString() || '',
+    }));
   }, [sensorData]);
+
+  const totalItems = useMemo(() => sensorData?.totalItems || 0, [sensorData]);
 
   const { mutate: deleteSensorMutate } = useDeleteIoTSensor({
     onSuccess: () => {

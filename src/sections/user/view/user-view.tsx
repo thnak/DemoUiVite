@@ -1,5 +1,5 @@
+import { useMemo, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -65,9 +65,6 @@ export function UserView() {
 
   const [filterName, setFilterName] = useState('');
   const [filterRole, setFilterRole] = useState<string>('all');
-  const [users, setUsers] = useState<UserProps[]>([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [roleCounts, setRoleCounts] = useState<Record<string, number>>({});
 
   const roles = filterRole === 'all' ? undefined : [filterRole];
   const { data: userData, isLoading } = useGetapiUsergetuserpages(
@@ -84,22 +81,22 @@ export function UserView() {
     }
   );
 
-  useEffect(() => {
-    if (userData) {
-      const mappedUsers: UserProps[] = (userData.items || []).map((item) => ({
-        id: item.username || '',
-        username: item.username || '',
-        displayName: item.displayName || '',
-        email: item.email || '',
-        phoneNumber: item.phoneNumber || '',
-        avatarUrl: item.avatarUrl || '',
-        roleNames: item.roleNames || [],
-      }));
-      setUsers(mappedUsers);
-      setTotalItems(userData.totalItems || 0);
-      setRoleCounts(userData.roleCounts || {});
-    }
+  // Derive users, totalItems, and roleCounts from userData using useMemo - React Compiler friendly
+  const users = useMemo<UserProps[]>(() => {
+    if (!userData) return [];
+    return (userData.items || []).map((item) => ({
+      id: item.username || '',
+      username: item.username || '',
+      displayName: item.displayName || '',
+      email: item.email || '',
+      phoneNumber: item.phoneNumber || '',
+      avatarUrl: item.avatarUrl || '',
+      roleNames: item.roleNames || [],
+    }));
   }, [userData]);
+
+  const totalItems = useMemo(() => userData?.totalItems || 0, [userData]);
+  const roleCounts = useMemo(() => userData?.roleCounts || {}, [userData]);
 
   const handleFilterRole = useCallback(
     (_event: React.SyntheticEvent, newValue: string) => {

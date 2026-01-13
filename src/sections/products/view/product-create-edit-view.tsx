@@ -217,19 +217,9 @@ export function ProductCreateEditView({
 
     // Navigate back to list after save
   }, [
-    formData.name,
-    formData.code,
-    formData.price,
-    formData.stock,
-    formData.weight,
-    formData.length,
-    formData.width,
-    formData.height,
-    formData.categoryId,
-    formData.unitOfMeasureId,
-    formData.secondaryUnitOfMeasureId,
+    formData,
     isEdit,
-    currentProduct?.id,
+    currentProduct,
     router,
     imageUrl,
     published,

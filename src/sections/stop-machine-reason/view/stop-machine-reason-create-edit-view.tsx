@@ -3,7 +3,7 @@ import type { StopMachineReasonEntity } from 'src/api/types/generated';
 
 import { MuiColorInput } from 'mui-color-input';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -54,27 +54,13 @@ export function StopMachineReasonCreateEditView({
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [formData, setFormData] = useState<StopMachineReasonFormData>({
-    code: '',
-    name: '',
-    description: '',
-    colorHex: '#1976d2',
-    groupId: '',
-    requiresApproval: false,
-    requiresNote: false,
-    requiresAttachment: false,
-    requiresComment: false,
-    translations: {},
-  });
-  const [isLoadingData, setIsLoadingData] = useState(isEdit);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [translationKey, setTranslationKey] = useState('');
   const [translationValue, setTranslationValue] = useState('');
-  const formInitializedRef = useRef(false);
 
   // Fetch stop machine reason data if editing
-  const { data: reasonData } = useGetStopMachineReasonById(id || '', {
+  const { data: reasonData, isLoading: isLoadingData } = useGetStopMachineReasonById(id || '', {
     enabled: isEdit && !!id,
   });
 
@@ -84,14 +70,10 @@ export function StopMachineReasonCreateEditView({
       enabled: !isEdit,
     });
 
-  // Initialize form data once when data loads
-  // This is a legitimate use of setState in useEffect for one-time form initialization
-  // The ref prevents cascading renders by ensuring it only runs once
-  useEffect(() => {
-    if (isEdit && reasonData && !formInitializedRef.current) {
-      formInitializedRef.current = true;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setFormData({
+  // Initialize form data using useMemo - React Compiler friendly
+  const initialFormData = useMemo<StopMachineReasonFormData>(() => {
+    if (isEdit && reasonData) {
+      return {
         code: reasonData.code || '',
         name: reasonData.name || '',
         description: reasonData.description || '',
@@ -102,14 +84,39 @@ export function StopMachineReasonCreateEditView({
         requiresAttachment: reasonData.requiresAttachment || false,
         requiresComment: reasonData.requiresComment || false,
         translations: reasonData.translations || {},
-      });
-      setIsLoadingData(false);
-    } else if (!isEdit && generatedCode && !formInitializedRef.current) {
-      formInitializedRef.current = true;
-      // Set generated code for new reason
-      setFormData((prev) => ({ ...prev, code: generatedCode }));
+      };
     }
+    return {
+      code: generatedCode || '',
+      name: '',
+      description: '',
+      colorHex: '#1976d2',
+      groupId: '',
+      requiresApproval: false,
+      requiresNote: false,
+      requiresAttachment: false,
+      requiresComment: false,
+      translations: {},
+    };
   }, [isEdit, reasonData, generatedCode]);
+
+  const [formData, setFormData] = useState<StopMachineReasonFormData>(initialFormData);
+
+  // Synchronize form code with API-generated code (for create mode only)
+  // This is a legitimate external system sync - updates when API provides new code
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    if (!isEdit && generatedCode) {
+      setFormData((prev) => {
+        // Only update if code actually changed to prevent unnecessary renders
+        if (prev.code !== generatedCode) {
+          return { ...prev, code: generatedCode };
+        }
+        return prev;
+      });
+    }
+  }, [isEdit, generatedCode]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const { mutate: createReason, isPending: isCreating } = useCreateStopMachineReason({
     onSuccess: (result) => {

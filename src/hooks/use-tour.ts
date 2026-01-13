@@ -76,7 +76,7 @@ export function useTour({ steps, tourOptions, onComplete, onCancel }: UseTourOpt
           ...stepOptions,
           buttons: buttons?.map((btn) => ({
             text: btn.text,
-            action: btn.action || function(this: any) {
+            action: btn.action || function handleAction(this: any) {
               if (btn.text === 'Next' || btn.text === 'Start Tour' || btn.text === 'Finish') {
                 this.next();
               } else if (btn.text === 'Skip') {
@@ -89,12 +89,20 @@ export function useTour({ steps, tourOptions, onComplete, onCancel }: UseTourOpt
           })) || [
             {
               text: 'Back',
-              action(this: any) { this.back(); },
+              action() { 
+                // Access tour instance via closure instead of `this`
+                const tourInstance = tourRef.current;
+                if (tourInstance) tourInstance.back();
+              },
               classes: 'shepherd-button-secondary',
             },
             {
               text: 'Next',
-              action(this: any) { this.next(); },
+              action() { 
+                // Access tour instance via closure instead of `this`
+                const tourInstance = tourRef.current;
+                if (tourInstance) tourInstance.next();
+              },
               classes: 'shepherd-button-primary',
             },
           ],

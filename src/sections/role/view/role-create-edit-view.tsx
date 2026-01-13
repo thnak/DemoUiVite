@@ -130,7 +130,7 @@ export function RoleCreateEditView({ isEdit = false, currentRole }: RoleCreateEd
         } as any, // Cast to any to bypass strict type checking for required fields,
       });
     }
-  }, [formData, isEdit, currentRole?.id, createRoleMutate, updateRoleMutate, clearValidationResult]);
+  }, [formData, isEdit, currentRole, createRoleMutate, updateRoleMutate, clearValidationResult]);
 
   const handleCancel = useCallback(() => {
     router.push('/roles');

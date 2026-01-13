@@ -193,7 +193,7 @@ export function DefectReasonCreateEditView({
   }, [
     formData,
     isEdit,
-    currentDefectReason?.id,
+    currentDefectReason,
     createDefectReasonMutate,
     updateDefectReasonMutate,
     clearValidationResult,

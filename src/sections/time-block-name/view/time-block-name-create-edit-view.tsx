@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 
+import { useMemo, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useRef, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -44,44 +44,39 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [formData, setFormData] = useState<TimeBlockNameFormData>({
-    code: '',
-    name: '',
-    description: '',
-    colorHex: '#1976d2',
-    imageUrl: '',
-    translations: {},
-  });
-  const [isLoadingData, setIsLoadingData] = useState(isEdit);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [translationKey, setTranslationKey] = useState('');
   const [translationValue, setTranslationValue] = useState('');
-  const formInitializedRef = useRef(false);
 
   // Fetch time block name data if editing
-  const { data: timeBlockNameData } = useGetTimeBlockNameById(id || '', {
+  const { data: timeBlockNameData, isLoading: isLoadingData } = useGetTimeBlockNameById(id || '', {
     enabled: isEdit && !!id,
   });
 
-  // Initialize form data once when data loads
-  // This is a legitimate use of setState in useEffect for one-time form initialization
-  // The ref prevents cascading renders by ensuring it only runs once
-  useEffect(() => {
-    if (isEdit && timeBlockNameData && !formInitializedRef.current) {
-      formInitializedRef.current = true;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setFormData({
+  // Initialize form data using useMemo - React Compiler friendly
+  const initialFormData = useMemo<TimeBlockNameFormData>(() => {
+    if (isEdit && timeBlockNameData) {
+      return {
         code: timeBlockNameData.code || '',
         name: timeBlockNameData.name || '',
         description: timeBlockNameData.description || '',
         colorHex: timeBlockNameData.colorHex || '#1976d2',
         imageUrl: timeBlockNameData.imageUrl || '',
         translations: timeBlockNameData.translations || {},
-      });
-      setIsLoadingData(false);
+      };
     }
-  }, [isEdit, timeBlockNameData]); 
+    return {
+      code: '',
+      name: '',
+      description: '',
+      colorHex: '#1976d2',
+      imageUrl: '',
+      translations: {},
+    };
+  }, [isEdit, timeBlockNameData]);
+
+  const [formData, setFormData] = useState<TimeBlockNameFormData>(initialFormData); 
 
   const { mutate: createTimeBlockName, isPending: isCreating } = useCreateTimeBlockName({
     onSuccess: (result) => {
