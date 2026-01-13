@@ -20,7 +20,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
-import { usePostapiUnitgetunitconversions } from 'src/api/hooks/generated/use-unit';
+import { useGetapiUnitgetunitconversions } from 'src/api/hooks/generated/use-unit';
 import {
   unitConversionKeys,
   useDeleteUnitConversion,
@@ -43,7 +43,6 @@ export function UnitConversionListView() {
 
   const [conversions, setConversions] = useState<UnitConversionProps[]>([]);
   const [totalItems, setTotalItems] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterName, setFilterName] = useState('');
@@ -52,9 +51,21 @@ export function UnitConversionListView() {
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const { mutate: fetchConversions } = usePostapiUnitgetunitconversions({
-    onSuccess: (data) => {
-      const mappedConversions: UnitConversionProps[] = (data.items || []).map((item) => ({
+  const { data: conversionData, isLoading } = useGetapiUnitgetunitconversions(
+    {
+      pageNumber: page,
+      pageSize: rowsPerPage,
+      searchTerm: filterName || undefined,
+      SortingFields: ['fromUnitName'],
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  useEffect(() => {
+    if (conversionData) {
+      const mappedConversions: UnitConversionProps[] = (conversionData.items || []).map((item) => ({
         id: item.conversionId?.toString() || '',
         from: item.fromUnitName || '',
         to: item.toUnitName || '',
@@ -63,17 +74,12 @@ export function UnitConversionListView() {
         formulaDescription: item.formula || '',
       }));
       setConversions(mappedConversions);
-      setTotalItems(data.totalItems || 0);
-      setIsLoading(false);
-    },
-    onError: () => {
-      setIsLoading(false);
-    },
-  });
+      setTotalItems(conversionData.totalItems || 0);
+    }
+  }, [conversionData]);
 
   const { mutate: deleteConversionMutate } = useDeleteUnitConversion({
     onSuccess: () => {
-      refetchConversions();
       queryClient.invalidateQueries({ queryKey: unitConversionKeys.all });
       setIsDeleting(false);
       setDeleteDialogOpen(false);
@@ -83,23 +89,6 @@ export function UnitConversionListView() {
       setIsDeleting(false);
     },
   });
-
-  const refetchConversions = useCallback(() => {
-    setIsLoading(true);
-    fetchConversions({
-      data: [{ sortBy: 'fromUnitName', descending: false }],
-      params: {
-        pageNumber: page,
-        pageSize: rowsPerPage,
-        searchTerm: filterName || undefined,
-      },
-    });
-  }, [fetchConversions, page, rowsPerPage, filterName]);
-
-  useEffect(() => {
-    refetchConversions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, rowsPerPage, filterName]);
 
   const handleFilterName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setFilterName(event.target.value);

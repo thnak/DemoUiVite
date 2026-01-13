@@ -338,6 +338,7 @@ export function MachineSelectionView() {
                     running: { label: 'Running', color: '#22c55e', icon: 'solar:play-circle-bold' as const },
                     speedLoss: { label: 'Speed Loss', color: '#f59e0b', icon: 'mdi:speedometer' as const },
                     downtime: { label: 'Downtime', color: '#ef4444', icon: 'solar:danger-triangle-bold-duotone' as const },
+                    testMode: { label: 'Test Mode', color: '#8b5cf6', icon: 'solar:test-tube-bold' as const },
                   };
                   const currentState = machine.currentRunState ? runStateConfig[machine.currentRunState] : null;
                   

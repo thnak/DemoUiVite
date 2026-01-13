@@ -19,7 +19,7 @@ import { isValidationSuccess } from 'src/utils/validation-result';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
-import { deleteMachine, postapiMachinesearchmachines } from 'src/api/services/generated/machine';
+import { deleteMachine, getapiMachinesearchmachines } from 'src/api/services/generated/machine';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -116,8 +116,8 @@ export function MachineView() {
     setLoading(true);
     setError(null);
     try {
-      // Gọi API với POST request
-      const response = await postapiMachinesearchmachines([], {
+      // Gọi API với GET request
+      const response = await getapiMachinesearchmachines({
         pageNumber: page,
         pageSize: rowsPerPage,
         searchTerm: filterName || undefined,

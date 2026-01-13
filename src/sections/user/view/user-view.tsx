@@ -67,12 +67,26 @@ export function UserView() {
   const [filterRole, setFilterRole] = useState<string>('all');
   const [users, setUsers] = useState<UserProps[]>([]);
   const [totalItems, setTotalItems] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
   const [roleCounts, setRoleCounts] = useState<Record<string, number>>({});
 
-  const { mutate: fetchUsers } = useGetapiUsergetuserpages({
-    onSuccess: (data) => {
-      const mappedUsers: UserProps[] = (data.items || []).map((item) => ({
+  const roles = filterRole === 'all' ? undefined : [filterRole];
+  const { data: userData, isLoading } = useGetapiUsergetuserpages(
+    {
+      pageNumber: table.page,
+      pageSize: table.rowsPerPage,
+      searchTerm: filterName || undefined,
+      Roles: roles,
+      SortingFields: [table.orderBy],
+      DescendingFields: table.order === 'desc' ? [table.orderBy] : undefined,
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  useEffect(() => {
+    if (userData) {
+      const mappedUsers: UserProps[] = (userData.items || []).map((item) => ({
         id: item.username || '',
         username: item.username || '',
         displayName: item.displayName || '',
@@ -82,29 +96,10 @@ export function UserView() {
         roleNames: item.roleNames || [],
       }));
       setUsers(mappedUsers);
-      setTotalItems(data.totalItems || 0);
-      setRoleCounts(data.roleCounts || {});
-      setIsLoading(false);
-    },
-    onError: () => {
-      setIsLoading(false);
-    },
-  });
-
-  useEffect(() => {
-    setIsLoading(true);
-    const roles = filterRole === 'all' ? undefined : [filterRole];
-    fetchUsers({
-      data: [{ sortBy: table.orderBy, descending: table.order === 'desc' }],
-      params: {
-        pageNumber: table.page,
-        pageSize: table.rowsPerPage,
-        searchTerm: filterName || undefined,
-        Roles: roles,
-      },
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [table.page, table.rowsPerPage, table.orderBy, table.order, filterName, filterRole]);
+      setTotalItems(userData.totalItems || 0);
+      setRoleCounts(userData.roleCounts || {});
+    }
+  }, [userData]);
 
   const handleFilterRole = useCallback(
     (_event: React.SyntheticEvent, newValue: string) => {
