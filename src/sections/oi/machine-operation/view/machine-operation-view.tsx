@@ -94,6 +94,7 @@ interface DefectType {
   defectName: string;
   imageUrl?: string;
   colorHex: string;
+  allowMultipleDefectsPerUnit?: boolean;
 }
 
 interface DefectSubmission {
@@ -431,7 +432,7 @@ export function MachineOperationView() {
               id: `${item.createdAt}`, // Use timestamp as ID since there's no id field
               timestamp: item.createdAt || new Date().toISOString(),
               addedQuantity: item.quantity || 0,
-              addedBy: 'Unknown', // API doesn't provide user info
+              addedBy: item.userAdded || 'Unknown',
               note: item.remark || undefined,
             }));
             setQuantityHistory(formattedHistory);
@@ -490,7 +491,7 @@ export function MachineOperationView() {
                   defectId: '', // Not provided by API
                   defectName: item.defectReasonName || 'Unknown',
                   quantity: item.quantity || 0,
-                  colorHex: '#ef4444', // Default color since not provided
+                  colorHex: item.defectReasonHexColor || '#ef4444',
                 },
               ],
               submittedBy: 'Unknown', // Not provided by API
@@ -678,7 +679,7 @@ export function MachineOperationView() {
             id: `${item.createdAt}`,
             timestamp: item.createdAt || new Date().toISOString(),
             addedQuantity: item.quantity || 0,
-            addedBy: 'Unknown',
+            addedBy: item.userAdded || 'Unknown',
             note: item.remark || undefined,
           }));
           setQuantityHistory(formattedHistory);
@@ -753,7 +754,7 @@ export function MachineOperationView() {
               defectId: '',
               defectName: item.defectReasonName || 'Unknown',
               quantity: item.quantity || 0,
-              colorHex: '#ef4444',
+              colorHex: item.defectReasonHexColor || '#ef4444',
             },
           ],
           submittedBy: 'Unknown',
@@ -805,7 +806,7 @@ export function MachineOperationView() {
     try {
       await postapimachineproductionmachineIdlabeldowntimerecord(selectedMachine.id, {
         startTime: downtimeToLabel.startTime || '',
-        reasonId: selectedReasons[0], // API only accepts single reason
+        reasonIds: selectedReasons, // API now supports multiple reasons
         note: labelNote || undefined,
       });
       
