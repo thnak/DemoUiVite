@@ -35,9 +35,25 @@ const DESIGN_OPTIONS: { value: DesignOption; label: string; description: string 
 
 const DESIGN_STORAGE_KEY = 'index-page-design';
 
+// Helper function to load design from localStorage
+function loadSavedDesign(): DesignOption {
+  try {
+    const savedDesign = localStorage.getItem(DESIGN_STORAGE_KEY);
+    if (savedDesign) {
+      const designNumber = parseInt(savedDesign, 10);
+      if (designNumber >= 1 && designNumber <= 5) {
+        return designNumber as DesignOption;
+      }
+    }
+  } catch (error) {
+    // Ignore localStorage errors
+  }
+  return 4; // Default to Design 4
+}
+
 export function IndexPageView() {
   const router = useRouter();
-  const [selectedDesign, setSelectedDesign] = useState<DesignOption>(4); // Default to Design 4
+  const [selectedDesign, setSelectedDesign] = useState<DesignOption>(loadSavedDesign);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -47,19 +63,6 @@ export function IndexPageView() {
       router.push('/oi/select-machine');
     }
   }, [router]);
-
-  // Load saved design preference from localStorage
-  useEffect(() => {
-    const savedDesign = localStorage.getItem(DESIGN_STORAGE_KEY);
-    if (savedDesign) {
-      const designNumber = parseInt(savedDesign, 10);
-      if (designNumber >= 1 && designNumber <= 5) {
-        setSelectedDesign(designNumber as DesignOption);
-      }
-    }
-    // Only run once on mount to load saved preference - legitimate use for localStorage sync
-     
-  }, []);
 
   const handleDesignChange = (newDesign: DesignOption) => {
     setSelectedDesign(newDesign);
