@@ -51,15 +51,17 @@ import { getapiMachinemachineIdavailableproducts } from 'src/api/services/genera
 import { getapiDefectReasongetdefectreasons } from 'src/api/services/generated/defect-reason';
 import { getapiStopMachineReasongetreasonpage } from 'src/api/services/generated/stop-machine-reason';
 import {
+  deleteapimachineproductionmachineIdremoveexternalquantity,
+  getapimachineproductionmachineIdaddexternalquantityhistory,
+  getapimachineproductionmachineIdcurrentproductstate,
+  getapimachineproductionmachineIdcurrentrunstaterecords,
   getapimachineproductionmachineIddefecteditems,
+  postapimachineproductionmachineIdaddexternalquantity,
   postapimachineproductionmachineIdchangeproduct,
   postapimachineproductionmachineIdchangerunmode,
-  getapimachineproductionmachineIdcurrentproductstate,
-  postapimachineproductionmachineIdaddexternalquantity,
   postapimachineproductionmachineIddefecteditemsaddnew,
   postapimachineproductionmachineIdlabeldowntimerecord,
-  getapimachineproductionmachineIdcurrentrunstaterecords,
-  getapimachineproductionmachineIdaddexternalquantityhistory,
+  postapimachineproductionmachineIdupdateexternalquantity,
 } from 'src/api/services/generated/machine-production';
 
 import { Iconify } from 'src/components/iconify';
@@ -356,6 +358,9 @@ export function MachineOperationView() {
   const [quantityToAdd, setQuantityToAdd] = useState<string>('');
   const [quantityNote, setQuantityNote] = useState<string>('');
   const [quantityHistory, setQuantityHistory] = useState<QuantityAddHistory[]>([]);
+  const [editingQuantityId, setEditingQuantityId] = useState<string | null>(null);
+  const [editQuantityValue, setEditQuantityValue] = useState<string>('');
+  const [editQuantityNote, setEditQuantityNote] = useState<string>('');
   const [mappedProducts, setMappedProducts] = useState<MappedProduct[]>([]);
   const [productSearchTerm, setProductSearchTerm] = useState('');
   const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
@@ -429,7 +434,7 @@ export function MachineOperationView() {
           const history = await getapimachineproductionmachineIdaddexternalquantityhistory(machineId);
           if (mounted && history) {
             const formattedHistory: QuantityAddHistory[] = history.map((item) => ({
-              id: `${item.createdAt}`, // Use timestamp as ID since there's no id field
+              id: item.id || `${item.createdAt}`, // Use actual ID from API
               timestamp: item.createdAt || new Date().toISOString(),
               addedQuantity: item.quantity || 0,
               addedBy: item.userAdded || 'Unknown',
@@ -676,7 +681,7 @@ export function MachineOperationView() {
         const history = await getapimachineproductionmachineIdaddexternalquantityhistory(selectedMachine.id);
         if (history) {
           const formattedHistory: QuantityAddHistory[] = history.map((item) => ({
-            id: `${item.createdAt}`,
+            id: item.id || `${item.createdAt}`,
             timestamp: item.createdAt || new Date().toISOString(),
             addedQuantity: item.quantity || 0,
             addedBy: item.userAdded || 'Unknown',
@@ -700,6 +705,90 @@ export function MachineOperationView() {
         console.error('Failed to add quantity:', error);
         // TODO: Show error notification to user
       }
+    }
+  };
+
+  const handleEditQuantity = (history: QuantityAddHistory) => {
+    setEditingQuantityId(history.id);
+    setEditQuantityValue(String(history.addedQuantity));
+    setEditQuantityNote(history.note || '');
+  };
+
+  const handleSaveEditQuantity = async (historyId: string) => {
+    const newQty = parseInt(editQuantityValue, 10);
+    if (newQty > 0 && selectedMachine?.id) {
+      try {
+        await postapimachineproductionmachineIdupdateexternalquantity(selectedMachine.id, {
+          externalQuantityId: historyId,
+          newQuantity: newQty,
+          remark: editQuantityNote || undefined,
+        });
+
+        // Reload quantity history
+        const history = await getapimachineproductionmachineIdaddexternalquantityhistory(selectedMachine.id);
+        if (history) {
+          const formattedHistory: QuantityAddHistory[] = history.map((item) => ({
+            id: item.id || `${item.createdAt}`,
+            timestamp: item.createdAt || new Date().toISOString(),
+            addedQuantity: item.quantity || 0,
+            addedBy: item.userAdded || 'Unknown',
+            note: item.remark || undefined,
+          }));
+          setQuantityHistory(formattedHistory);
+        }
+
+        // Reload product data to get updated quantities
+        const productState = await getapimachineproductionmachineIdcurrentproductstate(selectedMachine.id);
+        if (productState) {
+          setProductData(productState);
+        }
+
+        // Reset edit state
+        setEditingQuantityId(null);
+        setEditQuantityValue('');
+        setEditQuantityNote('');
+      } catch (error) {
+        console.error('Failed to update quantity:', error);
+        // TODO: Show error notification to user
+      }
+    }
+  };
+
+  const handleCancelEditQuantity = () => {
+    setEditingQuantityId(null);
+    setEditQuantityValue('');
+    setEditQuantityNote('');
+  };
+
+  const handleDeleteQuantity = async (historyId: string) => {
+    if (!selectedMachine?.id) return;
+
+    try {
+      await deleteapimachineproductionmachineIdremoveexternalquantity(selectedMachine.id, {
+        externalQuantityId: historyId,
+      });
+
+      // Reload quantity history
+      const history = await getapimachineproductionmachineIdaddexternalquantityhistory(selectedMachine.id);
+      if (history) {
+        const formattedHistory: QuantityAddHistory[] = history.map((item) => ({
+          id: item.id || `${item.createdAt}`,
+          timestamp: item.createdAt || new Date().toISOString(),
+          addedQuantity: item.quantity || 0,
+          addedBy: item.userAdded || 'Unknown',
+          note: item.remark || undefined,
+        }));
+        setQuantityHistory(formattedHistory);
+      }
+
+      // Reload product data to get updated quantities
+      const productState = await getapimachineproductionmachineIdcurrentproductstate(selectedMachine.id);
+      if (productState) {
+        setProductData(productState);
+      }
+    } catch (error) {
+      console.error('Failed to delete quantity:', error);
+      // TODO: Show error notification to user
     }
   };
 
@@ -1594,12 +1683,13 @@ export function MachineOperationView() {
                     <TableCell align="center">Số lượng</TableCell>
                     <TableCell>Người thêm</TableCell>
                     <TableCell>Ghi chú</TableCell>
+                    <TableCell align="right">Thao tác</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {quantityHistory.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={4} align="center">
+                      <TableCell colSpan={5} align="center">
                         <Typography variant="body2" color="text.secondary">
                           Chưa có lịch sử thêm số lượng
                         </Typography>
@@ -1612,17 +1702,72 @@ export function MachineOperationView() {
                           {new Date(history.timestamp).toLocaleString('vi-VN')}
                         </TableCell>
                         <TableCell align="center">
-                          <Chip 
-                            label={`+${history.addedQuantity}`} 
-                            size="small" 
-                            color="success"
-                          />
+                          {editingQuantityId === history.id ? (
+                            <TextField
+                              size="small"
+                              type="number"
+                              value={editQuantityValue}
+                              onChange={(e) => setEditQuantityValue(e.target.value)}
+                              sx={{ width: '100px' }}
+                            />
+                          ) : (
+                            <Chip 
+                              label={`+${history.addedQuantity}`} 
+                              size="small" 
+                              color="success"
+                            />
+                          )}
                         </TableCell>
                         <TableCell>{history.addedBy}</TableCell>
                         <TableCell>
-                          <Typography variant="body2" color="text.secondary">
-                            {history.note || '-'}
-                          </Typography>
+                          {editingQuantityId === history.id ? (
+                            <TextField
+                              size="small"
+                              fullWidth
+                              value={editQuantityNote}
+                              onChange={(e) => setEditQuantityNote(e.target.value)}
+                              placeholder="Ghi chú"
+                            />
+                          ) : (
+                            <Typography variant="body2" color="text.secondary">
+                              {history.note || '-'}
+                            </Typography>
+                          )}
+                        </TableCell>
+                        <TableCell align="right">
+                          {editingQuantityId === history.id ? (
+                            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                              <IconButton
+                                size="small"
+                                color="primary"
+                                onClick={() => handleSaveEditQuantity(history.id)}
+                              >
+                                <Iconify icon="solar:check-circle-bold" />
+                              </IconButton>
+                              <IconButton
+                                size="small"
+                                onClick={handleCancelEditQuantity}
+                              >
+                                <Iconify icon="mingcute:close-line" />
+                              </IconButton>
+                            </Box>
+                          ) : (
+                            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+                              <IconButton
+                                size="small"
+                                onClick={() => handleEditQuantity(history)}
+                              >
+                                <Iconify icon="solar:pen-bold" />
+                              </IconButton>
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => handleDeleteQuantity(history.id)}
+                              >
+                                <Iconify icon="solar:trash-bin-trash-bold" />
+                              </IconButton>
+                            </Box>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))
