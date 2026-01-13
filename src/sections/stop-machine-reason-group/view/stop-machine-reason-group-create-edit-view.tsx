@@ -3,7 +3,7 @@ import type { StopMachineImpact, StopMachineReasonGroupEntity } from 'src/api/ty
 
 import { MuiColorInput } from 'mui-color-input';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -60,20 +60,11 @@ export function StopMachineReasonGroupCreateEditView({
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [formData, setFormData] = useState<StopMachineReasonGroupFormData>({
-    code: '',
-    name: '',
-    description: '',
-    colorHex: '#1976d2',
-    impact: '',
-    translations: {},
-  });
   const [isLoadingData, setIsLoadingData] = useState(isEdit);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [translationKey, setTranslationKey] = useState('');
   const [translationValue, setTranslationValue] = useState('');
-  const formInitializedRef = useRef(false);
 
   // Fetch group data if editing
   const { data: groupData } = useGetStopMachineReasonGroupById(id || '', {
@@ -86,27 +77,39 @@ export function StopMachineReasonGroupCreateEditView({
       enabled: !isEdit,
     });
 
-  // Initialize form data once when data loads
-  // This is a legitimate use of setState in useEffect for one-time form initialization
-  // The ref prevents cascading renders by ensuring it only runs once
-  useEffect(() => {
-    if (isEdit && groupData && !formInitializedRef.current) {
-      formInitializedRef.current = true;
-      setFormData({
+  // Initialize form data using useMemo - React Compiler friendly
+  const initialFormData = useMemo<StopMachineReasonGroupFormData>(() => {
+    if (isEdit && groupData) {
+      return {
         code: groupData.code || '',
         name: groupData.name || '',
         description: groupData.description || '',
         colorHex: groupData.colorHex || '#1976d2',
         impact: groupData.impact || '',
         translations: groupData.translations || {},
-      });
-      setIsLoadingData(false);
-    } else if (!isEdit && generatedCode && !formInitializedRef.current) {
-      formInitializedRef.current = true;
-      // Set generated code for new group
+      };
+    }
+    return {
+      code: generatedCode || '',
+      name: '',
+      description: '',
+      colorHex: '#1976d2',
+      impact: '',
+      translations: {},
+    };
+  }, [isEdit, groupData, generatedCode]);
+
+  const [formData, setFormData] = useState<StopMachineReasonGroupFormData>(initialFormData);
+
+  // Update form data when initial data changes (for generated code in create mode)
+  useEffect(() => {
+    if (!isEdit && generatedCode && formData.code !== generatedCode) {
       setFormData((prev) => ({ ...prev, code: generatedCode }));
     }
-  }, [isEdit, groupData, generatedCode]); 
+    if (isEdit && groupData && isLoadingData) {
+      setIsLoadingData(false);
+    }
+  }, [isEdit, generatedCode, groupData, formData.code, isLoadingData]); 
 
   const { mutate: createGroup, isPending: isCreating } = useCreateStopMachineReasonGroup({
     onSuccess: (result) => {

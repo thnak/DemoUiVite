@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 
 import { useParams, useNavigate } from 'react-router-dom';
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -55,38 +55,38 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
     overallMessage,
   } = useValidationResult();
 
-  const [formData, setFormData] = useState<UnitConversionFormData>({
-    fromUnitId: '',
-    toUnitId: '',
-    conversionFactor: '',
-    offset: '0',
-    formulaDescription: '',
-  });
   const [isLoadingConversion, setIsLoadingConversion] = useState(isEdit);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const formInitializedRef = useRef(false);
 
   // Fetch conversion data if editing
   const { data: conversionData } = useGetUnitConversionById(id || '', {
     enabled: isEdit && !!id,
   });
 
-  // Initialize form data once when data loads
-  // This is a legitimate use of setState in useEffect for one-time form initialization
-  // The ref prevents cascading renders by ensuring it only runs once
-  useEffect(() => {
-    if (isEdit && conversionData && !formInitializedRef.current) {
-      formInitializedRef.current = true;
-      setFormData({
+  // Initialize form data using useMemo - React Compiler friendly
+  const initialFormData = useMemo<UnitConversionFormData>(() => {
+    if (isEdit && conversionData) {
+      if (isLoadingConversion) {
+        setIsLoadingConversion(false);
+      }
+      return {
         fromUnitId: conversionData.fromUnitId?.toString() || '',
         toUnitId: conversionData.toUnitId?.toString() || '',
         conversionFactor: conversionData.conversionFactor?.toString() || '',
         offset: conversionData.offset?.toString() || '0',
         formulaDescription: conversionData.formulaDescription || '',
-      });
-      setIsLoadingConversion(false);
+      };
     }
-  }, [isEdit, conversionData]); 
+    return {
+      fromUnitId: '',
+      toUnitId: '',
+      conversionFactor: '',
+      offset: '0',
+      formulaDescription: '',
+    };
+  }, [isEdit, conversionData, isLoadingConversion]);
+
+  const [formData, setFormData] = useState<UnitConversionFormData>(initialFormData); 
 
   const { mutate: createConversion, isPending: isCreating } = useCreateUnitConversion({
     onSuccess: (result) => {

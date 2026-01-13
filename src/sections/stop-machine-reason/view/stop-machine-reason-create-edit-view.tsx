@@ -3,7 +3,7 @@ import type { StopMachineReasonEntity } from 'src/api/types/generated';
 
 import { MuiColorInput } from 'mui-color-input';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -54,24 +54,11 @@ export function StopMachineReasonCreateEditView({
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [formData, setFormData] = useState<StopMachineReasonFormData>({
-    code: '',
-    name: '',
-    description: '',
-    colorHex: '#1976d2',
-    groupId: '',
-    requiresApproval: false,
-    requiresNote: false,
-    requiresAttachment: false,
-    requiresComment: false,
-    translations: {},
-  });
   const [isLoadingData, setIsLoadingData] = useState(isEdit);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [translationKey, setTranslationKey] = useState('');
   const [translationValue, setTranslationValue] = useState('');
-  const formInitializedRef = useRef(false);
 
   // Fetch stop machine reason data if editing
   const { data: reasonData } = useGetStopMachineReasonById(id || '', {
@@ -84,13 +71,10 @@ export function StopMachineReasonCreateEditView({
       enabled: !isEdit,
     });
 
-  // Initialize form data once when data loads
-  // This is a legitimate use of setState in useEffect for one-time form initialization
-  // The ref prevents cascading renders by ensuring it only runs once
-  useEffect(() => {
-    if (isEdit && reasonData && !formInitializedRef.current) {
-      formInitializedRef.current = true;
-      setFormData({
+  // Initialize form data using useMemo - React Compiler friendly
+  const initialFormData = useMemo<StopMachineReasonFormData>(() => {
+    if (isEdit && reasonData) {
+      return {
         code: reasonData.code || '',
         name: reasonData.name || '',
         description: reasonData.description || '',
@@ -101,13 +85,33 @@ export function StopMachineReasonCreateEditView({
         requiresAttachment: reasonData.requiresAttachment || false,
         requiresComment: reasonData.requiresComment || false,
         translations: reasonData.translations || {},
-      });
-      setIsLoadingData(false);
-    } else if (!isEdit && generatedCode && !formInitializedRef.current) {
-      formInitializedRef.current = true;
-      // Set generated code for new reason
+      };
+    }
+    return {
+      code: generatedCode || '',
+      name: '',
+      description: '',
+      colorHex: '#1976d2',
+      groupId: '',
+      requiresApproval: false,
+      requiresNote: false,
+      requiresAttachment: false,
+      requiresComment: false,
+      translations: {},
+    };
+  }, [isEdit, reasonData, generatedCode]);
+
+  const [formData, setFormData] = useState<StopMachineReasonFormData>(initialFormData);
+
+  // Update form data when initial data changes (for generated code in create mode)
+  useEffect(() => {
+    if (!isEdit && generatedCode && formData.code !== generatedCode) {
       setFormData((prev) => ({ ...prev, code: generatedCode }));
     }
+    if (isEdit && reasonData && isLoadingData) {
+      setIsLoadingData(false);
+    }
+  }, [isEdit, generatedCode, reasonData, formData.code, isLoadingData]);
   }, [isEdit, reasonData, generatedCode]);
 
   const { mutate: createReason, isPending: isCreating } = useCreateStopMachineReason({

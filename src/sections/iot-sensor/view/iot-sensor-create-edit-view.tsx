@@ -1,6 +1,6 @@
 import type { IoTSensorType } from 'src/api/types/generated';
 
-import { useRef, useState, useEffect, useCallback, type ChangeEvent } from 'react';
+import { useMemo, useState, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -85,7 +85,6 @@ export function IoTSensorCreateEditView({
   } = useValidationResult();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const isFormInitializedRef = useRef(false);
 
   // Load sensor data in edit mode
   const { data: currentSensor, isLoading: isLoadingSensor } = useGetIoTSensorById(
@@ -95,24 +94,10 @@ export function IoTSensorCreateEditView({
     }
   );
 
-  // Initialize form data - empty by default
-  const [formData, setFormData] = useState<IoTSensorFormData>(() => ({
-    code: '',
-    name: '',
-    description: '',
-    type: '',
-    deviceId: '',
-    pinNumber: '',
-    unitOfMeasurement: '',
-  }));
-
-  // Initialize form data once when sensor data loads  
-  // This is a legitimate use of setState in useEffect for one-time form initialization
-  // The ref prevents cascading renders by ensuring it only runs once
-  useEffect(() => {
-    if (isEdit && currentSensor && !isFormInitializedRef.current) {
-      isFormInitializedRef.current = true;
-      setFormData({
+  // Initialize form data using useMemo - React Compiler friendly
+  const initialFormData = useMemo<IoTSensorFormData>(() => {
+    if (isEdit && currentSensor) {
+      return {
         code: currentSensor.code || '',
         name: currentSensor.name || '',
         description: currentSensor.description || '',
@@ -120,9 +105,20 @@ export function IoTSensorCreateEditView({
         deviceId: currentSensor.deviceId?.toString() || '',
         pinNumber: currentSensor.pinNumber?.toString() || '',
         unitOfMeasurement: currentSensor.unitOfMeasurement?.toString() || '',
-      });
+      };
     }
+    return {
+      code: '',
+      name: '',
+      description: '',
+      type: '',
+      deviceId: '',
+      pinNumber: '',
+      unitOfMeasurement: '',
+    };
   }, [isEdit, currentSensor]);
+
+  const [formData, setFormData] = useState<IoTSensorFormData>(initialFormData);
 
   const { mutate: createSensorMutate, isPending: isCreating } = useCreateIoTSensor({
     onSuccess: (result) => {
