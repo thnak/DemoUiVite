@@ -53202,6 +53202,76 @@
         }
       }
     },
+    "/api/machine-production/{machineId}/aggregation/stream": {
+      "get": {
+        "tags": [
+          "Machine Production",
+          "Event Stream"
+        ],
+        "summary": "Get Machine Production Aggregation Stream",
+        "description": "Get a stream of machine production aggregation updates for a specific machine.",
+        "operationId": "GetMachineProductionAggregationStream",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "MongoDB ObjectId represented as a 24-character hexadecimal string",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineAggregation"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine-production/run-state-stream": {
+      "get": {
+        "tags": [
+          "Machine Production",
+          "Event Stream"
+        ],
+        "summary": "Get Machine Production Run State Stream",
+        "description": "Get a stream of machine production run state updates for all machines.",
+        "operationId": "GetMachineProductionRunStateStream",
+        "parameters": [
+          {
+            "name": "machines",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ObjectId"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/event;event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineOutputRunState"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/machineareamapping/{id}": {
       "get": {
         "tags": [
@@ -98465,37 +98535,56 @@
           "id": {
             "$ref": "#/components/schemas/ObjectId"
           },
+          "name": {
+            "type": "string",
+            "description": "Machine name",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Machine description",
+            "nullable": true
+          },
+          "outputCalculationMode": {
+            "$ref": "#/components/schemas/OutputCalculationMode"
+          },
+          "code": {
+            "type": "string",
+            "description": "Machine code",
+            "nullable": true
+          },
+          "calendarId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "calendarName": {
+            "type": "string",
+            "description": "Calendar name",
+            "nullable": true
+          },
+          "calculationMode": {
+            "$ref": "#/components/schemas/OutputCalculationMode"
+          },
           "createTime": {
             "type": "string",
-            "description": "Represents the date and time when the entity was created.",
-            "format": "date-time"
-          },
-          "modifiedTime": {
-            "type": "string",
-            "description": "Represents the date and time when the entity was last modified.",
+            "description": "Creation time of the machine record",
             "format": "date-time"
           },
           "isDeleted": {
             "type": "boolean",
-            "description": "Indicates whether the entity has been soft-deleted."
+            "description": "Indicates whether the machine is deleted"
           },
           "isDraft": {
             "type": "boolean",
-            "description": "Indicates whether the entity is in draft status."
+            "description": "Indicates whether the machine is in draft status"
           },
-          "code": {
+          "modifiedTime": {
             "type": "string",
-            "description": "Code",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "description": "",
-            "nullable": true
+            "description": "Last modified time of the machine record",
+            "format": "date-time"
           },
           "imageUrl": {
             "type": "string",
-            "description": "Image URL. Relative path to the image resource.",
+            "description": "Image URL of the machine",
             "nullable": true
           },
           "areaId": {
@@ -98503,28 +98592,17 @@
           },
           "areaName": {
             "type": "string",
-            "description": "",
+            "description": "Area name the machine belongs to",
             "nullable": true
-          },
-          "calculationMode": {
-            "$ref": "#/components/schemas/OutputCalculationMode"
           },
           "numberOfChannels": {
             "type": "integer",
-            "description": "number of output channels have been configured for this machine",
+            "description": "Number of channels the machine has",
             "format": "int32"
-          },
-          "calendarId": {
-            "$ref": "#/components/schemas/ObjectId"
-          },
-          "calendarName": {
-            "type": "string",
-            "description": "",
-            "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": ""
+        "description": "Machine data transfer object"
       },
       "MachineEntity": {
         "required": [
@@ -99875,7 +99953,8 @@
         "enum": [
           "running",
           "speedLoss",
-          "downtime",
+          "unPlannedDowntime",
+          "plannedDowntime",
           "testMode"
         ],
         "type": "string",
@@ -118799,6 +118878,12 @@
     {
       "name": "Machine",
       "description": "Controller for machine master data"
+    },
+    {
+      "name": "Machine Production"
+    },
+    {
+      "name": "Event Stream"
     },
     {
       "name": "MachineAreaMapping"
