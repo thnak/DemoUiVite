@@ -152,7 +152,7 @@ export function DefectReasonGroupCreateEditView({
   }, [
     formData,
     isEdit,
-    currentDefectReasonGroup?.id,
+    currentDefectReasonGroup,
     createDefectReasonGroupMutate,
     updateDefectReasonGroupMutate,
     clearValidationResult,

@@ -155,7 +155,7 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
         } as any, // Cast to any to bypass strict type checking for required fields
       });
     }
-  }, [formData, isEdit, currentArea?.id, createAreaMutate, updateAreaMutate, clearValidationResult]);
+  }, [formData, isEdit, currentArea, createAreaMutate, updateAreaMutate, clearValidationResult]);
 
   const handleCancel = useCallback(() => {
     router.push(returnUrl);

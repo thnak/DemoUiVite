@@ -134,7 +134,7 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
         } as any, // Cast to any to bypass strict type checking for required fields
       });
     }
-  }, [formData, isEdit, currentMachineType?.id, createMachineTypeMutate, updateMachineTypeMutate, clearValidationResult]);
+  }, [formData, isEdit, currentMachineType, createMachineTypeMutate, updateMachineTypeMutate, clearValidationResult]);
 
   const handleCancel = useCallback(() => {
     router.push('/machine-types');
