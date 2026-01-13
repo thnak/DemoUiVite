@@ -1,6 +1,6 @@
 import type { TextFieldProps } from '@mui/material/TextField';
 
-import { useRef, useMemo, useState, useCallback } from 'react';
+import { useRef, useMemo, useState, useCallback, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -260,9 +260,10 @@ export function DurationTimePicker({
   const prevValueRef = useRef(value);
   const prevPrecisionRef = useRef(precision);
 
-  // Sync local state with external value changes using useMemo - React Compiler friendly
-  // Compute parts directly from value instead of setState in useEffect
-  useMemo(() => {
+  // Sync local state with external value changes
+  // This is a legitimate use of setState in useEffect for synchronizing with external props
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
     // Only update if value or precision actually changed
     if (value !== prevValueRef.current || precision !== prevPrecisionRef.current) {
       prevValueRef.current = value;
@@ -283,8 +284,8 @@ export function DurationTimePicker({
         setSecondsStr(newParts.seconds > 0 ? String(newParts.seconds) : '');
       }
     }
-    return null; // useMemo must return a value
   }, [value, precision]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Handle seconds-only input change
   const handleSecondsOnlyChange = useCallback(

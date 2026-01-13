@@ -102,12 +102,21 @@ export function StopMachineReasonCreateEditView({
 
   const [formData, setFormData] = useState<StopMachineReasonFormData>(initialFormData);
 
-  // Update form code when generatedCode changes (for create mode only)
+  // Synchronize form code with API-generated code (for create mode only)
+  // This is a legitimate external system sync - updates when API provides new code
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    if (!isEdit && generatedCode && formData.code !== generatedCode) {
-      setFormData((prev) => ({ ...prev, code: generatedCode }));
+    if (!isEdit && generatedCode) {
+      setFormData((prev) => {
+        // Only update if code actually changed to prevent unnecessary renders
+        if (prev.code !== generatedCode) {
+          return { ...prev, code: generatedCode };
+        }
+        return prev;
+      });
     }
-  }, [isEdit, generatedCode, formData.code]);
+  }, [isEdit, generatedCode]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const { mutate: createReason, isPending: isCreating } = useCreateStopMachineReason({
     onSuccess: (result) => {

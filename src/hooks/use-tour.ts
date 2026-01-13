@@ -91,8 +91,8 @@ export function useTour({ steps, tourOptions, onComplete, onCancel }: UseTourOpt
               text: 'Back',
               action() { 
                 // Access tour instance via closure instead of `this`
-                const tour = tourRef.current;
-                if (tour) tour.back();
+                const tourInstance = tourRef.current;
+                if (tourInstance) tourInstance.back();
               },
               classes: 'shepherd-button-secondary',
             },
@@ -100,8 +100,8 @@ export function useTour({ steps, tourOptions, onComplete, onCancel }: UseTourOpt
               text: 'Next',
               action() { 
                 // Access tour instance via closure instead of `this`
-                const tour = tourRef.current;
-                if (tour) tour.next();
+                const tourInstance = tourRef.current;
+                if (tourInstance) tourInstance.next();
               },
               classes: 'shepherd-button-primary',
             },
