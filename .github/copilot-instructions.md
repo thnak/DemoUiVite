@@ -1188,3 +1188,226 @@ See implementation in:
 - 2. call the "fetchDocs" tool to fetch any additional docs if needed using ONLY the URLs present in the returned content.
 - 3. repeat steps 1-2 until you have fetched all relevant docs for the given question
 - 4. use the fetched content to answer the question
+
+## React Compiler Standards - **MANDATORY**
+
+This project uses **React Compiler** (babel-plugin-react-compiler@1.0.0) for automatic optimization. All code must be React Compiler compatible.
+
+### Configuration
+
+**vite.config.ts:**
+```typescript
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [
+    react({
+      babel: {
+        plugins: [['babel-plugin-react-compiler', { target: '19' }]],
+      },
+    }),
+  ],
+});
+```
+
+### React Compiler Rules
+
+#### ❌ Prohibited Patterns
+
+1. **setState in useEffect** - Causes cascading renders
+```typescript
+// WRONG: setState directly in useEffect
+useEffect(() => {
+  if (data) {
+    setItems(data.items);
+  }
+}, [data]);
+```
+
+2. **setState in useMemo** - Causes infinite loops
+```typescript
+// WRONG: setState inside useMemo
+const value = useMemo(() => {
+  if (condition) {
+    setState(newValue); // ERROR!
+  }
+  return computedValue;
+}, [condition]);
+```
+
+3. **`this` keyword** - Not supported by React Compiler
+```typescript
+// WRONG: Using `this` in callbacks
+action(this: any) { 
+  this.next(); // ERROR!
+}
+```
+
+4. **Partial dependencies in useCallback** - Compiler infers full objects
+```typescript
+// WRONG: Using object?.id instead of full object
+const handleSubmit = useCallback(() => {
+  if (currentItem?.id) { /* ... */ }
+}, [formData, currentItem?.id]); // ERROR: Use currentItem, not currentItem?.id
+```
+
+#### ✅ Correct Patterns
+
+1. **Derive state with useMemo** - For transforming query data
+```typescript
+// CORRECT: Derive state from props/queries
+const items = useMemo(() => {
+  if (!data) return [];
+  return data.items.map(item => ({
+    id: item.id,
+    name: item.name,
+  }));
+}, [data]);
+```
+
+2. **Initialize state with useMemo** - For form initialization
+```typescript
+// CORRECT: Compute initial state
+const initialFormData = useMemo(() => {
+  if (isEdit && currentData) {
+    return {
+      name: currentData.name || '',
+      code: currentData.code || '',
+    };
+  }
+  return { name: '', code: '' };
+}, [isEdit, currentData]);
+
+const [formData, setFormData] = useState(initialFormData);
+```
+
+3. **Full object dependencies** - In useCallback
+```typescript
+// CORRECT: Use full object reference
+const handleSubmit = useCallback(() => {
+  if (currentItem?.id) { /* ... */ }
+}, [formData, currentItem]); // Full object, not currentItem?.id
+```
+
+4. **Closure instead of `this`** - For callbacks
+```typescript
+// CORRECT: Use closure to access instance
+action() {
+  const instance = instanceRef.current;
+  if (instance) instance.next();
+}
+```
+
+5. **Query loading state** - Use isLoading from query
+```typescript
+// CORRECT: Use query's loading state directly
+const { data, isLoading } = useGetData(id, { enabled: !!id });
+
+// WRONG: Manually tracking loading
+const [isLoading, setIsLoading] = useState(true);
+useEffect(() => {
+  if (data) setIsLoading(false); // ERROR!
+}, [data]);
+```
+
+### Common Refactoring Patterns
+
+#### Pattern 1: Transform Query Data
+
+**Before:**
+```typescript
+const [items, setItems] = useState([]);
+const { data } = useGetItems();
+
+useEffect(() => {
+  if (data) {
+    setItems(data.items.map(/* transform */));
+  }
+}, [data]);
+```
+
+**After:**
+```typescript
+const { data } = useGetItems();
+
+const items = useMemo(() => {
+  if (!data) return [];
+  return data.items.map(/* transform */);
+}, [data]);
+```
+
+#### Pattern 2: Form Initialization
+
+**Before:**
+```typescript
+const [formData, setFormData] = useState({ name: '' });
+useEffect(() => {
+  if (isEdit && currentData) {
+    setFormData({ name: currentData.name });
+  }
+}, [isEdit, currentData]);
+```
+
+**After:**
+```typescript
+const initialFormData = useMemo(() => {
+  if (isEdit && currentData) {
+    return { name: currentData.name };
+  }
+  return { name: '' };
+}, [isEdit, currentData]);
+
+const [formData, setFormData] = useState(initialFormData);
+```
+
+#### Pattern 3: Loading States
+
+**Before:**
+```typescript
+const [isLoading, setIsLoading] = useState(true);
+const { data } = useGetData();
+
+useEffect(() => {
+  if (data) setIsLoading(false);
+}, [data]);
+```
+
+**After:**
+```typescript
+const { data, isLoading } = useGetData();
+// Use isLoading directly from query
+```
+
+### Exceptions
+
+Some patterns may trigger warnings but are legitimate:
+
+1. **External system synchronization** (rare) - Generated codes from API
+2. **LocalStorage sync on mount** - One-time initialization
+
+For these cases, document why the pattern is necessary with a comment.
+
+### Testing React Compiler Compatibility
+
+Run ESLint to check compatibility:
+```bash
+npm run lint
+```
+
+React Compiler errors are prefixed with `react-hooks/`:
+- `react-hooks/set-state-in-effect`
+- `react-hooks/preserve-manual-memoization`
+- `react-hooks/unsupported-syntax`
+- `react-hooks/set-state-in-render`
+
+### Benefits
+
+- **Automatic memoization** - No manual `useMemo`/`useCallback` needed for compatible components
+- **Better performance** - Reduces unnecessary re-renders
+- **Future-proof** - Ready for React 19+ optimizations
+- **Type-safe** - Works seamlessly with TypeScript
+
+### Documentation
+
+See `REACT_COMPILER_IMPLEMENTATION.md` for complete implementation details.
+
