@@ -47,7 +47,20 @@ import { useRouter } from 'src/routes/hooks';
 
 import { apiConfig } from 'src/api/config';
 import { MachineHubService } from 'src/services/machineHub';
-import { getapimachineproductionmachineIdcurrentrunstaterecords } from 'src/api/services/generated/machine-production';
+import { getapiMachinemachineIdavailableproducts } from 'src/api/services/generated/machine';
+import {
+  getapimachineproductionmachineIdaddexternalquantityhistory,
+  getapimachineproductionmachineIdcurrentproductstate,
+  getapimachineproductionmachineIdcurrentrunstaterecords,
+  getapimachineproductionmachineIddefecteditems,
+  postapimachineproductionmachineIdaddexternalquantity,
+  postapimachineproductionmachineIdchangeproduct,
+  postapimachineproductionmachineIdchangerunmode,
+  postapimachineproductionmachineIddefecteditemsaddnew,
+  postapimachineproductionmachineIdlabeldowntimerecord,
+} from 'src/api/services/generated/machine-production';
+import { getapiDefectReasongetdefectreasons } from 'src/api/services/generated/defect-reason';
+import { getapiStopMachineReasongetreasonpage } from 'src/api/services/generated/stop-machine-reason';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -55,60 +68,7 @@ import { useMachineSelector } from '../../context';
 
 // ----------------------------------------------------------------------
 
-// Mock ProductWorkingStateByMachine data for development
-const getMockProductData = (): ProductWorkingStateByMachine => ({
-  productId: 'mock-product-1',
-  productionOrderNumber: 'PO-LSX-20260109-001',
-  userId: 'mock-user-1',
-  quantityPerCycle: 1,
-  idealCycleTime: 'PT12.5S', // 12.5 seconds
-  downtimeThreshold: 'PT30S', // 30 seconds
-  speedLossThreshold: 'PT15S', // 15 seconds
-  productName: 'THACAL83737146TRDU',
-  plannedQuantity: 1500,
-  currentQuantity: 1359,
-  goodQuantity: 1340,
-  scrapQuantity: 19,
-  actualCycleTime: 'PT10.2S', // 10.2 seconds
-});
-
-// Mock timeline data for development
-const getMockTimelineData = (): CurrentMachineRunStateRecords[] => [
-  {
-    stateId: '000000000000000000000000',
-    stateName: 'Normal Operation',
-    isUnplannedDowntime: false,
-    state: 'running',
-    startTime: '2026-01-09T06:00:00Z',
-    endTime: '2026-01-09T07:15:00Z',
-  },
-  {
-    stateId: '000000000000000000000000',
-    stateName: null,
-    isUnplannedDowntime: true,
-    state: 'downtime',
-    startTime: '2026-01-09T07:15:00Z',
-    endTime: '2026-01-09T07:25:00Z',
-  },
-  {
-    stateId: '507f1f77bcf86cd799439011',
-    stateName: 'Maintenance',
-    isUnplannedDowntime: false,
-    state: 'downtime',
-    startTime: '2026-01-09T07:25:00Z',
-    endTime: '2026-01-09T07:45:00Z',
-  },
-  {
-    stateId: '000000000000000000000000',
-    stateName: 'Normal Operation',
-    isUnplannedDowntime: false,
-    state: 'running',
-    startTime: '2026-01-09T07:45:00Z',
-    endTime: null,
-  },
-];
-
-// Mock mapped products for product change dialog
+// Mapped product interface for product change dialog
 interface MappedProduct {
   id: string;
   productId: string;
@@ -119,39 +79,6 @@ interface MappedProduct {
   isActive: boolean;
   startTime: string;
 }
-
-const getMockMappedProducts = (): MappedProduct[] => [
-  {
-    id: '1',
-    productId: 'prod-1',
-    productName: 'THACAL83737146TRDU',
-    productionOrderNumber: 'PO-LSX-20260109-001',
-    targetQuantity: 1500,
-    currentQuantity: 1359,
-    isActive: true,
-    startTime: '2026-01-09T06:00:00Z',
-  },
-  {
-    id: '2',
-    productId: 'prod-2',
-    productName: 'CABLE-PRO-X2000',
-    productionOrderNumber: 'PO-LSX-20260109-002',
-    targetQuantity: 2000,
-    currentQuantity: 0,
-    isActive: false,
-    startTime: '2026-01-09T08:00:00Z',
-  },
-  {
-    id: '3',
-    productId: 'prod-3',
-    productName: 'CONNECTOR-MINI-500',
-    productionOrderNumber: 'PO-LSX-20260109-003',
-    targetQuantity: 800,
-    currentQuantity: 0,
-    isActive: false,
-    startTime: '2026-01-09T10:00:00Z',
-  },
-];
 
 // Quantity add history interface
 interface QuantityAddHistory {
@@ -169,86 +96,12 @@ interface DefectType {
   colorHex: string;
 }
 
-// Commenting out unused interface to fix lint warning
-// interface DefectEntry {
-//   defectId: string;
-//   quantity: number;
-// }
-
 interface DefectSubmission {
   id: string;
   timestamp: string;
   defects: Array<{ defectId: string; defectName: string; quantity: number; colorHex: string }>;
   submittedBy: string;
 }
-
-// Mock defect types
-const getMockDefectTypes = (): DefectType[] => [
-  {
-    defectId: 'defect-1',
-    defectName: 'Scratch',
-    imageUrl: undefined, // Will use fallback
-    colorHex: '#ef4444', // Red
-  },
-  {
-    defectId: 'defect-2',
-    defectName: 'Dent',
-    imageUrl: undefined,
-    colorHex: '#f59e0b', // Orange
-  },
-  {
-    defectId: 'defect-3',
-    defectName: 'Discoloration',
-    imageUrl: undefined,
-    colorHex: '#eab308', // Yellow
-  },
-  {
-    defectId: 'defect-4',
-    defectName: 'Crack',
-    imageUrl: undefined,
-    colorHex: '#dc2626', // Dark red
-  },
-  {
-    defectId: 'defect-5',
-    defectName: 'Missing Part',
-    imageUrl: undefined,
-    colorHex: '#7c2d12', // Brown
-  },
-  {
-    defectId: 'defect-6',
-    defectName: 'Wrong Dimension',
-    imageUrl: undefined,
-    colorHex: '#ea580c', // Orange-red
-  },
-  {
-    defectId: 'defect-7',
-    defectName: 'Surface Defect',
-    imageUrl: undefined,
-    colorHex: '#f97316', // Bright orange
-  },
-  {
-    defectId: 'defect-8',
-    defectName: 'Assembly Error',
-    imageUrl: undefined,
-    colorHex: '#b91c1c', // Crimson
-  },
-];
-
-const getMockQuantityHistory = (): QuantityAddHistory[] => [
-  {
-    id: '1',
-    timestamp: '2026-01-09T06:30:00Z',
-    addedQuantity: 100,
-    addedBy: 'WIBU - 01234',
-    note: 'Initial batch',
-  },
-  {
-    id: '2',
-    timestamp: '2026-01-09T07:00:00Z',
-    addedQuantity: 50,
-    addedBy: 'WIBU - 01234',
-  },
-];
 
 // Stop reason interfaces for downtime labeling
 interface StopReason {
@@ -268,58 +121,6 @@ interface DowntimeLabelHistory {
   note?: string;
   labeledBy: string;
 }
-
-// Mock stop reasons
-const getMockStopReasons = (): StopReason[] => [
-  {
-    reasonId: 'stop-1',
-    reasonName: 'Material Shortage',
-    imageUrl: undefined,
-    colorHex: '#ef4444', // Red
-  },
-  {
-    reasonId: 'stop-2',
-    reasonName: 'Machine Breakdown',
-    imageUrl: undefined,
-    colorHex: '#dc2626', // Dark red
-  },
-  {
-    reasonId: 'stop-3',
-    reasonName: 'Tool Change',
-    imageUrl: undefined,
-    colorHex: '#f59e0b', // Orange
-  },
-  {
-    reasonId: 'stop-4',
-    reasonName: 'Quality Issue',
-    imageUrl: undefined,
-    colorHex: '#eab308', // Yellow
-  },
-  {
-    reasonId: 'stop-5',
-    reasonName: 'Setup/Changeover',
-    imageUrl: undefined,
-    colorHex: '#3b82f6', // Blue
-  },
-  {
-    reasonId: 'stop-6',
-    reasonName: 'Planned Maintenance',
-    imageUrl: undefined,
-    colorHex: '#22c55e', // Green
-  },
-  {
-    reasonId: 'stop-7',
-    reasonName: 'Operator Break',
-    imageUrl: undefined,
-    colorHex: '#8b5cf6', // Purple
-  },
-  {
-    reasonId: 'stop-8',
-    reasonName: 'Power Outage',
-    imageUrl: undefined,
-    colorHex: '#64748b', // Gray
-  },
-];
 
 interface MachineStatus {
   status: 'running' | 'planstop' | 'unplanstop' | 'testing';
@@ -598,24 +399,105 @@ export function MachineOperationView() {
       try {
         setIsConnecting(true);
         
-        // Load mock product data in dev mode
-        if (import.meta.env.DEV) {
-          setProductData(getMockProductData());
-          setTimelineRecords(getMockTimelineData());
-          setMappedProducts(getMockMappedProducts());
-          setQuantityHistory(getMockQuantityHistory());
-          setDefectTypes(getMockDefectTypes());
-          setStopReasons(getMockStopReasons());
-        } else {
-          // Load real timeline data in production
-          try {
-            const records = await getapimachineproductionmachineIdcurrentrunstaterecords(selectedMachine.id || '');
-            if (mounted && records) {
-              setTimelineRecords(Array.isArray(records) ? records : []);
-            }
-          } catch (error) {
-            console.error('Failed to load timeline data:', error);
+        // Load real data from APIs
+        const machineId = selectedMachine.id || '';
+        
+        try {
+          // Load product working state
+          const productState = await getapimachineproductionmachineIdcurrentproductstate(machineId);
+          if (mounted && productState) {
+            setProductData(productState);
           }
+        } catch (error) {
+          console.error('Failed to load product state:', error);
+        }
+        
+        try {
+          // Load timeline records
+          const records = await getapimachineproductionmachineIdcurrentrunstaterecords(machineId);
+          if (mounted && records) {
+            setTimelineRecords(Array.isArray(records) ? records : []);
+          }
+        } catch (error) {
+          console.error('Failed to load timeline data:', error);
+        }
+        
+        try {
+          // Load quantity history
+          const history = await getapimachineproductionmachineIdaddexternalquantityhistory(machineId);
+          if (mounted && history) {
+            const formattedHistory: QuantityAddHistory[] = history.map((item) => ({
+              id: item.id || '',
+              timestamp: item.addedTime || new Date().toISOString(),
+              addedQuantity: item.quantity || 0,
+              addedBy: item.addedByUserName || 'Unknown',
+              note: item.note,
+            }));
+            setQuantityHistory(formattedHistory);
+          }
+        } catch (error) {
+          console.error('Failed to load quantity history:', error);
+        }
+        
+        try {
+          // Load defect types
+          const defectData = await getapiDefectReasongetdefectreasons({
+            pageNumber: 0,
+            pageSize: 100,
+          });
+          if (mounted && defectData?.items) {
+            const formattedDefects: DefectType[] = defectData.items.map((item) => ({
+              defectId: item.id || '',
+              defectName: item.name || 'Unknown',
+              imageUrl: undefined, // No image URL in API
+              colorHex: item.colorHex || '#ef4444',
+            }));
+            setDefectTypes(formattedDefects);
+          }
+        } catch (error) {
+          console.error('Failed to load defect types:', error);
+        }
+        
+        try {
+          // Load stop reasons
+          const stopData = await getapiStopMachineReasongetreasonpage([], {
+            PageNumber: 0,
+            PageSize: 100,
+          });
+          if (mounted && stopData?.items) {
+            const formattedReasons: StopReason[] = stopData.items.map((item) => ({
+              reasonId: item.id || '',
+              reasonName: item.name || 'Unknown',
+              imageUrl: undefined, // No image URL in API
+              colorHex: item.colorHex || '#ef4444',
+            }));
+            setStopReasons(formattedReasons);
+          }
+        } catch (error) {
+          console.error('Failed to load stop reasons:', error);
+        }
+        
+        try {
+          // Load defect history for current machine
+          const defectHistoryResponse = await getapimachineproductionmachineIddefecteditems(machineId);
+          if (mounted && defectHistoryResponse?.items) {
+            const formattedDefectHistory: DefectSubmission[] = defectHistoryResponse.items.map((item) => ({
+              id: item.id || '',
+              timestamp: item.defectedTime || new Date().toISOString(),
+              defects: [
+                {
+                  defectId: item.defectReasonId || '',
+                  defectName: item.defectReasonName || 'Unknown',
+                  quantity: item.quantity || 0,
+                  colorHex: item.defectReasonColor || '#ef4444',
+                },
+              ],
+              submittedBy: item.addedByUserName || 'Unknown',
+            }));
+            setDefectHistory(formattedDefectHistory);
+          }
+        } catch (error) {
+          console.error('Failed to load defect history:', error);
         }
         
         await hubService.subscribeToMachine(selectedMachine.id || '', handleMachineUpdate);
@@ -664,6 +546,38 @@ export function MachineOperationView() {
       }
     };
   }, [selectedMachine, hubService, handleMachineUpdate, router]);
+
+  // Load available products when product change dialog opens
+  useEffect(() => {
+    if (!productChangeDialogOpen || !selectedMachine?.id) return;
+
+    const loadAvailableProducts = async () => {
+      try {
+        const response = await getapiMachinemachineIdavailableproducts(
+          selectedMachine.id || '',
+          { page: 0, pageSize: 100 }
+        );
+        
+        if (response?.items) {
+          const formattedProducts: MappedProduct[] = response.items.map((item) => ({
+            id: item.productId || '',
+            productId: item.productId || '',
+            productName: item.productName || 'Unknown',
+            productionOrderNumber: item.productionOrderNumber || '',
+            targetQuantity: item.plannedQuantity || 0,
+            currentQuantity: 0, // Will be updated from real data
+            isActive: false, // Will be determined by comparing with current product
+            startTime: new Date().toISOString(),
+          }));
+          setMappedProducts(formattedProducts);
+        }
+      } catch (error) {
+        console.error('Failed to load available products:', error);
+      }
+    };
+
+    loadAvailableProducts();
+  }, [productChangeDialogOpen, selectedMachine?.id]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -719,42 +633,71 @@ export function MachineOperationView() {
     router.push('/oi/select-machine');
   };
 
-  const handleProductSelect = (product: MappedProduct) => {
-    // TODO: Implement product selection logic
-    console.log('Selected product:', product);
-    setProductChangeDialogOpen(false);
+  const handleProductSelect = async (product: MappedProduct) => {
+    if (!selectedMachine?.id) return;
+    
+    try {
+      await postapimachineproductionmachineIdchangeproduct(selectedMachine.id, {
+        productId: product.productId,
+        productionOrderNumber: product.productionOrderNumber,
+        plannedQuantity: product.targetQuantity,
+      });
+      
+      // Reload product data after change
+      const productState = await getapimachineproductionmachineIdcurrentproductstate(selectedMachine.id);
+      if (productState) {
+        setProductData(productState);
+      }
+      
+      setProductChangeDialogOpen(false);
+    } catch (error) {
+      console.error('Failed to change product:', error);
+      // TODO: Show error notification to user
+    }
   };
 
   const handleUpdateTarget = (productId: string, newTarget: number) => {
-    // TODO: Implement target update logic
+    // TODO: Implement target update logic if API is available
     console.log('Update target:', productId, newTarget);
   };
 
-  const handleAddQuantity = () => {
+  const handleAddQuantity = async () => {
     const qty = parseInt(quantityToAdd, 10);
-    if (qty > 0 && productData) {
-      // Add to history
-      const newHistory: QuantityAddHistory = {
-        id: `${Date.now()}`,
-        timestamp: new Date().toISOString(),
-        addedQuantity: qty,
-        addedBy: 'WIBU - 01234', // TODO: Get from user context
-        note: quantityNote,
-      };
-      setQuantityHistory([newHistory, ...quantityHistory]);
-
-      // Update product data
-      setProductData({
-        ...productData,
-        currentQuantity: (productData.currentQuantity || 0) + qty,
-        goodQuantity: (productData.goodQuantity || 0) + qty,
-      });
-
-      // Reset form
-      setQuantityToAdd('');
-      setQuantityNote('');
-      setAddQuantityDialogOpen(false);
-      setAddQuantityTabValue(0);
+    if (qty > 0 && selectedMachine?.id) {
+      try {
+        await postapimachineproductionmachineIdaddexternalquantity(selectedMachine.id, {
+          quantity: qty,
+          note: quantityNote || undefined,
+        });
+        
+        // Reload quantity history
+        const history = await getapimachineproductionmachineIdaddexternalquantityhistory(selectedMachine.id);
+        if (history) {
+          const formattedHistory: QuantityAddHistory[] = history.map((item) => ({
+            id: item.id || '',
+            timestamp: item.addedTime || new Date().toISOString(),
+            addedQuantity: item.quantity || 0,
+            addedBy: item.addedByUserName || 'Unknown',
+            note: item.note,
+          }));
+          setQuantityHistory(formattedHistory);
+        }
+        
+        // Reload product data to get updated quantities
+        const productState = await getapimachineproductionmachineIdcurrentproductstate(selectedMachine.id);
+        if (productState) {
+          setProductData(productState);
+        }
+        
+        // Reset form
+        setQuantityToAdd('');
+        setQuantityNote('');
+        setAddQuantityDialogOpen(false);
+        setAddQuantityTabValue(0);
+      } catch (error) {
+        console.error('Failed to add quantity:', error);
+        // TODO: Show error notification to user
+      }
     }
   };
 
@@ -786,41 +729,51 @@ export function MachineOperationView() {
     }
   };
 
-  const handleSubmitDefects = () => {
-    if (defectEntries.size === 0) return;
+  const handleSubmitDefects = async () => {
+    if (defectEntries.size === 0 || !selectedMachine?.id) return;
 
-    const defectsToSubmit = Array.from(defectEntries.entries()).map(([defectId, quantity]) => {
-      const defectType = defectTypes.find(d => d.defectId === defectId);
-      return {
-        defectId,
-        defectName: defectType?.defectName || 'Unknown',
-        quantity,
-        colorHex: defectType?.colorHex || '#gray',
-      };
-    });
-
-    const newSubmission: DefectSubmission = {
-      id: `${Date.now()}`,
-      timestamp: new Date().toISOString(),
-      defects: defectsToSubmit,
-      submittedBy: 'WIBU - 01234',
-    };
-
-    setDefectHistory([newSubmission, ...defectHistory]);
-
-    // Update scrap quantity
-    const totalDefects = defectsToSubmit.reduce((sum, d) => sum + d.quantity, 0);
-    if (productData) {
-      setProductData({
-        ...productData,
-        scrapQuantity: (productData.scrapQuantity || 0) + totalDefects,
-      });
+    try {
+      // Submit each defect entry to the API
+      for (const [defectId, quantity] of defectEntries.entries()) {
+        await postapimachineproductionmachineIddefecteditemsaddnew(selectedMachine.id, {
+          defectReasonId: defectId,
+          quantity,
+        });
+      }
+      
+      // Reload defect history
+      const defectHistoryResponse = await getapimachineproductionmachineIddefecteditems(selectedMachine.id);
+      if (defectHistoryResponse?.items) {
+        const formattedDefectHistory: DefectSubmission[] = defectHistoryResponse.items.map((item) => ({
+          id: item.id || '',
+          timestamp: item.defectedTime || new Date().toISOString(),
+          defects: [
+            {
+              defectId: item.defectReasonId || '',
+              defectName: item.defectReasonName || 'Unknown',
+              quantity: item.quantity || 0,
+              colorHex: item.defectReasonColor || '#ef4444',
+            },
+          ],
+          submittedBy: item.addedByUserName || 'Unknown',
+        }));
+        setDefectHistory(formattedDefectHistory);
+      }
+      
+      // Reload product data to get updated scrap quantity
+      const productState = await getapimachineproductionmachineIdcurrentproductstate(selectedMachine.id);
+      if (productState) {
+        setProductData(productState);
+      }
+      
+      // Reset form
+      setDefectEntries(new Map());
+      setAddDefectDialogOpen(false);
+      setDefectTabValue(0);
+    } catch (error) {
+      console.error('Failed to submit defects:', error);
+      // TODO: Show error notification to user
     }
-
-    // Reset form
-    setDefectEntries(new Map());
-    setAddDefectDialogOpen(false);
-    setDefectTabValue(0);
   };
 
   // Downtime label handlers
@@ -845,45 +798,54 @@ export function MachineOperationView() {
     });
   };
 
-  const handleSubmitLabel = () => {
-    if (selectedReasons.length === 0 || !downtimeToLabel) return;
+  const handleSubmitLabel = async () => {
+    if (selectedReasons.length === 0 || !downtimeToLabel || !selectedMachine?.id) return;
 
-    const reasons = selectedReasons.map((id) => {
-      const reason = stopReasons.find((r) => r.reasonId === id);
-      return {
-        reasonId: id,
-        reasonName: reason?.reasonName || 'Unknown',
-        colorHex: reason?.colorHex || '#gray',
+    try {
+      await postapimachineproductionmachineIdlabeldowntimerecord(selectedMachine.id, {
+        startTime: downtimeToLabel.startTime || '',
+        stopMachineReasonIds: selectedReasons,
+        note: labelNote || undefined,
+      });
+      
+      // Reload timeline records
+      const records = await getapimachineproductionmachineIdcurrentrunstaterecords(selectedMachine.id);
+      if (records) {
+        setTimelineRecords(Array.isArray(records) ? records : []);
+      }
+      
+      // Add to local history for UI display
+      const reasons = selectedReasons.map((id) => {
+        const reason = stopReasons.find((r) => r.reasonId === id);
+        return {
+          reasonId: id,
+          reasonName: reason?.reasonName || 'Unknown',
+          colorHex: reason?.colorHex || '#gray',
+        };
+      });
+
+      const newLabel: DowntimeLabelHistory = {
+        id: `${Date.now()}`,
+        timestamp: new Date().toISOString(),
+        startTime: downtimeToLabel.startTime,
+        endTime: downtimeToLabel.endTime,
+        duration: calculateDuration(downtimeToLabel.startTime, downtimeToLabel.endTime),
+        reasons,
+        note: labelNote,
+        labeledBy: 'Current User', // TODO: Get from user context
       };
-    });
 
-    const newLabel: DowntimeLabelHistory = {
-      id: `${Date.now()}`,
-      timestamp: new Date().toISOString(),
-      startTime: downtimeToLabel.startTime,
-      endTime: downtimeToLabel.endTime,
-      duration: calculateDuration(downtimeToLabel.startTime, downtimeToLabel.endTime),
-      reasons,
-      note: labelNote,
-      labeledBy: 'WIBU - 01234',
-    };
-
-    setDowntimeHistory([newLabel, ...downtimeHistory]);
-
-    // Remove from timeline records (marked as labeled)
-    setTimelineRecords(prev => 
-      prev.map(record => 
-        record === downtimeToLabel 
-          ? { ...record, stateId: '507f1f77bcf86cd799439011', stateName: 'Labeled' }
-          : record
-      )
-    );
-
-    // Reset and close
-    setSelectedReasons([]);
-    setLabelNote('');
-    setShowReasonGrid(false);
-    setDowntimeToLabel(null);
+      setDowntimeHistory([newLabel, ...downtimeHistory]);
+      
+      // Reset and close
+      setSelectedReasons([]);
+      setLabelNote('');
+      setShowReasonGrid(false);
+      setDowntimeToLabel(null);
+    } catch (error) {
+      console.error('Failed to label downtime:', error);
+      // TODO: Show error notification to user
+    }
   };
 
   const filteredProducts = mappedProducts.filter(product =>
@@ -1052,7 +1014,26 @@ export function MachineOperationView() {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Typography variant="body2">RUN</Typography>
-            <Switch checked={testMode} onChange={(e) => setTestMode(e.target.checked)} />
+            <Switch 
+              checked={testMode} 
+              onChange={async (e) => {
+                const newTestMode = e.target.checked;
+                setTestMode(newTestMode);
+                
+                // Call API to change run mode
+                if (selectedMachine?.id) {
+                  try {
+                    await postapimachineproductionmachineIdchangerunmode(selectedMachine.id, {
+                      testMode: newTestMode,
+                    });
+                  } catch (error) {
+                    console.error('Failed to change run mode:', error);
+                    // Revert the toggle on error
+                    setTestMode(!newTestMode);
+                  }
+                }
+              }} 
+            />
             <Typography variant="body2">TEST</Typography>
           </Box>
           <Box sx={{ textAlign: 'right' }}>
