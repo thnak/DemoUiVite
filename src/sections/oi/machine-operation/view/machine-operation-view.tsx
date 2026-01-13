@@ -48,19 +48,19 @@ import { useRouter } from 'src/routes/hooks';
 import { apiConfig } from 'src/api/config';
 import { MachineHubService } from 'src/services/machineHub';
 import { getapiMachinemachineIdavailableproducts } from 'src/api/services/generated/machine';
-import {
-  getapimachineproductionmachineIdaddexternalquantityhistory,
-  getapimachineproductionmachineIdcurrentproductstate,
-  getapimachineproductionmachineIdcurrentrunstaterecords,
-  getapimachineproductionmachineIddefecteditems,
-  postapimachineproductionmachineIdaddexternalquantity,
-  postapimachineproductionmachineIdchangeproduct,
-  postapimachineproductionmachineIdchangerunmode,
-  postapimachineproductionmachineIddefecteditemsaddnew,
-  postapimachineproductionmachineIdlabeldowntimerecord,
-} from 'src/api/services/generated/machine-production';
 import { getapiDefectReasongetdefectreasons } from 'src/api/services/generated/defect-reason';
 import { getapiStopMachineReasongetreasonpage } from 'src/api/services/generated/stop-machine-reason';
+import {
+  getapimachineproductionmachineIddefecteditems,
+  postapimachineproductionmachineIdchangeproduct,
+  postapimachineproductionmachineIdchangerunmode,
+  getapimachineproductionmachineIdcurrentproductstate,
+  postapimachineproductionmachineIdaddexternalquantity,
+  postapimachineproductionmachineIddefecteditemsaddnew,
+  postapimachineproductionmachineIdlabeldowntimerecord,
+  getapimachineproductionmachineIdcurrentrunstaterecords,
+  getapimachineproductionmachineIdaddexternalquantityhistory,
+} from 'src/api/services/generated/machine-production';
 
 import { Iconify } from 'src/components/iconify';
 

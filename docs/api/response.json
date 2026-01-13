@@ -88959,6 +88959,10 @@
           "addScrapAndIncreaseTotalQuantity": {
             "type": "boolean",
             "description": "if this is enabled, then this reason will add scrap and increase the total quantity by the same amount (as scrap)."
+          },
+          "allowMultipleDefectsPerUnit": {
+            "type": "boolean",
+            "description": "Cho phép nhiều lỗi trên một đơn vị sản phẩm"
           }
         },
         "additionalProperties": false,
@@ -89464,13 +89468,18 @@
         "properties": {
           "defectReasonName": {
             "type": "string",
-            "description": "Id của lý do lỗi",
+            "description": "Defect name",
             "nullable": true
           },
           "createdAt": {
             "type": "string",
             "description": "Thời gian tạo lỗi",
             "format": "date-time"
+          },
+          "defectReasonHexColor": {
+            "type": "string",
+            "description": "Màu sắc đại diện cho lý do lỗi (dạng mã hex)",
+            "nullable": true
           },
           "quantity": {
             "type": "number",
@@ -93035,6 +93044,11 @@
       "GetAddExternalQuantityHistoryResult": {
         "type": "object",
         "properties": {
+          "userAdded": {
+            "type": "string",
+            "description": "Người thêm số lượng bên ngoài",
+            "nullable": true
+          },
           "quantity": {
             "type": "number",
             "description": "Số lượng bên ngoài đã thêm",
@@ -93417,6 +93431,10 @@
           "addScrapAndIncreaseTotalQuantity": {
             "type": "boolean",
             "description": "if this is enabled, then this reason will add scrap and increase the total quantity by the same amount (as scrap)."
+          },
+          "allowMultipleDefectsPerUnit": {
+            "type": "boolean",
+            "description": "Cho phép nhiều lỗi trên một đơn vị sản phẩm"
           }
         },
         "additionalProperties": false,
@@ -97296,8 +97314,13 @@
             "description": "Start time of the downtime period to be labeled.",
             "format": "date-time"
           },
-          "reasonId": {
-            "$ref": "#/components/schemas/ObjectId"
+          "reasonIds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "description": "Identifier for the reason of the downtime.",
+            "nullable": true
           },
           "note": {
             "type": "string",
