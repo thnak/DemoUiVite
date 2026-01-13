@@ -231,13 +231,14 @@ function ApexTimelineVisualization({ records }: { records: CurrentMachineRunStat
     if (isUnlabeled) return '#ef4444'; // Red for unlabeled downtime
     if (state === 'running') return '#22c55e'; // Green
     if (state === 'speedLoss') return '#f59e0b'; // Orange
-    if (state === 'downtime') return '#64748b'; // Gray for labeled downtime
+    if (state === 'unPlannedDowntime' || state === 'plannedDowntime') return '#64748b'; // Gray for labeled downtime
     return '#94a3b8'; // Light gray default
   };
 
   // Convert records to ApexCharts timeline format
   const timelineData = records.map((record, index) => {
-    const isUnlabeled = record.stateId === '000000000000000000000000' && record.state === 'downtime';
+    const isUnlabeled = record.stateId === '000000000000000000000000' && 
+                        (record.state === 'unPlannedDowntime' || record.state === 'plannedDowntime');
     const color = getStateColor(record.state, isUnlabeled);
     const stateName = record.stateName || (isUnlabeled ? 'Unlabeled Downtime' : 'Unknown');
     
@@ -427,11 +428,11 @@ export function MachineOperationView() {
           const history = await getapimachineproductionmachineIdaddexternalquantityhistory(machineId);
           if (mounted && history) {
             const formattedHistory: QuantityAddHistory[] = history.map((item) => ({
-              id: item.id || '',
-              timestamp: item.addedTime || new Date().toISOString(),
+              id: `${item.createdAt}`, // Use timestamp as ID since there's no id field
+              timestamp: item.createdAt || new Date().toISOString(),
               addedQuantity: item.quantity || 0,
-              addedBy: item.addedByUserName || 'Unknown',
-              note: item.note,
+              addedBy: 'Unknown', // API doesn't provide user info
+              note: item.remark || undefined,
             }));
             setQuantityHistory(formattedHistory);
           }
@@ -469,7 +470,7 @@ export function MachineOperationView() {
               reasonId: item.id || '',
               reasonName: item.name || 'Unknown',
               imageUrl: undefined, // No image URL in API
-              colorHex: item.colorHex || '#ef4444',
+              colorHex: item.color || '#ef4444',
             }));
             setStopReasons(formattedReasons);
           }
@@ -480,19 +481,19 @@ export function MachineOperationView() {
         try {
           // Load defect history for current machine
           const defectHistoryResponse = await getapimachineproductionmachineIddefecteditems(machineId);
-          if (mounted && defectHistoryResponse?.items) {
-            const formattedDefectHistory: DefectSubmission[] = defectHistoryResponse.items.map((item) => ({
-              id: item.id || '',
-              timestamp: item.defectedTime || new Date().toISOString(),
+          if (mounted && defectHistoryResponse?.defectedItems) {
+            const formattedDefectHistory: DefectSubmission[] = defectHistoryResponse.defectedItems.map((item) => ({
+              id: item.createdAt || '',
+              timestamp: item.createdAt || new Date().toISOString(),
               defects: [
                 {
-                  defectId: item.defectReasonId || '',
+                  defectId: '', // Not provided by API
                   defectName: item.defectReasonName || 'Unknown',
                   quantity: item.quantity || 0,
-                  colorHex: item.defectReasonColor || '#ef4444',
+                  colorHex: '#ef4444', // Default color since not provided
                 },
               ],
-              submittedBy: item.addedByUserName || 'Unknown',
+              submittedBy: 'Unknown', // Not provided by API
             }));
             setDefectHistory(formattedDefectHistory);
           }
@@ -667,18 +668,18 @@ export function MachineOperationView() {
       try {
         await postapimachineproductionmachineIdaddexternalquantity(selectedMachine.id, {
           quantity: qty,
-          note: quantityNote || undefined,
+          remark: quantityNote || undefined,
         });
         
         // Reload quantity history
         const history = await getapimachineproductionmachineIdaddexternalquantityhistory(selectedMachine.id);
         if (history) {
           const formattedHistory: QuantityAddHistory[] = history.map((item) => ({
-            id: item.id || '',
-            timestamp: item.addedTime || new Date().toISOString(),
+            id: `${item.createdAt}`,
+            timestamp: item.createdAt || new Date().toISOString(),
             addedQuantity: item.quantity || 0,
-            addedBy: item.addedByUserName || 'Unknown',
-            note: item.note,
+            addedBy: 'Unknown',
+            note: item.remark || undefined,
           }));
           setQuantityHistory(formattedHistory);
         }
@@ -743,19 +744,19 @@ export function MachineOperationView() {
       
       // Reload defect history
       const defectHistoryResponse = await getapimachineproductionmachineIddefecteditems(selectedMachine.id);
-      if (defectHistoryResponse?.items) {
-        const formattedDefectHistory: DefectSubmission[] = defectHistoryResponse.items.map((item) => ({
-          id: item.id || '',
-          timestamp: item.defectedTime || new Date().toISOString(),
+      if (defectHistoryResponse?.defectedItems) {
+        const formattedDefectHistory: DefectSubmission[] = defectHistoryResponse.defectedItems.map((item) => ({
+          id: item.createdAt || '',
+          timestamp: item.createdAt || new Date().toISOString(),
           defects: [
             {
-              defectId: item.defectReasonId || '',
+              defectId: '',
               defectName: item.defectReasonName || 'Unknown',
               quantity: item.quantity || 0,
-              colorHex: item.defectReasonColor || '#ef4444',
+              colorHex: '#ef4444',
             },
           ],
-          submittedBy: item.addedByUserName || 'Unknown',
+          submittedBy: 'Unknown',
         }));
         setDefectHistory(formattedDefectHistory);
       }
@@ -804,7 +805,7 @@ export function MachineOperationView() {
     try {
       await postapimachineproductionmachineIdlabeldowntimerecord(selectedMachine.id, {
         startTime: downtimeToLabel.startTime || '',
-        stopMachineReasonIds: selectedReasons,
+        reasonId: selectedReasons[0], // API only accepts single reason
         note: labelNote || undefined,
       });
       
@@ -854,12 +855,14 @@ export function MachineOperationView() {
   );
 
   const unlabeledDowntimeCount = timelineRecords.filter(
-    record => record.stateId === '000000000000000000000000' && record.state === 'downtime'
+    record => record.stateId === '000000000000000000000000' && 
+             (record.state === 'unPlannedDowntime' || record.state === 'plannedDowntime')
   ).length;
 
   // Get unlabeled downtimes sorted by newest first
   const unlabeledDowntimes = timelineRecords
-    .filter(record => record.stateId === '000000000000000000000000' && record.state === 'downtime')
+    .filter(record => record.stateId === '000000000000000000000000' && 
+                     (record.state === 'unPlannedDowntime' || record.state === 'plannedDowntime'))
     .sort((a, b) => {
       const timeA = new Date(a.startTime || '').getTime();
       const timeB = new Date(b.startTime || '').getTime();
