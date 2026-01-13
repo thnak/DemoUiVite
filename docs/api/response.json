@@ -42,7 +42,7 @@
       }
     },
     "/api/adaptiveruleconfig/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "AdaptiveRuleConfig"
         ],
@@ -367,7 +367,7 @@
       }
     },
     "/api/adminglobalsetting/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "AdminGlobalSetting"
         ],
@@ -692,7 +692,7 @@
       }
     },
     "/api/apigateway/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "ApiGateway"
         ],
@@ -986,6 +986,7 @@
         "tags": [
           "AppVersion"
         ],
+        "summary": "Notify clients about a new version of the application being available.",
         "responses": {
           "200": {
             "description": "OK"
@@ -998,6 +999,7 @@
         "tags": [
           "AppVersion"
         ],
+        "summary": "Force clients to reload the application.",
         "responses": {
           "200": {
             "description": "OK"
@@ -1010,6 +1012,7 @@
         "tags": [
           "AppVersion"
         ],
+        "summary": "Notify clients about an application version change.",
         "responses": {
           "200": {
             "description": "OK"
@@ -1053,7 +1056,7 @@
       }
     },
     "/api/area/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Area"
         ],
@@ -1532,7 +1535,7 @@
       }
     },
     "/api/assemblyhashinfo/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "AssemblyHashInfo"
         ],
@@ -2140,6 +2143,7 @@
         "tags": [
           "Blob"
         ],
+        "summary": "Upload file to blob storage",
         "requestBody": {
           "description": "File upload using MultipartReader",
           "content": {
@@ -2173,10 +2177,12 @@
         "tags": [
           "Blob"
         ],
+        "summary": "Download file from blob storage",
         "parameters": [
           {
             "name": "fileName",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -2184,7 +2190,15 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
           }
         }
       }
@@ -2225,7 +2239,7 @@
       }
     },
     "/api/bomheader/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "BomHeader"
         ],
@@ -2550,7 +2564,7 @@
       }
     },
     "/api/bomline/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "BomLine"
         ],
@@ -2875,7 +2889,7 @@
       }
     },
     "/api/brand/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Brand"
         ],
@@ -3169,6 +3183,7 @@
         "tags": [
           "Cache"
         ],
+        "summary": "Clears the entire Redis cache",
         "responses": {
           "200": {
             "description": "OK"
@@ -3212,7 +3227,7 @@
       }
     },
     "/api/calendar/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Calendar"
         ],
@@ -3541,7 +3556,7 @@
       }
     },
     "/api/Calendar/search-calendars": {
-      "post": {
+      "get": {
         "tags": [
           "Calendar"
         ],
@@ -3572,49 +3587,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -3707,7 +3703,7 @@
       }
     },
     "/api/calendarexception/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "CalendarException"
         ],
@@ -4032,7 +4028,7 @@
       }
     },
     "/api/category/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Category"
         ],
@@ -4746,7 +4742,7 @@
       }
     },
     "/api/childwidgetconfig/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "ChildWidgetConfig"
         ],
@@ -37158,10 +37154,12 @@
         "tags": [
           "Culture"
         ],
+        "summary": "Sets the culture for the user and optionally redirects to a specified URI.",
         "parameters": [
           {
             "name": "culture",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -37169,6 +37167,7 @@
           {
             "name": "redirectUri",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -37177,6 +37176,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "302": {
+            "description": "Found"
           }
         }
       }
@@ -37217,7 +37219,7 @@
       }
     },
     "/api/customer/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Customer"
         ],
@@ -37597,10 +37599,12 @@
         "tags": [
           "Dashboard"
         ],
+        "summary": "Get dashboard template with pagination",
         "parameters": [
           {
             "name": "search",
             "in": "query",
+            "description": "Search query",
             "schema": {
               "type": "string"
             }
@@ -37608,6 +37612,7 @@
           {
             "name": "fromTime",
             "in": "query",
+            "description": "From time filter",
             "schema": {
               "type": "string",
               "format": "date-time"
@@ -37616,6 +37621,7 @@
           {
             "name": "toTime",
             "in": "query",
+            "description": "To time filter",
             "schema": {
               "type": "string",
               "format": "date-time"
@@ -37646,49 +37652,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -37723,10 +37710,12 @@
         "tags": [
           "Dashboard"
         ],
+        "summary": "Get widget template by template id",
         "parameters": [
           {
             "name": "templateId",
             "in": "path",
+            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -37767,10 +37756,12 @@
         "tags": [
           "Dashboard"
         ],
+        "summary": "Get dashboard combine dto by id",
         "parameters": [
           {
             "name": "id",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -37810,10 +37801,12 @@
         "tags": [
           "Dashboard"
         ],
+        "summary": "Search dashboard templates",
         "parameters": [
           {
             "name": "query",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -37821,6 +37814,7 @@
           {
             "name": "limit",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -37874,10 +37868,12 @@
         "tags": [
           "Dashboard"
         ],
+        "summary": "Get script definition by widget id",
         "parameters": [
           {
             "name": "widgetId",
             "in": "path",
+            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -37943,10 +37939,12 @@
         "tags": [
           "Dashboard"
         ],
+        "summary": "Get script variant by widget id",
         "parameters": [
           {
             "name": "widgetId",
             "in": "path",
+            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -38476,7 +38474,7 @@
       }
     },
     "/api/dashboardtemplate/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "DashboardTemplate"
         ],
@@ -38801,7 +38799,7 @@
       }
     },
     "/api/dataprotectionkey/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "DataProtectionKey"
         ],
@@ -39126,7 +39124,7 @@
       }
     },
     "/api/defectinput/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "DefectInput"
         ],
@@ -39451,7 +39449,7 @@
       }
     },
     "/api/defectreason/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "DefectReason"
         ],
@@ -39822,49 +39820,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -40184,7 +40163,7 @@
       }
     },
     "/api/defectreasongroup/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "DefectReasonGroup"
         ],
@@ -40548,7 +40527,7 @@
       }
     },
     "/api/department/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Department"
         ],
@@ -40876,112 +40855,6 @@
         }
       }
     },
-    "/api/Device/delete-device": {
-      "post": {
-        "tags": [
-          "Device"
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "deviceId": {
-                    "type": "string"
-                  }
-                }
-              },
-              "encoding": {
-                "deviceId": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Device/delete-sensor": {
-      "post": {
-        "tags": [
-          "Device"
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "sensorId": {
-                    "type": "string"
-                  }
-                }
-              },
-              "encoding": {
-                "sensorId": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/Device/get-device": {
       "post": {
         "tags": [
@@ -41062,49 +40935,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -41450,7 +41304,7 @@
       }
     },
     "/api/Device/get-sensor": {
-      "post": {
+      "get": {
         "tags": [
           "Device"
         ],
@@ -41526,49 +41380,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -41685,7 +41520,7 @@
       }
     },
     "/api/Device/get-raw-sensor": {
-      "post": {
+      "get": {
         "tags": [
           "Device"
         ],
@@ -41745,49 +41580,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -41954,49 +41770,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -42119,7 +41916,7 @@
       }
     },
     "/api/Device/get-device-log": {
-      "post": {
+      "get": {
         "tags": [
           "Device"
         ],
@@ -42177,49 +41974,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -42743,7 +42521,7 @@
       }
     },
     "/api/document/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Document"
         ],
@@ -43068,7 +42846,7 @@
       }
     },
     "/api/downtimeinput/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "DowntimeInput"
         ],
@@ -44048,7 +43826,7 @@
       }
     },
     "/api/fileinfo/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "FileInfo"
         ],
@@ -44373,7 +44151,7 @@
       }
     },
     "/api/filelocationhistory/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "FileLocationHistory"
         ],
@@ -44698,7 +44476,7 @@
       }
     },
     "/api/filemetadata/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "FileMetadata"
         ],
@@ -45023,7 +44801,7 @@
       }
     },
     "/api/filepermission/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "FilePermission"
         ],
@@ -45348,7 +45126,7 @@
       }
     },
     "/api/filepubliclink/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "FilePublicLink"
         ],
@@ -45889,7 +45667,7 @@
       }
     },
     "/api/fileversions/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "FileVersions"
         ],
@@ -46183,6 +45961,7 @@
         "tags": [
           "Firmware"
         ],
+        "summary": "Crafts a new firmware release for a specified device model.",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -46194,16 +45973,20 @@
                 "type": "object",
                 "properties": {
                   "ModelTypeId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The ID of the device model for which the firmware is being created"
                   },
                   "Version": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The version of the firmware (optional). If not provided, a default version will be used."
                   },
                   "Description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The description of the firmware release (optional)."
                   },
                   "File": {
                     "type": "string",
+                    "description": "The firmware file to be uploaded",
                     "format": "binary"
                   }
                 }
@@ -46284,10 +46067,12 @@
         "tags": [
           "Firmware"
         ],
+        "summary": "Lấy thông tin phiên bản firmware theo ID",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -46353,10 +46138,12 @@
         "tags": [
           "Firmware"
         ],
+        "summary": "Tải về file firmware theo ID",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -46375,10 +46162,12 @@
         "tags": [
           "Firmware"
         ],
+        "summary": "Lấy danh sách tất cả các phiên bản firmware",
         "parameters": [
           {
             "name": "ModelTypeId",
             "in": "query",
+            "description": "Lọc theo Model Type ID",
             "schema": {
               "type": "string"
             }
@@ -46408,49 +46197,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -46516,7 +46286,7 @@
       }
     },
     "/api/firmwareversion/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "FirmwareVersion"
         ],
@@ -46841,7 +46611,7 @@
       }
     },
     "/api/folderinfo/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "FolderInfo"
         ],
@@ -47166,7 +46936,7 @@
       }
     },
     "/api/folderlocationhistory/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "FolderLocationHistory"
         ],
@@ -47491,7 +47261,7 @@
       }
     },
     "/api/folderpermission/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "FolderPermission"
         ],
@@ -47780,80 +47550,6 @@
         }
       }
     },
-    "/api/hls/{fileName}/playlist.m3u8": {
-      "get": {
-        "tags": [
-          "Hls"
-        ],
-        "parameters": [
-          {
-            "name": "fileName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/hls/{fileName}/segments/{segmentName}": {
-      "get": {
-        "tags": [
-          "Hls"
-        ],
-        "parameters": [
-          {
-            "name": "fileName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "segmentName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/hls/{fileName}/transcode": {
-      "post": {
-        "tags": [
-          "Hls"
-        ],
-        "parameters": [
-          {
-            "name": "fileName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/Account/ssologin": {
       "get": {
         "tags": [
@@ -47989,7 +47685,7 @@
       }
     },
     "/api/informationbase/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "InformationBase"
         ],
@@ -48353,7 +48049,7 @@
       }
     },
     "/api/informationdecoratorbase/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "InformationDecoratorBase"
         ],
@@ -48713,49 +48409,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -48821,7 +48498,7 @@
       }
     },
     "/api/iotdevice/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "IoTDevice"
         ],
@@ -49185,7 +48862,7 @@
       }
     },
     "/api/iotdevicegroup/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "IoTDeviceGroup"
         ],
@@ -49549,7 +49226,7 @@
       }
     },
     "/api/iotdevicemodel/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "IoTDeviceModel"
         ],
@@ -49967,49 +49644,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -50482,7 +50140,7 @@
       }
     },
     "/api/iotsensor/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "IoTSensor"
         ],
@@ -50846,7 +50504,7 @@
       }
     },
     "/api/job/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Job"
         ],
@@ -51171,7 +50829,7 @@
       }
     },
     "/api/jtitoken/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "JtiToken"
         ],
@@ -51496,7 +51154,7 @@
       }
     },
     "/api/languagekeylang/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "LanguageKeyLang"
         ],
@@ -51786,7 +51444,7 @@
       }
     },
     "/api/translations/get-lang": {
-      "post": {
+      "get": {
         "tags": [
           "Localization"
         ],
@@ -51817,49 +51475,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -52207,7 +51846,7 @@
       }
     },
     "/api/machine/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Machine"
         ],
@@ -52536,7 +52175,7 @@
       }
     },
     "/api/Machine/search-machines": {
-      "post": {
+      "get": {
         "tags": [
           "Machine"
         ],
@@ -52575,49 +52214,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -53081,289 +52701,6 @@
               "application/vnd.msgpack": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Machine/{machineId}/change-product": {
-      "post": {
-        "tags": [
-          "Machine"
-        ],
-        "summary": "Changes the product of a specific machine.",
-        "parameters": [
-          {
-            "name": "machineId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ObjectId"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeMachineProductRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeMachineProductRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeMachineProductRequest"
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeMachineProductRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Machine/{machineId}/complete-current-product": {
-      "post": {
-        "tags": [
-          "Machine"
-        ],
-        "summary": "Completes the current product on a specific machine.",
-        "parameters": [
-          {
-            "name": "machineId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ObjectId"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Machine/{machineId}/current-product": {
-      "get": {
-        "tags": [
-          "Machine"
-        ],
-        "summary": "Retrieves the current product being processed by a specific machine.",
-        "parameters": [
-          {
-            "name": "machineId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ObjectId"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductWorkingStateByMachine"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductWorkingStateByMachine"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductWorkingStateByMachine"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductWorkingStateByMachine"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Machine/{machineId}/defected-items": {
-      "get": {
-        "tags": [
-          "Machine"
-        ],
-        "summary": "Retrieves defected items from a running machine.",
-        "parameters": [
-          {
-            "name": "machineId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ObjectId"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDefectedFromRunningMachineResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDefectedFromRunningMachineResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDefectedFromRunningMachineResult"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDefectedFromRunningMachineResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Machine/{machineId}/defected-items/add-new": {
-      "post": {
-        "tags": [
-          "Machine"
-        ],
-        "summary": "Adds a new defected item to a machine.",
-        "parameters": [
-          {
-            "name": "machineId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ObjectId"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddDefectedItemRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddDefectedItemRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddDefectedItemRequest"
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "$ref": "#/components/schemas/AddDefectedItemRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
                 }
               }
             }
@@ -53901,7 +53238,7 @@
       }
     },
     "/api/machineareamapping/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "MachineAreaMapping"
         ],
@@ -54442,7 +53779,7 @@
       }
     },
     "/api/machinedefectinput/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "MachineDefectInput"
         ],
@@ -54767,7 +54104,7 @@
       }
     },
     "/api/machinedefectreasonmapping/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "MachineDefectReasonMapping"
         ],
@@ -55056,190 +54393,6 @@
         }
       }
     },
-    "/api/MachineDowntime/{machineId}/current-run-state-records": {
-      "get": {
-        "tags": [
-          "MachineDowntime"
-        ],
-        "summary": "Gets the current downtime records from running machine.",
-        "parameters": [
-          {
-            "name": "machineId",
-            "in": "path",
-            "description": "MongoDB ObjectId represented as a 24-character hexadecimal string",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ObjectId"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CurrentMachineRunStateRecords"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CurrentMachineRunStateRecords"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CurrentMachineRunStateRecords"
-                  }
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CurrentMachineRunStateRecords"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/MachineDowntime/{machineId}/label-downtime-record": {
-      "post": {
-        "tags": [
-          "MachineDowntime"
-        ],
-        "summary": "Labels a downtime record for a machine.",
-        "parameters": [
-          {
-            "name": "machineId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ObjectId"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LabelDowntimeRecordRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LabelDowntimeRecordRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/LabelDowntimeRecordRequest"
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "$ref": "#/components/schemas/LabelDowntimeRecordRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/MachineDowntime/{machineId}/unlabel-downtime-record": {
-      "post": {
-        "tags": [
-          "MachineDowntime"
-        ],
-        "summary": "Unlabels a downtime record for a machine.",
-        "parameters": [
-          {
-            "name": "machineId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ObjectId"
-            }
-          },
-          {
-            "name": "startTime",
-            "in": "query",
-            "description": "",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              },
-              "application/vnd.msgpack": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/machinegroup/{id}": {
       "get": {
         "tags": [
@@ -55276,7 +54429,7 @@
       }
     },
     "/api/machinegroup/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "MachineGroup"
         ],
@@ -55640,7 +54793,7 @@
       }
     },
     "/api/machinegroupmachinemapping/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "MachineGroupMachineMapping"
         ],
@@ -55965,7 +55118,7 @@
       }
     },
     "/api/machineoeehourstatistic/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "MachineOeeHourStatistic"
         ],
@@ -56290,7 +55443,7 @@
       }
     },
     "/api/machineoutputmapping/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "MachineOutputMapping"
         ],
@@ -56579,6 +55732,758 @@
         }
       }
     },
+    "/api/machine/production/{machineId}/add-external-quantity": {
+      "post": {
+        "tags": [
+          "MachineProduction"
+        ],
+        "summary": "Adds external quantity to a specific machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddExternalQuantityRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddExternalQuantityRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddExternalQuantityRequest"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/AddExternalQuantityRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine/production/{machineId}/add-external-quantity/history": {
+      "get": {
+        "tags": [
+          "MachineProduction"
+        ],
+        "summary": "Retrieves the history of added external quantities for a specific machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetAddExternalQuantityHistoryResult"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetAddExternalQuantityHistoryResult"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetAddExternalQuantityHistoryResult"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetAddExternalQuantityHistoryResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine/production/{machineId}/defected-items/add-new": {
+      "post": {
+        "tags": [
+          "MachineProduction"
+        ],
+        "summary": "Adds a new defected item to a machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddDefectedItemRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddDefectedItemRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddDefectedItemRequest"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/AddDefectedItemRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine/production/{machineId}/defected-items/remove": {
+      "delete": {
+        "tags": [
+          "MachineProduction"
+        ],
+        "summary": "Removes a defected item from a running machine based on the defected time.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          },
+          {
+            "name": "defectedTime",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine/production/{machineId}/change-run-mode": {
+      "post": {
+        "tags": [
+          "MachineProduction"
+        ],
+        "summary": "Changes the run mode of a specific machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          },
+          {
+            "name": "testMode",
+            "in": "query",
+            "description": "true for test mode, false for normal mode",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine/production/{machineId}/defected-items": {
+      "get": {
+        "tags": [
+          "MachineProduction"
+        ],
+        "summary": "Retrieves defected items from a running machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDefectedFromRunningMachineResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDefectedFromRunningMachineResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDefectedFromRunningMachineResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDefectedFromRunningMachineResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine/production/{machineId}/current-product-state": {
+      "get": {
+        "tags": [
+          "MachineProduction"
+        ],
+        "summary": "Retrieves the current product planning state for a specific machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductWorkingStateByMachine"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductWorkingStateByMachine"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductWorkingStateByMachine"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductWorkingStateByMachine"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine/production/{machineId}/current-aggregation": {
+      "get": {
+        "tags": [
+          "MachineProduction"
+        ],
+        "summary": "Retrieves the current aggregation data for a specific machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineAggregation"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineAggregation"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineAggregation"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineAggregation"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine/production/{machineId}/change-product": {
+      "post": {
+        "tags": [
+          "MachineProduction"
+        ],
+        "summary": "Changes the product of a specific machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeMachineProductRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeMachineProductRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeMachineProductRequest"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeMachineProductRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/machine/production/{machineId}/complete-current-product": {
+      "post": {
+        "tags": [
+          "MachineProduction"
+        ],
+        "summary": "Completes the current product on a specific machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine/production/{machineId}/current-run-state-records": {
+      "get": {
+        "tags": [
+          "MachineProduction"
+        ],
+        "summary": "Gets the current downtime records from running machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "MongoDB ObjectId represented as a 24-character hexadecimal string",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CurrentMachineRunStateRecords"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CurrentMachineRunStateRecords"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CurrentMachineRunStateRecords"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CurrentMachineRunStateRecords"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine/production/{machineId}/label-downtime-record": {
+      "post": {
+        "tags": [
+          "MachineProduction"
+        ],
+        "summary": "Labels a downtime record for a machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LabelDowntimeRecordRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LabelDowntimeRecordRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LabelDowntimeRecordRequest"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/LabelDowntimeRecordRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine/production/{machineId}/unlabel-downtime-record": {
+      "post": {
+        "tags": [
+          "MachineProduction"
+        ],
+        "summary": "Unlabels a downtime record for a machine.",
+        "parameters": [
+          {
+            "name": "machineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/machineproductmapping/{id}": {
       "get": {
         "tags": [
@@ -56615,7 +56520,7 @@
       }
     },
     "/api/machineproductmapping/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "MachineProductMapping"
         ],
@@ -56940,7 +56845,7 @@
       }
     },
     "/api/machinestopmachinereasonmapping/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "MachineStopMachineReasonMapping"
         ],
@@ -57265,7 +57170,7 @@
       }
     },
     "/api/machinetype/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "MachineType"
         ],
@@ -57629,7 +57534,7 @@
       }
     },
     "/api/maintenancethreshold/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "MaintenanceThreshold"
         ],
@@ -57954,7 +57859,7 @@
       }
     },
     "/api/manufacturer/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Manufacturer"
         ],
@@ -58318,7 +58223,7 @@
       }
     },
     "/api/memoryschema/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "MemorySchema"
         ],
@@ -58612,6 +58517,7 @@
         "tags": [
           "Modules"
         ],
+        "summary": "Uploads a module as a zip assembly",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -58620,6 +58526,7 @@
                 "properties": {
                   "file": {
                     "type": "string",
+                    "description": "",
                     "format": "binary"
                   }
                 }
@@ -58644,6 +58551,7 @@
         "tags": [
           "Modules"
         ],
+        "summary": "Gets the list of loaded module names",
         "responses": {
           "200": {
             "description": "OK"
@@ -58656,6 +58564,7 @@
         "tags": [
           "Modules"
         ],
+        "summary": "Gets the list of module icons accessible to the current user",
         "responses": {
           "200": {
             "description": "OK"
@@ -58699,7 +58608,7 @@
       }
     },
     "/api/mongoblob/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "MongoBlob"
         ],
@@ -59112,49 +59021,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -59245,7 +59135,7 @@
       }
     },
     "/api/onetimelogintoken/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "OneTimeLoginToken"
         ],
@@ -59570,7 +59460,7 @@
       }
     },
     "/api/operation/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Operation"
         ],
@@ -59903,10 +59793,12 @@
         "tags": [
           "Operation"
         ],
+        "summary": "Search operations by code keyword",
         "parameters": [
           {
             "name": "keyword",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "string",
               "default": ""
@@ -59915,7 +59807,41 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OperationEntity"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OperationEntity"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OperationEntity"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OperationEntity"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -59956,7 +59882,7 @@
       }
     },
     "/api/operationparametersetting/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "OperationParameterSetting"
         ],
@@ -60281,7 +60207,7 @@
       }
     },
     "/api/operationvariant/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "OperationVariant"
         ],
@@ -60606,7 +60532,7 @@
       }
     },
     "/api/operatorstationlog/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "OperatorStationLog"
         ],
@@ -60931,7 +60857,7 @@
       }
     },
     "/api/page/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Page"
         ],
@@ -62448,7 +62374,7 @@
       }
     },
     "/api/paraphrasemap/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "ParaphraseMap"
         ],
@@ -62773,7 +62699,7 @@
       }
     },
     "/api/permission/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Permission"
         ],
@@ -63105,49 +63031,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -63213,7 +63120,7 @@
       }
     },
     "/api/product/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Product"
         ],
@@ -63591,7 +63498,7 @@
       }
     },
     "/api/Product/get-product-page": {
-      "post": {
+      "get": {
         "tags": [
           "Product"
         ],
@@ -63633,49 +63540,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -63813,7 +63701,7 @@
       }
     },
     "/api/productcategory/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "ProductCategory"
         ],
@@ -64177,7 +64065,7 @@
       }
     },
     "/api/productionorder/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "ProductionOrder"
         ],
@@ -64502,7 +64390,7 @@
       }
     },
     "/api/productionreceipt/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "ProductionReceipt"
         ],
@@ -64827,7 +64715,7 @@
       }
     },
     "/api/productvariant/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "ProductVariant"
         ],
@@ -65152,7 +65040,7 @@
       }
     },
     "/api/qualitycheckpoint/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "QualityCheckPoint"
         ],
@@ -65771,7 +65659,9 @@
         "tags": [
           "Record"
         ],
+        "summary": "Create an anonymous IoT record",
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -65829,10 +65719,12 @@
         "tags": [
           "Record"
         ],
+        "summary": "Get the sum of record values for a specific sensor within a date range",
         "parameters": [
           {
             "name": "sensor",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -65840,6 +65732,7 @@
           {
             "name": "startDate",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "string",
               "format": "date-time"
@@ -65848,6 +65741,7 @@
           {
             "name": "endDate",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "string",
               "format": "date-time"
@@ -65913,14 +65807,16 @@
       }
     },
     "/api/Record/get-records": {
-      "post": {
+      "get": {
         "tags": [
           "Record"
         ],
+        "summary": "",
         "parameters": [
           {
             "name": "fromTime",
             "in": "query",
+            "description": "Start date for filtering records",
             "schema": {
               "type": "string",
               "format": "date-time"
@@ -65929,6 +65825,7 @@
           {
             "name": "toTime",
             "in": "query",
+            "description": "End date for filtering records",
             "schema": {
               "type": "string",
               "format": "date-time"
@@ -65937,7 +65834,7 @@
           {
             "name": "SensorId",
             "in": "query",
-            "description": "MongoDB ObjectId represented as a 24-character hexadecimal string",
+            "description": "Filter by specific Sensor ID",
             "schema": {
               "$ref": "#/components/schemas/ObjectId"
             }
@@ -65945,7 +65842,7 @@
           {
             "name": "DeviceId",
             "in": "query",
-            "description": "MongoDB ObjectId represented as a 24-character hexadecimal string",
+            "description": "Filter by specific Device ID",
             "schema": {
               "$ref": "#/components/schemas/ObjectId"
             }
@@ -65953,6 +65850,7 @@
           {
             "name": "typeList",
             "in": "query",
+            "description": "Filter by list of Sensor Types",
             "schema": {
               "type": "array",
               "items": {
@@ -65985,49 +65883,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -66118,7 +65997,7 @@
       }
     },
     "/api/refreshtoken/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "RefreshToken"
         ],
@@ -67039,7 +66918,7 @@
       }
     },
     "/api/role/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Role"
         ],
@@ -67449,7 +67328,7 @@
       }
     },
     "/api/rolepermissionmapping/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "RolePermissionMapping"
         ],
@@ -67774,7 +67653,7 @@
       }
     },
     "/api/routing/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Routing"
         ],
@@ -68584,7 +68463,7 @@
       }
     },
     "/api/ScriptDefine/get-script-definitions": {
-      "post": {
+      "get": {
         "tags": [
           "ScriptDefine"
         ],
@@ -68641,49 +68520,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -68753,49 +68613,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -69181,7 +69022,7 @@
       }
     },
     "/api/scriptdefinition/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "ScriptDefinition"
         ],
@@ -69655,7 +69496,7 @@
       }
     },
     "/api/scriptvariant/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "ScriptVariant"
         ],
@@ -70186,7 +70027,7 @@
       }
     },
     "/api/ScriptVariant/get-scripts": {
-      "post": {
+      "get": {
         "tags": [
           "ScriptVariant"
         ],
@@ -70225,49 +70066,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -70519,7 +70341,7 @@
       }
     },
     "/api/shifttemplate/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "ShiftTemplate"
         ],
@@ -70951,7 +70773,7 @@
       }
     },
     "/api/slideshow/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "SlideShow"
         ],
@@ -71366,7 +71188,7 @@
       }
     },
     "/api/station/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Station"
         ],
@@ -71699,10 +71521,12 @@
         "tags": [
           "Station"
         ],
+        "summary": "Search stations by code",
         "parameters": [
           {
             "name": "keyword",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "string",
               "default": ""
@@ -71752,7 +71576,7 @@
       }
     },
     "/api/stationgroup/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "StationGroup"
         ],
@@ -72116,7 +71940,7 @@
       }
     },
     "/api/stationgroupstationmapping/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "StationGroupStationMapping"
         ],
@@ -72441,7 +72265,7 @@
       }
     },
     "/api/stop/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Stop"
         ],
@@ -72766,7 +72590,7 @@
       }
     },
     "/api/stopmachinereason/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "StopMachineReason"
         ],
@@ -73095,7 +72919,7 @@
       }
     },
     "/api/StopMachineReason/get-reason-page": {
-      "post": {
+      "get": {
         "tags": [
           "StopMachineReason"
         ],
@@ -73488,7 +73312,7 @@
       }
     },
     "/api/stopmachinereasongroup/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "StopMachineReasonGroup"
         ],
@@ -73926,7 +73750,7 @@
       }
     },
     "/api/supplier/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Supplier"
         ],
@@ -74411,7 +74235,7 @@
       }
     },
     "/api/systemerrorreport/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "SystemErrorReport"
         ],
@@ -74736,7 +74560,7 @@
       }
     },
     "/api/systemerrorreportcomment/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "SystemErrorReportComment"
         ],
@@ -75061,7 +74885,7 @@
       }
     },
     "/api/systemsetting/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "SystemSetting"
         ],
@@ -75460,7 +75284,7 @@
       }
     },
     "/api/Tenant/get-all-tenants": {
-      "post": {
+      "get": {
         "tags": [
           "Tenant"
         ],
@@ -75491,98 +75315,29 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Tenant/update": {
-      "put": {
-        "tags": [
-          "Tenant"
-        ],
-        "summary": "Update an existing tenant",
-        "requestBody": {
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateTenantRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateTenantRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateTenantRequest"
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateTenantRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Test/stream": {
-      "get": {
-        "tags": [
-          "Test"
         ],
         "responses": {
           "200": {
@@ -75627,7 +75382,7 @@
       }
     },
     "/api/timeblockname/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "TimeBlockName"
         ],
@@ -76040,7 +75795,7 @@
       }
     },
     "/api/unit/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Unit"
         ],
@@ -76369,7 +76124,7 @@
       }
     },
     "/api/Unit/get-units": {
-      "post": {
+      "get": {
         "tags": [
           "Unit"
         ],
@@ -76408,49 +76163,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -76481,7 +76217,7 @@
       }
     },
     "/api/Unit/get-unit-conversions": {
-      "post": {
+      "get": {
         "tags": [
           "Unit"
         ],
@@ -76512,49 +76248,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -76691,7 +76408,7 @@
       }
     },
     "/api/unitconversion/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "UnitConversion"
         ],
@@ -77016,7 +76733,7 @@
       }
     },
     "/api/unitgroup/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "UnitGroup"
         ],
@@ -77341,7 +77058,7 @@
       }
     },
     "/api/user/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "User"
         ],
@@ -77673,49 +77390,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -78315,49 +78013,30 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Sorting requests.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+          },
+          {
+            "name": "DescendingFields",
+            "in": "query",
+            "description": "Fields to apply descending on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SortType"
-                },
-                "description": "Sorting requests."
+            }
+          },
+          {
+            "name": "SortingFields",
+            "in": "query",
+            "description": "Fields to apply sorting on.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -78717,7 +78396,7 @@
       }
     },
     "/api/userdepartmentmapping/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "UserDepartmentMapping"
         ],
@@ -79042,7 +78721,7 @@
       }
     },
     "/api/userloghistory/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "UserLogHistory"
         ],
@@ -79367,7 +79046,7 @@
       }
     },
     "/api/userlogininfopoco/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "UserLoginInfoPoco"
         ],
@@ -79692,7 +79371,7 @@
       }
     },
     "/api/userpasskey/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "UserPasskey"
         ],
@@ -80017,7 +79696,7 @@
       }
     },
     "/api/userpermissionmapping/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "UserPermissionMapping"
         ],
@@ -80342,7 +80021,7 @@
       }
     },
     "/api/userrolemapping/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "UserRoleMapping"
         ],
@@ -80667,7 +80346,7 @@
       }
     },
     "/api/usersetting/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "UserSetting"
         ],
@@ -81177,28 +80856,6 @@
         }
       }
     },
-    "/api/Video/streamandsave/{fileName}": {
-      "get": {
-        "tags": [
-          "Video"
-        ],
-        "parameters": [
-          {
-            "name": "fileName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/warehouse/{id}": {
       "get": {
         "tags": [
@@ -81235,7 +80892,7 @@
       }
     },
     "/api/warehouse/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Warehouse"
         ],
@@ -81599,7 +81256,7 @@
       }
     },
     "/api/webhook/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "Webhook"
         ],
@@ -81963,7 +81620,7 @@
       }
     },
     "/api/widgetconfig/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "WidgetConfig"
         ],
@@ -82288,7 +81945,7 @@
       }
     },
     "/api/workcell/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "WorkCell"
         ],
@@ -82636,7 +82293,7 @@
       }
     },
     "/api/workdatecalendarstatistic/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "WorkDateCalendarStatistic"
         ],
@@ -82947,7 +82604,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2026-01-09"
+              "example": "2026-01-13"
             }
           },
           {
@@ -82957,7 +82614,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2026-01-09"
+              "example": "2026-01-13"
             }
           },
           {
@@ -83104,7 +82761,7 @@
       }
     },
     "/api/workingparameter/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "WorkingParameter"
         ],
@@ -83763,7 +83420,7 @@
       }
     },
     "/api/workorder/get-page": {
-      "post": {
+      "get": {
         "tags": [
           "WorkOrder"
         ],
@@ -84338,6 +83995,23 @@
         },
         "additionalProperties": false,
         "description": "Yêu cầu thêm mục lỗi phát sinh cho máy"
+      },
+      "AddExternalQuantityRequest": {
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "number",
+            "description": "",
+            "format": "double"
+          },
+          "remark": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Yêu cầu thêm số lượng bên ngoài"
       },
       "AddMachineDefectReasonMappingRequest": {
         "type": "object",
@@ -86585,13 +86259,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2026-01-09"
+            "example": "2026-01-13"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2026-01-09"
+            "example": "2026-01-13"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -86713,13 +86387,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2026-01-09"
+            "example": "2026-01-13"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2026-01-09"
+            "example": "2026-01-13"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -87009,12 +86683,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-09"
+            "example": "2026-01-13"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-09"
+            "example": "2026-01-13"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -90852,6 +90526,11 @@
             "description": "Kích thước tệp tin (byte).",
             "format": "int64"
           },
+          "accessCount": {
+            "type": "integer",
+            "description": "Số lần truy cập tệp tin.",
+            "format": "int64"
+          },
           "contentType": {
             "type": "string",
             "description": "Loại nội dung tệp tin.",
@@ -91328,7 +91007,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-09"
+            "example": "2026-01-13"
           }
         },
         "additionalProperties": false
@@ -93283,31 +92962,59 @@
         "additionalProperties": false,
         "description": "Represents a request to generate a JWT access token for a user, including credentials and optional expiration."
       },
+      "GetAddExternalQuantityHistoryResult": {
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "number",
+            "description": "Số lượng bên ngoài đã thêm",
+            "format": "double"
+          },
+          "remark": {
+            "type": "string",
+            "description": "Ghi chú (nếu có)",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Thời gian tạo bản ghi",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Kết quả lịch sử thêm số lượng bên ngoài"
+      },
       "GetAllFirmwareVersionsResponse": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
+            "description": "ID của phiên bản firmware",
             "nullable": true
           },
           "modelTypeId": {
             "type": "string",
+            "description": "ID của loại mô hình thiết bị",
             "nullable": true
           },
           "version": {
             "type": "string",
+            "description": "Phiên bản firmware",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "Mô tả về phiên bản firmware",
             "nullable": true
           },
           "createdAt": {
             "type": "string",
+            "description": "Thời gian tạo phiên bản firmware",
             "format": "date-time"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Phản hồi lấy tất cả phiên bản firmware"
       },
       "GetAllFirmwareVersionsResponsePaginationQuery": {
         "type": "object",
@@ -95656,7 +95363,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2026-01-09"
+            "example": "2026-01-13"
           },
           "locationId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -96991,30 +96698,37 @@
         "properties": {
           "deviceId": {
             "type": "string",
+            "description": "Device identifier",
             "nullable": true
           },
           "deviceName": {
             "type": "string",
+            "description": "Device name",
             "nullable": true
           },
           "sensorId": {
             "type": "string",
+            "description": "Sensor identifier",
             "nullable": true
           },
           "sensorName": {
             "type": "string",
+            "description": "Sensor name",
             "nullable": true
           },
           "value": {
             "type": "number",
+            "description": "Sensor value",
             "format": "double"
           },
           "timestamp": {
             "type": "string",
+            "description": "Timestamp of the record",
             "format": "date-time"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Model for IoT record creation"
       },
       "JobEntity": {
         "required": [
@@ -97979,6 +97693,93 @@
         },
         "additionalProperties": false,
         "description": "Base class for paginated responses"
+      },
+      "MachineAggregation": {
+        "type": "object",
+        "properties": {
+          "availability": {
+            "type": "number",
+            "description": "",
+            "format": "double"
+          },
+          "performance": {
+            "type": "number",
+            "description": "",
+            "format": "double"
+          },
+          "quality": {
+            "type": "number",
+            "description": "",
+            "format": "double"
+          },
+          "oee": {
+            "type": "number",
+            "description": "",
+            "format": "double"
+          },
+          "goodCount": {
+            "type": "number",
+            "description": "",
+            "format": "double"
+          },
+          "scrappedCount": {
+            "type": "number",
+            "description": "",
+            "format": "double"
+          },
+          "totalCount": {
+            "type": "number",
+            "description": "",
+            "format": "double"
+          },
+          "plannedQuantity": {
+            "type": "number",
+            "description": "",
+            "format": "double"
+          },
+          "progressPercentage": {
+            "type": "number",
+            "description": "0-1 range",
+            "format": "double"
+          },
+          "totalRunTime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "totalDowntime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "totalSpeedLossTime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "description": "",
+            "format": "date-time"
+          },
+          "actualCycleTime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          },
+          "estimatedFinishTime": {
+            "type": "string",
+            "description": "Estimated finish time",
+            "format": "date-time"
+          },
+          "totalTestRunTime": {
+            "type": "string",
+            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
+            "format": "duration"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Pre-computed machine aggregation for fast retrieval\r\nCached in grain state, updated periodically"
       },
       "MachineAreaMapping": {
         "required": [
@@ -100074,7 +99875,8 @@
         "enum": [
           "running",
           "speedLoss",
-          "downtime"
+          "downtime",
+          "testMode"
         ],
         "type": "string",
         "description": "Represents the run state of a machine output."
@@ -105429,6 +105231,11 @@
           "productId": {
             "$ref": "#/components/schemas/ObjectId"
           },
+          "productName": {
+            "type": "string",
+            "description": "Name of the product.",
+            "nullable": true
+          },
           "productionOrderNumber": {
             "type": "string",
             "description": "Production order number associated with the product.",
@@ -105457,32 +105264,10 @@
             "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
             "format": "duration"
           },
-          "productName": {
-            "type": "string",
-            "description": "Name of the product.",
-            "nullable": true
-          },
           "plannedQuantity": {
             "type": "number",
             "description": "Planned quantity for the new product after changeover.",
             "format": "double"
-          },
-          "currentQuantity": {
-            "type": "number",
-            "format": "double"
-          },
-          "goodQuantity": {
-            "type": "number",
-            "format": "double"
-          },
-          "scrapQuantity": {
-            "type": "number",
-            "format": "double"
-          },
-          "actualCycleTime": {
-            "type": "string",
-            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
-            "format": "duration"
           }
         },
         "additionalProperties": false,
@@ -105864,7 +105649,7 @@
             "type": "string",
             "description": "Date of the work.",
             "format": "date",
-            "example": "2026-01-09"
+            "example": "2026-01-13"
           },
           "shiftName": {
             "type": "string",
@@ -111251,6 +111036,11 @@
           "requiresComment": {
             "type": "boolean",
             "description": "Lý do dừng máy có yêu cầu bình luận không"
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "Hình ảnh minh họa cho lý do dừng máy",
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -114360,90 +114150,6 @@
           "imperial"
         ],
         "type": "string"
-      },
-      "UpdateTenantRequest": {
-        "type": "object",
-        "properties": {
-          "databaseName": {
-            "type": "string",
-            "description": "Gets or sets the name of the database associated with the tenant.",
-            "nullable": true
-          },
-          "userName": {
-            "type": "string",
-            "description": "Gets or sets the username for database authentication.",
-            "nullable": true
-          },
-          "password": {
-            "type": "string",
-            "description": "Gets or sets the password for database authentication.",
-            "nullable": true
-          },
-          "maxConnectionPoolSize": {
-            "type": "integer",
-            "description": "Gets or sets the maximum size of the connection pool for the tenant.",
-            "format": "int32"
-          },
-          "replicaSetMembers": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Gets or sets a list of connection strings for the replica set members, e.g., [\"host1:27017\", \"host2:27017\",\r\n\"host3:27017\"].",
-            "nullable": true
-          },
-          "replicaSetName": {
-            "type": "string",
-            "description": "Gets or sets the name of the MongoDB replica set. This is crucial for connecting to a replica set.",
-            "nullable": true
-          },
-          "defaultPort": {
-            "type": "integer",
-            "description": "Gets or sets the default port for MongoDB connections.",
-            "format": "int32"
-          },
-          "cephServiceUrl": {
-            "type": "string",
-            "description": "The S3-compatible service URL for this tenant. If null or empty, the default is used.",
-            "nullable": true
-          },
-          "cephUsername": {
-            "type": "string",
-            "description": "The S3 UserId for this tenant. If null or empty, the default is used.",
-            "nullable": true
-          },
-          "cephAccessKey": {
-            "type": "string",
-            "description": "The S3 Access Key for this tenant. If null or empty, the default is used.",
-            "nullable": true
-          },
-          "cephSecretKey": {
-            "type": "string",
-            "description": "The S3 Secret Key for this tenant. If null or empty, the default is used.",
-            "nullable": true
-          },
-          "cephBucketName": {
-            "type": "string",
-            "description": "The primary bucket name for this tenant. If null or empty, the default is used.",
-            "nullable": true
-          },
-          "id": {
-            "type": "string",
-            "description": "Gets or sets the unique identifier for the tenant.",
-            "nullable": true
-          },
-          "identifier": {
-            "type": "string",
-            "description": "Gets or sets the database name, which is also used as the tenant identifier.",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "description": "Gets or sets the name of the tenant.",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
       },
       "UpdateTimeBlockRequest": {
         "type": "object",
@@ -118157,7 +117863,7 @@
             "type": "string",
             "description": "The specific work date this statistic applies to.",
             "format": "date",
-            "example": "2026-01-09"
+            "example": "2026-01-13"
           },
           "calendarId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -118913,7 +118619,8 @@
       "name": "ApiGateway"
     },
     {
-      "name": "AppVersion"
+      "name": "AppVersion",
+      "description": "Controller for handling application version notifications."
     },
     {
       "name": "Area",
@@ -118927,7 +118634,8 @@
       "description": ""
     },
     {
-      "name": "Blob"
+      "name": "Blob",
+      "description": "Controller for blob storage operations"
     },
     {
       "name": "BomHeader"
@@ -118939,7 +118647,8 @@
       "name": "Brand"
     },
     {
-      "name": "Cache"
+      "name": "Cache",
+      "description": "Controller for cache management"
     },
     {
       "name": "Calendar",
@@ -118961,13 +118670,15 @@
       "name": "CodeGeneratorSetting"
     },
     {
-      "name": "Culture"
+      "name": "Culture",
+      "description": "Controller for managing culture settings."
     },
     {
       "name": "Customer"
     },
     {
-      "name": "Dashboard"
+      "name": "Dashboard",
+      "description": "Dashboard controller - Read operations"
     },
     {
       "name": "DashboardTemplate"
@@ -119041,9 +118752,6 @@
       "name": "FolderPermission"
     },
     {
-      "name": "Hls"
-    },
-    {
       "name": "IdentityComponentsEndpointRouteBuilderExtensions"
     },
     {
@@ -119090,7 +118798,7 @@
     },
     {
       "name": "Machine",
-      "description": "Controller for machine-related operations"
+      "description": "Controller for machine master data"
     },
     {
       "name": "MachineAreaMapping"
@@ -119106,10 +118814,6 @@
       "name": "MachineDefectReasonMapping"
     },
     {
-      "name": "MachineDowntime",
-      "description": "Controller for machine downtime operations"
-    },
-    {
       "name": "MachineGroup"
     },
     {
@@ -119120,6 +118824,10 @@
     },
     {
       "name": "MachineOutputMapping"
+    },
+    {
+      "name": "MachineProduction",
+      "description": "Controller for managing machine production operations."
     },
     {
       "name": "MachineProductMapping"
@@ -119140,7 +118848,8 @@
       "name": "MemorySchema"
     },
     {
-      "name": "Modules"
+      "name": "Modules",
+      "description": "Controller for managing server modules"
     },
     {
       "name": "MongoBlob"
@@ -119200,7 +118909,8 @@
       "description": "API Controller for monitoring Quartz.NET jobs"
     },
     {
-      "name": "Record"
+      "name": "Record",
+      "description": "Controller for managing IoT Records"
     },
     {
       "name": "RefreshToken"
@@ -119252,7 +118962,8 @@
       "description": "Controller for managing static files."
     },
     {
-      "name": "Station"
+      "name": "Station",
+      "description": "Controller for managing stations"
     },
     {
       "name": "StationGroup"
@@ -119290,9 +119001,6 @@
     {
       "name": "Tenant",
       "description": ""
-    },
-    {
-      "name": "Test"
     },
     {
       "name": "TimeBlockName",
@@ -119335,9 +119043,6 @@
     },
     {
       "name": "VaultForce"
-    },
-    {
-      "name": "Video"
     },
     {
       "name": "Warehouse"
