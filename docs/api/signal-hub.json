@@ -75,7 +75,7 @@
         "payloadExample": {
           "deviceId": "device-123",
           "currentState": "online",
-          "lastSeen": "2026-01-07T04:54:52.2009569Z",
+          "lastSeen": "2026-01-13T09:12:43.6335337Z",
           "firmwareVersion": "1.0.3",
           "lastError": ""
         }
@@ -92,7 +92,7 @@
         "name": "GetMachineAggregation",
         "description": "Get current machine aggregation (pre-computed OEE metrics)",
         "returnType": "MachineAggregation",
-        "payloadExample": "{\"availability\":0.0,\"performance\":0.0,\"quality\":0.0,\"oee\":0.0,\"goodCount\":0.0,\"totalCount\":0.0,\"totalRunTime\":\"00:00:00\",\"totalDowntime\":\"00:00:00\",\"totalSpeedLossTime\":\"00:00:00\",\"lastUpdated\":\"2000-01-01T00:00:00Z\"}",
+        "payloadExample": "{\"availability\":0.0,\"performance\":0.0,\"quality\":0.0,\"oee\":0.0,\"goodCount\":0.0,\"scrappedCount\":0.0,\"totalCount\":0.0,\"plannedQuantity\":0.0,\"progressPercentage\":0.0,\"totalRunTime\":\"00:00:00\"}",
         "parameters": [
           {
             "name": "machineId",
@@ -198,13 +198,13 @@
         "schema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"startTime\": {\n      \"type\": \"string\",\n      \"description\": \"Start time of the runtime block.\",\n      \"format\": \"date-time\"\n    },\n    \"endTime\": {\n      \"type\": \"string\",\n      \"description\": \"End time of the runtime block. Nullable to indicate ongoing blocks.\",\n      \"format\": \"date-time\",\n      \"nullable\": true\n    },\n    \"stopReasonId\": {\n      \"type\": \"string\",\n      \"description\": \"Identifier for the stop reason associated with this runtime block. ObjectId in string format. Empty string\\r\\nindicates normal operation.\",\n      \"nullable\": true\n    },\n    \"name\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the runtime block. Or stop reason name.\",\n      \"nullable\": true\n    },\n    \"extraNote\": {\n      \"type\": \"string\",\n      \"description\": \"Color associated with the runtime block. Or stop reason color.\",\n      \"nullable\": true\n    },\n    \"isUnplannedDowntime\": {\n      \"type\": \"boolean\",\n      \"description\": \"Indicates if the downtime was unplanned.\"\n    },\n    \"state\": \n  },\n  \"additionalProperties\": false,\n  \"description\": \"Represents a runtime block with start and end times, stop reason, name, and color.\"\n}",
         "description": "Broadcasts machine runtime blocks showing start/stop times and downtime reasons",
         "payloadExample": {
-          "startTime": "2026-01-07T04:39:52.1999827Z",
-          "endTime": "2026-01-07T04:54:52.2000634Z",
+          "startTime": "2026-01-13T08:57:43.6325374Z",
+          "endTime": "2026-01-13T09:12:43.6326226Z",
           "stopReasonId": "reason-123",
           "name": "Scheduled Maintenance",
           "extraNote": "Quarterly checkup",
           "isUnplannedDowntime": false,
-          "state": "downtime"
+          "state": "unPlannedDowntime"
         }
       }
     ]
@@ -276,7 +276,7 @@
       },
       {
         "name": "WidgetJoinGroups",
-        "description": "",
+        "description": "Subscribes the current connection to multiple widget groups.",
         "returnType": "Task",
         "payloadExample": null,
         "parameters": [
@@ -383,7 +383,7 @@
         "payloadExample": {
           "sensorId": "sensor-456",
           "value": 23.5,
-          "timestamp": "2026-01-07T04:54:52.2006892Z"
+          "timestamp": "2026-01-13T09:12:43.6333104Z"
         }
       }
     ]
