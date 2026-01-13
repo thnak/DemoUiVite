@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -41,8 +41,6 @@ export function UnitConversionListView() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const [conversions, setConversions] = useState<UnitConversionProps[]>([]);
-  const [totalItems, setTotalItems] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filterName, setFilterName] = useState('');
@@ -63,20 +61,20 @@ export function UnitConversionListView() {
     }
   );
 
-  useEffect(() => {
-    if (conversionData) {
-      const mappedConversions: UnitConversionProps[] = (conversionData.items || []).map((item) => ({
-        id: item.conversionId?.toString() || '',
-        from: item.fromUnitName || '',
-        to: item.toUnitName || '',
-        conversionFactor: item.conversionFactor || 0,
-        offset: item.offset || 0,
-        formulaDescription: item.formula || '',
-      }));
-      setConversions(mappedConversions);
-      setTotalItems(conversionData.totalItems || 0);
-    }
+  // Derive conversions and totalItems from conversionData using useMemo - React Compiler friendly
+  const conversions = useMemo<UnitConversionProps[]>(() => {
+    if (!conversionData) return [];
+    return (conversionData.items || []).map((item) => ({
+      id: item.conversionId?.toString() || '',
+      from: item.fromUnitName || '',
+      to: item.toUnitName || '',
+      conversionFactor: item.conversionFactor || 0,
+      offset: item.offset || 0,
+      formulaDescription: item.formula || '',
+    }));
   }, [conversionData]);
+
+  const totalItems = useMemo(() => conversionData?.totalItems || 0, [conversionData]);
 
   const { mutate: deleteConversionMutate } = useDeleteUnitConversion({
     onSuccess: () => {

@@ -260,9 +260,9 @@ export function DurationTimePicker({
   const prevValueRef = useRef(value);
   const prevPrecisionRef = useRef(precision);
 
-  // Sync local state with external value changes
-  // This is a valid use of useEffect for synchronizing with external systems (props)
-  useEffect(() => {
+  // Sync local state with external value changes using useMemo - React Compiler friendly
+  // Compute parts directly from value instead of setState in useEffect
+  useMemo(() => {
     // Only update if value or precision actually changed
     if (value !== prevValueRef.current || precision !== prevPrecisionRef.current) {
       prevValueRef.current = value;
@@ -283,6 +283,7 @@ export function DurationTimePicker({
         setSecondsStr(newParts.seconds > 0 ? String(newParts.seconds) : '');
       }
     }
+    return null; // useMemo must return a value
   }, [value, precision]);
 
   // Handle seconds-only input change

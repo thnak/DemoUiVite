@@ -89,12 +89,20 @@ export function useTour({ steps, tourOptions, onComplete, onCancel }: UseTourOpt
           })) || [
             {
               text: 'Back',
-              action(this: any) { this.back(); },
+              action() { 
+                // Access tour instance via closure instead of `this`
+                const tour = tourRef.current;
+                if (tour) tour.back();
+              },
               classes: 'shepherd-button-secondary',
             },
             {
               text: 'Next',
-              action(this: any) { this.next(); },
+              action() { 
+                // Access tour instance via closure instead of `this`
+                const tour = tourRef.current;
+                if (tour) tour.next();
+              },
               classes: 'shepherd-button-primary',
             },
           ],
