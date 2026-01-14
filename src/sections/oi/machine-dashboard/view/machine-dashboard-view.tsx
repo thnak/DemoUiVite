@@ -1,5 +1,5 @@
-import type { GetAreaNamesResult, SearchMachineByAreaResult } from 'src/api/types/generated';
 import type { MachineOeeUpdate } from 'src/services/machineHub';
+import type { GetAreaNamesResult, SearchMachineByAreaResult } from 'src/api/types/generated';
 
 import { motion } from 'framer-motion';
 import { useState, useEffect, useCallback } from 'react';
