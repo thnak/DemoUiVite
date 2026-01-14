@@ -5,11 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
-import Tabs from '@mui/material/Tabs';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Badge from '@mui/material/Badge';
@@ -60,7 +58,6 @@ import {
 import { Iconify } from 'src/components/iconify';
 
 import { useMachineSelector } from '../../context';
-import { OEEAPQChart, TimelineVisualization } from '../components';
 import {
   getMachineStatus,
   calculateDuration,
@@ -68,6 +65,14 @@ import {
   mergeSignalRUpdate,
   createEmptyMachineData,
 } from '../types';
+import {
+  OEEAPQChart,
+  AddDefectDialog,
+  AddQuantityDialog,
+  KeyboardHelpDialog,
+  LabelDowntimeDialog,
+  TimelineVisualization,
+} from '../components';
 
 import type {
   DefectType,
@@ -105,34 +110,19 @@ export function MachineOperationView() {
   const [selectedProductForChange, setSelectedProductForChange] = useState<AvailableProduct | null>(null);
   const [targetQuantity, setTargetQuantity] = useState<string>('');
   const [addQuantityDialogOpen, setAddQuantityDialogOpen] = useState(false);
-  const [addQuantityTabValue, setAddQuantityTabValue] = useState(0);
-  const [quantityToAdd, setQuantityToAdd] = useState<string>('');
-  const [quantityNote, setQuantityNote] = useState<string>('');
   const [quantityHistory, setQuantityHistory] = useState<QuantityAddHistory[]>([]);
-  const [editingQuantityId, setEditingQuantityId] = useState<string | null>(null);
-  const [editQuantityValue, setEditQuantityValue] = useState<string>('');
-  const [editQuantityNote, setEditQuantityNote] = useState<string>('');
   const [availableProducts, setAvailableProducts] = useState<AvailableProduct[]>([]);
   const [productSearchTerm, setProductSearchTerm] = useState('');
   const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
 
   // Defect/Scrap dialog states
   const [addDefectDialogOpen, setAddDefectDialogOpen] = useState(false);
-  const [defectTabValue, setDefectTabValue] = useState(0);
   const [defectTypes, setDefectTypes] = useState<DefectType[]>([]);
-  const [defectEntries, setDefectEntries] = useState<Map<string, number>>(new Map());
   const [defectHistory, setDefectHistory] = useState<DefectSubmission[]>([]);
 
   // Label downtime dialog states
   const [labelDowntimeDialogOpen, setLabelDowntimeDialogOpen] = useState(false);
-  const [downtimeTabValue, setDowntimeTabValue] = useState(0);
   const [stopReasons, setStopReasons] = useState<StopReason[]>([]);
-  const [downtimeToLabel, setDowntimeToLabel] = useState<CurrentMachineRunStateRecords | null>(
-    null
-  );
-  const [showReasonGrid, setShowReasonGrid] = useState(false);
-  const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
-  const [labelNote, setLabelNote] = useState<string>('');
   const [downtimeHistory, setDowntimeHistory] = useState<DowntimeLabelHistory[]>([]);
 
   const hubService = MachineHubService.getInstance(apiConfig.baseUrl);
@@ -499,104 +489,81 @@ export function MachineOperationView() {
     }
   };
 
-  const handleAddQuantity = async () => {
-    const qty = parseInt(quantityToAdd, 10);
-    if (qty > 0 && selectedMachine?.id) {
-      try {
-        await postapimachineproductionmachineIdaddexternalquantity(selectedMachine.id, {
-          quantity: qty,
-          remark: quantityNote || undefined,
-        });
+  // Wrapper for AddQuantityDialog - receives quantity and note as parameters
+  const handleAddQuantitySubmit = async (quantity: number, note: string) => {
+    if (!selectedMachine?.id) return;
 
-        // Reload quantity history
-        const history = await getapimachineproductionmachineIdaddexternalquantityhistory(
-          selectedMachine.id
-        );
-        if (history) {
-          const formattedHistory: QuantityAddHistory[] = history.map((item) => ({
-            id: item.id || `${item.createdAt}`,
-            timestamp: item.createdAt || new Date().toISOString(),
-            addedQuantity: item.quantity || 0,
-            addedBy: item.userAdded || 'Unknown',
-            note: item.remark || undefined,
-          }));
-          setQuantityHistory(formattedHistory);
-        }
+    try {
+      await postapimachineproductionmachineIdaddexternalquantity(selectedMachine.id, {
+        quantity,
+        remark: note || undefined,
+      });
 
-        // Reload product data to get updated quantities
-        const productState = await getapimachineproductionmachineIdcurrentproductstate(
-          selectedMachine.id
-        );
-        if (productState) {
-          setMachineData((prev) => mergeProductState(prev, productState, apiConfig.baseUrl));
-        }
-
-        // Reset form
-        setQuantityToAdd('');
-        setQuantityNote('');
-        setAddQuantityDialogOpen(false);
-        setAddQuantityTabValue(0);
-      } catch (error) {
-        console.error('Failed to add quantity:', error);
-        // TODO: Show error notification to user
+      // Reload quantity history
+      const history = await getapimachineproductionmachineIdaddexternalquantityhistory(
+        selectedMachine.id
+      );
+      if (history) {
+        const formattedHistory: QuantityAddHistory[] = history.map((item) => ({
+          id: item.id || `${item.createdAt}`,
+          timestamp: item.createdAt || new Date().toISOString(),
+          addedQuantity: item.quantity || 0,
+          addedBy: item.userAdded || 'Unknown',
+          note: item.remark || undefined,
+        }));
+        setQuantityHistory(formattedHistory);
       }
+
+      // Reload product data to get updated quantities
+      const productState = await getapimachineproductionmachineIdcurrentproductstate(
+        selectedMachine.id
+      );
+      if (productState) {
+        setMachineData((prev) => mergeProductState(prev, productState, apiConfig.baseUrl));
+      }
+    } catch (error) {
+      console.error('Failed to add quantity:', error);
+      // TODO: Show error notification to user
     }
   };
 
-  const handleEditQuantity = (history: QuantityAddHistory) => {
-    setEditingQuantityId(history.id);
-    setEditQuantityValue(String(history.addedQuantity));
-    setEditQuantityNote(history.note || '');
-  };
 
-  const handleSaveEditQuantity = async (historyId: string) => {
-    const newQty = parseInt(editQuantityValue, 10);
-    if (newQty > 0 && selectedMachine?.id) {
-      try {
-        await postapimachineproductionmachineIdupdateexternalquantity(selectedMachine.id, {
-          externalQuantityId: historyId,
-          newQuantity: newQty,
-          remark: editQuantityNote || undefined,
-        });
+  const handleSaveEditQuantity = async (historyId: string, newQty: number, note: string) => {
+    if (!selectedMachine?.id) return;
 
-        // Reload quantity history
-        const history = await getapimachineproductionmachineIdaddexternalquantityhistory(
-          selectedMachine.id
-        );
-        if (history) {
-          const formattedHistory: QuantityAddHistory[] = history.map((item) => ({
-            id: item.id || `${item.createdAt}`,
-            timestamp: item.createdAt || new Date().toISOString(),
-            addedQuantity: item.quantity || 0,
-            addedBy: item.userAdded || 'Unknown',
-            note: item.remark || undefined,
-          }));
-          setQuantityHistory(formattedHistory);
-        }
+    try {
+      await postapimachineproductionmachineIdupdateexternalquantity(selectedMachine.id, {
+        externalQuantityId: historyId,
+        newQuantity: newQty,
+        remark: note || undefined,
+      });
 
-        // Reload product data to get updated quantities
-        const productState = await getapimachineproductionmachineIdcurrentproductstate(
-          selectedMachine.id
-        );
-        if (productState) {
-          setMachineData((prev) => mergeProductState(prev, productState, apiConfig.baseUrl));
-        }
-
-        // Reset edit state
-        setEditingQuantityId(null);
-        setEditQuantityValue('');
-        setEditQuantityNote('');
-      } catch (error) {
-        console.error('Failed to update quantity:', error);
-        // TODO: Show error notification to user
+      // Reload quantity history
+      const history = await getapimachineproductionmachineIdaddexternalquantityhistory(
+        selectedMachine.id
+      );
+      if (history) {
+        const formattedHistory: QuantityAddHistory[] = history.map((item) => ({
+          id: item.id || `${item.createdAt}`,
+          timestamp: item.createdAt || new Date().toISOString(),
+          addedQuantity: item.quantity || 0,
+          addedBy: item.userAdded || 'Unknown',
+          note: item.remark || undefined,
+        }));
+        setQuantityHistory(formattedHistory);
       }
-    }
-  };
 
-  const handleCancelEditQuantity = () => {
-    setEditingQuantityId(null);
-    setEditQuantityValue('');
-    setEditQuantityNote('');
+      // Reload product data to get updated quantities
+      const productState = await getapimachineproductionmachineIdcurrentproductstate(
+        selectedMachine.id
+      );
+      if (productState) {
+        setMachineData((prev) => mergeProductState(prev, productState, apiConfig.baseUrl));
+      }
+    } catch (error) {
+      console.error('Failed to update quantity:', error);
+      // TODO: Show error notification to user
+    }
   };
 
   const handleDeleteQuantity = async (historyId: string) => {
@@ -635,35 +602,8 @@ export function MachineOperationView() {
     }
   };
 
-  // Defect handling functions
-  const handleDefectQuantityChange = (defectId: string, value: string) => {
-    const qty = parseInt(value, 10);
-    if (!Number.isNaN(qty) && qty > 0) {
-      setDefectEntries(new Map(defectEntries.set(defectId, qty)));
-    } else {
-      const newMap = new Map(defectEntries);
-      newMap.delete(defectId);
-      setDefectEntries(newMap);
-    }
-  };
-
-  const handleDefectIncrement = (defectId: string) => {
-    const current = defectEntries.get(defectId) || 0;
-    setDefectEntries(new Map(defectEntries.set(defectId, current + 1)));
-  };
-
-  const handleDefectDecrement = (defectId: string) => {
-    const current = defectEntries.get(defectId) || 0;
-    if (current > 1) {
-      setDefectEntries(new Map(defectEntries.set(defectId, current - 1)));
-    } else {
-      const newMap = new Map(defectEntries);
-      newMap.delete(defectId);
-      setDefectEntries(newMap);
-    }
-  };
-
-  const handleSubmitDefects = async () => {
+  // Wrapper for AddDefectDialog - receives defect entries as parameter
+  const handleSubmitDefectsWrapper = async (defectEntries: Map<string, number>) => {
     if (defectEntries.size === 0 || !selectedMachine?.id) return;
 
     try {
@@ -705,11 +645,6 @@ export function MachineOperationView() {
       if (productState) {
         setMachineData((prev) => mergeProductState(prev, productState, apiConfig.baseUrl));
       }
-
-      // Reset form
-      setDefectEntries(new Map());
-      setAddDefectDialogOpen(false);
-      setDefectTabValue(0);
     } catch (error) {
       console.error('Failed to submit defects:', error);
       // TODO: Show error notification to user
@@ -717,28 +652,20 @@ export function MachineOperationView() {
   };
 
   // Downtime label handlers
-  const handleLabelDowntime = (downtime: CurrentMachineRunStateRecords) => {
-    setDowntimeToLabel(downtime);
-    setShowReasonGrid(true);
-  };
 
-  const handleStopReasonToggle = (reasonId: string) => {
-    setSelectedReasons((prev) => {
-      if (prev.includes(reasonId)) {
-        return prev.filter((id) => id !== reasonId);
-      }
-      return [...prev, reasonId];
-    });
-  };
-
-  const handleSubmitLabel = async () => {
-    if (selectedReasons.length === 0 || !downtimeToLabel || !selectedMachine?.id) return;
+  // Wrapper for LabelDowntimeDialog component
+  const handleLabelDowntimeSubmit = async (
+    downtime: CurrentMachineRunStateRecords,
+    reasonIds: string[],
+    note: string
+  ) => {
+    if (reasonIds.length === 0 || !selectedMachine?.id) return;
 
     try {
       await postapimachineproductionmachineIdlabeldowntimerecord(selectedMachine.id, {
-        startTime: downtimeToLabel.startTime || '',
-        reasonIds: selectedReasons, // API now supports multiple reasons
-        note: labelNote || undefined,
+        startTime: downtime.startTime || '',
+        reasonIds,
+        note: note || undefined,
       });
 
       // Reload timeline records
@@ -750,7 +677,7 @@ export function MachineOperationView() {
       }
 
       // Add to local history for UI display
-      const reasons = selectedReasons.map((id) => {
+      const reasons = reasonIds.map((id) => {
         const reason = stopReasons.find((r) => r.reasonId === id);
         return {
           reasonId: id,
@@ -762,21 +689,15 @@ export function MachineOperationView() {
       const newLabel: DowntimeLabelHistory = {
         id: `${Date.now()}`,
         timestamp: new Date().toISOString(),
-        startTime: downtimeToLabel.startTime,
-        endTime: downtimeToLabel.endTime,
-        duration: calculateDuration(downtimeToLabel.startTime, downtimeToLabel.endTime),
+        startTime: downtime.startTime,
+        endTime: downtime.endTime,
+        duration: calculateDuration(downtime.startTime, downtime.endTime),
         reasons,
-        note: labelNote,
+        note,
         labeledBy: 'Current User', // TODO: Get from user context
       };
 
       setDowntimeHistory([newLabel, ...downtimeHistory]);
-
-      // Reset and close
-      setSelectedReasons([]);
-      setLabelNote('');
-      setShowReasonGrid(false);
-      setDowntimeToLabel(null);
     } catch (error) {
       console.error('Failed to label downtime:', error);
       // TODO: Show error notification to user
@@ -1597,733 +1518,39 @@ export function MachineOperationView() {
       </Dialog>
 
       {/* Add Quantity Dialog */}
-      <Dialog
+      <AddQuantityDialog
         open={addQuantityDialogOpen}
         onClose={() => setAddQuantityDialogOpen(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-              Thêm sản phẩm
-            </Typography>
-            <IconButton onClick={() => setAddQuantityDialogOpen(false)}>
-              <Iconify icon="eva:close-outline" />
-            </IconButton>
-          </Box>
-        </DialogTitle>
-        <DialogContent>
-          <Tabs
-            value={addQuantityTabValue}
-            onChange={(e, newValue) => setAddQuantityTabValue(newValue)}
-            sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}
-          >
-            <Tab label="Thêm số lượng" />
-            <Tab label="Lịch sử" />
-          </Tabs>
-
-          {/* Tab 1: Add Quantity */}
-          {addQuantityTabValue === 0 && (
-            <Stack spacing={3} height="700px">
-              <TextField
-                fullWidth
-                label="Số lượng"
-                type="number"
-                value={quantityToAdd}
-                onChange={(e) => setQuantityToAdd(e.target.value)}
-                slotProps={{
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Iconify icon="eva:plus-fill" />
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-                helperText="Nhập số lượng sản phẩm muốn thêm vào tổng số"
-              />
-              <TextField
-                fullWidth
-                label="Ghi chú (tùy chọn)"
-                multiline
-                rows={3}
-                value={quantityNote}
-                onChange={(e) => setQuantityNote(e.target.value)}
-                placeholder="Nhập ghi chú nếu cần..."
-              />
-              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-                <Button variant="outlined" onClick={() => setAddQuantityDialogOpen(false)}>
-                  Hủy
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={handleAddQuantity}
-                  disabled={!quantityToAdd || parseInt(quantityToAdd, 10) <= 0}
-                >
-                  Thêm
-                </Button>
-              </Box>
-            </Stack>
-          )}
-
-          {/* Tab 2: History */}
-          {addQuantityTabValue === 1 && (
-            <TableContainer style={{ height: '700px' }}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Thời gian</TableCell>
-                    <TableCell align="center">Số lượng</TableCell>
-                    <TableCell>Người thêm</TableCell>
-                    <TableCell>Ghi chú</TableCell>
-                    <TableCell align="right">Thao tác</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {quantityHistory.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={5} align="center">
-                        <Typography variant="body2" color="text.secondary">
-                          Chưa có lịch sử thêm số lượng
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    quantityHistory.map((history) => (
-                      <TableRow key={history.id} hover>
-                        <TableCell>{new Date(history.timestamp).toLocaleString('vi-VN')}</TableCell>
-                        <TableCell align="center">
-                          {editingQuantityId === history.id ? (
-                            <TextField
-                              size="small"
-                              type="number"
-                              value={editQuantityValue}
-                              onChange={(e) => setEditQuantityValue(e.target.value)}
-                              sx={{ width: '100px' }}
-                            />
-                          ) : (
-                            <Chip
-                              label={`+${history.addedQuantity}`}
-                              size="small"
-                              color="success"
-                            />
-                          )}
-                        </TableCell>
-                        <TableCell>{history.addedBy}</TableCell>
-                        <TableCell>
-                          {editingQuantityId === history.id ? (
-                            <TextField
-                              size="small"
-                              fullWidth
-                              value={editQuantityNote}
-                              onChange={(e) => setEditQuantityNote(e.target.value)}
-                              placeholder="Ghi chú"
-                            />
-                          ) : (
-                            <Typography variant="body2" color="text.secondary">
-                              {history.note || '-'}
-                            </Typography>
-                          )}
-                        </TableCell>
-                        <TableCell align="right">
-                          {editingQuantityId === history.id ? (
-                            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-                              <IconButton
-                                size="small"
-                                color="primary"
-                                onClick={() => handleSaveEditQuantity(history.id)}
-                              >
-                                <Iconify icon="solar:check-circle-bold" />
-                              </IconButton>
-                              <IconButton size="small" onClick={handleCancelEditQuantity}>
-                                <Iconify icon="mingcute:close-line" />
-                              </IconButton>
-                            </Box>
-                          ) : (
-                            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-                              <IconButton size="small" onClick={() => handleEditQuantity(history)}>
-                                <Iconify icon="solar:pen-bold" />
-                              </IconButton>
-                              <IconButton
-                                size="small"
-                                color="error"
-                                onClick={() => handleDeleteQuantity(history.id)}
-                              >
-                                <Iconify icon="solar:trash-bin-trash-bold" />
-                              </IconButton>
-                            </Box>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        </DialogContent>
-      </Dialog>
+        quantityHistory={quantityHistory}
+        onAdd={handleAddQuantitySubmit}
+        onEdit={handleSaveEditQuantity}
+        onDelete={handleDeleteQuantity}
+      />
 
       {/* Add Defect/Scrap Dialog */}
-      <Dialog
+      <AddDefectDialog
         open={addDefectDialogOpen}
         onClose={() => setAddDefectDialogOpen(false)}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-              Nhập lỗi/Scrap
-            </Typography>
-            <IconButton onClick={() => setAddDefectDialogOpen(false)}>
-              <Iconify icon="eva:close-outline" />
-            </IconButton>
-          </Box>
-        </DialogTitle>
-        <DialogContent>
-          <Tabs
-            value={defectTabValue}
-            onChange={(e, newValue) => setDefectTabValue(newValue)}
-            sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}
-          >
-            <Tab label="Nhập lỗi" />
-            <Tab label="Lịch sử" />
-          </Tabs>
-
-          {/* Tab 1: Add Defects Grid */}
-          {defectTabValue === 0 && (
-            <Box sx={{ height: 600, overflow: 'auto' }}>
-              <Grid container spacing={2}>
-                {defectTypes.map((defect) => {
-                  const quantity = defectEntries.get(defect.defectId) || 0;
-
-                  return (
-                    <Grid key={defect.defectId} size={{ xs: 12, sm: 6, md: 4 }}>
-                      <Card
-                        sx={{
-                          p: 2,
-                          borderLeft: 4,
-                          borderColor: defect.colorHex,
-                          height: '100%',
-                          display: 'flex',
-                          flexDirection: 'column',
-                        }}
-                      >
-                        {/* Defect image/icon */}
-                        <Box
-                          sx={{
-                            width: '100%',
-                            height: 100,
-                            borderRadius: 1,
-                            bgcolor: defect.colorHex,
-                            opacity: 0.15,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            mb: 2,
-                            position: 'relative',
-                          }}
-                        >
-                          {defect.imageUrl ? (
-                            <img
-                              key={defect.defectId} // Force re-render on defect change
-                              src={defect.imageUrl}
-                              alt={defect.defectName}
-                              style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-                            />
-                          ) : (
-                            <Typography
-                              variant="h1"
-                              sx={{
-                                color: defect.colorHex,
-                                opacity: 0.7,
-                              }}
-                            >
-                              ⚠️
-                            </Typography>
-                          )}
-                        </Box>
-
-                        {/* Defect name */}
-                        <Typography
-                          variant="subtitle1"
-                          sx={{
-                            fontWeight: 'bold',
-                            mb: 2,
-                            color: defect.colorHex,
-                          }}
-                        >
-                          {defect.defectName}
-                        </Typography>
-
-                        {/* Quantity controls */}
-                        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 'auto' }}>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleDefectDecrement(defect.defectId)}
-                            disabled={quantity === 0}
-                            sx={{
-                              border: 1,
-                              borderColor: defect.colorHex,
-                              color: defect.colorHex,
-                            }}
-                          >
-                            <Iconify icon="eva:minus-fill" />
-                          </IconButton>
-
-                          <TextField
-                            size="small"
-                            value={quantity || ''}
-                            onChange={(e) =>
-                              handleDefectQuantityChange(defect.defectId, e.target.value)
-                            }
-                            type="number"
-                            sx={{ flex: 1 }}
-                            slotProps={{
-                              input: {
-                                sx: { textAlign: 'center' },
-                              },
-                            }}
-                            placeholder="0"
-                          />
-
-                          <IconButton
-                            size="small"
-                            onClick={() => handleDefectIncrement(defect.defectId)}
-                            sx={{
-                              border: 1,
-                              borderColor: defect.colorHex,
-                              bgcolor: defect.colorHex,
-                              color: 'white',
-                              '&:hover': {
-                                bgcolor: defect.colorHex,
-                                opacity: 0.9,
-                              },
-                            }}
-                          >
-                            <Iconify icon="eva:plus-fill" />
-                          </IconButton>
-                        </Box>
-
-                        {/* Show current quantity if > 0 */}
-                        {quantity > 0 && (
-                          <Chip
-                            label={`${quantity} lỗi`}
-                            size="small"
-                            sx={{
-                              mt: 1,
-                              bgcolor: defect.colorHex,
-                              color: 'white',
-                            }}
-                          />
-                        )}
-                      </Card>
-                    </Grid>
-                  );
-                })}
-              </Grid>
-
-              {/* Submit button */}
-              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mt: 3 }}>
-                <Button variant="outlined" onClick={() => setAddDefectDialogOpen(false)}>
-                  Hủy
-                </Button>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={handleSubmitDefects}
-                  disabled={defectEntries.size === 0}
-                  startIcon={<Iconify icon="eva:checkmark-fill" />}
-                >
-                  Xác nhận ({Array.from(defectEntries.values()).reduce((sum, qty) => sum + qty, 0)}{' '}
-                  lỗi)
-                </Button>
-              </Box>
-            </Box>
-          )}
-
-          {/* Tab 2: History Grid */}
-          {defectTabValue === 1 && (
-            <Box sx={{ height: 600, overflow: 'auto' }}>
-              {defectHistory.length === 0 ? (
-                <Box sx={{ textAlign: 'center', py: 10 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    Chưa có lịch sử nhập lỗi
-                  </Typography>
-                </Box>
-              ) : (
-                <Stack spacing={3}>
-                  {defectHistory.map((submission) => (
-                    <Card key={submission.id} sx={{ p: 2 }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                        <Typography variant="body2" color="text.secondary">
-                          {new Date(submission.timestamp).toLocaleString('vi-VN')}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {submission.submittedBy}
-                        </Typography>
-                      </Box>
-                      <Grid container spacing={2}>
-                        {submission.defects.map((defect) => (
-                          <Grid key={defect.defectId} size={{ xs: 12, sm: 6, md: 4 }}>
-                            <Box
-                              sx={{
-                                p: 2,
-                                borderLeft: 4,
-                                borderColor: defect.colorHex,
-                                bgcolor: 'background.neutral',
-                                borderRadius: 1,
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                              }}
-                            >
-                              <Typography
-                                variant="body2"
-                                sx={{
-                                  fontWeight: 'bold',
-                                  color: defect.colorHex,
-                                }}
-                              >
-                                {defect.defectName}
-                              </Typography>
-                              <Chip
-                                label={`${defect.quantity}`}
-                                size="small"
-                                sx={{
-                                  bgcolor: defect.colorHex,
-                                  color: 'white',
-                                }}
-                              />
-                            </Box>
-                          </Grid>
-                        ))}
-                      </Grid>
-                    </Card>
-                  ))}
-                </Stack>
-              )}
-            </Box>
-          )}
-        </DialogContent>
-      </Dialog>
+        defectTypes={defectTypes}
+        defectHistory={defectHistory}
+        onSubmit={handleSubmitDefectsWrapper}
+      />
 
       {/* Label Downtime Dialog */}
-      <Dialog
+      <LabelDowntimeDialog
         open={labelDowntimeDialogOpen}
-        onClose={() => {
-          setLabelDowntimeDialogOpen(false);
-          setDowntimeTabValue(0);
-          setShowReasonGrid(false);
-          setDowntimeToLabel(null);
-        }}
-        maxWidth="md"
-        fullWidth
-        PaperProps={{
-          sx: { height: 600 },
-        }}
-      >
-        <DialogTitle>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="h6">Lý do dừng máy</Typography>
-            <IconButton
-              onClick={() => {
-                setLabelDowntimeDialogOpen(false);
-                setDowntimeTabValue(0);
-                setShowReasonGrid(false);
-                setDowntimeToLabel(null);
-              }}
-            >
-              <Iconify icon="eva:close-outline" />
-            </IconButton>
-          </Box>
-          <Tabs value={downtimeTabValue} onChange={(e, value) => setDowntimeTabValue(value)}>
-            <Tab label="Cần gán nhãn" />
-            <Tab label="Lịch sử" />
-          </Tabs>
-        </DialogTitle>
-        <DialogContent dividers sx={{ minHeight: 400 }}>
-          {/* Tab 1: Unlabeled Downtimes */}
-          {downtimeTabValue === 0 && (
-            <Box>
-              {showReasonGrid && downtimeToLabel ? (
-                // Show reason selection grid
-                <Box>
-                  <Button
-                    startIcon={<Iconify icon="eva:arrow-back-fill" />}
-                    onClick={() => {
-                      setShowReasonGrid(false);
-                      setDowntimeToLabel(null);
-                      setSelectedReasons([]);
-                      setLabelNote('');
-                    }}
-                    sx={{ mb: 2 }}
-                  >
-                    Quay lại
-                  </Button>
-                  <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
-                    Thời gian:{' '}
-                    {downtimeToLabel.startTime
-                      ? new Date(downtimeToLabel.startTime).toLocaleString()
-                      : 'N/A'}{' '}
-                    -
-                    {downtimeToLabel.endTime
-                      ? new Date(downtimeToLabel.endTime).toLocaleString()
-                      : ' Đang diễn ra'}{' '}
-                    ({calculateDuration(downtimeToLabel.startTime, downtimeToLabel.endTime)} phút)
-                  </Typography>
-
-                  <Grid container spacing={2} sx={{ mb: 3 }}>
-                    {stopReasons.map((reason) => (
-                      <Grid key={reason.reasonId} size={{ xs: 12, sm: 6, md: 4 }}>
-                        <Card
-                          sx={{
-                            p: 2,
-                            cursor: 'pointer',
-                            borderLeft: 4,
-                            borderColor: reason.colorHex,
-                            bgcolor: selectedReasons.includes(reason.reasonId)
-                              ? `${reason.colorHex}20`
-                              : 'background.paper',
-                            '&:hover': {
-                              bgcolor: `${reason.colorHex}10`,
-                            },
-                          }}
-                          onClick={() => handleStopReasonToggle(reason.reasonId)}
-                        >
-                          <Box
-                            sx={{
-                              height: 100,
-                              bgcolor: `${reason.colorHex}15`,
-                              borderRadius: 1,
-                              mb: 1,
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '2rem',
-                            }}
-                          >
-                            {reason.imageUrl ? (
-                              <img
-                                key={reason.reasonId} // Force re-render on reason change
-                                src={reason.imageUrl}
-                                alt={reason.reasonName}
-                                style={{ maxWidth: '100%', maxHeight: '100%' }}
-                              />
-                            ) : (
-                              '⚠️'
-                            )}
-                          </Box>
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                            }}
-                          >
-                            <Typography
-                              variant="body2"
-                              sx={{ fontWeight: 'bold', color: reason.colorHex }}
-                            >
-                              {reason.reasonName}
-                            </Typography>
-                            <Iconify
-                              icon={
-                                selectedReasons.includes(reason.reasonId)
-                                  ? 'eva:checkmark-square-2-fill'
-                                  : 'eva:square-outline'
-                              }
-                              sx={{ color: reason.colorHex }}
-                            />
-                          </Box>
-                        </Card>
-                      </Grid>
-                    ))}
-                  </Grid>
-
-                  <TextField
-                    multiline
-                    rows={3}
-                    fullWidth
-                    label="Ghi chú (tùy chọn)"
-                    value={labelNote}
-                    onChange={(e) => setLabelNote(e.target.value)}
-                    sx={{ mb: 2 }}
-                  />
-
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    onClick={handleSubmitLabel}
-                    disabled={selectedReasons.length === 0}
-                  >
-                    Xác nhận ({selectedReasons.length} lý do)
-                  </Button>
-                </Box>
-              ) : (
-                // Show unlabeled downtimes list
-                <Stack spacing={2}>
-                  {unlabeledDowntimes.length === 0 ? (
-                    <Alert severity="success">Không có thời gian dừng cần gán nhãn</Alert>
-                  ) : (
-                    unlabeledDowntimes.map((downtime, index) => {
-                      const isOngoing = !downtime.endTime;
-                      const duration = calculateDuration(downtime.startTime, downtime.endTime);
-
-                      return (
-                        <Card key={`${downtime.startTime}-${index}`} sx={{ p: 2 }}>
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                              mb: 1,
-                            }}
-                          >
-                            <Box>
-                              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                                {downtime.startTime
-                                  ? new Date(downtime.startTime).toLocaleString()
-                                  : 'N/A'}{' '}
-                                -
-                                {downtime.endTime
-                                  ? new Date(downtime.endTime).toLocaleString()
-                                  : ' Đang diễn ra'}
-                              </Typography>
-                              <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
-                                <Chip
-                                  icon={<Iconify icon="eva:clock-outline" />}
-                                  label={`${duration} phút`}
-                                  size="small"
-                                  color="default"
-                                />
-                                {isOngoing && (
-                                  <Chip label="Đang diễn ra" size="small" color="error" />
-                                )}
-                              </Box>
-                            </Box>
-                            <Button
-                              variant="contained"
-                              size="small"
-                              onClick={() => handleLabelDowntime(downtime)}
-                            >
-                              Gán nhãn
-                            </Button>
-                          </Box>
-                        </Card>
-                      );
-                    })
-                  )}
-                </Stack>
-              )}
-            </Box>
-          )}
-
-          {/* Tab 2: Labeled Downtime History */}
-          {downtimeTabValue === 1 && (
-            <Box>
-              {downtimeHistory.length === 0 ? (
-                <Alert severity="info">Chưa có lịch sử gán nhãn</Alert>
-              ) : (
-                <Stack spacing={2}>
-                  {downtimeHistory.map((history) => (
-                    <Card key={history.id} sx={{ p: 2 }}>
-                      <Box sx={{ mb: 2 }}>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 0.5 }}>
-                          {history.startTime ? new Date(history.startTime).toLocaleString() : 'N/A'}{' '}
-                          -
-                          {history.endTime
-                            ? new Date(history.endTime).toLocaleString()
-                            : ' Đang diễn ra'}{' '}
-                          ({history.duration} phút)
-                        </Typography>
-                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                          Gán bởi: {history.labeledBy} •{' '}
-                          {new Date(history.timestamp).toLocaleString()}
-                        </Typography>
-                      </Box>
-
-                      <Grid container spacing={1} sx={{ mb: history.note ? 2 : 0 }}>
-                        {history.reasons.map((reason) => (
-                          <Grid key={reason.reasonId} size={{ xs: 12, sm: 6, md: 4 }}>
-                            <Box
-                              sx={{
-                                p: 1,
-                                borderLeft: 4,
-                                borderColor: reason.colorHex,
-                                bgcolor: `${reason.colorHex}10`,
-                                borderRadius: 1,
-                              }}
-                            >
-                              <Typography
-                                variant="body2"
-                                sx={{ fontWeight: 'bold', color: reason.colorHex }}
-                              >
-                                {reason.reasonName}
-                              </Typography>
-                            </Box>
-                          </Grid>
-                        ))}
-                      </Grid>
-
-                      {history.note && (
-                        <Box sx={{ p: 1.5, bgcolor: 'background.neutral', borderRadius: 1 }}>
-                          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                            Ghi chú:
-                          </Typography>
-                          <Typography variant="body2">{history.note}</Typography>
-                        </Box>
-                      )}
-                    </Card>
-                  ))}
-                </Stack>
-              )}
-            </Box>
-          )}
-        </DialogContent>
-      </Dialog>
+        onClose={() => setLabelDowntimeDialogOpen(false)}
+        unlabeledDowntimes={unlabeledDowntimes}
+        stopReasons={stopReasons}
+        downtimeHistory={downtimeHistory}
+        onLabelDowntime={handleLabelDowntimeSubmit}
+      />
 
       {/* Keyboard Help Dialog */}
-      <Dialog open={showKeyboardHelp} onClose={() => setShowKeyboardHelp(false)} maxWidth="sm">
-        <DialogTitle>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="h6">Phím tắt</Typography>
-            <IconButton onClick={() => setShowKeyboardHelp(false)}>
-              <Iconify icon="eva:close-outline" />
-            </IconButton>
-          </Box>
-        </DialogTitle>
-        <DialogContent>
-          <Stack spacing={2}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="body2">Đổi mã hàng</Typography>
-              <Chip label="F1" size="small" />
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="body2">Thêm sản phẩm</Typography>
-              <Chip label="F2" size="small" />
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="body2">Nhập lỗi</Typography>
-              <Chip label="F3" size="small" />
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="body2">Lý do dừng máy</Typography>
-              <Chip label="F4" size="small" />
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="body2">Đóng dialog</Typography>
-              <Chip label="ESC" size="small" />
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="body2">Hiển thị phím tắt</Typography>
-              <Chip label="F12" size="small" />
-            </Box>
-          </Stack>
-        </DialogContent>
-      </Dialog>
+      <KeyboardHelpDialog
+        open={showKeyboardHelp}
+        onClose={() => setShowKeyboardHelp(false)}
+      />
     </Container>
   );
 }
