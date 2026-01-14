@@ -467,7 +467,7 @@ export function MachineOperationView() {
         
         try {
           // Load stop reasons
-          const stopData = await getapiStopMachineReasongetreasonpage([], {
+          const stopData = await getapiStopMachineReasongetreasonpage({
             PageNumber: 0,
             PageSize: 100,
           });

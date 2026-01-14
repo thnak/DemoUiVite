@@ -50,7 +50,6 @@ export function StopMachineReasonListView() {
   const [reasons, setReasons] = useState<StopMachineReasonProps[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [groupCounts, setGroupCounts] = useState<Record<string, number>>({});
-  const [isLoading, setIsLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -60,12 +59,20 @@ export function StopMachineReasonListView() {
   // Determine which groups to query - 'all' means empty array
   // Memoize to prevent infinite loops in useEffect
   const groupsToQuery = useMemo(() => 
-    currentGroup === 'all' ? [] : [currentGroup],
+    currentGroup === 'all' ? undefined : [currentGroup],
     [currentGroup]
   );
 
-  const { mutate: fetchReasons } = useGetapiStopMachineReasongetreasonpage({
-    onSuccess: (data) => {
+  const { data, isLoading: queryLoading, refetch } = useGetapiStopMachineReasongetreasonpage({
+    Search: filterName || undefined,
+    PageNumber: table.page,
+    PageSize: table.rowsPerPage,
+    GroupNames: groupsToQuery,
+  });
+
+  // Update local state when data changes
+  useEffect(() => {
+    if (data) {
       const mappedReasons: StopMachineReasonProps[] = (data.items || []).map((item: StopMachineReasonDto) => ({
         id: item.id?.toString() || '',
         code: item.code || '',
@@ -86,45 +93,24 @@ export function StopMachineReasonListView() {
       if (data.groupCounts) {
         setGroupCounts(data.groupCounts);
       }
-      
-      setIsLoading(false);
-    },
-    onError: () => {
-      setIsLoading(false);
-    },
-  });
+    }
+  }, [data]);
+
+  const isLoading = queryLoading;
 
   const { mutate: deleteStopMachineReasonMutate } = useDeleteStopMachineReason({
     onSuccess: () => {
       setSuccessMessage('Stop machine reason deleted successfully');
       // Refetch data after deletion
-      fetchReasons({
-        data: groupsToQuery,
-        params: {
-          Search: filterName || undefined,
-          PageNumber: table.page,
-          PageSize: table.rowsPerPage,
-        },
-      });
+      refetch();
     },
     onError: (error: any) => {
       setErrorMessage(error?.message || 'Failed to delete stop machine reason');
     },
   });
 
-  // Fetch data when filters change
-  useEffect(() => {
-    setIsLoading(true);
-    fetchReasons({
-      data: groupsToQuery,
-      params: {
-        Search: filterName || undefined,
-        PageNumber: table.page,
-        PageSize: table.rowsPerPage,
-      },
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [table.page, table.rowsPerPage, filterName, groupsToQuery]);
+  // The query will automatically refetch when the parameters change
+  // No need for manual useEffect to trigger fetches
 
   // Calculate tabs from groupCounts
   const tabs = useMemo(() => {
