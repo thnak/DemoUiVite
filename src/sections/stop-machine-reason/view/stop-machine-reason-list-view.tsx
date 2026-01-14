@@ -1,6 +1,6 @@
 import type { StopMachineReasonDto } from 'src/api/types/generated';
 
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -47,9 +47,6 @@ export function StopMachineReasonListView() {
 
   const [filterName, setFilterName] = useState('');
   const [currentGroup, setCurrentGroup] = useState<string>('all');
-  const [reasons, setReasons] = useState<StopMachineReasonProps[]>([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [groupCounts, setGroupCounts] = useState<Record<string, number>>({});
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -57,7 +54,7 @@ export function StopMachineReasonListView() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Determine which groups to query - 'all' means empty array
-  // Memoize to prevent infinite loops in useEffect
+  // Memoize to prevent infinite loops
   const groupsToQuery = useMemo(() => 
     currentGroup === 'all' ? undefined : [currentGroup],
     [currentGroup]
@@ -70,31 +67,26 @@ export function StopMachineReasonListView() {
     GroupNames: groupsToQuery,
   });
 
-  // Update local state when data changes
-  useEffect(() => {
-    if (data) {
-      const mappedReasons: StopMachineReasonProps[] = (data.items || []).map((item: StopMachineReasonDto) => ({
-        id: item.id?.toString() || '',
-        code: item.code || '',
-        name: item.name || '',
-        description: item.description || '',
-        groupName: item.groupName || '',
-        color: item.color || '',
-        impact: item.impact || 'run',
-        requiresApproval: item.requiresApproval || false,
-        requiresNote: item.requiresNote || false,
-        requiresAttachment: item.requiresAttachment || false,
-        requiresComment: item.requiresComment || false,
-      }));
-      setReasons(mappedReasons);
-      setTotalItems(data.totalItems || 0);
-      
-      // Store group counts for tabs
-      if (data.groupCounts) {
-        setGroupCounts(data.groupCounts);
-      }
-    }
+  // Derive reasons from query data using useMemo - React Compiler friendly
+  const reasons = useMemo<StopMachineReasonProps[]>(() => {
+    if (!data) return [];
+    return (data.items || []).map((item: StopMachineReasonDto) => ({
+      id: item.id?.toString() || '',
+      code: item.code || '',
+      name: item.name || '',
+      description: item.description || '',
+      groupName: item.groupName || '',
+      color: item.color || '',
+      impact: item.impact || 'run',
+      requiresApproval: item.requiresApproval || false,
+      requiresNote: item.requiresNote || false,
+      requiresAttachment: item.requiresAttachment || false,
+      requiresComment: item.requiresComment || false,
+    }));
   }, [data]);
+
+  const totalItems = useMemo(() => data?.totalItems || 0, [data]);
+  const groupCounts = useMemo(() => data?.groupCounts || {}, [data]);
 
   const isLoading = queryLoading;
 
@@ -108,9 +100,6 @@ export function StopMachineReasonListView() {
       setErrorMessage(error?.message || 'Failed to delete stop machine reason');
     },
   });
-
-  // The query will automatically refetch when the parameters change
-  // No need for manual useEffect to trigger fetches
 
   // Calculate tabs from groupCounts
   const tabs = useMemo(() => {
