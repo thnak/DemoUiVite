@@ -1,6 +1,9 @@
 import type { ApexOptions } from 'apexcharts';
 import type { MachineOeeUpdate } from 'src/services/machineHub';
-import type { CurrentMachineRunStateRecords, ProductWorkingStateByMachine as BaseProductWorkingState } from 'src/api/types/generated';
+import type {
+  CurrentMachineRunStateRecords,
+  ProductWorkingStateByMachine as BaseProductWorkingState,
+} from 'src/api/types/generated';
 
 /**
  * Unified interface for all machine operation data
@@ -10,7 +13,7 @@ interface MachineOperationData {
   // Machine identification
   machineId: string;
   machineName: string;
-  
+
   // OEE Metrics (from SignalR MachineOeeUpdate)
   oee: number; // Percentage (0-100)
   availability: number; // Percentage (0-100)
@@ -20,21 +23,21 @@ interface MachineOperationData {
   performanceVsLastPeriod: number;
   qualityVsLastPeriod: number;
   oeeVsLastPeriod: number;
-  
+
   // Production Counts (from SignalR)
   goodCount: number;
   totalCount: number;
   scrapQuantity: number; // Derived from totalCount - goodCount
   goodCountVsLastPeriod: number;
   totalCountVsLastPeriod: number;
-  
+
   // Time metrics (from SignalR)
   plannedProductionTime: string; // ISO 8601 duration
   runTime: string; // ISO 8601 duration
   downtime: string; // ISO 8601 duration
   speedLossTime: string; // ISO 8601 duration
   estimatedFinishTime?: string; // ISO 8601 date-time
-  
+
   // Product information (from API ProductWorkingStateByMachine)
   productId?: string;
   productName: string; // Falls back to currentProductName from SignalR
@@ -45,7 +48,7 @@ interface MachineOperationData {
   actualCycleTime?: string;
   userId?: string;
   startTime?: string;
-  
+
   // Progress calculation
   progressPercentage: number; // Calculated from currentQuantity / plannedQuantity
 }
@@ -53,7 +56,10 @@ interface MachineOperationData {
 /**
  * Create initial empty machine operation data
  */
-const createEmptyMachineData = (machineId?: string, machineName?: string): MachineOperationData => ({
+const createEmptyMachineData = (
+  machineId?: string,
+  machineName?: string
+): MachineOperationData => ({
   machineId: machineId || '',
   machineName: machineName || '',
   oee: 0,
@@ -126,9 +132,10 @@ const mergeProductState = (
   plannedQuantity: productState.plannedQuantity ?? existing.plannedQuantity,
   idealCycleTime: productState.idealCycleTime,
   userId: productState.userId,
-  progressPercentage: productState.plannedQuantity && existing.currentQuantity
-    ? (existing.currentQuantity / productState.plannedQuantity * 100)
-    : existing.progressPercentage,
+  progressPercentage:
+    productState.plannedQuantity && existing.currentQuantity
+      ? (existing.currentQuantity / productState.plannedQuantity) * 100
+      : existing.progressPercentage,
 });
 
 import Chart from 'react-apexcharts';
@@ -319,7 +326,7 @@ function OEEAPQCombinedChart({
       fontSize: '14px',
       markers: {
         size: 6,
-        strokeWidth: 4
+        strokeWidth: 4,
         // radius: 12, // Rounded markers
       },
       itemMargin: {
@@ -335,10 +342,10 @@ function OEEAPQCombinedChart({
   const series = [oee, availability, performance, quality];
 
   return (
-    <Box 
-      sx={{ 
-        width: '100%', 
-        maxWidth: 500, 
+    <Box
+      sx={{
+        width: '100%',
+        maxWidth: 500,
         mx: 'auto',
         borderRadius: 3, // Rounded container corners
         p: 2,
@@ -361,11 +368,12 @@ function ApexTimelineVisualization({ records }: { records: CurrentMachineRunStat
 
   // Convert records to ApexCharts timeline format
   const timelineData = records.map((record, index) => {
-    const isUnlabeled = record.stateId === '000000000000000000000000' && 
-                        (record.state === 'unPlannedDowntime' || record.state === 'plannedDowntime');
+    const isUnlabeled =
+      record.stateId === '000000000000000000000000' &&
+      (record.state === 'unPlannedDowntime' || record.state === 'plannedDowntime');
     const color = getStateColor(record.state, isUnlabeled);
     const stateName = record.stateName || (isUnlabeled ? 'Unlabeled Downtime' : 'Unknown');
-    
+
     return {
       x: stateName,
       y: [
@@ -412,7 +420,7 @@ function ApexTimelineVisualization({ records }: { records: CurrentMachineRunStat
         const start = new Date(data.y[0]);
         const end = new Date(data.y[1]);
         const duration = Math.round((end.getTime() - start.getTime()) / 60000); // minutes
-        
+
         return `<div style="padding: 10px;">
           <strong>${data.x}</strong><br/>
           Start: ${start.toLocaleTimeString()}<br/>
@@ -435,7 +443,7 @@ function ApexTimelineVisualization({ records }: { records: CurrentMachineRunStat
   return (
     <Box>
       <Chart options={chartOptions} series={series} type="rangeBar" height={150} />
-      
+
       {/* Legend */}
       <Stack direction="row" spacing={2} flexWrap="wrap" sx={{ mt: 2 }}>
         <Stack direction="row" spacing={0.5} alignItems="center">
@@ -463,19 +471,19 @@ export function MachineOperationView() {
   // const { t } = useTranslation(); // TODO: Add translations when needed
   const router = useRouter();
   const { selectedMachine } = useMachineSelector();
-  
+
   const [currentTime, setCurrentTime] = useState(new Date());
-  
+
   // Unified machine operation data state
-  const [machineData, setMachineData] = useState<MachineOperationData>(() => 
+  const [machineData, setMachineData] = useState<MachineOperationData>(() =>
     createEmptyMachineData(selectedMachine?.id, selectedMachine?.name)
   );
-  
+
   const [timelineRecords, setTimelineRecords] = useState<CurrentMachineRunStateRecords[]>([]);
   const [isConnecting, setIsConnecting] = useState(false);
   const [testMode, setTestMode] = useState(false);
   const [timelineView, setTimelineView] = useState<'current' | 'shift' | 'day'>('current');
-  
+
   // Dialog states
   const [productChangeDialogOpen, setProductChangeDialogOpen] = useState(false);
   const [addQuantityDialogOpen, setAddQuantityDialogOpen] = useState(false);
@@ -501,7 +509,9 @@ export function MachineOperationView() {
   const [labelDowntimeDialogOpen, setLabelDowntimeDialogOpen] = useState(false);
   const [downtimeTabValue, setDowntimeTabValue] = useState(0);
   const [stopReasons, setStopReasons] = useState<StopReason[]>([]);
-  const [downtimeToLabel, setDowntimeToLabel] = useState<CurrentMachineRunStateRecords | null>(null);
+  const [downtimeToLabel, setDowntimeToLabel] = useState<CurrentMachineRunStateRecords | null>(
+    null
+  );
   const [showReasonGrid, setShowReasonGrid] = useState(false);
   const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
   const [labelNote, setLabelNote] = useState<string>('');
@@ -511,7 +521,7 @@ export function MachineOperationView() {
 
   // Handle SignalR updates - merge with existing data
   const handleMachineUpdate = useCallback((update: MachineOeeUpdate) => {
-    setMachineData(prev => mergeSignalRUpdate(prev, update));
+    setMachineData((prev) => mergeSignalRUpdate(prev, update));
   }, []);
 
   useEffect(() => {
@@ -525,20 +535,20 @@ export function MachineOperationView() {
     const connectToMachine = async () => {
       try {
         setIsConnecting(true);
-        
+
         // Load real data from APIs
         const machineId = selectedMachine.id || '';
-        
+
         try {
           // Load product working state
           const productState = await getapimachineproductionmachineIdcurrentproductstate(machineId);
           if (mounted && productState) {
-            setMachineData(prev => mergeProductState(prev, productState));
+            setMachineData((prev) => mergeProductState(prev, productState));
           }
         } catch (error) {
           console.error('Failed to load product state:', error);
         }
-        
+
         try {
           // Load timeline records
           const records = await getapimachineproductionmachineIdcurrentrunstaterecords(machineId);
@@ -548,10 +558,11 @@ export function MachineOperationView() {
         } catch (error) {
           console.error('Failed to load timeline data:', error);
         }
-        
+
         try {
           // Load quantity history
-          const history = await getapimachineproductionmachineIdaddexternalquantityhistory(machineId);
+          const history =
+            await getapimachineproductionmachineIdaddexternalquantityhistory(machineId);
           if (mounted && history) {
             const formattedHistory: QuantityAddHistory[] = history.map((item) => ({
               id: item.id || `${item.createdAt}`, // Use actual ID from API
@@ -565,7 +576,7 @@ export function MachineOperationView() {
         } catch (error) {
           console.error('Failed to load quantity history:', error);
         }
-        
+
         try {
           // Load defect types
           const defectData = await getapiDefectReasongetdefectreasons({
@@ -584,7 +595,7 @@ export function MachineOperationView() {
         } catch (error) {
           console.error('Failed to load defect types:', error);
         }
-        
+
         try {
           // Load stop reasons
           const stopData = await getapiStopMachineReasongetreasonpage({
@@ -603,30 +614,32 @@ export function MachineOperationView() {
         } catch (error) {
           console.error('Failed to load stop reasons:', error);
         }
-        
+
         try {
           // Load defect history for current machine
-          const defectHistoryResponse = await getapimachineproductionmachineIddefecteditems(machineId);
+          const defectHistoryResponse =
+            await getapimachineproductionmachineIddefecteditems(machineId);
           if (mounted && defectHistoryResponse?.defectedItems) {
-            const formattedDefectHistory: DefectSubmission[] = defectHistoryResponse.defectedItems.map((item) => ({
-              id: item.createdAt || '',
-              timestamp: item.createdAt || new Date().toISOString(),
-              defects: [
-                {
-                  defectId: '', // Not provided by API
-                  defectName: item.defectReasonName || 'Unknown',
-                  quantity: item.quantity || 0,
-                  colorHex: item.defectReasonHexColor || '#ef4444',
-                },
-              ],
-              submittedBy: 'Unknown', // Not provided by API
-            }));
+            const formattedDefectHistory: DefectSubmission[] =
+              defectHistoryResponse.defectedItems.map((item) => ({
+                id: item.createdAt || '',
+                timestamp: item.createdAt || new Date().toISOString(),
+                defects: [
+                  {
+                    defectId: '', // Not provided by API
+                    defectName: item.defectReasonName || 'Unknown',
+                    quantity: item.quantity || 0,
+                    colorHex: item.defectReasonHexColor || '#ef4444',
+                  },
+                ],
+                submittedBy: 'Unknown', // Not provided by API
+              }));
             setDefectHistory(formattedDefectHistory);
           }
         } catch (error) {
           console.error('Failed to load defect history:', error);
         }
-        
+
         await hubService.subscribeToMachine(selectedMachine.id || '', handleMachineUpdate);
 
         if (!mounted) return;
@@ -634,7 +647,7 @@ export function MachineOperationView() {
         const aggregation = await hubService.getMachineAggregation(selectedMachine.id || '');
         if (aggregation && mounted) {
           // Merge initial aggregation data
-          setMachineData(prev => ({
+          setMachineData((prev) => ({
             ...prev,
             availability: aggregation.availability * 100,
             performance: aggregation.performance * 100,
@@ -642,7 +655,8 @@ export function MachineOperationView() {
             oee: aggregation.oee * 100,
             goodCount: aggregation.goodCount,
             totalCount: aggregation.totalCount,
-            scrapQuantity: (aggregation.scrappedCount ?? (aggregation.totalCount - aggregation.goodCount)),
+            scrapQuantity:
+              aggregation.scrappedCount ?? aggregation.totalCount - aggregation.goodCount,
             plannedQuantity: aggregation.plannedQuantity ?? prev.plannedQuantity,
             progressPercentage: aggregation.progressPercentage ?? prev.progressPercentage,
             runTime: aggregation.totalRunTime,
@@ -677,11 +691,11 @@ export function MachineOperationView() {
 
     const loadAvailableProducts = async () => {
       try {
-        const response = await getapiMachinemachineIdavailableproducts(
-          selectedMachine.id || '',
-          { page: 0, pageSize: 100 }
-        );
-        
+        const response = await getapiMachinemachineIdavailableproducts(selectedMachine.id || '', {
+          page: 0,
+          pageSize: 100,
+        });
+
         if (response?.items) {
           const formattedProducts: MappedProduct[] = response.items.map((item) => ({
             id: item.productId || '',
@@ -759,20 +773,22 @@ export function MachineOperationView() {
 
   const handleProductSelect = async (product: MappedProduct) => {
     if (!selectedMachine?.id) return;
-    
+
     try {
       await postapimachineproductionmachineIdchangeproduct(selectedMachine.id, {
         productId: product.productId,
         productionOrderNumber: product.productionOrderNumber,
         plannedQuantity: product.targetQuantity,
       });
-      
+
       // Reload product data after change
-      const productState = await getapimachineproductionmachineIdcurrentproductstate(selectedMachine.id);
+      const productState = await getapimachineproductionmachineIdcurrentproductstate(
+        selectedMachine.id
+      );
       if (productState) {
-        setMachineData(prev => mergeProductState(prev, productState));
+        setMachineData((prev) => mergeProductState(prev, productState));
       }
-      
+
       setProductChangeDialogOpen(false);
     } catch (error) {
       console.error('Failed to change product:', error);
@@ -793,9 +809,11 @@ export function MachineOperationView() {
           quantity: qty,
           remark: quantityNote || undefined,
         });
-        
+
         // Reload quantity history
-        const history = await getapimachineproductionmachineIdaddexternalquantityhistory(selectedMachine.id);
+        const history = await getapimachineproductionmachineIdaddexternalquantityhistory(
+          selectedMachine.id
+        );
         if (history) {
           const formattedHistory: QuantityAddHistory[] = history.map((item) => ({
             id: item.id || `${item.createdAt}`,
@@ -806,13 +824,15 @@ export function MachineOperationView() {
           }));
           setQuantityHistory(formattedHistory);
         }
-        
+
         // Reload product data to get updated quantities
-        const productState = await getapimachineproductionmachineIdcurrentproductstate(selectedMachine.id);
+        const productState = await getapimachineproductionmachineIdcurrentproductstate(
+          selectedMachine.id
+        );
         if (productState) {
-          setMachineData(prev => mergeProductState(prev, productState));
+          setMachineData((prev) => mergeProductState(prev, productState));
         }
-        
+
         // Reset form
         setQuantityToAdd('');
         setQuantityNote('');
@@ -842,7 +862,9 @@ export function MachineOperationView() {
         });
 
         // Reload quantity history
-        const history = await getapimachineproductionmachineIdaddexternalquantityhistory(selectedMachine.id);
+        const history = await getapimachineproductionmachineIdaddexternalquantityhistory(
+          selectedMachine.id
+        );
         if (history) {
           const formattedHistory: QuantityAddHistory[] = history.map((item) => ({
             id: item.id || `${item.createdAt}`,
@@ -855,9 +877,11 @@ export function MachineOperationView() {
         }
 
         // Reload product data to get updated quantities
-        const productState = await getapimachineproductionmachineIdcurrentproductstate(selectedMachine.id);
+        const productState = await getapimachineproductionmachineIdcurrentproductstate(
+          selectedMachine.id
+        );
         if (productState) {
-          setMachineData(prev => mergeProductState(prev, productState));
+          setMachineData((prev) => mergeProductState(prev, productState));
         }
 
         // Reset edit state
@@ -886,7 +910,9 @@ export function MachineOperationView() {
       });
 
       // Reload quantity history
-      const history = await getapimachineproductionmachineIdaddexternalquantityhistory(selectedMachine.id);
+      const history = await getapimachineproductionmachineIdaddexternalquantityhistory(
+        selectedMachine.id
+      );
       if (history) {
         const formattedHistory: QuantityAddHistory[] = history.map((item) => ({
           id: item.id || `${item.createdAt}`,
@@ -899,9 +925,11 @@ export function MachineOperationView() {
       }
 
       // Reload product data to get updated quantities
-      const productState = await getapimachineproductionmachineIdcurrentproductstate(selectedMachine.id);
+      const productState = await getapimachineproductionmachineIdcurrentproductstate(
+        selectedMachine.id
+      );
       if (productState) {
-        setMachineData(prev => mergeProductState(prev, productState));
+        setMachineData((prev) => mergeProductState(prev, productState));
       }
     } catch (error) {
       console.error('Failed to delete quantity:', error);
@@ -948,32 +976,38 @@ export function MachineOperationView() {
           quantity,
         });
       }
-      
+
       // Reload defect history
-      const defectHistoryResponse = await getapimachineproductionmachineIddefecteditems(selectedMachine.id);
+      const defectHistoryResponse = await getapimachineproductionmachineIddefecteditems(
+        selectedMachine.id
+      );
       if (defectHistoryResponse?.defectedItems) {
-        const formattedDefectHistory: DefectSubmission[] = defectHistoryResponse.defectedItems.map((item) => ({
-          id: item.createdAt || '',
-          timestamp: item.createdAt || new Date().toISOString(),
-          defects: [
-            {
-              defectId: '',
-              defectName: item.defectReasonName || 'Unknown',
-              quantity: item.quantity || 0,
-              colorHex: item.defectReasonHexColor || '#ef4444',
-            },
-          ],
-          submittedBy: 'Unknown',
-        }));
+        const formattedDefectHistory: DefectSubmission[] = defectHistoryResponse.defectedItems.map(
+          (item) => ({
+            id: item.createdAt || '',
+            timestamp: item.createdAt || new Date().toISOString(),
+            defects: [
+              {
+                defectId: '',
+                defectName: item.defectReasonName || 'Unknown',
+                quantity: item.quantity || 0,
+                colorHex: item.defectReasonHexColor || '#ef4444',
+              },
+            ],
+            submittedBy: 'Unknown',
+          })
+        );
         setDefectHistory(formattedDefectHistory);
       }
-      
+
       // Reload product data to get updated scrap quantity
-      const productState = await getapimachineproductionmachineIdcurrentproductstate(selectedMachine.id);
+      const productState = await getapimachineproductionmachineIdcurrentproductstate(
+        selectedMachine.id
+      );
       if (productState) {
-        setMachineData(prev => mergeProductState(prev, productState));
+        setMachineData((prev) => mergeProductState(prev, productState));
       }
-      
+
       // Reset form
       setDefectEntries(new Map());
       setAddDefectDialogOpen(false);
@@ -1015,13 +1049,15 @@ export function MachineOperationView() {
         reasonIds: selectedReasons, // API now supports multiple reasons
         note: labelNote || undefined,
       });
-      
+
       // Reload timeline records
-      const records = await getapimachineproductionmachineIdcurrentrunstaterecords(selectedMachine.id);
+      const records = await getapimachineproductionmachineIdcurrentrunstaterecords(
+        selectedMachine.id
+      );
       if (records) {
         setTimelineRecords(Array.isArray(records) ? records : []);
       }
-      
+
       // Add to local history for UI display
       const reasons = selectedReasons.map((id) => {
         const reason = stopReasons.find((r) => r.reasonId === id);
@@ -1044,7 +1080,7 @@ export function MachineOperationView() {
       };
 
       setDowntimeHistory([newLabel, ...downtimeHistory]);
-      
+
       // Reset and close
       setSelectedReasons([]);
       setLabelNote('');
@@ -1056,20 +1092,25 @@ export function MachineOperationView() {
     }
   };
 
-  const filteredProducts = mappedProducts.filter(product =>
-    product.productName.toLowerCase().includes(productSearchTerm.toLowerCase()) ||
-    product.productionOrderNumber.toLowerCase().includes(productSearchTerm.toLowerCase())
+  const filteredProducts = mappedProducts.filter(
+    (product) =>
+      product.productName.toLowerCase().includes(productSearchTerm.toLowerCase()) ||
+      product.productionOrderNumber.toLowerCase().includes(productSearchTerm.toLowerCase())
   );
 
   const unlabeledDowntimeCount = timelineRecords.filter(
-    record => record.stateId === '000000000000000000000000' && 
-             (record.state === 'unPlannedDowntime' || record.state === 'plannedDowntime')
+    (record) =>
+      record.stateId === '000000000000000000000000' &&
+      (record.state === 'unPlannedDowntime' || record.state === 'plannedDowntime')
   ).length;
 
   // Get unlabeled downtimes sorted by newest first
   const unlabeledDowntimes = timelineRecords
-    .filter(record => record.stateId === '000000000000000000000000' && 
-                     (record.state === 'unPlannedDowntime' || record.state === 'plannedDowntime'))
+    .filter(
+      (record) =>
+        record.stateId === '000000000000000000000000' &&
+        (record.state === 'unPlannedDowntime' || record.state === 'plannedDowntime')
+    )
     .sort((a, b) => {
       const timeA = new Date(a.startTime || '').getTime();
       const timeB = new Date(b.startTime || '').getTime();
@@ -1338,10 +1379,10 @@ export function MachineOperationView() {
                 {/* Combined OEE + APQ Chart with 270-degree coverage */}
                 <Box sx={{ mb: 3 }}>
                   <OEEAPQCombinedChart
-                    oee={machineData.oee ?? 85}
-                    availability={machineData.availability ?? 92}
-                    performance={machineData.performance ?? 95}
-                    quality={machineData.quality ?? 97}
+                    oee={machineData.oee ?? 0}
+                    availability={machineData.availability ?? 0}
+                    performance={machineData.performance ?? 0}
+                    quality={machineData.quality ?? 0}
                   />
                 </Box>
 
@@ -1486,8 +1527,7 @@ export function MachineOperationView() {
                     <LinearProgress
                       variant="determinate"
                       value={
-                        ((machineData.currentQuantity ?? 0) /
-                          (machineData.plannedQuantity ?? 1)) *
+                        ((machineData.currentQuantity ?? 0) / (machineData.plannedQuantity ?? 1)) *
                         100
                       }
                       sx={{
@@ -1605,7 +1645,7 @@ export function MachineOperationView() {
                           Nhịp lý tưởng
                         </Typography>
                         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                          {machineData.idealCycleTime ?? "N/A"}s
+                          {machineData.idealCycleTime ?? 'N/A'}s
                         </Typography>
                       </Box>
                     </Grid>
@@ -1619,7 +1659,7 @@ export function MachineOperationView() {
                           Nhịp thực tế
                         </Typography>
                         <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'success.main' }}>
-                          {machineData.actualCycleTime ?? "N/A"}s
+                          {machineData.actualCycleTime ?? 'N/A'}s
                         </Typography>
                       </Box>
                     </Grid>

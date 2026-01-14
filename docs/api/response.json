@@ -53269,22 +53269,22 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductWorkingStateByMachineBasePaginationResponse"
+                  "$ref": "#/components/schemas/ProductByMachineBasePaginationResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductWorkingStateByMachineBasePaginationResponse"
+                  "$ref": "#/components/schemas/ProductByMachineBasePaginationResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductWorkingStateByMachineBasePaginationResponse"
+                  "$ref": "#/components/schemas/ProductByMachineBasePaginationResponse"
                 }
               },
               "application/vnd.msgpack": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductWorkingStateByMachineBasePaginationResponse"
+                  "$ref": "#/components/schemas/ProductByMachineBasePaginationResponse"
                 }
               }
             }
@@ -56939,22 +56939,22 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductWorkingStateByMachine"
+                  "$ref": "#/components/schemas/GetCurrentProductByMachineResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductWorkingStateByMachine"
+                  "$ref": "#/components/schemas/GetCurrentProductByMachineResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductWorkingStateByMachine"
+                  "$ref": "#/components/schemas/GetCurrentProductByMachineResult"
                 }
               },
               "application/vnd.msgpack": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductWorkingStateByMachine"
+                  "$ref": "#/components/schemas/GetCurrentProductByMachineResult"
                 }
               }
             }
@@ -67703,6 +67703,66 @@
               "application/vnd.msgpack": {
                 "schema": {
                   "$ref": "#/components/schemas/FieldSuggestionResultDtoResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reports/capabilities": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Gets complete query capabilities including supported operations, operators, aggregations, and syntax rules\r\nEndpoint: GET /api/reports/capabilities",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryCapabilitiesDtoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryCapabilitiesDtoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryCapabilitiesDtoResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryCapabilitiesDtoResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryCapabilitiesDtoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryCapabilitiesDtoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryCapabilitiesDtoResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryCapabilitiesDtoResult"
                 }
               }
             }
@@ -85191,6 +85251,40 @@
         "additionalProperties": false,
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
+      "AggregationInfoDto": {
+        "type": "object",
+        "properties": {
+          "function": {
+            "type": "string",
+            "description": "Gets or sets the aggregation function name (e.g., \"Sum\", \"Avg\")",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Gets or sets the description of what the function does",
+            "nullable": true
+          },
+          "applicableTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets applicable data types for this aggregation",
+            "nullable": true
+          },
+          "requiresGroupBy": {
+            "type": "boolean",
+            "description": "Gets or sets whether this aggregation requires groupBy"
+          },
+          "mongoOperator": {
+            "type": "string",
+            "description": "Gets or sets the MongoDB aggregation operator",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents an aggregation function supported by the report engine"
+      },
       "AggregationInterval": {
         "enum": [
           "notScheduled",
@@ -87918,6 +88012,9 @@
         "description": "Data transfer object for changing lock screen password"
       },
       "ChangeMachineProductRequest": {
+        "required": [
+          "productId"
+        ],
         "type": "object",
         "properties": {
           "productId": {
@@ -87935,26 +88032,6 @@
             "type": "number",
             "description": "Planned quantity for the new product after changeover.",
             "format": "double"
-          },
-          "quantityPerSignal": {
-            "type": "number",
-            "description": "Quantity produced per signal for the product.",
-            "format": "double"
-          },
-          "idealCycleTime": {
-            "type": "string",
-            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
-            "format": "duration"
-          },
-          "downtimeThreshold": {
-            "type": "string",
-            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
-            "format": "duration"
-          },
-          "speedLossThreshold": {
-            "type": "string",
-            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
-            "format": "duration"
           }
         },
         "additionalProperties": false,
@@ -91214,7 +91291,11 @@
           "id",
           "isDeleted",
           "isDraft",
-          "modifiedTime"
+          "machineId",
+          "modifiedTime",
+          "quantity",
+          "userAddedId",
+          "userAddedName"
         ],
         "type": "object",
         "properties": {
@@ -91249,6 +91330,11 @@
           },
           "userAddedId": {
             "$ref": "#/components/schemas/ObjectId"
+          },
+          "userAddedName": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Tên người thêm số lượng bên ngoài"
           },
           "remark": {
             "type": "string",
@@ -94350,6 +94436,47 @@
         },
         "additionalProperties": false,
         "description": "Request to get created working parameters with pagination and filters"
+      },
+      "GetCurrentProductByMachineResult": {
+        "required": [
+          "plannedQuantity",
+          "productId",
+          "productionOrderNumber",
+          "productName",
+          "userId",
+          "userName"
+        ],
+        "type": "object",
+        "properties": {
+          "productId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "productName": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Name of the product."
+          },
+          "plannedQuantity": {
+            "type": "number",
+            "description": "Planned quantity for production.",
+            "format": "double"
+          },
+          "productionOrderNumber": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Production order number."
+          },
+          "userId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "userName": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Name of the user assigned to the machine."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Result structure for the current product by machine"
       },
       "GetDefectMappingFormDefectIdResult": {
         "type": "object",
@@ -98046,6 +98173,40 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
+      },
+      "JoinTypeInfoDto": {
+        "type": "object",
+        "properties": {
+          "joinType": {
+            "type": "string",
+            "description": "Gets or sets the join type (e.g., \"Inner\", \"Left\")",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Gets or sets the description of the join behavior",
+            "nullable": true
+          },
+          "usesUnwind": {
+            "type": "boolean",
+            "description": "Gets or sets whether this join type uses $unwind"
+          },
+          "nonMatchBehavior": {
+            "type": "string",
+            "description": "Gets or sets the behavior with non-matching records",
+            "nullable": true
+          },
+          "pipelineStages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets MongoDB pipeline stages used",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a join type supported by the report engine"
       },
       "JtiTokenEntity": {
         "required": [
@@ -104166,6 +104327,41 @@
         "additionalProperties": false,
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
+      "OperatorInfoDto": {
+        "type": "object",
+        "properties": {
+          "operator": {
+            "type": "string",
+            "description": "Gets or sets the operator name (e.g., \"Equals\", \"Contains\")",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Gets or sets the description of what the operator does",
+            "nullable": true
+          },
+          "applicableTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets applicable data types for this operator",
+            "nullable": true
+          },
+          "exampleValue": {
+            "type": "string",
+            "description": "Gets or sets example value for this operator",
+            "nullable": true
+          },
+          "mongoOperator": {
+            "type": "string",
+            "description": "Gets or sets the MongoDB operator this translates to",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents an operator supported by the report engine"
+      },
       "OperatorStationLogEntity": {
         "required": [
           "createTime",
@@ -105333,6 +105529,79 @@
         },
         "additionalProperties": { }
       },
+      "ProductByMachine": {
+        "required": [
+          "productCode",
+          "productId",
+          "productName"
+        ],
+        "type": "object",
+        "properties": {
+          "productId": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "productCode": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Code of the product."
+          },
+          "productName": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Name of the product."
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "Image URL of the product.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Response structure for available products by machine"
+      },
+      "ProductByMachineBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductByMachine"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
       "ProductCategoryEntity": {
         "required": [
           "code",
@@ -106297,97 +106566,6 @@
         },
         "additionalProperties": false,
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
-      },
-      "ProductWorkingStateByMachine": {
-        "type": "object",
-        "properties": {
-          "productId": {
-            "$ref": "#/components/schemas/ObjectId"
-          },
-          "productName": {
-            "type": "string",
-            "description": "Name of the product.",
-            "nullable": true
-          },
-          "productionOrderNumber": {
-            "type": "string",
-            "description": "Production order number associated with the product.",
-            "nullable": true
-          },
-          "userId": {
-            "$ref": "#/components/schemas/ObjectId"
-          },
-          "quantityPerCycle": {
-            "type": "number",
-            "description": "Quantity produced per signal for the product.",
-            "format": "double"
-          },
-          "idealCycleTime": {
-            "type": "string",
-            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
-            "format": "duration"
-          },
-          "downtimeThreshold": {
-            "type": "string",
-            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
-            "format": "duration"
-          },
-          "speedLossThreshold": {
-            "type": "string",
-            "description": "Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)",
-            "format": "duration"
-          },
-          "plannedQuantity": {
-            "type": "number",
-            "description": "Planned quantity for the new product after changeover.",
-            "format": "double"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Response structure for available products by machine"
-      },
-      "ProductWorkingStateByMachineBasePaginationResponse": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProductWorkingStateByMachine"
-            },
-            "description": "List of items in the current page",
-            "nullable": true
-          },
-          "totalItems": {
-            "type": "integer",
-            "description": "Total number of items across all pages",
-            "format": "int32"
-          },
-          "pageNumber": {
-            "type": "integer",
-            "description": "Current page number (0-based)",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "description": "Number of items per page",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "description": "Total number of pages",
-            "format": "int32"
-          },
-          "sortableFields": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "List of fields that can be used for sorting",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "Base class for paginated responses"
       },
       "ProductionDisposition": {
         "enum": [
@@ -107704,6 +107882,180 @@
         },
         "additionalProperties": false,
         "description": "DTO representing a Quartz.NET trigger information"
+      },
+      "QueryCapabilitiesDto": {
+        "type": "object",
+        "properties": {
+          "filterOperators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OperatorInfoDto"
+            },
+            "description": "Gets or sets the list of supported filter operators",
+            "nullable": true
+          },
+          "aggregations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AggregationInfoDto"
+            },
+            "description": "Gets or sets the list of supported aggregation functions",
+            "nullable": true
+          },
+          "joinTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JoinTypeInfoDto"
+            },
+            "description": "Gets or sets the list of supported join types",
+            "nullable": true
+          },
+          "limits": {
+            "$ref": "#/components/schemas/QueryLimitsDto"
+          },
+          "logicalOperators": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets the list of supported logical operators",
+            "nullable": true
+          },
+          "sortDirections": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets the list of supported sort directions",
+            "nullable": true
+          },
+          "pipelineOrder": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets the pipeline operation order",
+            "nullable": true
+          },
+          "syntaxRules": {
+            "$ref": "#/components/schemas/QuerySyntaxRulesDto"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the complete query capabilities of the report engine"
+      },
+      "QueryCapabilitiesDtoResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/QueryCapabilitiesDto"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the operation was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets the message describing the result.",
+            "nullable": true
+          },
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of an operation, containing a value, success status, message, and error type."
+      },
+      "QueryLimitsDto": {
+        "type": "object",
+        "properties": {
+          "maxFilters": {
+            "type": "integer",
+            "description": "Gets or sets maximum number of filters",
+            "format": "int32"
+          },
+          "maxJoins": {
+            "type": "integer",
+            "description": "Gets or sets maximum number of joins",
+            "format": "int32"
+          },
+          "maxGroupByFields": {
+            "type": "integer",
+            "description": "Gets or sets maximum number of group by fields",
+            "format": "int32"
+          },
+          "maxSortFields": {
+            "type": "integer",
+            "description": "Gets or sets maximum number of sort fields",
+            "format": "int32"
+          },
+          "minPage": {
+            "type": "integer",
+            "description": "Gets or sets minimum page number",
+            "format": "int32"
+          },
+          "maxPageSize": {
+            "type": "integer",
+            "description": "Gets or sets maximum page size",
+            "format": "int32"
+          },
+          "defaultPageSize": {
+            "type": "integer",
+            "description": "Gets or sets default page size",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents pipeline operation limits"
+      },
+      "QuerySyntaxRulesDto": {
+        "type": "object",
+        "properties": {
+          "fieldNamingPattern": {
+            "type": "string",
+            "description": "Gets or sets the field naming pattern",
+            "nullable": true
+          },
+          "entityNamingPattern": {
+            "type": "string",
+            "description": "Gets or sets the entity naming pattern",
+            "nullable": true
+          },
+          "validFieldPathExamples": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets examples of valid field paths",
+            "nullable": true
+          },
+          "invalidFieldPathExamples": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets examples of invalid field paths",
+            "nullable": true
+          },
+          "aggregationRules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets aggregation rules",
+            "nullable": true
+          },
+          "joinRules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets join rules",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents syntax rules for query construction"
       },
       "QueryValidationError": {
         "type": "object",
