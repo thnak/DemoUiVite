@@ -48221,10 +48221,12 @@
         "tags": [
           "Image"
         ],
+        "summary": "Generate an image with specified size and text",
         "parameters": [
           {
             "name": "size",
             "in": "path",
+            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -48233,6 +48235,7 @@
           {
             "name": "text",
             "in": "query",
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -48250,6 +48253,7 @@
         "tags": [
           "Image"
         ],
+        "summary": "Upload and process a favicon image",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -48258,6 +48262,7 @@
                 "properties": {
                   "file": {
                     "type": "string",
+                    "description": "",
                     "format": "binary"
                   }
                 }
@@ -73773,49 +73778,19 @@
               "type": "integer",
               "format": "int32"
             }
-          }
-        ],
-        "requestBody": {
-          "description": "Array of Group names to filter the Stop Machine Reasons.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "Array of Group names to filter the Stop Machine Reasons."
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "Array of Group names to filter the Stop Machine Reasons."
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "Array of Group names to filter the Stop Machine Reasons."
-              }
-            },
-            "application/vnd.msgpack": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "Array of Group names to filter the Stop Machine Reasons."
+          },
+          {
+            "name": "GroupNames",
+            "in": "query",
+            "description": "Array of Group names to filter the Stop Machine Reasons.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -83427,7 +83402,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2026-01-13"
+              "example": "2026-01-14"
             }
           },
           {
@@ -83437,7 +83412,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2026-01-13"
+              "example": "2026-01-14"
             }
           },
           {
@@ -87082,13 +87057,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2026-01-13"
+            "example": "2026-01-14"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2026-01-13"
+            "example": "2026-01-14"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -87210,13 +87185,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2026-01-13"
+            "example": "2026-01-14"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2026-01-13"
+            "example": "2026-01-14"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -87506,12 +87481,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-13"
+            "example": "2026-01-14"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-13"
+            "example": "2026-01-14"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -89615,6 +89590,11 @@
           "defectGroupName": {
             "type": "string",
             "description": "Name of the defect group",
+            "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "Image URL representing the defect reason",
             "nullable": true
           },
           "colorHex": {
@@ -92071,7 +92051,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-13"
+            "example": "2026-01-14"
           }
         },
         "additionalProperties": false
@@ -96442,7 +96422,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2026-01-13"
+            "example": "2026-01-14"
           },
           "locationId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -106742,7 +106722,7 @@
             "type": "string",
             "description": "Date of the work.",
             "format": "date",
-            "example": "2026-01-13"
+            "example": "2026-01-14"
           },
           "shiftName": {
             "type": "string",
@@ -118980,7 +118960,7 @@
             "type": "string",
             "description": "The specific work date this statistic applies to.",
             "format": "date",
-            "example": "2026-01-13"
+            "example": "2026-01-14"
           },
           "calendarId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -119875,7 +119855,8 @@
       "name": "IdentityComponentsEndpointRouteBuilderExtensions"
     },
     {
-      "name": "Image"
+      "name": "Image",
+      "description": ""
     },
     {
       "name": "InformationBase"

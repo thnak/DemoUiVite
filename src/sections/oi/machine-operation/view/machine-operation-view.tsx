@@ -51,17 +51,17 @@ import { getapiMachinemachineIdavailableproducts } from 'src/api/services/genera
 import { getapiDefectReasongetdefectreasons } from 'src/api/services/generated/defect-reason';
 import { getapiStopMachineReasongetreasonpage } from 'src/api/services/generated/stop-machine-reason';
 import {
-  deleteapimachineproductionmachineIdremoveexternalquantity,
-  getapimachineproductionmachineIdaddexternalquantityhistory,
-  getapimachineproductionmachineIdcurrentproductstate,
-  getapimachineproductionmachineIdcurrentrunstaterecords,
   getapimachineproductionmachineIddefecteditems,
-  postapimachineproductionmachineIdaddexternalquantity,
   postapimachineproductionmachineIdchangeproduct,
   postapimachineproductionmachineIdchangerunmode,
+  getapimachineproductionmachineIdcurrentproductstate,
+  postapimachineproductionmachineIdaddexternalquantity,
   postapimachineproductionmachineIddefecteditemsaddnew,
   postapimachineproductionmachineIdlabeldowntimerecord,
+  getapimachineproductionmachineIdcurrentrunstaterecords,
   postapimachineproductionmachineIdupdateexternalquantity,
+  deleteapimachineproductionmachineIdremoveexternalquantity,
+  getapimachineproductionmachineIdaddexternalquantityhistory,
 } from 'src/api/services/generated/machine-production';
 
 import { Iconify } from 'src/components/iconify';
@@ -1214,10 +1214,10 @@ export function MachineOperationView() {
                 {/* Combined OEE + APQ Chart with 270-degree coverage */}
                 <Box sx={{ mb: 3 }}>
                   <OEEAPQCombinedChart
-                    oee={machineData?.oee || 85}
-                    availability={machineData?.availability || 92}
-                    performance={machineData?.performance || 95}
-                    quality={machineData?.quality || 97}
+                    oee={machineData?.oee ?? 85}
+                    availability={machineData?.availability ?? 92}
+                    performance={machineData?.performance ?? 95}
+                    quality={machineData?.quality ?? 97}
                   />
                 </Box>
 
@@ -1227,7 +1227,7 @@ export function MachineOperationView() {
                     OEE = Availability × Performance × Quality
                   </Typography>
                   <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-                    {machineData?.availability.toFixed(1) || '92.0'}% × {machineData?.performance.toFixed(1) || '95.0'}% × {machineData?.quality.toFixed(1) || '97.0'}% = {machineData?.oee.toFixed(1) || '85.0'}%
+                    {machineData?.availability.toFixed(1) ?? '00.0'}% × {machineData?.performance.toFixed(1) ?? '00.0'}% × {machineData?.quality.toFixed(1) ?? '00.0'}% = {machineData?.oee.toFixed(1) ?? '00.0'}%
                   </Typography>
                 </Box>
 
@@ -1310,11 +1310,11 @@ export function MachineOperationView() {
                         Mã hàng
                       </Typography>
                       <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-                        {productData?.productName || machineData?.currentProductName || 'THACAL83737146TRDU'}
+                        {productData?.productName || machineData?.currentProductName || 'N/A'}
                       </Typography>
                       <Stack direction="row" spacing={1}>
                         <Chip 
-                          label={productData?.productionOrderNumber || 'PO-LSX-1213'} 
+                          label={productData?.productionOrderNumber ?? ''}
                           size="small" 
                           variant="outlined" 
                         />
@@ -1329,12 +1329,12 @@ export function MachineOperationView() {
                         Tiến trình sản xuất
                       </Typography>
                       <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                        {productData?.currentQuantity || 1359} / {productData?.plannedQuantity || 1500}
+                        {productData?.currentQuantity ?? 0} / {productData?.plannedQuantity ?? 0}
                       </Typography>
                     </Box>
                     <LinearProgress 
                       variant="determinate" 
-                      value={((productData?.currentQuantity || 1359) / (productData?.plannedQuantity || 1500)) * 100} 
+                      value={((productData?.currentQuantity ?? 0) / (productData?.plannedQuantity ?? 1)) * 100}
                       sx={{ 
                         height: 10, 
                         borderRadius: 1,
@@ -1350,7 +1350,7 @@ export function MachineOperationView() {
                         0%
                       </Typography>
                       <Typography variant="caption" sx={{ fontWeight: 'bold', color: 'success.main' }}>
-                        {(((productData?.currentQuantity || 1359) / (productData?.plannedQuantity || 1500)) * 100).toFixed(1)}%
+                        {(((productData?.currentQuantity ?? 0) / (productData?.plannedQuantity ?? 1)) * 100).toFixed(1)}%
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
                         100%
@@ -1377,7 +1377,7 @@ export function MachineOperationView() {
                           Tổng cộng
                         </Typography>
                         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                          {productData?.currentQuantity || machineData?.totalCount || 1359}
+                          {productData?.currentQuantity || machineData?.totalCount || 0}
                         </Typography>
                       </Box>
                     </Grid>
@@ -1387,7 +1387,7 @@ export function MachineOperationView() {
                           Đạt
                         </Typography>
                         <Typography variant="h6" color="success.main" sx={{ fontWeight: 'bold' }}>
-                          {productData?.goodQuantity || machineData?.goodCount || 1340}
+                          {productData?.goodQuantity || machineData?.goodCount || 0}
                         </Typography>
                       </Box>
                     </Grid>
@@ -1397,7 +1397,7 @@ export function MachineOperationView() {
                           Lỗi
                         </Typography>
                         <Typography variant="h6" color="error.main" sx={{ fontWeight: 'bold' }}>
-                          {productData?.scrapQuantity || 19}
+                          {productData?.scrapQuantity || 0}
                         </Typography>
                       </Box>
                     </Grid>

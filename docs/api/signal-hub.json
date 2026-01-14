@@ -75,7 +75,7 @@
         "payloadExample": {
           "deviceId": "device-123",
           "currentState": "online",
-          "lastSeen": "2026-01-13T09:12:43.6335337Z",
+          "lastSeen": "2026-01-14T03:09:25.9842805Z",
           "firmwareVersion": "1.0.3",
           "lastError": ""
         }
@@ -92,7 +92,7 @@
         "name": "GetMachineAggregation",
         "description": "Get current machine aggregation (pre-computed OEE metrics)",
         "returnType": "MachineAggregation",
-        "payloadExample": "{\"availability\":0.0,\"performance\":0.0,\"quality\":0.0,\"oee\":0.0,\"goodCount\":0.0,\"scrappedCount\":0.0,\"totalCount\":0.0,\"plannedQuantity\":0.0,\"progressPercentage\":0.0,\"totalRunTime\":\"00:00:00\"}",
+        "payloadExample": "{\"availability\":0.0,\"performance\":0.0,\"quality\":0.0,\"oee\":0.0,\"goodCount\":0.0,\"scrappedCount\":0.0,\"totalCount\":0.0,\"plannedQuantity\":0.0,\"progressPercentage\":0.0,\"totalRunTime\":\"PT1H30M\",\"totalDowntime\":\"PT1H30M\",\"totalSpeedLossTime\":\"PT1H30M\",\"lastUpdated\":\"2000-01-01T00:00:00Z\",\"actualCycleTime\":\"PT1H30M\",\"estimatedFinishTime\":\"2000-01-01T00:00:00Z\",\"totalTestRunTime\":\"PT1H30M\"}",
         "parameters": [
           {
             "name": "machineId",
@@ -168,7 +168,7 @@
       {
         "clientMethodName": "MachineUpdate",
         "messageType": "MachineOeeUpdate",
-        "schema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"machineId\": {\n      \"type\": \"string\",\n      \"description\": \"Identifier of the machine\",\n      \"nullable\": true\n    },\n    \"machineName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the machine\",\n      \"nullable\": true\n    },\n    \"availability\": {\n      \"type\": \"number\",\n      \"description\": \"Overall Equipment Effectiveness (OEE) percentage\",\n      \"format\": \"double\"\n    },\n    \"availabilityVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"Availability percentage compared to the last period. Percentage points difference.\",\n      \"format\": \"double\"\n    },\n    \"performance\": {\n      \"type\": \"number\",\n      \"description\": \"Performance percentage\",\n      \"format\": \"double\"\n    },\n    \"performanceVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"Performance percentage compared to the last period. Percentage points difference.\",\n      \"format\": \"double\"\n    },\n    \"quality\": {\n      \"type\": \"number\",\n      \"description\": \"Quality percentage\",\n      \"format\": \"double\"\n    },\n    \"qualityVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"Quality percentage compared to the last period. Percentage points difference.\",\n      \"format\": \"double\"\n    },\n    \"oee\": {\n      \"type\": \"number\",\n      \"description\": \"Overall Equipment Effectiveness (OEE)\",\n      \"format\": \"double\"\n    },\n    \"oeeVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"OEE compared to the last period. Percentage points difference.\",\n      \"format\": \"double\"\n    },\n    \"goodCount\": {\n      \"type\": \"number\",\n      \"description\": \"Count of good products produced\",\n      \"format\": \"double\"\n    },\n    \"goodCountVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"Good count compared to the last period. Difference in count.\",\n      \"format\": \"double\"\n    },\n    \"totalCount\": {\n      \"type\": \"number\",\n      \"description\": \"Total count of products produced\",\n      \"format\": \"double\"\n    },\n    \"totalCountVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"Total count compared to the last period. Difference in count.\",\n      \"format\": \"double\"\n    },\n    \"plannedProductionTime\": {\n      \"type\": \"string\",\n      \"description\": \"Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)\",\n      \"format\": \"duration\"\n    },\n    \"runTime\": {\n      \"type\": \"string\",\n      \"description\": \"Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)\",\n      \"format\": \"duration\"\n    },\n    \"downtime\": {\n      \"type\": \"string\",\n      \"description\": \"Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)\",\n      \"format\": \"duration\"\n    },\n    \"speedLossTime\": {\n      \"type\": \"string\",\n      \"description\": \"Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)\",\n      \"format\": \"duration\"\n    },\n    \"currentProductName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the current product running on the machine\",\n      \"nullable\": true\n    }\n  },\n  \"additionalProperties\": false,\n  \"description\": \"Result of OEE calculation for a machine\"\n}",
+        "schema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"machineId\": {\n      \"type\": \"string\",\n      \"description\": \"Identifier of the machine\",\n      \"nullable\": true\n    },\n    \"machineName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the machine\",\n      \"nullable\": true\n    },\n    \"availability\": {\n      \"type\": \"number\",\n      \"description\": \"Overall Equipment Effectiveness (OEE) percentage\",\n      \"format\": \"double\"\n    },\n    \"availabilityVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"Availability percentage compared to the last period. Percentage points difference.\",\n      \"format\": \"double\"\n    },\n    \"performance\": {\n      \"type\": \"number\",\n      \"description\": \"Performance percentage\",\n      \"format\": \"double\"\n    },\n    \"performanceVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"Performance percentage compared to the last period. Percentage points difference.\",\n      \"format\": \"double\"\n    },\n    \"quality\": {\n      \"type\": \"number\",\n      \"description\": \"Quality percentage\",\n      \"format\": \"double\"\n    },\n    \"qualityVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"Quality percentage compared to the last period. Percentage points difference.\",\n      \"format\": \"double\"\n    },\n    \"oee\": {\n      \"type\": \"number\",\n      \"description\": \"Overall Equipment Effectiveness (OEE)\",\n      \"format\": \"double\"\n    },\n    \"oeeVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"OEE compared to the last period. Percentage points difference.\",\n      \"format\": \"double\"\n    },\n    \"goodCount\": {\n      \"type\": \"number\",\n      \"description\": \"Count of good products produced\",\n      \"format\": \"double\"\n    },\n    \"goodCountVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"Good count compared to the last period. Difference in count.\",\n      \"format\": \"double\"\n    },\n    \"totalCount\": {\n      \"type\": \"number\",\n      \"description\": \"Total count of products produced\",\n      \"format\": \"double\"\n    },\n    \"totalCountVsLastPeriod\": {\n      \"type\": \"number\",\n      \"description\": \"Total count compared to the last period. Difference in count.\",\n      \"format\": \"double\"\n    },\n    \"plannedProductionTime\": {\n      \"type\": \"string\",\n      \"description\": \"Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)\",\n      \"format\": \"duration\"\n    },\n    \"runTime\": {\n      \"type\": \"string\",\n      \"description\": \"Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)\",\n      \"format\": \"duration\"\n    },\n    \"downtime\": {\n      \"type\": \"string\",\n      \"description\": \"Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)\",\n      \"format\": \"duration\"\n    },\n    \"speedLossTime\": {\n      \"type\": \"string\",\n      \"description\": \"Duration in ISO 8601 format (e.g., PT1H30M for 1 hour 30 minutes, P1D for 1 day, PT45S for 45 seconds)\",\n      \"format\": \"duration\"\n    },\n    \"estimatedFinishTime\": {\n      \"type\": \"string\",\n      \"description\": \"Estimated time to finish the current production order\",\n      \"format\": \"date-time\"\n    },\n    \"currentProductName\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the current product running on the machine\",\n      \"nullable\": true\n    }\n  },\n  \"additionalProperties\": false,\n  \"description\": \"Result of OEE calculation for a machine\"\n}",
         "description": "Broadcasts machine OEE updates including availability, performance, quality metrics",
         "payloadExample": {
           "machineId": "machine-123",
@@ -189,6 +189,7 @@
           "runTime": "PT0S",
           "downtime": "PT0S",
           "speedLossTime": "PT0S",
+          "estimatedFinishTime": "0001-01-01T00:00:00",
           "currentProductName": ""
         }
       },
@@ -198,8 +199,8 @@
         "schema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"startTime\": {\n      \"type\": \"string\",\n      \"description\": \"Start time of the runtime block.\",\n      \"format\": \"date-time\"\n    },\n    \"endTime\": {\n      \"type\": \"string\",\n      \"description\": \"End time of the runtime block. Nullable to indicate ongoing blocks.\",\n      \"format\": \"date-time\",\n      \"nullable\": true\n    },\n    \"stopReasonId\": {\n      \"type\": \"string\",\n      \"description\": \"Identifier for the stop reason associated with this runtime block. ObjectId in string format. Empty string\\r\\nindicates normal operation.\",\n      \"nullable\": true\n    },\n    \"name\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the runtime block. Or stop reason name.\",\n      \"nullable\": true\n    },\n    \"extraNote\": {\n      \"type\": \"string\",\n      \"description\": \"Color associated with the runtime block. Or stop reason color.\",\n      \"nullable\": true\n    },\n    \"isUnplannedDowntime\": {\n      \"type\": \"boolean\",\n      \"description\": \"Indicates if the downtime was unplanned.\"\n    },\n    \"state\": \n  },\n  \"additionalProperties\": false,\n  \"description\": \"Represents a runtime block with start and end times, stop reason, name, and color.\"\n}",
         "description": "Broadcasts machine runtime blocks showing start/stop times and downtime reasons",
         "payloadExample": {
-          "startTime": "2026-01-13T08:57:43.6325374Z",
-          "endTime": "2026-01-13T09:12:43.6326226Z",
+          "startTime": "2026-01-14T02:54:25.9833478Z",
+          "endTime": "2026-01-14T03:09:25.9834372Z",
           "stopReasonId": "reason-123",
           "name": "Scheduled Maintenance",
           "extraNote": "Quarterly checkup",
@@ -219,7 +220,7 @@
         "name": "GetOnlineUsers",
         "description": "Handles the connection of a user to the hub.",
         "returnType": "List<UserInfo>",
-        "payloadExample": "[{\"userId\":\"example\",\"userName\":\"example\",\"displayName\":\"example\",\"email\":\"example\",\"phoneNumber\":\"example\",\"isActive\":false,\"createdAt\":\"2000-01-01T00:00:00Z\",\"updatedAt\":\"2000-01-01T00:00:00Z\",\"avatarUrl\":null,\"language\":null}]",
+        "payloadExample": "[{\"userId\":\"example\",\"userName\":\"example\",\"displayName\":\"example\",\"email\":\"example\",\"phoneNumber\":\"example\",\"isActive\":false,\"createdAt\":\"2000-01-01T00:00:00Z\",\"updatedAt\":\"2000-01-01T00:00:00Z\",\"avatarUrl\":null,\"language\":null,\"timeZone\":null,\"country\":null,\"region\":null,\"city\":null,\"postalCode\":null,\"address\":null,\"company\":null,\"department\":null,\"jobTitle\":null,\"position\":null}]",
         "parameters": []
       },
       {
@@ -383,7 +384,7 @@
         "payloadExample": {
           "sensorId": "sensor-456",
           "value": 23.5,
-          "timestamp": "2026-01-13T09:12:43.6333104Z"
+          "timestamp": "2026-01-14T03:09:25.9840376Z"
         }
       }
     ]
