@@ -488,7 +488,7 @@ export function MachineOperationView() {
     }
   };
 
-  // Wrapper for AddQuantityDialog - receives quantity and note as parameters
+  // Wrapper for AddQuantityDialog
   const handleAddQuantitySubmit = async (quantity: number, note: string) => {
     if (!selectedMachine?.id) return;
 
@@ -525,7 +525,6 @@ export function MachineOperationView() {
       // TODO: Show error notification to user
     }
   };
-
 
   const handleSaveEditQuantity = async (historyId: string, newQty: number, note: string) => {
     if (!selectedMachine?.id) return;
@@ -601,7 +600,7 @@ export function MachineOperationView() {
     }
   };
 
-  // Wrapper for AddDefectDialog - receives defect entries as parameter
+  // Wrapper for AddDefectDialog
   const handleSubmitDefectsWrapper = async (defectEntries: Map<string, number>) => {
     if (defectEntries.size === 0 || !selectedMachine?.id) return;
 
@@ -650,9 +649,7 @@ export function MachineOperationView() {
     }
   };
 
-  // Downtime label handlers
-
-  // Wrapper for LabelDowntimeDialog component
+  // Wrapper for LabelDowntimeDialog
   const handleLabelDowntimeSubmit = async (
     downtime: CurrentMachineRunStateRecords,
     reasonIds: string[],
