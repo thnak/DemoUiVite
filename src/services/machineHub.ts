@@ -37,6 +37,7 @@ export interface MachineOeeUpdate {
   runTime: string; // ISO 8601 duration (e.g., "PT7H30M")
   downtime: string; // ISO 8601 duration (e.g., "PT30M")
   speedLossTime: string; // ISO 8601 duration (e.g., "PT15M")
+  totalTestRunTime: string; // ISO 8601 duration - Total test run time
   estimatedFinishTime?: string; // ISO 8601 date-time - Estimated time to finish current production order
   currentProductName: string; // Name of current product
 }

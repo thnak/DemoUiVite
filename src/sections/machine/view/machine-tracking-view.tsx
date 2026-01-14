@@ -116,6 +116,7 @@ export function MachineTrackingView() {
             runTime: initialAggregation.totalRunTime,
             downtime: initialAggregation.totalDowntime,
             speedLossTime: initialAggregation.totalSpeedLossTime,
+            totalTestRunTime: initialAggregation.totalTestRunTime || 'PT0S',
             currentProductName: ''
           });
           setLastUpdateTime(new Date());

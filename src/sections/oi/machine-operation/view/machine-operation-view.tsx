@@ -2,6 +2,8 @@ import type { ApexOptions } from 'apexcharts';
 import type { MachineOeeUpdate } from 'src/services/machineHub';
 import type { CurrentMachineRunStateRecords, GetCurrentProductByMachineResult } from 'src/api/types/generated';
 
+import { fDuration, fRelativeTime } from 'src/utils/format-time';
+
 /**
  * Unified interface for all machine operation data
  * Combines OEE metrics from SignalR with product working state from API
@@ -33,6 +35,7 @@ interface MachineOperationData {
   runTime: string; // ISO 8601 duration
   downtime: string; // ISO 8601 duration
   speedLossTime: string; // ISO 8601 duration
+  totalTestRunTime: string; // ISO 8601 duration
   estimatedFinishTime?: string; // ISO 8601 date-time
 
   // Product information (from API GetCurrentProductByMachineResult)
@@ -76,6 +79,7 @@ const createEmptyMachineData = (
   runTime: 'PT0S',
   downtime: 'PT0S',
   speedLossTime: 'PT0S',
+  totalTestRunTime: 'PT0S',
   productName: '',
   currentQuantity: 0,
   plannedQuantity: 0,
@@ -109,6 +113,7 @@ const mergeSignalRUpdate = (
   runTime: update.runTime,
   downtime: update.downtime,
   speedLossTime: update.speedLossTime,
+  totalTestRunTime: update.totalTestRunTime ?? existing.totalTestRunTime,
   estimatedFinishTime: update.estimatedFinishTime,
   productName: update.currentProductName || existing.productName,
   // Preserve existing product data unless we have better info
@@ -295,14 +300,14 @@ function OEEAPQCombinedChart({
             offsetY: 76,
             fontSize: '28px',
             fontWeight: 'bold',
-            formatter: (val: number) => `${Math.round(val)}%`,
+            formatter: (val: number) => `${Math.round(Math.min(val, 100))}%`,
           },
           total: {
             show: true,
             label: 'OEE',
             fontSize: '18px',
             color: '#666',
-            formatter: () => `${Math.round(oee)}%`,
+            formatter: () => `${Math.round(Math.min(oee, 100))}%`,
           },
         },
         hollow: {
@@ -332,7 +337,13 @@ function OEEAPQCombinedChart({
     },
   };
 
-  const series = [oee, availability, performance, quality];
+  // Cap values at 100% to prevent overflow
+  const series = [
+    Math.min(oee, 100),
+    Math.min(availability, 100),
+    Math.min(performance, 100),
+    Math.min(quality, 100),
+  ];
 
   return (
     <Box
@@ -402,6 +413,7 @@ function ApexTimelineVisualization({ records }: { records: CurrentMachineRunStat
         datetimeFormatter: {
           hour: 'HH:mm',
         },
+        datetimeUTC: false, // Use local time, not UTC
       },
     },
     yaxis: {
@@ -1455,7 +1467,7 @@ export function MachineOperationView() {
                         </Typography>
                       </Stack>
                       <Typography variant="h6" color="error.main">
-                        {machineData.downtime || '0.5'}h
+                        {fDuration(machineData.downtime)}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
                         3 lần
@@ -1479,7 +1491,7 @@ export function MachineOperationView() {
                         </Typography>
                       </Stack>
                       <Typography variant="h6" color="warning.main">
-                        0.12h
+                        {fDuration(machineData.totalTestRunTime)}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
                         2 lần
@@ -1611,7 +1623,7 @@ export function MachineOperationView() {
                       </Typography>
                     </Stack>
                     <Typography variant="h6" color="info.main">
-                      {new Date(machineData.estimatedFinishTime ?? '').toLocaleTimeString()}
+                      {fRelativeTime(machineData.estimatedFinishTime)}
                     </Typography>
                   </Box>
 
@@ -1682,7 +1694,7 @@ export function MachineOperationView() {
                           Nhịp lý tưởng
                         </Typography>
                         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                          {machineData.idealCycleTime ?? 'N/A'}s
+                          {fDuration(machineData.idealCycleTime)}
                         </Typography>
                       </Box>
                     </Grid>
@@ -1696,7 +1708,7 @@ export function MachineOperationView() {
                           Nhịp thực tế
                         </Typography>
                         <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'success.main' }}>
-                          {machineData.actualCycleTime ?? 'N/A'}s
+                          {fDuration(machineData.actualCycleTime)}
                         </Typography>
                       </Box>
                     </Grid>
