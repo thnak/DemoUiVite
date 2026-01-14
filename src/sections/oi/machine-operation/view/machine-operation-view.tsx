@@ -47,6 +47,7 @@ interface MachineOperationData {
   idealCycleTime?: string;
   actualCycleTime?: string;
   userId?: string;
+  userName: string;
   startTime?: string;
 
   // Progress calculation
@@ -84,6 +85,7 @@ const createEmptyMachineData = (
   currentQuantity: 0,
   plannedQuantity: 0,
   progressPercentage: 0,
+  userName: ''
 });
 
 /**
@@ -133,6 +135,7 @@ const mergeProductState = (
   productionOrderNumber: productState.productionOrderNumber,
   plannedQuantity: productState.plannedQuantity,
   userId: productState.userId,
+  userName: productState.userName,
   idealCycleTime: productState.idealCycleTime,
   progressPercentage:
     productState.plannedQuantity && existing.currentQuantity
@@ -1526,7 +1529,7 @@ export function MachineOperationView() {
                     >
                       <img
                         src={`${apiConfig.baseUrl}/api/Product/${machineData.productId}/image`}
-                        alt={machineData.productName || ''}
+                        alt={machineData.productName ?? ''}
                         onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
                           const target = e.currentTarget;
                           target.style.display = 'none';
@@ -1740,7 +1743,7 @@ export function MachineOperationView() {
                         Người vận hành
                       </Typography>
                       <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                        {machineData.userId || 'N/A'}
+                        {machineData.userName || 'N/A'}
                       </Typography>
                     </Box>
                   </Box>
