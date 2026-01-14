@@ -19,7 +19,7 @@ export interface MachineRuntimeBlock {
 }
 
 export interface MachineOeeUpdate {
-  machineId: string,
+  machineId: string;
   machineName: string; // Name of the machine
   availability: number; // Percentage (0-1)
   availabilityVsLastPeriod: number; // Percentage points difference
@@ -39,7 +39,7 @@ export interface MachineOeeUpdate {
   speedLossTime: string; // ISO 8601 duration (e.g., "PT15M")
   totalTestRunTime: string; // ISO 8601 duration - Total test run time
   estimatedFinishTime?: string; // ISO 8601 date-time - Estimated time to finish current production order
-  currentProductName: string; // Name of current product
+  actualCycleTime: string;
 }
 
 export interface MachineAggregation {

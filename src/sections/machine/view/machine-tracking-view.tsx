@@ -117,7 +117,7 @@ export function MachineTrackingView() {
             downtime: initialAggregation.totalDowntime,
             speedLossTime: initialAggregation.totalSpeedLossTime,
             totalTestRunTime: initialAggregation.totalTestRunTime || 'PT0S',
-            currentProductName: ''
+            actualCycleTime: 'PT0S',
           });
           setLastUpdateTime(new Date());
         }
@@ -623,7 +623,7 @@ export function MachineTrackingView() {
                           Current Product
                         </Typography>
                         <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                          {machineState.currentProductName || 'N/A'}
+                          N/A
                         </Typography>
                       </Box>
                     </Grid>

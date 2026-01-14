@@ -118,9 +118,9 @@ const mergeSignalRUpdate = (
   speedLossTime: update.speedLossTime,
   totalTestRunTime: update.totalTestRunTime ?? existing.totalTestRunTime,
   estimatedFinishTime: update.estimatedFinishTime,
-  productName: update.currentProductName || existing.productName,
   // Preserve existing product data unless we have better info
   currentQuantity: update.totalCount || existing.currentQuantity,
+  actualCycleTime: update.actualCycleTime ?? 0
 });
 
 /**
