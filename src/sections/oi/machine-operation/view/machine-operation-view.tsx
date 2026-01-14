@@ -1,154 +1,8 @@
-import type { ApexOptions } from 'apexcharts';
+import type { CurrentMachineRunStateRecords } from 'src/api/types/generated';
 import type { MachineOeeUpdate, MachineRuntimeBlock } from 'src/services/machineHub';
-import type { CurrentMachineRunStateRecords, GetCurrentProductByMachineResult } from 'src/api/types/generated';
 
-import { fDuration, fRelativeTime } from 'src/utils/format-time';
-
-/**
- * Unified interface for all machine operation data
- * Combines OEE metrics from SignalR with product working state from API
- */
-interface MachineOperationData {
-  // Machine identification
-  machineId: string;
-  machineName: string;
-
-  // OEE Metrics (from SignalR MachineOeeUpdate)
-  oee: number; // Percentage (0-100)
-  availability: number; // Percentage (0-100)
-  performance: number; // Percentage (0-100)
-  quality: number; // Percentage (0-100)
-  availabilityVsLastPeriod: number;
-  performanceVsLastPeriod: number;
-  qualityVsLastPeriod: number;
-  oeeVsLastPeriod: number;
-
-  // Production Counts (from SignalR)
-  goodCount: number;
-  totalCount: number;
-  scrapQuantity: number; // Derived from totalCount - goodCount
-  goodCountVsLastPeriod: number;
-  totalCountVsLastPeriod: number;
-
-  // Time metrics (from SignalR)
-  plannedProductionTime: string; // ISO 8601 duration
-  runTime: string; // ISO 8601 duration
-  downtime: string; // ISO 8601 duration
-  speedLossTime: string; // ISO 8601 duration
-  totalTestRunTime: string; // ISO 8601 duration
-  estimatedFinishTime?: string; // ISO 8601 date-time
-
-  // Product information (from API GetCurrentProductByMachineResult)
-  productId?: string;
-  productImageUrl?: string; // Product image URL for faster loading
-  productName: string; // Falls back to currentProductName from SignalR
-  productionOrderNumber?: string;
-  currentQuantity: number; // Falls back to totalCount
-  plannedQuantity: number;
-  idealCycleTime?: string;
-  actualCycleTime?: string;
-  userId?: string;
-  userName: string;
-  startTime?: string;
-
-  // Progress calculation
-  progressPercentage: number; // Calculated from currentQuantity / plannedQuantity
-}
-
-/**
- * Create initial empty machine operation data
- */
-const createEmptyMachineData = (
-  machineId?: string,
-  machineName?: string
-): MachineOperationData => ({
-  machineId: machineId || '',
-  machineName: machineName || '',
-  oee: 0,
-  availability: 0,
-  performance: 0,
-  quality: 0,
-  availabilityVsLastPeriod: 0,
-  performanceVsLastPeriod: 0,
-  qualityVsLastPeriod: 0,
-  oeeVsLastPeriod: 0,
-  goodCount: 0,
-  totalCount: 0,
-  scrapQuantity: 0,
-  goodCountVsLastPeriod: 0,
-  totalCountVsLastPeriod: 0,
-  plannedProductionTime: 'PT0S',
-  runTime: 'PT0S',
-  downtime: 'PT0S',
-  speedLossTime: 'PT0S',
-  totalTestRunTime: 'PT0S',
-  productName: '',
-  currentQuantity: 0,
-  plannedQuantity: 0,
-  progressPercentage: 0,
-  userName: ''
-});
-
-/**
- * Merge SignalR update with existing data
- */
-const mergeSignalRUpdate = (
-  existing: MachineOperationData,
-  update: MachineOeeUpdate
-): MachineOperationData => ({
-  ...existing,
-  machineId: update.machineId,
-  machineName: update.machineName,
-  oee: update.oee * 100,
-  availability: update.availability * 100,
-  performance: update.performance * 100,
-  quality: update.quality * 100,
-  availabilityVsLastPeriod: update.availabilityVsLastPeriod,
-  performanceVsLastPeriod: update.performanceVsLastPeriod,
-  qualityVsLastPeriod: update.qualityVsLastPeriod,
-  oeeVsLastPeriod: update.oeeVsLastPeriod,
-  goodCount: update.goodCount,
-  totalCount: update.totalCount,
-  scrapQuantity: update.totalCount - update.goodCount,
-  goodCountVsLastPeriod: update.goodCountVsLastPeriod,
-  totalCountVsLastPeriod: update.totalCountVsLastPeriod,
-  plannedProductionTime: update.plannedProductionTime,
-  runTime: update.runTime,
-  downtime: update.downtime,
-  speedLossTime: update.speedLossTime,
-  totalTestRunTime: update.totalTestRunTime ?? existing.totalTestRunTime,
-  estimatedFinishTime: update.estimatedFinishTime,
-  // Preserve existing product data unless we have better info
-  currentQuantity: update.totalCount || existing.currentQuantity,
-  actualCycleTime: update.actualCycleTime ?? 0
-});
-
-/**
- * Merge API product state with existing data
- */
-const mergeProductState = (
-  existing: MachineOperationData,
-  productState: GetCurrentProductByMachineResult
-): MachineOperationData => ({
-  ...existing,
-  productId: productState.productId,
-  productImageUrl: productState.productId
-    ? `${apiConfig.baseUrl}/api/Product/${productState.productId}/image`
-    : undefined,
-  productName: productState.productName,
-  productionOrderNumber: productState.productionOrderNumber,
-  plannedQuantity: productState.plannedQuantity,
-  userId: productState.userId,
-  userName: productState.userName,
-  idealCycleTime: productState.idealCycleTime,
-  progressPercentage:
-    productState.plannedQuantity && existing.currentQuantity
-      ? (existing.currentQuantity / productState.plannedQuantity) * 100
-      : existing.progressPercentage,
-});
-
-import Chart from 'react-apexcharts';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -182,6 +36,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { fDuration, fRelativeTime } from 'src/utils/format-time';
+
 import { apiConfig } from 'src/api/config';
 import { MachineHubService } from 'src/services/machineHub';
 import { getapiMachinemachineIdavailableproducts } from 'src/api/services/generated/machine';
@@ -204,283 +60,30 @@ import {
 import { Iconify } from 'src/components/iconify';
 
 import { useMachineSelector } from '../../context';
+import { OEEAPQChart, TimelineVisualization } from '../components';
+import {
+  getMachineStatus,
+  calculateDuration,
+  mergeProductState,
+  mergeSignalRUpdate,
+  createEmptyMachineData,
+} from '../types';
+
+import type {
+  DefectType,
+  StopReason,
+  TimelineView,
+  AvailableProduct,
+  DefectSubmission,
+  QuantityAddHistory,
+  DowntimeLabelHistory,
+  MachineOperationData,
+} from '../types';
 
 // ----------------------------------------------------------------------
 
-// Simplified product interface for product change dialog
-interface AvailableProduct {
-  productId: string;
-  productCode: string;
-  productName: string;
-  imageUrl?: string | null;
-}
-
-// Quantity add history interface
-interface QuantityAddHistory {
-  id: string;
-  timestamp: string;
-  addedQuantity: number;
-  addedBy: string;
-  note?: string;
-}
-
-interface DefectType {
-  defectId: string;
-  defectName: string;
-  imageUrl?: string;
-  colorHex: string;
-  allowMultipleDefectsPerUnit?: boolean;
-}
-
-interface DefectSubmission {
-  id: string;
-  timestamp: string;
-  defects: Array<{ defectId: string; defectName: string; quantity: number; colorHex: string }>;
-  submittedBy: string;
-}
-
-// Stop reason interfaces for downtime labeling
-interface StopReason {
-  reasonId: string;
-  reasonName: string;
-  imageUrl?: string;
-  colorHex: string;
-}
-
-interface DowntimeLabelHistory {
-  id: string;
-  timestamp: string;
-  startTime?: string;
-  endTime?: string | null;
-  duration: number; // in minutes
-  reasons: Array<{ reasonId: string; reasonName: string; colorHex: string }>;
-  note?: string;
-  labeledBy: string;
-}
-
-interface MachineStatus {
-  status: 'running' | 'planstop' | 'unplanstop' | 'testing';
-  label: string;
-  color: 'success' | 'info' | 'error' | 'warning';
-}
-
-const getMachineStatus = (machineData: MachineOperationData | null): MachineStatus => {
-  if (!machineData || !machineData.machineId) {
-    return { status: 'unplanstop', label: 'Dừng không kế hoạch', color: 'error' };
-  }
-  return { status: 'running', label: 'Đang chạy', color: 'success' };
-};
-
-// Combined OEE + APQ Chart with 270-degree coverage
-function OEEAPQCombinedChart({
-  oee,
-  availability,
-  performance,
-  quality,
-}: {
-  oee: number;
-  availability: number;
-  performance: number;
-  quality: number;
-}) {
-  const chartOptions: ApexOptions = {
-    chart: {
-      type: 'radialBar',
-      height: 400,
-    },
-    plotOptions: {
-      radialBar: {
-        startAngle: -135, // 270-degree: -135 to 135
-        endAngle: 135,
-        track: {
-          background: '#e7e7e7',
-          strokeWidth: '70%',
-          margin: 12, // Space between bars
-        },
-        dataLabels: {
-          name: {
-            fontSize: '16px',
-            color: '#666',
-            offsetY: 120,
-          },
-          value: {
-            offsetY: 76,
-            fontSize: '28px',
-            fontWeight: 'bold',
-            formatter: (val: number) => `${Math.round(Math.min(val, 100))}%`,
-          },
-          total: {
-            show: true,
-            label: 'OEE',
-            fontSize: '18px',
-            color: '#666',
-            formatter: () => `${Math.round(Math.min(oee, 100))}%`,
-          },
-        },
-        hollow: {
-          size: '20%',
-        },
-      },
-    },
-    colors: ['#22c55e', '#3b82f6', '#f59e0b', '#8b5cf6'], // OEE (Green), Availability (Blue), Performance (Orange), Quality (Purple)
-    labels: ['OEE', 'Availability', 'Performance', 'Quality'],
-    legend: {
-      show: true,
-      position: 'bottom',
-      horizontalAlign: 'center',
-      fontSize: '14px',
-      markers: {
-        size: 6,
-        strokeWidth: 4,
-        // radius: 12, // Rounded markers
-      },
-      itemMargin: {
-        horizontal: 12,
-        vertical: 8,
-      },
-    },
-    stroke: {
-      lineCap: 'round', // Rounded corners
-    },
-  };
-
-  // Cap values at 100% to prevent overflow
-  const series = [
-    Math.min(oee, 100),
-    Math.min(availability, 100),
-    Math.min(performance, 100),
-    Math.min(quality, 100),
-  ];
-
-  return (
-    <Box
-      sx={{
-        width: '100%',
-        maxWidth: 500,
-        mx: 'auto',
-        borderRadius: 3, // Rounded container corners
-        p: 2,
-      }}
-    >
-      <Chart options={chartOptions} series={series} type="radialBar" height={400} />
-    </Box>
-  );
-}
-
-// ApexCharts Timeline Visualization Component
-function ApexTimelineVisualization({ records }: { records: CurrentMachineRunStateRecords[] }) {
-  const getStateColor = (state?: string, isUnlabeled?: boolean) => {
-    if (isUnlabeled) return '#ef4444'; // Red for unlabeled downtime
-    if (state === 'running') return '#22c55e'; // Green
-    if (state === 'speedLoss') return '#f59e0b'; // Orange
-    if (state === 'unPlannedDowntime' || state === 'plannedDowntime') return '#64748b'; // Gray for labeled downtime
-    return '#94a3b8'; // Light gray default
-  };
-
-  // Convert records to ApexCharts timeline format
-  const timelineData = records.map((record, index) => {
-    const isUnlabeled =
-      record.stateId === '000000000000000000000000' &&
-      (record.state === 'unPlannedDowntime' || record.state === 'plannedDowntime');
-    const color = getStateColor(record.state, isUnlabeled);
-    const stateName = record.stateName || (isUnlabeled ? 'Unlabeled Downtime' : 'Unknown');
-
-    return {
-      x: stateName,
-      y: [
-        new Date(record.startTime || '').getTime(),
-        record.endTime ? new Date(record.endTime).getTime() : new Date().getTime(),
-      ],
-      fillColor: color,
-    };
-  });
-
-  const chartOptions: ApexOptions = {
-    chart: {
-      type: 'rangeBar',
-      height: 150,
-      toolbar: {
-        show: false,
-      },
-    },
-    plotOptions: {
-      bar: {
-        horizontal: true,
-        barHeight: '80%',
-        rangeBarGroupRows: true,
-      },
-    },
-    colors: ['#22c55e', '#f59e0b', '#ef4444', '#64748b'],
-    fill: {
-      type: 'solid',
-    },
-    xaxis: {
-      type: 'datetime',
-      labels: {
-        datetimeFormatter: {
-          hour: 'HH:mm',
-        },
-        datetimeUTC: false, // Use local time, not UTC
-      },
-    },
-    yaxis: {
-      show: true,
-    },
-    tooltip: {
-      custom: ({ seriesIndex, dataPointIndex, w }) => {
-        const data = w.config.series[seriesIndex].data[dataPointIndex];
-        const start = new Date(data.y[0]);
-        const end = new Date(data.y[1]);
-        const duration = Math.round((end.getTime() - start.getTime()) / 60000); // minutes
-
-        return `<div style="padding: 10px;">
-          <strong>${data.x}</strong><br/>
-          Start: ${start.toLocaleTimeString()}<br/>
-          End: ${end.toLocaleTimeString()}<br/>
-          Duration: ${duration} minutes
-        </div>`;
-      },
-    },
-    legend: {
-      show: false,
-    },
-  };
-
-  const series = [
-    {
-      data: timelineData,
-    },
-  ];
-
-  return (
-    <Box>
-      <Chart options={chartOptions} series={series} type="rangeBar" height={150} />
-
-      {/* Legend */}
-      <Stack direction="row" spacing={2} flexWrap="wrap" sx={{ mt: 2 }}>
-        <Stack direction="row" spacing={0.5} alignItems="center">
-          <Box sx={{ width: 16, height: 16, bgcolor: '#22c55e', borderRadius: 0.5 }} />
-          <Typography variant="caption">Running</Typography>
-        </Stack>
-        <Stack direction="row" spacing={0.5} alignItems="center">
-          <Box sx={{ width: 16, height: 16, bgcolor: '#f59e0b', borderRadius: 0.5 }} />
-          <Typography variant="caption">Speed Loss</Typography>
-        </Stack>
-        <Stack direction="row" spacing={0.5} alignItems="center">
-          <Box sx={{ width: 16, height: 16, bgcolor: '#64748b', borderRadius: 0.5 }} />
-          <Typography variant="caption">Labeled Downtime</Typography>
-        </Stack>
-        <Stack direction="row" spacing={0.5} alignItems="center">
-          <Box sx={{ width: 16, height: 16, bgcolor: '#ef4444', borderRadius: 0.5 }} />
-          <Typography variant="caption">Unlabeled Downtime</Typography>
-        </Stack>
-      </Stack>
-    </Box>
-  );
-}
-
 export function MachineOperationView() {
-  // const { t } = useTranslation(); // TODO: Add translations when needed
+  const { t } = useTranslation();
   const router = useRouter();
   const { selectedMachine } = useMachineSelector();
 
@@ -494,7 +97,7 @@ export function MachineOperationView() {
   const [timelineRecords, setTimelineRecords] = useState<CurrentMachineRunStateRecords[]>([]);
   const [isConnecting, setIsConnecting] = useState(false);
   const [testMode, setTestMode] = useState(false);
-  const [timelineView, setTimelineView] = useState<'current' | 'shift' | 'day'>('current');
+  const [timelineView, setTimelineView] = useState<TimelineView>('current');
 
   // Dialog states
   const [productChangeDialogOpen, setProductChangeDialogOpen] = useState(false);
@@ -595,7 +198,7 @@ export function MachineOperationView() {
           // Load product working state
           const productState = await getapimachineproductionmachineIdcurrentproductstate(machineId);
           if (mounted && productState) {
-            setMachineData((prev) => mergeProductState(prev, productState));
+            setMachineData((prev) => mergeProductState(prev, productState, apiConfig.baseUrl));
           }
         } catch (error) {
           console.error('Failed to load product state:', error);
@@ -851,7 +454,7 @@ export function MachineOperationView() {
         selectedMachine.id
       );
       if (productState) {
-        setMachineData((prev) => mergeProductState(prev, productState));
+        setMachineData((prev) => mergeProductState(prev, productState, apiConfig.baseUrl));
       }
 
       // Close dialogs
@@ -886,7 +489,7 @@ export function MachineOperationView() {
         selectedMachine.id
       );
       if (productState) {
-        setMachineData((prev) => mergeProductState(prev, productState));
+        setMachineData((prev) => mergeProductState(prev, productState, apiConfig.baseUrl));
       }
 
       setProductTargetDialogOpen(false);
@@ -925,7 +528,7 @@ export function MachineOperationView() {
           selectedMachine.id
         );
         if (productState) {
-          setMachineData((prev) => mergeProductState(prev, productState));
+          setMachineData((prev) => mergeProductState(prev, productState, apiConfig.baseUrl));
         }
 
         // Reset form
@@ -976,7 +579,7 @@ export function MachineOperationView() {
           selectedMachine.id
         );
         if (productState) {
-          setMachineData((prev) => mergeProductState(prev, productState));
+          setMachineData((prev) => mergeProductState(prev, productState, apiConfig.baseUrl));
         }
 
         // Reset edit state
@@ -1024,7 +627,7 @@ export function MachineOperationView() {
         selectedMachine.id
       );
       if (productState) {
-        setMachineData((prev) => mergeProductState(prev, productState));
+        setMachineData((prev) => mergeProductState(prev, productState, apiConfig.baseUrl));
       }
     } catch (error) {
       console.error('Failed to delete quantity:', error);
@@ -1100,7 +703,7 @@ export function MachineOperationView() {
         selectedMachine.id
       );
       if (productState) {
-        setMachineData((prev) => mergeProductState(prev, productState));
+        setMachineData((prev) => mergeProductState(prev, productState, apiConfig.baseUrl));
       }
 
       // Reset form
@@ -1114,13 +717,6 @@ export function MachineOperationView() {
   };
 
   // Downtime label handlers
-  const calculateDuration = (start?: string, end?: string | null) => {
-    if (!start) return 0;
-    const startTime = new Date(start).getTime();
-    const endTime = end ? new Date(end).getTime() : Date.now();
-    return Math.round((endTime - startTime) / 60000); // Minutes
-  };
-
   const handleLabelDowntime = (downtime: CurrentMachineRunStateRecords) => {
     setDowntimeToLabel(downtime);
     setShowReasonGrid(true);
@@ -1192,8 +788,6 @@ export function MachineOperationView() {
       product.productName.toLowerCase().includes(productSearchTerm.toLowerCase()) ||
       product.productCode.toLowerCase().includes(productSearchTerm.toLowerCase())
   );
-
-  const isCurrentProductRunning = !!machineData.productId;
 
   const unlabeledDowntimeCount = timelineRecords.filter(
     (record) =>
@@ -1277,7 +871,7 @@ export function MachineOperationView() {
                   onClick={() => setProductChangeDialogOpen(true)}
                   sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
                 >
-                  Đổi mã hàng
+                  {t('oi.operation.changeProduct')}
                 </Button>
               </Badge>
             </Badge>
@@ -1301,7 +895,7 @@ export function MachineOperationView() {
                 onClick={() => setAddQuantityDialogOpen(true)}
                 sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
               >
-                Thêm sản phẩm
+                {t('oi.operation.addProduct')}
               </Button>
             </Badge>
             <Badge
@@ -1324,7 +918,7 @@ export function MachineOperationView() {
                 onClick={() => setAddDefectDialogOpen(true)}
                 sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
               >
-                Nhập lỗi
+                {t('oi.operation.inputDefect')}
               </Button>
             </Badge>
             <Badge
@@ -1347,7 +941,7 @@ export function MachineOperationView() {
                 onClick={() => setLabelDowntimeDialogOpen(true)}
                 sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
               >
-                Lý do dừng máy
+                {t('oi.operation.stopReason')}
               </Button>
             </Badge>
             <IconButton
@@ -1439,7 +1033,7 @@ export function MachineOperationView() {
 
             {/* Timeline Visualization */}
             {timelineRecords.length > 0 ? (
-              <ApexTimelineVisualization records={timelineRecords} />
+              <TimelineVisualization records={timelineRecords} />
             ) : (
               <Box
                 sx={{
@@ -1475,7 +1069,7 @@ export function MachineOperationView() {
 
                 {/* Combined OEE + APQ Chart with 270-degree coverage */}
                 <Box sx={{ mb: 3 }}>
-                  <OEEAPQCombinedChart
+                  <OEEAPQChart
                     oee={machineData.oee ?? 0}
                     availability={machineData.availability ?? 0}
                     performance={machineData.performance ?? 0}

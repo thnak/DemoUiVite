@@ -19,9 +19,9 @@ import DialogContent from '@mui/material/DialogContent';
 import TableContainer from '@mui/material/TableContainer';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import type { AvailableProduct } from '../../types';
-
 import { Iconify } from 'src/components/iconify';
+
+import type { AvailableProduct } from '../../types';
 
 interface ProductChangeDialogProps {
   open: boolean;

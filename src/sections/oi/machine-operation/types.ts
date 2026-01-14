@@ -2,8 +2,8 @@
  * Types and interfaces for Machine Operation View
  */
 
-import type { MachineOeeUpdate, MachineRuntimeBlock } from 'src/services/machineHub';
-import type { CurrentMachineRunStateRecords, GetCurrentProductByMachineResult } from 'src/api/types/generated';
+import type { MachineOeeUpdate } from 'src/services/machineHub';
+import type { GetCurrentProductByMachineResult } from 'src/api/types/generated';
 
 /**
  * Unified interface for all machine operation data
