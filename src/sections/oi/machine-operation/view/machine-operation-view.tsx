@@ -1,9 +1,6 @@
 import type { ApexOptions } from 'apexcharts';
 import type { MachineOeeUpdate } from 'src/services/machineHub';
-import type {
-  CurrentMachineRunStateRecords,
-  ProductWorkingStateByMachine as BaseProductWorkingState,
-} from 'src/api/types/generated';
+import type { CurrentMachineRunStateRecords, GetCurrentProductByMachineResult } from 'src/api/types/generated';
 
 /**
  * Unified interface for all machine operation data
@@ -38,7 +35,7 @@ interface MachineOperationData {
   speedLossTime: string; // ISO 8601 duration
   estimatedFinishTime?: string; // ISO 8601 date-time
 
-  // Product information (from API ProductWorkingStateByMachine)
+  // Product information (from API GetCurrentProductByMachineResult)
   productId?: string;
   productName: string; // Falls back to currentProductName from SignalR
   productionOrderNumber?: string;
@@ -123,14 +120,13 @@ const mergeSignalRUpdate = (
  */
 const mergeProductState = (
   existing: MachineOperationData,
-  productState: BaseProductWorkingState
+  productState: GetCurrentProductByMachineResult
 ): MachineOperationData => ({
   ...existing,
   productId: productState.productId,
-  productName: productState.productName ?? existing.productName,
-  productionOrderNumber: productState.productionOrderNumber ?? undefined,
-  plannedQuantity: productState.plannedQuantity ?? existing.plannedQuantity,
-  idealCycleTime: productState.idealCycleTime,
+  productName: productState.productName,
+  productionOrderNumber: productState.productionOrderNumber,
+  plannedQuantity: productState.plannedQuantity,
   userId: productState.userId,
   progressPercentage:
     productState.plannedQuantity && existing.currentQuantity
@@ -198,16 +194,12 @@ import { useMachineSelector } from '../../context';
 
 // ----------------------------------------------------------------------
 
-// Mapped product interface for product change dialog
-interface MappedProduct {
-  id: string;
+// Simplified product interface for product change dialog
+interface AvailableProduct {
   productId: string;
+  productCode: string;
   productName: string;
-  productionOrderNumber: string;
-  targetQuantity: number;
-  currentQuantity: number;
-  isActive: boolean;
-  startTime: string;
+  imageUrl?: string | null;
 }
 
 // Quantity add history interface
@@ -486,6 +478,9 @@ export function MachineOperationView() {
 
   // Dialog states
   const [productChangeDialogOpen, setProductChangeDialogOpen] = useState(false);
+  const [productTargetDialogOpen, setProductTargetDialogOpen] = useState(false);
+  const [selectedProductForChange, setSelectedProductForChange] = useState<AvailableProduct | null>(null);
+  const [targetQuantity, setTargetQuantity] = useState<string>('');
   const [addQuantityDialogOpen, setAddQuantityDialogOpen] = useState(false);
   const [addQuantityTabValue, setAddQuantityTabValue] = useState(0);
   const [quantityToAdd, setQuantityToAdd] = useState<string>('');
@@ -494,7 +489,7 @@ export function MachineOperationView() {
   const [editingQuantityId, setEditingQuantityId] = useState<string | null>(null);
   const [editQuantityValue, setEditQuantityValue] = useState<string>('');
   const [editQuantityNote, setEditQuantityNote] = useState<string>('');
-  const [mappedProducts, setMappedProducts] = useState<MappedProduct[]>([]);
+  const [availableProducts, setAvailableProducts] = useState<AvailableProduct[]>([]);
   const [productSearchTerm, setProductSearchTerm] = useState('');
   const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
 
@@ -697,17 +692,13 @@ export function MachineOperationView() {
         });
 
         if (response?.items) {
-          const formattedProducts: MappedProduct[] = response.items.map((item) => ({
-            id: item.productId || '',
+          const formattedProducts: AvailableProduct[] = response.items.map((item) => ({
             productId: item.productId || '',
+            productCode: item.productCode || '',
             productName: item.productName || 'Unknown',
-            productionOrderNumber: item.productionOrderNumber || '',
-            targetQuantity: item.plannedQuantity || 0,
-            currentQuantity: 0, // Will be updated from real data
-            isActive: false, // Will be determined by comparing with current product
-            startTime: new Date().toISOString(),
+            imageUrl: item.imageUrl,
           }));
-          setMappedProducts(formattedProducts);
+          setAvailableProducts(formattedProducts);
         }
       } catch (error) {
         console.error('Failed to load available products:', error);
@@ -771,14 +762,27 @@ export function MachineOperationView() {
     router.push('/oi/select-machine');
   };
 
-  const handleProductSelect = async (product: MappedProduct) => {
-    if (!selectedMachine?.id) return;
+  // Handle product selection - opens target dialog
+  const handleProductClick = (product: AvailableProduct) => {
+    setSelectedProductForChange(product);
+    setTargetQuantity(''); // Reset target
+    setProductTargetDialogOpen(true);
+  };
+
+  // Confirm product change with target quantity
+  const handleConfirmProductChange = async () => {
+    if (!selectedMachine?.id || !selectedProductForChange) return;
+
+    const target = parseInt(targetQuantity, 10);
+    if (!target || target <= 0) {
+      // TODO: Show validation error
+      return;
+    }
 
     try {
       await postapimachineproductionmachineIdchangeproduct(selectedMachine.id, {
-        productId: product.productId,
-        productionOrderNumber: product.productionOrderNumber,
-        plannedQuantity: product.targetQuantity,
+        productId: selectedProductForChange.productId,
+        plannedQuantity: target,
       });
 
       // Reload product data after change
@@ -789,16 +793,46 @@ export function MachineOperationView() {
         setMachineData((prev) => mergeProductState(prev, productState));
       }
 
+      // Close dialogs
+      setProductTargetDialogOpen(false);
       setProductChangeDialogOpen(false);
+      setSelectedProductForChange(null);
     } catch (error) {
       console.error('Failed to change product:', error);
       // TODO: Show error notification to user
     }
   };
 
-  const handleUpdateTarget = (productId: string, newTarget: number) => {
-    // TODO: Implement target update logic if API is available
-    console.log('Update target:', productId, newTarget);
+  // Handle update target for currently running product
+  const handleUpdateTarget = async () => {
+    if (!selectedMachine?.id || !machineData.productId) return;
+
+    const target = parseInt(targetQuantity, 10);
+    if (!target || target <= 0) {
+      // TODO: Show validation error
+      return;
+    }
+
+    try {
+      // Use the same API to update target for running product
+      await postapimachineproductionmachineIdchangeproduct(selectedMachine.id, {
+        productId: machineData.productId,
+        plannedQuantity: target,
+      });
+
+      // Reload product data after update
+      const productState = await getapimachineproductionmachineIdcurrentproductstate(
+        selectedMachine.id
+      );
+      if (productState) {
+        setMachineData((prev) => mergeProductState(prev, productState));
+      }
+
+      setProductTargetDialogOpen(false);
+    } catch (error) {
+      console.error('Failed to update target:', error);
+      // TODO: Show error notification to user
+    }
   };
 
   const handleAddQuantity = async () => {
@@ -1092,11 +1126,13 @@ export function MachineOperationView() {
     }
   };
 
-  const filteredProducts = mappedProducts.filter(
+  const filteredProducts = availableProducts.filter(
     (product) =>
       product.productName.toLowerCase().includes(productSearchTerm.toLowerCase()) ||
-      product.productionOrderNumber.toLowerCase().includes(productSearchTerm.toLowerCase())
+      product.productCode.toLowerCase().includes(productSearchTerm.toLowerCase())
   );
+
+  const isCurrentProductRunning = !!machineData.productId;
 
   const unlabeledDowntimeCount = timelineRecords.filter(
     (record) =>
@@ -1723,7 +1759,7 @@ export function MachineOperationView() {
           {/* Search Box */}
           <TextField
             fullWidth
-            placeholder="Tìm kiếm sản phẩm hoặc PO..."
+            placeholder="Tìm kiếm sản phẩm..."
             value={productSearchTerm}
             onChange={(e) => setProductSearchTerm(e.target.value)}
             sx={{ mb: 3 }}
@@ -1743,99 +1779,89 @@ export function MachineOperationView() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Thời gian</TableCell>
                   <TableCell>Sản phẩm</TableCell>
-                  <TableCell>PO</TableCell>
-                  <TableCell align="center">Mục tiêu</TableCell>
+                  <TableCell>Mã sản phẩm</TableCell>
                   <TableCell align="center">Hành động</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredProducts.map((product) => (
-                  <TableRow key={product.id} hover>
-                    <TableCell>
-                      {new Date(product.startTime).toLocaleTimeString('vi-VN', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </TableCell>
-                    <TableCell>
-                      <Stack direction="row" spacing={2} alignItems="center">
-                        <Box
-                          sx={{
-                            width: 40,
-                            height: 40,
-                            borderRadius: 1,
-                            overflow: 'hidden',
-                            bgcolor: 'background.neutral',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}
-                        >
-                          <img
-                            src={`${apiConfig.baseUrl}/api/Product/${product.productId}/image`}
-                            alt={product.productName}
-                            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                              const target = e.currentTarget;
-                              target.style.display = 'none';
-                              const parent = target.parentElement;
-                              if (parent && !parent.querySelector('.fallback-icon')) {
-                                const icon = document.createElement('div');
-                                icon.className = 'fallback-icon';
-                                icon.style.fontSize = '20px';
-                                icon.innerHTML = '📦';
-                                parent.appendChild(icon);
-                              }
+                {filteredProducts.map((product) => {
+                  const isRunning = machineData.productId === product.productId;
+                  return (
+                    <TableRow key={product.productId} hover>
+                      <TableCell>
+                        <Stack direction="row" spacing={2} alignItems="center">
+                          <Box
+                            sx={{
+                              width: 40,
+                              height: 40,
+                              borderRadius: 1,
+                              overflow: 'hidden',
+                              bgcolor: 'background.neutral',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
                             }}
-                            style={{
-                              width: '100%',
-                              height: '100%',
-                              objectFit: 'cover',
-                            }}
-                          />
-                        </Box>
-                        <Box>
-                          <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                            {product.productName}
-                          </Typography>
-                          {product.isActive && (
-                            <Chip label="Đang chạy" size="small" color="success" sx={{ mt: 0.5 }} />
-                          )}
-                        </Box>
-                      </Stack>
-                    </TableCell>
-                    <TableCell>{product.productionOrderNumber}</TableCell>
-                    <TableCell align="center">
-                      <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                        {product.currentQuantity} / {product.targetQuantity}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Stack direction="row" spacing={1} justifyContent="center">
+                          >
+                            {product.imageUrl ? (
+                              <img
+                                src={product.imageUrl}
+                                alt={product.productName}
+                                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                                  const target = e.currentTarget;
+                                  target.style.display = 'none';
+                                  const parent = target.parentElement;
+                                  if (parent && !parent.querySelector('.fallback-icon')) {
+                                    const icon = document.createElement('div');
+                                    icon.className = 'fallback-icon';
+                                    icon.style.fontSize = '20px';
+                                    icon.innerHTML = '📦';
+                                    parent.appendChild(icon);
+                                  }
+                                }}
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  objectFit: 'cover',
+                                }}
+                              />
+                            ) : (
+                              <Box sx={{ fontSize: '20px' }}>📦</Box>
+                            )}
+                          </Box>
+                          <Box>
+                            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                              {product.productName}
+                            </Typography>
+                            {isRunning && (
+                              <Chip label="Đang chạy" size="small" color="success" sx={{ mt: 0.5 }} />
+                            )}
+                          </Box>
+                        </Stack>
+                      </TableCell>
+                      <TableCell>{product.productCode}</TableCell>
+                      <TableCell align="center">
                         <Button
                           size="small"
-                          variant="contained"
-                          onClick={() => handleProductSelect(product)}
-                          disabled={product.isActive}
-                        >
-                          Chọn
-                        </Button>
-                        {product.isActive && (
-                          <Button
-                            size="small"
-                            variant="outlined"
-                            onClick={() =>
-                              handleUpdateTarget(product.productId, product.targetQuantity)
+                          variant={isRunning ? 'outlined' : 'contained'}
+                          onClick={() => {
+                            if (isRunning) {
+                              // For running product, open target dialog for update
+                              setSelectedProductForChange(product);
+                              setTargetQuantity(String(machineData.plannedQuantity || ''));
+                              setProductTargetDialogOpen(true);
+                            } else {
+                              // For new product, open target dialog for selection
+                              handleProductClick(product);
                             }
-                          >
-                            Cập nhật
-                          </Button>
-                        )}
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                          }}
+                        >
+                          {isRunning ? 'Cập nhật' : 'Chọn'}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </TableContainer>
@@ -1843,6 +1869,59 @@ export function MachineOperationView() {
         <DialogActions>
           <Button onClick={() => setProductChangeDialogOpen(false)} variant="outlined">
             Đóng (ESC)
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Product Target Dialog */}
+      <Dialog
+        open={productTargetDialogOpen}
+        onClose={() => setProductTargetDialogOpen(false)}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle>
+          {selectedProductForChange?.productId === machineData.productId
+            ? 'Cập nhật mục tiêu'
+            : 'Nhập mục tiêu sản xuất'}
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ pt: 2 }}>
+            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+              Sản phẩm: {selectedProductForChange?.productName}
+            </Typography>
+            <TextField
+              fullWidth
+              label="Số lượng mục tiêu"
+              type="number"
+              value={targetQuantity}
+              onChange={(e) => setTargetQuantity(e.target.value)}
+              placeholder="Nhập số lượng..."
+              slotProps={{
+                htmlInput: {
+                  min: 1,
+                },
+              }}
+              autoFocus
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setProductTargetDialogOpen(false)} variant="outlined">
+            Hủy
+          </Button>
+          <Button
+            onClick={
+              selectedProductForChange?.productId === machineData.productId
+                ? handleUpdateTarget
+                : handleConfirmProductChange
+            }
+            variant="contained"
+            disabled={!targetQuantity || parseInt(targetQuantity, 10) <= 0}
+          >
+            {selectedProductForChange?.productId === machineData.productId
+              ? 'Cập nhật'
+              : 'Xác nhận'}
           </Button>
         </DialogActions>
       </Dialog>
