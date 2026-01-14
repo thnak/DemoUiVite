@@ -1014,10 +1014,10 @@ export function MachineOperationView() {
                   },
                 }}
               >
-                <Button 
-                  variant="contained" 
+                <Button
+                  variant="contained"
                   size="large"
-                  color="primary" 
+                  color="primary"
                   startIcon={<Iconify icon="eva:swap-fill" />}
                   onClick={() => setProductChangeDialogOpen(true)}
                   sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
@@ -1038,10 +1038,10 @@ export function MachineOperationView() {
                 },
               }}
             >
-              <Button 
-                variant="outlined" 
+              <Button
+                variant="outlined"
                 size="large"
-                color="primary" 
+                color="primary"
                 startIcon={<Iconify icon="eva:plus-fill" />}
                 onClick={() => setAddQuantityDialogOpen(true)}
                 sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
@@ -1061,10 +1061,10 @@ export function MachineOperationView() {
                 },
               }}
             >
-              <Button 
-                variant="outlined" 
+              <Button
+                variant="outlined"
                 size="large"
-                color="error" 
+                color="error"
                 startIcon={<Iconify icon="eva:alert-triangle-fill" />}
                 onClick={() => setAddDefectDialogOpen(true)}
                 sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
@@ -1084,10 +1084,10 @@ export function MachineOperationView() {
                 },
               }}
             >
-              <Button 
-                variant="outlined" 
+              <Button
+                variant="outlined"
                 size="large"
-                color="warning" 
+                color="warning"
                 startIcon={<Iconify icon="eva:stop-circle-fill" />}
                 onClick={() => setLabelDowntimeDialogOpen(true)}
                 sx={{ fontSize: '1rem', px: 3, py: 1.5 }}
@@ -1095,7 +1095,7 @@ export function MachineOperationView() {
                 Lý do dừng máy
               </Button>
             </Badge>
-            <IconButton 
+            <IconButton
               onClick={() => setShowKeyboardHelp(!showKeyboardHelp)}
               sx={{ border: 1, borderColor: 'divider' }}
             >
@@ -1107,12 +1107,12 @@ export function MachineOperationView() {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Typography variant="body2">RUN</Typography>
-            <Switch 
-              checked={testMode} 
+            <Switch
+              checked={testMode}
               onChange={async (e) => {
                 const newTestMode = e.target.checked;
                 setTestMode(newTestMode);
-                
+
                 // Call API to change run mode
                 if (selectedMachine?.id) {
                   try {
@@ -1125,7 +1125,7 @@ export function MachineOperationView() {
                     setTestMode(!newTestMode);
                   }
                 }
-              }} 
+              }}
             />
             <Typography variant="body2">TEST</Typography>
           </Box>
@@ -1133,7 +1133,12 @@ export function MachineOperationView() {
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               {currentTime.toLocaleTimeString()}
             </Typography>
-            <Chip label={machineStatus.label} color={machineStatus.color} size="small" sx={{ mt: 0.5 }} />
+            <Chip
+              label={machineStatus.label}
+              color={machineStatus.color}
+              size="small"
+              sx={{ mt: 0.5 }}
+            />
           </Box>
         </Box>
       </Box>
@@ -1146,7 +1151,9 @@ export function MachineOperationView() {
         <Stack spacing={3}>
           {/* Timeline Container */}
           <Card sx={{ p: 3 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Box
+              sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
+            >
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                 Timeline
               </Typography>
@@ -1174,7 +1181,7 @@ export function MachineOperationView() {
                 </Button>
               </Box>
             </Box>
-            
+
             {/* Timeline Visualization */}
             {timelineRecords.length > 0 ? (
               <ApexTimelineVisualization records={timelineRecords} />
@@ -1194,7 +1201,7 @@ export function MachineOperationView() {
                 </Typography>
               </Box>
             )}
-            
+
             {unlabeledDowntimeCount > 0 && (
               <Alert severity="warning" sx={{ mt: 2 }}>
                 {unlabeledDowntimeCount} DOWNTIME CHƯA PHÂN LOẠI
@@ -1210,7 +1217,7 @@ export function MachineOperationView() {
                 <Typography variant="h6" sx={{ mb: 3, fontWeight: 'bold' }}>
                   Chỉ số OEE
                 </Typography>
-                
+
                 {/* Combined OEE + APQ Chart with 270-degree coverage */}
                 <Box sx={{ mb: 3 }}>
                   <OEEAPQCombinedChart
@@ -1223,11 +1230,18 @@ export function MachineOperationView() {
 
                 {/* OEE Formula */}
                 <Box sx={{ mb: 3, p: 2, bgcolor: 'background.neutral', borderRadius: 1 }}>
-                  <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ display: 'block', mb: 0.5 }}
+                  >
                     OEE = Availability × Performance × Quality
                   </Typography>
                   <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-                    {machineData?.availability.toFixed(1) ?? '00.0'}% × {machineData?.performance.toFixed(1) ?? '00.0'}% × {machineData?.quality.toFixed(1) ?? '00.0'}% = {machineData?.oee.toFixed(1) ?? '00.0'}%
+                    {machineData?.availability.toFixed(1) ?? '00.0'}% ×{' '}
+                    {machineData?.performance.toFixed(1) ?? '00.0'}% ×{' '}
+                    {machineData?.quality.toFixed(1) ?? '00.0'}% ={' '}
+                    {machineData?.oee.toFixed(1) ?? '00.0'}%
                   </Typography>
                 </Box>
 
@@ -1236,25 +1250,45 @@ export function MachineOperationView() {
                   <Grid size={6}>
                     <Box sx={{ p: 2, bgcolor: 'error.lighter', borderRadius: 1 }}>
                       <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
-                        <Iconify icon="solar:danger-triangle-bold-duotone" width={20} sx={{ color: 'error.main' }} />
+                        <Iconify
+                          icon="solar:danger-triangle-bold-duotone"
+                          width={20}
+                          sx={{ color: 'error.main' }}
+                        />
                         <Typography variant="body2" color="error.main" sx={{ fontWeight: 'bold' }}>
                           Downtime
                         </Typography>
                       </Stack>
-                      <Typography variant="h6" color="error.main">{machineData?.downtime || '0.5'}h</Typography>
-                      <Typography variant="caption" color="text.secondary">3 lần</Typography>
+                      <Typography variant="h6" color="error.main">
+                        {machineData?.downtime || '0.5'}h
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        3 lần
+                      </Typography>
                     </Box>
                   </Grid>
                   <Grid size={6}>
                     <Box sx={{ p: 2, bgcolor: 'warning.lighter', borderRadius: 1 }}>
                       <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
-                        <Iconify icon="solar:test-tube-bold" width={20} sx={{ color: 'warning.main' }} />
-                        <Typography variant="body2" color="warning.main" sx={{ fontWeight: 'bold' }}>
+                        <Iconify
+                          icon="solar:test-tube-bold"
+                          width={20}
+                          sx={{ color: 'warning.main' }}
+                        />
+                        <Typography
+                          variant="body2"
+                          color="warning.main"
+                          sx={{ fontWeight: 'bold' }}
+                        >
                           Test Mode
                         </Typography>
                       </Stack>
-                      <Typography variant="h6" color="warning.main">0.12h</Typography>
-                      <Typography variant="caption" color="text.secondary">2 lần</Typography>
+                      <Typography variant="h6" color="warning.main">
+                        0.12h
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        2 lần
+                      </Typography>
                     </Box>
                   </Grid>
                 </Grid>
@@ -1313,10 +1347,10 @@ export function MachineOperationView() {
                         {productData?.productName || machineData?.currentProductName || 'N/A'}
                       </Typography>
                       <Stack direction="row" spacing={1}>
-                        <Chip 
+                        <Chip
                           label={productData?.productionOrderNumber ?? ''}
-                          size="small" 
-                          variant="outlined" 
+                          size="small"
+                          variant="outlined"
                         />
                       </Stack>
                     </Box>
@@ -1332,25 +1366,37 @@ export function MachineOperationView() {
                         {productData?.currentQuantity ?? 0} / {productData?.plannedQuantity ?? 0}
                       </Typography>
                     </Box>
-                    <LinearProgress 
-                      variant="determinate" 
-                      value={((productData?.currentQuantity ?? 0) / (productData?.plannedQuantity ?? 1)) * 100}
-                      sx={{ 
-                        height: 10, 
+                    <LinearProgress
+                      variant="determinate"
+                      value={
+                        ((productData?.currentQuantity ?? 0) /
+                          (productData?.plannedQuantity ?? 1)) *
+                        100
+                      }
+                      sx={{
+                        height: 10,
                         borderRadius: 1,
                         bgcolor: 'action.hover',
                         '& .MuiLinearProgress-bar': {
                           borderRadius: 1,
                           bgcolor: 'success.main',
                         },
-                      }} 
+                      }}
                     />
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
                       <Typography variant="caption" color="text.secondary">
                         0%
                       </Typography>
-                      <Typography variant="caption" sx={{ fontWeight: 'bold', color: 'success.main' }}>
-                        {(((productData?.currentQuantity ?? 0) / (productData?.plannedQuantity ?? 1)) * 100).toFixed(1)}%
+                      <Typography
+                        variant="caption"
+                        sx={{ fontWeight: 'bold', color: 'success.main' }}
+                      >
+                        {(
+                          ((productData?.currentQuantity ?? 0) /
+                            (productData?.plannedQuantity ?? 1)) *
+                          100
+                        ).toFixed(1)}
+                        %
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
                         100%
@@ -1361,18 +1407,31 @@ export function MachineOperationView() {
                   {/* Completion Time */}
                   <Box sx={{ p: 2, bgcolor: 'info.lighter', borderRadius: 1 }}>
                     <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 0.5 }}>
-                      <Iconify icon="solar:clock-circle-bold" width={20} sx={{ color: 'info.main' }} />
+                      <Iconify
+                        icon="solar:clock-circle-bold"
+                        width={20}
+                        sx={{ color: 'info.main' }}
+                      />
                       <Typography variant="body2" color="info.main" sx={{ fontWeight: 'bold' }}>
                         Thời gian hoàn thành dự kiến
                       </Typography>
                     </Stack>
-                    <Typography variant="h6" color="info.main">17:45</Typography>
+                    <Typography variant="h6" color="info.main">
+                      {machineData?.estimatedFinishTime}
+                    </Typography>
                   </Box>
 
                   {/* Quality Stats */}
                   <Grid container spacing={2}>
                     <Grid size={4}>
-                      <Box sx={{ textAlign: 'center', p: 1.5, bgcolor: 'background.neutral', borderRadius: 1 }}>
+                      <Box
+                        sx={{
+                          textAlign: 'center',
+                          p: 1.5,
+                          bgcolor: 'background.neutral',
+                          borderRadius: 1,
+                        }}
+                      >
                         <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
                           Tổng cộng
                         </Typography>
@@ -1382,7 +1441,14 @@ export function MachineOperationView() {
                       </Box>
                     </Grid>
                     <Grid size={4}>
-                      <Box sx={{ textAlign: 'center', p: 1.5, bgcolor: 'success.lighter', borderRadius: 1 }}>
+                      <Box
+                        sx={{
+                          textAlign: 'center',
+                          p: 1.5,
+                          bgcolor: 'success.lighter',
+                          borderRadius: 1,
+                        }}
+                      >
                         <Typography variant="body2" color="success.main" sx={{ mb: 0.5 }}>
                           Đạt
                         </Typography>
@@ -1392,7 +1458,14 @@ export function MachineOperationView() {
                       </Box>
                     </Grid>
                     <Grid size={4}>
-                      <Box sx={{ textAlign: 'center', p: 1.5, bgcolor: 'error.lighter', borderRadius: 1 }}>
+                      <Box
+                        sx={{
+                          textAlign: 'center',
+                          p: 1.5,
+                          bgcolor: 'error.lighter',
+                          borderRadius: 1,
+                        }}
+                      >
                         <Typography variant="body2" color="error.main" sx={{ mb: 0.5 }}>
                           Lỗi
                         </Typography>
@@ -1407,40 +1480,61 @@ export function MachineOperationView() {
                   <Grid container spacing={2}>
                     <Grid size={6}>
                       <Box sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1 }}>
-                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{ display: 'block', mb: 0.5 }}
+                        >
                           Nhịp lý tưởng
                         </Typography>
                         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                          12.5s
+                          {productData?.idealCycleTime ?? "N/A"}s
                         </Typography>
                       </Box>
                     </Grid>
                     <Grid size={6}>
                       <Box sx={{ p: 2, border: 1, borderColor: 'divider', borderRadius: 1 }}>
-                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{ display: 'block', mb: 0.5 }}
+                        >
                           Nhịp thực tế
                         </Typography>
                         <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'success.main' }}>
-                          10.2s
+                          {productData?.actualCycleTime ?? "N/A"}s
                         </Typography>
                       </Box>
                     </Grid>
                   </Grid>
 
                   {/* Operator Info with Avatar */}
-                  <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', p: 2, bgcolor: 'background.neutral', borderRadius: 1 }}>
-                    <Avatar 
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: 2,
+                      alignItems: 'center',
+                      p: 2,
+                      bgcolor: 'background.neutral',
+                      borderRadius: 1,
+                    }}
+                  >
+                    <Avatar
                       src={`${apiConfig.baseUrl}/api/User/${productData?.userId}/avatar-image`}
                       sx={{ width: 48, height: 48 }}
                     >
                       <Iconify icon="solar:user-circle-bold" width={48} />
                     </Avatar>
                     <Box>
-                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ display: 'block' }}
+                      >
                         Người vận hành
                       </Typography>
                       <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                        WIBU - 01234
+                        {productData?.userId || 'N/A'}
                       </Typography>
                     </Box>
                   </Box>
@@ -1452,8 +1546,8 @@ export function MachineOperationView() {
       )}
 
       {/* Product Change Dialog */}
-      <Dialog 
-        open={productChangeDialogOpen} 
+      <Dialog
+        open={productChangeDialogOpen}
         onClose={() => setProductChangeDialogOpen(false)}
         maxWidth="md"
         fullWidth
@@ -1483,7 +1577,7 @@ export function MachineOperationView() {
                     <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
                   </InputAdornment>
                 ),
-              }
+              },
             }}
           />
 
@@ -1503,9 +1597,9 @@ export function MachineOperationView() {
                 {filteredProducts.map((product) => (
                   <TableRow key={product.id} hover>
                     <TableCell>
-                      {new Date(product.startTime).toLocaleTimeString('vi-VN', { 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
+                      {new Date(product.startTime).toLocaleTimeString('vi-VN', {
+                        hour: '2-digit',
+                        minute: '2-digit',
                       })}
                     </TableCell>
                     <TableCell>
@@ -1549,12 +1643,7 @@ export function MachineOperationView() {
                             {product.productName}
                           </Typography>
                           {product.isActive && (
-                            <Chip 
-                              label="Đang chạy" 
-                              size="small" 
-                              color="success" 
-                              sx={{ mt: 0.5 }}
-                            />
+                            <Chip label="Đang chạy" size="small" color="success" sx={{ mt: 0.5 }} />
                           )}
                         </Box>
                       </Stack>
@@ -1579,7 +1668,9 @@ export function MachineOperationView() {
                           <Button
                             size="small"
                             variant="outlined"
-                            onClick={() => handleUpdateTarget(product.productId, product.targetQuantity)}
+                            onClick={() =>
+                              handleUpdateTarget(product.productId, product.targetQuantity)
+                            }
                           >
                             Cập nhật
                           </Button>
@@ -1600,8 +1691,8 @@ export function MachineOperationView() {
       </Dialog>
 
       {/* Add Quantity Dialog */}
-      <Dialog 
-        open={addQuantityDialogOpen} 
+      <Dialog
+        open={addQuantityDialogOpen}
         onClose={() => setAddQuantityDialogOpen(false)}
         maxWidth="sm"
         fullWidth
@@ -1617,8 +1708,8 @@ export function MachineOperationView() {
           </Box>
         </DialogTitle>
         <DialogContent>
-          <Tabs 
-            value={addQuantityTabValue} 
+          <Tabs
+            value={addQuantityTabValue}
             onChange={(e, newValue) => setAddQuantityTabValue(newValue)}
             sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}
           >
@@ -1628,7 +1719,7 @@ export function MachineOperationView() {
 
           {/* Tab 1: Add Quantity */}
           {addQuantityTabValue === 0 && (
-            <Stack spacing={3} height='700px'>
+            <Stack spacing={3} height="700px">
               <TextField
                 fullWidth
                 label="Số lượng"
@@ -1642,7 +1733,7 @@ export function MachineOperationView() {
                         <Iconify icon="eva:plus-fill" />
                       </InputAdornment>
                     ),
-                  }
+                  },
                 }}
                 helperText="Nhập số lượng sản phẩm muốn thêm vào tổng số"
               />
@@ -1656,14 +1747,11 @@ export function MachineOperationView() {
                 placeholder="Nhập ghi chú nếu cần..."
               />
               <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-                <Button 
-                  variant="outlined" 
-                  onClick={() => setAddQuantityDialogOpen(false)}
-                >
+                <Button variant="outlined" onClick={() => setAddQuantityDialogOpen(false)}>
                   Hủy
                 </Button>
-                <Button 
-                  variant="contained" 
+                <Button
+                  variant="contained"
                   onClick={handleAddQuantity}
                   disabled={!quantityToAdd || parseInt(quantityToAdd, 10) <= 0}
                 >
@@ -1698,9 +1786,7 @@ export function MachineOperationView() {
                   ) : (
                     quantityHistory.map((history) => (
                       <TableRow key={history.id} hover>
-                        <TableCell>
-                          {new Date(history.timestamp).toLocaleString('vi-VN')}
-                        </TableCell>
+                        <TableCell>{new Date(history.timestamp).toLocaleString('vi-VN')}</TableCell>
                         <TableCell align="center">
                           {editingQuantityId === history.id ? (
                             <TextField
@@ -1711,9 +1797,9 @@ export function MachineOperationView() {
                               sx={{ width: '100px' }}
                             />
                           ) : (
-                            <Chip 
-                              label={`+${history.addedQuantity}`} 
-                              size="small" 
+                            <Chip
+                              label={`+${history.addedQuantity}`}
+                              size="small"
                               color="success"
                             />
                           )}
@@ -1744,19 +1830,13 @@ export function MachineOperationView() {
                               >
                                 <Iconify icon="solar:check-circle-bold" />
                               </IconButton>
-                              <IconButton
-                                size="small"
-                                onClick={handleCancelEditQuantity}
-                              >
+                              <IconButton size="small" onClick={handleCancelEditQuantity}>
                                 <Iconify icon="mingcute:close-line" />
                               </IconButton>
                             </Box>
                           ) : (
                             <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-                              <IconButton
-                                size="small"
-                                onClick={() => handleEditQuantity(history)}
-                              >
+                              <IconButton size="small" onClick={() => handleEditQuantity(history)}>
                                 <Iconify icon="solar:pen-bold" />
                               </IconButton>
                               <IconButton
@@ -1780,8 +1860,8 @@ export function MachineOperationView() {
       </Dialog>
 
       {/* Add Defect/Scrap Dialog */}
-      <Dialog 
-        open={addDefectDialogOpen} 
+      <Dialog
+        open={addDefectDialogOpen}
         onClose={() => setAddDefectDialogOpen(false)}
         maxWidth="md"
         fullWidth
@@ -1797,8 +1877,8 @@ export function MachineOperationView() {
           </Box>
         </DialogTitle>
         <DialogContent>
-          <Tabs 
-            value={defectTabValue} 
+          <Tabs
+            value={defectTabValue}
             onChange={(e, newValue) => setDefectTabValue(newValue)}
             sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}
           >
@@ -1812,11 +1892,11 @@ export function MachineOperationView() {
               <Grid container spacing={2}>
                 {defectTypes.map((defect) => {
                   const quantity = defectEntries.get(defect.defectId) || 0;
-                  
+
                   return (
                     <Grid key={defect.defectId} size={{ xs: 12, sm: 6, md: 4 }}>
-                      <Card 
-                        sx={{ 
+                      <Card
+                        sx={{
                           p: 2,
                           borderLeft: 4,
                           borderColor: defect.colorHex,
@@ -1841,15 +1921,15 @@ export function MachineOperationView() {
                           }}
                         >
                           {defect.imageUrl ? (
-                            <img 
-                              src={defect.imageUrl} 
+                            <img
+                              src={defect.imageUrl}
                               alt={defect.defectName}
                               style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                             />
                           ) : (
-                            <Typography 
-                              variant="h1" 
-                              sx={{ 
+                            <Typography
+                              variant="h1"
+                              sx={{
                                 color: defect.colorHex,
                                 opacity: 0.7,
                               }}
@@ -1860,9 +1940,9 @@ export function MachineOperationView() {
                         </Box>
 
                         {/* Defect name */}
-                        <Typography 
-                          variant="subtitle1" 
-                          sx={{ 
+                        <Typography
+                          variant="subtitle1"
+                          sx={{
                             fontWeight: 'bold',
                             mb: 2,
                             color: defect.colorHex,
@@ -1873,11 +1953,11 @@ export function MachineOperationView() {
 
                         {/* Quantity controls */}
                         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 'auto' }}>
-                          <IconButton 
+                          <IconButton
                             size="small"
                             onClick={() => handleDefectDecrement(defect.defectId)}
                             disabled={quantity === 0}
-                            sx={{ 
+                            sx={{
                               border: 1,
                               borderColor: defect.colorHex,
                               color: defect.colorHex,
@@ -1889,7 +1969,9 @@ export function MachineOperationView() {
                           <TextField
                             size="small"
                             value={quantity || ''}
-                            onChange={(e) => handleDefectQuantityChange(defect.defectId, e.target.value)}
+                            onChange={(e) =>
+                              handleDefectQuantityChange(defect.defectId, e.target.value)
+                            }
                             type="number"
                             sx={{ flex: 1 }}
                             slotProps={{
@@ -1900,10 +1982,10 @@ export function MachineOperationView() {
                             placeholder="0"
                           />
 
-                          <IconButton 
+                          <IconButton
                             size="small"
                             onClick={() => handleDefectIncrement(defect.defectId)}
-                            sx={{ 
+                            sx={{
                               border: 1,
                               borderColor: defect.colorHex,
                               bgcolor: defect.colorHex,
@@ -1920,10 +2002,10 @@ export function MachineOperationView() {
 
                         {/* Show current quantity if > 0 */}
                         {quantity > 0 && (
-                          <Chip 
+                          <Chip
                             label={`${quantity} lỗi`}
                             size="small"
-                            sx={{ 
+                            sx={{
                               mt: 1,
                               bgcolor: defect.colorHex,
                               color: 'white',
@@ -1938,20 +2020,18 @@ export function MachineOperationView() {
 
               {/* Submit button */}
               <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mt: 3 }}>
-                <Button 
-                  variant="outlined" 
-                  onClick={() => setAddDefectDialogOpen(false)}
-                >
+                <Button variant="outlined" onClick={() => setAddDefectDialogOpen(false)}>
                   Hủy
                 </Button>
-                <Button 
-                  variant="contained" 
+                <Button
+                  variant="contained"
                   color="error"
                   onClick={handleSubmitDefects}
                   disabled={defectEntries.size === 0}
                   startIcon={<Iconify icon="eva:checkmark-fill" />}
                 >
-                  Xác nhận ({Array.from(defectEntries.values()).reduce((sum, qty) => sum + qty, 0)} lỗi)
+                  Xác nhận ({Array.from(defectEntries.values()).reduce((sum, qty) => sum + qty, 0)}{' '}
+                  lỗi)
                 </Button>
               </Box>
             </Box>
@@ -1993,19 +2073,19 @@ export function MachineOperationView() {
                                 alignItems: 'center',
                               }}
                             >
-                              <Typography 
-                                variant="body2" 
-                                sx={{ 
+                              <Typography
+                                variant="body2"
+                                sx={{
                                   fontWeight: 'bold',
                                   color: defect.colorHex,
                                 }}
                               >
                                 {defect.defectName}
                               </Typography>
-                              <Chip 
+                              <Chip
                                 label={`${defect.quantity}`}
                                 size="small"
-                                sx={{ 
+                                sx={{
                                   bgcolor: defect.colorHex,
                                   color: 'white',
                                 }}
@@ -2077,11 +2157,17 @@ export function MachineOperationView() {
                     Quay lại
                   </Button>
                   <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
-                    Thời gian: {downtimeToLabel.startTime ? new Date(downtimeToLabel.startTime).toLocaleString() : 'N/A'} - 
-                    {downtimeToLabel.endTime ? new Date(downtimeToLabel.endTime).toLocaleString() : ' Đang diễn ra'}
-                    {' '}({calculateDuration(downtimeToLabel.startTime, downtimeToLabel.endTime)} phút)
+                    Thời gian:{' '}
+                    {downtimeToLabel.startTime
+                      ? new Date(downtimeToLabel.startTime).toLocaleString()
+                      : 'N/A'}{' '}
+                    -
+                    {downtimeToLabel.endTime
+                      ? new Date(downtimeToLabel.endTime).toLocaleString()
+                      : ' Đang diễn ra'}{' '}
+                    ({calculateDuration(downtimeToLabel.startTime, downtimeToLabel.endTime)} phút)
                   </Typography>
-                  
+
                   <Grid container spacing={2} sx={{ mb: 3 }}>
                     {stopReasons.map((reason) => (
                       <Grid key={reason.reasonId} size={{ xs: 12, sm: 6, md: 4 }}>
@@ -2091,8 +2177,8 @@ export function MachineOperationView() {
                             cursor: 'pointer',
                             borderLeft: 4,
                             borderColor: reason.colorHex,
-                            bgcolor: selectedReasons.includes(reason.reasonId) 
-                              ? `${reason.colorHex}20` 
+                            bgcolor: selectedReasons.includes(reason.reasonId)
+                              ? `${reason.colorHex}20`
                               : 'background.paper',
                             '&:hover': {
                               bgcolor: `${reason.colorHex}10`,
@@ -2122,7 +2208,13 @@ export function MachineOperationView() {
                               '⚠️'
                             )}
                           </Box>
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                            }}
+                          >
                             <Typography
                               variant="body2"
                               sx={{ fontWeight: 'bold', color: reason.colorHex }}
@@ -2171,14 +2263,26 @@ export function MachineOperationView() {
                     unlabeledDowntimes.map((downtime, index) => {
                       const isOngoing = !downtime.endTime;
                       const duration = calculateDuration(downtime.startTime, downtime.endTime);
-                      
+
                       return (
                         <Card key={`${downtime.startTime}-${index}`} sx={{ p: 2 }}>
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              mb: 1,
+                            }}
+                          >
                             <Box>
                               <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                                {downtime.startTime ? new Date(downtime.startTime).toLocaleString() : 'N/A'} - 
-                                {downtime.endTime ? new Date(downtime.endTime).toLocaleString() : ' Đang diễn ra'}
+                                {downtime.startTime
+                                  ? new Date(downtime.startTime).toLocaleString()
+                                  : 'N/A'}{' '}
+                                -
+                                {downtime.endTime
+                                  ? new Date(downtime.endTime).toLocaleString()
+                                  : ' Đang diễn ra'}
                               </Typography>
                               <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
                                 <Chip
@@ -2188,11 +2292,7 @@ export function MachineOperationView() {
                                   color="default"
                                 />
                                 {isOngoing && (
-                                  <Chip
-                                    label="Đang diễn ra"
-                                    size="small"
-                                    color="error"
-                                  />
+                                  <Chip label="Đang diễn ra" size="small" color="error" />
                                 )}
                               </Box>
                             </Box>
@@ -2224,15 +2324,19 @@ export function MachineOperationView() {
                     <Card key={history.id} sx={{ p: 2 }}>
                       <Box sx={{ mb: 2 }}>
                         <Typography variant="body2" sx={{ color: 'text.secondary', mb: 0.5 }}>
-                          {history.startTime ? new Date(history.startTime).toLocaleString() : 'N/A'} - 
-                          {history.endTime ? new Date(history.endTime).toLocaleString() : ' Đang diễn ra'}
-                          {' '}({history.duration} phút)
+                          {history.startTime ? new Date(history.startTime).toLocaleString() : 'N/A'}{' '}
+                          -
+                          {history.endTime
+                            ? new Date(history.endTime).toLocaleString()
+                            : ' Đang diễn ra'}{' '}
+                          ({history.duration} phút)
                         </Typography>
                         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                          Gán bởi: {history.labeledBy} • {new Date(history.timestamp).toLocaleString()}
+                          Gán bởi: {history.labeledBy} •{' '}
+                          {new Date(history.timestamp).toLocaleString()}
                         </Typography>
                       </Box>
-                      
+
                       <Grid container spacing={1} sx={{ mb: history.note ? 2 : 0 }}>
                         {history.reasons.map((reason) => (
                           <Grid key={reason.reasonId} size={{ xs: 12, sm: 6, md: 4 }}>
@@ -2274,11 +2378,7 @@ export function MachineOperationView() {
       </Dialog>
 
       {/* Keyboard Help Dialog */}
-      <Dialog 
-        open={showKeyboardHelp} 
-        onClose={() => setShowKeyboardHelp(false)}
-        maxWidth="sm"
-      >
+      <Dialog open={showKeyboardHelp} onClose={() => setShowKeyboardHelp(false)} maxWidth="sm">
         <DialogTitle>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography variant="h6">Phím tắt</Typography>
