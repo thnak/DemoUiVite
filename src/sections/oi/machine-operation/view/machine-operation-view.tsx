@@ -128,6 +128,7 @@ const mergeProductState = (
   productionOrderNumber: productState.productionOrderNumber,
   plannedQuantity: productState.plannedQuantity,
   userId: productState.userId,
+  idealCycleTime: productState.idealCycleTime,
   progressPercentage:
     productState.plannedQuantity && existing.currentQuantity
       ? (existing.currentQuantity / productState.plannedQuantity) * 100
@@ -1610,7 +1611,7 @@ export function MachineOperationView() {
                       </Typography>
                     </Stack>
                     <Typography variant="h6" color="info.main">
-                      {machineData.estimatedFinishTime}
+                      {new Date(machineData.estimatedFinishTime ?? '').toLocaleTimeString()}
                     </Typography>
                   </Box>
 
