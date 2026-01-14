@@ -7,11 +7,13 @@ import react from '@vitejs/plugin-react';
 
 const PORT = 3039;
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     react({
       babel: {
-        plugins: [['babel-plugin-react-compiler', { target: '19' }]],
+        // Only enable React Compiler in production builds for better performance
+        // Keep dev mode fast by skipping compiler transformations
+        plugins: mode === 'production' ? [['babel-plugin-react-compiler', { target: '19' }]] : [],
       },
     }),
     checker({
@@ -38,4 +40,4 @@ export default defineConfig({
   },
   server: { port: PORT, host: true },
   preview: { port: PORT, host: true },
-});
+}));

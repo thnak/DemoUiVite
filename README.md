@@ -24,6 +24,7 @@ The development server runs at `http://localhost:3039`.
 | Category | Technologies |
 |----------|-------------|
 | **Framework** | React 19, Vite 7 |
+| **Optimization** | React Compiler (production builds only) |
 | **UI Library** | MUI (Material UI) 7 |
 | **Styling** | Emotion (CSS-in-JS) |
 | **Routing** | React Router DOM 7 |
@@ -31,6 +32,14 @@ The development server runs at `http://localhost:3039`.
 | **Internationalization** | i18next, react-i18next |
 | **Language** | TypeScript 5 |
 | **Code Quality** | ESLint, Prettier |
+
+## ⚡ Performance Features
+
+- **Fast Development**: Dev server starts in ~270ms without compiler overhead
+- **Optimized Production**: React Compiler automatically optimizes components in production builds
+- **Conditional Compilation**: Compiler runs only during production builds for best development experience
+
+See [React Compiler Configuration](./docs/guides/react-compiler-configuration.md) for details.
 
 ## 📁 Project Structure
 
