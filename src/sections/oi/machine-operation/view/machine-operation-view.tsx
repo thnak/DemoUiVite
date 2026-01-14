@@ -391,7 +391,6 @@ export function MachineOperationView() {
         setAddQuantityDialogOpen(false);
         setAddDefectDialogOpen(false);
         setLabelDowntimeDialogOpen(false);
-        setShowReasonGrid(false);
         setShowKeyboardHelp(false);
       }
       // F12 for keyboard help
