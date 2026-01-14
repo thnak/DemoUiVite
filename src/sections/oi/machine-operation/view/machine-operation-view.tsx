@@ -1,5 +1,5 @@
 import type { ApexOptions } from 'apexcharts';
-import type { MachineOeeUpdate } from 'src/services/machineHub';
+import type { MachineOeeUpdate, MachineRuntimeBlock } from 'src/services/machineHub';
 import type { CurrentMachineRunStateRecords, GetCurrentProductByMachineResult } from 'src/api/types/generated';
 
 import { fDuration, fRelativeTime } from 'src/utils/format-time';
@@ -40,6 +40,7 @@ interface MachineOperationData {
 
   // Product information (from API GetCurrentProductByMachineResult)
   productId?: string;
+  productImageUrl?: string; // Product image URL for faster loading
   productName: string; // Falls back to currentProductName from SignalR
   productionOrderNumber?: string;
   currentQuantity: number; // Falls back to totalCount
@@ -131,6 +132,9 @@ const mergeProductState = (
 ): MachineOperationData => ({
   ...existing,
   productId: productState.productId,
+  productImageUrl: productState.productId
+    ? `${apiConfig.baseUrl}/api/Product/${productState.productId}/image`
+    : undefined,
   productName: productState.productName,
   productionOrderNumber: productState.productionOrderNumber,
   plannedQuantity: productState.plannedQuantity,
@@ -144,7 +148,7 @@ const mergeProductState = (
 });
 
 import Chart from 'react-apexcharts';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -535,6 +539,43 @@ export function MachineOperationView() {
     setMachineData((prev) => mergeSignalRUpdate(prev, update));
   }, []);
 
+  // Handle runtime block updates - updates timeline with new blocks
+  const handleRuntimeBlockUpdate = useCallback((block: MachineRuntimeBlock) => {
+    setTimelineRecords((prevRecords) => {
+      // Check if block with same startTime already exists
+      const existingIndex = prevRecords.findIndex(
+        (record) => record.startTime === block.startTime
+      );
+
+      if (existingIndex >= 0) {
+        // Update existing block
+        const newRecords = [...prevRecords];
+        newRecords[existingIndex] = {
+          ...newRecords[existingIndex],
+          endTime: block.endTime,
+          state: block.state as any, // Map MachineRunState to MachineOutputRunState
+          stateId: block.stopReasonId,
+          stateName: block.name,
+          isUnplannedDowntime: block.isUnplannedDowntime,
+        };
+        return newRecords;
+      }
+
+      // Add new block at the end
+      return [
+        ...prevRecords,
+        {
+          stateId: block.stopReasonId,
+          startTime: block.startTime,
+          endTime: block.endTime,
+          state: block.state as any, // Map to proper state
+          stateName: block.name,
+          isUnplannedDowntime: block.isUnplannedDowntime,
+        },
+      ];
+    });
+  }, []);
+
   useEffect(() => {
     if (!selectedMachine?.id) {
       router.push('/oi/select-machine');
@@ -651,7 +692,11 @@ export function MachineOperationView() {
           console.error('Failed to load defect history:', error);
         }
 
-        await hubService.subscribeToMachine(selectedMachine.id || '', handleMachineUpdate);
+        await hubService.subscribeToMachine(
+          selectedMachine.id || '',
+          handleMachineUpdate,
+          handleRuntimeBlockUpdate
+        );
 
         if (!mounted) return;
 
@@ -1527,27 +1572,41 @@ export function MachineOperationView() {
                         flexShrink: 0,
                       }}
                     >
-                      <img
-                        src={`${apiConfig.baseUrl}/api/Product/${machineData.productId}/image`}
-                        alt={machineData.productName ?? ''}
-                        onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                          const target = e.currentTarget;
-                          target.style.display = 'none';
-                          const parent = target.parentElement;
-                          if (parent && !parent.querySelector('.fallback-icon')) {
-                            const icon = document.createElement('div');
-                            icon.className = 'fallback-icon';
-                            icon.style.fontSize = '40px';
-                            icon.innerHTML = '📦';
-                            parent.appendChild(icon);
-                          }
-                        }}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                        }}
-                      />
+                      {machineData.productImageUrl ? (
+                        <img
+                          key={machineData.productId} // Force re-render on product change
+                          src={machineData.productImageUrl}
+                          alt={machineData.productName ?? ''}
+                          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                            const target = e.currentTarget;
+                            target.style.display = 'none';
+                            const parent = target.parentElement;
+                            if (parent && !parent.querySelector('.fallback-icon')) {
+                              const icon = document.createElement('div');
+                              icon.className = 'fallback-icon';
+                              icon.style.fontSize = '40px';
+                              icon.innerHTML = '📦';
+                              parent.appendChild(icon);
+                            }
+                          }}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                          }}
+                        />
+                      ) : (
+                        <Box
+                          sx={{
+                            fontSize: '40px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          📦
+                        </Box>
+                      )}
                     </Box>
                     <Box sx={{ flex: 1 }}>
                       <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
@@ -1821,6 +1880,7 @@ export function MachineOperationView() {
                           >
                             {product.imageUrl ? (
                               <img
+                                key={product.productId} // Force re-render on product change
                                 src={product.imageUrl}
                                 alt={product.productName}
                                 onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
@@ -2174,6 +2234,7 @@ export function MachineOperationView() {
                         >
                           {defect.imageUrl ? (
                             <img
+                              key={defect.defectId} // Force re-render on defect change
                               src={defect.imageUrl}
                               alt={defect.defectName}
                               style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
@@ -2452,6 +2513,7 @@ export function MachineOperationView() {
                           >
                             {reason.imageUrl ? (
                               <img
+                                key={reason.reasonId} // Force re-render on reason change
                                 src={reason.imageUrl}
                                 alt={reason.reasonName}
                                 style={{ maxWidth: '100%', maxHeight: '100%' }}
