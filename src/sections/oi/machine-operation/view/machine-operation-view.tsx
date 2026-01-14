@@ -2,13 +2,134 @@ import type { ApexOptions } from 'apexcharts';
 import type { MachineOeeUpdate } from 'src/services/machineHub';
 import type { CurrentMachineRunStateRecords, ProductWorkingStateByMachine as BaseProductWorkingState } from 'src/api/types/generated';
 
-// Extended type with legacy fields for backward compatibility
-type ProductWorkingStateByMachine = BaseProductWorkingState & {
-  currentQuantity?: number;
-  goodQuantity?: number;
-  scrapQuantity?: number;
+/**
+ * Unified interface for all machine operation data
+ * Combines OEE metrics from SignalR with product working state from API
+ */
+interface MachineOperationData {
+  // Machine identification
+  machineId: string;
+  machineName: string;
+  
+  // OEE Metrics (from SignalR MachineOeeUpdate)
+  oee: number; // Percentage (0-100)
+  availability: number; // Percentage (0-100)
+  performance: number; // Percentage (0-100)
+  quality: number; // Percentage (0-100)
+  availabilityVsLastPeriod: number;
+  performanceVsLastPeriod: number;
+  qualityVsLastPeriod: number;
+  oeeVsLastPeriod: number;
+  
+  // Production Counts (from SignalR)
+  goodCount: number;
+  totalCount: number;
+  scrapQuantity: number; // Derived from totalCount - goodCount
+  goodCountVsLastPeriod: number;
+  totalCountVsLastPeriod: number;
+  
+  // Time metrics (from SignalR)
+  plannedProductionTime: string; // ISO 8601 duration
+  runTime: string; // ISO 8601 duration
+  downtime: string; // ISO 8601 duration
+  speedLossTime: string; // ISO 8601 duration
+  estimatedFinishTime?: string; // ISO 8601 date-time
+  
+  // Product information (from API ProductWorkingStateByMachine)
+  productId?: string;
+  productName: string; // Falls back to currentProductName from SignalR
+  productionOrderNumber?: string;
+  currentQuantity: number; // Falls back to totalCount
+  plannedQuantity: number;
+  idealCycleTime?: string;
   actualCycleTime?: string;
-};
+  userId?: string;
+  startTime?: string;
+  
+  // Progress calculation
+  progressPercentage: number; // Calculated from currentQuantity / plannedQuantity
+}
+
+/**
+ * Create initial empty machine operation data
+ */
+const createEmptyMachineData = (machineId?: string, machineName?: string): MachineOperationData => ({
+  machineId: machineId || '',
+  machineName: machineName || '',
+  oee: 0,
+  availability: 0,
+  performance: 0,
+  quality: 0,
+  availabilityVsLastPeriod: 0,
+  performanceVsLastPeriod: 0,
+  qualityVsLastPeriod: 0,
+  oeeVsLastPeriod: 0,
+  goodCount: 0,
+  totalCount: 0,
+  scrapQuantity: 0,
+  goodCountVsLastPeriod: 0,
+  totalCountVsLastPeriod: 0,
+  plannedProductionTime: 'PT0S',
+  runTime: 'PT0S',
+  downtime: 'PT0S',
+  speedLossTime: 'PT0S',
+  productName: '',
+  currentQuantity: 0,
+  plannedQuantity: 0,
+  progressPercentage: 0,
+});
+
+/**
+ * Merge SignalR update with existing data
+ */
+const mergeSignalRUpdate = (
+  existing: MachineOperationData,
+  update: MachineOeeUpdate
+): MachineOperationData => ({
+  ...existing,
+  machineId: update.machineId,
+  machineName: update.machineName,
+  oee: update.oee * 100,
+  availability: update.availability * 100,
+  performance: update.performance * 100,
+  quality: update.quality * 100,
+  availabilityVsLastPeriod: update.availabilityVsLastPeriod,
+  performanceVsLastPeriod: update.performanceVsLastPeriod,
+  qualityVsLastPeriod: update.qualityVsLastPeriod,
+  oeeVsLastPeriod: update.oeeVsLastPeriod,
+  goodCount: update.goodCount,
+  totalCount: update.totalCount,
+  scrapQuantity: update.totalCount - update.goodCount,
+  goodCountVsLastPeriod: update.goodCountVsLastPeriod,
+  totalCountVsLastPeriod: update.totalCountVsLastPeriod,
+  plannedProductionTime: update.plannedProductionTime,
+  runTime: update.runTime,
+  downtime: update.downtime,
+  speedLossTime: update.speedLossTime,
+  estimatedFinishTime: update.estimatedFinishTime,
+  productName: update.currentProductName || existing.productName,
+  // Preserve existing product data unless we have better info
+  currentQuantity: update.totalCount || existing.currentQuantity,
+});
+
+/**
+ * Merge API product state with existing data
+ */
+const mergeProductState = (
+  existing: MachineOperationData,
+  productState: BaseProductWorkingState
+): MachineOperationData => ({
+  ...existing,
+  productId: productState.productId,
+  productName: productState.productName ?? existing.productName,
+  productionOrderNumber: productState.productionOrderNumber ?? undefined,
+  plannedQuantity: productState.plannedQuantity ?? existing.plannedQuantity,
+  idealCycleTime: productState.idealCycleTime,
+  userId: productState.userId,
+  progressPercentage: productState.plannedQuantity && existing.currentQuantity
+    ? (existing.currentQuantity / productState.plannedQuantity * 100)
+    : existing.progressPercentage,
+});
 
 import Chart from 'react-apexcharts';
 import { useState, useEffect, useCallback } from 'react';
@@ -131,8 +252,8 @@ interface MachineStatus {
   color: 'success' | 'info' | 'error' | 'warning';
 }
 
-const getMachineStatus = (machineData: MachineOeeUpdate | null): MachineStatus => {
-  if (!machineData) {
+const getMachineStatus = (machineData: MachineOperationData | null): MachineStatus => {
+  if (!machineData || !machineData.machineId) {
     return { status: 'unplanstop', label: 'Dừng không kế hoạch', color: 'error' };
   }
   return { status: 'running', label: 'Đang chạy', color: 'success' };
@@ -344,8 +465,12 @@ export function MachineOperationView() {
   const { selectedMachine } = useMachineSelector();
   
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [machineData, setMachineData] = useState<MachineOeeUpdate | null>(null);
-  const [productData, setProductData] = useState<ProductWorkingStateByMachine | null>(null);
+  
+  // Unified machine operation data state
+  const [machineData, setMachineData] = useState<MachineOperationData>(() => 
+    createEmptyMachineData(selectedMachine?.id, selectedMachine?.name)
+  );
+  
   const [timelineRecords, setTimelineRecords] = useState<CurrentMachineRunStateRecords[]>([]);
   const [isConnecting, setIsConnecting] = useState(false);
   const [testMode, setTestMode] = useState(false);
@@ -384,14 +509,9 @@ export function MachineOperationView() {
 
   const hubService = MachineHubService.getInstance(apiConfig.baseUrl);
 
+  // Handle SignalR updates - merge with existing data
   const handleMachineUpdate = useCallback((update: MachineOeeUpdate) => {
-    setMachineData({
-      ...update,
-      oee: update.oee * 100,
-      availability: update.availability * 100,
-      performance: update.performance * 100,
-      quality: update.quality * 100,
-    });
+    setMachineData(prev => mergeSignalRUpdate(prev, update));
   }, []);
 
   useEffect(() => {
@@ -413,7 +533,7 @@ export function MachineOperationView() {
           // Load product working state
           const productState = await getapimachineproductionmachineIdcurrentproductstate(machineId);
           if (mounted && productState) {
-            setProductData(productState);
+            setMachineData(prev => mergeProductState(prev, productState));
           }
         } catch (error) {
           console.error('Failed to load product state:', error);
@@ -513,27 +633,24 @@ export function MachineOperationView() {
 
         const aggregation = await hubService.getMachineAggregation(selectedMachine.id || '');
         if (aggregation && mounted) {
-          setMachineData({
-            machineId: selectedMachine.id || '',
-            machineName: selectedMachine.name || selectedMachine.code || '',
+          // Merge initial aggregation data
+          setMachineData(prev => ({
+            ...prev,
             availability: aggregation.availability * 100,
-            availabilityVsLastPeriod: 0,
             performance: aggregation.performance * 100,
-            performanceVsLastPeriod: 0,
             quality: aggregation.quality * 100,
-            qualityVsLastPeriod: 0,
             oee: aggregation.oee * 100,
-            oeeVsLastPeriod: 0,
             goodCount: aggregation.goodCount,
-            goodCountVsLastPeriod: 0,
             totalCount: aggregation.totalCount,
-            totalCountVsLastPeriod: 0,
-            plannedProductionTime: '',
+            scrapQuantity: (aggregation.scrappedCount ?? (aggregation.totalCount - aggregation.goodCount)),
+            plannedQuantity: aggregation.plannedQuantity ?? prev.plannedQuantity,
+            progressPercentage: aggregation.progressPercentage ?? prev.progressPercentage,
             runTime: aggregation.totalRunTime,
             downtime: aggregation.totalDowntime,
             speedLossTime: aggregation.totalSpeedLossTime,
-            currentProductName: '',
-          });
+            actualCycleTime: aggregation.actualCycleTime,
+            estimatedFinishTime: aggregation.estimatedFinishTime,
+          }));
         }
       } catch (error) {
         console.error('Failed to connect to machine hub:', error);
@@ -653,7 +770,7 @@ export function MachineOperationView() {
       // Reload product data after change
       const productState = await getapimachineproductionmachineIdcurrentproductstate(selectedMachine.id);
       if (productState) {
-        setProductData(productState);
+        setMachineData(prev => mergeProductState(prev, productState));
       }
       
       setProductChangeDialogOpen(false);
@@ -693,7 +810,7 @@ export function MachineOperationView() {
         // Reload product data to get updated quantities
         const productState = await getapimachineproductionmachineIdcurrentproductstate(selectedMachine.id);
         if (productState) {
-          setProductData(productState);
+          setMachineData(prev => mergeProductState(prev, productState));
         }
         
         // Reset form
@@ -740,7 +857,7 @@ export function MachineOperationView() {
         // Reload product data to get updated quantities
         const productState = await getapimachineproductionmachineIdcurrentproductstate(selectedMachine.id);
         if (productState) {
-          setProductData(productState);
+          setMachineData(prev => mergeProductState(prev, productState));
         }
 
         // Reset edit state
@@ -784,7 +901,7 @@ export function MachineOperationView() {
       // Reload product data to get updated quantities
       const productState = await getapimachineproductionmachineIdcurrentproductstate(selectedMachine.id);
       if (productState) {
-        setProductData(productState);
+        setMachineData(prev => mergeProductState(prev, productState));
       }
     } catch (error) {
       console.error('Failed to delete quantity:', error);
@@ -854,7 +971,7 @@ export function MachineOperationView() {
       // Reload product data to get updated scrap quantity
       const productState = await getapimachineproductionmachineIdcurrentproductstate(selectedMachine.id);
       if (productState) {
-        setProductData(productState);
+        setMachineData(prev => mergeProductState(prev, productState));
       }
       
       // Reset form
@@ -1143,7 +1260,7 @@ export function MachineOperationView() {
         </Box>
       </Box>
 
-      {isConnecting && !machineData ? (
+      {isConnecting && !machineData.machineId ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', p: 8 }}>
           <CircularProgress size={64} />
         </Box>
@@ -1221,10 +1338,10 @@ export function MachineOperationView() {
                 {/* Combined OEE + APQ Chart with 270-degree coverage */}
                 <Box sx={{ mb: 3 }}>
                   <OEEAPQCombinedChart
-                    oee={machineData?.oee ?? 85}
-                    availability={machineData?.availability ?? 92}
-                    performance={machineData?.performance ?? 95}
-                    quality={machineData?.quality ?? 97}
+                    oee={machineData.oee ?? 85}
+                    availability={machineData.availability ?? 92}
+                    performance={machineData.performance ?? 95}
+                    quality={machineData.quality ?? 97}
                   />
                 </Box>
 
@@ -1238,10 +1355,10 @@ export function MachineOperationView() {
                     OEE = Availability × Performance × Quality
                   </Typography>
                   <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-                    {machineData?.availability.toFixed(1) ?? '00.0'}% ×{' '}
-                    {machineData?.performance.toFixed(1) ?? '00.0'}% ×{' '}
-                    {machineData?.quality.toFixed(1) ?? '00.0'}% ={' '}
-                    {machineData?.oee.toFixed(1) ?? '00.0'}%
+                    {machineData.availability.toFixed(1) ?? '00.0'}% ×{' '}
+                    {machineData.performance.toFixed(1) ?? '00.0'}% ×{' '}
+                    {machineData.quality.toFixed(1) ?? '00.0'}% ={' '}
+                    {machineData.oee.toFixed(1) ?? '00.0'}%
                   </Typography>
                 </Box>
 
@@ -1260,7 +1377,7 @@ export function MachineOperationView() {
                         </Typography>
                       </Stack>
                       <Typography variant="h6" color="error.main">
-                        {machineData?.downtime || '0.5'}h
+                        {machineData.downtime || '0.5'}h
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
                         3 lần
@@ -1318,8 +1435,8 @@ export function MachineOperationView() {
                       }}
                     >
                       <img
-                        src={`${apiConfig.baseUrl}/api/Product/${productData?.productId}/image`}
-                        alt={productData?.productName || ''}
+                        src={`${apiConfig.baseUrl}/api/Product/${machineData.productId}/image`}
+                        alt={machineData.productName || ''}
                         onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
                           const target = e.currentTarget;
                           target.style.display = 'none';
@@ -1344,11 +1461,11 @@ export function MachineOperationView() {
                         Mã hàng
                       </Typography>
                       <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-                        {productData?.productName || machineData?.currentProductName || 'N/A'}
+                        {machineData.productName || machineData.productName || 'N/A'}
                       </Typography>
                       <Stack direction="row" spacing={1}>
                         <Chip
-                          label={productData?.productionOrderNumber ?? ''}
+                          label={machineData.productionOrderNumber ?? ''}
                           size="small"
                           variant="outlined"
                         />
@@ -1363,14 +1480,14 @@ export function MachineOperationView() {
                         Tiến trình sản xuất
                       </Typography>
                       <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                        {productData?.currentQuantity ?? 0} / {productData?.plannedQuantity ?? 0}
+                        {machineData.currentQuantity ?? 0} / {machineData.plannedQuantity ?? 0}
                       </Typography>
                     </Box>
                     <LinearProgress
                       variant="determinate"
                       value={
-                        ((productData?.currentQuantity ?? 0) /
-                          (productData?.plannedQuantity ?? 1)) *
+                        ((machineData.currentQuantity ?? 0) /
+                          (machineData.plannedQuantity ?? 1)) *
                         100
                       }
                       sx={{
@@ -1392,8 +1509,8 @@ export function MachineOperationView() {
                         sx={{ fontWeight: 'bold', color: 'success.main' }}
                       >
                         {(
-                          ((productData?.currentQuantity ?? 0) /
-                            (productData?.plannedQuantity ?? 1)) *
+                          ((machineData.currentQuantity ?? 0) /
+                            (machineData.plannedQuantity ?? 1)) *
                           100
                         ).toFixed(1)}
                         %
@@ -1417,7 +1534,7 @@ export function MachineOperationView() {
                       </Typography>
                     </Stack>
                     <Typography variant="h6" color="info.main">
-                      {machineData?.estimatedFinishTime}
+                      {machineData.estimatedFinishTime}
                     </Typography>
                   </Box>
 
@@ -1436,7 +1553,7 @@ export function MachineOperationView() {
                           Tổng cộng
                         </Typography>
                         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                          {productData?.currentQuantity || machineData?.totalCount || 0}
+                          {machineData.currentQuantity || machineData.totalCount || 0}
                         </Typography>
                       </Box>
                     </Grid>
@@ -1453,7 +1570,7 @@ export function MachineOperationView() {
                           Đạt
                         </Typography>
                         <Typography variant="h6" color="success.main" sx={{ fontWeight: 'bold' }}>
-                          {productData?.goodQuantity || machineData?.goodCount || 0}
+                          {machineData.goodCount || machineData.goodCount || 0}
                         </Typography>
                       </Box>
                     </Grid>
@@ -1470,7 +1587,7 @@ export function MachineOperationView() {
                           Lỗi
                         </Typography>
                         <Typography variant="h6" color="error.main" sx={{ fontWeight: 'bold' }}>
-                          {productData?.scrapQuantity || 0}
+                          {machineData.scrapQuantity || 0}
                         </Typography>
                       </Box>
                     </Grid>
@@ -1488,7 +1605,7 @@ export function MachineOperationView() {
                           Nhịp lý tưởng
                         </Typography>
                         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                          {productData?.idealCycleTime ?? "N/A"}s
+                          {machineData.idealCycleTime ?? "N/A"}s
                         </Typography>
                       </Box>
                     </Grid>
@@ -1502,7 +1619,7 @@ export function MachineOperationView() {
                           Nhịp thực tế
                         </Typography>
                         <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'success.main' }}>
-                          {productData?.actualCycleTime ?? "N/A"}s
+                          {machineData.actualCycleTime ?? "N/A"}s
                         </Typography>
                       </Box>
                     </Grid>
@@ -1520,7 +1637,7 @@ export function MachineOperationView() {
                     }}
                   >
                     <Avatar
-                      src={`${apiConfig.baseUrl}/api/User/${productData?.userId}/avatar-image`}
+                      src={`${apiConfig.baseUrl}/api/User/${machineData.userId}/avatar-image`}
                       sx={{ width: 48, height: 48 }}
                     >
                       <Iconify icon="solar:user-circle-bold" width={48} />
@@ -1534,7 +1651,7 @@ export function MachineOperationView() {
                         Người vận hành
                       </Typography>
                       <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                        {productData?.userId || 'N/A'}
+                        {machineData.userId || 'N/A'}
                       </Typography>
                     </Box>
                   </Box>
