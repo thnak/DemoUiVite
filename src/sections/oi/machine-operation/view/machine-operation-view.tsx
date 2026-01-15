@@ -332,7 +332,7 @@ export function MachineOperationView() {
         hubService.unsubscribeFromMachine(selectedMachine.id).catch(console.error);
       }
     };
-  }, [selectedMachine, hubService, handleMachineUpdate, router]);
+  }, [selectedMachine, hubService, handleMachineUpdate, router, handleRuntimeBlockUpdate]);
 
   // Load available products when product change dialog opens
   useEffect(() => {
