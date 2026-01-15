@@ -19,6 +19,7 @@ import { useRouter } from 'src/routes/hooks';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { UnitSelector } from 'src/components/selectors/unit-selector';
+import { TranslationSection } from 'src/components/translation-section';
 import { ImageEntityResourceUploader } from 'src/components/image-entity-resource-uploader';
 import { ProductCategorySelector } from 'src/components/selectors/product-category-selector';
 
@@ -490,6 +491,11 @@ export function ProductCreateEditView({
                 </Grid>
               </Grid>
             </Card>
+
+            <TranslationSection
+              translations={formData.translations}
+              onTranslationsChange={handleTranslationsChange}
+            />
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
               <Button variant="outlined" color="inherit" onClick={handleCancel}>

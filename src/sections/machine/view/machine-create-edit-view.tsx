@@ -44,6 +44,7 @@ import {
 
 import { Iconify } from 'src/components/iconify';
 import { AreaSelector } from 'src/components/selectors/area-selector';
+import { TranslationSection } from 'src/components/translation-section';
 import { CalendarSelector } from 'src/components/selectors/calendar-selector';
 import { MachineTypeSelector } from 'src/components/selectors/machine-type-selector';
 import { ImageEntityResourceUploader } from 'src/components/image-entity-resource-uploader';
@@ -889,6 +890,13 @@ export function MachineCreateEditView({
                 </Button>
               </Box>
             )}
+
+            {/* Translation Section */}
+            <TranslationSection
+              translations={formData.translations}
+              onTranslationsChange={handleTranslationsChange}
+              disabled={isSubmitting}
+            />
 
             {/* Product Mapping Section */}
             {isEdit && currentMachine?.id ? (
