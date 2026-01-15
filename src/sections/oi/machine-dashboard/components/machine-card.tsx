@@ -2,20 +2,16 @@ import type { MachineOeeUpdate, MachineRuntimeBlock } from 'src/services/machine
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
 import CircularProgress from '@mui/material/CircularProgress';
-
-import { apiConfig } from 'src/api/config';
 
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
 interface MachineCardProps {
-  machineId: string;
   machineName: string;
   oeeData: MachineOeeUpdate | null;
   runtimeBlock: MachineRuntimeBlock | null;
@@ -23,7 +19,13 @@ interface MachineCardProps {
   areaColor?: string;
 }
 
-export function MachineCard({ machineId, machineName, oeeData, runtimeBlock, isLoading, areaColor }: MachineCardProps) {
+export function MachineCard({
+  machineName,
+  oeeData,
+  runtimeBlock,
+  isLoading,
+  areaColor,
+}: MachineCardProps) {
   const getStatusConfig = () => {
     // If we have a runtime block, use its data for status
     if (runtimeBlock) {
@@ -31,7 +33,7 @@ export function MachineCard({ machineId, machineName, oeeData, runtimeBlock, isL
         label: runtimeBlock.name || 'Unknown',
         color: 'default' as const,
         icon: 'eva:clock-outline' as const,
-        bgColor: runtimeBlock.StopReasonHexColor || '#9ca3af',
+        bgColor: runtimeBlock.stopReasonHexColor || '#9ca3af',
       };
     }
 
@@ -72,7 +74,7 @@ export function MachineCard({ machineId, machineName, oeeData, runtimeBlock, isL
   const status = getStatusConfig();
   const oeePercentage = oeeData ? Math.round(oeeData.oee * 100) : 0;
   const progressPercentage = oeeData
-    ? Math.round(((oeeData.goodCount || 0) / Math.max((oeeData.totalCount || 1), 1)) * 100)
+    ? Math.round(((oeeData.goodCount || 0) / Math.max(oeeData.targetCount || 1, 1)) * 100)
     : 0;
 
   return (
@@ -103,64 +105,6 @@ export function MachineCard({ machineId, machineName, oeeData, runtimeBlock, isL
         </Box>
       ) : (
         <>
-          {/* Machine Image */}
-          <Box
-            sx={{
-              height: 140,
-              bgcolor: areaColor ? `${areaColor}15` : 'background.neutral',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              overflow: 'hidden',
-              position: 'relative',
-            }}
-          >
-            <img
-              src={`${apiConfig.baseUrl}/api/Machine/${machineId}/image`}
-              alt={machineName}
-              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                const target = e.currentTarget;
-                target.style.display = 'none';
-                const parent = target.parentElement;
-                if (parent && !parent.querySelector('.fallback-icon')) {
-                  const icon = document.createElement('div');
-                  icon.className = 'fallback-icon';
-                  icon.style.fontSize = '48px';
-                  icon.innerHTML = '🏭';
-                  parent.appendChild(icon);
-                }
-              }}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-              }}
-            />
-
-            {/* Status Badge */}
-            <Box
-              sx={{
-                position: 'absolute',
-                top: 8,
-                right: 8,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 0.5,
-                bgcolor: status.bgColor,
-                color: 'white',
-                px: 1.5,
-                py: 0.5,
-                borderRadius: 1.5,
-                fontSize: '0.75rem',
-                fontWeight: 'bold',
-                boxShadow: 2,
-              }}
-            >
-              <Iconify icon={status.icon} width={14} />
-              {status.label}
-            </Box>
-          </Box>
-
           {/* Machine Info */}
           <Box sx={{ p: 2.5 }}>
             {/* Machine Name */}
@@ -220,7 +164,9 @@ export function MachineCard({ machineId, machineName, oeeData, runtimeBlock, isL
 
                 {/* APQ Metrics */}
                 <Stack spacing={0.5} sx={{ flex: 1 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box
+                    sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                  >
                     <Typography variant="caption" color="text.secondary">
                       A
                     </Typography>
@@ -228,7 +174,9 @@ export function MachineCard({ machineId, machineName, oeeData, runtimeBlock, isL
                       {oeeData ? Math.round(oeeData.availability * 100) : 0}%
                     </Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box
+                    sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                  >
                     <Typography variant="caption" color="text.secondary">
                       P
                     </Typography>
@@ -236,7 +184,9 @@ export function MachineCard({ machineId, machineName, oeeData, runtimeBlock, isL
                       {oeeData ? Math.round(oeeData.performance * 100) : 0}%
                     </Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box
+                    sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                  >
                     <Typography variant="caption" color="text.secondary">
                       Q
                     </Typography>
@@ -254,7 +204,7 @@ export function MachineCard({ machineId, machineName, oeeData, runtimeBlock, isL
                     Production
                   </Typography>
                   <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                    {oeeData?.goodCount || 0} / {oeeData?.totalCount || 0}
+                    {oeeData?.goodCount || 0} / {oeeData?.targetCount || 0}
                   </Typography>
                 </Box>
                 <LinearProgress
@@ -273,14 +223,27 @@ export function MachineCard({ machineId, machineName, oeeData, runtimeBlock, isL
               </Box>
 
               {/* Status Chips */}
-              <Stack direction="row" spacing={1} flexWrap="wrap">
-                <Chip
-                  label={status.label}
-                  size="small"
-                  color={status.color}
-                  icon={<Iconify icon={status.icon} width={16} />}
-                />
-              </Stack>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 8,
+                  right: 8,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
+                  bgcolor: status.bgColor,
+                  color: 'white',
+                  px: 1.5,
+                  py: 0.5,
+                  borderRadius: 1.5,
+                  fontSize: '0.75rem',
+                  fontWeight: 'bold',
+                  boxShadow: 2,
+                }}
+              >
+                <Iconify icon={status.icon} width={14} />
+                {status.label}
+              </Box>
             </Stack>
           </Box>
         </>

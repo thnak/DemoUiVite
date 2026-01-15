@@ -53835,7 +53835,7 @@
         }
       }
     },
-    "/api/machine-production/{machineId}/aggregation/stream": {
+    "/stream/machine/{machineId}/aggregation": {
       "get": {
         "tags": [
           "Machine Production",
@@ -53869,7 +53869,7 @@
         }
       }
     },
-    "/api/machine-production/run-state-stream": {
+    "/stream/machine/run-state": {
       "get": {
         "tags": [
           "Machine Production",
@@ -83462,7 +83462,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2026-01-14"
+              "example": "2026-01-15"
             }
           },
           {
@@ -83472,7 +83472,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2026-01-14"
+              "example": "2026-01-15"
             }
           },
           {
@@ -87151,13 +87151,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2026-01-14"
+            "example": "2026-01-15"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2026-01-14"
+            "example": "2026-01-15"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -87279,13 +87279,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2026-01-14"
+            "example": "2026-01-15"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2026-01-14"
+            "example": "2026-01-15"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -87575,12 +87575,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-14"
+            "example": "2026-01-15"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-14"
+            "example": "2026-01-15"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -92137,7 +92137,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-14"
+            "example": "2026-01-15"
           }
         },
         "additionalProperties": false
@@ -96567,7 +96567,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2026-01-14"
+            "example": "2026-01-15"
           },
           "locationId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -96592,6 +96592,10 @@
           },
           "machineId": {
             "$ref": "#/components/schemas/ObjectId"
+          },
+          "autoCreateIfMissingSensor": {
+            "type": "boolean",
+            "description": "Key-value pairs representing pin mappings for the device."
           }
         },
         "additionalProperties": false,
@@ -106918,7 +106922,7 @@
             "type": "string",
             "description": "Date of the work.",
             "format": "date",
-            "example": "2026-01-14"
+            "example": "2026-01-15"
           },
           "shiftName": {
             "type": "string",
@@ -119330,7 +119334,7 @@
             "type": "string",
             "description": "The specific work date this statistic applies to.",
             "format": "date",
-            "example": "2026-01-14"
+            "example": "2026-01-15"
           },
           "calendarId": {
             "$ref": "#/components/schemas/ObjectId"

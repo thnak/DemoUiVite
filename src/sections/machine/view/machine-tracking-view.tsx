@@ -118,6 +118,7 @@ export function MachineTrackingView() {
             speedLossTime: initialAggregation.totalSpeedLossTime,
             totalTestRunTime: initialAggregation.totalTestRunTime || 'PT0S',
             actualCycleTime: 'PT0S',
+            targetCount: 0
           });
           setLastUpdateTime(new Date());
         }
@@ -743,7 +744,7 @@ export function MachineTrackingView() {
                                   width: 12,
                                   height: 12,
                                   borderRadius: '50%',
-                                  bgcolor: block.StopReasonHexColor || getStateColor(block.state),
+                                  bgcolor: block.stopReasonHexColor || getStateColor(block.state),
                                 }}
                               />
                               <Typography variant="subtitle2">

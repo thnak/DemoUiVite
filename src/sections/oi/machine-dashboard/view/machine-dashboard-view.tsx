@@ -307,7 +307,6 @@ export function MachineDashboardView() {
                 <Grid key={machine.machineId} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
                   <motion.div variants={cardVariants as any}>
                     <MachineCard
-                      machineId={machine.machineId || ''}
                       machineName={machine.machineName || 'Unknown'}
                       oeeData={machineOeeData.get(machine.machineId || '') || null}
                       runtimeBlock={machineRuntimeBlocks.get(machine.machineId || '') || null}
