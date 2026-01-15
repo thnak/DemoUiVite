@@ -20,6 +20,8 @@ import { isValidationSuccess } from 'src/utils/validation-result';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useCreateMachineType, useUpdateMachineType } from 'src/api/hooks/generated/use-machine-type';
 
+import { TranslationSection } from 'src/components/translation-section';
+
 // ----------------------------------------------------------------------
 
 interface MachineTypeFormData {
@@ -27,6 +29,7 @@ interface MachineTypeFormData {
   name: string;
   description: string;
   colorHex: string;
+  translations: Record<string, string>;
 }
 
 interface MachineTypeCreateEditViewProps {
@@ -37,6 +40,7 @@ interface MachineTypeCreateEditViewProps {
     name: string;
     description: string;
     colorHex?: string;
+    translations?: Record<string, string>;
   };
 }
 
@@ -58,6 +62,7 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
     name: currentMachineType?.name || '',
     description: currentMachineType?.description || '',
     colorHex: currentMachineType?.colorHex || '#1976d2',
+    translations: currentMachineType?.translations || {},
   });
 
   const { mutate: createMachineTypeMutate, isPending: isCreating } = useCreateMachineType({
@@ -120,6 +125,13 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
     [clearFieldError]
   );
 
+  const handleTranslationsChange = useCallback((translations: Record<string, string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      translations,
+    }));
+  }, []);
+
   const handleSubmit = useCallback(() => {
     clearValidationResult();
     setErrorMessage(null);
@@ -138,6 +150,7 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
           { key: 'name', value: formData.name },
           { key: 'description', value: formData.description },
           { key: 'colorHex', value: formData.colorHex },
+          { key: 'translations', value: JSON.stringify(formData.translations) },
         ],
       });
     } else {
@@ -148,6 +161,7 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
           name: formData.name,
           description: formData.description,
           colorHex: formData.colorHex,
+          translations: formData.translations,
         } as any, // Cast to any to bypass strict type checking for required fields
       });
     }
@@ -279,6 +293,12 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
           </Button>
         </Box>
       </Card>
+
+      <TranslationSection
+        translations={formData.translations}
+        onTranslationsChange={handleTranslationsChange}
+        disabled={isSubmitting}
+      />
 
       <Snackbar
         open={!!(errorMessage || overallMessage)}
