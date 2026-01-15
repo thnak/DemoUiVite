@@ -743,7 +743,7 @@ export function MachineTrackingView() {
                                   width: 12,
                                   height: 12,
                                   borderRadius: '50%',
-                                  bgcolor: block.color || getStateColor(block.state),
+                                  bgcolor: block.StopReasonHexColor || getStateColor(block.state),
                                 }}
                               />
                               <Typography variant="subtitle2">

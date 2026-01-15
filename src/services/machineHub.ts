@@ -13,7 +13,7 @@ export interface MachineRuntimeBlock {
   endTime: string | null; // ISO 8601 date string, null for ongoing blocks
   stopReasonId: string; // ObjectId in string format, empty for normal operation
   name: string; // Stop reason name or runtime block name
-  color: string; // Color code for visualization
+  StopReasonHexColor: string; // Color code for visualization
   isUnplannedDowntime: boolean; // True if this is an unplanned stop
   state: MachineRunState; // Current run state
 }
