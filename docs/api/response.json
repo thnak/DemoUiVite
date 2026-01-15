@@ -3643,6 +3643,94 @@
         }
       }
     },
+    "/api/calendar/translation-keys": {
+      "get": {
+        "tags": [
+          "Calendar"
+        ],
+        "summary": "Get all translation keys for Calendar",
+        "description": "Retrieves all unique language keys used across all Calendar entities.",
+        "operationId": "GetCalendarTranslationKeys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/calendar/translations": {
+      "get": {
+        "tags": [
+          "Calendar"
+        ],
+        "summary": "Get all translations for all Calendar entities",
+        "description": "Retrieves all translation entries from all Calendar entities in the system.",
+        "operationId": "GetAllCalendarTranslations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/calendar/translations/{id}": {
+      "get": {
+        "tags": [
+          "Calendar"
+        ],
+        "summary": "Get translations for Calendar",
+        "description": "Retrieves all translation entries for a specific Calendar entity.",
+        "operationId": "GetCalendarTranslations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/Calendar/search-calendars": {
       "get": {
         "tags": [
@@ -60119,6 +60207,94 @@
         }
       }
     },
+    "/api/machinetype/translation-keys": {
+      "get": {
+        "tags": [
+          "MachineType"
+        ],
+        "summary": "Get all translation keys for Machine Type",
+        "description": "Retrieves all unique language keys used across all Machine Type entities.",
+        "operationId": "GetMachineTypeTranslationKeys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machinetype/translations": {
+      "get": {
+        "tags": [
+          "MachineType"
+        ],
+        "summary": "Get all translations for all Machine Type entities",
+        "description": "Retrieves all translation entries from all Machine Type entities in the system.",
+        "operationId": "GetAllMachineTypeTranslations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machinetype/translations/{id}": {
+      "get": {
+        "tags": [
+          "MachineType"
+        ],
+        "summary": "Get translations for Machine Type",
+        "description": "Retrieves all translation entries for a specific Machine Type entity.",
+        "operationId": "GetMachineTypeTranslations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/maintenancethreshold/{id}": {
       "get": {
         "tags": [
@@ -89544,13 +89720,15 @@
       "CalendarEntity": {
         "required": [
           "code",
+          "colorHex",
           "createTime",
           "description",
           "id",
           "isDeleted",
           "isDraft",
           "modifiedTime",
-          "name"
+          "name",
+          "translations"
         ],
         "type": "object",
         "properties": {
@@ -89589,6 +89767,18 @@
             "minLength": 1,
             "type": "string",
             "description": "Mô tả chi tiết về thực thể."
+          },
+          "colorHex": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Màu sắc hiển thị lý do dừng máy"
+          },
+          "translations": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Các bản dịch của tên lý do dừng máy"
           },
           "parentCalendarId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -104310,13 +104500,15 @@
       "MachineTypeEntity": {
         "required": [
           "code",
+          "colorHex",
           "createTime",
           "description",
           "id",
           "isDeleted",
           "isDraft",
           "modifiedTime",
-          "name"
+          "name",
+          "translations"
         ],
         "type": "object",
         "properties": {
@@ -104355,6 +104547,18 @@
             "minLength": 1,
             "type": "string",
             "description": "Mô tả chi tiết về thực thể."
+          },
+          "colorHex": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Màu sắc hiển thị lý do dừng máy"
+          },
+          "translations": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Các bản dịch của tên lý do dừng máy"
           }
         },
         "additionalProperties": false,
