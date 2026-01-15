@@ -29,6 +29,7 @@ import {
 } from 'src/api/services/generated/calendar';
 
 import { useTour, TourButton } from 'src/components/tour';
+import { TranslationSection } from 'src/components/translation-section';
 import { DurationTimePicker } from 'src/components/duration-time-picker';
 import { TimeShiftCaseVisualization } from 'src/components/time-shift-case-visualization';
 
@@ -51,6 +52,7 @@ interface CalendarFormData {
   mergeCase5ToLatest: boolean;
   autoVirtualShift: boolean;
   colorHex: string;
+  translations: Record<string, string>;
 }
 
 const defaultFormData: CalendarFormData = {
@@ -68,6 +70,7 @@ const defaultFormData: CalendarFormData = {
   mergeCase5ToLatest: false,
   autoVirtualShift: false,
   colorHex: '#1976d2',
+  translations: {},
 };
 
 // ----------------------------------------------------------------------
@@ -143,6 +146,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
               mergeCase5ToLatest: calendar.mergeCase5ToLatest || false,
               autoVirtualShift: calendar.autoVirtualShift || false,
               colorHex: calendar.colorHex || '#1976d2',
+              translations: calendar.translations || {},
             });
 
             // Find and set the selected shift template
@@ -189,6 +193,13 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
     }));
   }, []);
 
+  const handleTranslationsChange = useCallback((translations: Record<string, string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      translations,
+    }));
+  }, []);
+
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
@@ -223,6 +234,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             { key: 'mergeCase5ToLatest', value: formData.mergeCase5ToLatest },
             { key: 'autoVirtualShift', value: formData.autoVirtualShift },
             { key: 'colorHex', value: formData.colorHex },
+            { key: 'translations', value: JSON.stringify(formData.translations) },
           ];
           const updateResult = await updateCalendar(calendarId, updates);
           if (updateResult.isValid) {
@@ -252,6 +264,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             mergeCase5ToLatest: formData.mergeCase5ToLatest,
             autoVirtualShift: formData.autoVirtualShift,
             colorHex: formData.colorHex,
+            translations: formData.translations,
           };
           const result = await createCalendar(entity as any);
           if (result.isValid) {
@@ -621,6 +634,12 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
           </form>
         </CardContent>
       </Card>
+
+      <TranslationSection
+        translations={formData.translations}
+        onTranslationsChange={handleTranslationsChange}
+        disabled={submitting}
+      />
 
       <Snackbar
         open={!!errorMessage}

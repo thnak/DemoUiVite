@@ -21,6 +21,8 @@ import { isValidationSuccess } from 'src/utils/validation-result';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useCreateArea, useUpdateArea } from 'src/api/hooks/generated/use-area';
 
+import { TranslationSection } from 'src/components/translation-section';
+
 // ----------------------------------------------------------------------
 
 interface AreaFormData {
@@ -28,6 +30,7 @@ interface AreaFormData {
   name: string;
   description: string;
   colorHex: string;
+  translations: Record<string, string>;
 }
 
 interface AreaCreateEditViewProps {
@@ -38,6 +41,7 @@ interface AreaCreateEditViewProps {
     name: string;
     description: string;
     colorHex?: string;
+    translations?: Record<string, string>;
   };
 }
 
@@ -62,6 +66,7 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
     name: currentArea?.name || '',
     description: currentArea?.description || '',
     colorHex: currentArea?.colorHex || '#1976d2',
+    translations: currentArea?.translations || {},
   });
 
   const { mutate: createAreaMutate, isPending: isCreating } = useCreateArea({
@@ -124,6 +129,13 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
     [clearFieldError]
   );
 
+  const handleTranslationsChange = useCallback((translations: Record<string, string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      translations,
+    }));
+  }, []);
+
   const handleSubmit = useCallback(() => {
     clearValidationResult();
     setErrorMessage(null);
@@ -142,6 +154,7 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
           { key: 'name', value: formData.name },
           { key: 'description', value: formData.description },
           { key: 'colorHex', value: formData.colorHex },
+          { key: 'translations', value: JSON.stringify(formData.translations) },
         ],
       });
     } else {
@@ -152,6 +165,7 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
           name: formData.name,
           description: formData.description,
           colorHex: formData.colorHex,
+          translations: formData.translations,
         } as any, // Cast to any to bypass strict type checking for required fields
       });
     }
@@ -285,6 +299,12 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
           </Button>
         </Box>
       </Card>
+
+      <TranslationSection
+        translations={formData.translations}
+        onTranslationsChange={handleTranslationsChange}
+        disabled={isSubmitting}
+      />
 
       <Snackbar
         open={!!(errorMessage || overallMessage)}

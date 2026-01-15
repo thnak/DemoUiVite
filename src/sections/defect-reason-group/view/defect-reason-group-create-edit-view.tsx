@@ -23,6 +23,8 @@ import {
   useUpdateDefectReasonGroup,
 } from 'src/api/hooks/generated/use-defect-reason-group';
 
+import { TranslationSection } from 'src/components/translation-section';
+
 // ----------------------------------------------------------------------
 
 interface DefectReasonGroupFormData {
@@ -30,6 +32,7 @@ interface DefectReasonGroupFormData {
   name: string;
   colorHex: string;
   description: string;
+  translations: Record<string, string>;
 }
 
 interface DefectReasonGroupCreateEditViewProps {
@@ -40,6 +43,7 @@ interface DefectReasonGroupCreateEditViewProps {
     name: string;
     colorHex: string;
     description: string;
+    translations?: Record<string, string>;
   };
 }
 
@@ -65,6 +69,7 @@ export function DefectReasonGroupCreateEditView({
     name: currentDefectReasonGroup?.name || '',
     colorHex: currentDefectReasonGroup?.colorHex || '#1976d2',
     description: currentDefectReasonGroup?.description || '',
+    translations: currentDefectReasonGroup?.translations || {},
   });
 
   const { mutate: createDefectReasonGroupMutate, isPending: isCreating } =
@@ -130,6 +135,13 @@ export function DefectReasonGroupCreateEditView({
     [clearFieldError]
   );
 
+  const handleTranslationsChange = useCallback((translations: Record<string, string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      translations,
+    }));
+  }, []);
+
   const handleSubmit = useCallback(() => {
     clearValidationResult();
     setErrorMessage(null);
@@ -148,6 +160,7 @@ export function DefectReasonGroupCreateEditView({
           { key: 'name', value: formData.name },
           { key: 'colorHex', value: formData.colorHex },
           { key: 'description', value: formData.description },
+          { key: 'translations', value: JSON.stringify(formData.translations) },
         ],
       });
     } else {
@@ -158,6 +171,7 @@ export function DefectReasonGroupCreateEditView({
           name: formData.name,
           colorHex: formData.colorHex,
           description: formData.description,
+          translations: formData.translations,
         } as any, // Cast to any to bypass strict type checking for required fields,
       });
     }
@@ -300,6 +314,12 @@ export function DefectReasonGroupCreateEditView({
           </Button>
         </Box>
       </Card>
+
+      <TranslationSection
+        translations={formData.translations}
+        onTranslationsChange={handleTranslationsChange}
+        disabled={isSubmitting}
+      />
 
       <Snackbar
         open={!!(errorMessage || overallMessage)}

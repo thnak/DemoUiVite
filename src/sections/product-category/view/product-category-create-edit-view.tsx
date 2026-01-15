@@ -28,6 +28,8 @@ import {
   useGenerateNewProductCategoryCode,
 } from 'src/api/hooks/generated/use-product-category';
 
+import { TranslationSection } from 'src/components/translation-section';
+
 // ----------------------------------------------------------------------
 
 interface ProductCategoryFormData {
@@ -35,11 +37,20 @@ interface ProductCategoryFormData {
   name: string;
   description: string;
   colorHex: string;
+  translations: Record<string, string>;
 }
 
 interface ProductCategoryCreateEditViewProps {
   isEdit?: boolean;
   productCategoryId?: string;
+  currentProductCategory?: {
+    id: string;
+    code: string;
+    name: string;
+    description: string;
+    colorHex?: string;
+    translations?: Record<string, string>;
+  };
 }
 
 export function ProductCategoryCreateEditView({
@@ -64,6 +75,7 @@ export function ProductCategoryCreateEditView({
     name: '',
     description: '',
     colorHex: '#1976d2',
+    translations: {},
   });
 
   // Fetch existing product category data when editing
@@ -86,6 +98,7 @@ export function ProductCategoryCreateEditView({
         name: currentProductCategory.name || '',
         description: currentProductCategory.description || '',
         colorHex: currentProductCategory.colorHex || '#1976d2',
+        translations: currentProductCategory.translations || {},
       });
     } else if (!isEdit && generatedCode) {
       setFormData((prev) => ({
@@ -158,6 +171,13 @@ export function ProductCategoryCreateEditView({
     [clearFieldError]
   );
 
+  const handleTranslationsChange = useCallback((translations: Record<string, string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      translations,
+    }));
+  }, []);
+
   const handleSubmit = useCallback(() => {
     clearValidationResult();
 
@@ -167,6 +187,7 @@ export function ProductCategoryCreateEditView({
         { key: 'name', value: formData.name },
         { key: 'description', value: formData.description },
         { key: 'colorHex', value: formData.colorHex },
+        { key: 'translations', value: JSON.stringify(formData.translations) },
       ];
       updateProductCategoryMutate({ id: productCategoryId, data: updates });
     } else {
@@ -175,6 +196,7 @@ export function ProductCategoryCreateEditView({
         name: formData.name,
         description: formData.description,
         colorHex: formData.colorHex,
+        translations: formData.translations,
       };
       createProductCategoryMutate({ data: productCategoryData as any }); // Cast to any to bypass strict type checking
     }
@@ -324,7 +346,6 @@ export function ProductCategoryCreateEditView({
               </Grid>
             </Card>
 
-            {/* Action buttons at the bottom */}
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
               <Button variant="outlined" onClick={handleCancel} disabled={isSubmitting}>
                 Cancel
@@ -341,6 +362,12 @@ export function ProductCategoryCreateEditView({
           </Stack>
         </Grid>
       </Grid>
+
+      <TranslationSection
+        translations={formData.translations}
+        onTranslationsChange={handleTranslationsChange}
+        disabled={isSubmitting}
+      />
 
       {/* Error Snackbar */}
       <Snackbar
