@@ -1,3 +1,4 @@
+import { MuiColorInput } from 'mui-color-input';
 import { useState, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
@@ -62,7 +63,7 @@ export function DefectReasonGroupCreateEditView({
   const [formData, setFormData] = useState<DefectReasonGroupFormData>({
     code: currentDefectReasonGroup?.code || '',
     name: currentDefectReasonGroup?.name || '',
-    colorHex: currentDefectReasonGroup?.colorHex || '#000000',
+    colorHex: currentDefectReasonGroup?.colorHex || '#1976d2',
     description: currentDefectReasonGroup?.description || '',
   });
 
@@ -115,6 +116,17 @@ export function DefectReasonGroupCreateEditView({
         }));
         clearFieldError(field);
       },
+    [clearFieldError]
+  );
+
+  const handleColorChange = useCallback(
+    (newColor: string) => {
+      setFormData((prev) => ({
+        ...prev,
+        colorHex: newColor,
+      }));
+      clearFieldError('colorHex');
+    },
     [clearFieldError]
   );
 
@@ -213,37 +225,36 @@ export function DefectReasonGroupCreateEditView({
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
               Color
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box
-                component="input"
-                type="color"
-                value={formData.colorHex}
-                onChange={handleInputChange('colorHex')}
+            <MuiColorInput
+              fullWidth
+              format="hex"
+              value={formData.colorHex}
+              onChange={handleColorChange}
+              error={hasError('colorHex')}
+              helperText={getFieldErrorMessage('colorHex') || 'Choose a color to represent this defect reason group'}
+            />
+            <Box
+              sx={{
+                mt: 2,
+                p: 2,
+                bgcolor: formData.colorHex,
+                borderRadius: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: 60,
+              }}
+            >
+              <Typography
+                variant="body2"
                 sx={{
-                  width: 48,
-                  height: 48,
-                  border: 'none',
-                  borderRadius: 1,
-                  cursor: 'pointer',
-                  '&::-webkit-color-swatch-wrapper': {
-                    padding: 0,
-                  },
-                  '&::-webkit-color-swatch': {
-                    border: '1px solid',
-                    borderColor: 'divider',
-                    borderRadius: 1,
-                  },
+                  color: 'white',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                  fontWeight: 'medium',
                 }}
-              />
-              <TextField
-                size="small"
-                value={formData.colorHex}
-                onChange={handleInputChange('colorHex')}
-                placeholder="#000000"
-                sx={{ width: 120 }}
-                error={hasError('colorHex')}
-                helperText={getFieldErrorMessage('colorHex')}
-              />
+              >
+                Preview: {formData.name || 'Defect Reason Group Name'}
+              </Typography>
             </Box>
           </Box>
 

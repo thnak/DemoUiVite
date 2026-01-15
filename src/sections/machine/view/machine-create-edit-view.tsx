@@ -1,6 +1,7 @@
 import type { SelectChangeEvent } from '@mui/material/Select';
 import type { OutputCalculationMode, MachineOutputMappingResponse } from 'src/api/types/generated';
 
+import { MuiColorInput } from 'mui-color-input';
 import { useState, useEffect, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
@@ -57,6 +58,7 @@ interface MachineFormData {
   calendarId: string | null;
   machineTypeId: string | null;
   calculationMode: OutputCalculationMode;
+  colorHex: string;
 }
 
 interface SensorOutputMapping extends MachineOutputMappingResponse {
@@ -82,6 +84,7 @@ interface MachineCreateEditViewProps {
     calendarId: string | null;
     machineTypeId: string | null;
     calculationMode: OutputCalculationMode;
+    colorHex?: string;
   };
 }
 
@@ -110,6 +113,7 @@ export function MachineCreateEditView({
     calendarId: currentMachine?.calendarId || null,
     machineTypeId: currentMachine?.machineTypeId || null,
     calculationMode: currentMachine?.calculationMode || 'pairParallel',
+    colorHex: currentMachine?.colorHex || '#1976d2',
   });
 
 
@@ -281,6 +285,17 @@ export function MachineCreateEditView({
     }));
     clearFieldError('machineTypeId');
   }, [clearFieldError]);
+
+  const handleColorChange = useCallback(
+    (newColor: string) => {
+      setFormData((prev) => ({
+        ...prev,
+        colorHex: newColor,
+      }));
+      clearFieldError('colorHex');
+    },
+    [clearFieldError]
+  );
   
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -430,6 +445,7 @@ export function MachineCreateEditView({
           { key: 'calendarId', value: formData.calendarId || undefined },
           { key: 'machineTypeId', value: formData.machineTypeId || undefined },
           { key: 'calculationMode', value: formData.calculationMode },
+          { key: 'colorHex', value: formData.colorHex },
         ],
       });
     } else {
@@ -443,6 +459,7 @@ export function MachineCreateEditView({
           calendarId: formData.calendarId || undefined,
           machineTypeId: formData.machineTypeId || undefined,
           calculationMode: formData.calculationMode,
+          colorHex: formData.colorHex,
         } as any, // Cast to any to bypass strict type checking for required fields
       });
     }
@@ -529,6 +546,43 @@ export function MachineCreateEditView({
                   <MenuItem value="weightedChannels">Weighted Channels</MenuItem>
                 </Select>
               </FormControl>
+            </Box>
+
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Machine Color
+              </Typography>
+              <MuiColorInput
+                fullWidth
+                format="hex"
+                value={formData.colorHex}
+                onChange={handleColorChange}
+                error={hasError('colorHex')}
+                helperText={getFieldErrorMessage('colorHex') || 'Choose a color to represent this machine'}
+              />
+              <Box
+                sx={{
+                  mt: 2,
+                  p: 2,
+                  bgcolor: formData.colorHex,
+                  borderRadius: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: 60,
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'white',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                    fontWeight: 'medium',
+                  }}
+                >
+                  Preview: {formData.name || 'Machine Name'}
+                </Typography>
+              </Box>
             </Box>
           </Card>
         </Grid>

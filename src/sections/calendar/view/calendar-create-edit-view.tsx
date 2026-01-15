@@ -1,5 +1,6 @@
 import type { CalendarEntity, ShiftTemplateEntity } from 'src/api/types/generated';
 
+import { MuiColorInput } from 'mui-color-input';
 import { useParams } from 'react-router';
 import { useState, useEffect, useCallback } from 'react';
 
@@ -49,6 +50,7 @@ interface CalendarFormData {
   mergeCase4ToShift1: boolean;
   mergeCase5ToLatest: boolean;
   autoVirtualShift: boolean;
+  colorHex: string;
 }
 
 const defaultFormData: CalendarFormData = {
@@ -65,6 +67,7 @@ const defaultFormData: CalendarFormData = {
   mergeCase4ToShift1: false,
   mergeCase5ToLatest: false,
   autoVirtualShift: false,
+  colorHex: '#1976d2',
 };
 
 // ----------------------------------------------------------------------
@@ -139,6 +142,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
               mergeCase4ToShift1: calendar.mergeCase4ToShift1 || false,
               mergeCase5ToLatest: calendar.mergeCase5ToLatest || false,
               autoVirtualShift: calendar.autoVirtualShift || false,
+              colorHex: calendar.colorHex || '#1976d2',
             });
 
             // Find and set the selected shift template
@@ -172,6 +176,10 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
     },
     []
   );
+
+  const handleColorChange = useCallback((newColor: string) => {
+    setFormData((prev) => ({ ...prev, colorHex: newColor }));
+  }, []);
 
   const handleShiftTemplateChange = useCallback((_: unknown, value: ShiftTemplateEntity | null) => {
     setSelectedShiftTemplate(value);
@@ -214,6 +222,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             { key: 'mergeCase4ToShift1', value: formData.mergeCase4ToShift1 },
             { key: 'mergeCase5ToLatest', value: formData.mergeCase5ToLatest },
             { key: 'autoVirtualShift', value: formData.autoVirtualShift },
+            { key: 'colorHex', value: formData.colorHex },
           ];
           const updateResult = await updateCalendar(calendarId, updates);
           if (updateResult.isValid) {
@@ -242,6 +251,7 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             mergeCase4ToShift1: formData.mergeCase4ToShift1,
             mergeCase5ToLatest: formData.mergeCase5ToLatest,
             autoVirtualShift: formData.autoVirtualShift,
+            colorHex: formData.colorHex,
           };
           const result = await createCalendar(entity as any);
           if (result.isValid) {
@@ -461,6 +471,42 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                 rows={3}
                 data-tour="calendar-description"
               />
+
+              <Box>
+                <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                  Calendar Color
+                </Typography>
+                <MuiColorInput
+                  fullWidth
+                  format="hex"
+                  value={formData.colorHex}
+                  onChange={handleColorChange}
+                  helperText="Choose a color to represent this calendar"
+                />
+                <Box
+                  sx={{
+                    mt: 2,
+                    p: 2,
+                    bgcolor: formData.colorHex,
+                    borderRadius: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: 60,
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: 'white',
+                      textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                      fontWeight: 'medium',
+                    }}
+                  >
+                    Preview: {formData.name || 'Calendar Name'}
+                  </Typography>
+                </Box>
+              </Box>
 
               {/* Time-Shift Policy Configuration */}
               <Box data-tour="calendar-policy">

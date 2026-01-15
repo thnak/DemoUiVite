@@ -1,5 +1,6 @@
 import type { ProductCategoryEntity } from 'src/api/types/generated';
 
+import { MuiColorInput } from 'mui-color-input';
 import { useState, useEffect, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
@@ -33,6 +34,7 @@ interface ProductCategoryFormData {
   code: string;
   name: string;
   description: string;
+  colorHex: string;
 }
 
 interface ProductCategoryCreateEditViewProps {
@@ -61,6 +63,7 @@ export function ProductCategoryCreateEditView({
     code: '',
     name: '',
     description: '',
+    colorHex: '#1976d2',
   });
 
   // Fetch existing product category data when editing
@@ -82,6 +85,7 @@ export function ProductCategoryCreateEditView({
         code: currentProductCategory.code || '',
         name: currentProductCategory.name || '',
         description: currentProductCategory.description || '',
+        colorHex: currentProductCategory.colorHex || '#1976d2',
       });
     } else if (!isEdit && generatedCode) {
       setFormData((prev) => ({
@@ -143,6 +147,17 @@ export function ProductCategoryCreateEditView({
     [clearFieldError]
   );
 
+  const handleColorChange = useCallback(
+    (newColor: string) => {
+      setFormData((prev) => ({
+        ...prev,
+        colorHex: newColor,
+      }));
+      clearFieldError('colorHex');
+    },
+    [clearFieldError]
+  );
+
   const handleSubmit = useCallback(() => {
     clearValidationResult();
 
@@ -151,6 +166,7 @@ export function ProductCategoryCreateEditView({
         { key: 'code', value: formData.code },
         { key: 'name', value: formData.name },
         { key: 'description', value: formData.description },
+        { key: 'colorHex', value: formData.colorHex },
       ];
       updateProductCategoryMutate({ id: productCategoryId, data: updates });
     } else {
@@ -158,6 +174,7 @@ export function ProductCategoryCreateEditView({
         code: formData.code,
         name: formData.name,
         description: formData.description,
+        colorHex: formData.colorHex,
       };
       createProductCategoryMutate({ data: productCategoryData as any }); // Cast to any to bypass strict type checking
     }
@@ -261,6 +278,45 @@ export function ProductCategoryCreateEditView({
                     helperText={getFieldErrorMessage('description')}
                     disabled={isSubmitting}
                   />
+                </Grid>
+                <Grid size={{ xs: 12 }}>
+                  <Box>
+                    <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                      Category Color
+                    </Typography>
+                    <MuiColorInput
+                      fullWidth
+                      format="hex"
+                      value={formData.colorHex}
+                      onChange={handleColorChange}
+                      error={hasError('colorHex')}
+                      helperText={getFieldErrorMessage('colorHex') || 'Choose a color to represent this product category'}
+                      disabled={isSubmitting}
+                    />
+                    <Box
+                      sx={{
+                        mt: 2,
+                        p: 2,
+                        bgcolor: formData.colorHex,
+                        borderRadius: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minHeight: 60,
+                      }}
+                    >
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: 'white',
+                          textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                          fontWeight: 'medium',
+                        }}
+                      >
+                        Preview: {formData.name || 'Product Category Name'}
+                      </Typography>
+                    </Box>
+                  </Box>
                 </Grid>
               </Grid>
             </Card>

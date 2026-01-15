@@ -1,3 +1,4 @@
+import { MuiColorInput } from 'mui-color-input';
 import { useState, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
@@ -25,6 +26,7 @@ interface MachineTypeFormData {
   code: string;
   name: string;
   description: string;
+  colorHex: string;
 }
 
 interface MachineTypeCreateEditViewProps {
@@ -34,6 +36,7 @@ interface MachineTypeCreateEditViewProps {
     code: string;
     name: string;
     description: string;
+    colorHex?: string;
   };
 }
 
@@ -54,6 +57,7 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
     code: currentMachineType?.code || '',
     name: currentMachineType?.name || '',
     description: currentMachineType?.description || '',
+    colorHex: currentMachineType?.colorHex || '#1976d2',
   });
 
   const { mutate: createMachineTypeMutate, isPending: isCreating } = useCreateMachineType({
@@ -105,6 +109,17 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
     [clearFieldError]
   );
 
+  const handleColorChange = useCallback(
+    (newColor: string) => {
+      setFormData((prev) => ({
+        ...prev,
+        colorHex: newColor,
+      }));
+      clearFieldError('colorHex');
+    },
+    [clearFieldError]
+  );
+
   const handleSubmit = useCallback(() => {
     clearValidationResult();
     setErrorMessage(null);
@@ -122,6 +137,7 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
           { key: 'code', value: formData.code },
           { key: 'name', value: formData.name },
           { key: 'description', value: formData.description },
+          { key: 'colorHex', value: formData.colorHex },
         ],
       });
     } else {
@@ -131,6 +147,7 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
           code: formData.code,
           name: formData.name,
           description: formData.description,
+          colorHex: formData.colorHex,
         } as any, // Cast to any to bypass strict type checking for required fields
       });
     }
@@ -196,6 +213,43 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
             error={hasError('description')}
             helperText={getFieldErrorMessage('description')}
           />
+
+          <Box>
+            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+              Color
+            </Typography>
+            <MuiColorInput
+              fullWidth
+              format="hex"
+              value={formData.colorHex}
+              onChange={handleColorChange}
+              error={hasError('colorHex')}
+              helperText={getFieldErrorMessage('colorHex') || 'Choose a color to represent this machine type'}
+            />
+            <Box
+              sx={{
+                mt: 2,
+                p: 2,
+                bgcolor: formData.colorHex,
+                borderRadius: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: 60,
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'white',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                  fontWeight: 'medium',
+                }}
+              >
+                Preview: {formData.name || 'Machine Type Name'}
+              </Typography>
+            </Box>
+          </Box>
         </Stack>
 
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>

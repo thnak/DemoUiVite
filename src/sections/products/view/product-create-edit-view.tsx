@@ -1,3 +1,4 @@
+import { MuiColorInput } from 'mui-color-input';
 import { useState, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
@@ -37,6 +38,7 @@ interface ProductFormData {
   height: string;
   unitOfMeasureId: string | null;
   secondaryUnitOfMeasureId: string | null;
+  colorHex: string;
 }
 
 
@@ -59,6 +61,7 @@ interface ProductCreateEditViewProps {
     };
     unitOfMeasureId?: string;
     secondaryUnitOfMeasureId?: string;
+    colorHex?: string;
   };
 }
 
@@ -83,6 +86,7 @@ export function ProductCreateEditView({
     height: currentProduct?.dimensions?.height?.toString() ?? '',
     unitOfMeasureId: currentProduct?.unitOfMeasureId || null,
     secondaryUnitOfMeasureId: currentProduct?.secondaryUnitOfMeasureId || null,
+    colorHex: currentProduct?.colorHex || '#1976d2',
   });
 
   const handleCloseError = useCallback(() => {
@@ -121,6 +125,13 @@ export function ProductCreateEditView({
     },
     []
   );
+
+  const handleColorChange = useCallback((newColor: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      colorHex: newColor,
+    }));
+  }, []);
 
   const handleSubmit = useCallback(async () => {
     if (!formData.name) {
@@ -188,6 +199,7 @@ export function ProductCreateEditView({
           updates.push({ key: 'imageUrl', value: imageUrl });
         }
         updates.push({ key: 'isDraft', value: (!published).toString() });
+        updates.push({ key: 'colorHex', value: formData.colorHex });
         await updateProduct(currentProduct.id, updates);
       } else {
         const dimensions = (length !== undefined || width !== undefined || height !== undefined) 
@@ -205,6 +217,7 @@ export function ProductCreateEditView({
           secondaryUnitOfMeasureId: formData.secondaryUnitOfMeasureId || undefined,
           imageUrl: imageUrl || undefined,
           isDraft: !published,
+          colorHex: formData.colorHex,
           // Add description as empty string to satisfy required field
           description: '',
           isActive: true,
@@ -286,6 +299,41 @@ export function ProductCreateEditView({
                   label=""
                   sx={{ m: 0 }}
                 />
+              </Box>
+            </Box>
+
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Product Color
+              </Typography>
+              <MuiColorInput
+                fullWidth
+                format="hex"
+                value={formData.colorHex}
+                onChange={handleColorChange}
+              />
+              <Box
+                sx={{
+                  mt: 2,
+                  p: 2,
+                  bgcolor: formData.colorHex,
+                  borderRadius: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: 60,
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'white',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                    fontWeight: 'medium',
+                  }}
+                >
+                  Preview: {formData.name || 'Product Name'}
+                </Typography>
               </Box>
             </Box>
           </Card>
