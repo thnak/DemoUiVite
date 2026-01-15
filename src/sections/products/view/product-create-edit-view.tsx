@@ -63,6 +63,7 @@ interface ProductCreateEditViewProps {
     unitOfMeasureId?: string;
     secondaryUnitOfMeasureId?: string;
     colorHex?: string;
+    translations?: Record<string, string>;
   };
 }
 

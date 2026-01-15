@@ -87,6 +87,7 @@ interface MachineCreateEditViewProps {
     machineTypeId: string | null;
     calculationMode: OutputCalculationMode;
     colorHex?: string;
+    translations?: Record<string, string>;
   };
 }
 
