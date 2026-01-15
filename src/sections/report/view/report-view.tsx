@@ -66,9 +66,21 @@ const mockFactoryOEE = {
   ],
   trends: {
     oee: { value: 2.3, isPositive: true },
-    availability: { value: 1.5, isPositive: true, chartData: [87.5, 88.1, 88.5, 89.0, 89.5, 89.3, 89.1, 89.2] },
-    performance: { value: -0.8, isPositive: false, chartData: [93.5, 93.2, 92.8, 92.5, 92.1, 92.3, 92.2, 92.3] },
-    quality: { value: 0.5, isPositive: true, chartData: [94.8, 95.0, 95.2, 95.3, 95.5, 95.4, 95.3, 95.4] },
+    availability: {
+      value: 1.5,
+      isPositive: true,
+      chartData: [87.5, 88.1, 88.5, 89.0, 89.5, 89.3, 89.1, 89.2],
+    },
+    performance: {
+      value: -0.8,
+      isPositive: false,
+      chartData: [93.5, 93.2, 92.8, 92.5, 92.1, 92.3, 92.2, 92.3],
+    },
+    quality: {
+      value: 0.5,
+      isPositive: true,
+      chartData: [94.8, 95.0, 95.2, 95.3, 95.5, 95.4, 95.3, 95.4],
+    },
   },
 };
 
@@ -114,12 +126,12 @@ export function ReportView() {
       if (!isHovering && scrollContainer) {
         scrollPosition += scrollSpeed;
         const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-        
+
         // Reset to start when reaching the end
         if (scrollPosition >= maxScroll) {
           scrollPosition = 0;
         }
-        
+
         scrollContainer.scrollLeft = scrollPosition;
       }
       animationId = requestAnimationFrame(animate);
@@ -334,7 +346,7 @@ export function ReportView() {
               </Button>
               <Button
                 variant="outlined"
-                startIcon={<Iconify icon='solar:map-bold' />}
+                startIcon={<Iconify icon="solar:map-bold" />}
                 onClick={() => navigate('/area')}
               >
                 Area Management

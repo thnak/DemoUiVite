@@ -150,20 +150,16 @@ export function ProductTableRow({
         </TableCell>
 
         <TableCell>
-          <Label>{(row.stockStatus)}</Label>
-
+          <Label>{row.stockStatus}</Label>
         </TableCell>
 
         <TableCell>
-          <Label>{(row.stock ?? 0)}</Label>
+          <Label>{row.stock ?? 0}</Label>
         </TableCell>
 
         <TableCell>
           <Label>{(row.price ?? 0).toLocaleString('vi-VN')}</Label>
         </TableCell>
-
-
-
 
         <TableCell>
           <Label

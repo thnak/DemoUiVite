@@ -76,7 +76,7 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
     };
   }, [isEdit, timeBlockNameData]);
 
-  const [formData, setFormData] = useState<TimeBlockNameFormData>(initialFormData); 
+  const [formData, setFormData] = useState<TimeBlockNameFormData>(initialFormData);
 
   const { mutate: createTimeBlockName, isPending: isCreating } = useCreateTimeBlockName({
     onSuccess: (result) => {
@@ -408,11 +408,7 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
             )}
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-              <Button
-                variant="outlined"
-                onClick={handleCancel}
-                disabled={isCreating || isUpdating}
-              >
+              <Button variant="outlined" onClick={handleCancel} disabled={isCreating || isUpdating}>
                 Cancel
               </Button>
               <Button

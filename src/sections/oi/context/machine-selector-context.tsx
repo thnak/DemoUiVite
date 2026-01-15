@@ -54,10 +54,10 @@ export function MachineSelectorProvider({ children }: MachineSelectorProviderPro
 
 export function useMachineSelector() {
   const context = useContext(MachineSelectorContext);
-  
+
   if (!context) {
     throw new Error('useMachineSelector must be used within MachineSelectorProvider');
   }
-  
+
   return context;
 }

@@ -65,10 +65,11 @@ export function StopMachineReasonCreateEditView({
   });
 
   // Generate new code hook
-  const { data: generatedCode, isFetching: isGeneratingCode } =
-    useGenerateNewStopMachineReasonCode({
+  const { data: generatedCode, isFetching: isGeneratingCode } = useGenerateNewStopMachineReasonCode(
+    {
       enabled: !isEdit,
-    });
+    }
+  );
 
   // Initialize form data using useMemo - React Compiler friendly
   const initialFormData = useMemo<StopMachineReasonFormData>(() => {
@@ -273,7 +274,6 @@ export function StopMachineReasonCreateEditView({
       createReason({ data: entityData as any }); // Cast to any to bypass strict type checking
     }
     // Form initialization effect
-     
   }, [isEdit, id, formData, createReason, updateReason]);
 
   if (isLoadingData) {

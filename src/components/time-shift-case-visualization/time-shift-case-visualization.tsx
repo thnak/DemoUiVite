@@ -397,7 +397,13 @@ export function TimeShiftCaseVisualization({
             </Box>
 
             {/* Case Details Grid */}
-            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 2 }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: 2,
+              }}
+            >
               {CASES.map((caseInfo) => {
                 const isAffected = isCaseAffected(caseInfo.affectedBy);
                 const isSelected = selectedCase === caseInfo.id;
@@ -439,10 +445,16 @@ export function TimeShiftCaseVisualization({
                           />
                         )}
                       </Box>
-                      <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}
+                      >
                         {caseInfo.description}
                       </Typography>
-                      <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: 'text.disabled', display: 'block' }}
+                      >
                         Trigger: {caseInfo.trigger}
                       </Typography>
                     </CardContent>
@@ -473,7 +485,8 @@ export function TimeShiftCaseVisualization({
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Iconify icon="solar:play-circle-bold" width={20} />
                     <Typography variant="body2">
-                      Merge Case 4 (Early Start): <strong>{mergeCase4ToShift1 ? 'Yes' : 'No'}</strong>
+                      Merge Case 4 (Early Start):{' '}
+                      <strong>{mergeCase4ToShift1 ? 'Yes' : 'No'}</strong>
                     </Typography>
                     <Chip
                       label="Case 4"
@@ -497,7 +510,8 @@ export function TimeShiftCaseVisualization({
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Iconify icon="solar:calendar-mark-bold" width={20} />
                     <Typography variant="body2">
-                      Auto Virtual Shift: <strong>{autoVirtualShift ? 'Enabled' : 'Disabled'}</strong>
+                      Auto Virtual Shift:{' '}
+                      <strong>{autoVirtualShift ? 'Enabled' : 'Disabled'}</strong>
                     </Typography>
                     <Chip
                       label="Cases 7 & 8"

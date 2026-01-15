@@ -1,4 +1,3 @@
-
 import { MuiColorInput } from 'mui-color-input';
 import { useState, useCallback, type ChangeEvent } from 'react';
 
@@ -27,7 +26,6 @@ import {
 } from 'src/api/hooks/generated/use-defect-reason';
 
 import { Iconify } from 'src/components/iconify';
-
 
 // ----------------------------------------------------------------------
 
@@ -280,7 +278,9 @@ export function DefectReasonCreateEditView({
               value={formData.colorHex}
               onChange={handleColorChange}
               error={hasError('colorHex')}
-              helperText={getFieldErrorMessage('colorHex') || 'Choose a color to represent this defect reason'}
+              helperText={
+                getFieldErrorMessage('colorHex') || 'Choose a color to represent this defect reason'
+              }
             />
             <Box
               sx={{
@@ -350,19 +350,24 @@ export function DefectReasonCreateEditView({
       {/* Machine Mapping Section */}
       {isEdit && currentDefectReason?.id ? (
         <Card sx={{ p: 3 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}
+          >
             <Typography variant="h6">Machine Mapping</Typography>
             <Button
               variant="contained"
               color="primary"
               startIcon={<Iconify icon="solar:settings-bold-duotone" />}
-              onClick={() => router.push(`/defect-reasons/${currentDefectReason.id}/machine-mapping`)}
+              onClick={() =>
+                router.push(`/defect-reasons/${currentDefectReason.id}/machine-mapping`)
+              }
             >
               Manage Machine Mapping
             </Button>
           </Box>
           <Typography variant="body2" color="text.secondary">
-            Click the button above to manage machine mappings for this defect reason on a dedicated page with better performance.
+            Click the button above to manage machine mappings for this defect reason on a dedicated
+            page with better performance.
           </Typography>
         </Card>
       ) : (
@@ -370,7 +375,8 @@ export function DefectReasonCreateEditView({
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
             <Iconify icon="solar:bell-bing-bold-duotone" width={24} />
             <Typography variant="body2" color="text.secondary">
-              Machine mapping will be available after creating the defect reason. Please save the form first.
+              Machine mapping will be available after creating the defect reason. Please save the
+              form first.
             </Typography>
           </Box>
         </Card>

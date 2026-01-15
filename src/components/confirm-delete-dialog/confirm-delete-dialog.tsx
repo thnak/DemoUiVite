@@ -59,14 +59,8 @@ export function ConfirmDeleteDialog({
     <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
       <DialogTitle>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Iconify
-            icon="solar:trash-bin-trash-bold"
-            width={24}
-            sx={{ color: 'error.main' }}
-          />
-          <Typography variant="h6">
-            Confirm Delete
-          </Typography>
+          <Iconify icon="solar:trash-bin-trash-bold" width={24} sx={{ color: 'error.main' }} />
+          <Typography variant="h6">Confirm Delete</Typography>
         </Box>
       </DialogTitle>
 
@@ -96,9 +90,7 @@ export function ConfirmDeleteDialog({
             autoFocus
             error={confirmText.length > 0 && !isConfirmValid}
             helperText={
-              confirmText.length > 0 && !isConfirmValid
-                ? 'Please type "delete" exactly'
-                : ''
+              confirmText.length > 0 && !isConfirmValid ? 'Please type "delete" exactly' : ''
             }
           />
         </Box>

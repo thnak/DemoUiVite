@@ -32,10 +32,7 @@ export function usePaginationParams(options: UsePaginationParamsOptions = {}) {
   // Parse current params from URL
   const params = useMemo<PaginationParams>(() => {
     const page = parseInt(searchParams.get('page') || String(defaultPage), 10);
-    const rowsPerPage = parseInt(
-      searchParams.get('rowsPerPage') || String(defaultRowsPerPage),
-      10
-    );
+    const rowsPerPage = parseInt(searchParams.get('rowsPerPage') || String(defaultRowsPerPage), 10);
     const orderBy = searchParams.get('orderBy') || defaultOrderBy;
     const order = (searchParams.get('order') || defaultOrder) as 'asc' | 'desc';
     const filterName = searchParams.get('filterName') || undefined;

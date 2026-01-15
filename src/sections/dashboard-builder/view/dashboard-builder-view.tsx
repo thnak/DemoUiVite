@@ -234,9 +234,12 @@ export function DashboardBuilderView() {
   }, [id]);
 
   // Handle layout changes
-  const handleLayoutChange = useCallback((_currentLayout: Layout, allLayouts: ResponsiveLayouts) => {
-    setLayouts(allLayouts);
-  }, []);
+  const handleLayoutChange = useCallback(
+    (_currentLayout: Layout, allLayouts: ResponsiveLayouts) => {
+      setLayouts(allLayouts);
+    },
+    []
+  );
 
   // Handle breakpoint change
   const handleBreakpointChange = useCallback((newBreakpoint: string) => {
@@ -541,7 +544,9 @@ export function DashboardBuilderView() {
       const newLayouts: ResponsiveLayouts = {};
       Object.keys(prevLayouts).forEach((bp) => {
         const mergedLayout = (prevLayouts[bp] ?? []).find((l) => l.i === entry.resultWidget.id);
-        const filteredLayouts = (prevLayouts[bp] ?? []).filter((l) => l.i !== entry.resultWidget.id);
+        const filteredLayouts = (prevLayouts[bp] ?? []).filter(
+          (l) => l.i !== entry.resultWidget.id
+        );
 
         const restoredLayouts = [
           ...filteredLayouts,

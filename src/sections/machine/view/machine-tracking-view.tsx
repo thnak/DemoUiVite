@@ -118,7 +118,7 @@ export function MachineTrackingView() {
             speedLossTime: initialAggregation.totalSpeedLossTime,
             totalTestRunTime: initialAggregation.totalTestRunTime || 'PT0S',
             actualCycleTime: 'PT0S',
-            targetCount: 0
+            targetCount: 0,
           });
           setLastUpdateTime(new Date());
         }

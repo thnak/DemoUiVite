@@ -231,7 +231,10 @@ export function DefectReasonGroupCreateEditView({
               value={formData.colorHex}
               onChange={handleColorChange}
               error={hasError('colorHex')}
-              helperText={getFieldErrorMessage('colorHex') || 'Choose a color to represent this defect reason group'}
+              helperText={
+                getFieldErrorMessage('colorHex') ||
+                'Choose a color to represent this defect reason group'
+              }
             />
             <Box
               sx={{

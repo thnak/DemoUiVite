@@ -116,7 +116,6 @@ export function MachineCreateEditView({
     colorHex: currentMachine?.colorHex || '#1976d2',
   });
 
-
   // Sensor output mapping state - separated into good and scrap
   const [goodOutputMappings, setGoodOutputMappings] = useState<SensorOutputMapping[]>([]);
   const [scrapOutputMappings, setScrapOutputMappings] = useState<SensorOutputMapping[]>([]);
@@ -246,29 +245,38 @@ export function MachineCreateEditView({
     [clearFieldError]
   );
 
-  const handleImageUrlChange = useCallback((newImageUrl: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      imageUrl: newImageUrl,
-    }));
-    clearFieldError('imageUrl');
-  }, [clearFieldError]);
+  const handleImageUrlChange = useCallback(
+    (newImageUrl: string) => {
+      setFormData((prev) => ({
+        ...prev,
+        imageUrl: newImageUrl,
+      }));
+      clearFieldError('imageUrl');
+    },
+    [clearFieldError]
+  );
 
-  const handleAreaChange = useCallback((areaId: string | null) => {
-    setFormData((prev) => ({
-      ...prev,
-      areaId,
-    }));
-    clearFieldError('areaId');
-  }, [clearFieldError]);
+  const handleAreaChange = useCallback(
+    (areaId: string | null) => {
+      setFormData((prev) => ({
+        ...prev,
+        areaId,
+      }));
+      clearFieldError('areaId');
+    },
+    [clearFieldError]
+  );
 
-  const handleCalendarChange = useCallback((calendarId: string | null) => {
-    setFormData((prev) => ({
-      ...prev,
-      calendarId,
-    }));
-    clearFieldError('calendarId');
-  }, [clearFieldError]);
+  const handleCalendarChange = useCallback(
+    (calendarId: string | null) => {
+      setFormData((prev) => ({
+        ...prev,
+        calendarId,
+      }));
+      clearFieldError('calendarId');
+    },
+    [clearFieldError]
+  );
 
   // Drag and drop handlers
   const handleDragStart = useCallback(
@@ -277,14 +285,17 @@ export function MachineCreateEditView({
     },
     []
   );
-  
-  const handleMachineTypeChange = useCallback((machineTypeId: string | null) => {
-    setFormData((prev) => ({
-      ...prev,
-      machineTypeId,
-    }));
-    clearFieldError('machineTypeId');
-  }, [clearFieldError]);
+
+  const handleMachineTypeChange = useCallback(
+    (machineTypeId: string | null) => {
+      setFormData((prev) => ({
+        ...prev,
+        machineTypeId,
+      }));
+      clearFieldError('machineTypeId');
+    },
+    [clearFieldError]
+  );
 
   const handleColorChange = useCallback(
     (newColor: string) => {
@@ -296,7 +307,7 @@ export function MachineCreateEditView({
     },
     [clearFieldError]
   );
-  
+
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
   }, []);
@@ -463,7 +474,14 @@ export function MachineCreateEditView({
         } as any, // Cast to any to bypass strict type checking for required fields
       });
     }
-  }, [formData, isEdit, currentMachine?.id, createMachineMutate, updateMachineMutate, clearValidationResult]);
+  }, [
+    formData,
+    isEdit,
+    currentMachine?.id,
+    createMachineMutate,
+    updateMachineMutate,
+    clearValidationResult,
+  ]);
 
   const handleCancel = useCallback(() => {
     router.push('/machines');
@@ -558,7 +576,9 @@ export function MachineCreateEditView({
                 value={formData.colorHex}
                 onChange={handleColorChange}
                 error={hasError('colorHex')}
-                helperText={getFieldErrorMessage('colorHex') || 'Choose a color to represent this machine'}
+                helperText={
+                  getFieldErrorMessage('colorHex') || 'Choose a color to represent this machine'
+                }
               />
               <Box
                 sx={{
@@ -873,7 +893,14 @@ export function MachineCreateEditView({
             {/* Product Mapping Section */}
             {isEdit && currentMachine?.id ? (
               <Card sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    mb: 2,
+                  }}
+                >
                   <Typography variant="h6">Product Mapping</Typography>
                   <Button
                     variant="contained"
@@ -885,7 +912,8 @@ export function MachineCreateEditView({
                   </Button>
                 </Box>
                 <Typography variant="body2" color="text.secondary">
-                  Click the button above to manage product mappings for this machine on a dedicated page with better performance.
+                  Click the button above to manage product mappings for this machine on a dedicated
+                  page with better performance.
                 </Typography>
               </Card>
             ) : (
@@ -893,7 +921,8 @@ export function MachineCreateEditView({
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                   <Iconify icon="solar:bell-bing-bold-duotone" width={24} />
                   <Typography variant="body2" color="text.secondary">
-                    Product mapping will be available after creating the machine. Please save the form first.
+                    Product mapping will be available after creating the machine. Please save the
+                    form first.
                   </Typography>
                 </Box>
               </Card>

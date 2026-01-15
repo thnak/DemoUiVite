@@ -65,59 +65,59 @@ export function IndexDesign1({ modules, viewMode }: Props) {
                   transition: 'all 0.3s ease-in-out',
                   '&:hover': {
                     transform: 'translateX(8px)',
-                boxShadow: theme.customShadows.z16,
-              },
-            }}
-          >
-            <CardActionArea
-              onClick={() => handleClick(module.path)}
-              sx={{ p: 2.5, display: 'flex', alignItems: 'center', gap: 3 }}
-            >
-              <Box
-                sx={{
-                  width: 56,
-                  height: 56,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 2,
-                  background:
-                    module.color === 'primary'
-                      ? `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.12)} 0%, ${alpha(theme.palette.primary.main, 0.24)} 100%)`
-                      : `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.12)} 0%, ${alpha(theme.palette.secondary.main, 0.24)} 100%)`,
+                    boxShadow: theme.customShadows.z16,
+                  },
                 }}
               >
-                <Iconify
-                  icon={module.icon}
-                  width={32}
-                  sx={{
-                    color: module.color === 'primary' ? 'primary.main' : 'secondary.main',
-                  }}
-                />
-              </Box>
-
-              <Box sx={{ flex: 1 }}>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: 600,
-                    fontFamily: theme.typography.fontFamily,
-                  }}
+                <CardActionArea
+                  onClick={() => handleClick(module.path)}
+                  sx={{ p: 2.5, display: 'flex', alignItems: 'center', gap: 3 }}
                 >
-                  {module.title}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {module.subtitle}
-                </Typography>
-              </Box>
+                  <Box
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 2,
+                      background:
+                        module.color === 'primary'
+                          ? `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.12)} 0%, ${alpha(theme.palette.primary.main, 0.24)} 100%)`
+                          : `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.12)} 0%, ${alpha(theme.palette.secondary.main, 0.24)} 100%)`,
+                    }}
+                  >
+                    <Iconify
+                      icon={module.icon}
+                      width={32}
+                      sx={{
+                        color: module.color === 'primary' ? 'primary.main' : 'secondary.main',
+                      }}
+                    />
+                  </Box>
 
-              <Iconify icon="eva:arrow-ios-forward-fill" width={24} color="text.secondary" />
-            </CardActionArea>
-          </Card>
-        </motion.div>
-        ))}
-      </Stack>
-    </motion.div>
+                  <Box sx={{ flex: 1 }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 600,
+                        fontFamily: theme.typography.fontFamily,
+                      }}
+                    >
+                      {module.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {module.subtitle}
+                    </Typography>
+                  </Box>
+
+                  <Iconify icon="eva:arrow-ios-forward-fill" width={24} color="text.secondary" />
+                </CardActionArea>
+              </Card>
+            </motion.div>
+          ))}
+        </Stack>
+      </motion.div>
     );
   }
 
@@ -180,29 +180,29 @@ export function IndexDesign1({ modules, viewMode }: Props) {
 
                   <Box sx={{ mt: 1 }}>
                     <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: 700,
-                    fontFamily: theme.typography.fontFamily,
-                    letterSpacing: '-0.02em',
-                  }}
-                >
-                  {module.title}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 0.5, lineHeight: 1.5 }}
-                >
-                  {module.subtitle}
-                </Typography>
-              </Box>
-            </CardActionArea>
-          </Card>
-        </motion.div>
-        </Grid>
-      ))}
-    </Grid>
-  </motion.div>
+                      variant="h6"
+                      sx={{
+                        fontWeight: 700,
+                        fontFamily: theme.typography.fontFamily,
+                        letterSpacing: '-0.02em',
+                      }}
+                    >
+                      {module.title}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ mt: 0.5, lineHeight: 1.5 }}
+                    >
+                      {module.subtitle}
+                    </Typography>
+                  </Box>
+                </CardActionArea>
+              </Card>
+            </motion.div>
+          </Grid>
+        ))}
+      </Grid>
+    </motion.div>
   );
 }

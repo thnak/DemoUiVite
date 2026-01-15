@@ -29,7 +29,13 @@ type UnitGroupTableRowProps = {
   returnUrl?: string;
 };
 
-export function UnitGroupTableRow({ row, selected, onSelectRow, onDeleteRow, returnUrl }: UnitGroupTableRowProps) {
+export function UnitGroupTableRow({
+  row,
+  selected,
+  onSelectRow,
+  onDeleteRow,
+  returnUrl,
+}: UnitGroupTableRowProps) {
   const router = useRouter();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
@@ -43,7 +49,9 @@ export function UnitGroupTableRow({ row, selected, onSelectRow, onDeleteRow, ret
 
   const handleEditRow = useCallback(() => {
     const editUrl = `/settings/unit-groups/${row.id}/edit`;
-    const urlWithReturn = returnUrl ? `${editUrl}?returnUrl=${encodeURIComponent(returnUrl)}` : editUrl;
+    const urlWithReturn = returnUrl
+      ? `${editUrl}?returnUrl=${encodeURIComponent(returnUrl)}`
+      : editUrl;
     router.push(urlWithReturn);
   }, [router, row.id, returnUrl]);
 

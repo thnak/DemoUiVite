@@ -50,7 +50,10 @@ export function IoTSensorTableHead({
             key={headCell.id}
             align={headCell.align || 'left'}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ width: headCell.id === '' ? 88 : 'auto', minWidth: headCell.id === '' ? 88 : 100 }}
+            sx={{
+              width: headCell.id === '' ? 88 : 'auto',
+              minWidth: headCell.id === '' ? 88 : 100,
+            }}
           >
             {headCell.id ? (
               <TableSortLabel

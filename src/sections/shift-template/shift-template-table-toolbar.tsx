@@ -18,7 +18,12 @@ type ShiftTemplateTableToolbarProps = {
   onDeleteSelected?: () => void;
 };
 
-export function ShiftTemplateTableToolbar({ numSelected, filterName, onFilterName, onDeleteSelected }: ShiftTemplateTableToolbarProps) {
+export function ShiftTemplateTableToolbar({
+  numSelected,
+  filterName,
+  onFilterName,
+  onDeleteSelected,
+}: ShiftTemplateTableToolbarProps) {
   return (
     <Toolbar
       sx={{

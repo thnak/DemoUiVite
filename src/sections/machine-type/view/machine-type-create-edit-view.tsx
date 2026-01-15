@@ -18,7 +18,10 @@ import { useValidationResult } from 'src/hooks/use-validation-result';
 import { isValidationSuccess } from 'src/utils/validation-result';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { useCreateMachineType, useUpdateMachineType } from 'src/api/hooks/generated/use-machine-type';
+import {
+  useCreateMachineType,
+  useUpdateMachineType,
+} from 'src/api/hooks/generated/use-machine-type';
 
 import { TranslationSection } from 'src/components/translation-section';
 
@@ -44,7 +47,10 @@ interface MachineTypeCreateEditViewProps {
   };
 }
 
-export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }: MachineTypeCreateEditViewProps) {
+export function MachineTypeCreateEditView({
+  isEdit = false,
+  currentMachineType,
+}: MachineTypeCreateEditViewProps) {
   const router = useRouter();
 
   const {
@@ -104,13 +110,14 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
   }, []);
 
   const handleInputChange = useCallback(
-    (field: keyof MachineTypeFormData) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setFormData((prev) => ({
-        ...prev,
-        [field]: event.target.value,
-      }));
-      clearFieldError(field);
-    },
+    (field: keyof MachineTypeFormData) =>
+      (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setFormData((prev) => ({
+          ...prev,
+          [field]: event.target.value,
+        }));
+        clearFieldError(field);
+      },
     [clearFieldError]
   );
 
@@ -165,7 +172,14 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
         } as any, // Cast to any to bypass strict type checking for required fields
       });
     }
-  }, [formData, isEdit, currentMachineType, createMachineTypeMutate, updateMachineTypeMutate, clearValidationResult]);
+  }, [
+    formData,
+    isEdit,
+    currentMachineType,
+    createMachineTypeMutate,
+    updateMachineTypeMutate,
+    clearValidationResult,
+  ]);
 
   const handleCancel = useCallback(() => {
     router.push('/machine-types');
@@ -198,7 +212,6 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
 
       <Card sx={{ p: 3 }}>
         <Stack spacing={3}>
-
           <TextField
             fullWidth
             label="Machine type code"
@@ -238,7 +251,9 @@ export function MachineTypeCreateEditView({ isEdit = false, currentMachineType }
               value={formData.colorHex}
               onChange={handleColorChange}
               error={hasError('colorHex')}
-              helperText={getFieldErrorMessage('colorHex') || 'Choose a color to represent this machine type'}
+              helperText={
+                getFieldErrorMessage('colorHex') || 'Choose a color to represent this machine type'
+              }
             />
             <Box
               sx={{

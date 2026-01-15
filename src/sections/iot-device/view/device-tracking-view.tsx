@@ -91,9 +91,7 @@ export function DeviceTrackingView() {
 
         console.error('Failed to connect to device hub:', error);
         setConnectionStatus('error');
-        setErrorMessage(
-          error instanceof Error ? error.message : 'Failed to connect to device hub'
-        );
+        setErrorMessage(error instanceof Error ? error.message : 'Failed to connect to device hub');
       }
     };
 
@@ -121,9 +119,7 @@ export function DeviceTrackingView() {
     navigate('/iot-devices');
   }, [navigate]);
 
-  const getStateColor = (
-    state: string
-  ): 'success' | 'error' | 'warning' | 'info' | 'default' => {
+  const getStateColor = (state: string): 'success' | 'error' | 'warning' | 'info' | 'default' => {
     switch (state) {
       case 'Online':
         return 'success';
@@ -166,7 +162,9 @@ export function DeviceTrackingView() {
   if (isLoadingDevice) {
     return (
       <DashboardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
           <CircularProgress />
         </Box>
       </DashboardContent>
@@ -192,7 +190,9 @@ export function DeviceTrackingView() {
           <Button
             variant="outlined"
             size="small"
-            startIcon={<Iconify icon="eva:arrow-ios-forward-fill" sx={{ transform: 'rotate(180deg)' }} />}
+            startIcon={
+              <Iconify icon="eva:arrow-ios-forward-fill" sx={{ transform: 'rotate(180deg)' }} />
+            }
             onClick={handleBackToList}
           >
             Back
@@ -243,7 +243,10 @@ export function DeviceTrackingView() {
               <Divider />
 
               <Box>
-                <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}>
+                <Typography
+                  variant="caption"
+                  sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}
+                >
                   MAC Address
                 </Typography>
                 <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
@@ -252,14 +255,20 @@ export function DeviceTrackingView() {
               </Box>
 
               <Box>
-                <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}>
+                <Typography
+                  variant="caption"
+                  sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}
+                >
                   Device Type
                 </Typography>
                 <Typography variant="body2">{device.type || '-'}</Typography>
               </Box>
 
               <Box>
-                <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}>
+                <Typography
+                  variant="caption"
+                  sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}
+                >
                   Machine
                 </Typography>
                 <Typography variant="body2">
@@ -275,7 +284,14 @@ export function DeviceTrackingView() {
           <Stack spacing={3}>
             {/* Connection Status */}
             <Card sx={{ p: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  mb: 2,
+                }}
+              >
                 <Typography variant="h6">Connection Status</Typography>
                 <Chip
                   icon={
@@ -314,7 +330,10 @@ export function DeviceTrackingView() {
                 <Grid container spacing={3}>
                   <Grid size={{ xs: 12, sm: 6 }}>
                     <Box>
-                      <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: 'text.secondary', display: 'block', mb: 1 }}
+                      >
                         Current State
                       </Typography>
                       <Label color={getStateColor(deviceState.currentState)} sx={{ px: 2, py: 1 }}>
@@ -325,7 +344,10 @@ export function DeviceTrackingView() {
                               height: 8,
                               borderRadius: '50%',
                               bgcolor: 'currentColor',
-                              animation: deviceState.currentState === 'Online' ? 'pulse 2s infinite' : 'none',
+                              animation:
+                                deviceState.currentState === 'Online'
+                                  ? 'pulse 2s infinite'
+                                  : 'none',
                               '@keyframes pulse': {
                                 '0%, 100%': { opacity: 1 },
                                 '50%': { opacity: 0.5 },
@@ -340,7 +362,10 @@ export function DeviceTrackingView() {
 
                   <Grid size={{ xs: 12, sm: 6 }}>
                     <Box>
-                      <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: 'text.secondary', display: 'block', mb: 1 }}
+                      >
                         Firmware Version
                       </Typography>
                       <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
@@ -351,7 +376,10 @@ export function DeviceTrackingView() {
 
                   <Grid size={{ xs: 12, sm: 6 }}>
                     <Box>
-                      <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: 'text.secondary', display: 'block', mb: 1 }}
+                      >
                         Last Seen
                       </Typography>
                       <Typography variant="body2">
@@ -362,7 +390,10 @@ export function DeviceTrackingView() {
 
                   <Grid size={{ xs: 12, sm: 6 }}>
                     <Box>
-                      <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: 'text.secondary', display: 'block', mb: 1 }}
+                      >
                         Last Update
                       </Typography>
                       <Typography variant="body2">

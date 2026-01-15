@@ -33,7 +33,6 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-
 const IMPACT_OPTIONS: { value: StopMachineImpact; label: string }[] = [
   { value: 'run', label: 'Run' },
   { value: 'unPlanedStop', label: 'Unplanned Stop' },
@@ -114,7 +113,7 @@ export function StopMachineReasonGroupCreateEditView({
       });
     }
   }, [isEdit, generatedCode]);
-  /* eslint-enable react-hooks/set-state-in-effect */ 
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const { mutate: createGroup, isPending: isCreating } = useCreateStopMachineReasonGroup({
     onSuccess: (result) => {
@@ -253,8 +252,18 @@ export function StopMachineReasonGroupCreateEditView({
       createGroup({ data: entityData as any }); // Cast to any to bypass strict type checking
     }
     // Form initialization effect
-     
-  }, [createGroup, formData.code, formData.colorHex, formData.description, formData.impact, formData.name, formData.translations, id, isEdit, updateGroup]);
+  }, [
+    createGroup,
+    formData.code,
+    formData.colorHex,
+    formData.description,
+    formData.impact,
+    formData.name,
+    formData.translations,
+    id,
+    isEdit,
+    updateGroup,
+  ]);
 
   if (isLoadingData) {
     return (
@@ -310,9 +319,7 @@ export function StopMachineReasonGroupCreateEditView({
                 disabled={isGeneratingCode}
                 slotProps={{
                   input: {
-                    endAdornment: isGeneratingCode ? (
-                      <CircularProgress size={20} />
-                    ) : null,
+                    endAdornment: isGeneratingCode ? <CircularProgress size={20} /> : null,
                   },
                 }}
               />
@@ -343,11 +350,7 @@ export function StopMachineReasonGroupCreateEditView({
             <Grid size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth required error={!!fieldErrors.impact}>
                 <InputLabel>Impact</InputLabel>
-                <Select
-                  value={formData.impact}
-                  onChange={handleImpactChange}
-                  label="Impact"
-                >
+                <Select value={formData.impact} onChange={handleImpactChange} label="Impact">
                   {IMPACT_OPTIONS.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}

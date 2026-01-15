@@ -22,10 +22,7 @@ import { useValidationResult } from 'src/hooks/use-validation-result';
 import { isValidationSuccess } from 'src/utils/validation-result';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import {
-  useCreateUnitGroup,
-  useUpdateUnitGroup,
-} from 'src/api/hooks/generated/use-unit-group';
+import { useCreateUnitGroup, useUpdateUnitGroup } from 'src/api/hooks/generated/use-unit-group';
 
 // ----------------------------------------------------------------------
 
@@ -58,7 +55,7 @@ export function UnitGroupCreateEditView({
   } = useValidationResult();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  
+
   // Initialize form data using useMemo - React Compiler friendly
   const initialFormData = useMemo<UnitGroupFormData>(() => {
     if (isEdit && currentUnitGroup) {
@@ -72,7 +69,7 @@ export function UnitGroupCreateEditView({
       description: '',
     };
   }, [isEdit, currentUnitGroup]);
-  
+
   const [formData, setFormData] = useState<UnitGroupFormData>(initialFormData);
 
   const { mutate: createUnitGroup, isPending: isCreating } = useCreateUnitGroup({
@@ -153,7 +150,7 @@ export function UnitGroupCreateEditView({
     updateUnitGroup,
     createUnitGroup,
     clearValidationResult,
-  ]); 
+  ]);
 
   const handleCancel = useCallback(() => {
     router.push(returnUrl);

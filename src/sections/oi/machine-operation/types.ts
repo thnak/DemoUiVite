@@ -87,7 +87,7 @@ export const createEmptyMachineData = (
   currentQuantity: 0,
   plannedQuantity: 0,
   progressPercentage: 0,
-  userName: ''
+  userName: '',
 });
 
 /**
@@ -121,7 +121,7 @@ export const mergeSignalRUpdate = (
   estimatedFinishTime: update.estimatedFinishTime,
   // Preserve existing product data unless we have better info
   currentQuantity: update.totalCount || existing.currentQuantity,
-  actualCycleTime: update.actualCycleTime ?? 0
+  actualCycleTime: update.actualCycleTime ?? 0,
 });
 
 /**

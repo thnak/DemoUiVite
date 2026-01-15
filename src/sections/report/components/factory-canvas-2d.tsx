@@ -185,9 +185,7 @@ export function FactoryCanvas2D({ areas, onMachineClick, onAreaClick }: FactoryC
                 <Typography variant="caption">Maintenance</Typography>
               </Stack>
               <Stack direction="row" spacing={1} alignItems="center">
-                <Box
-                  sx={{ width: 16, height: 16, bgcolor: 'grey.500', borderRadius: 0.5 }}
-                />
+                <Box sx={{ width: 16, height: 16, bgcolor: 'grey.500', borderRadius: 0.5 }} />
                 <Typography variant="caption">Idle</Typography>
               </Stack>
             </Stack>
@@ -348,12 +346,7 @@ export function FactoryCanvas2D({ areas, onMachineClick, onAreaClick }: FactoryC
                               shadowColor="black"
                               shadowOpacity={0.3}
                             />
-                            <Circle
-                              x={absX + 12}
-                              y={absY + 12}
-                              radius={3}
-                              fill={statusColor}
-                            />
+                            <Circle x={absX + 12} y={absY + 12} radius={3} fill={statusColor} />
 
                             {/* Machine Icon (Gear representation) */}
                             <Circle

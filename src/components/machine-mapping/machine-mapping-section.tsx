@@ -178,7 +178,9 @@ export function MachineMappingSection({
           <Typography variant="subtitle2" sx={{ mb: 2 }}>
             Mapped Machines ({mappedMachines.length})
           </Typography>
-          <TableContainer sx={{ maxHeight: 400, border: 1, borderColor: 'divider', borderRadius: 1 }}>
+          <TableContainer
+            sx={{ maxHeight: 400, border: 1, borderColor: 'divider', borderRadius: 1 }}
+          >
             {isLoadingMapped ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
                 <CircularProgress size={32} />
@@ -268,7 +270,9 @@ export function MachineMappingSection({
           />
 
           {/* Available machines table */}
-          <TableContainer sx={{ maxHeight: 300, border: 1, borderColor: 'divider', borderRadius: 1 }}>
+          <TableContainer
+            sx={{ maxHeight: 300, border: 1, borderColor: 'divider', borderRadius: 1 }}
+          >
             {isLoadingAvailable ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
                 <CircularProgress size={32} />
@@ -331,7 +335,11 @@ export function MachineMappingSection({
               onClick={handleAddSelected}
               disabled={selectedMachineIds.length === 0 || isAdding}
             >
-              {isAdding ? <CircularProgress size={24} /> : `Add Selected (${selectedMachineIds.length})`}
+              {isAdding ? (
+                <CircularProgress size={24} />
+              ) : (
+                `Add Selected (${selectedMachineIds.length})`
+              )}
             </Button>
           </Box>
         </Grid>

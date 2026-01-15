@@ -41,7 +41,6 @@ interface ProductFormData {
   colorHex: string;
 }
 
-
 interface ProductCreateEditViewProps {
   isEdit?: boolean;
   currentProduct?: {
@@ -78,7 +77,7 @@ export function ProductCreateEditView({
     name: currentProduct?.name || '',
     code: currentProduct?.code || '',
     categoryId: currentProduct?.categoryId || null,
-    price: currentProduct?.price?.toString() ?? '' ,
+    price: currentProduct?.price?.toString() ?? '',
     stock: currentProduct?.stock?.toString() ?? '',
     weight: currentProduct?.weight?.toString() ?? '',
     length: currentProduct?.dimensions?.length?.toString() ?? '',
@@ -107,7 +106,6 @@ export function ProductCreateEditView({
       },
     []
   );
-
 
   const handleCategoryChange = useCallback((value: string | null) => {
     setFormData((prev) => ({
@@ -184,16 +182,19 @@ export function ProductCreateEditView({
           updates.push({ key: 'weight', value: weight.toString() });
         }
         if (length !== undefined || width !== undefined || height !== undefined) {
-          updates.push({ 
-            key: 'dimensions', 
-            value: JSON.stringify({ length, width, height }) 
+          updates.push({
+            key: 'dimensions',
+            value: JSON.stringify({ length, width, height }),
           });
         }
         if (formData.unitOfMeasureId) {
           updates.push({ key: 'unitOfMeasureId', value: formData.unitOfMeasureId });
         }
         if (formData.secondaryUnitOfMeasureId) {
-          updates.push({ key: 'secondaryUnitOfMeasureId', value: formData.secondaryUnitOfMeasureId });
+          updates.push({
+            key: 'secondaryUnitOfMeasureId',
+            value: formData.secondaryUnitOfMeasureId,
+          });
         }
         if (imageUrl !== null) {
           updates.push({ key: 'imageUrl', value: imageUrl });
@@ -202,9 +203,10 @@ export function ProductCreateEditView({
         updates.push({ key: 'colorHex', value: formData.colorHex });
         await updateProduct(currentProduct.id, updates);
       } else {
-        const dimensions = (length !== undefined || width !== undefined || height !== undefined) 
-          ? { length, width, height } 
-          : undefined;
+        const dimensions =
+          length !== undefined || width !== undefined || height !== undefined
+            ? { length, width, height }
+            : undefined;
         await createProduct({
           name: formData.name,
           code: formData.code,
@@ -223,20 +225,13 @@ export function ProductCreateEditView({
           isActive: true,
         } as any); // Cast to any to bypass strict type checking for required fields
       }
-    router.push('/products');
-  } catch (e: any) {
-    setErrorMessage(e?.message ?? 'Something went wrong');
-  }
+      router.push('/products');
+    } catch (e: any) {
+      setErrorMessage(e?.message ?? 'Something went wrong');
+    }
 
     // Navigate back to list after save
-  }, [
-    formData,
-    isEdit,
-    currentProduct,
-    router,
-    imageUrl,
-    published,
-  ]);
+  }, [formData, isEdit, currentProduct, router, imageUrl, published]);
 
   const handleCancel = useCallback(() => {
     router.push('/products');

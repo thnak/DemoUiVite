@@ -230,7 +230,11 @@ export function MachineProductMappingView(props: MachineProductMappingViewProps)
           {product.productName[0]}
         </Avatar>
         <Typography sx={{ flexGrow: 1 }}>{product.productName}</Typography>
-        <IconButton size="small" color="error" onClick={() => handleRemoveProduct(product.productId)}>
+        <IconButton
+          size="small"
+          color="error"
+          onClick={() => handleRemoveProduct(product.productId)}
+        >
           <Iconify icon="solar:trash-bin-trash-bold" />
         </IconButton>
       </Box>
@@ -320,7 +324,7 @@ export function MachineProductMappingView(props: MachineProductMappingViewProps)
             <Typography variant="h6" sx={{ mb: 2 }}>
               Mapped Products ({mappedProducts.length})
             </Typography>
-            
+
             {/* Search for mapped products */}
             <TextField
               fullWidth
@@ -339,7 +343,7 @@ export function MachineProductMappingView(props: MachineProductMappingViewProps)
                 },
               }}
             />
-            
+
             <Box
               sx={{
                 height: 'calc(100% - 110px)',

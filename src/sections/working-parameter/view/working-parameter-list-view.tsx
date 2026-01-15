@@ -65,7 +65,7 @@ export function WorkingParameterListView() {
     () =>
       entities.map((entity) => {
         const idealSeconds = timeSpanToSeconds(entity.idealCycleTime);
-        const downSeconds  = timeSpanToSeconds(entity.downtimeThreshold);
+        const downSeconds = timeSpanToSeconds(entity.downtimeThreshold);
         const speedLossSeconds = timeSpanToSeconds(entity.speedLossThreshold);
 
         return {
@@ -176,18 +176,42 @@ export function WorkingParameterListView() {
     <DashboardContent>
       <Box sx={{ mb: 5, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Box>
-          <Typography variant="h4" sx={{ mb: 1 }}>List</Typography>
+          <Typography variant="h4" sx={{ mb: 1 }}>
+            List
+          </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" sx={{ color: 'text.primary' }}>Dashboard</Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>•</Typography>
-            <Typography variant="body2" sx={{ color: 'text.primary' }}>Working Parameter</Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>•</Typography>
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>List</Typography>
+            <Typography variant="body2" sx={{ color: 'text.primary' }}>
+              Dashboard
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              •
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.primary' }}>
+              Working Parameter
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              •
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+              List
+            </Typography>
           </Box>
         </Box>
         <Box sx={{ display: 'flex', gap: 1.5 }}>
-          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="solar:cloud-upload-bold" />}>Import</Button>
-          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="solar:cloud-download-bold" />}>Export</Button>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="solar:cloud-upload-bold" />}
+          >
+            Import
+          </Button>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="solar:cloud-download-bold" />}
+          >
+            Export
+          </Button>
           <Button
             variant="contained"
             color="inherit"
@@ -196,7 +220,6 @@ export function WorkingParameterListView() {
           >
             Add parameter
           </Button>
-
         </Box>
       </Box>
 
@@ -220,7 +243,10 @@ export function WorkingParameterListView() {
                 numSelected={table.selected.length}
                 onSort={table.onSort}
                 onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(checked, dataFiltered.map((item) => item.id))
+                  table.onSelectAllRows(
+                    checked,
+                    dataFiltered.map((item) => item.id)
+                  )
                 }
                 headLabel={[
                   { id: 'product', label: 'Product' },
@@ -229,7 +255,7 @@ export function WorkingParameterListView() {
                   { id: 'quantityPerSignal', label: 'Quantity per Output Signal' },
                   { id: 'downtimeThreshold', label: 'Downtime Threshold' },
                   { id: 'speedLossThreshold', label: 'SpeedLossThreshold' },
-                  { id: ''}
+                  { id: '' },
                 ]}
               />
               <TableBody>

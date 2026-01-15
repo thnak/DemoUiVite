@@ -113,10 +113,13 @@ export function IoTDeviceCreateEditView({
     { enabled: sensorSearchText.length > 0 && isEdit }
   );
 
-  const { data: deviceSensors, isLoading: isLoadingSensors, refetch: refetchSensors } =
-    useGetapiIotSensorgetsensorfromdevicedeviceCode(currentDevice?.id || '', {
-      enabled: isEdit && !!currentDevice?.id,
-    });
+  const {
+    data: deviceSensors,
+    isLoading: isLoadingSensors,
+    refetch: refetchSensors,
+  } = useGetapiIotSensorgetsensorfromdevicedeviceCode(currentDevice?.id || '', {
+    enabled: isEdit && !!currentDevice?.id,
+  });
 
   const { mutate: createDeviceMutate, isPending: isCreating } = useCreateIoTDevice({
     onSuccess: (result) => {
@@ -601,9 +604,7 @@ export function IoTDeviceCreateEditView({
                             <TableCell align="right">
                               <IconButton
                                 size="small"
-                                onClick={(e) =>
-                                  handleOpenPopover(e, sensor.id?.toString() || '')
-                                }
+                                onClick={(e) => handleOpenPopover(e, sensor.id?.toString() || '')}
                               >
                                 <Iconify icon="eva:more-vertical-fill" />
                               </IconButton>

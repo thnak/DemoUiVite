@@ -1346,10 +1346,7 @@ export type OEESummaryReportData = {
 };
 
 // Generate OEE summary for machines
-function generateMachineOEESummary(
-  filters: OEESummaryFilters,
-  seed: number
-): MachineOEESummary[] {
+function generateMachineOEESummary(filters: OEESummaryFilters, seed: number): MachineOEESummary[] {
   const filteredMachines = _machines.filter((machine) => {
     if (filters.machines.length > 0 && !filters.machines.includes(machine.id)) return false;
     if (filters.areas.length > 0 && !filters.areas.includes(machine.area)) return false;
@@ -1428,7 +1425,10 @@ function generateTimeOEESummary(filters: OEESummaryFilters, seed: number): TimeO
     }
   } else if (timeRange === 'months') {
     // Generate monthly data for up to 12 months
-    const monthCount = Math.min(12, Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 30)));
+    const monthCount = Math.min(
+      12,
+      Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 30))
+    );
     for (let i = 0; i < monthCount; i++) {
       const date = new Date(startDate);
       date.setMonth(date.getMonth() + i);
@@ -1504,22 +1504,16 @@ export function generateOEESummaryReport(filters: OEESummaryFilters): OEESummary
   // Calculate overall metrics
   const allMetrics = [...byMachines.map((m) => m.metrics), ...byTimes.map((t) => t.metrics)];
   const overallMetrics: OEESummaryMetrics = {
-    oee:
-      Math.round(
-        (allMetrics.reduce((sum, m) => sum + m.oee, 0) / allMetrics.length) * 10
-      ) / 10,
+    oee: Math.round((allMetrics.reduce((sum, m) => sum + m.oee, 0) / allMetrics.length) * 10) / 10,
     availability:
       Math.round(
         (allMetrics.reduce((sum, m) => sum + m.availability, 0) / allMetrics.length) * 10
       ) / 10,
     performance:
-      Math.round(
-        (allMetrics.reduce((sum, m) => sum + m.performance, 0) / allMetrics.length) * 10
-      ) / 10,
+      Math.round((allMetrics.reduce((sum, m) => sum + m.performance, 0) / allMetrics.length) * 10) /
+      10,
     quality:
-      Math.round(
-        (allMetrics.reduce((sum, m) => sum + m.quality, 0) / allMetrics.length) * 10
-      ) / 10,
+      Math.round((allMetrics.reduce((sum, m) => sum + m.quality, 0) / allMetrics.length) * 10) / 10,
   };
 
   return {

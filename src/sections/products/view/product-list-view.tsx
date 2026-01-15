@@ -120,13 +120,10 @@ export function ProductListView() {
     [router]
   );
 
-  const handleDeleteProduct = useCallback(
-    async (id: string) => {
-      setItemToDelete(id);
-      setDeleteDialogOpen(true);
-    },
-    []
-  );
+  const handleDeleteProduct = useCallback(async (id: string) => {
+    setItemToDelete(id);
+    setDeleteDialogOpen(true);
+  }, []);
 
   const handleConfirmDelete = useCallback(async () => {
     if (itemToDelete) {
@@ -220,7 +217,11 @@ export function ProductListView() {
           >
             Import
           </Button>
-          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="solar:cloud-download-bold" />}>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="solar:cloud-download-bold" />}
+          >
             Export
           </Button>
           <Button
@@ -259,7 +260,7 @@ export function ProductListView() {
                   { id: 'name', label: 'Sản phẩm' },
                   { id: 'createdAt', label: 'Ngày tạo' },
                   { id: 'stockStatus', label: 'Tình trạng' },
-                  { id: 'stock', label: 'Tồn kho'},
+                  { id: 'stock', label: 'Tồn kho' },
                   { id: 'price', label: 'Giá' },
                   { id: 'publish', label: 'Trạng thái' },
                   { id: '' },

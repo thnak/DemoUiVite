@@ -41,8 +41,7 @@ export class DeviceHubService {
 
   async start(): Promise<void> {
     try {
-      if(this.connection.state === 'Disconnected')
-      await this.connection.start();
+      if (this.connection.state === 'Disconnected') await this.connection.start();
       console.log('DeviceHub connected');
     } catch (err) {
       console.error('Error connecting to DeviceHub:', err);

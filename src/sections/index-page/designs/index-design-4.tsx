@@ -124,8 +124,8 @@ export function IndexDesign4({ modules, viewMode }: Props) {
               IoT & Production Hub
             </Typography>
             <Typography variant="body1" sx={{ opacity: 0.8, maxWidth: 500 }}>
-              Manage your production floor, monitor devices, and track performance metrics all in one
-              place.
+              Manage your production floor, monitor devices, and track performance metrics all in
+              one place.
             </Typography>
 
             {/* Decorative elements */}

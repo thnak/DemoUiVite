@@ -165,7 +165,14 @@ export function MachineCard({
                 {/* APQ Metrics */}
                 <Stack spacing={0.5} sx={{ flex: 1 }}>
                   <Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.25 }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        mb: 0.25,
+                      }}
+                    >
                       <Typography variant="caption" color="text.secondary">
                         A
                       </Typography>
@@ -188,7 +195,14 @@ export function MachineCard({
                     />
                   </Box>
                   <Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.25 }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        mb: 0.25,
+                      }}
+                    >
                       <Typography variant="caption" color="text.secondary">
                         P
                       </Typography>
@@ -211,7 +225,14 @@ export function MachineCard({
                     />
                   </Box>
                   <Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.25 }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        mb: 0.25,
+                      }}
+                    >
                       <Typography variant="caption" color="text.secondary">
                         Q
                       </Typography>

@@ -71,12 +71,7 @@ export function TimeBlockNameTableRow({
         </TableCell>
 
         <TableCell>
-          <Avatar
-            alt={row.name}
-            src={imageUrl}
-            variant="rounded"
-            sx={{ width: 48, height: 48 }}
-          />
+          <Avatar alt={row.name} src={imageUrl} variant="rounded" sx={{ width: 48, height: 48 }} />
         </TableCell>
 
         <TableCell component="th" scope="row">

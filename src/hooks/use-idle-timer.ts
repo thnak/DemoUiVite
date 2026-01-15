@@ -50,15 +50,7 @@ export function useIdleTimer({
     };
 
     // Events that indicate user activity
-    const events = [
-      'mousedown',
-      'mousemove',
-      'keypress',
-      'scroll',
-      'touchstart',
-      'click',
-      'wheel',
-    ];
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click', 'wheel'];
 
     // Initialize timeout
     handleActivity();

@@ -32,12 +32,22 @@ export const WorkingParameterListPage = lazy(() => import('src/pages/working-par
 export const WorkingParameterCreatePage = lazy(() => import('src/pages/working-parameter-create'));
 export const WorkingParameterEditPage = lazy(() => import('src/pages/working-parameter-edit'));
 export const StopMachineReasonListPage = lazy(() => import('src/pages/stop-machine-reason-list'));
-export const StopMachineReasonCreatePage = lazy(() => import('src/pages/stop-machine-reason-create'));
+export const StopMachineReasonCreatePage = lazy(
+  () => import('src/pages/stop-machine-reason-create')
+);
 export const StopMachineReasonEditPage = lazy(() => import('src/pages/stop-machine-reason-edit'));
-export const StopMachineReasonMachineMappingPage = lazy(() => import('src/pages/stop-machine-reason-machine-mapping'));
-export const StopMachineReasonGroupListPage = lazy(() => import('src/pages/stop-machine-reason-group-list'));
-export const StopMachineReasonGroupCreatePage = lazy(() => import('src/pages/stop-machine-reason-group-create'));
-export const StopMachineReasonGroupEditPage = lazy(() => import('src/pages/stop-machine-reason-group-edit'));
+export const StopMachineReasonMachineMappingPage = lazy(
+  () => import('src/pages/stop-machine-reason-machine-mapping')
+);
+export const StopMachineReasonGroupListPage = lazy(
+  () => import('src/pages/stop-machine-reason-group-list')
+);
+export const StopMachineReasonGroupCreatePage = lazy(
+  () => import('src/pages/stop-machine-reason-group-create')
+);
+export const StopMachineReasonGroupEditPage = lazy(
+  () => import('src/pages/stop-machine-reason-group-edit')
+);
 export const ProductCategoryListPage = lazy(() => import('src/pages/product-category-list'));
 export const ProductCategoryCreatePage = lazy(() => import('src/pages/product-category-create'));
 export const ProductCategoryEditPage = lazy(() => import('src/pages/product-category-edit'));
@@ -64,7 +74,9 @@ export const DefectReasonGroupEditPage = lazy(() => import('src/pages/defect-rea
 export const DefectReasonPage = lazy(() => import('src/pages/defect-reason'));
 export const DefectReasonCreatePage = lazy(() => import('src/pages/defect-reason-create'));
 export const DefectReasonEditPage = lazy(() => import('src/pages/defect-reason-edit'));
-export const DefectReasonMachineMappingPage = lazy(() => import('src/pages/defect-reason-machine-mapping'));
+export const DefectReasonMachineMappingPage = lazy(
+  () => import('src/pages/defect-reason-machine-mapping')
+);
 export const CalendarListPage = lazy(() => import('src/pages/calendar-list'));
 export const CalendarCreatePage = lazy(() => import('src/pages/calendar-create'));
 export const CalendarEditPage = lazy(() => import('src/pages/calendar-edit'));
@@ -149,7 +161,10 @@ export const routesSection: RouteObject[] = [
       { path: 'stop-machine-reason', element: <StopMachineReasonListPage /> },
       { path: 'stop-machine-reason/create', element: <StopMachineReasonCreatePage /> },
       { path: 'stop-machine-reason/edit/:id', element: <StopMachineReasonEditPage /> },
-      { path: 'stop-machine-reason/:id/machine-mapping', element: <StopMachineReasonMachineMappingPage /> },
+      {
+        path: 'stop-machine-reason/:id/machine-mapping',
+        element: <StopMachineReasonMachineMappingPage />,
+      },
       { path: 'stop-machine-reason-group', element: <StopMachineReasonGroupListPage /> },
       { path: 'stop-machine-reason-group/create', element: <StopMachineReasonGroupCreatePage /> },
       { path: 'stop-machine-reason-group/edit/:id', element: <StopMachineReasonGroupEditPage /> },
@@ -188,7 +203,10 @@ export const routesSection: RouteObject[] = [
       { path: 'iot-devices/create', element: <IoTDeviceCreatePage /> },
       { path: 'iot-devices/:id/edit', element: <IoTDeviceEditPage /> },
       { path: 'iot-devices/:id/tracking', element: <IoTDeviceTrackingPage /> },
-      { path: 'iot-devices/:deviceId/sensors/:sensorId/data-seeding', element: <IoTSensorDataSeedingPage /> },
+      {
+        path: 'iot-devices/:deviceId/sensors/:sensorId/data-seeding',
+        element: <IoTSensorDataSeedingPage />,
+      },
       { path: 'iot-sensors', element: <IoTSensorListPage /> },
       { path: 'iot-sensors/create', element: <IoTSensorCreatePage /> },
       { path: 'iot-sensors/:id/edit', element: <IoTSensorEditPage /> },
@@ -244,9 +262,7 @@ export const routesSection: RouteObject[] = [
         </Suspense>
       </FullWidthLayout>
     ),
-    children: [
-      { path: 'report', element: <ReportPage /> },
-    ],
+    children: [{ path: 'report', element: <ReportPage /> }],
   },
   {
     path: 'sign-in',

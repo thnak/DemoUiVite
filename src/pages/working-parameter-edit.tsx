@@ -44,9 +44,9 @@ export default function Page() {
 
         // ✅ normalize (ép về type bạn cần) + bắt lỗi nếu thiếu id
         const normalized: ApiWorkingParameter = {
-          id: res.id  ?? id, // ưu tiên id từ api; fallback _id; cuối cùng fallback route id
-          machineId: res.machineId  ?? '',
-          productId: res.productId ??  '',
+          id: res.id ?? id, // ưu tiên id từ api; fallback _id; cuối cùng fallback route id
+          machineId: res.machineId ?? '',
+          productId: res.productId ?? '',
           idealCycleTime: res.idealCycleTime ?? null,
           downtimeThreshold: res.downtimeThreshold ?? null,
           speedLossThreshold: res.speedLossThreshold ?? null,

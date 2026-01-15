@@ -7,7 +7,10 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchIoTDeviceGroup, useGetIoTDeviceGroupById } from 'src/api/hooks/generated/use-io-tdevice-group';
+import {
+  useSearchIoTDeviceGroup,
+  useGetIoTDeviceGroupById,
+} from 'src/api/hooks/generated/use-io-tdevice-group';
 
 // ----------------------------------------------------------------------
 
@@ -32,19 +35,22 @@ export function IoTDeviceGroupSelector({
 }: IoTDeviceGroupSelectorProps) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
-  const [selectedIoTDeviceGroup, setSelectedIoTDeviceGroup] = useState<IoTDeviceGroupEntity | null>(null);
+  const [selectedIoTDeviceGroup, setSelectedIoTDeviceGroup] = useState<IoTDeviceGroupEntity | null>(
+    null
+  );
 
   // Fetch entity by ID when value prop is provided
-  const { data: entityById, isFetching: isFetchingById } = useGetIoTDeviceGroupById(
-    value || '',
-    {
-      enabled: !!value && !selectedIoTDeviceGroup,
-    }
-  );
+  const { data: entityById, isFetching: isFetchingById } = useGetIoTDeviceGroupById(value || '', {
+    enabled: !!value && !selectedIoTDeviceGroup,
+  });
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value && entityById.id?.toString() !== selectedIoTDeviceGroup?.id?.toString()) {
+    if (
+      entityById &&
+      value &&
+      entityById.id?.toString() !== selectedIoTDeviceGroup?.id?.toString()
+    ) {
       setSelectedIoTDeviceGroup(entityById);
     } else if (!value && selectedIoTDeviceGroup !== null) {
       setSelectedIoTDeviceGroup(null);
@@ -54,18 +60,17 @@ export function IoTDeviceGroupSelector({
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
-    () => debounce((searchValue: string) => {
-      setDebouncedInputValue(searchValue);
-    }, 500),
+    () =>
+      debounce((searchValue: string) => {
+        setDebouncedInputValue(searchValue);
+      }, 500),
     []
   );
 
-  const { data: searchResults, isFetching: isFetchingSearch } = useSearchIoTDeviceGroup(
-    {
-      searchText: debouncedInputValue || undefined,
-      maxResults: 10,
-    }
-  );
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchIoTDeviceGroup({
+    searchText: debouncedInputValue || undefined,
+    maxResults: 10,
+  });
 
   const items = searchResults?.data || [];
   const isFetching = isFetchingById || isFetchingSearch;
@@ -97,7 +102,15 @@ export function IoTDeviceGroupSelector({
         if (typeof option === 'string') return option;
         // Try common property names across different entity types
         const entity = option as any;
-        return entity.name || entity.code || entity.sensorName || entity.sensorCode || entity.title || String(entity.id) || '';
+        return (
+          entity.name ||
+          entity.code ||
+          entity.sensorName ||
+          entity.sensorCode ||
+          entity.title ||
+          String(entity.id) ||
+          ''
+        );
       }}
       isOptionEqualToValue={(option, val) => option.id === val.id}
       loading={isFetching}
@@ -118,7 +131,7 @@ export function IoTDeviceGroupSelector({
                   {params.InputProps.endAdornment}
                 </>
               ),
-            }
+            },
           }}
         />
       )}

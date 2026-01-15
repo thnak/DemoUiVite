@@ -41,7 +41,9 @@ interface UnitConversionCreateEditViewProps {
   isEdit?: boolean;
 }
 
-export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionCreateEditViewProps) {
+export function UnitConversionCreateEditView({
+  isEdit = false,
+}: UnitConversionCreateEditViewProps) {
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -58,9 +60,12 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Fetch conversion data if editing
-  const { data: conversionData, isLoading: isLoadingConversion } = useGetUnitConversionById(id || '', {
-    enabled: isEdit && !!id,
-  });
+  const { data: conversionData, isLoading: isLoadingConversion } = useGetUnitConversionById(
+    id || '',
+    {
+      enabled: isEdit && !!id,
+    }
+  );
 
   // Initialize form data using useMemo - React Compiler friendly
   const initialFormData = useMemo<UnitConversionFormData>(() => {
@@ -82,7 +87,7 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
     };
   }, [isEdit, conversionData]);
 
-  const [formData, setFormData] = useState<UnitConversionFormData>(initialFormData); 
+  const [formData, setFormData] = useState<UnitConversionFormData>(initialFormData);
 
   const { mutate: createConversion, isPending: isCreating } = useCreateUnitConversion({
     onSuccess: (result) => {
@@ -117,13 +122,14 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
   });
 
   const handleChange = useCallback(
-    (field: keyof UnitConversionFormData) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setFormData((prev) => ({
-        ...prev,
-        [field]: event.target.value,
-      }));
-      clearFieldError(field);
-    },
+    (field: keyof UnitConversionFormData) =>
+      (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setFormData((prev) => ({
+          ...prev,
+          [field]: event.target.value,
+        }));
+        clearFieldError(field);
+      },
     [clearFieldError]
   );
 
@@ -230,7 +236,10 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
                     label="Conversion Factor"
                     value={formData.conversionFactor}
                     onChange={handleChange('conversionFactor')}
-                    helperText={getFieldErrorMessage('conversionFactor') || "Multiply the from-unit by this factor"}
+                    helperText={
+                      getFieldErrorMessage('conversionFactor') ||
+                      'Multiply the from-unit by this factor'
+                    }
                     required
                     error={hasError('conversionFactor')}
                   />
@@ -242,7 +251,9 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
                     label="Offset"
                     value={formData.offset}
                     onChange={handleChange('offset')}
-                    helperText={getFieldErrorMessage('offset') || "Add this offset after multiplication"}
+                    helperText={
+                      getFieldErrorMessage('offset') || 'Add this offset after multiplication'
+                    }
                     error={hasError('offset')}
                   />
                 </Grid>
@@ -254,7 +265,9 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
                     label="Formula Description"
                     value={formData.formulaDescription}
                     onChange={handleChange('formulaDescription')}
-                    helperText={getFieldErrorMessage('formulaDescription') || "e.g., 'F = C * 1.8 + 32'"}
+                    helperText={
+                      getFieldErrorMessage('formulaDescription') || "e.g., 'F = C * 1.8 + 32'"
+                    }
                     error={hasError('formulaDescription')}
                   />
                 </Grid>
@@ -268,7 +281,13 @@ export function UnitConversionCreateEditView({ isEdit = false }: UnitConversionC
               <Button
                 variant="contained"
                 onClick={handleSave}
-                disabled={isCreating || isUpdating || !formData.fromUnitId || !formData.toUnitId || !formData.conversionFactor}
+                disabled={
+                  isCreating ||
+                  isUpdating ||
+                  !formData.fromUnitId ||
+                  !formData.toUnitId ||
+                  !formData.conversionFactor
+                }
               >
                 {isCreating || isUpdating ? 'Saving...' : 'Save'}
               </Button>

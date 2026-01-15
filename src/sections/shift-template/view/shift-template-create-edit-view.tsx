@@ -36,19 +36,19 @@ import { shiftTemplateTourSteps } from '../tour-steps';
 // Parse ISO 8601 duration to HH:mm format (e.g., "PT8H30M" -> "08:30")
 // function parseDurationToTime(duration: string | undefined): string {
 //   if (!duration) return '00:00';
-// 
+//
 //   let hours = 0;
 //   let minutes = 0;
 //   const hourMatch = duration.match(/(\d+)H/);
 //   const minuteMatch = duration.match(/(\d+)M/);
-// 
+//
 //   if (hourMatch) {
 //     hours = parseInt(hourMatch[1], 10);
 //   }
 //   if (minuteMatch) {
 //     minutes = parseInt(minuteMatch[1], 10);
 //   }
-// 
+//
 //   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
 // }
 
@@ -109,11 +109,7 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
   const templateId = params.id as string | undefined;
 
   // Use ValidationResult hook for form validation
-  const {
-    setValidationResult,
-    clearValidationResult,
-    overallMessage,
-  } = useValidationResult();
+  const { setValidationResult, clearValidationResult, overallMessage } = useValidationResult();
 
   const [initialData, setInitialData] = useState<ShiftTemplateFormData | undefined>(undefined);
   const [loading, setLoading] = useState(isEdit);
@@ -138,7 +134,10 @@ export function ShiftTemplateCreateEditView({ isEdit = false }: ShiftTemplateCre
           const template = await getShiftTemplateById(templateId);
           if (template) {
             // Group shifts by timeBlockNameId to recreate definitions
-            const shiftsByTimeBlockId = new Map<string, { shift: ShiftDefinition; days: DayOfWeek[] }>();
+            const shiftsByTimeBlockId = new Map<
+              string,
+              { shift: ShiftDefinition; days: DayOfWeek[] }
+            >();
 
             for (const shift of template.shifts || []) {
               const timeBlockId = shift.timeBlockNameId ? String(shift.timeBlockNameId) : 'unnamed';

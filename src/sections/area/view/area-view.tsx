@@ -150,13 +150,10 @@ export function AreaView() {
     [setParams]
   );
 
-  const handleDeleteRow = useCallback(
-    (id: string) => {
-      setItemToDelete(id);
-      setDeleteDialogOpen(true);
-    },
-    []
-  );
+  const handleDeleteRow = useCallback((id: string) => {
+    setItemToDelete(id);
+    setDeleteDialogOpen(true);
+  }, []);
 
   const handleConfirmDelete = useCallback(() => {
     if (itemToDelete) {
@@ -214,7 +211,11 @@ export function AreaView() {
           >
             Import
           </Button>
-          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="solar:cloud-download-bold" />}>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="solar:cloud-download-bold" />}
+          >
             Export
           </Button>
           <Button

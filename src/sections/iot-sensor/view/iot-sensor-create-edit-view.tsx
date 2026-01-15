@@ -235,7 +235,14 @@ export function IoTSensorCreateEditView({
         } as any, // Cast to any to bypass strict type checking for required fields
       });
     }
-  }, [formData, isEdit, currentSensorId, createSensorMutate, updateSensorMutate, clearValidationResult]);
+  }, [
+    formData,
+    isEdit,
+    currentSensorId,
+    createSensorMutate,
+    updateSensorMutate,
+    clearValidationResult,
+  ]);
 
   const handleCancel = useCallback(() => {
     router.push('/iot-sensors');
@@ -244,7 +251,9 @@ export function IoTSensorCreateEditView({
   if (isEdit && isLoadingSensor) {
     return (
       <DashboardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
           <CircularProgress />
         </Box>
       </DashboardContent>
@@ -405,8 +414,7 @@ export function IoTSensorCreateEditView({
                 disabled={isSubmitting}
                 sx={{
                   bgcolor: 'text.primary',
-                  color: (theme) =>
-                    theme.palette.mode === 'light' ? 'common.white' : 'grey.800',
+                  color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
                   '&:hover': {
                     bgcolor: 'text.primary',
                   },

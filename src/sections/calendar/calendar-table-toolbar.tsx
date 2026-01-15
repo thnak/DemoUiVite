@@ -18,7 +18,12 @@ type CalendarTableToolbarProps = {
   onDeleteSelected?: () => void;
 };
 
-export function CalendarTableToolbar({ numSelected, filterName, onFilterName, onDeleteSelected }: CalendarTableToolbarProps) {
+export function CalendarTableToolbar({
+  numSelected,
+  filterName,
+  onFilterName,
+  onDeleteSelected,
+}: CalendarTableToolbarProps) {
   return (
     <Toolbar
       sx={{

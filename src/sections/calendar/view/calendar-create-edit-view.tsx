@@ -1,7 +1,7 @@
 import type { CalendarEntity, ShiftTemplateEntity } from 'src/api/types/generated';
 
-import { MuiColorInput } from 'mui-color-input';
 import { useParams } from 'react-router';
+import { MuiColorInput } from 'mui-color-input';
 import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -446,7 +446,11 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                 data-tour="calendar-infinite"
               />
 
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} data-tour="calendar-work-time">
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={2}
+                data-tour="calendar-work-time"
+              >
                 <DurationTimePicker
                   fullWidth
                   label="Work Date Start Time"
@@ -514,7 +518,8 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                   Time-Shift Policy Configuration
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                  Configure how the 8 time-shift cases are handled for OEE computation. These policies control merging, thresholds, and virtual shift creation.
+                  Configure how the 8 time-shift cases are handled for OEE computation. These
+                  policies control merging, thresholds, and virtual shift creation.
                 </Typography>
 
                 <Stack spacing={3}>
@@ -523,7 +528,9 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                     label="Late Buffer Minutes"
                     type="number"
                     value={formData.lateBufferMinutes}
-                    onChange={(e) => handleInputChange('lateBufferMinutes', parseInt(e.target.value, 10) || 0)}
+                    onChange={(e) =>
+                      handleInputChange('lateBufferMinutes', parseInt(e.target.value, 10) || 0)
+                    }
                     helperText="Threshold in minutes to distinguish Case 5 (Overtime) from Case 6 (Night Run). Default: 120 minutes (2 hours)."
                     data-tour="calendar-late-buffer"
                     slotProps={{
@@ -542,7 +549,9 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                     data-tour="calendar-case4-merge"
                   />
                   <Typography variant="caption" color="text.secondary" sx={{ mt: -2, mb: 1 }}>
-                    When enabled, runtime between work day start and first shift start is added to Shift 1 performance. When disabled, logged as separate &quot;Early Production&quot; bucket.
+                    When enabled, runtime between work day start and first shift start is added to
+                    Shift 1 performance. When disabled, logged as separate &quot;Early
+                    Production&quot; bucket.
                   </Typography>
 
                   <FormControlLabel
@@ -556,7 +565,8 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                     data-tour="calendar-case5-merge"
                   />
                   <Typography variant="caption" color="text.secondary" sx={{ mt: -2, mb: 1 }}>
-                    When enabled, overtime within the late buffer is appended to the last shift. When disabled, tracked as separate &quot;Overtime Production&quot; bucket.
+                    When enabled, overtime within the late buffer is appended to the last shift.
+                    When disabled, tracked as separate &quot;Overtime Production&quot; bucket.
                   </Typography>
 
                   <FormControlLabel
@@ -570,7 +580,9 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                     data-tour="calendar-auto-virtual"
                   />
                   <Typography variant="caption" color="text.secondary" sx={{ mt: -2, mb: 1 }}>
-                    When enabled, production on Sunday (Case 7) or holidays (Case 8) automatically generates a virtual shift with OEE calculation. When disabled, logged as unscheduled run.
+                    When enabled, production on Sunday (Case 7) or holidays (Case 8) automatically
+                    generates a virtual shift with OEE calculation. When disabled, logged as
+                    unscheduled run.
                   </Typography>
                 </Stack>
               </Box>
@@ -586,7 +598,12 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                 />
               </Box>
 
-              <Stack direction="row" spacing={2} justifyContent="flex-end" data-tour="calendar-actions">
+              <Stack
+                direction="row"
+                spacing={2}
+                justifyContent="flex-end"
+                data-tour="calendar-actions"
+              >
                 <Button variant="outlined" onClick={handleCancel}>
                   Cancel
                 </Button>

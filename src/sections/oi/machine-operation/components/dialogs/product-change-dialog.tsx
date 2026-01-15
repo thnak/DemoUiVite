@@ -65,7 +65,7 @@ export function ProductChangeDialog({
 
   const handleConfirm = () => {
     if (!selectedProduct) return;
-    
+
     const target = parseInt(targetQuantity, 10);
     if (!target || target <= 0) return;
 
@@ -175,7 +175,12 @@ export function ProductChangeDialog({
                               {product.productName}
                             </Typography>
                             {isRunning && (
-                              <Chip label="Đang chạy" size="small" color="success" sx={{ mt: 0.5 }} />
+                              <Chip
+                                label="Đang chạy"
+                                size="small"
+                                color="success"
+                                sx={{ mt: 0.5 }}
+                              />
                             )}
                           </Box>
                         </Stack>
@@ -205,7 +210,12 @@ export function ProductChangeDialog({
       </Dialog>
 
       {/* Target Quantity Dialog */}
-      <Dialog open={targetDialogOpen} onClose={() => setTargetDialogOpen(false)} maxWidth="xs" fullWidth>
+      <Dialog
+        open={targetDialogOpen}
+        onClose={() => setTargetDialogOpen(false)}
+        maxWidth="xs"
+        fullWidth
+      >
         <DialogTitle>
           {selectedProduct?.productId === currentProductId
             ? 'Cập nhật mục tiêu'

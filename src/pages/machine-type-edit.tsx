@@ -15,14 +15,20 @@ import { MachineTypeCreateEditView } from 'src/sections/machine-type/view';
 export default function Page() {
   const { id } = useParams();
 
-  const { data: machineTypeData, isLoading, error } = useGetMachineTypeById(id || '', {
+  const {
+    data: machineTypeData,
+    isLoading,
+    error,
+  } = useGetMachineTypeById(id || '', {
     enabled: !!id,
   });
 
   if (isLoading) {
     return (
       <DashboardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
           <CircularProgress />
         </Box>
       </DashboardContent>
@@ -32,7 +38,9 @@ export default function Page() {
   if (error || !machineTypeData) {
     return (
       <DashboardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}
+        >
           <Typography color="error">Machine Type not found</Typography>
         </Box>
       </DashboardContent>

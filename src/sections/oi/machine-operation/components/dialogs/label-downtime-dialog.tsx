@@ -30,7 +30,11 @@ interface LabelDowntimeDialogProps {
   unlabeledDowntimes: CurrentMachineRunStateRecords[];
   stopReasons: StopReason[];
   downtimeHistory: DowntimeLabelHistory[];
-  onLabelDowntime: (downtime: CurrentMachineRunStateRecords, reasonIds: string[], note: string) => void;
+  onLabelDowntime: (
+    downtime: CurrentMachineRunStateRecords,
+    reasonIds: string[],
+    note: string
+  ) => void;
 }
 
 /**
@@ -78,7 +82,7 @@ export function LabelDowntimeDialog({
 
   const handleSubmitLabel = () => {
     if (selectedReasons.length === 0 || !downtimeToLabel) return;
-    
+
     onLabelDowntime(downtimeToLabel, selectedReasons, labelNote);
     setSelectedReasons([]);
     setLabelNote('');
@@ -298,8 +302,7 @@ export function LabelDowntimeDialog({
                   <Card key={history.id} sx={{ p: 2 }}>
                     <Box sx={{ mb: 2 }}>
                       <Typography variant="body2" sx={{ color: 'text.secondary', mb: 0.5 }}>
-                        {history.startTime ? new Date(history.startTime).toLocaleString() : 'N/A'}{' '}
-                        -
+                        {history.startTime ? new Date(history.startTime).toLocaleString() : 'N/A'} -
                         {history.endTime
                           ? new Date(history.endTime).toLocaleString()
                           : ' Đang diễn ra'}{' '}
