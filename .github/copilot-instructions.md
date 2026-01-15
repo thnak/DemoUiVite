@@ -1411,3 +1411,83 @@ React Compiler errors are prefixed with `react-hooks/`:
 
 See `REACT_COMPILER_IMPLEMENTATION.md` for complete implementation details.
 
+## OEE Color Standards
+
+**MANDATORY**: When displaying OEE (Overall Equipment Effectiveness) metrics and APQ (Availability, Performance, Quality) breakdowns, use these standard colors for consistency across the application.
+
+### Standard OEE Colors
+
+These colors are used in OEE radial charts, progress bars, and metric visualizations:
+
+| Metric | Color Code | Color Name | Usage |
+|--------|-----------|------------|-------|
+| **OEE** | `#22c55e` | Green | Overall Equipment Effectiveness |
+| **Availability (A)** | `#3b82f6` | Blue | Machine availability percentage |
+| **Performance (P)** | `#f59e0b` | Orange | Performance efficiency |
+| **Quality (Q)** | `#8b5cf6` | Purple | Quality rate |
+
+### Implementation Examples
+
+**APQ Progress Bars:**
+```tsx
+// Availability progress bar (Blue)
+<LinearProgress
+  variant="determinate"
+  value={availability * 100}
+  sx={{
+    '& .MuiLinearProgress-bar': {
+      bgcolor: '#3b82f6', // Availability color
+    },
+  }}
+/>
+
+// Performance progress bar (Orange)
+<LinearProgress
+  variant="determinate"
+  value={performance * 100}
+  sx={{
+    '& .MuiLinearProgress-bar': {
+      bgcolor: '#f59e0b', // Performance color
+    },
+  }}
+/>
+
+// Quality progress bar (Purple)
+<LinearProgress
+  variant="determinate"
+  value={quality * 100}
+  sx={{
+    '& .MuiLinearProgress-bar': {
+      bgcolor: '#8b5cf6', // Quality color
+    },
+  }}
+/>
+```
+
+**OEE Radial Chart:**
+```tsx
+const chartOptions: ApexOptions = {
+  colors: [
+    '#22c55e', // OEE (Green)
+    '#3b82f6', // Availability (Blue)
+    '#f59e0b', // Performance (Orange)
+    '#8b5cf6', // Quality (Purple)
+  ],
+  labels: ['OEE', 'Availability', 'Performance', 'Quality'],
+};
+```
+
+### When to Use
+
+- ✅ OEE dashboard cards and widgets
+- ✅ Machine monitoring displays
+- ✅ APQ metric breakdowns
+- ✅ Performance charts and visualizations
+- ✅ Real-time monitoring interfaces
+
+### Reference Implementation
+
+See these files for examples:
+- `src/sections/oi/machine-operation/components/oee-apq-chart.tsx` - Radial chart with all OEE colors
+- `src/sections/oi/machine-dashboard/components/machine-card.tsx` - APQ progress bars with standard colors
+

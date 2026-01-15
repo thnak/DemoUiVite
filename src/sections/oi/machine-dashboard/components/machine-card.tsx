@@ -164,35 +164,74 @@ export function MachineCard({
 
                 {/* APQ Metrics */}
                 <Stack spacing={0.5} sx={{ flex: 1 }}>
-                  <Box
-                    sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                  >
-                    <Typography variant="caption" color="text.secondary">
-                      A
-                    </Typography>
-                    <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                      {oeeData ? Math.round(oeeData.availability * 100) : 0}%
-                    </Typography>
+                  <Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.25 }}>
+                      <Typography variant="caption" color="text.secondary">
+                        A
+                      </Typography>
+                      <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
+                        {oeeData ? Math.round(oeeData.availability * 100) : 0}%
+                      </Typography>
+                    </Box>
+                    <LinearProgress
+                      variant="determinate"
+                      value={oeeData ? Math.min(oeeData.availability * 100, 100) : 0}
+                      sx={{
+                        height: 4,
+                        borderRadius: 0.5,
+                        bgcolor: 'action.hover',
+                        '& .MuiLinearProgress-bar': {
+                          borderRadius: 0.5,
+                          bgcolor: '#3b82f6', // Availability color (Blue)
+                        },
+                      }}
+                    />
                   </Box>
-                  <Box
-                    sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                  >
-                    <Typography variant="caption" color="text.secondary">
-                      P
-                    </Typography>
-                    <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                      {oeeData ? Math.round(oeeData.performance * 100) : 0}%
-                    </Typography>
+                  <Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.25 }}>
+                      <Typography variant="caption" color="text.secondary">
+                        P
+                      </Typography>
+                      <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
+                        {oeeData ? Math.round(oeeData.performance * 100) : 0}%
+                      </Typography>
+                    </Box>
+                    <LinearProgress
+                      variant="determinate"
+                      value={oeeData ? Math.min(oeeData.performance * 100, 100) : 0}
+                      sx={{
+                        height: 4,
+                        borderRadius: 0.5,
+                        bgcolor: 'action.hover',
+                        '& .MuiLinearProgress-bar': {
+                          borderRadius: 0.5,
+                          bgcolor: '#f59e0b', // Performance color (Orange)
+                        },
+                      }}
+                    />
                   </Box>
-                  <Box
-                    sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                  >
-                    <Typography variant="caption" color="text.secondary">
-                      Q
-                    </Typography>
-                    <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                      {oeeData ? Math.round(oeeData.quality * 100) : 0}%
-                    </Typography>
+                  <Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.25 }}>
+                      <Typography variant="caption" color="text.secondary">
+                        Q
+                      </Typography>
+                      <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
+                        {oeeData ? Math.round(oeeData.quality * 100) : 0}%
+                      </Typography>
+                    </Box>
+                    <LinearProgress
+                      variant="determinate"
+                      value={oeeData ? Math.min(oeeData.quality * 100, 100) : 0}
+                      sx={{
+                        height: 4,
+                        borderRadius: 0.5,
+                        bgcolor: 'action.hover',
+                        '& .MuiLinearProgress-bar': {
+                          borderRadius: 0.5,
+                          bgcolor: '#8b5cf6', // Quality color (Purple)
+                        },
+                      }}
+                    />
                   </Box>
                 </Stack>
               </Box>
