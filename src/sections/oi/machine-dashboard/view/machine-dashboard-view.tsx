@@ -209,54 +209,7 @@ export function MachineDashboardView() {
             () => {} // No runtime block callback needed for dashboard
           );
 
-          // Try to get initial aggregation
-          try {
-            const aggregation = await hubService.getMachineAggregation(machine.machineId);
-            if (aggregation && mounted) {
-              const update: MachineOeeUpdate = {
-                machineId: machine.machineId,
-                machineName: machine.machineName || '',
-                availability: aggregation.availability,
-                availabilityVsLastPeriod: 0,
-                performance: aggregation.performance,
-                performanceVsLastPeriod: 0,
-                quality: aggregation.quality,
-                qualityVsLastPeriod: 0,
-                oee: aggregation.oee,
-                oeeVsLastPeriod: 0,
-                goodCount: aggregation.goodCount,
-                goodCountVsLastPeriod: 0,
-                totalCount: aggregation.totalCount,
-                totalCountVsLastPeriod: 0,
-                plannedProductionTime: 'PT8H',
-                runTime: aggregation.totalRunTime,
-                downtime: aggregation.totalDowntime,
-                speedLossTime: aggregation.totalSpeedLossTime,
-                totalTestRunTime: aggregation.totalTestRunTime || 'PT0S',
-                estimatedFinishTime: aggregation.estimatedFinishTime,
-                actualCycleTime: aggregation.actualCycleTime || 'PT0S',
-              };
-              
-              setMachineOeeData((prev) => {
-                const newMap = new Map(prev);
-                newMap.set(machine.machineId || '', update);
-                return newMap;
-              });
-              setLoadingMachines((prev) => {
-                const newSet = new Set(prev);
-                newSet.delete(machine.machineId || '');
-                return newSet;
-              });
-            }
-          } catch (error) {
-            console.error(`Failed to load initial data for ${machine.machineId}:`, error);
-            // Remove from loading set even on error
-            setLoadingMachines((prev) => {
-              const newSet = new Set(prev);
-              newSet.delete(machine.machineId || '');
-              return newSet;
-            });
-          }
+          // Try to get initial aggregation. I have removed it because server will broadcast immediately after subscription
         }
       } catch (error) {
         console.error('Failed to connect to machines:', error);
