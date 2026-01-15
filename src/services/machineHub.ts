@@ -186,7 +186,7 @@ export class MachineHubService {
     // Ensure connection is active
     await this.ensureConnected();
 
-    // Register callbacks
+    // Register callbacks. we always register callbacks to allow updating even after reconnects. callbacks will be called right after subscription
     this.callbacks.set(machineId, callback);
     if (runtimeBlockCallback) {
       this.runtimeBlockCallbacks.set(machineId, runtimeBlockCallback);
