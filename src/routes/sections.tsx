@@ -91,6 +91,7 @@ export const IoTSensorEditPage = lazy(() => import('src/pages/iot-sensor-edit'))
 export const IoTSensorDataSeedingPage = lazy(() => import('src/pages/iot-sensor-data-seeding'));
 export const MachineSelectionPage = lazy(() => import('src/pages/oi/machine-selection'));
 export const MachineOperationPage = lazy(() => import('src/pages/oi/machine-operation'));
+export const MachineDashboardPage = lazy(() => import('src/pages/oi/machine-dashboard'));
 export const RoleListPage = lazy(() => import('src/pages/role-list'));
 export const RoleCreatePage = lazy(() => import('src/pages/role-create'));
 export const RoleEditPage = lazy(() => import('src/pages/role-edit'));
@@ -229,6 +230,7 @@ export const routesSection: RouteObject[] = [
         children: [
           { path: 'select-machine', element: <MachineSelectionPage /> },
           { path: 'operation', element: <MachineOperationPage /> },
+          { path: 'dashboard', element: <MachineDashboardPage /> },
         ],
       },
     ],

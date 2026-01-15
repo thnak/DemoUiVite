@@ -9,11 +9,12 @@ export enum MachineRunState {
 }
 
 export interface MachineRuntimeBlock {
+  machineId?: string; // Machine ID - may be present in broadcasts to identify the machine
   startTime: string; // ISO 8601 date string
   endTime: string | null; // ISO 8601 date string, null for ongoing blocks
   stopReasonId: string; // ObjectId in string format, empty for normal operation
   name: string; // Stop reason name or runtime block name
-  color: string; // Color code for visualization
+  stopReasonHexColor: string; // Color code for visualization
   isUnplannedDowntime: boolean; // True if this is an unplanned stop
   state: MachineRunState; // Current run state
 }
@@ -33,6 +34,7 @@ export interface MachineOeeUpdate {
   goodCountVsLastPeriod: number; // Count difference
   totalCount: number; // Total count of products produced
   totalCountVsLastPeriod: number; // Count difference
+  targetCount: number;
   plannedProductionTime: string; // ISO 8601 duration (e.g., "PT8H")
   runTime: string; // ISO 8601 duration (e.g., "PT7H30M")
   downtime: string; // ISO 8601 duration (e.g., "PT30M")
@@ -186,7 +188,7 @@ export class MachineHubService {
     // Ensure connection is active
     await this.ensureConnected();
 
-    // Register callbacks
+    // Register callbacks. we always register callbacks to allow updating even after reconnects. callbacks will be called right after subscription
     this.callbacks.set(machineId, callback);
     if (runtimeBlockCallback) {
       this.runtimeBlockCallbacks.set(machineId, runtimeBlockCallback);
