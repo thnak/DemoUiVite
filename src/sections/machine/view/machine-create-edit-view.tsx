@@ -60,6 +60,7 @@ interface MachineFormData {
   machineTypeId: string | null;
   calculationMode: OutputCalculationMode;
   colorHex: string;
+  translations: Record<string, string>;
 }
 
 interface SensorOutputMapping extends MachineOutputMappingResponse {
@@ -115,6 +116,7 @@ export function MachineCreateEditView({
     machineTypeId: currentMachine?.machineTypeId || null,
     calculationMode: currentMachine?.calculationMode || 'pairParallel',
     colorHex: currentMachine?.colorHex || '#1976d2',
+    translations: currentMachine?.translations || {},
   });
 
   // Sensor output mapping state - separated into good and scrap
@@ -308,6 +310,13 @@ export function MachineCreateEditView({
     },
     [clearFieldError]
   );
+
+  const handleTranslationsChange = useCallback((translations: Record<string, string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      translations,
+    }));
+  }, []);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();

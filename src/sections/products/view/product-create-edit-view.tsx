@@ -40,6 +40,7 @@ interface ProductFormData {
   unitOfMeasureId: string | null;
   secondaryUnitOfMeasureId: string | null;
   colorHex: string;
+  translations: Record<string, string>;
 }
 
 interface ProductCreateEditViewProps {
@@ -87,6 +88,7 @@ export function ProductCreateEditView({
     unitOfMeasureId: currentProduct?.unitOfMeasureId || null,
     secondaryUnitOfMeasureId: currentProduct?.secondaryUnitOfMeasureId || null,
     colorHex: currentProduct?.colorHex || '#1976d2',
+    translations: currentProduct?.translations || {},
   });
 
   const handleCloseError = useCallback(() => {
@@ -129,6 +131,13 @@ export function ProductCreateEditView({
     setFormData((prev) => ({
       ...prev,
       colorHex: newColor,
+    }));
+  }, []);
+
+  const handleTranslationsChange = useCallback((translations: Record<string, string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      translations,
     }));
   }, []);
 
