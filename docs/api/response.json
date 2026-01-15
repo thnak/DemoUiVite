@@ -1384,6 +1384,94 @@
         }
       }
     },
+    "/api/area/translation-keys": {
+      "get": {
+        "tags": [
+          "Area"
+        ],
+        "summary": "Get all translation keys for Area",
+        "description": "Retrieves all unique language keys used across all Area entities.",
+        "operationId": "GetAreaTranslationKeys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/area/translations": {
+      "get": {
+        "tags": [
+          "Area"
+        ],
+        "summary": "Get all translations for all Area entities",
+        "description": "Retrieves all translation entries from all Area entities in the system.",
+        "operationId": "GetAllAreaTranslations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/area/translations/{id}": {
+      "get": {
+        "tags": [
+          "Area"
+        ],
+        "summary": "Get translations for Area",
+        "description": "Retrieves all translation entries for a specific Area entity.",
+        "operationId": "GetAreaTranslations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/Area/minimal-names": {
       "get": {
         "tags": [
@@ -29877,6 +29965,309 @@
         }
       }
     },
+    "/api/code-generator-setting/keyvaluestore/{id}": {
+      "get": {
+        "tags": [
+          "CodeGeneratorSetting"
+        ],
+        "summary": "Get code generator setting for Key Value Store by ID",
+        "description": "Retrieves a specific code generator setting for Key Value Store entity by its unique identifier.",
+        "operationId": "GetCodeGeneratorSettingForKeyValueStoreEntityById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntityCodeGeneratorSettingEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/code-generator-setting/keyvaluestore/get-page": {
+      "post": {
+        "tags": [
+          "CodeGeneratorSetting"
+        ],
+        "summary": "Get paginated list of code generator settings for Key Value Store",
+        "description": "Retrieves a paginated list of code generator settings for Key Value Store entities.",
+        "operationId": "GetCodeGeneratorSettingForKeyValueStoreEntityPage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntityCodeGeneratorSettingEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/code-generator-setting/keyvaluestore/create": {
+      "post": {
+        "tags": [
+          "CodeGeneratorSetting"
+        ],
+        "summary": "Create a new code generator setting for Key Value Store",
+        "description": "Creates a new code generator setting for Key Value Store entity in the system.",
+        "operationId": "CreateCodeGeneratorSettingForKeyValueStoreEntity",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KeyValueStoreEntityCodeGeneratorSettingEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntityCodeGeneratorSettingEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntityCodeGeneratorSettingEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/code-generator-setting/keyvaluestore/update/{id}": {
+      "post": {
+        "tags": [
+          "CodeGeneratorSetting"
+        ],
+        "summary": "Update an existing code generator setting for Key Value Store",
+        "description": "Updates specific fields of an existing code generator setting for Key Value Store entity by ID.",
+        "operationId": "UpdateCodeGeneratorSettingForKeyValueStoreEntity",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntityCodeGeneratorSettingEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntityCodeGeneratorSettingEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/code-generator-setting/keyvaluestore/delete/{id}": {
+      "delete": {
+        "tags": [
+          "CodeGeneratorSetting"
+        ],
+        "summary": "Delete a code generator setting for Key Value Store",
+        "description": "Deletes a code generator setting for Key Value Store entity by its unique identifier.",
+        "operationId": "DeleteCodeGeneratorSettingForKeyValueStoreEntity",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntityCodeGeneratorSettingEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntityCodeGeneratorSettingEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/code-generator-setting/keyvaluestore/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "CodeGeneratorSetting"
+        ],
+        "summary": "Soft delete a code generator setting for Key Value Store",
+        "description": "Soft deletes a code generator setting for Key Value Store entity by its unique identifier.",
+        "operationId": "SoftDeleteCodeGeneratorSettingForKeyValueStoreEntity",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/code-generator-setting/keyvaluestore/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "CodeGeneratorSetting"
+        ],
+        "summary": "Restore a soft deleted code generator setting for Key Value Store",
+        "description": "Restores a previously soft deleted code generator setting for Key Value Store entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteCodeGeneratorSettingForKeyValueStoreEntity",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/code-generator-setting/languagekeylang/{id}": {
       "get": {
         "tags": [
@@ -40080,6 +40471,94 @@
         }
       }
     },
+    "/api/defectreason/translation-keys": {
+      "get": {
+        "tags": [
+          "DefectReason"
+        ],
+        "summary": "Get all translation keys for Defect Reason",
+        "description": "Retrieves all unique language keys used across all Defect Reason entities.",
+        "operationId": "GetDefectReasonTranslationKeys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/defectreason/translations": {
+      "get": {
+        "tags": [
+          "DefectReason"
+        ],
+        "summary": "Get all translations for all Defect Reason entities",
+        "description": "Retrieves all translation entries from all Defect Reason entities in the system.",
+        "operationId": "GetAllDefectReasonTranslations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/defectreason/translations/{id}": {
+      "get": {
+        "tags": [
+          "DefectReason"
+        ],
+        "summary": "Get translations for Defect Reason",
+        "description": "Retrieves all translation entries for a specific Defect Reason entity.",
+        "operationId": "GetDefectReasonTranslations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/DefectReason/get-defect-reasons": {
       "get": {
         "tags": [
@@ -40794,6 +41273,94 @@
         }
       }
     },
+    "/api/defectreasongroup/translation-keys": {
+      "get": {
+        "tags": [
+          "DefectReasonGroup"
+        ],
+        "summary": "Get all translation keys for Defect Reason Group",
+        "description": "Retrieves all unique language keys used across all Defect Reason Group entities.",
+        "operationId": "GetDefectReasonGroupTranslationKeys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/defectreasongroup/translations": {
+      "get": {
+        "tags": [
+          "DefectReasonGroup"
+        ],
+        "summary": "Get all translations for all Defect Reason Group entities",
+        "description": "Retrieves all translation entries from all Defect Reason Group entities in the system.",
+        "operationId": "GetAllDefectReasonGroupTranslations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/defectreasongroup/translations/{id}": {
+      "get": {
+        "tags": [
+          "DefectReasonGroup"
+        ],
+        "summary": "Get translations for Defect Reason Group",
+        "description": "Retrieves all translation entries for a specific Defect Reason Group entity.",
+        "operationId": "GetDefectReasonGroupTranslations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/department/{id}": {
       "get": {
         "tags": [
@@ -41154,6 +41721,94 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/department/translation-keys": {
+      "get": {
+        "tags": [
+          "Department"
+        ],
+        "summary": "Get all translation keys for Department",
+        "description": "Retrieves all unique language keys used across all Department entities.",
+        "operationId": "GetDepartmentTranslationKeys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/department/translations": {
+      "get": {
+        "tags": [
+          "Department"
+        ],
+        "summary": "Get all translations for all Department entities",
+        "description": "Retrieves all translation entries from all Department entities in the system.",
+        "operationId": "GetAllDepartmentTranslations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/department/translations/{id}": {
+      "get": {
+        "tags": [
+          "Department"
+        ],
+        "summary": "Get translations for Department",
+        "description": "Retrieves all translation entries for a specific Department entity.",
+        "operationId": "GetDepartmentTranslations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
@@ -49010,6 +49665,94 @@
         }
       }
     },
+    "/api/informationdecoratorbase/translation-keys": {
+      "get": {
+        "tags": [
+          "InformationDecoratorBase"
+        ],
+        "summary": "Get all translation keys for Information Decorator Base",
+        "description": "Retrieves all unique language keys used across all Information Decorator Base entities.",
+        "operationId": "GetInformationDecoratorBaseTranslationKeys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/informationdecoratorbase/translations": {
+      "get": {
+        "tags": [
+          "InformationDecoratorBase"
+        ],
+        "summary": "Get all translations for all Information Decorator Base entities",
+        "description": "Retrieves all translation entries from all Information Decorator Base entities in the system.",
+        "operationId": "GetAllInformationDecoratorBaseTranslations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/informationdecoratorbase/translations/{id}": {
+      "get": {
+        "tags": [
+          "InformationDecoratorBase"
+        ],
+        "summary": "Get translations for Information Decorator Base",
+        "description": "Retrieves all translation entries for a specific Information Decorator Base entity.",
+        "operationId": "GetInformationDecoratorBaseTranslations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/IotDevice/search-device": {
       "post": {
         "tags": [
@@ -51751,6 +52494,968 @@
         }
       }
     },
+    "/api/keyvaluestore/{id}": {
+      "get": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Get Key Value Store by ID",
+        "description": "Retrieves a specific Key Value Store entity by its unique identifier.",
+        "operationId": "GetKeyValueStoreById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/keyvaluestore/get-page": {
+      "get": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Get paginated list of Key Value Store",
+        "description": "Retrieves a paginated list of Key Value Store entities.",
+        "operationId": "GetKeyValueStorePage",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page number, starting from 0.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "Search term for filtering results.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Sorting requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SortType"
+                },
+                "description": "Sorting requests."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntityBasePaginationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/keyvaluestore/create": {
+      "post": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Create a new Key Value Store",
+        "description": "Creates a new Key Value Store entity in the system.",
+        "operationId": "CreateKeyValueStore",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KeyValueStoreEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/keyvaluestore/update/{id}": {
+      "post": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Update an existing Key Value Store",
+        "description": "Updates specific fields of an existing Key Value Store entity by ID.",
+        "operationId": "UpdateKeyValueStore",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/StringObjectKeyValuePair"
+                },
+                "description": "Generic implementation of VaultForce.Shared.Generals.FieldParams for a specific type <typeparamref name=\"T\" />."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/keyvaluestore/delete/{id}": {
+      "delete": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Delete a Key Value Store",
+        "description": "Deletes a Key Value Store entity by its unique identifier.",
+        "operationId": "DeleteKeyValueStore",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntityValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntityValidationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/keyvaluestore/soft-delete/{id}": {
+      "delete": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Soft delete a Key Value Store",
+        "description": "Soft deletes a Key Value Store entity by its unique identifier.",
+        "operationId": "SoftDeleteKeyValueStore",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/keyvaluestore/restore-soft-delete/{id}": {
+      "put": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Soft restore delete a Key Value Store",
+        "description": "Soft restore deletes a Key Value Store entity by its unique identifier.",
+        "operationId": "SoftRestoreDeleteKeyValueStore",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/keyvaluestore/generate-new-code": {
+      "get": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Generate a new code for Key Value Store",
+        "description": "Generates a new unique code for a Key Value Store entity.",
+        "operationId": "GenerateNewKeyValueStoreCode",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/keyvaluestore/search": {
+      "get": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Search Key Value Store entities",
+        "description": "Searches Key Value Store entities by text across searchable fields.",
+        "operationId": "SearchKeyValueStore",
+        "parameters": [
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntityResultArray"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/KeyValueStore/get-entity/{key}": {
+      "get": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Get raw entity by key",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "The key to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntity"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntity"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntity"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/KeyValueStore/get-by-id/{id}": {
+      "get": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Get entity by ObjectId",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The entity ID",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntity"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntity"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntity"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyValueStoreEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/KeyValueStore/list": {
+      "get": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "List all key-value pairs with optional key filter",
+        "parameters": [
+          {
+            "name": "keyFilter",
+            "in": "query",
+            "description": "Optional filter for keys (case-insensitive contains)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KeyValueStoreEntity"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KeyValueStoreEntity"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KeyValueStoreEntity"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KeyValueStoreEntity"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/KeyValueStore/contains/{key}": {
+      "get": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Check if a key exists using CQRS",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "The key to check",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "boolean"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/KeyValueStore/create": {
+      "post": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Create a new key-value entity (raw entity approach)",
+        "requestBody": {
+          "description": "The entity to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KeyValueStoreEntity"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KeyValueStoreEntity"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/KeyValueStoreEntity"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/KeyValueStoreEntity"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/KeyValueStore/update/{id}": {
+      "put": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Update an existing key-value entity",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The entity ID",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The updated entity",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KeyValueStoreEntity"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KeyValueStoreEntity"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/KeyValueStoreEntity"
+              }
+            },
+            "application/vnd.msgpack": {
+              "schema": {
+                "$ref": "#/components/schemas/KeyValueStoreEntity"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/KeyValueStore/delete/{key}": {
+      "delete": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Delete a key-value pair by key using CQRS",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "The key to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/KeyValueStore/delete-by-id/{id}": {
+      "delete": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Delete a key-value entity by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The entity ID to delete",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/KeyValueStore/by-tags": {
+      "get": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Get entries by tags (must have ALL specified tags)",
+        "parameters": [
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "Comma-separated list of tags",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KeyValueStoreEntity"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KeyValueStoreEntity"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KeyValueStoreEntity"
+                  }
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KeyValueStoreEntity"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/KeyValueStore/cleanup-expired": {
+      "post": {
+        "tags": [
+          "KeyValueStore"
+        ],
+        "summary": "Manually trigger removal of expired entries",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/vnd.msgpack": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/languagekeylang/{id}": {
       "get": {
         "tags": [
@@ -52803,6 +54508,94 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/machine/translation-keys": {
+      "get": {
+        "tags": [
+          "Machine"
+        ],
+        "summary": "Get all translation keys for Machine",
+        "description": "Retrieves all unique language keys used across all Machine entities.",
+        "operationId": "GetMachineTranslationKeys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine/translations": {
+      "get": {
+        "tags": [
+          "Machine"
+        ],
+        "summary": "Get all translations for all Machine entities",
+        "description": "Retrieves all translation entries from all Machine entities in the system.",
+        "operationId": "GetAllMachineTranslations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/machine/translations/{id}": {
+      "get": {
+        "tags": [
+          "Machine"
+        ],
+        "summary": "Get translations for Machine",
+        "description": "Retrieves all translation entries for a specific Machine entity.",
+        "operationId": "GetMachineTranslations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
@@ -64276,6 +66069,94 @@
         }
       }
     },
+    "/api/product/translation-keys": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Get all translation keys for Product",
+        "description": "Retrieves all unique language keys used across all Product entities.",
+        "operationId": "GetProductTranslationKeys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/product/translations": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Get all translations for all Product entities",
+        "description": "Retrieves all translation entries from all Product entities in the system.",
+        "operationId": "GetAllProductTranslations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/product/translations/{id}": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Get translations for Product",
+        "description": "Retrieves all translation entries for a specific Product entity.",
+        "operationId": "GetProductTranslations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/Product/{productId}/image": {
       "get": {
         "tags": [
@@ -64853,6 +66734,94 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/productcategory/translation-keys": {
+      "get": {
+        "tags": [
+          "ProductCategory"
+        ],
+        "summary": "Get all translation keys for Product Category",
+        "description": "Retrieves all unique language keys used across all Product Category entities.",
+        "operationId": "GetProductCategoryTranslationKeys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productcategory/translations": {
+      "get": {
+        "tags": [
+          "ProductCategory"
+        ],
+        "summary": "Get all translations for all Product Category entities",
+        "description": "Retrieves all translation entries from all Product Category entities in the system.",
+        "operationId": "GetAllProductCategoryTranslations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productcategory/translations/{id}": {
+      "get": {
+        "tags": [
+          "ProductCategory"
+        ],
+        "summary": "Get translations for Product Category",
+        "description": "Retrieves all translation entries for a specific Product Category entity.",
+        "operationId": "GetProductCategoryTranslations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
@@ -73806,6 +75775,94 @@
         }
       }
     },
+    "/api/stopmachinereason/translation-keys": {
+      "get": {
+        "tags": [
+          "StopMachineReason"
+        ],
+        "summary": "Get all translation keys for Stop Machine Reason",
+        "description": "Retrieves all unique language keys used across all Stop Machine Reason entities.",
+        "operationId": "GetStopMachineReasonTranslationKeys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereason/translations": {
+      "get": {
+        "tags": [
+          "StopMachineReason"
+        ],
+        "summary": "Get all translations for all Stop Machine Reason entities",
+        "description": "Retrieves all translation entries from all Stop Machine Reason entities in the system.",
+        "operationId": "GetAllStopMachineReasonTranslations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereason/translations/{id}": {
+      "get": {
+        "tags": [
+          "StopMachineReason"
+        ],
+        "summary": "Get translations for Stop Machine Reason",
+        "description": "Retrieves all translation entries for a specific Stop Machine Reason entity.",
+        "operationId": "GetStopMachineReasonTranslations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/StopMachineReason/get-reason-page": {
       "get": {
         "tags": [
@@ -74494,6 +76551,94 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereasongroup/translation-keys": {
+      "get": {
+        "tags": [
+          "StopMachineReasonGroup"
+        ],
+        "summary": "Get all translation keys for Stop Machine Reason Group",
+        "description": "Retrieves all unique language keys used across all Stop Machine Reason Group entities.",
+        "operationId": "GetStopMachineReasonGroupTranslationKeys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereasongroup/translations": {
+      "get": {
+        "tags": [
+          "StopMachineReasonGroup"
+        ],
+        "summary": "Get all translations for all Stop Machine Reason Group entities",
+        "description": "Retrieves all translation entries from all Stop Machine Reason Group entities in the system.",
+        "operationId": "GetAllStopMachineReasonGroupTranslations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stopmachinereasongroup/translations/{id}": {
+      "get": {
+        "tags": [
+          "StopMachineReasonGroup"
+        ],
+        "summary": "Get translations for Stop Machine Reason Group",
+        "description": "Retrieves all translation entries for a specific Stop Machine Reason Group entity.",
+        "operationId": "GetStopMachineReasonGroupTranslations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
@@ -76568,6 +78713,94 @@
         }
       }
     },
+    "/api/timeblockname/translation-keys": {
+      "get": {
+        "tags": [
+          "TimeBlockName"
+        ],
+        "summary": "Get all translation keys for Time Block Name",
+        "description": "Retrieves all unique language keys used across all Time Block Name entities.",
+        "operationId": "GetTimeBlockNameTranslationKeys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/timeblockname/translations": {
+      "get": {
+        "tags": [
+          "TimeBlockName"
+        ],
+        "summary": "Get all translations for all Time Block Name entities",
+        "description": "Retrieves all translation entries from all Time Block Name entities in the system.",
+        "operationId": "GetAllTimeBlockNameTranslations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/timeblockname/translations/{id}": {
+      "get": {
+        "tags": [
+          "TimeBlockName"
+        ],
+        "summary": "Get translations for Time Block Name",
+        "description": "Retrieves all translation entries for a specific Time Block Name entity.",
+        "operationId": "GetTimeBlockNameTranslations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/TimeBlockName/{id}/image": {
       "get": {
         "tags": [
@@ -77876,6 +80109,94 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/unitgroup/translation-keys": {
+      "get": {
+        "tags": [
+          "UnitGroup"
+        ],
+        "summary": "Get all translation keys for Unit Group",
+        "description": "Retrieves all unique language keys used across all Unit Group entities.",
+        "operationId": "GetUnitGroupTranslationKeys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unitgroup/translations": {
+      "get": {
+        "tags": [
+          "UnitGroup"
+        ],
+        "summary": "Get all translations for all Unit Group entities",
+        "description": "Retrieves all translation entries from all Unit Group entities in the system.",
+        "operationId": "GetAllUnitGroupTranslations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/unitgroup/translations/{id}": {
+      "get": {
+        "tags": [
+          "UnitGroup"
+        ],
+        "summary": "Get translations for Unit Group",
+        "description": "Retrieves all translation entries for a specific Unit Group entity.",
+        "operationId": "GetUnitGroupTranslations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntityTranslationDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
@@ -91244,6 +93565,26 @@
         "additionalProperties": false,
         "description": "Represents the result of an operation, containing a value, success status, message, and error type."
       },
+      "EntityTranslationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "key": {
+            "type": "string",
+            "description": "Gets or sets the language/culture key (e.g., \"en-US\", \"vi-VN\").",
+            "nullable": true
+          },
+          "content": {
+            "type": "string",
+            "description": "Gets or sets the translated content.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "DTO representing a single translation entry for an entity."
+      },
       "ErrorType": {
         "enum": [
           "none",
@@ -98460,6 +100801,289 @@
         "additionalProperties": false,
         "description": "Represents the result of a validation operation for a specific type with property-level error details."
       },
+      "KeyValueStoreEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "key",
+          "modifiedTime"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "key": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The unique key for the stored value. Keys are automatically normalized to lowercase and trimmed."
+          },
+          "value": {
+            "type": "string",
+            "description": "The serialized JSON value stored as a string.",
+            "nullable": true
+          },
+          "typeName": {
+            "type": "string",
+            "description": "The type name of the stored value for runtime type checking.",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Tags for categorizing and grouping key-value pairs.",
+            "nullable": true
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "Optional expiration time (UTC). If set, the entry will be automatically deleted after this time.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isEncrypted": {
+            "type": "boolean",
+            "description": "Indicates whether the value is encrypted using .NET Data Protection API."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a key-value pair stored in MongoDB for general-purpose key-value storage.\r\nKeys are automatically normalized (trimmed and lowercase)."
+      },
+      "KeyValueStoreEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KeyValueStoreEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "KeyValueStoreEntityCodeGeneratorSettingEntity": {
+        "required": [
+          "createTime",
+          "id",
+          "isDeleted",
+          "isDraft",
+          "modifiedTime"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ObjectId"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was created.",
+            "format": "date-time"
+          },
+          "modifiedTime": {
+            "type": "string",
+            "description": "Represents the date and time when the entity was last modified.",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "description": "Indicates whether the entity has been soft-deleted."
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Indicates whether the entity is in draft status."
+          },
+          "template": {
+            "type": "string",
+            "description": "    Code template.\r\nAvailable tokens:\r\n{Year} - Current year in 4 digits (e.g., 2023)\r\n{Month} - Current month in 2 digits (e.g., 01 to 12)\r\n{Day} - Current day in 2 digits (e.g., 01 to 31)\r\n{Hour} - Current hour in 2 digits (e.g., 00 to 23)\r\n{Minute} - Current minute in 2 digits (e.g., 00 to 59)\r\n{Second} - Current second in 2 digits (e.g., 00 to 59)\r\n{SortDate} - Current date in dd-MM-yyyy\r\n{LongDate} - Current date in dd-MM-yyyy HH:mm\r\n{LongTime} - Current time in HH:mm:ss\r\n{ShortTime} - Current time in HH:mm\r\n{Index} - Incremental index padded to 4 digits (e.g., 0001, 0002)",
+            "nullable": true
+          },
+          "indexIncrementalMode": {
+            "$ref": "#/components/schemas/IndexIncrementalMode"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Code generator setting entity"
+      },
+      "KeyValueStoreEntityCodeGeneratorSettingEntityBasePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KeyValueStoreEntityCodeGeneratorSettingEntity"
+            },
+            "description": "List of items in the current page",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items across all pages",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "Current page number (0-based)",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "sortableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields that can be used for sorting",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Base class for paginated responses"
+      },
+      "KeyValueStoreEntityCodeGeneratorSettingEntityValidationResult": {
+        "type": "object",
+        "properties": {
+          "isValid": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the validation was successful.",
+            "readOnly": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets or sets the overall validation message.",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of a validation operation for a specific type with property-level error details."
+      },
+      "KeyValueStoreEntityResultArray": {
+        "required": [
+          "data",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean",
+            "description": "Trạng thái thành công hay thất bại"
+          },
+          "message": {
+            "type": "string",
+            "description": "Thông điệp trả về",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KeyValueStoreEntity"
+            },
+            "description": "Dữ liệu trả về",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "description": "Tổng item khả dụng. không phải độ dài của Data",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Kết quả trả về dạng mảng"
+      },
+      "KeyValueStoreEntityValidationResult": {
+        "type": "object",
+        "properties": {
+          "isValid": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the validation was successful.",
+            "readOnly": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets or sets the overall validation message.",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "description": "Gets the dictionary of property errors.\r\nKey is the property name, value is the validation error.",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the result of a validation operation for a specific type with property-level error details."
+      },
       "LabelDowntimeRecordRequest": {
         "type": "object",
         "properties": {
@@ -99784,13 +102408,15 @@
       "MachineEntity": {
         "required": [
           "code",
+          "colorHex",
           "createTime",
           "description",
           "id",
           "isDeleted",
           "isDraft",
           "modifiedTime",
-          "name"
+          "name",
+          "translations"
         ],
         "type": "object",
         "properties": {
@@ -99829,6 +102455,18 @@
             "minLength": 1,
             "type": "string",
             "description": "Mô tả chi tiết về thực thể."
+          },
+          "colorHex": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Màu sắc hiển thị lý do dừng máy"
+          },
+          "translations": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Các bản dịch của tên lý do dừng máy"
           },
           "machineTypeId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -105936,13 +108574,15 @@
       "ProductEntity": {
         "required": [
           "code",
+          "colorHex",
           "createTime",
           "description",
           "id",
           "isDeleted",
           "isDraft",
           "modifiedTime",
-          "name"
+          "name",
+          "translations"
         ],
         "type": "object",
         "properties": {
@@ -105981,6 +108621,18 @@
             "minLength": 1,
             "type": "string",
             "description": "Mô tả chi tiết về thực thể."
+          },
+          "colorHex": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Màu sắc hiển thị lý do dừng máy"
+          },
+          "translations": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Các bản dịch của tên lý do dừng máy"
           },
           "unitOfMeasureId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -120263,6 +122915,10 @@
     },
     {
       "name": "JtiToken"
+    },
+    {
+      "name": "KeyValueStore",
+      "description": "Controller for key-value store operations"
     },
     {
       "name": "LanguageKeyLang"
