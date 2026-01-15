@@ -1,4 +1,4 @@
-import type { MachineOeeUpdate } from 'src/services/machineHub';
+import type { MachineOeeUpdate, MachineRuntimeBlock } from 'src/services/machineHub';
 import type { GetAreaNamesResult, SearchMachineByAreaResult } from 'src/api/types/generated';
 
 import { motion } from 'framer-motion';
@@ -83,6 +83,8 @@ export function MachineDashboardView() {
   
   // Store OEE data for each machine
   const [machineOeeData, setMachineOeeData] = useState<Map<string, MachineOeeUpdate>>(new Map());
+  // Store runtime block data for each machine
+  const [machineRuntimeBlocks, setMachineRuntimeBlocks] = useState<Map<string, MachineRuntimeBlock>>(new Map());
   const [loadingMachines, setLoadingMachines] = useState<Set<string>>(new Set());
 
   const hubService = MachineHubService.getInstance(apiConfig.baseUrl);
@@ -203,10 +205,23 @@ export function MachineDashboardView() {
             }
           };
 
+          const handleRuntimeBlockUpdate = (block: MachineRuntimeBlock) => {
+            if (mounted) {
+              // Update runtime block for this machine
+              // If block has machineId, use it; otherwise use the subscribed machine's ID
+              const blockMachineId = block.machineId || machine.machineId || '';
+              setMachineRuntimeBlocks((prev) => {
+                const newMap = new Map(prev);
+                newMap.set(blockMachineId, block);
+                return newMap;
+              });
+            }
+          };
+
           await hubService.subscribeToMachine(
             machine.machineId,
             handleUpdate,
-            () => {} // No runtime block callback needed for dashboard
+            handleRuntimeBlockUpdate
           );
 
           // Try to get initial aggregation. I have removed it because server will broadcast immediately after subscription
@@ -295,6 +310,7 @@ export function MachineDashboardView() {
                       machineId={machine.machineId || ''}
                       machineName={machine.machineName || 'Unknown'}
                       oeeData={machineOeeData.get(machine.machineId || '') || null}
+                      runtimeBlock={machineRuntimeBlocks.get(machine.machineId || '') || null}
                       isLoading={loadingMachines.has(machine.machineId || '')}
                       areaColor={machine.areaHexColor}
                     />

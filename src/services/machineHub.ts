@@ -9,6 +9,7 @@ export enum MachineRunState {
 }
 
 export interface MachineRuntimeBlock {
+  machineId?: string; // Machine ID - may be present in broadcasts to identify the machine
   startTime: string; // ISO 8601 date string
   endTime: string | null; // ISO 8601 date string, null for ongoing blocks
   stopReasonId: string; // ObjectId in string format, empty for normal operation

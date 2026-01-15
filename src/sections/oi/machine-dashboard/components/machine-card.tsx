@@ -1,4 +1,4 @@
-import type { MachineOeeUpdate } from 'src/services/machineHub';
+import type { MachineOeeUpdate, MachineRuntimeBlock } from 'src/services/machineHub';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -18,12 +18,23 @@ interface MachineCardProps {
   machineId: string;
   machineName: string;
   oeeData: MachineOeeUpdate | null;
+  runtimeBlock: MachineRuntimeBlock | null;
   isLoading?: boolean;
   areaColor?: string;
 }
 
-export function MachineCard({ machineId, machineName, oeeData, isLoading, areaColor }: MachineCardProps) {
+export function MachineCard({ machineId, machineName, oeeData, runtimeBlock, isLoading, areaColor }: MachineCardProps) {
   const getStatusConfig = () => {
+    // If we have a runtime block, use its data for status
+    if (runtimeBlock) {
+      return {
+        label: runtimeBlock.name || 'Unknown',
+        color: 'default' as const,
+        icon: 'eva:clock-outline' as const,
+        bgColor: runtimeBlock.StopReasonHexColor || '#9ca3af',
+      };
+    }
+
     if (!oeeData) {
       return {
         label: 'Unknown',
