@@ -4,11 +4,13 @@
  * Provides React hooks for accessing entity translations.
  */
 
-import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { EntityType, SyncProgress } from './types';
+import { useState, useEffect, useCallback } from 'react';
+
 import { TranslationManager } from './manager';
 import { createTranslationService } from './base-service';
+
+import type { EntityType, SyncProgress } from './types';
 
 // ----------------------------------------------------------------------
 

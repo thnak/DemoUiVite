@@ -5,7 +5,8 @@
  * Stores translations and ETag metadata for efficient caching.
  */
 
-import { get, set, keys, del, clear } from 'idb-keyval';
+import { get, set, del, keys, clear } from 'idb-keyval';
+
 import type { EntityType, EntityETagMetadata } from './types';
 
 // ----------------------------------------------------------------------

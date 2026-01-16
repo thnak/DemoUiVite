@@ -5,16 +5,6 @@
  * Uses IndexedDB for persistent storage and implements ETag-based conditional fetching.
  */
 
-import type {
-  EntityType,
-  WorkerMessage,
-  WorkerMessageType,
-  GetTranslationRequest,
-  TranslationResponse,
-  SyncProgress,
-  TranslationConfig,
-} from './types';
-
 import { translationKeyToString, convertTranslationDtoToMap } from './types';
 import {
   getEntityETag,
@@ -22,6 +12,16 @@ import {
   getTranslation,
   setTranslations,
 } from './storage';
+
+import type {
+  EntityType,
+  SyncProgress,
+  WorkerMessage,
+  WorkerMessageType,
+  TranslationConfig,
+  TranslationResponse,
+  GetTranslationRequest,
+} from './types';
 
 // ----------------------------------------------------------------------
 

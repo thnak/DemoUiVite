@@ -4,10 +4,13 @@
  * UI button to manually trigger translation synchronization with progress indicator.
  */
 
-import { Box, Button, CircularProgress, LinearProgress, Typography, Popover } from '@mui/material';
 import { useState, useCallback } from 'react';
-import { Iconify } from 'src/components/iconify';
+
+import { Box, Button, Popover, Typography, LinearProgress, CircularProgress } from '@mui/material';
+
 import { useTranslationSync } from 'src/services/translation';
+
+import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 

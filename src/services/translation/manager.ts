@@ -5,10 +5,12 @@
  * Provides initialization, sync control, and event handling.
  */
 
-import type { TranslationConfig, SyncProgress } from './types';
+import { apiConfig } from 'src/api/config';
+
 import { WorkerMessageType } from './types';
 import { translationWorker } from './worker-manager';
-import { apiConfig } from 'src/api/config';
+
+import type { SyncProgress, TranslationConfig } from './types';
 
 // ----------------------------------------------------------------------
 

@@ -5,8 +5,9 @@
  * Each entity (Area, Product, etc.) extends this base class.
  */
 
-import type { EntityType } from './types';
 import { translationWorker } from './worker-manager';
+
+import type { EntityType } from './types';
 
 // ----------------------------------------------------------------------
 

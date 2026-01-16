@@ -5,16 +5,15 @@
  * for the main thread to interact with the worker.
  */
 
+import { WorkerMessageType } from './types';
+
 import type {
   EntityType,
   WorkerMessage,
-  GetTranslationRequest,
-  TranslationResponse,
-  SyncProgress,
   TranslationConfig,
+  TranslationResponse,
+  GetTranslationRequest,
 } from './types';
-
-import { WorkerMessageType } from './types';
 
 // ----------------------------------------------------------------------
 
