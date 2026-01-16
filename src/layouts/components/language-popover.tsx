@@ -10,17 +10,13 @@ import MenuList from '@mui/material/MenuList';
 import IconButton from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
+import { allLangs } from 'src/locales/i18n';
+
 // ----------------------------------------------------------------------
 
-export type LanguagePopoverProps = IconButtonProps & {
-  data?: {
-    value: string;
-    label: string;
-    icon: string;
-  }[];
-};
+export type LanguagePopoverProps = IconButtonProps;
 
-export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProps) {
+export function LanguagePopover({ sx, ...other }: LanguagePopoverProps) {
   const { open, anchorEl, onClose, onOpen } = usePopover();
   const { i18n } = useTranslation();
 
@@ -32,7 +28,7 @@ export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProp
     [i18n, onClose]
   );
 
-  const currentLang = data.find((lang) => lang.value === i18n.language) || data[0];
+  const currentLang = allLangs.find((lang) => lang.value === i18n.language) || allLangs[0];
 
   const renderFlag = (label?: string, icon?: string) => (
     <Box
@@ -70,7 +66,7 @@ export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProp
           },
         }}
       >
-        {data?.map((option) => (
+        {allLangs.map((option) => (
           <MenuItem
             key={option.value}
             selected={option.value === currentLang?.value}

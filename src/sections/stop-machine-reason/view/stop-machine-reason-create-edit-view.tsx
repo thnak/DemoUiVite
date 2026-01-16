@@ -15,7 +15,6 @@ import Snackbar from '@mui/material/Snackbar';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -28,6 +27,7 @@ import {
 } from 'src/api/hooks/generated/use-stop-machine-reason';
 
 import { Iconify } from 'src/components/iconify';
+import { TranslationSection } from 'src/components/translation-section';
 import { StopMachineReasonGroupSelector } from 'src/components/selectors/stop-machine-reason-group-selector';
 
 // ----------------------------------------------------------------------
@@ -56,8 +56,6 @@ export function StopMachineReasonCreateEditView({
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const [translationKey, setTranslationKey] = useState('');
-  const [translationValue, setTranslationValue] = useState('');
 
   // Fetch stop machine reason data if editing
   const { data: reasonData, isLoading: isLoadingData } = useGetStopMachineReasonById(id || '', {
@@ -208,29 +206,11 @@ export function StopMachineReasonCreateEditView({
     }));
   }, []);
 
-  const handleAddTranslation = useCallback(() => {
-    if (translationKey && translationValue) {
-      setFormData((prev) => ({
-        ...prev,
-        translations: {
-          ...prev.translations,
-          [translationKey]: translationValue,
-        } as any, // Cast to any to bypass strict type checking for required fields,
-      }));
-      setTranslationKey('');
-      setTranslationValue('');
-    }
-  }, [translationKey, translationValue]);
-
-  const handleRemoveTranslation = useCallback((key: string) => {
-    setFormData((prev) => {
-      const newTranslations = { ...prev.translations };
-      delete newTranslations[key];
-      return {
-        ...prev,
-        translations: newTranslations,
-      };
-    });
+  const handleTranslationsChange = useCallback((translations: Record<string, string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      translations,
+    }));
   }, []);
 
   const handleCloseError = useCallback(() => {
@@ -465,71 +445,11 @@ export function StopMachineReasonCreateEditView({
               </Grid>
             </Card>
 
-            {/*Use TranslationSection component instead*/}
-            <Card sx={{ p: 3 }}>
-              <Typography variant="h6" sx={{ mb: 3 }}>
-                Translations
-              </Typography>
-              <Grid container spacing={2} sx={{ mb: 2 }}>
-                <Grid size={{ xs: 12, md: 4 }}>
-                  <TextField
-                    fullWidth
-                    label="Language Code"
-                    value={translationKey}
-                    onChange={(e) => setTranslationKey(e.target.value)}
-                    placeholder="e.g., en, vi, zh"
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, md: 6 }}>
-                  <TextField
-                    fullWidth
-                    label="Translation"
-                    value={translationValue}
-                    onChange={(e) => setTranslationValue(e.target.value)}
-                    placeholder="Translation text"
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, md: 2 }}>
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    color="primary"
-                    onClick={handleAddTranslation}
-                    disabled={!translationKey || !translationValue}
-                    sx={{ height: '56px' }}
-                  >
-                    Add
-                  </Button>
-                </Grid>
-              </Grid>
-              {Object.keys(formData.translations).length > 0 && (
-                <Stack spacing={1}>
-                  {Object.entries(formData.translations).map(([key, value]) => (
-                    <Box
-                      key={key}
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 2,
-                        p: 1.5,
-                        bgcolor: 'background.neutral',
-                        borderRadius: 1,
-                      }}
-                    >
-                      <Typography variant="subtitle2" sx={{ minWidth: 60 }}>
-                        {key}:
-                      </Typography>
-                      <Typography variant="body2" sx={{ flexGrow: 1 }}>
-                        {value}
-                      </Typography>
-                      <IconButton size="small" onClick={() => handleRemoveTranslation(key)}>
-                        <Iconify icon="solar:trash-bin-trash-bold" />
-                      </IconButton>
-                    </Box>
-                  ))}
-                </Stack>
-              )}
-            </Card>
+            <TranslationSection
+              translations={formData.translations}
+              onTranslationsChange={handleTranslationsChange}
+              disabled={isPending}
+            />
 
             {/* Machine Mapping Section */}
             {isEdit && id ? (
