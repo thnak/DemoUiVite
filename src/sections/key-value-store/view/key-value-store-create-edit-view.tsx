@@ -1,6 +1,5 @@
-import { useMemo, useState, useCallback, type ChangeEvent } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { useMemo, useState, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -25,9 +24,9 @@ import { isValidationSuccess } from 'src/utils/validation-result';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import {
-  useGetKeyValueStoreById,
   useCreateKeyValueStore,
   useUpdateKeyValueStore,
+  useGetKeyValueStoreById,
 } from 'src/api/hooks/generated/use-key-value-store';
 
 import { Iconify } from 'src/components/iconify';
@@ -170,10 +169,11 @@ export function KeyValueStoreCreateEditView({ isEdit = false }: KeyValueStoreCre
   );
 
   const handleDateChange = useCallback(
-    (newDate: Date | null) => {
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
       setFormData((prev) => ({
         ...prev,
-        expiresAt: newDate,
+        expiresAt: value ? new Date(value) : null,
       }));
       clearFieldError('expiresAt');
     },
@@ -271,8 +271,8 @@ export function KeyValueStoreCreateEditView({ isEdit = false }: KeyValueStoreCre
                   <Checkbox
                     checked={formData.isEncrypted}
                     onChange={handleCheckboxChange('isEncrypted')}
-                    icon={<Iconify icon="solar:lock-unlocked-outline" width={24} />}
-                    checkedIcon={<Iconify icon="solar:lock-bold" width={24} />}
+                    icon={<Iconify icon="solar:eye-closed-bold" width={24} />}
+                    checkedIcon={<Iconify icon="solar:shield-keyhole-bold-duotone" width={24} />}
                   />
                 }
                 label="Encrypt Value"
@@ -331,18 +331,25 @@ export function KeyValueStoreCreateEditView({ isEdit = false }: KeyValueStoreCre
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
-                  <DateTimePicker
+                  <TextField
+                    fullWidth
                     label="Expires At"
-                    value={formData.expiresAt}
+                    type="datetime-local"
+                    value={
+                      formData.expiresAt
+                        ? new Date(formData.expiresAt.getTime() - formData.expiresAt.getTimezoneOffset() * 60000)
+                            .toISOString()
+                            .slice(0, 16)
+                        : ''
+                    }
                     onChange={handleDateChange}
-                    slotProps={{
-                      textField: {
-                        fullWidth: true,
-                        error: hasError('expiresAt'),
-                        helperText:
-                          getFieldErrorMessage('expiresAt') ||
-                          'Optional expiration time (UTC). Entry will be auto-deleted after this time.',
-                      },
+                    error={hasError('expiresAt')}
+                    helperText={
+                      getFieldErrorMessage('expiresAt') ||
+                      'Optional expiration time (UTC). Entry will be auto-deleted after this time.'
+                    }
+                    InputLabelProps={{
+                      shrink: true,
                     }}
                   />
                 </Grid>

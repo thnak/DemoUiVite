@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import { format } from 'date-fns';
 
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
@@ -75,7 +74,13 @@ export function KeyValueStoreTableRow({
   const formatExpiresAt = (expiresAt: string | null | undefined) => {
     if (!expiresAt) return '-';
     try {
-      return format(new Date(expiresAt), 'MMM dd, yyyy HH:mm');
+      return new Date(expiresAt).toLocaleString('en-US', {
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
     } catch {
       return '-';
     }
@@ -119,10 +124,10 @@ export function KeyValueStoreTableRow({
           {row.tags && row.tags.length > 0 ? (
             <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
               {row.tags.slice(0, 2).map((tag) => (
-                <Chip key={tag} label={tag} size="small" variant="soft" />
+                <Chip key={tag} label={tag} size="small" variant="outlined" />
               ))}
               {row.tags.length > 2 && (
-                <Chip label={`+${row.tags.length - 2}`} size="small" variant="soft" />
+                <Chip label={`+${row.tags.length - 2}`} size="small" variant="outlined" />
               )}
             </Box>
           ) : (
