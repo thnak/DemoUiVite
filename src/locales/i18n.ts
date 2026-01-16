@@ -7,16 +7,16 @@ import vi from './langs/vi.json';
 
 // ----------------------------------------------------------------------
 
-export const defaultLang = 'en';
+export const defaultLang = 'en-US';
 
 export const allLangs = [
   {
-    value: 'en',
+    value: 'en-US',
     label: 'English',
     icon: '/assets/icons/flags/ic-flag-en.svg',
   },
   {
-    value: 'vi',
+    value: 'vi-VN',
     label: 'Tiếng Việt',
     icon: '/assets/icons/flags/ic-flag-vi.svg',
   },
@@ -29,6 +29,9 @@ i18n
   .use(initReactI18next)
   .init({
     resources: {
+      'en-US': { translation: en },
+      'vi-VN': { translation: vi },
+      // Fallback for short codes
       en: { translation: en },
       vi: { translation: vi },
     },

@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
 
-import { _langs, _notifications } from 'src/_mock';
+import { _notifications } from 'src/_mock';
 
 import { useNav } from '../nav-context';
 import { NavMobile, NavDesktop } from './nav';
@@ -103,7 +103,7 @@ function DashboardLayoutContent({
           <ThemeModeToggle />
 
           {/** @slot Language popover */}
-          <LanguagePopover data={_langs} />
+          <LanguagePopover />
 
           {/** @slot Notifications popover */}
           <NotificationsPopover data={_notifications} />

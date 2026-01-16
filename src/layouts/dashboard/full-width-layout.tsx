@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
 
-import { _langs, _notifications } from 'src/_mock';
+import { _notifications } from 'src/_mock';
 
 import { _account } from '../nav-config-account';
 import { dashboardLayoutVars } from './css-vars';
@@ -63,7 +63,7 @@ export function FullWidthLayout({
           <ThemeModeToggle />
 
           {/** @slot Language popover */}
-          <LanguagePopover data={_langs} />
+          <LanguagePopover />
 
           {/** @slot Notifications popover */}
           <NotificationsPopover data={_notifications} />
