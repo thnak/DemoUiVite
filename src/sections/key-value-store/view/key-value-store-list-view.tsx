@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -54,8 +54,8 @@ export function KeyValueStoreListView() {
     },
   });
 
-  // Fetch data when params change
-  useMemo(() => {
+  // Fetch data when params change using useEffect
+  useEffect(() => {
     fetchKeyValueStorePage({
       data: [{ sortBy: params.orderBy, descending: params.order === 'desc' }],
       params: {
