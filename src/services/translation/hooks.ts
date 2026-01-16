@@ -1,6 +1,6 @@
 /**
  * React Hooks for Translation System
- * 
+ *
  * Provides React hooks for accessing entity translations.
  */
 
@@ -16,7 +16,7 @@ import type { EntityType, SyncProgress } from './types';
 
 /**
  * Hook to get entity translation
- * 
+ *
  * @param entity - Entity type
  * @param entityId - Entity ID
  * @returns Translated content or null
@@ -36,7 +36,7 @@ export function useEntityTranslation(
     let mounted = true;
 
     const service = createTranslationService(entity);
-    
+
     service.get(entityId, i18n.language).then((result) => {
       if (mounted) {
         setContent(result);
@@ -53,7 +53,7 @@ export function useEntityTranslation(
 
 /**
  * Hook to sync translations
- * 
+ *
  * @returns Sync functions and state
  */
 export function useTranslationSync() {
@@ -102,7 +102,7 @@ export function useTranslationSync() {
 
 /**
  * Hook to listen to translation data updates
- * 
+ *
  * @param callback - Callback when translations are updated
  */
 export function useTranslationUpdates(callback: (entity: string) => void) {
@@ -114,13 +114,11 @@ export function useTranslationUpdates(callback: (entity: string) => void) {
 
 /**
  * Hook to check translation system status
- * 
+ *
  * @returns Initialization status
  */
 export function useTranslationSystem() {
-  const [initialized, setInitialized] = useState(
-    TranslationManager.isInitialized()
-  );
+  const [initialized, setInitialized] = useState(TranslationManager.isInitialized());
 
   useEffect(() => {
     // Check if already initialized
@@ -129,12 +127,14 @@ export function useTranslationSystem() {
     }
 
     // Initialize if not already done
-    TranslationManager.initialize().then(() => {
-      setInitialized(true);
-    }).catch((error) => {
-      console.error('[useTranslationSystem] Initialization failed:', error);
-    });
-    
+    TranslationManager.initialize()
+      .then(() => {
+        setInitialized(true);
+      })
+      .catch((error) => {
+        console.error('[useTranslationSystem] Initialization failed:', error);
+      });
+
     return undefined;
   }, []);
 

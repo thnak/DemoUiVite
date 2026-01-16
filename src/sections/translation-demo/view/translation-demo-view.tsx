@@ -1,6 +1,6 @@
 /**
  * Translation System Demo Page
- * 
+ *
  * Demonstrates the high-performance translation system with:
  * - Manual sync control
  * - Storage statistics
@@ -12,10 +12,7 @@ import { useState, useEffect } from 'react';
 import { Box, Card, Grid, Chip, Stack, Divider, Typography } from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { 
-  getStorageStats,
-  useTranslationSystem,
-} from 'src/services/translation';
+import { getStorageStats, useTranslationSystem } from 'src/services/translation';
 
 import { TranslationSyncButton } from 'src/components/translation-sync-button';
 
@@ -59,7 +56,7 @@ export function TranslationDemoView() {
             <Typography variant="h6" sx={{ mb: 2 }}>
               System Status
             </Typography>
-            
+
             <Stack spacing={2}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography variant="body2" color="text.secondary">
@@ -116,14 +113,15 @@ export function TranslationDemoView() {
             <Typography variant="h6" sx={{ mb: 2 }}>
               How It Works
             </Typography>
-            
+
             <Stack spacing={2}>
               <Box>
                 <Typography variant="subtitle2" color="primary" gutterBottom>
                   1. Background Processing
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  All translation fetching and caching happens in a Web Worker, keeping the UI responsive.
+                  All translation fetching and caching happens in a Web Worker, keeping the UI
+                  responsive.
                 </Typography>
               </Box>
 
@@ -141,7 +139,8 @@ export function TranslationDemoView() {
                   3. Efficient Updates
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Uses ETags for conditional fetching - only downloads when data changes (304 responses).
+                  Uses ETags for conditional fetching - only downloads when data changes (304
+                  responses).
                 </Typography>
               </Box>
 
@@ -163,7 +162,7 @@ export function TranslationDemoView() {
             <Typography variant="h6" sx={{ mb: 2 }}>
               Usage Example
             </Typography>
-            
+
             <Stack spacing={2}>
               <Box
                 sx={{
@@ -174,7 +173,7 @@ export function TranslationDemoView() {
                 }}
               >
                 <Typography variant="body2" component="pre" sx={{ m: 0 }}>
-{`import { useEntityTranslation } from 'src/services/translation';
+                  {`import { useEntityTranslation } from 'src/services/translation';
 
 function MyComponent({ areaId }) {
   const areaName = useEntityTranslation('area', areaId);
@@ -186,8 +185,8 @@ function MyComponent({ areaId }) {
 
               <Box>
                 <Typography variant="body2" color="text.secondary">
-                  The hook automatically fetches the translation in the current language from IndexedDB
-                  via the Web Worker, with zero main-thread blocking.
+                  The hook automatically fetches the translation in the current language from
+                  IndexedDB via the Web Worker, with zero main-thread blocking.
                 </Typography>
               </Box>
             </Stack>
@@ -200,7 +199,7 @@ function MyComponent({ areaId }) {
             <Typography variant="h6" sx={{ mb: 3 }}>
               Performance Benefits
             </Typography>
-            
+
             <Grid container spacing={3}>
               <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                 <Box>
@@ -255,7 +254,7 @@ function MyComponent({ areaId }) {
             <Typography variant="h6" sx={{ mb: 2 }}>
               Documentation
             </Typography>
-            
+
             <Stack spacing={1}>
               <Box>
                 <Typography variant="subtitle2" color="primary">

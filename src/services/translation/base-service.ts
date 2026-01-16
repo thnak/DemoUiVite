@@ -1,6 +1,6 @@
 /**
  * Base Translation Service
- * 
+ *
  * Provides translation lookup for entity-specific translations.
  * Each entity (Area, Product, etc.) extends this base class.
  */
@@ -23,7 +23,7 @@ export class BaseTranslationService {
 
   /**
    * Get translation for an entity ID
-   * 
+   *
    * @param id - Entity ID
    * @param lang - Language code (optional, uses current i18next language if not provided)
    * @returns Promise resolving to translated content or null
@@ -31,13 +31,9 @@ export class BaseTranslationService {
   async get(id: string, lang?: string): Promise<string | null> {
     // Use provided lang or get from i18next
     const language = lang || this.getCurrentLanguage();
-    
+
     try {
-      const content = await translationWorker.getTranslation(
-        this.entity,
-        id,
-        language
-      );
+      const content = await translationWorker.getTranslation(this.entity, id, language);
       return content;
     } catch (error) {
       console.error(`[${this.entity}TranslationService] Error getting translation:`, error);

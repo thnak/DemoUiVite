@@ -1,6 +1,6 @@
 /**
  * Entity-Specific Translation Services
- * 
+ *
  * Pre-configured translation services for each entity type.
  */
 
@@ -36,7 +36,9 @@ export const DepartmentTranslationService = createTranslationService('department
 /**
  * Information Decorator Base Translation Service
  */
-export const InformationDecoratorBaseTranslationService = createTranslationService('informationDecoratorBase');
+export const InformationDecoratorBaseTranslationService = createTranslationService(
+  'informationDecoratorBase'
+);
 
 /**
  * Machine Type Translation Service
@@ -76,7 +78,8 @@ export const StopMachineReasonTranslationService = createTranslationService('sto
 /**
  * Stop Machine Reason Group Translation Service
  */
-export const StopMachineReasonGroupTranslationService = createTranslationService('stopMachineReasonGroup');
+export const StopMachineReasonGroupTranslationService =
+  createTranslationService('stopMachineReasonGroup');
 
 /**
  * Time Block Name Translation Service

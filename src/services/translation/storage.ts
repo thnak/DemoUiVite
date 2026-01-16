@@ -1,6 +1,6 @@
 /**
  * IndexedDB Storage Layer for Translation System
- * 
+ *
  * Uses idb-keyval for simple, fast IndexedDB operations.
  * Stores translations and ETag metadata for efficient caching.
  */
@@ -36,10 +36,7 @@ export async function getEntityETag(entity: EntityType): Promise<EntityETagMetad
 /**
  * Set ETag metadata for an entity
  */
-export async function setEntityETag(
-  entity: EntityType,
-  etag: string | null
-): Promise<void> {
+export async function setEntityETag(entity: EntityType, etag: string | null): Promise<void> {
   try {
     const key = `${STORAGE_KEYS.ETAG_PREFIX}${entity}`;
     const metadata: EntityETagMetadata = {
@@ -82,9 +79,7 @@ export async function setTranslation(key: string, content: string): Promise<void
  */
 export async function setTranslations(translations: Map<string, string>): Promise<void> {
   try {
-    const promises = Array.from(translations.entries()).map(([key, content]) =>
-      set(key, content)
-    );
+    const promises = Array.from(translations.entries()).map(([key, content]) => set(key, content));
     await Promise.all(promises);
   } catch (error) {
     console.error('Failed to batch set translations:', error);
@@ -97,10 +92,10 @@ export async function setTranslations(translations: Map<string, string>): Promis
 export async function deleteEntityTranslations(entity: EntityType): Promise<void> {
   try {
     const allKeys = await keys();
-    const entityKeys = allKeys.filter((key) => 
-      typeof key === 'string' && key.startsWith(`${entity}:`)
+    const entityKeys = allKeys.filter(
+      (key) => typeof key === 'string' && key.startsWith(`${entity}:`)
     );
-    
+
     const promises = entityKeys.map((key) => del(key));
     await Promise.all(promises);
   } catch (error) {

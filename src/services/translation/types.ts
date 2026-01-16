@@ -1,6 +1,6 @@
 /**
  * High-Performance Dynamic Translation System Types
- * 
+ *
  * This module defines types for the worker-based translation system
  * that offloads translation storage and processing to IndexedDB and Web Workers.
  */
@@ -159,7 +159,7 @@ export function convertTranslationDtoToMap(
   translations: EntityTranslationDto[]
 ): Map<string, string> {
   const map = new Map<string, string>();
-  
+
   translations.forEach((dto) => {
     if (dto.key && dto.content) {
       const storageKey = translationKeyToString({
@@ -170,6 +170,6 @@ export function convertTranslationDtoToMap(
       map.set(storageKey, dto.content);
     }
   });
-  
+
   return map;
 }

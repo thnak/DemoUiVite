@@ -1,6 +1,6 @@
 /**
  * Translation System Exports
- * 
+ *
  * High-Performance Dynamic Translation System with Web Workers and IndexedDB.
  */
 
@@ -10,10 +10,7 @@ export { WorkerMessageType } from './types';
 export { TranslationManager } from './manager';
 
 // Storage utilities (for advanced usage)
-export {
-  getStorageStats,
-  clearAllTranslations,
-} from './storage';
+export { getStorageStats, clearAllTranslations } from './storage';
 
 // Services
 export { BaseTranslationService, createTranslationService } from './base-service';

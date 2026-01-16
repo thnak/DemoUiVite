@@ -1,14 +1,16 @@
 /**
  * Dev Hub Page
- * 
+ *
  * Central hub for accessing development/debugging pages that don't have a place in the main navigation.
  */
 
-import { Box, Card, CardActionArea, CardContent, Grid, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-import { Iconify } from 'src/components/iconify';
+import { Box, Card, Grid, Typography, CardContent, CardActionArea } from '@mui/material';
+
 import { DashboardContent } from 'src/layouts/dashboard';
+
+import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +25,8 @@ interface DevPageCard {
 const DEV_PAGES: DevPageCard[] = [
   {
     title: 'Translation System Demo',
-    description: 'High-performance translation system with Web Workers and IndexedDB. Shows real-time stats, sync controls, and usage examples.',
+    description:
+      'High-performance translation system with Web Workers and IndexedDB. Shows real-time stats, sync controls, and usage examples.',
     path: '/dev/translation-demo',
     icon: 'solar:translation-bold',
     color: '#3b82f6',
@@ -41,7 +44,8 @@ export default function DevHubPage() {
           🛠️ Developer Hub
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Access development and debugging pages. These pages are for testing new features and debugging purposes.
+          Access development and debugging pages. These pages are for testing new features and
+          debugging purposes.
         </Typography>
       </Box>
 
@@ -58,10 +62,7 @@ export default function DevHubPage() {
                 },
               }}
             >
-              <CardActionArea
-                onClick={() => navigate(page.path)}
-                sx={{ height: '100%' }}
-              >
+              <CardActionArea onClick={() => navigate(page.path)} sx={{ height: '100%' }}>
                 <CardContent sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                   <Box
                     sx={{
@@ -82,22 +83,14 @@ export default function DevHubPage() {
                         bgcolor: `${page.color}20`,
                       }}
                     >
-                      <Iconify
-                        icon={page.icon as any}
-                        width={32}
-                        sx={{ color: page.color }}
-                      />
+                      <Iconify icon={page.icon as any} width={32} sx={{ color: page.color }} />
                     </Box>
                     <Typography variant="h5" sx={{ flexGrow: 1 }}>
                       {page.title}
                     </Typography>
                   </Box>
 
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ flexGrow: 1 }}
-                  >
+                  <Typography variant="body2" color="text.secondary" sx={{ flexGrow: 1 }}>
                     {page.description}
                   </Typography>
 

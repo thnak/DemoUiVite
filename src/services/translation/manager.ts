@@ -1,6 +1,6 @@
 /**
  * Translation Manager
- * 
+ *
  * Central manager for the translation system.
  * Provides initialization, sync control, and event handling.
  */
@@ -130,9 +130,12 @@ class TranslationManagerClass {
     });
 
     // Listen to sync errors
-    translationWorker.on(WorkerMessageType.SYNC_ERROR, (payload: { entity: string; error: string }) => {
-      console.error(`[TranslationManager] Sync error for ${payload.entity}:`, payload.error);
-    });
+    translationWorker.on(
+      WorkerMessageType.SYNC_ERROR,
+      (payload: { entity: string; error: string }) => {
+        console.error(`[TranslationManager] Sync error for ${payload.entity}:`, payload.error);
+      }
+    );
   }
 }
 

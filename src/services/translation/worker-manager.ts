@@ -1,6 +1,6 @@
 /**
  * Translation Worker Manager
- * 
+ *
  * Manages the translation web worker lifecycle and provides a clean API
  * for the main thread to interact with the worker.
  */
@@ -78,11 +78,7 @@ export class TranslationWorkerManager {
   /**
    * Get a translation
    */
-  async getTranslation(
-    entity: EntityType,
-    entityId: string,
-    lang: string
-  ): Promise<string | null> {
+  async getTranslation(entity: EntityType, entityId: string, lang: string): Promise<string | null> {
     if (!this.initialized) {
       console.warn('[TranslationWorker] Not initialized, returning null');
       return null;

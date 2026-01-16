@@ -1,17 +1,12 @@
 /**
  * Translation Web Worker
- * 
+ *
  * Handles all translation storage, fetching, and caching in a background thread.
  * Uses IndexedDB for persistent storage and implements ETag-based conditional fetching.
  */
 
 import { translationKeyToString, convertTranslationDtoToMap } from './types';
-import {
-  getEntityETag,
-  setEntityETag,
-  getTranslation,
-  setTranslations,
-} from './storage';
+import { getEntityETag, setEntityETag, getTranslation, setTranslations } from './storage';
 
 import type {
   EntityType,
@@ -113,13 +108,13 @@ async function fetchEntityTranslations(
     }
 
     const url = `${config.baseUrl}${endpoint}`;
-    
+
     // Get stored ETag
     const metadata = await getEntityETag(entity);
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
     };
-    
+
     if (metadata?.etag) {
       headers['If-None-Match'] = metadata.etag;
     }
@@ -136,7 +131,7 @@ async function fetchEntityTranslations(
     if (response.ok) {
       const translations = await response.json();
       const newETag = response.headers.get('ETag');
-      
+
       console.log(`[Worker] Fetched ${translations.length} translations for ${entity}`);
       return { translations, etag: newETag };
     }
@@ -152,16 +147,13 @@ async function fetchEntityTranslations(
 /**
  * Process and store entity translations
  */
-async function processEntityTranslations(
-  entity: EntityType,
-  translations: any[]
-): Promise<number> {
+async function processEntityTranslations(entity: EntityType, translations: any[]): Promise<number> {
   try {
     let storedCount = 0;
 
     // Group translations by entity ID
     const byEntityId = new Map<string, any[]>();
-    
+
     translations.forEach((item) => {
       const entityId = item.id?.$oid || item.id || 'unknown';
       if (!byEntityId.has(entityId)) {
@@ -207,7 +199,7 @@ async function syncEntity(entity: EntityType): Promise<SyncProgress> {
       postResponse('SYNC_PROGRESS', progress);
 
       const count = await processEntityTranslations(entity, translations);
-      
+
       // Update ETag
       if (etag) {
         await setEntityETag(entity, etag);
@@ -242,7 +234,7 @@ async function syncEntity(entity: EntityType): Promise<SyncProgress> {
  */
 async function syncAll(): Promise<void> {
   console.log('[Worker] Starting sync all entities');
-  
+
   for (const entity of SUPPORTED_ENTITIES) {
     await syncEntity(entity);
   }
@@ -275,11 +267,15 @@ async function handleGetTranslation(request: GetTranslationRequest, requestId?: 
     postResponse('TRANSLATION_RESPONSE', response, requestId);
   } catch (error) {
     console.error('[Worker] Error getting translation:', error);
-    postResponse('TRANSLATION_RESPONSE', {
-      ...request,
-      content: null,
-      fromCache: false,
-    }, requestId);
+    postResponse(
+      'TRANSLATION_RESPONSE',
+      {
+        ...request,
+        content: null,
+        fromCache: false,
+      },
+      requestId
+    );
   }
 }
 
@@ -296,7 +292,7 @@ function startPolling() {
       console.log('[Worker] Background sync triggered');
       syncAll();
     }, config.pollingInterval);
-    
+
     console.log(`[Worker] Polling started: ${config.pollingInterval}ms interval`);
   }
 }
@@ -317,7 +313,7 @@ function stopPolling() {
  */
 function initialize(initConfig?: Partial<TranslationConfig>) {
   console.log('[Worker] Initializing translation worker');
-  
+
   if (initConfig) {
     config = { ...config, ...initConfig };
   }
