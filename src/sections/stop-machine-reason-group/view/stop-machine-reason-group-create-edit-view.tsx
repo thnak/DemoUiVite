@@ -302,186 +302,199 @@ export function StopMachineReasonGroupCreateEditView({
         </Box>
       </Box>
 
-      <Stack spacing={3}>
-        <Card sx={{ p: 3 }}>
-          <Typography variant="h6" sx={{ mb: 3 }}>
-            Basic Information
-          </Typography>
-          <Grid container spacing={3}>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <TextField
-                fullWidth
-                label="Code"
-                value={formData.code}
-                onChange={handleChange('code')}
-                error={!!fieldErrors.code}
-                helperText={fieldErrors.code}
-                disabled={isGeneratingCode}
-                slotProps={{
-                  input: {
-                    endAdornment: isGeneratingCode ? <CircularProgress size={20} /> : null,
-                  },
-                }}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <TextField
-                fullWidth
-                label="Name"
-                value={formData.name}
-                onChange={handleChange('name')}
-                error={!!fieldErrors.name}
-                helperText={fieldErrors.name}
-                required
-              />
-            </Grid>
-            <Grid size={{ xs: 12 }}>
-              <TextField
-                fullWidth
-                multiline
-                rows={3}
-                label="Description"
-                value={formData.description}
-                onChange={handleChange('description')}
-                error={!!fieldErrors.description}
-                helperText={fieldErrors.description}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <FormControl fullWidth required error={!!fieldErrors.impact}>
-                <InputLabel>Impact</InputLabel>
-                <Select value={formData.impact} onChange={handleImpactChange} label="Impact">
-                  {IMPACT_OPTIONS.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {fieldErrors.impact && (
-                  <Typography variant="caption" color="error" sx={{ mt: 0.5 }}>
-                    {fieldErrors.impact}
-                  </Typography>
-                )}
-              </FormControl>
-            </Grid>
-          </Grid>
-        </Card>
-
-        <Card sx={{ p: 3 }}>
-          <Typography variant="h6" sx={{ mb: 3 }}>
-            Color
-          </Typography>
-          <MuiColorInput
-            fullWidth
-            format="hex"
-            value={formData.colorHex}
-            onChange={handleColorChange}
-            helperText="Choose a color to represent this group"
-          />
-          <Box
-            sx={{
-              mt: 2,
-              p: 2,
-              bgcolor: formData.colorHex,
-              borderRadius: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              minHeight: 60,
-            }}
-          >
-            <Typography
-              variant="body2"
+      <Grid container spacing={3}>
+        <Grid size={{ xs: 12, md: 4 }}>
+          <Card sx={{ p: 3 }}>
+            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+              Color
+            </Typography>
+            <MuiColorInput
+              fullWidth
+              format="hex"
+              value={formData.colorHex}
+              onChange={handleColorChange}
+              helperText="Choose a color to represent this group"
+            />
+            <Box
               sx={{
-                color: 'white',
-                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                fontWeight: 'medium',
+                mt: 2,
+                p: 2,
+                bgcolor: formData.colorHex,
+                borderRadius: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: 60,
               }}
             >
-              Preview: {formData.name || 'Group Name'}
-            </Typography>
-          </Box>
-        </Card>
-
-        <Card sx={{ p: 3 }}>
-          <Typography variant="h6" sx={{ mb: 3 }}>
-            Translations
-          </Typography>
-          <Grid container spacing={2} sx={{ mb: 2 }}>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <TextField
-                fullWidth
-                label="Language Code"
-                value={translationKey}
-                onChange={(e) => setTranslationKey(e.target.value)}
-                placeholder="e.g., en, vi, zh"
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <TextField
-                fullWidth
-                label="Translation"
-                value={translationValue}
-                onChange={(e) => setTranslationValue(e.target.value)}
-                placeholder="Translation text"
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 2 }}>
-              <Button
-                fullWidth
-                variant="outlined"
-                color="primary"
-                onClick={handleAddTranslation}
-                disabled={!translationKey || !translationValue}
-                sx={{ height: '56px' }}
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'white',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                  fontWeight: 'medium',
+                }}
               >
-                Add
-              </Button>
-            </Grid>
-          </Grid>
-          {Object.keys(formData.translations).length > 0 && (
-            <Stack spacing={1}>
-              {Object.entries(formData.translations).map(([key, value]) => (
-                <Box
-                  key={key}
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 2,
-                    p: 1.5,
-                    bgcolor: 'background.neutral',
-                    borderRadius: 1,
-                  }}
-                >
-                  <Typography variant="subtitle2" sx={{ minWidth: 60 }}>
-                    {key}:
-                  </Typography>
-                  <Typography variant="body2" sx={{ flexGrow: 1 }}>
-                    {value}
-                  </Typography>
-                  <IconButton size="small" onClick={() => handleRemoveTranslation(key)}>
-                    <Iconify icon="solar:trash-bin-trash-bold" />
-                  </IconButton>
-                </Box>
-              ))}
-            </Stack>
-          )}
-        </Card>
+                Preview: {formData.name || 'Group Name'}
+              </Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid size={{ xs: 12, md: 8 }}>
+          <Stack spacing={3}>
+            <Card sx={{ p: 3 }}>
+              <Typography variant="h6" sx={{ mb: 3 }}>
+                Basic Information
+              </Typography>
+              <Grid container spacing={3}>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <TextField
+                    fullWidth
+                    label="Code"
+                    value={formData.code}
+                    required
+                    onChange={handleChange('code')}
+                    error={!!fieldErrors.code}
+                    helperText={fieldErrors.code}
+                    disabled={isGeneratingCode}
+                    slotProps={{
+                      input: {
+                        endAdornment: isGeneratingCode ? <CircularProgress size={20} /> : null,
+                      },
+                    }}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <TextField
+                    fullWidth
+                    label="Name"
+                    value={formData.name}
+                    onChange={handleChange('name')}
+                    error={!!fieldErrors.name}
+                    helperText={fieldErrors.name}
+                    required
+                  />
+                </Grid>
+                <Grid size={{ xs: 12 }}>
+                  <TextField
+                    fullWidth
+                    multiline
+                    rows={3}
+                    label="Description"
+                    value={formData.description}
+                    onChange={handleChange('description')}
+                    error={!!fieldErrors.description}
+                    helperText={fieldErrors.description}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <FormControl fullWidth required error={!!fieldErrors.impact}>
+                    <InputLabel>Impact</InputLabel>
+                    <Select value={formData.impact} onChange={handleImpactChange} label="Impact">
+                      {IMPACT_OPTIONS.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {fieldErrors.impact && (
+                      <Typography variant="caption" color="error" sx={{ mt: 0.5 }}>
+                        {fieldErrors.impact}
+                      </Typography>
+                    )}
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Card>
 
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-          <Button
-            variant="outlined"
-            color="inherit"
-            onClick={() => navigate('/stop-machine-reason-group')}
-            disabled={isPending}
-          >
-            Cancel
-          </Button>
-          <Button variant="contained" color="primary" onClick={handleSave} disabled={isPending}>
-            {isPending ? <CircularProgress size={24} /> : isEdit ? 'Update' : 'Create'}
-          </Button>
-        </Box>
-      </Stack>
+            {/*Use TranslationSection component instead*/}
+            <Card sx={{ p: 3 }}>
+              <Typography variant="h6" sx={{ mb: 3 }}>
+                Translations
+              </Typography>
+              <Grid container spacing={2} sx={{ mb: 2 }}>
+                <Grid size={{ xs: 12, md: 4 }}>
+                  <TextField
+                    fullWidth
+                    label="Language Code"
+                    value={translationKey}
+                    onChange={(e) => setTranslationKey(e.target.value)}
+                    placeholder="e.g., en, vi, zh"
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <TextField
+                    fullWidth
+                    label="Translation"
+                    value={translationValue}
+                    onChange={(e) => setTranslationValue(e.target.value)}
+                    placeholder="Translation text"
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 2 }}>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleAddTranslation}
+                    disabled={!translationKey || !translationValue}
+                    sx={{ height: '56px' }}
+                  >
+                    Add
+                  </Button>
+                </Grid>
+              </Grid>
+              {Object.keys(formData.translations).length > 0 && (
+                <Stack spacing={1}>
+                  {Object.entries(formData.translations).map(([key, value]) => (
+                    <Box
+                      key={key}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 2,
+                        p: 1.5,
+                        bgcolor: 'background.neutral',
+                        borderRadius: 1,
+                      }}
+                    >
+                      <Typography variant="subtitle2" sx={{ minWidth: 60 }}>
+                        {key}:
+                      </Typography>
+                      <Typography variant="body2" sx={{ flexGrow: 1 }}>
+                        {value}
+                      </Typography>
+                      <IconButton size="small" onClick={() => handleRemoveTranslation(key)}>
+                        <Iconify icon="solar:trash-bin-trash-bold" />
+                      </IconButton>
+                    </Box>
+                  ))}
+                </Stack>
+              )}
+            </Card>
+
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+              <Button
+                variant="outlined"
+                color="inherit"
+                onClick={() => navigate('/stop-machine-reason-group')}
+                disabled={isPending}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleSave}
+                color="inherit"
+                disabled={isPending}
+                startIcon={isPending ? <CircularProgress size={20} /> : null}
+              >
+                {isEdit ? 'Save Changes' : 'Create'}
+              </Button>
+            </Box>
+          </Stack>
+        </Grid>
+      </Grid>
 
       <Snackbar
         open={!!errorMessage}

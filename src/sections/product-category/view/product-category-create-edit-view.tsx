@@ -257,13 +257,58 @@ export function ProductCategoryCreateEditView({
       )}
 
       <Grid container spacing={3}>
+        <Grid size={{ xs: 12, md: 4 }}>
+          <Card sx={{ p: 3 }}>
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Color
+              </Typography>
+              <MuiColorInput
+                fullWidth
+                format="hex"
+                value={formData.colorHex}
+                onChange={handleColorChange}
+                error={hasError('colorHex')}
+                helperText={
+                  getFieldErrorMessage('colorHex') ||
+                  'Choose a color to represent this product category'
+                }
+                disabled={isSubmitting}
+              />
+              <Box
+                sx={{
+                  mt: 2,
+                  p: 2,
+                  bgcolor: formData.colorHex,
+                  borderRadius: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: 60,
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'white',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                    fontWeight: 'medium',
+                  }}
+                >
+                  Preview: {formData.name || 'Product Category Name'}
+                </Typography>
+              </Box>
+            </Box>
+          </Card>
+        </Grid>
+
         {/* Form Section */}
-        <Grid size={{ xs: 12 }}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Stack spacing={3}>
             {/* Main form card */}
             <Card sx={{ p: 3 }}>
               <Typography variant="h6" sx={{ mb: 3 }}>
-                Product Category Information
+                Basic Information
               </Typography>
               <Grid container spacing={3}>
                 <Grid size={{ xs: 12, md: 6 }}>
@@ -271,6 +316,7 @@ export function ProductCategoryCreateEditView({
                     fullWidth
                     label="Code"
                     value={formData.code}
+                    required
                     onChange={handleInputChange('code')}
                     error={hasError('code')}
                     helperText={getFieldErrorMessage('code')}
@@ -282,6 +328,7 @@ export function ProductCategoryCreateEditView({
                     fullWidth
                     label="Name"
                     value={formData.name}
+                    required
                     onChange={handleInputChange('name')}
                     error={hasError('name')}
                     helperText={getFieldErrorMessage('name')}
@@ -301,57 +348,20 @@ export function ProductCategoryCreateEditView({
                     disabled={isSubmitting}
                   />
                 </Grid>
-                <Grid size={{ xs: 12 }}>
-                  <Box>
-                    <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                      Category Color
-                    </Typography>
-                    <MuiColorInput
-                      fullWidth
-                      format="hex"
-                      value={formData.colorHex}
-                      onChange={handleColorChange}
-                      error={hasError('colorHex')}
-                      helperText={
-                        getFieldErrorMessage('colorHex') ||
-                        'Choose a color to represent this product category'
-                      }
-                      disabled={isSubmitting}
-                    />
-                    <Box
-                      sx={{
-                        mt: 2,
-                        p: 2,
-                        bgcolor: formData.colorHex,
-                        borderRadius: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        minHeight: 60,
-                      }}
-                    >
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          color: 'white',
-                          textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                          fontWeight: 'medium',
-                        }}
-                      >
-                        Preview: {formData.name || 'Product Category Name'}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Grid>
               </Grid>
             </Card>
-
+            <TranslationSection
+              translations={formData.translations}
+              onTranslationsChange={handleTranslationsChange}
+              disabled={isSubmitting}
+            />
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
               <Button variant="outlined" onClick={handleCancel} disabled={isSubmitting}>
                 Cancel
               </Button>
               <Button
                 variant="contained"
+                color="inherit"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
                 startIcon={isSubmitting ? <CircularProgress size={20} /> : null}
@@ -362,12 +372,6 @@ export function ProductCategoryCreateEditView({
           </Stack>
         </Grid>
       </Grid>
-
-      <TranslationSection
-        translations={formData.translations}
-        onTranslationsChange={handleTranslationsChange}
-        disabled={isSubmitting}
-      />
 
       {/* Error Snackbar */}
       <Snackbar

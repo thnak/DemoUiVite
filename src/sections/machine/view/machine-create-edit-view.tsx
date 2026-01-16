@@ -543,7 +543,10 @@ export function MachineCreateEditView({
               previewSize={300}
             />
 
-            <Box sx={{ mt: 3 }}>
+            <Typography variant="subtitle2" sx={{ mb: 1, mt: 3 }}>
+              Reference Data
+            </Typography>
+            <Box sx={{ mt: 0 }}>
               <AreaSelector value={formData.areaId} onChange={handleAreaChange} label="Area" />
             </Box>
 
@@ -564,22 +567,8 @@ export function MachineCreateEditView({
             </Box>
 
             <Box sx={{ mt: 3 }}>
-              <FormControl fullWidth>
-                <InputLabel>Calculation Mode</InputLabel>
-                <Select
-                  value={formData.calculationMode}
-                  onChange={handleCalculationModeChange}
-                  label="Calculation Mode"
-                >
-                  <MenuItem value="pairParallel">Pair Parallel</MenuItem>
-                  <MenuItem value="weightedChannels">Weighted Channels</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-
-            <Box sx={{ mt: 3 }}>
               <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                Machine Color
+                Color
               </Typography>
               <MuiColorInput
                 fullWidth
@@ -632,6 +621,7 @@ export function MachineCreateEditView({
                     fullWidth
                     label="Machine code"
                     value={formData.code}
+                    required
                     onChange={handleInputChange('code')}
                     error={hasError('code')}
                     helperText={getFieldErrorMessage('code')}
@@ -649,8 +639,29 @@ export function MachineCreateEditView({
                     helperText={getFieldErrorMessage('name')}
                   />
                 </Grid>
+
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>Calculation Mode</InputLabel>
+                    <Select
+                      value={formData.calculationMode}
+                      onChange={handleCalculationModeChange}
+                      label="Calculation Mode"
+                    >
+                      <MenuItem value="pairParallel">Pair Parallel</MenuItem>
+                      <MenuItem value="weightedChannels">Weighted Channels</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
               </Grid>
             </Card>
+
+            {/* Translation Section */}
+            <TranslationSection
+              translations={formData.translations}
+              onTranslationsChange={handleTranslationsChange}
+              disabled={isSubmitting}
+            />
 
             {/* Device Mapping Section - Read Only */}
             <Card sx={{ p: 3 }}>
@@ -900,13 +911,6 @@ export function MachineCreateEditView({
                 </Button>
               </Box>
             )}
-
-            {/* Translation Section */}
-            <TranslationSection
-              translations={formData.translations}
-              onTranslationsChange={handleTranslationsChange}
-              disabled={isSubmitting}
-            />
 
             {/* Product Mapping Section */}
             {isEdit && currentMachine?.id ? (
