@@ -8,6 +8,10 @@ You have access to these tools. use it to search a new one icon when needed. sol
 - iconify/search_icons
 - iconify/get_icon
 
+some of instructions are mandatory. please follow them strictly.
+- .github/instruction.md
+- .github/mui.instructions.md
+
 ## Documentation Structure
 
 All documentation should be placed in the `docs/` folder with the following structure:
