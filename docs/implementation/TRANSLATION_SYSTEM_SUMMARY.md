@@ -61,7 +61,7 @@ Successfully implemented a production-ready, high-performance dynamic translatio
 - ✅ `docs/guides/translation-system-quickstart.md` - Quick start guide (5KB)
 
 #### Developer Documentation
-- ✅ `TRANSLATION_SYSTEM_IMPLEMENTATION.md` - Implementation details (9KB)
+- ✅ `./TRANSLATION_SYSTEM_IMPLEMENTATION.md` - Implementation details (9KB)
 - ✅ Inline code comments throughout
 - ✅ TypeScript type definitions
 
@@ -263,7 +263,7 @@ While the current implementation is production-ready, potential future improveme
    - File: `docs/guides/translation-system.md`
 
 3. **Implementation Details** - Architecture and design
-   - File: `TRANSLATION_SYSTEM_IMPLEMENTATION.md`
+   - File: `./TRANSLATION_SYSTEM_IMPLEMENTATION.md`
 
 ### For Users
 

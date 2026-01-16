@@ -75,14 +75,14 @@ This PR implements machine mapping functionality for Defect Reasons and Stop Mac
 ## Documentation
 
 ### New Documentation Files
-1. **MACHINE_MAPPING_IMPLEMENTATION.md**
+1. **implementation/MACHINE_MAPPING_IMPLEMENTATION.md**
    - Comprehensive implementation guide
    - API endpoint documentation
    - User flow documentation
    - Component props and interfaces
    - Testing checklist
 
-2. **MACHINE_MAPPING_ARCHITECTURE.md**
+2. **guides/machine-mapping-architecture.md**
    - Component hierarchy diagrams
    - Data flow diagrams
    - State management flow

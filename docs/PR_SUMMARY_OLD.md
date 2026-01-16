@@ -78,7 +78,7 @@ interface MachineOeeUpdate {
    - Best practices
    - Troubleshooting
 
-2. **`MACHINE_STATE_TRACKING_IMPLEMENTATION.md`** (261 lines)
+2. **`implementation/MACHINE_STATE_TRACKING_IMPLEMENTATION.md`** (261 lines)
    - Technical implementation details
    - Migration notes
    - API alignment verification
@@ -128,7 +128,7 @@ Modified:
   src/sections/machine/view/machine-tracking-view.tsx (+344)
 
 Added:
-  MACHINE_STATE_TRACKING_IMPLEMENTATION.md            (261)
+  implementation/MACHINE_STATE_TRACKING_IMPLEMENTATION.md            (261)
   docs/guides/machine-realtime-tracking.md            (195)
   docs/guides/machine-tracking-visual-changes.md      (348)
 ```
@@ -189,7 +189,7 @@ await hubService.subscribeToMachine(
 
 ### Documentation
 - User Guide: `docs/guides/machine-realtime-tracking.md`
-- Implementation Details: `MACHINE_STATE_TRACKING_IMPLEMENTATION.md`
+- Implementation Details: `implementation/MACHINE_STATE_TRACKING_IMPLEMENTATION.md`
 - Visual Changes: `docs/guides/machine-tracking-visual-changes.md`
 
 ### Code Examples
