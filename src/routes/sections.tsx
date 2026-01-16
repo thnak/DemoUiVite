@@ -97,6 +97,9 @@ export const UnitGroupEditPage = lazy(() => import('src/pages/unit-group-edit'))
 export const UnitConversionListPage = lazy(() => import('src/pages/unit-conversion-list'));
 export const UnitConversionCreatePage = lazy(() => import('src/pages/unit-conversion-create'));
 export const UnitConversionEditPage = lazy(() => import('src/pages/unit-conversion-edit'));
+export const KeyValueStoreListPage = lazy(() => import('src/pages/key-value-store-list'));
+export const KeyValueStoreCreatePage = lazy(() => import('src/pages/key-value-store-create'));
+export const KeyValueStoreEditPage = lazy(() => import('src/pages/key-value-store-edit'));
 export const IoTSensorListPage = lazy(() => import('src/pages/iot-sensor-list'));
 export const IoTSensorCreatePage = lazy(() => import('src/pages/iot-sensor-create'));
 export const IoTSensorEditPage = lazy(() => import('src/pages/iot-sensor-edit'));
@@ -225,6 +228,9 @@ export const routesSection: RouteObject[] = [
       { path: 'settings/time-block-names', element: <TimeBlockNameListPage /> },
       { path: 'settings/time-block-names/create', element: <TimeBlockNameCreatePage /> },
       { path: 'settings/time-block-names/:id/edit', element: <TimeBlockNameEditPage /> },
+      { path: 'settings/key-value-store', element: <KeyValueStoreListPage /> },
+      { path: 'settings/key-value-store/create', element: <KeyValueStoreCreatePage /> },
+      { path: 'settings/key-value-store/:id/edit', element: <KeyValueStoreEditPage /> },
       { path: 'roles', element: <RoleListPage /> },
       { path: 'roles/create', element: <RoleCreatePage /> },
       { path: 'roles/:id/edit', element: <RoleEditPage /> },
