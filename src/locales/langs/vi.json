@@ -43,7 +43,8 @@
     "other": "Khác",
     "signIn": "Đăng nhập",
     "notFound": "Không tìm thấy",
-    "timeBlockName": "Tên khối thời gian"
+    "timeBlockName": "Tên khối thời gian",
+    "keyValueStore": "Kho Khóa-Giá trị"
   },
   "account": {
     "home": "Trang chủ",

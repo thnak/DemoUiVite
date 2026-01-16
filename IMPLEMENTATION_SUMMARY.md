@@ -1,202 +1,203 @@
-# Working Parameter Refactor - Implementation Summary
+# Key-Value Store Management Implementation Summary
 
 ## Overview
-Successfully implemented a complete refactor of the working parameter management system to follow a product-centric approach, enabling efficient bulk management of working parameters across multiple machines.
+Successfully implemented a complete Key-Value Store management system in the settings module with full CRUD functionality, following all project standards and best practices.
 
-## Files Changed (6 files, +830 lines, -178 lines)
+## Files Created
 
-### New Files
-1. **WORKING_PARAMETER_REFACTOR.md** - Comprehensive documentation
-2. **working-parameter-create-view.tsx** - New product-centric create page (487 lines)
+### Section Components (src/sections/key-value-store/)
+1. **key-value-store-table-row.tsx** - Table row component with action menu
+2. **key-value-store-table-head.tsx** - Sortable table header
+3. **key-value-store-table-toolbar.tsx** - Search and filter toolbar
+4. **key-value-store-table-no-data.tsx** - Empty state component
+5. **key-value-store-table-empty-rows.tsx** - Pagination helper
+6. **key-value-store-utils.ts** - Utility functions
 
-### Modified Files
-1. **working-parameter-list-view.tsx** - Updated to use new API endpoint
-2. **working-parameter-edit-view.tsx** - Simplified for individual updates
-3. **working-parameter-create.tsx** - Updated to use new create view
-4. **index.ts** - Export new create view
+### Views (src/sections/key-value-store/view/)
+1. **key-value-store-list-view.tsx** - Main list page with pagination
+2. **key-value-store-create-edit-view.tsx** - Create/edit form with Grid layout
+3. **index.ts** - View exports
 
-## Implementation Details
+### Pages (src/pages/)
+1. **key-value-store-list.tsx** - List page wrapper
+2. **key-value-store-create.tsx** - Create page wrapper
+3. **key-value-store-edit.tsx** - Edit page wrapper
 
-### 1. List Page Improvements
-**API Change:**
-- **Before:** `getWorkingParameterPage()` - basic entity list
-- **After:** `postapiWorkingParametercreatedworkingparameters()` - enriched data with names
+## Files Modified
 
-**Features:**
-- ✅ Server-side pagination
-- ✅ Search functionality
-- ✅ Filter support (prepared for machine types, groups, product categories)
-- ✅ Direct display of product/machine names (no additional lookups)
+### Navigation & Routing
+- **src/layouts/nav-config-settings.tsx** - Added Key-Value Store link with unique icons for all menu items
+- **src/routes/sections.tsx** - Added lazy-loaded page imports and routes
 
-### 2. New Create Page (Product-Centric)
-**Workflow:**
-```
-Select Product → Configure Parameters → Select Machines → Create in Bulk → View Created
-```
+### Icons & Translations
+- **src/components/iconify/icon-sets.ts** - Added icons:
+  - `solar:database-bold-duotone` (Key-Value Store)
+  - `solar:ruler-bold-duotone` (Unit)
+  - `solar:scale-bold-duotone` (Unit Group)
+  
+- **src/locales/langs/en.json** - Added "Key-Value Store" translation
+- **src/locales/langs/vi.json** - Added "Kho Khóa-Giá trị" translation
 
-**Key Features:**
-- ✅ Product selector with autocomplete
-- ✅ Working parameter configuration (all time fields support ISO 8601)
-  - Ideal Cycle Time (with seconds precision)
-  - Downtime Threshold (with seconds precision)
-  - Speed Loss Threshold (with seconds precision)
-  - Quantity Per Cycle
-- ✅ Machine selection table with:
-  - Real-time search
-  - Checkbox selection (all/individual)
-  - Loading states
-  - Selection count
-- ✅ Created parameters table with:
-  - View all existing parameters for selected product
-  - Delete individual parameters
-  - Real-time updates after creation
-- ✅ Proper error handling and user feedback
+## Features Implemented
 
-**API Endpoints Used:**
-```typescript
-// Fetch mapped machines for product
-GET /api/Product/{productId}/mapped-machines
+### List View
+- **Table Columns:**
+  - Key (with lock icon 🔒 if encrypted)
+  - Value (truncated to 50 chars)
+  - Type Name
+  - Tags (displayed as Material-UI Chips, max 2 visible + "+N" indicator)
+  - Expires At (formatted date/time)
+  - Actions (Edit/Delete menu)
 
-// Bulk create/update working parameters
-POST /api/WorkingParameter/{productId}/create-up-from-mapped-products
+- **Header Actions:**
+  - Import button (outlined, cloud-upload icon)
+  - Export button (outlined, cloud-download icon)
+  - Add Key-Value Store button (contained, add icon)
 
-// Fetch existing parameters
-POST /api/WorkingParameter/created-working-parameters
+- **Functionality:**
+  - URL-based pagination
+  - Search filtering (key, value, typeName, tags)
+  - Sortable columns
+  - Bulk selection and deletion
+  - Delete confirmation dialog
 
-// Delete parameter
-DELETE /api/workingparameter/delete/{id}
-```
+### Create/Edit Form
+- **Grid Layout:** 4/12 (left) + 8/12 (right)
 
-### 3. Simplified Edit Page
-**Changes:**
-- ✅ Removed bulk creation logic
-- ✅ Disabled machine/product selection (locked once created)
-- ✅ Focus on updating time thresholds and quantity
-- ✅ Uses proper update API endpoint
+- **Left Section (Encryption Settings):**
+  - IsEncrypted checkbox with visual indicators
+  - Encryption info text
+  - Shield/Eye icons for encrypted/unencrypted states
 
-## Technical Highlights
+- **Right Section (Form Fields):**
+  - **Key** - TextField (required)
+  - **Value** - TextField (multiline, 4 rows)
+  - **TypeName** - TextField
+  - **Tags** - Autocomplete with freeSolo (chip-based input)
+  - **ExpiresAt** - Native datetime-local input (timezone-aware)
 
-### API Integration
-All endpoints from requirements are properly integrated:
-- ✅ `/api/WorkingParameter/created-working-parameters` - List page
-- ✅ `/api/WorkingParameter/{productId}/create-up-from-mapped-products` - Bulk creation
-- ✅ `/api/Product/{productId}/mapped-machines` - Machine selection
-- ✅ `/api/Machine/{machineId}/products/mapped` - Available in codebase
-- ✅ `/api/WorkingParameter/by-machine/{machineId}` - Available in codebase
-- ✅ `/api/WorkingParameter/by-product/{productId}` - Available in codebase
+- **Actions:**
+  - Cancel button (navigates back)
+  - Save button (creates/updates entry)
 
-### Code Quality
-- ✅ TypeScript strict typing throughout
-- ✅ Proper error handling with user feedback
-- ✅ Loading states for all async operations
-- ✅ Responsive design with Material-UI Grid
-- ✅ Follows project conventions (DashboardContent, breadcrumbs, etc.)
-- ✅ No linting errors (only pre-existing warnings in other files)
-- ✅ Build successful
+## Technical Standards Followed
 
-### User Experience
-- ✅ Clear navigation with breadcrumbs
-- ✅ Immediate feedback with Snackbar notifications
-- ✅ Confirm dialogs for destructive actions (delete)
-- ✅ Search functionality for filtering machines
-- ✅ Visual selection indicators (checkboxes)
-- ✅ Disabled states for locked fields
-- ✅ Proper form validation
+### React Compiler Compatibility ✅
+- No setState in useEffect or useMemo
+- Full object dependencies in useCallback
+- Proper state derivation with useMemo
 
-## Testing Recommendations
+### Material-UI Best Practices ✅
+- Theme system integration (light/dark mode support)
+- Consistent spacing and layout
+- Proper Grid usage (responsive breakpoints)
+- Typography variants
+- Icon integration with Iconify
 
-### Functional Testing
-- [ ] Navigate to working parameter list page
-- [ ] Verify pagination controls work
-- [ ] Test search functionality
-- [ ] Click "Add parameter" to go to create page
-- [ ] Select a product from dropdown
-- [ ] Verify mapped machines load
-- [ ] Configure working parameters
-- [ ] Select one or more machines
-- [ ] Click "Create Parameters"
-- [ ] Verify success message
-- [ ] Verify parameters appear in created table
-- [ ] Test delete functionality
-- [ ] Navigate back to list
-- [ ] Click edit on a parameter
-- [ ] Verify machine/product fields are disabled
-- [ ] Modify time thresholds
-- [ ] Save changes
+### API Integration ✅
+- Generated TypeScript services from OpenAPI spec
+- TanStack Query hooks for data fetching
+- Proper error handling and loading states
+- ValidationResult pattern for form errors
 
-### Edge Cases
-- [ ] Product with no mapped machines
-- [ ] Creating parameters without selecting machines
-- [ ] Creating parameters without selecting product
-- [ ] Network errors during creation
-- [ ] Deleting last parameter for a product
-- [ ] Search with no results
-- [ ] Pagination edge cases (first/last page)
+### Code Quality ✅
+- TypeScript strict mode
+- Consistent naming conventions
+- Proper imports and exports
+- Comments where needed
+- No console errors or warnings
 
-### Performance
-- [ ] List page loads quickly with pagination
-- [ ] Machine search is responsive (debounced)
-- [ ] Bulk creation handles multiple machines
-- [ ] No memory leaks on unmount
+## Routes Added
 
-## Success Metrics
+| Path | Component | Description |
+|------|-----------|-------------|
+| `/settings/key-value-store` | KeyValueStoreListPage | List all entries |
+| `/settings/key-value-store/create` | KeyValueStoreCreatePage | Create new entry |
+| `/settings/key-value-store/:id/edit` | KeyValueStoreEditPage | Edit existing entry |
 
-### Requirements Met
-✅ Updated list page to use new endpoint
-✅ Created product-centric create page
-✅ Refactored edit page for individual updates
-✅ Integrated all specified API endpoints
-✅ Handles "tons of data" with pagination
-✅ Bulk creation workflow implemented
-✅ Machine search and selection working
-✅ Created parameters table with delete
+## Navigation Menu Updates
 
-### Code Statistics
-- **Lines Added:** 830
-- **Lines Removed:** 178
-- **Net Change:** +652 lines
-- **New Files:** 2 (create view + documentation)
-- **Modified Files:** 4
-- **Build Status:** ✅ Success
-- **Lint Status:** ✅ Pass (no errors)
+All settings menu items now have unique Iconify icons:
 
-## Migration Path
+| Menu Item | Icon | Path |
+|-----------|------|------|
+| Unit Group | `solar:scale-bold-duotone` | `/settings/unit-groups` |
+| Unit | `solar:ruler-bold-duotone` | `/settings/units` |
+| Unit Conversion | `solar:restart-bold` | `/settings/unit-conversions` |
+| Time Block Name | `solar:clock-circle-bold` | `/settings/time-block-names` |
+| **Key-Value Store** | `solar:database-bold-duotone` | `/settings/key-value-store` |
 
-### For Users
-1. **No breaking changes** - Existing parameters continue to work
-2. **New workflow** - Use create page for bulk operations
-3. **Edit remains** - Fine-tune individual parameters as before
-4. **Better performance** - Pagination handles large datasets
+## API Endpoints Used
 
-### For Developers
-1. **Review documentation** - See WORKING_PARAMETER_REFACTOR.md
-2. **Understand new flow** - Product-first approach
-3. **API changes** - Use new endpoints for working parameters
-4. **Component reuse** - ProductSelector, DurationTimePicker patterns
+| Endpoint | Method | Hook | Purpose |
+|----------|--------|------|---------|
+| `/api/keyvaluestore/get-page` | GET | `useGetapikeyvaluestoregetpage` | List entries |
+| `/api/keyvaluestore/{id}` | GET | `useGetapikeyvaluestoreid` | Get single entry |
+| `/api/keyvaluestore/create` | POST | `useCreateapikeyvaluestorecreate` | Create entry |
+| `/api/keyvaluestore/update/{id}` | POST | `useUpdateapikeyvaluestoreupdateid` | Update entry |
+| `/api/keyvaluestore/delete/{id}` | DELETE | `useDeleteapikeyvaluestoredeleteid` | Delete entry |
 
-## Future Enhancements
+## Build & Verification
 
-### Short-term
-- [ ] Add filter UI for machine types/groups/categories
-- [ ] Add guided tour for create page
-- [ ] Add keyboard shortcuts for common actions
+- ✅ TypeScript compilation successful (no errors)
+- ✅ Vite build successful
+- ✅ React Compiler compatible
+- ✅ ESLint passes (no critical errors)
+- ✅ All routes accessible
+- ✅ All components render correctly
 
-### Long-term
-- [ ] Import/export functionality (CSV/Excel)
-- [ ] Parameter templates
-- [ ] Bulk edit existing parameters
-- [ ] Parameter validation rules
-- [ ] Audit log for changes
-- [ ] Copy parameters from one product to another
+## How to Use
+
+### Access the Key-Value Store Page
+1. Navigate to Settings in the sidebar
+2. Click "Key-Value Store" (database icon)
+3. View the list of all key-value entries
+
+### Create a New Entry
+1. Click "Add Key-Value Store" button
+2. Fill in the form:
+   - Key (required)
+   - Value (optional, multiline)
+   - TypeName (optional)
+   - Tags (optional, multiple allowed)
+   - ExpiresAt (optional datetime)
+   - IsEncrypted checkbox
+3. Click "Save"
+
+### Edit an Entry
+1. Click the "..." menu button on any row
+2. Select "Edit"
+3. Modify the fields
+4. Click "Save"
+
+### Delete an Entry
+1. Click the "..." menu button on any row
+2. Select "Delete"
+3. Confirm the deletion in the dialog
+
+## Future Enhancements (Optional)
+
+- [ ] Guided tour using Shepherd.js (following tour standards)
+- [ ] Export functionality implementation
+- [ ] Import functionality with validation
+- [ ] Advanced filtering options
+- [ ] Bulk edit capabilities
+- [ ] Encryption/decryption UI
+- [ ] Value preview with syntax highlighting (for JSON values)
 
 ## Conclusion
 
-The working parameter refactor successfully achieves all stated requirements:
-1. ✅ List page uses new API endpoint
-2. ✅ Product-centric create page handles bulk operations
-3. ✅ All required endpoints integrated
-4. ✅ Scalable solution for managing large datasets
-5. ✅ Improved user experience
-6. ✅ Clean, maintainable code
+The Key-Value Store management system has been successfully implemented with:
+- Complete CRUD operations
+- Professional UI following Material-UI design system
+- Proper error handling and validation
+- React Compiler compatible code
+- Full TypeScript type safety
+- Integration with existing project patterns
 
-The implementation is production-ready and follows all project standards and conventions.
+All requirements from the problem statement have been met:
+✅ New endpoints added to response.json
+✅ Pages created in settings module
+✅ Link added to nav menu with unique icons
+✅ Create and edit pages implemented
+✅ All required columns displayed in main page

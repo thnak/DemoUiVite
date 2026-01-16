@@ -44,7 +44,8 @@
     "other": "Other",
     "signIn": "Sign in",
     "notFound": "Not found",
-    "timeBlockName": "Time Block Name"
+    "timeBlockName": "Time Block Name",
+    "keyValueStore": "Key-Value Store"
   },
   "account": {
     "home": "Home",
