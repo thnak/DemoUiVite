@@ -251,6 +251,112 @@ const response = await axiosInstance.get(`/api/Machine/${id}/products`);
 - **Maintenance**: API changes are reflected automatically when regenerating
 - **Documentation**: Generated code is self-documenting from the OpenAPI spec
 
+### Using Generated Hooks Correctly - **CRITICAL**
+
+Generated API hooks come in two types: **Query Hooks** (using `useQuery`) and **Mutation Hooks** (using `useMutation`).
+
+#### Query Hooks vs Mutation Hooks
+
+**Query Hooks** (use `useQuery` internally):
+- Automatically fetch data when component mounts or dependencies change
+- Return `{ data, isLoading, error }` 
+- Examples: `useGetUnitById`, `useSearchKeyValueStore`
+- Use for GET endpoints that fetch data
+
+**Mutation Hooks** (use `useMutation` internally):
+- Must be manually triggered with `mutate()` function
+- Return `{ mutate, data, isPending, error }`
+- Examples: `useGetKeyValueStorePage`, `useCreateUnit`, `useDeleteUnit`
+- Use for POST/PUT/DELETE endpoints OR paginated GET endpoints
+
+#### ❌ WRONG: Using Mutation Hooks
+
+```typescript
+// ❌ WRONG: Triggering mutation in useMemo (violates React rules)
+const { mutate: fetchData, data, isPending: isLoading } = useGetKeyValueStorePage();
+
+useMemo(() => {
+  fetchData({ params: { pageNumber: 0 } });
+}, [fetchData]);
+// Problem: useMemo is for computing values, not side effects
+// Result: Loading state doesn't update properly
+```
+
+#### ✅ CORRECT: Using Mutation Hooks
+
+```typescript
+// ✅ CORRECT: Trigger mutation in useEffect
+const { mutate: fetchData, data, isPending: isLoading } = useGetKeyValueStorePage();
+
+useEffect(() => {
+  fetchData({
+    data: [{ sortBy: 'name', descending: false }],
+    params: { pageNumber: page, pageSize: size }
+  });
+}, [page, size, fetchData]);
+// Result: Loading state updates correctly with server response
+```
+
+#### ✅ CORRECT: Using Query Hooks
+
+```typescript
+// ✅ CORRECT: Query hooks fetch automatically
+const { data, isLoading } = useGetUnitById(id, {
+  enabled: !!id, // Only fetch if id exists
+  refetchOnWindowFocus: false,
+});
+// No useEffect needed - fetches automatically when id changes
+```
+
+#### Key Rules
+
+1. **NEVER trigger mutations in `useMemo`** - use `useEffect` for side effects
+2. **NEVER trigger mutations in `useCallback`** - use `useEffect` for side effects  
+3. **Use `isPending` from mutation hooks** - not manual loading states
+4. **Query hooks auto-fetch** - no `useEffect` needed for initial fetch
+5. **Mutation hooks need `useEffect`** - for automatic fetching on param changes
+
+#### Common Patterns
+
+**Pattern 1: List View with Pagination (Mutation Hook)**
+```typescript
+const { mutate: fetchPage, data, isPending: isLoading } = useGetEntityPage();
+
+useEffect(() => {
+  fetchPage({
+    data: [{ sortBy: orderBy, descending: order === 'desc' }],
+    params: { pageNumber: page, pageSize: rowsPerPage }
+  });
+}, [page, rowsPerPage, orderBy, order, fetchPage]);
+```
+
+**Pattern 2: Detail View (Query Hook)**
+```typescript
+const { data: entity, isLoading } = useGetEntityById(id, {
+  enabled: !!id,
+});
+// Auto-fetches when id changes, no useEffect needed
+```
+
+**Pattern 3: Create/Update (Mutation Hook)**
+```typescript
+const { mutate: createEntity, isPending } = useCreateEntity({
+  onSuccess: () => {
+    navigate('/list');
+  },
+});
+
+const handleSubmit = () => {
+  createEntity({ data: formData });
+};
+```
+
+### Why This Matters
+- **Loading States**: Proper usage ensures loading indicators work correctly
+- **React Compiler**: Follows React rules (no side effects in useMemo/useCallback)
+- **Performance**: Prevents unnecessary re-renders and stale data
+- **Debugging**: Makes data flow clear and predictable
+
 ## API Time Duration Standards
 
 All time duration values in API calls **MUST** use the ISO 8601 duration format. This is a mandatory standard with no exceptions.
