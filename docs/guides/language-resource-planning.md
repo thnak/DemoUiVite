@@ -4,9 +4,9 @@ This document outlines the plan for managing and updating language resources in 
 
 ## Current State
 
-The application currently supports the following languages:
-- **English (en)** - Default language
-- **Vietnamese (vi)** - Secondary language
+The application currently supports the following languages using BCP 47 language codes:
+- **English (en-US)** - Default language
+- **Vietnamese (vi-VN)** - Secondary language
 
 Language configuration is centralized in:
 - `src/locales/i18n.ts` - Main i18n configuration with `allLangs` array
@@ -32,17 +32,17 @@ To add a new language to the application:
    
    export const allLangs = [
      {
-       value: 'en',
+       value: 'en-US',
        label: 'English',
        icon: '/assets/icons/flags/ic-flag-en.svg',
      },
      {
-       value: 'vi',
+       value: 'vi-VN',
        label: 'Tiếng Việt',
        icon: '/assets/icons/flags/ic-flag-vi.svg',
      },
      {
-       value: 'zh', // Add new language
+       value: 'zh-CN', // Add new language with full BCP 47 code
        label: '中文',
        icon: '/assets/icons/flags/ic-flag-zh.svg',
      },
@@ -50,9 +50,13 @@ To add a new language to the application:
    
    i18n.init({
      resources: {
+       'en-US': { translation: en },
+       'vi-VN': { translation: vi },
+       'zh-CN': { translation: zh }, // Register new translation with full code
+       // Fallback for short codes
        en: { translation: en },
        vi: { translation: vi },
-       zh: { translation: zh }, // Register new translation
+       zh: { translation: zh },
      },
      // ... rest of config
    });
@@ -62,6 +66,26 @@ To add a new language to the application:
    - Place the flag SVG icon in `/public/assets/icons/flags/`
    - Follow naming convention: `ic-flag-{code}.svg`
    - Recommended size: 26x20px
+
+### BCP 47 Language Codes
+
+The application uses full BCP 47 language codes (e.g., `en-US`, `vi-VN`) instead of minimal codes (e.g., `en`, `vi`) for better internationalization support. This allows for:
+- Regional variants (e.g., `en-US` vs `en-GB`)
+- More precise language targeting
+- Better browser compatibility
+- Standard compliance
+
+Common BCP 47 codes:
+- `en-US` - English (United States)
+- `en-GB` - English (United Kingdom)
+- `vi-VN` - Vietnamese (Vietnam)
+- `zh-CN` - Chinese (Simplified, China)
+- `zh-TW` - Chinese (Traditional, Taiwan)
+- `ja-JP` - Japanese (Japan)
+- `ko-KR` - Korean (South Korea)
+- `fr-FR` - French (France)
+- `de-DE` - German (Germany)
+- `es-ES` - Spanish (Spain)
 
 ### Translation Components
 
