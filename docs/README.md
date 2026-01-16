@@ -17,6 +17,9 @@ docs/
 │   ├── api-usage.md                   # API service usage
 │   ├── shift-templates.md             # Shift template feature
 │   └── external-resource.md           # External resources and links
+├── implementation/   # Implementation summaries and technical details
+│   ├── README.md                      # Implementation documentation index
+│   └── [Feature implementation docs] # Detailed feature implementation records
 └── api/              # API documentation
     └── response.json                  # OpenAPI specification
 ```
@@ -100,6 +103,16 @@ New to the project? Start here:
 ## 📋 Feature-Specific Guides
 
 - **[Shift Templates](./guides/shift-templates.md)** - Working with shift template features
+
+## 📝 Implementation Records
+
+Looking for detailed implementation documentation? Check out:
+
+- **[Implementation Documentation](./implementation/README.md)** - Technical implementation summaries
+  - Feature implementation details
+  - Refactoring summaries
+  - Migration guides
+  - Verification checklists
 
 ## 🔧 Technical Reference
 
@@ -247,6 +260,7 @@ When adding documentation:
 
 1. **Place in correct folder**
    - `docs/guides/` - How-to guides, tutorials, patterns
+   - `docs/implementation/` - Implementation summaries, technical details
    - `docs/api/` - API specifications, endpoint documentation
 
 2. **Use clear titles and structure**

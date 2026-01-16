@@ -86,9 +86,9 @@ npm run start
 
 ## Documentation
 
-- 📚 [React Compiler Configuration Guide](./react-compiler-configuration.md)
-- 📊 [Before & After Comparison](./react-compiler-before-after.md)
-- 📝 [Implementation Summary](../../REACT_COMPILER_IMPLEMENTATION.md)
+- 📚 [React Compiler Configuration Guide](../guides/react-compiler-configuration.md)
+- 📊 [Before & After Comparison](../guides/react-compiler-before-after.md)
+- 📝 [Implementation Summary](./REACT_COMPILER_IMPLEMENTATION.md)
 
 ## Next Steps
 
