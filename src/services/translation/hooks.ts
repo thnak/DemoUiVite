@@ -27,23 +27,19 @@ export function useEntityTranslation(
 ): string | null {
   const { i18n } = useTranslation();
   const [content, setContent] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!entityId) {
-      setContent(null);
-      return;
+      return undefined;
     }
 
     let mounted = true;
-    setLoading(true);
 
     const service = createTranslationService(entity);
     
     service.get(entityId, i18n.language).then((result) => {
       if (mounted) {
         setContent(result);
-        setLoading(false);
       }
     });
 
@@ -52,7 +48,7 @@ export function useEntityTranslation(
     };
   }, [entity, entityId, i18n.language]);
 
-  return loading ? null : content;
+  return content;
 }
 
 /**
@@ -129,8 +125,7 @@ export function useTranslationSystem() {
   useEffect(() => {
     // Check if already initialized
     if (TranslationManager.isInitialized()) {
-      setInitialized(true);
-      return;
+      return undefined;
     }
 
     // Initialize if not already done
@@ -139,6 +134,8 @@ export function useTranslationSystem() {
     }).catch((error) => {
       console.error('[useTranslationSystem] Initialization failed:', error);
     });
+    
+    return undefined;
   }, []);
 
   return { initialized };

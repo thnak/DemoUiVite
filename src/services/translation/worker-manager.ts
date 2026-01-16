@@ -38,7 +38,7 @@ export class TranslationWorkerManager {
   async init(config?: Partial<TranslationConfig>): Promise<void> {
     if (this.initialized) {
       console.warn('[TranslationWorker] Already initialized');
-      return;
+      return undefined;
     }
 
     try {

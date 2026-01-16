@@ -112,6 +112,8 @@ export const FactoryLayoutPage = lazy(() => import('src/pages/factory-layout'));
 export const TimeBlockNameListPage = lazy(() => import('src/pages/time-block-name-list'));
 export const TimeBlockNameCreatePage = lazy(() => import('src/pages/time-block-name-create'));
 export const TimeBlockNameEditPage = lazy(() => import('src/pages/time-block-name-edit'));
+export const DevHubPage = lazy(() => import('src/pages/dev-hub'));
+export const TranslationDemoPage = lazy(() => import('src/pages/dev/translation-demo'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -229,6 +231,8 @@ export const routesSection: RouteObject[] = [
       { path: 'roles/create', element: <RoleCreatePage /> },
       { path: 'roles/:id/edit', element: <RoleEditPage /> },
       { path: 'factory-layout', element: <FactoryLayoutPage /> },
+      { path: 'dev', element: <DevHubPage /> },
+      { path: 'dev/translation-demo', element: <TranslationDemoPage /> },
     ],
   },
   // Fullscreen layout for OI module (no header, no sidebar)
