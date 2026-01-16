@@ -5,7 +5,7 @@
  * that offloads translation storage and processing to IndexedDB and Web Workers.
  */
 
-import type { EntityTranslationDto } from 'src/api/types';
+import type { EntityTranslationDto } from 'src/api/types/generated';
 
 // ----------------------------------------------------------------------
 

@@ -5,7 +5,8 @@
  * Provides initialization, sync control, and event handling.
  */
 
-import type { TranslationConfig, SyncProgress, WorkerMessageType } from './types';
+import type { TranslationConfig, SyncProgress } from './types';
+import { WorkerMessageType } from './types';
 import { translationWorker } from './worker-manager';
 import { apiConfig } from 'src/api/config';
 
@@ -112,22 +113,22 @@ class TranslationManagerClass {
    */
   private setupEventListeners(): void {
     // Listen to sync progress
-    translationWorker.on('SYNC_PROGRESS', (progress: SyncProgress) => {
+    translationWorker.on(WorkerMessageType.SYNC_PROGRESS, (progress: SyncProgress) => {
       this.syncProgressListeners.forEach((listener) => listener(progress));
     });
 
     // Listen to sync complete
-    translationWorker.on('SYNC_COMPLETE', () => {
+    translationWorker.on(WorkerMessageType.SYNC_COMPLETE, () => {
       this.syncCompleteListeners.forEach((listener) => listener());
     });
 
     // Listen to data updates
-    translationWorker.on('DATA_UPDATED', (payload: { entity: string }) => {
+    translationWorker.on(WorkerMessageType.DATA_UPDATED, (payload: { entity: string }) => {
       this.dataUpdatedListeners.forEach((listener) => listener(payload.entity));
     });
 
     // Listen to sync errors
-    translationWorker.on('SYNC_ERROR', (payload: { entity: string; error: string }) => {
+    translationWorker.on(WorkerMessageType.SYNC_ERROR, (payload: { entity: string; error: string }) => {
       console.error(`[TranslationManager] Sync error for ${payload.entity}:`, payload.error);
     });
   }

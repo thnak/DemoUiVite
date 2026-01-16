@@ -8,12 +8,13 @@
 import type {
   EntityType,
   WorkerMessage,
-  WorkerMessageType,
   GetTranslationRequest,
   TranslationResponse,
   SyncProgress,
   TranslationConfig,
 } from './types';
+
+import { WorkerMessageType } from './types';
 
 // ----------------------------------------------------------------------
 
@@ -60,7 +61,7 @@ export class TranslationWorkerManager {
           reject(new Error('Worker initialization timeout'));
         }, 10000);
 
-        this.once('INIT_COMPLETE', () => {
+        this.once(WorkerMessageType.INIT_COMPLETE, () => {
           clearTimeout(timeout);
           this.initialized = true;
           console.log('[TranslationWorker] Initialized successfully');
@@ -223,13 +224,13 @@ export class TranslationWorkerManager {
   /**
    * Post message to worker
    */
-  private postMessage(type: WorkerMessageType, payload?: any, id?: string): void {
+  private postMessage(type: string, payload?: any, id?: string): void {
     if (!this.worker) {
       console.error('[TranslationWorker] Worker not available');
       return;
     }
 
-    const message: WorkerMessage = { type, payload, id };
+    const message: WorkerMessage = { type: type as WorkerMessageType, payload, id };
     this.worker.postMessage(message);
   }
 

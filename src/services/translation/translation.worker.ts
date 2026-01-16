@@ -94,8 +94,8 @@ const ENTITY_ENDPOINTS: Record<EntityType, string> = {
 /**
  * Post message back to main thread
  */
-function postResponse(type: WorkerMessageType, payload?: any, requestId?: string) {
-  const message: WorkerMessage = { type, payload, id: requestId };
+function postResponse(type: string, payload?: any, requestId?: string) {
+  const message: WorkerMessage = { type: type as WorkerMessageType, payload, id: requestId };
   self.postMessage(message);
 }
 
@@ -291,7 +291,7 @@ function startPolling() {
     clearInterval(pollingTimer);
   }
 
-  if (config.autoSync && config.pollingInterval > 0) {
+  if (config.autoSync && (config.pollingInterval ?? 0) > 0) {
     pollingTimer = setInterval(() => {
       console.log('[Worker] Background sync triggered');
       syncAll();
