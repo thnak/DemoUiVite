@@ -2,7 +2,7 @@
 
 This document provides guidelines for creating and organizing documentation in this repository.
 
-You have access to these tools. use it to search a new one icon when needed. solar doutone is priority. icon must add to src/components/iconify/icon-sets.ts ad then resuse it.
+You have access to these tools. use it to search a new one icon when needed. solar doutone is highest priority (other families is allowed but duotone still have priority). icon must add to src/components/iconify/icon-sets.ts and then resuse it.
 - iconify/get_all_icon_sets
 - iconify/get_icon_set
 - iconify/search_icons
