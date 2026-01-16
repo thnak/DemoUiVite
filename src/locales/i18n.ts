@@ -45,4 +45,9 @@ i18n
     },
   });
 
+// Make i18n accessible globally for translation worker
+if (typeof window !== 'undefined') {
+  (window as any).i18n = i18n;
+}
+
 export default i18n;
