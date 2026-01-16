@@ -269,7 +269,6 @@ export function KeyValueStoreListView() {
                     { id: 'typeName', label: 'Type' },
                     { id: 'tags', label: 'Tags' },
                     { id: 'expiresAt', label: 'Expires At' },
-                    { id: 'isEncrypted', label: 'Encrypted' },
                     { id: '', label: 'Actions', align: 'right' },
                   ]}
                 />

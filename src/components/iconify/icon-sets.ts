@@ -455,7 +455,7 @@ export default {
   },
   // Index page module icons - duotone style
   'solar:database-bold-duotone': {
-    body: '<path fill="currentColor" d="M4 18.646V7.354C4.005 5.545 7.592 4 12 4s7.995 1.545 8 3.354v11.292C20 20.455 16.418 22 12 22s-8-1.545-8-3.354" opacity="0.5"/><path fill="currentColor" d="M20 7c0 1.657-3.582 3-8 3S4 8.657 4 7s3.582-3 8-3s8 1.343 8 3"/><path fill="currentColor" d="M20 12c0 1.657-3.582 3-8 3S4 13.657 4 12" opacity="0.7"/>',
+    body: '<path fill="currentColor" d="M12 10c4.418 0 8-1.79 8-4s-3.582-4-8-4s-8 1.79-8 4s3.582 4 8 4"/><path fill="currentColor" d="M4 12v6c0 2.21 3.582 4 8 4s8-1.79 8-4v-6c0 2.21-3.582 4-8 4s-8-1.79-8-4" opacity="0.5"/><path fill="currentColor" d="M4 6v6c0 2.21 3.582 4 8 4s8-1.79 8-4V6c0 2.21-3.582 4-8 4S4 8.21 4 6" opacity="0.7"/>',
   },
   'solar:chart-bold-duotone': {
     body: '<path fill="currentColor" d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2s7.071 0 8.535 1.464C22 4.93 22 7.286 22 12s0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12" opacity="0.5"/><path fill="currentColor" d="M7 14a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1m5-4a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0v-6a1 1 0 0 1 1-1m5-3a1 1 0 0 1 1 1v9a1 1 0 1 1-2 0V8a1 1 0 0 1 1-1"/>',
