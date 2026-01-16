@@ -1,4 +1,3 @@
-
 import type { StopMachineReasonProps } from './stop-machine-reason-table-row';
 
 // ----------------------------------------------------------------------
@@ -59,11 +58,7 @@ type ApplyFilterProps = {
   comparator: (a: any, b: any) => number;
 };
 
-export function applyFilter({
-  inputData,
-  comparator,
-  filterName,
-}: ApplyFilterProps) {
+export function applyFilter({ inputData, comparator, filterName }: ApplyFilterProps) {
   const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 
   stabilizedThis.sort((a, b) => {

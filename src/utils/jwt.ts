@@ -18,7 +18,7 @@ export interface JwtPayload {
 /**
  * Decode JWT token without verification
  * Note: This does not validate the signature, only decodes the payload
- * 
+ *
  * @param token - JWT token string
  * @returns Decoded payload or null if invalid
  */
@@ -42,7 +42,7 @@ export function decodeJwt(token: string): JwtPayload | null {
 
 /**
  * Extract user roles from JWT token
- * 
+ *
  * @param token - JWT token string
  * @returns Array of user roles
  */
@@ -56,7 +56,7 @@ export function getUserRolesFromToken(token: string): string[] {
   if (Array.isArray(payload.role)) {
     return payload.role;
   }
-  
+
   if (typeof payload.role === 'string') {
     return [payload.role];
   }
@@ -71,19 +71,19 @@ export function getUserRolesFromToken(token: string): string[] {
 
 /**
  * Check if user has a specific role
- * 
+ *
  * @param token - JWT token string
  * @param role - Role name to check (case-insensitive)
  * @returns True if user has the role
  */
 export function hasRole(token: string, role: string): boolean {
   const roles = getUserRolesFromToken(token);
-  return roles.some(r => r.toLowerCase() === role.toLowerCase());
+  return roles.some((r) => r.toLowerCase() === role.toLowerCase());
 }
 
 /**
  * Check if JWT token is expired
- * 
+ *
  * @param token - JWT token string
  * @returns True if token is expired
  */
@@ -99,7 +99,7 @@ export function isTokenExpired(token: string): boolean {
 
 /**
  * Get access token from localStorage
- * 
+ *
  * @returns Access token or null
  */
 export function getAccessToken(): string | null {
@@ -108,7 +108,7 @@ export function getAccessToken(): string | null {
 
 /**
  * Check if current user is an Operator
- * 
+ *
  * @returns True if user has Operator role
  */
 export function isOperator(): boolean {

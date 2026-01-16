@@ -361,47 +361,51 @@ export function ShiftTemplateForm({
             exit="exit"
           >
             <Card>
-          <CardContent>
-            <Typography variant="h6" sx={{ mb: 3 }}>
-              Days (Applied to All Shifts)
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              Select the days of the week that apply to all shifts. Break times can be configured
-              individually for each shift below.
-            </Typography>
-            <Stack spacing={3}>
-              {/* Shared Days Selector */}
-              <FormControl fullWidth error={!!errors.sharedDays} data-tour="shift-days">
-                <InputLabel>Days of Week</InputLabel>
-                <Select
-                  multiple
-                  value={sharedDays}
-                  onChange={handleSharedDaysChange}
-                  input={<OutlinedInput label="Days of Week" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {selected.map((day) => (
-                        // Guard DAY_LABELS access in case the key is missing
-                        (<Chip key={day} label={(DAY_LABELS[day] ?? '').slice(0, 3)} size="small" />)
+              <CardContent>
+                <Typography variant="h6" sx={{ mb: 3 }}>
+                  Days (Applied to All Shifts)
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  Select the days of the week that apply to all shifts. Break times can be
+                  configured individually for each shift below.
+                </Typography>
+                <Stack spacing={3}>
+                  {/* Shared Days Selector */}
+                  <FormControl fullWidth error={!!errors.sharedDays} data-tour="shift-days">
+                    <InputLabel>Days of Week</InputLabel>
+                    <Select
+                      multiple
+                      value={sharedDays}
+                      onChange={handleSharedDaysChange}
+                      input={<OutlinedInput label="Days of Week" />}
+                      renderValue={(selected) => (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                          {selected.map((day) => (
+                            // Guard DAY_LABELS access in case the key is missing
+                            <Chip
+                              key={day}
+                              label={(DAY_LABELS[day] ?? '').slice(0, 3)}
+                              size="small"
+                            />
+                          ))}
+                        </Box>
+                      )}
+                    >
+                      {DAYS_OF_WEEK.map((day) => (
+                        <MenuItem key={day} value={day}>
+                          {DAY_LABELS[day]}
+                        </MenuItem>
                       ))}
-                    </Box>
-                  )}
-                >
-                  {DAYS_OF_WEEK.map((day) => (
-                    <MenuItem key={day} value={day}>
-                      {DAY_LABELS[day]}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {errors.sharedDays && (
-                  <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>
-                    {errors.sharedDays}
-                  </Typography>
-                )}
-              </FormControl>
-            </Stack>
-          </CardContent>
-        </Card>
+                    </Select>
+                    {errors.sharedDays && (
+                      <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>
+                        {errors.sharedDays}
+                      </Typography>
+                    )}
+                  </FormControl>
+                </Stack>
+              </CardContent>
+            </Card>
           </motion.div>
         )}
       </AnimatePresence>
@@ -461,12 +465,18 @@ export function ShiftTemplateForm({
                     helperText={errors[`def-${defIndex}-timeBlockNameId`]}
                   />
 
-                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} data-tour="shift-times">
+                  <Stack
+                    direction={{ xs: 'column', sm: 'row' }}
+                    spacing={2}
+                    data-tour="shift-times"
+                  >
                     <Box sx={{ flex: 1 }}>
                       <DurationTimePicker
                         label="Start Time"
                         value={normalizeTimeValue(def.startTime)}
-                        onChange={(duration) => handleDefinitionChange(def.id, 'startTime', duration)}
+                        onChange={(duration) =>
+                          handleDefinitionChange(def.id, 'startTime', duration)
+                        }
                         size="small"
                         fullWidth
                         showHelperText={false}
@@ -570,7 +580,11 @@ export function ShiftTemplateForm({
 
                   {/* Advanced Mode: Per-shift Days */}
                   {mode === 'advanced' && (
-                    <FormControl fullWidth error={!!errors[`def-${defIndex}-days`]} data-tour="shift-days">
+                    <FormControl
+                      fullWidth
+                      error={!!errors[`def-${defIndex}-days`]}
+                      data-tour="shift-days"
+                    >
                       <InputLabel>Days of Week</InputLabel>
                       <Select
                         multiple
@@ -582,7 +596,11 @@ export function ShiftTemplateForm({
                         renderValue={(selected) => (
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                             {selected.map((day) => (
-                              <Chip key={day} label={(DAY_LABELS[day] ?? '').slice(0, 3)} size="small" />
+                              <Chip
+                                key={day}
+                                label={(DAY_LABELS[day] ?? '').slice(0, 3)}
+                                size="small"
+                              />
                             ))}
                           </Box>
                         )}
@@ -617,85 +635,87 @@ export function ShiftTemplateForm({
             exit="exit"
           >
             <Card>
-          <CardContent>
-            <Typography variant="h6" sx={{ mb: 3 }}>
-              Advanced: Per-Day Shift Control
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              In advanced mode, you can see and manage shifts for each specific day. The table below
-              shows which shifts are active on each day.
-            </Typography>
+              <CardContent>
+                <Typography variant="h6" sx={{ mb: 3 }}>
+                  Advanced: Per-Day Shift Control
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  In advanced mode, you can see and manage shifts for each specific day. The table
+                  below shows which shifts are active on each day.
+                </Typography>
 
-            <Box sx={{ overflowX: 'auto' }}>
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(8, 1fr)',
-                  gap: 1,
-                  minWidth: 700,
-                }}
-              >
-                {/* Header Row */}
-                <Box sx={{ p: 1, fontWeight: 'bold', borderRadius: 1 }}>Shift</Box>
-                {DAYS_OF_WEEK.map((day) => (
+                <Box sx={{ overflowX: 'auto' }}>
                   <Box
-                    key={day}
-                    sx={{ p: 1, fontWeight: 'bold', borderRadius: 1, textAlign: 'center' }}
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(8, 1fr)',
+                      gap: 1,
+                      minWidth: 700,
+                    }}
                   >
-                    {(DAY_LABELS[day] ?? '').slice(0, 3)}
-                  </Box>
-                ))}
+                    {/* Header Row */}
+                    <Box sx={{ p: 1, fontWeight: 'bold', borderRadius: 1 }}>Shift</Box>
+                    {DAYS_OF_WEEK.map((day) => (
+                      <Box
+                        key={day}
+                        sx={{ p: 1, fontWeight: 'bold', borderRadius: 1, textAlign: 'center' }}
+                      >
+                        {(DAY_LABELS[day] ?? '').slice(0, 3)}
+                      </Box>
+                    ))}
 
-                {/* Data Rows */}
-                {formData.definitions.map((def) => (
-                  <Fragment key={def.id}>
-                    <Box key={`${def.id}-name`} sx={{ p: 1, borderRadius: 1 }}>
-                      <Typography variant="body2" noWrap>
-                        {def.timeBlockNameId ? `Time Block: ${def.timeBlockNameId}` : 'Unnamed Shift'}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {def.startTime} - {def.endTime}
-                      </Typography>
-                    </Box>
-                    {DAYS_OF_WEEK.map((day) => {
-                      const isActive = def.days.includes(day);
-                      return (
-                        <Box
-                          key={`${def.id}-${day}`}
-                          sx={{
-                            p: 1,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            borderRadius: 1,
-                            bgcolor: isActive ? 'primary.lighter' : 'grey.50',
-                            cursor: 'pointer',
-                            '&:hover': {
-                              bgcolor: isActive ? 'primary.light' : 'grey.200',
-                            },
-                          }}
-                          onClick={() => {
-                            const newDays = isActive
-                              ? def.days.filter((d) => d !== day)
-                              : [...def.days, day];
-                            handleDefinitionChange(def.id, 'days', newDays);
-                          }}
-                        >
-                          <Iconify
-                            icon={isActive ? 'solar:check-circle-bold' : 'mingcute:close-line'}
-                            sx={{
-                              color: isActive ? 'primary.main' : 'grey.400',
-                            }}
-                          />
+                    {/* Data Rows */}
+                    {formData.definitions.map((def) => (
+                      <Fragment key={def.id}>
+                        <Box key={`${def.id}-name`} sx={{ p: 1, borderRadius: 1 }}>
+                          <Typography variant="body2" noWrap>
+                            {def.timeBlockNameId
+                              ? `Time Block: ${def.timeBlockNameId}`
+                              : 'Unnamed Shift'}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {def.startTime} - {def.endTime}
+                          </Typography>
                         </Box>
-                      );
-                    })}
-                  </Fragment>
-                ))}
-              </Box>
-            </Box>
-          </CardContent>
-        </Card>
+                        {DAYS_OF_WEEK.map((day) => {
+                          const isActive = def.days.includes(day);
+                          return (
+                            <Box
+                              key={`${def.id}-${day}`}
+                              sx={{
+                                p: 1,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderRadius: 1,
+                                bgcolor: isActive ? 'primary.lighter' : 'grey.50',
+                                cursor: 'pointer',
+                                '&:hover': {
+                                  bgcolor: isActive ? 'primary.light' : 'grey.200',
+                                },
+                              }}
+                              onClick={() => {
+                                const newDays = isActive
+                                  ? def.days.filter((d) => d !== day)
+                                  : [...def.days, day];
+                                handleDefinitionChange(def.id, 'days', newDays);
+                              }}
+                            >
+                              <Iconify
+                                icon={isActive ? 'solar:check-circle-bold' : 'mingcute:close-line'}
+                                sx={{
+                                  color: isActive ? 'primary.main' : 'grey.400',
+                                }}
+                              />
+                            </Box>
+                          );
+                        })}
+                      </Fragment>
+                    ))}
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
           </motion.div>
         )}
       </AnimatePresence>

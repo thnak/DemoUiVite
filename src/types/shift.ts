@@ -192,7 +192,9 @@ export function minutesToHoursString(minutes: number): string {
   return `${hours}h ${mins}m`;
 }
 
-export function createDefaultShiftDefinition(timeBlockNameId?: string | null): ShiftDefinitionFormData {
+export function createDefaultShiftDefinition(
+  timeBlockNameId?: string | null
+): ShiftDefinitionFormData {
   return {
     id: generateId(),
     timeBlockNameId: timeBlockNameId || null,

@@ -63,14 +63,17 @@ export function DefectReasonMachineMappingView(props: DefectReasonMachineMapping
   });
 
   // Fetch mapped machines
-  const { data: mappedMachinesData, isLoading: isLoadingMapped, refetch: refetchMappedMachines } =
-    useGetapiDefectReasongetdefectmappingsbydefectiddefectId(
-      id || '',
-      { search: mappedSearchText },
-      {
-        enabled: !!id,
-      }
-    );
+  const {
+    data: mappedMachinesData,
+    isLoading: isLoadingMapped,
+    refetch: refetchMappedMachines,
+  } = useGetapiDefectReasongetdefectmappingsbydefectiddefectId(
+    id || '',
+    { search: mappedSearchText },
+    {
+      enabled: !!id,
+    }
+  );
 
   // Get available machines query
   const {
@@ -350,7 +353,7 @@ export function DefectReasonMachineMappingView(props: DefectReasonMachineMapping
             <Typography variant="h6" sx={{ mb: 2 }}>
               Mapped Machines ({mappedMachines.length})
             </Typography>
-            
+
             {/* Search for mapped machines */}
             <TextField
               fullWidth
@@ -369,7 +372,7 @@ export function DefectReasonMachineMappingView(props: DefectReasonMachineMapping
                 },
               }}
             />
-            
+
             <Box
               sx={{
                 height: 'calc(100% - 110px)',

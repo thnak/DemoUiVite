@@ -18,7 +18,9 @@ export interface TourStep {
     secondary?: boolean;
   }>;
   classes?: string;
-  scrollTo?: boolean | { behavior?: 'auto' | 'smooth'; block?: 'start' | 'center' | 'end' | 'nearest' };
+  scrollTo?:
+    | boolean
+    | { behavior?: 'auto' | 'smooth'; block?: 'start' | 'center' | 'end' | 'nearest' };
   when?: {
     show?: () => void;
     hide?: () => void;
@@ -36,10 +38,10 @@ export interface UseTourOptions {
 
 /**
  * Custom hook for managing Shepherd.js guided tours
- * 
+ *
  * @param options - Configuration for the tour
  * @returns Tour control functions
- * 
+ *
  * @example
  * const { startTour, isActive } = useTour({
  *   steps: [...],
@@ -71,25 +73,29 @@ export function useTour({ steps, tourOptions, onComplete, onCancel }: UseTourOpt
       // Add steps
       steps.forEach((step) => {
         const { buttons, ...stepOptions } = step;
-        
+
         tour.addStep({
           ...stepOptions,
           buttons: buttons?.map((btn) => ({
             text: btn.text,
-            action: btn.action || function handleAction(this: any) {
-              if (btn.text === 'Next' || btn.text === 'Start Tour' || btn.text === 'Finish') {
-                this.next();
-              } else if (btn.text === 'Skip') {
-                this.cancel();
-              } else {
-                this.back();
-              }
-            },
-            classes: btn.classes || (btn.secondary ? 'shepherd-button-secondary' : 'shepherd-button-primary'),
+            action:
+              btn.action ||
+              function handleAction(this: any) {
+                if (btn.text === 'Next' || btn.text === 'Start Tour' || btn.text === 'Finish') {
+                  this.next();
+                } else if (btn.text === 'Skip') {
+                  this.cancel();
+                } else {
+                  this.back();
+                }
+              },
+            classes:
+              btn.classes ||
+              (btn.secondary ? 'shepherd-button-secondary' : 'shepherd-button-primary'),
           })) || [
             {
               text: 'Back',
-              action() { 
+              action() {
                 // Access tour instance via closure instead of `this`
                 const tourInstance = tourRef.current;
                 if (tourInstance) tourInstance.back();
@@ -98,7 +104,7 @@ export function useTour({ steps, tourOptions, onComplete, onCancel }: UseTourOpt
             },
             {
               text: 'Next',
-              action() { 
+              action() {
                 // Access tour instance via closure instead of `this`
                 const tourInstance = tourRef.current;
                 if (tourInstance) tourInstance.next();

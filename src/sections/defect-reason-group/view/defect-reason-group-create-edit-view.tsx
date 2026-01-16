@@ -1,3 +1,4 @@
+import { MuiColorInput } from 'mui-color-input';
 import { useState, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
@@ -22,6 +23,8 @@ import {
   useUpdateDefectReasonGroup,
 } from 'src/api/hooks/generated/use-defect-reason-group';
 
+import { TranslationSection } from 'src/components/translation-section';
+
 // ----------------------------------------------------------------------
 
 interface DefectReasonGroupFormData {
@@ -29,6 +32,7 @@ interface DefectReasonGroupFormData {
   name: string;
   colorHex: string;
   description: string;
+  translations: Record<string, string>;
 }
 
 interface DefectReasonGroupCreateEditViewProps {
@@ -39,6 +43,7 @@ interface DefectReasonGroupCreateEditViewProps {
     name: string;
     colorHex: string;
     description: string;
+    translations?: Record<string, string>;
   };
 }
 
@@ -62,8 +67,9 @@ export function DefectReasonGroupCreateEditView({
   const [formData, setFormData] = useState<DefectReasonGroupFormData>({
     code: currentDefectReasonGroup?.code || '',
     name: currentDefectReasonGroup?.name || '',
-    colorHex: currentDefectReasonGroup?.colorHex || '#000000',
+    colorHex: currentDefectReasonGroup?.colorHex || '#1976d2',
     description: currentDefectReasonGroup?.description || '',
+    translations: currentDefectReasonGroup?.translations || {},
   });
 
   const { mutate: createDefectReasonGroupMutate, isPending: isCreating } =
@@ -118,6 +124,24 @@ export function DefectReasonGroupCreateEditView({
     [clearFieldError]
   );
 
+  const handleColorChange = useCallback(
+    (newColor: string) => {
+      setFormData((prev) => ({
+        ...prev,
+        colorHex: newColor,
+      }));
+      clearFieldError('colorHex');
+    },
+    [clearFieldError]
+  );
+
+  const handleTranslationsChange = useCallback((translations: Record<string, string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      translations,
+    }));
+  }, []);
+
   const handleSubmit = useCallback(() => {
     clearValidationResult();
     setErrorMessage(null);
@@ -136,6 +160,7 @@ export function DefectReasonGroupCreateEditView({
           { key: 'name', value: formData.name },
           { key: 'colorHex', value: formData.colorHex },
           { key: 'description', value: formData.description },
+          { key: 'translations', value: JSON.stringify(formData.translations) },
         ],
       });
     } else {
@@ -146,6 +171,7 @@ export function DefectReasonGroupCreateEditView({
           name: formData.name,
           colorHex: formData.colorHex,
           description: formData.description,
+          translations: formData.translations,
         } as any, // Cast to any to bypass strict type checking for required fields,
       });
     }
@@ -213,37 +239,39 @@ export function DefectReasonGroupCreateEditView({
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
               Color
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box
-                component="input"
-                type="color"
-                value={formData.colorHex}
-                onChange={handleInputChange('colorHex')}
+            <MuiColorInput
+              fullWidth
+              format="hex"
+              value={formData.colorHex}
+              onChange={handleColorChange}
+              error={hasError('colorHex')}
+              helperText={
+                getFieldErrorMessage('colorHex') ||
+                'Choose a color to represent this defect reason group'
+              }
+            />
+            <Box
+              sx={{
+                mt: 2,
+                p: 2,
+                bgcolor: formData.colorHex,
+                borderRadius: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: 60,
+              }}
+            >
+              <Typography
+                variant="body2"
                 sx={{
-                  width: 48,
-                  height: 48,
-                  border: 'none',
-                  borderRadius: 1,
-                  cursor: 'pointer',
-                  '&::-webkit-color-swatch-wrapper': {
-                    padding: 0,
-                  },
-                  '&::-webkit-color-swatch': {
-                    border: '1px solid',
-                    borderColor: 'divider',
-                    borderRadius: 1,
-                  },
+                  color: 'white',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                  fontWeight: 'medium',
                 }}
-              />
-              <TextField
-                size="small"
-                value={formData.colorHex}
-                onChange={handleInputChange('colorHex')}
-                placeholder="#000000"
-                sx={{ width: 120 }}
-                error={hasError('colorHex')}
-                helperText={getFieldErrorMessage('colorHex')}
-              />
+              >
+                Preview: {formData.name || 'Defect Reason Group Name'}
+              </Typography>
             </Box>
           </Box>
 
@@ -286,6 +314,12 @@ export function DefectReasonGroupCreateEditView({
           </Button>
         </Box>
       </Card>
+
+      <TranslationSection
+        translations={formData.translations}
+        onTranslationsChange={handleTranslationsChange}
+        disabled={isSubmitting}
+      />
 
       <Snackbar
         open={!!(errorMessage || overallMessage)}

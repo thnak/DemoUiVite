@@ -260,81 +260,81 @@ export function MachineOEEView() {
         animate="visible"
       >
         <Grid container spacing={3}>
-        {/* OEE Summary Widgets */}
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <OEEWidgetSummary
-            title="Overall OEE"
-            value={displayOEEData.oee}
-            icon={<Iconify icon="mdi:gauge" width={48} />}
-          />
-        </Grid>
+          {/* OEE Summary Widgets */}
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <OEEWidgetSummary
+              title="Overall OEE"
+              value={displayOEEData.oee}
+              icon={<Iconify icon="mdi:gauge" width={48} />}
+            />
+          </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <OEEWidgetSummary
-            title="Availability"
-            value={displayOEEData.availability}
-            color="info"
-            icon={<Iconify icon="mdi:clock-check" width={48} />}
-            subtitle="Planned vs Actual runtime"
-          />
-        </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <OEEWidgetSummary
+              title="Availability"
+              value={displayOEEData.availability}
+              color="info"
+              icon={<Iconify icon="mdi:clock-check" width={48} />}
+              subtitle="Planned vs Actual runtime"
+            />
+          </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <OEEWidgetSummary
-            title="Performance"
-            value={displayOEEData.performance}
-            color="warning"
-            icon={<Iconify icon="mdi:speedometer" width={48} />}
-            subtitle="Actual vs Ideal cycle time"
-          />
-        </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <OEEWidgetSummary
+              title="Performance"
+              value={displayOEEData.performance}
+              color="warning"
+              icon={<Iconify icon="mdi:speedometer" width={48} />}
+              subtitle="Actual vs Ideal cycle time"
+            />
+          </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <OEEWidgetSummary
-            title="Quality"
-            value={displayOEEData.quality}
-            color="success"
-            icon={<Iconify icon="mdi:check-decagram" width={48} />}
-            subtitle="Good units vs Total units"
-          />
-        </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <OEEWidgetSummary
+              title="Quality"
+              value={displayOEEData.quality}
+              color="success"
+              icon={<Iconify icon="mdi:check-decagram" width={48} />}
+              subtitle="Good units vs Total units"
+            />
+          </Grid>
 
-        {/* OEE Trend Chart */}
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <OEETrendChart
-            title="OEE Trend"
-            subheader={`${selectedYear} - Monthly breakdown`}
-            chart={chartData}
-          />
-        </Grid>
+          {/* OEE Trend Chart */}
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <OEETrendChart
+              title="OEE Trend"
+              subheader={`${selectedYear} - Monthly breakdown`}
+              chart={chartData}
+            />
+          </Grid>
 
-        {/* Best Product */}
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <OEEBestProduct
-            title="Best Product Performance"
-            subheader={`Top performer for ${timePeriod === 'year' ? selectedYear : currentMonthData.month}`}
-            product={currentYearData.bestProduct}
-          />
-        </Grid>
+          {/* Best Product */}
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <OEEBestProduct
+              title="Best Product Performance"
+              subheader={`Top performer for ${timePeriod === 'year' ? selectedYear : currentMonthData.month}`}
+              product={currentYearData.bestProduct}
+            />
+          </Grid>
 
-        {/* Product OEE Table */}
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <OEEProductTable
-            title="Product OEE Breakdown"
-            subheader={`All products for selected ${timePeriod}`}
-            products={displayProducts}
-          />
-        </Grid>
+          {/* Product OEE Table */}
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <OEEProductTable
+              title="Product OEE Breakdown"
+              subheader={`All products for selected ${timePeriod}`}
+              products={displayProducts}
+            />
+          </Grid>
 
-        {/* Weekly OEE Table */}
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <OEEWeeklyTable
-            title="Weekly Performance"
-            subheader={`${currentMonthData.month} ${selectedYear}`}
-            weekData={currentMonthData.weeklyData}
-          />
+          {/* Weekly OEE Table */}
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <OEEWeeklyTable
+              title="Weekly Performance"
+              subheader={`${currentMonthData.month} ${selectedYear}`}
+              weekData={currentMonthData.weeklyData}
+            />
+          </Grid>
         </Grid>
-      </Grid>
       </motion.div>
     </DashboardContent>
   );

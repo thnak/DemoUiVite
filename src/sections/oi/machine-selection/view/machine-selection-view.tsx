@@ -103,7 +103,7 @@ export function MachineSelectionView() {
       });
 
       let machineData = Array.isArray(response) ? response : [];
-      
+
       // Add mock data for visual testing if no real data (dev mode only)
       if (machineData.length === 0 && import.meta.env.DEV) {
         machineData = [
@@ -151,7 +151,7 @@ export function MachineSelectionView() {
           },
         ];
       }
-      
+
       setMachines(machineData);
     } catch (error) {
       console.error('Failed to load machines:', error);
@@ -246,9 +246,12 @@ export function MachineSelectionView() {
                 slotProps={{
                   input: {
                     startAdornment: (
-                      <Iconify icon="eva:search-fill" sx={{ mr: 1, color: 'text.disabled', width: 24, height: 24 }} />
+                      <Iconify
+                        icon="eva:search-fill"
+                        sx={{ mr: 1, color: 'text.disabled', width: 24, height: 24 }}
+                      />
                     ),
-                  }
+                  },
                 }}
               />
 
@@ -274,11 +277,12 @@ export function MachineSelectionView() {
                     </Box>
                   )}
                 >
-                  {Array.isArray(areas) && areas.map((area) => (
-                    <MenuItem key={area.id} value={area.id}>
-                      {area.name}
-                    </MenuItem>
-                  ))}
+                  {Array.isArray(areas) &&
+                    areas.map((area) => (
+                      <MenuItem key={area.id} value={area.id}>
+                        {area.name}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </Stack>
@@ -335,14 +339,36 @@ export function MachineSelectionView() {
               >
                 {machines.map((machine) => {
                   const runStateConfig = {
-                    running: { label: 'Running', color: '#22c55e', icon: 'solar:play-circle-bold' as const },
-                    speedLoss: { label: 'Speed Loss', color: '#f59e0b', icon: 'mdi:speedometer' as const },
-                    unPlannedDowntime: { label: 'Unplanned Downtime', color: '#ef4444', icon: 'solar:danger-triangle-bold-duotone' as const },
-                    plannedDowntime: { label: 'Planned Downtime', color: '#64748b', icon: 'solar:danger-triangle-bold-duotone' as const },
-                    testMode: { label: 'Test Mode', color: '#8b5cf6', icon: 'solar:test-tube-bold' as const },
+                    running: {
+                      label: 'Running',
+                      color: '#22c55e',
+                      icon: 'solar:play-circle-bold' as const,
+                    },
+                    speedLoss: {
+                      label: 'Speed Loss',
+                      color: '#f59e0b',
+                      icon: 'mdi:speedometer' as const,
+                    },
+                    unPlannedDowntime: {
+                      label: 'Unplanned Downtime',
+                      color: '#ef4444',
+                      icon: 'solar:danger-triangle-bold-duotone' as const,
+                    },
+                    plannedDowntime: {
+                      label: 'Planned Downtime',
+                      color: '#64748b',
+                      icon: 'solar:danger-triangle-bold-duotone' as const,
+                    },
+                    testMode: {
+                      label: 'Test Mode',
+                      color: '#8b5cf6',
+                      icon: 'solar:test-tube-bold' as const,
+                    },
                   };
-                  const currentState = machine.currentRunState ? runStateConfig[machine.currentRunState] : null;
-                  
+                  const currentState = machine.currentRunState
+                    ? runStateConfig[machine.currentRunState]
+                    : null;
+
                   return (
                     <motion.div key={machine.machineId} variants={cardVariants as any}>
                       <Card
@@ -363,7 +389,9 @@ export function MachineSelectionView() {
                         <Box
                           sx={{
                             height: 180,
-                            bgcolor: machine.areaHexColor ? `${machine.areaHexColor}15` : 'background.neutral',
+                            bgcolor: machine.areaHexColor
+                              ? `${machine.areaHexColor}15`
+                              : 'background.neutral',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -393,7 +421,7 @@ export function MachineSelectionView() {
                               objectFit: 'cover',
                             }}
                           />
-                          
+
                           {/* Run State Badge */}
                           {currentState && (
                             <Box
@@ -425,14 +453,14 @@ export function MachineSelectionView() {
                           <Typography variant="h5" sx={{ mb: 1, fontWeight: 'bold' }}>
                             {machine.machineName}
                           </Typography>
-                          
+
                           {/* Area Name - Small Text without Chip */}
-                          <Typography 
-                            variant="caption" 
-                            sx={{ 
+                          <Typography
+                            variant="caption"
+                            sx={{
                               display: 'block',
                               color: 'text.secondary',
-                              mb: 2
+                              mb: 2,
                             }}
                           >
                             {machine.areaName || 'Unknown Area'}

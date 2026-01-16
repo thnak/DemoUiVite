@@ -263,40 +263,40 @@ export function DowntimeReportView() {
             exit="exit"
           >
             <Grid container spacing={3}>
-          <Grid size={{ xs: 12, lg: 6 }}>
-            <DowntimeByReasonChart
-              title="Downtime by Reason Category"
-              subheader={`${selectedYear} - All machines`}
-              data={reportData.downtimeByReason}
-            />
-          </Grid>
+              <Grid size={{ xs: 12, lg: 6 }}>
+                <DowntimeByReasonChart
+                  title="Downtime by Reason Category"
+                  subheader={`${selectedYear} - All machines`}
+                  data={reportData.downtimeByReason}
+                />
+              </Grid>
 
-          <Grid size={{ xs: 12, lg: 6 }}>
-            <DowntimeParetoChart
-              title="Pareto Analysis - Reasons"
-              subheader="Identify top downtime contributors"
-              data={reasonParetoData}
-              valueLabel="Downtime"
-            />
-          </Grid>
+              <Grid size={{ xs: 12, lg: 6 }}>
+                <DowntimeParetoChart
+                  title="Pareto Analysis - Reasons"
+                  subheader="Identify top downtime contributors"
+                  data={reasonParetoData}
+                  valueLabel="Downtime"
+                />
+              </Grid>
 
-          <Grid size={{ xs: 12 }}>
-            <DowntimeTimelineChart
-              title="Monthly Downtime Timeline"
-              subheader={`${selectedYear} - Runtime distribution`}
-              data={reportData.monthlyData}
-              viewType="monthly"
-            />
-          </Grid>
+              <Grid size={{ xs: 12 }}>
+                <DowntimeTimelineChart
+                  title="Monthly Downtime Timeline"
+                  subheader={`${selectedYear} - Runtime distribution`}
+                  data={reportData.monthlyData}
+                  viewType="monthly"
+                />
+              </Grid>
 
-          <Grid size={{ xs: 12 }}>
-            <DowntimeMachineTable
-              title="Top Machines by Downtime"
-              subheader="Machines with highest downtime impact"
-              data={reportData.machinesSummary}
-            />
-          </Grid>
-        </Grid>
+              <Grid size={{ xs: 12 }}>
+                <DowntimeMachineTable
+                  title="Top Machines by Downtime"
+                  subheader="Machines with highest downtime impact"
+                  data={reportData.machinesSummary}
+                />
+              </Grid>
+            </Grid>
           </motion.div>
         )}
 
@@ -309,31 +309,31 @@ export function DowntimeReportView() {
             exit="exit"
           >
             <Grid container spacing={3}>
-          <Grid size={{ xs: 12, lg: 8 }}>
-            <DowntimeParetoChart
-              title="Pareto Analysis - Machines"
-              subheader="Identify machines causing most downtime"
-              data={machineParetoData}
-              valueLabel="Downtime"
-            />
-          </Grid>
+              <Grid size={{ xs: 12, lg: 8 }}>
+                <DowntimeParetoChart
+                  title="Pareto Analysis - Machines"
+                  subheader="Identify machines causing most downtime"
+                  data={machineParetoData}
+                  valueLabel="Downtime"
+                />
+              </Grid>
 
-          <Grid size={{ xs: 12, lg: 4 }}>
-            <DowntimeByReasonChart
-              title={`${currentMonthData.month} Reasons`}
-              subheader="Monthly breakdown"
-              data={currentMonthData.downtimeByReason}
-            />
-          </Grid>
+              <Grid size={{ xs: 12, lg: 4 }}>
+                <DowntimeByReasonChart
+                  title={`${currentMonthData.month} Reasons`}
+                  subheader="Monthly breakdown"
+                  data={currentMonthData.downtimeByReason}
+                />
+              </Grid>
 
-          <Grid size={{ xs: 12 }}>
-            <DowntimeMachineTable
-              title="Machine Downtime Details"
-              subheader="Complete machine performance overview"
-              data={reportData.machinesSummary}
-            />
-          </Grid>
-        </Grid>
+              <Grid size={{ xs: 12 }}>
+                <DowntimeMachineTable
+                  title="Machine Downtime Details"
+                  subheader="Complete machine performance overview"
+                  data={reportData.machinesSummary}
+                />
+              </Grid>
+            </Grid>
           </motion.div>
         )}
 
@@ -346,53 +346,53 @@ export function DowntimeReportView() {
             exit="exit"
           >
             <Grid container spacing={3}>
-          <Grid size={{ xs: 12, lg: 8 }}>
-            <DowntimeParetoChart
-              title="Pareto Analysis - Products"
-              subheader="Products associated with most downtime"
-              data={productParetoData}
-              valueLabel="Downtime"
-            />
-          </Grid>
+              <Grid size={{ xs: 12, lg: 8 }}>
+                <DowntimeParetoChart
+                  title="Pareto Analysis - Products"
+                  subheader="Products associated with most downtime"
+                  data={productParetoData}
+                  valueLabel="Downtime"
+                />
+              </Grid>
 
-          <Grid size={{ xs: 12, lg: 4 }}>
-            <Card sx={{ p: 3, height: '100%' }}>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                Product Downtime Summary
-              </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
-                Products experiencing the most issues during production
-              </Typography>
-
-              {reportData.productsSummary.slice(0, 5).map((product, index) => (
-                <Box
-                  key={product.productId}
-                  sx={{
-                    py: 1.5,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    borderBottom: (theme) =>
-                      index < 4 ? `1px dashed ${theme.vars.palette.divider}` : 'none',
-                  }}
-                >
-                  <Box>
-                    <Typography variant="subtitle2">{product.productName}</Typography>
-                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                      {product.totalDowntimeEvents} events
-                    </Typography>
-                  </Box>
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ color: 'error.main', fontWeight: 'fontWeightBold' }}
-                  >
-                    {Math.round((product.totalDowntimeMinutes / 60) * 10) / 10} hrs
+              <Grid size={{ xs: 12, lg: 4 }}>
+                <Card sx={{ p: 3, height: '100%' }}>
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    Product Downtime Summary
                   </Typography>
-                </Box>
-              ))}
-            </Card>
-          </Grid>
-        </Grid>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
+                    Products experiencing the most issues during production
+                  </Typography>
+
+                  {reportData.productsSummary.slice(0, 5).map((product, index) => (
+                    <Box
+                      key={product.productId}
+                      sx={{
+                        py: 1.5,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        borderBottom: (theme) =>
+                          index < 4 ? `1px dashed ${theme.vars.palette.divider}` : 'none',
+                      }}
+                    >
+                      <Box>
+                        <Typography variant="subtitle2">{product.productName}</Typography>
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                          {product.totalDowntimeEvents} events
+                        </Typography>
+                      </Box>
+                      <Typography
+                        variant="subtitle2"
+                        sx={{ color: 'error.main', fontWeight: 'fontWeightBold' }}
+                      >
+                        {Math.round((product.totalDowntimeMinutes / 60) * 10) / 10} hrs
+                      </Typography>
+                    </Box>
+                  ))}
+                </Card>
+              </Grid>
+            </Grid>
           </motion.div>
         )}
 
@@ -405,44 +405,46 @@ export function DowntimeReportView() {
             exit="exit"
           >
             <Grid container spacing={3}>
-          <Grid size={{ xs: 12 }}>
-            <DowntimeTimelineChart
-              title="Monthly Overview"
-              subheader={`${selectedYear} - Complete year view`}
-              data={reportData.monthlyData}
-              viewType="monthly"
-            />
-          </Grid>
+              <Grid size={{ xs: 12 }}>
+                <DowntimeTimelineChart
+                  title="Monthly Overview"
+                  subheader={`${selectedYear} - Complete year view`}
+                  data={reportData.monthlyData}
+                  viewType="monthly"
+                />
+              </Grid>
 
-          <Grid size={{ xs: 12 }}>
-            <DowntimeTimelineChart
-              title={`Daily Breakdown - ${currentMonthData.month}`}
-              subheader="Day by day performance"
-              data={currentMonthData.dailyData}
-              viewType="daily"
-            />
-          </Grid>
+              <Grid size={{ xs: 12 }}>
+                <DowntimeTimelineChart
+                  title={`Daily Breakdown - ${currentMonthData.month}`}
+                  subheader="Day by day performance"
+                  data={currentMonthData.dailyData}
+                  viewType="daily"
+                />
+              </Grid>
 
-          <Grid size={{ xs: 12, lg: 6 }}>
-            <DowntimeByReasonChart
-              title={`${currentMonthData.month} Downtime by Reason`}
-              subheader="Selected month breakdown"
-              data={currentMonthData.downtimeByReason}
-            />
-          </Grid>
+              <Grid size={{ xs: 12, lg: 6 }}>
+                <DowntimeByReasonChart
+                  title={`${currentMonthData.month} Downtime by Reason`}
+                  subheader="Selected month breakdown"
+                  data={currentMonthData.downtimeByReason}
+                />
+              </Grid>
 
-          <Grid size={{ xs: 12, lg: 6 }}>
-            <DowntimeParetoChart
-              title={`${currentMonthData.month} Pareto Analysis`}
-              subheader="Monthly reason analysis"
-              data={Object.entries(currentMonthData.downtimeByReason).map(([reason, minutes]) => ({
-                name: reason,
-                value: minutes,
-              }))}
-              valueLabel="Downtime"
-            />
-          </Grid>
-        </Grid>
+              <Grid size={{ xs: 12, lg: 6 }}>
+                <DowntimeParetoChart
+                  title={`${currentMonthData.month} Pareto Analysis`}
+                  subheader="Monthly reason analysis"
+                  data={Object.entries(currentMonthData.downtimeByReason).map(
+                    ([reason, minutes]) => ({
+                      name: reason,
+                      value: minutes,
+                    })
+                  )}
+                  valueLabel="Downtime"
+                />
+              </Grid>
+            </Grid>
           </motion.div>
         )}
       </AnimatePresence>

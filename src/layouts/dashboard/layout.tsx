@@ -25,8 +25,6 @@ import { MainSection, layoutClasses, HeaderSection, LayoutSection } from '../cor
 
 import type { MainSectionProps, HeaderSectionProps, LayoutSectionProps } from '../core';
 
-
-
 // ----------------------------------------------------------------------
 
 type LayoutBaseProps = Pick<LayoutSectionProps, 'sx' | 'children' | 'cssVars'>;

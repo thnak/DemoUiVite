@@ -7,7 +7,10 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchTimeBlockName, useGetTimeBlockNameById } from 'src/api/hooks/generated/use-time-block-name';
+import {
+  useSearchTimeBlockName,
+  useGetTimeBlockNameById,
+} from 'src/api/hooks/generated/use-time-block-name';
 
 // ----------------------------------------------------------------------
 
@@ -36,19 +39,22 @@ export function TimeBlockNameSelector({
 }: TimeBlockNameSelectorProps) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
-  const [selectedTimeBlockName, setSelectedTimeBlockName] = useState<TimeBlockNameEntity | null>(null);
+  const [selectedTimeBlockName, setSelectedTimeBlockName] = useState<TimeBlockNameEntity | null>(
+    null
+  );
 
   // Fetch entity by ID when value prop is provided
-  const { data: entityById, isFetching: isFetchingById } = useGetTimeBlockNameById(
-    value || '',
-    {
-      enabled: !!value && !selectedTimeBlockName,
-    }
-  );
+  const { data: entityById, isFetching: isFetchingById } = useGetTimeBlockNameById(value || '', {
+    enabled: !!value && !selectedTimeBlockName,
+  });
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value && entityById.id?.toString() !== selectedTimeBlockName?.id?.toString()) {
+    if (
+      entityById &&
+      value &&
+      entityById.id?.toString() !== selectedTimeBlockName?.id?.toString()
+    ) {
       setSelectedTimeBlockName(entityById);
     } else if (!value && selectedTimeBlockName !== null) {
       setSelectedTimeBlockName(null);
@@ -58,18 +64,17 @@ export function TimeBlockNameSelector({
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
-    () => debounce((searchValue: string) => {
-      setDebouncedInputValue(searchValue);
-    }, 500),
+    () =>
+      debounce((searchValue: string) => {
+        setDebouncedInputValue(searchValue);
+      }, 500),
     []
   );
 
-  const { data: searchResults, isFetching: isFetchingSearch } = useSearchTimeBlockName(
-    {
-      searchText: debouncedInputValue || undefined,
-      maxResults: 10,
-    }
-  );
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchTimeBlockName({
+    searchText: debouncedInputValue || undefined,
+    maxResults: 10,
+  });
 
   const items = searchResults?.data || [];
   const isFetching = isFetchingById || isFetchingSearch;
@@ -124,7 +129,7 @@ export function TimeBlockNameSelector({
                   {params.InputProps.endAdornment}
                 </>
               ),
-            }
+            },
           }}
         />
       )}

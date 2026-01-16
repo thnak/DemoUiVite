@@ -96,7 +96,7 @@ export function OEEMetricCard({
     <Card
       sx={{
         p: 3,
-        height: "100%",
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         cursor: onClick ? 'pointer' : 'default',

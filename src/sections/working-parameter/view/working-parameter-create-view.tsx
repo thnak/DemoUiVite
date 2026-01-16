@@ -60,7 +60,7 @@ interface WorkingParameterFormData {
 export function WorkingParameterCreateView() {
   const router = useRouter();
   const [tabValue, setTabValue] = useState(0);
-  
+
   // Product-centric states
   const [productId, setProductId] = useState<string | null>(null);
   const [mappedMachines, setMappedMachines] = useState<GetMappedMachineByProductIdResult[]>([]);
@@ -70,7 +70,7 @@ export function WorkingParameterCreateView() {
   const [selectedMachineIds, setSelectedMachineIds] = useState<string[]>([]);
   const [machineSearch, setMachineSearch] = useState('');
   const [productParamsSearch, setProductParamsSearch] = useState('');
-  
+
   // Machine-centric states
   const [machineId, setMachineId] = useState<string | null>(null);
   const [mappedProducts, setMappedProducts] = useState<GetAvailableProductByMachineIdResult[]>([]);
@@ -80,7 +80,7 @@ export function WorkingParameterCreateView() {
   const [selectedProductIds, setSelectedProductIds] = useState<string[]>([]);
   const [productSearch, setProductSearch] = useState('');
   const [machineParamsSearch, setMachineParamsSearch] = useState('');
-  
+
   // Common states
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -420,12 +420,7 @@ export function WorkingParameterCreateView() {
               <Typography variant="h6" sx={{ mb: 3 }}>
                 Select Product
               </Typography>
-              <ProductSelector
-                value={productId}
-                onChange={setProductId}
-                label="Product"
-                required
-              />
+              <ProductSelector value={productId} onChange={setProductId} label="Product" required />
             </Card>
           </Grid>
 
@@ -437,242 +432,242 @@ export function WorkingParameterCreateView() {
                     Working Parameter Settings
                   </Typography>
                   <Grid container spacing={3}>
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <DurationTimePicker
-                      fullWidth
-                      label="Ideal Cycle Time"
-                      value={formData.idealCycleTime}
-                      onChange={(value) =>
-                        setFormData((prev) => ({ ...prev, idealCycleTime: value }))
-                      }
-                      precision="seconds"
-                    />
+                    <Grid size={{ xs: 12, md: 6 }}>
+                      <DurationTimePicker
+                        fullWidth
+                        label="Ideal Cycle Time"
+                        value={formData.idealCycleTime}
+                        onChange={(value) =>
+                          setFormData((prev) => ({ ...prev, idealCycleTime: value }))
+                        }
+                        precision="seconds"
+                      />
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 6 }}>
+                      <TextField
+                        fullWidth
+                        type="number"
+                        label="Quantity Per Cycle"
+                        value={formData.quantityPerCycle}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            quantityPerCycle: Number(e.target.value),
+                          }))
+                        }
+                      />
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 6 }}>
+                      <DurationTimePicker
+                        fullWidth
+                        label="Downtime Threshold"
+                        value={formData.downtimeThreshold}
+                        onChange={(value) =>
+                          setFormData((prev) => ({ ...prev, downtimeThreshold: value }))
+                        }
+                        precision="seconds"
+                      />
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 6 }}>
+                      <DurationTimePicker
+                        fullWidth
+                        label="Speed Loss Threshold"
+                        value={formData.speedLossThreshold}
+                        onChange={(value) =>
+                          setFormData((prev) => ({ ...prev, speedLossThreshold: value }))
+                        }
+                        precision="seconds"
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <TextField
-                      fullWidth
-                      type="number"
-                      label="Quantity Per Cycle"
-                      value={formData.quantityPerCycle}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          quantityPerCycle: Number(e.target.value),
-                        }))
-                      }
-                    />
-                  </Grid>
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <DurationTimePicker
-                      fullWidth
-                      label="Downtime Threshold"
-                      value={formData.downtimeThreshold}
-                      onChange={(value) =>
-                        setFormData((prev) => ({ ...prev, downtimeThreshold: value }))
-                      }
-                      precision="seconds"
-                    />
-                  </Grid>
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <DurationTimePicker
-                      fullWidth
-                      label="Speed Loss Threshold"
-                      value={formData.speedLossThreshold}
-                      onChange={(value) =>
-                        setFormData((prev) => ({ ...prev, speedLossThreshold: value }))
-                      }
-                      precision="seconds"
-                    />
-                  </Grid>
-                </Grid>
-              </Card>
-            </Grid>
+                </Card>
+              </Grid>
 
-            <Grid size={{ xs: 12 }}>
-              <Card sx={{ p: 3 }}>
-                <Box
-                  sx={{
-                    mb: 2,
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Typography variant="h6">Select Machines</Typography>
-                  <TextField
-                    size="small"
-                    placeholder="Search machines..."
-                    value={machineSearch}
-                    onChange={(e) => setMachineSearch(e.target.value)}
-                    slotProps={{
-                      input: {
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Iconify icon="eva:search-fill" />
-                          </InputAdornment>
-                        ),
-                      },
+              <Grid size={{ xs: 12 }}>
+                <Card sx={{ p: 3 }}>
+                  <Box
+                    sx={{
+                      mb: 2,
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
                     }}
-                    sx={{ width: 300 }}
-                  />
-                </Box>
-                <Scrollbar>
-                  <TableContainer sx={{ overflow: 'unset', maxHeight: 400 }}>
-                    <Table stickyHeader>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={
-                                mappedMachines.length > 0 &&
-                                selectedMachineIds.length === mappedMachines.length
-                              }
-                              indeterminate={
-                                selectedMachineIds.length > 0 &&
-                                selectedMachineIds.length < mappedMachines.length
-                              }
-                              onChange={(e) => handleSelectAllMachines(e.target.checked)}
-                            />
-                          </TableCell>
-                          <TableCell>Machine Name</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {loading ? (
-                          <TableRow>
-                            <TableCell colSpan={2} align="center">
-                              <CircularProgress size={24} />
-                            </TableCell>
-                          </TableRow>
-                        ) : filteredMachines.length === 0 ? (
-                          <TableRow>
-                            <TableCell colSpan={2} align="center">
-                              No mapped machines found
-                            </TableCell>
-                          </TableRow>
-                        ) : (
-                          filteredMachines.map((machine) => {
-                            const machineIdVal = machine.machineId?.toString() || '';
-                            return (
-                              <TableRow
-                                key={machineIdVal}
-                                hover
-                                onClick={() => handleSelectMachine(machineIdVal)}
-                                sx={{ cursor: 'pointer' }}
-                              >
-                                <TableCell padding="checkbox">
-                                  <Checkbox checked={selectedMachineIds.includes(machineIdVal)} />
-                                </TableCell>
-                                <TableCell>{machine.machineName}</TableCell>
-                              </TableRow>
-                            );
-                          })
-                        )}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Scrollbar>
-                <Box
-                  sx={{
-                    mt: 2,
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Typography variant="body2" color="text.secondary">
-                    {selectedMachineIds.length} machine(s) selected
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    disabled={loading || selectedMachineIds.length === 0}
-                    onClick={handleSubmitProduct}
                   >
-                    Create Parameters
-                  </Button>
-                </Box>
-              </Card>
-            </Grid>
-
-            <Grid size={{ xs: 12 }}>
-              <Card sx={{ p: 3 }}>
-                <Box
-                  sx={{
-                    mb: 2,
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Typography variant="h6">Created Working Parameters</Typography>
-                  <TextField
-                    size="small"
-                    placeholder="Search created parameters..."
-                    value={productParamsSearch}
-                    onChange={(e) => setProductParamsSearch(e.target.value)}
-                    sx={{ width: 300 }}
-                    slotProps={{
-                      input: {
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Iconify icon="eva:search-fill" />
-                          </InputAdornment>
-                        ),
-                      }
-                    }}
-                  />
-                </Box>
-                <Scrollbar>
-                  <TableContainer sx={{ overflow: 'unset' }}>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Machine Name</TableCell>
-                          <TableCell>Ideal Cycle Time</TableCell>
-                          <TableCell>Quantity Per Cycle</TableCell>
-                          <TableCell>Downtime Threshold</TableCell>
-                          <TableCell>Speed Loss Threshold</TableCell>
-                          <TableCell align="right">Actions</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {createdProductParameters.length === 0 ? (
+                    <Typography variant="h6">Select Machines</Typography>
+                    <TextField
+                      size="small"
+                      placeholder="Search machines..."
+                      value={machineSearch}
+                      onChange={(e) => setMachineSearch(e.target.value)}
+                      slotProps={{
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <Iconify icon="eva:search-fill" />
+                            </InputAdornment>
+                          ),
+                        },
+                      }}
+                      sx={{ width: 300 }}
+                    />
+                  </Box>
+                  <Scrollbar>
+                    <TableContainer sx={{ overflow: 'unset', maxHeight: 400 }}>
+                      <Table stickyHeader>
+                        <TableHead>
                           <TableRow>
-                            <TableCell colSpan={6} align="center">
-                              No working parameters created yet
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                checked={
+                                  mappedMachines.length > 0 &&
+                                  selectedMachineIds.length === mappedMachines.length
+                                }
+                                indeterminate={
+                                  selectedMachineIds.length > 0 &&
+                                  selectedMachineIds.length < mappedMachines.length
+                                }
+                                onChange={(e) => handleSelectAllMachines(e.target.checked)}
+                              />
                             </TableCell>
+                            <TableCell>Machine Name</TableCell>
                           </TableRow>
-                        ) : (
-                          createdProductParameters.map((param) => (
-                            <TableRow key={param.workingParameterId?.toString()}>
-                              <TableCell>{param.machineName}</TableCell>
-                              <TableCell>{param.idealCycleTime}</TableCell>
-                              <TableCell>{param.quantityPerCycle}</TableCell>
-                              <TableCell>{param.downtimeThreshold}</TableCell>
-                              <TableCell>{param.speedLossThreshold}</TableCell>
-                              <TableCell align="right">
-                                <IconButton
-                                  color="error"
-                                  onClick={() =>
-                                    handleDeleteParameter(
-                                      param.workingParameterId?.toString() || ''
-                                    )
-                                  }
-                                >
-                                  <Iconify icon="solar:trash-bin-trash-bold" />
-                                </IconButton>
+                        </TableHead>
+                        <TableBody>
+                          {loading ? (
+                            <TableRow>
+                              <TableCell colSpan={2} align="center">
+                                <CircularProgress size={24} />
                               </TableCell>
                             </TableRow>
-                          ))
-                        )}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Scrollbar>
-              </Card>
-            </Grid>
-          </>
-        )}
+                          ) : filteredMachines.length === 0 ? (
+                            <TableRow>
+                              <TableCell colSpan={2} align="center">
+                                No mapped machines found
+                              </TableCell>
+                            </TableRow>
+                          ) : (
+                            filteredMachines.map((machine) => {
+                              const machineIdVal = machine.machineId?.toString() || '';
+                              return (
+                                <TableRow
+                                  key={machineIdVal}
+                                  hover
+                                  onClick={() => handleSelectMachine(machineIdVal)}
+                                  sx={{ cursor: 'pointer' }}
+                                >
+                                  <TableCell padding="checkbox">
+                                    <Checkbox checked={selectedMachineIds.includes(machineIdVal)} />
+                                  </TableCell>
+                                  <TableCell>{machine.machineName}</TableCell>
+                                </TableRow>
+                              );
+                            })
+                          )}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Scrollbar>
+                  <Box
+                    sx={{
+                      mt: 2,
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Typography variant="body2" color="text.secondary">
+                      {selectedMachineIds.length} machine(s) selected
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      disabled={loading || selectedMachineIds.length === 0}
+                      onClick={handleSubmitProduct}
+                    >
+                      Create Parameters
+                    </Button>
+                  </Box>
+                </Card>
+              </Grid>
+
+              <Grid size={{ xs: 12 }}>
+                <Card sx={{ p: 3 }}>
+                  <Box
+                    sx={{
+                      mb: 2,
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Typography variant="h6">Created Working Parameters</Typography>
+                    <TextField
+                      size="small"
+                      placeholder="Search created parameters..."
+                      value={productParamsSearch}
+                      onChange={(e) => setProductParamsSearch(e.target.value)}
+                      sx={{ width: 300 }}
+                      slotProps={{
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <Iconify icon="eva:search-fill" />
+                            </InputAdornment>
+                          ),
+                        },
+                      }}
+                    />
+                  </Box>
+                  <Scrollbar>
+                    <TableContainer sx={{ overflow: 'unset' }}>
+                      <Table>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Machine Name</TableCell>
+                            <TableCell>Ideal Cycle Time</TableCell>
+                            <TableCell>Quantity Per Cycle</TableCell>
+                            <TableCell>Downtime Threshold</TableCell>
+                            <TableCell>Speed Loss Threshold</TableCell>
+                            <TableCell align="right">Actions</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {createdProductParameters.length === 0 ? (
+                            <TableRow>
+                              <TableCell colSpan={6} align="center">
+                                No working parameters created yet
+                              </TableCell>
+                            </TableRow>
+                          ) : (
+                            createdProductParameters.map((param) => (
+                              <TableRow key={param.workingParameterId?.toString()}>
+                                <TableCell>{param.machineName}</TableCell>
+                                <TableCell>{param.idealCycleTime}</TableCell>
+                                <TableCell>{param.quantityPerCycle}</TableCell>
+                                <TableCell>{param.downtimeThreshold}</TableCell>
+                                <TableCell>{param.speedLossThreshold}</TableCell>
+                                <TableCell align="right">
+                                  <IconButton
+                                    color="error"
+                                    onClick={() =>
+                                      handleDeleteParameter(
+                                        param.workingParameterId?.toString() || ''
+                                      )
+                                    }
+                                  >
+                                    <Iconify icon="solar:trash-bin-trash-bold" />
+                                  </IconButton>
+                                </TableCell>
+                              </TableRow>
+                            ))
+                          )}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Scrollbar>
+                </Card>
+              </Grid>
+            </>
+          )}
         </Grid>
       )}
       {/* Machine Tab */}
@@ -683,12 +678,7 @@ export function WorkingParameterCreateView() {
               <Typography variant="h6" sx={{ mb: 3 }}>
                 Select Machine
               </Typography>
-              <MachineSelector
-                value={machineId}
-                onChange={setMachineId}
-                label="Machine"
-                required
-              />
+              <MachineSelector value={machineId} onChange={setMachineId} label="Machine" required />
             </Card>
           </Grid>
 
@@ -824,7 +814,9 @@ export function WorkingParameterCreateView() {
                                   sx={{ cursor: 'pointer' }}
                                 >
                                   <TableCell padding="checkbox">
-                                    <Checkbox checked={selectedProductIds.includes(productIdValue)} />
+                                    <Checkbox
+                                      checked={selectedProductIds.includes(productIdValue)}
+                                    />
                                   </TableCell>
                                   <TableCell>{product.productName}</TableCell>
                                 </TableRow>
@@ -881,7 +873,7 @@ export function WorkingParameterCreateView() {
                               <Iconify icon="eva:search-fill" />
                             </InputAdornment>
                           ),
-                        }
+                        },
                       }}
                     />
                   </Box>

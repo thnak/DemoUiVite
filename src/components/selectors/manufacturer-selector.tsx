@@ -7,7 +7,10 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchManufacturer, useGetManufacturerById } from 'src/api/hooks/generated/use-manufacturer';
+import {
+  useSearchManufacturer,
+  useGetManufacturerById,
+} from 'src/api/hooks/generated/use-manufacturer';
 
 // ----------------------------------------------------------------------
 
@@ -35,12 +38,9 @@ export function ManufacturerSelector({
   const [selectedManufacturer, setSelectedManufacturer] = useState<ManufacturerEntity | null>(null);
 
   // Fetch entity by ID when value prop is provided
-  const { data: entityById, isFetching: isFetchingById } = useGetManufacturerById(
-    value || '',
-    {
-      enabled: !!value && !selectedManufacturer,
-    }
-  );
+  const { data: entityById, isFetching: isFetchingById } = useGetManufacturerById(value || '', {
+    enabled: !!value && !selectedManufacturer,
+  });
 
   // Set initial value when entity is fetched
   useEffect(() => {
@@ -54,18 +54,17 @@ export function ManufacturerSelector({
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
-    () => debounce((searchValue: string) => {
-      setDebouncedInputValue(searchValue);
-    }, 500),
+    () =>
+      debounce((searchValue: string) => {
+        setDebouncedInputValue(searchValue);
+      }, 500),
     []
   );
 
-  const { data: searchResults, isFetching: isFetchingSearch } = useSearchManufacturer(
-    {
-      searchText: debouncedInputValue || undefined,
-      maxResults: 10,
-    }
-  );
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchManufacturer({
+    searchText: debouncedInputValue || undefined,
+    maxResults: 10,
+  });
 
   const items = searchResults?.data || [];
   const isFetching = isFetchingById || isFetchingSearch;
@@ -97,7 +96,15 @@ export function ManufacturerSelector({
         if (typeof option === 'string') return option;
         // Try common property names across different entity types
         const entity = option as any;
-        return entity.name || entity.code || entity.sensorName || entity.sensorCode || entity.title || String(entity.id) || '';
+        return (
+          entity.name ||
+          entity.code ||
+          entity.sensorName ||
+          entity.sensorCode ||
+          entity.title ||
+          String(entity.id) ||
+          ''
+        );
       }}
       isOptionEqualToValue={(option, val) => option.id === val.id}
       loading={isFetching}
@@ -118,7 +125,7 @@ export function ManufacturerSelector({
                   {params.InputProps.endAdornment}
                 </>
               ),
-            }
+            },
           }}
         />
       )}

@@ -15,13 +15,7 @@ export const visuallyHidden = {
 export const emptyRows = (page: number, rowsPerPage: number, arrayLength: number) =>
   page ? Math.max(0, (1 + page) * rowsPerPage - arrayLength) : 0;
 
-export function applyFilter({
-  inputData,
-  filterName,
-}: {
-  inputData: any[];
-  filterName: string;
-}) {
+export function applyFilter({ inputData, filterName }: { inputData: any[]; filterName: string }) {
   if (filterName) {
     inputData = inputData.filter(
       (sensor) =>

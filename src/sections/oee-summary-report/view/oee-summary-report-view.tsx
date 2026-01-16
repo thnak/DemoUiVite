@@ -149,7 +149,8 @@ export function OEESummaryReportView() {
   }, [reportData.byMachines]);
 
   // Prepare chart data for times tab
-  const timeChartData = useMemo(() => ({
+  const timeChartData = useMemo(
+    () => ({
       categories: reportData.byTimes.map((t) => t.periodLabel),
       series: [
         {
@@ -169,17 +170,16 @@ export function OEESummaryReportView() {
           data: reportData.byTimes.map((t) => t.metrics.quality),
         },
       ],
-    }), [reportData.byTimes]);
+    }),
+    [reportData.byTimes]
+  );
 
   const handleTabChange = useCallback((_event: React.SyntheticEvent, newValue: TabValue) => {
     setCurrentTab(newValue);
   }, []);
 
   // Prepare machine and area data for filters
-  const machineOptions = useMemo(
-    () => _machines.map((m) => ({ id: m.id, name: m.name })),
-    []
-  );
+  const machineOptions = useMemo(() => _machines.map((m) => ({ id: m.id, name: m.name })), []);
 
   const areaOptions = useMemo(() => _areas.map((a) => ({ id: a.name, name: a.name })), []);
 
@@ -249,7 +249,7 @@ export function OEESummaryReportView() {
               <OEESummaryMetricCard
                 title="Overall OEE"
                 value={reportData.overallMetrics.oee}
-                icon={<Iconify icon='solar:chart-bold' width={32} />}
+                icon={<Iconify icon="solar:chart-bold" width={32} />}
                 subtitle="Target: 85%"
               />
             </motion.div>
@@ -259,7 +259,7 @@ export function OEESummaryReportView() {
               <OEESummaryMetricCard
                 title="Availability"
                 value={reportData.overallMetrics.availability}
-                icon={<Iconify icon='solar:clock-circle-bold' width={32} />}
+                icon={<Iconify icon="solar:clock-circle-bold" width={32} />}
                 color="info"
               />
             </motion.div>
@@ -269,7 +269,7 @@ export function OEESummaryReportView() {
               <OEESummaryMetricCard
                 title="Performance"
                 value={reportData.overallMetrics.performance}
-                icon={<Iconify icon='solar:bolt-bold' width={32} />}
+                icon={<Iconify icon="solar:bolt-bold" width={32} />}
                 color="warning"
               />
             </motion.div>
@@ -279,7 +279,7 @@ export function OEESummaryReportView() {
               <OEESummaryMetricCard
                 title="Quality"
                 value={reportData.overallMetrics.quality}
-                icon={<Iconify icon='solar:star-bold' width={32} />}
+                icon={<Iconify icon="solar:star-bold" width={32} />}
                 color="success"
               />
             </motion.div>
@@ -301,13 +301,13 @@ export function OEESummaryReportView() {
             <Tab
               value="machines"
               label="By Machines"
-              icon={<Iconify icon='solar:widget-2-bold' width={24} />}
+              icon={<Iconify icon="solar:widget-2-bold" width={24} />}
               iconPosition="start"
             />
             <Tab
               value="times"
               label="By Times"
-              icon={<Iconify icon='solar:calendar-mark-bold' width={24} />}
+              icon={<Iconify icon="solar:calendar-mark-bold" width={24} />}
               iconPosition="start"
             />
           </Tabs>

@@ -7,7 +7,10 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchStopMachineReasonGroup, useGetStopMachineReasonGroupById } from 'src/api/hooks/generated/use-stop-machine-reason-group';
+import {
+  useSearchStopMachineReasonGroup,
+  useGetStopMachineReasonGroupById,
+} from 'src/api/hooks/generated/use-stop-machine-reason-group';
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +35,8 @@ export function StopMachineReasonGroupSelector({
 }: StopMachineReasonGroupSelectorProps) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
-  const [selectedStopMachineReasonGroup, setSelectedStopMachineReasonGroup] = useState<StopMachineReasonGroupEntity | null>(null);
+  const [selectedStopMachineReasonGroup, setSelectedStopMachineReasonGroup] =
+    useState<StopMachineReasonGroupEntity | null>(null);
   const previousValueRef = useRef<string | null>(null);
 
   // Fetch entity by ID when value prop is provided
@@ -49,12 +53,14 @@ export function StopMachineReasonGroupSelector({
     if (previousValueRef.current === value) {
       return;
     }
-    
+
     previousValueRef.current = value || null;
-    
+
     if (entityById && value) {
       // Only update if the selected entity ID differs from the value
-      const currentId = selectedStopMachineReasonGroup?.id ? String(selectedStopMachineReasonGroup.id) : null;
+      const currentId = selectedStopMachineReasonGroup?.id
+        ? String(selectedStopMachineReasonGroup.id)
+        : null;
       if (currentId !== value) {
         setSelectedStopMachineReasonGroup(entityById);
       }
@@ -66,18 +72,17 @@ export function StopMachineReasonGroupSelector({
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
-    () => debounce((searchValue: string) => {
-      setDebouncedInputValue(searchValue);
-    }, 500),
+    () =>
+      debounce((searchValue: string) => {
+        setDebouncedInputValue(searchValue);
+      }, 500),
     []
   );
 
-  const { data: searchResults, isFetching: isFetchingSearch } = useSearchStopMachineReasonGroup(
-    {
-      searchText: debouncedInputValue || undefined,
-      maxResults: 10,
-    }
-  );
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchStopMachineReasonGroup({
+    searchText: debouncedInputValue || undefined,
+    maxResults: 10,
+  });
 
   const items = searchResults?.data || [];
   const isFetching = isFetchingById || isFetchingSearch;
@@ -109,7 +114,15 @@ export function StopMachineReasonGroupSelector({
         if (typeof option === 'string') return option;
         // Try common property names across different entity types
         const entity = option as any;
-        return entity.name || entity.code || entity.sensorName || entity.sensorCode || entity.title || String(entity.id) || '';
+        return (
+          entity.name ||
+          entity.code ||
+          entity.sensorName ||
+          entity.sensorCode ||
+          entity.title ||
+          String(entity.id) ||
+          ''
+        );
       }}
       isOptionEqualToValue={(option, val) => option.id === val.id}
       loading={isFetching}
@@ -130,7 +143,7 @@ export function StopMachineReasonGroupSelector({
                   {params.InputProps.endAdornment}
                 </>
               ),
-            }
+            },
           }}
         />
       )}

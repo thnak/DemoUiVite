@@ -7,7 +7,10 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchDefectReasonGroup, useGetDefectReasonGroupById } from 'src/api/hooks/generated/use-defect-reason-group';
+import {
+  useSearchDefectReasonGroup,
+  useGetDefectReasonGroupById,
+} from 'src/api/hooks/generated/use-defect-reason-group';
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +35,8 @@ export function DefectReasonGroupSelector({
 }: DefectReasonGroupSelectorProps) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
-  const [selectedDefectReasonGroup, setSelectedDefectReasonGroup] = useState<DefectReasonGroupEntity | null>(null);
+  const [selectedDefectReasonGroup, setSelectedDefectReasonGroup] =
+    useState<DefectReasonGroupEntity | null>(null);
 
   // Fetch entity by ID when value prop is provided
   const { data: entityById, isFetching: isFetchingById } = useGetDefectReasonGroupById(
@@ -44,7 +48,11 @@ export function DefectReasonGroupSelector({
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value && entityById.id?.toString() !== selectedDefectReasonGroup?.id?.toString()) {
+    if (
+      entityById &&
+      value &&
+      entityById.id?.toString() !== selectedDefectReasonGroup?.id?.toString()
+    ) {
       setSelectedDefectReasonGroup(entityById);
     } else if (!value && selectedDefectReasonGroup !== null) {
       setSelectedDefectReasonGroup(null);
@@ -54,18 +62,17 @@ export function DefectReasonGroupSelector({
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
-    () => debounce((searchValue: string) => {
-      setDebouncedInputValue(searchValue);
-    }, 500),
+    () =>
+      debounce((searchValue: string) => {
+        setDebouncedInputValue(searchValue);
+      }, 500),
     []
   );
 
-  const { data: searchResults, isFetching: isFetchingSearch } = useSearchDefectReasonGroup(
-    {
-      searchText: debouncedInputValue || undefined,
-      maxResults: 10,
-    }
-  );
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchDefectReasonGroup({
+    searchText: debouncedInputValue || undefined,
+    maxResults: 10,
+  });
 
   const items = searchResults?.data || [];
   const isFetching = isFetchingById || isFetchingSearch;
@@ -97,7 +104,15 @@ export function DefectReasonGroupSelector({
         if (typeof option === 'string') return option;
         // Try common property names across different entity types
         const entity = option as any;
-        return entity.name || entity.code || entity.sensorName || entity.sensorCode || entity.title || String(entity.id) || '';
+        return (
+          entity.name ||
+          entity.code ||
+          entity.sensorName ||
+          entity.sensorCode ||
+          entity.title ||
+          String(entity.id) ||
+          ''
+        );
       }}
       isOptionEqualToValue={(option, val) => option.id === val.id}
       loading={isFetching}
@@ -118,7 +133,7 @@ export function DefectReasonGroupSelector({
                   {params.InputProps.endAdornment}
                 </>
               ),
-            }
+            },
           }}
         />
       )}

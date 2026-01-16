@@ -4,6 +4,7 @@ import { useState, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
@@ -21,6 +22,8 @@ import { isValidationSuccess } from 'src/utils/validation-result';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useCreateArea, useUpdateArea } from 'src/api/hooks/generated/use-area';
 
+import { TranslationSection } from 'src/components/translation-section';
+
 // ----------------------------------------------------------------------
 
 interface AreaFormData {
@@ -28,6 +31,7 @@ interface AreaFormData {
   name: string;
   description: string;
   colorHex: string;
+  translations: Record<string, string>;
 }
 
 interface AreaCreateEditViewProps {
@@ -38,6 +42,7 @@ interface AreaCreateEditViewProps {
     name: string;
     description: string;
     colorHex?: string;
+    translations?: Record<string, string>;
   };
 }
 
@@ -62,6 +67,7 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
     name: currentArea?.name || '',
     description: currentArea?.description || '',
     colorHex: currentArea?.colorHex || '#1976d2',
+    translations: currentArea?.translations || {},
   });
 
   const { mutate: createAreaMutate, isPending: isCreating } = useCreateArea({
@@ -124,6 +130,13 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
     [clearFieldError]
   );
 
+  const handleTranslationsChange = useCallback((translations: Record<string, string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      translations,
+    }));
+  }, []);
+
   const handleSubmit = useCallback(() => {
     clearValidationResult();
     setErrorMessage(null);
@@ -142,6 +155,7 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
           { key: 'name', value: formData.name },
           { key: 'description', value: formData.description },
           { key: 'colorHex', value: formData.colorHex },
+          { key: 'translations', value: JSON.stringify(formData.translations) },
         ],
       });
     } else {
@@ -152,6 +166,7 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
           name: formData.name,
           description: formData.description,
           colorHex: formData.colorHex,
+          translations: formData.translations,
         } as any, // Cast to any to bypass strict type checking for required fields
       });
     }
@@ -186,103 +201,134 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
         </Box>
       </Box>
 
-      <Card sx={{ p: 3 }}>
-        <Stack spacing={3}>
-          <TextField
-            fullWidth
-            label="Area code"
-            value={formData.code}
-            onChange={handleInputChange('code')}
-            error={hasError('code')}
-            helperText={getFieldErrorMessage('code')}
-          />
-
-          <TextField
-            fullWidth
-            label="Area name"
-            value={formData.name}
-            onChange={handleInputChange('name')}
-            error={hasError('name')}
-            helperText={getFieldErrorMessage('name')}
-            required
-          />
-
-          <TextField
-            fullWidth
-            label="Description"
-            value={formData.description}
-            onChange={handleInputChange('description')}
-            multiline
-            rows={4}
-            error={hasError('description')}
-            helperText={getFieldErrorMessage('description')}
-          />
-
-          <Box>
-            <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              Area Color
-            </Typography>
-            <MuiColorInput
-              fullWidth
-              format="hex"
-              value={formData.colorHex}
-              onChange={handleColorChange}
-              error={hasError('colorHex')}
-              helperText={getFieldErrorMessage('colorHex') || 'Choose a color to represent this area'}
-            />
-            <Box
-              sx={{
-                mt: 2,
-                p: 2,
-                bgcolor: formData.colorHex,
-                borderRadius: 1,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minHeight: 60,
-              }}
-            >
-              <Typography
-                variant="body2"
+      <Grid container spacing={3}>
+        <Grid size={{ md: 4, xs: 12 }}>
+          <Card sx={{ p: 3 }}>
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Color
+              </Typography>
+              <MuiColorInput
+                fullWidth
+                format="hex"
+                value={formData.colorHex}
+                onChange={handleColorChange}
+                error={hasError('colorHex')}
+                helperText={
+                  getFieldErrorMessage('colorHex') || 'Choose a color to represent this area'
+                }
+              />
+              <Box
                 sx={{
-                  color: 'white',
-                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                  fontWeight: 'medium',
+                  mt: 2,
+                  p: 2,
+                  bgcolor: formData.colorHex,
+                  borderRadius: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: 60,
                 }}
               >
-                Preview: {formData.name || 'Area Name'}
-              </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'white',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                    fontWeight: 'medium',
+                  }}
+                >
+                  Preview: {formData.name || 'Area Name'}
+                </Typography>
+              </Box>
             </Box>
-          </Box>
-        </Stack>
+          </Card>
+        </Grid>
 
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
-          <Button variant="outlined" color="inherit" onClick={handleCancel} disabled={isSubmitting}>
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            color="inherit"
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            sx={{
-              bgcolor: 'grey.900',
-              color: 'common.white',
-              '&:hover': {
-                bgcolor: 'grey.800',
-              },
-            }}
-          >
-            {isSubmitting ? (
-              <CircularProgress size={24} color="inherit" />
-            ) : isEdit ? (
-              'Save changes'
-            ) : (
-              'Create area'
-            )}
-          </Button>
-        </Box>
-      </Card>
+        <Grid size={{ md: 8, xs: 12 }}>
+          <Stack spacing={3}>
+            <Card sx={{ p: 3 }}>
+              <Typography variant="h6" sx={{ mb: 3 }}>
+                Basic Information
+              </Typography>
+              <Grid container spacing={3}>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <TextField
+                    fullWidth
+                    label="Area code"
+                    value={formData.code}
+                    required
+                    onChange={handleInputChange('code')}
+                    error={hasError('code')}
+                    helperText={getFieldErrorMessage('code')}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <TextField
+                    fullWidth
+                    label="Area name"
+                    value={formData.name}
+                    onChange={handleInputChange('name')}
+                    error={hasError('name')}
+                    helperText={getFieldErrorMessage('name')}
+                    required
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 12 }}>
+                  <TextField
+                    fullWidth
+                    label="Description"
+                    value={formData.description}
+                    onChange={handleInputChange('description')}
+                    multiline
+                    rows={4}
+                    error={hasError('description')}
+                    helperText={getFieldErrorMessage('description')}
+                  />
+                </Grid>
+              </Grid>
+            </Card>
+
+            <TranslationSection
+              translations={formData.translations}
+              onTranslationsChange={handleTranslationsChange}
+              disabled={isSubmitting}
+            />
+
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
+              <Button
+                variant="outlined"
+                color="inherit"
+                onClick={handleCancel}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="inherit"
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                sx={{
+                  bgcolor: 'grey.900',
+                  color: 'common.white',
+                  '&:hover': {
+                    bgcolor: 'grey.800',
+                  },
+                }}
+              >
+                {isSubmitting ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : isEdit ? (
+                  'Save changes'
+                ) : (
+                  'Create area'
+                )}
+              </Button>
+            </Box>
+          </Stack>
+        </Grid>
+      </Grid>
 
       <Snackbar
         open={!!(errorMessage || overallMessage)}

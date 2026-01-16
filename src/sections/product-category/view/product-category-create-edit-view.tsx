@@ -1,5 +1,6 @@
 import type { ProductCategoryEntity } from 'src/api/types/generated';
 
+import { MuiColorInput } from 'mui-color-input';
 import { useState, useEffect, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
@@ -27,17 +28,29 @@ import {
   useGenerateNewProductCategoryCode,
 } from 'src/api/hooks/generated/use-product-category';
 
+import { TranslationSection } from 'src/components/translation-section';
+
 // ----------------------------------------------------------------------
 
 interface ProductCategoryFormData {
   code: string;
   name: string;
   description: string;
+  colorHex: string;
+  translations: Record<string, string>;
 }
 
 interface ProductCategoryCreateEditViewProps {
   isEdit?: boolean;
   productCategoryId?: string;
+  currentProductCategory?: {
+    id: string;
+    code: string;
+    name: string;
+    description: string;
+    colorHex?: string;
+    translations?: Record<string, string>;
+  };
 }
 
 export function ProductCategoryCreateEditView({
@@ -61,6 +74,8 @@ export function ProductCategoryCreateEditView({
     code: '',
     name: '',
     description: '',
+    colorHex: '#1976d2',
+    translations: {},
   });
 
   // Fetch existing product category data when editing
@@ -82,6 +97,8 @@ export function ProductCategoryCreateEditView({
         code: currentProductCategory.code || '',
         name: currentProductCategory.name || '',
         description: currentProductCategory.description || '',
+        colorHex: currentProductCategory.colorHex || '#1976d2',
+        translations: currentProductCategory.translations || {},
       });
     } else if (!isEdit && generatedCode) {
       setFormData((prev) => ({
@@ -143,6 +160,24 @@ export function ProductCategoryCreateEditView({
     [clearFieldError]
   );
 
+  const handleColorChange = useCallback(
+    (newColor: string) => {
+      setFormData((prev) => ({
+        ...prev,
+        colorHex: newColor,
+      }));
+      clearFieldError('colorHex');
+    },
+    [clearFieldError]
+  );
+
+  const handleTranslationsChange = useCallback((translations: Record<string, string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      translations,
+    }));
+  }, []);
+
   const handleSubmit = useCallback(() => {
     clearValidationResult();
 
@@ -151,6 +186,8 @@ export function ProductCategoryCreateEditView({
         { key: 'code', value: formData.code },
         { key: 'name', value: formData.name },
         { key: 'description', value: formData.description },
+        { key: 'colorHex', value: formData.colorHex },
+        { key: 'translations', value: JSON.stringify(formData.translations) },
       ];
       updateProductCategoryMutate({ id: productCategoryId, data: updates });
     } else {
@@ -158,6 +195,8 @@ export function ProductCategoryCreateEditView({
         code: formData.code,
         name: formData.name,
         description: formData.description,
+        colorHex: formData.colorHex,
+        translations: formData.translations,
       };
       createProductCategoryMutate({ data: productCategoryData as any }); // Cast to any to bypass strict type checking
     }
@@ -218,13 +257,58 @@ export function ProductCategoryCreateEditView({
       )}
 
       <Grid container spacing={3}>
+        <Grid size={{ xs: 12, md: 4 }}>
+          <Card sx={{ p: 3 }}>
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Color
+              </Typography>
+              <MuiColorInput
+                fullWidth
+                format="hex"
+                value={formData.colorHex}
+                onChange={handleColorChange}
+                error={hasError('colorHex')}
+                helperText={
+                  getFieldErrorMessage('colorHex') ||
+                  'Choose a color to represent this product category'
+                }
+                disabled={isSubmitting}
+              />
+              <Box
+                sx={{
+                  mt: 2,
+                  p: 2,
+                  bgcolor: formData.colorHex,
+                  borderRadius: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: 60,
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'white',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                    fontWeight: 'medium',
+                  }}
+                >
+                  Preview: {formData.name || 'Product Category Name'}
+                </Typography>
+              </Box>
+            </Box>
+          </Card>
+        </Grid>
+
         {/* Form Section */}
-        <Grid size={{ xs: 12 }}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Stack spacing={3}>
             {/* Main form card */}
             <Card sx={{ p: 3 }}>
               <Typography variant="h6" sx={{ mb: 3 }}>
-                Product Category Information
+                Basic Information
               </Typography>
               <Grid container spacing={3}>
                 <Grid size={{ xs: 12, md: 6 }}>
@@ -232,6 +316,7 @@ export function ProductCategoryCreateEditView({
                     fullWidth
                     label="Code"
                     value={formData.code}
+                    required
                     onChange={handleInputChange('code')}
                     error={hasError('code')}
                     helperText={getFieldErrorMessage('code')}
@@ -243,6 +328,7 @@ export function ProductCategoryCreateEditView({
                     fullWidth
                     label="Name"
                     value={formData.name}
+                    required
                     onChange={handleInputChange('name')}
                     error={hasError('name')}
                     helperText={getFieldErrorMessage('name')}
@@ -264,14 +350,18 @@ export function ProductCategoryCreateEditView({
                 </Grid>
               </Grid>
             </Card>
-
-            {/* Action buttons at the bottom */}
+            <TranslationSection
+              translations={formData.translations}
+              onTranslationsChange={handleTranslationsChange}
+              disabled={isSubmitting}
+            />
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
               <Button variant="outlined" onClick={handleCancel} disabled={isSubmitting}>
                 Cancel
               </Button>
               <Button
                 variant="contained"
+                color="inherit"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
                 startIcon={isSubmitting ? <CircularProgress size={20} /> : null}

@@ -88,77 +88,77 @@ export function IndexDesign5({ modules, viewMode }: Props) {
             const categoryModules = getCategoryModules(category);
             if (categoryModules.length === 0) return null;
 
-          return (
-            <motion.div key={category.key} variants={categoryVariants}>
-              <Box>
-                <Typography
-                  variant="overline"
-                  sx={{
-                    display: 'block',
-                    mb: 2,
-                    px: 1,
-                    color: 'text.secondary',
-                    letterSpacing: 1.5,
-                }}
-              >
-                {category.label}
-              </Typography>
-
-              <Stack spacing={1}>
-                {categoryModules.map((module) => (
-                  <Card
-                    key={module.id}
+            return (
+              <motion.div key={category.key} variants={categoryVariants}>
+                <Box>
+                  <Typography
+                    variant="overline"
                     sx={{
-                      borderRadius: 2,
-                      border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
-                      boxShadow: 'none',
-                      transition: 'all 0.2s ease',
-                      '&:hover': {
-                        borderColor: 'primary.main',
-                        boxShadow: theme.customShadows.z4,
-                      },
+                      display: 'block',
+                      mb: 2,
+                      px: 1,
+                      color: 'text.secondary',
+                      letterSpacing: 1.5,
                     }}
                   >
-                    <CardActionArea
-                      onClick={() => handleClick(module.path)}
-                      sx={{
-                        p: 2,
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 2,
-                      }}
-                    >
-                      <Iconify
-                        icon={module.icon}
-                        width={24}
+                    {category.label}
+                  </Typography>
+
+                  <Stack spacing={1}>
+                    {categoryModules.map((module) => (
+                      <Card
+                        key={module.id}
                         sx={{
-                          color: module.color === 'primary' ? 'primary.main' : 'secondary.main',
+                          borderRadius: 2,
+                          border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+                          boxShadow: 'none',
+                          transition: 'all 0.2s ease',
+                          '&:hover': {
+                            borderColor: 'primary.main',
+                            boxShadow: theme.customShadows.z4,
+                          },
                         }}
-                      />
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="subtitle2" fontWeight={600}>
-                          {module.title}
-                        </Typography>
-                      </Box>
-                      <Chip
-                        label={category.label}
-                        size="small"
-                        sx={{
-                          height: 22,
-                          fontSize: 11,
-                          bgcolor: alpha(theme.palette.text.primary, 0.06),
-                        }}
-                      />
-                    </CardActionArea>
-                  </Card>
-                ))}
-              </Stack>
-            </Box>
-          </motion.div>
-          );
-        })}
-      </Stack>
-    </motion.div>
+                      >
+                        <CardActionArea
+                          onClick={() => handleClick(module.path)}
+                          sx={{
+                            p: 2,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 2,
+                          }}
+                        >
+                          <Iconify
+                            icon={module.icon}
+                            width={24}
+                            sx={{
+                              color: module.color === 'primary' ? 'primary.main' : 'secondary.main',
+                            }}
+                          />
+                          <Box sx={{ flex: 1 }}>
+                            <Typography variant="subtitle2" fontWeight={600}>
+                              {module.title}
+                            </Typography>
+                          </Box>
+                          <Chip
+                            label={category.label}
+                            size="small"
+                            sx={{
+                              height: 22,
+                              fontSize: 11,
+                              bgcolor: alpha(theme.palette.text.primary, 0.06),
+                            }}
+                          />
+                        </CardActionArea>
+                      </Card>
+                    ))}
+                  </Stack>
+                </Box>
+              </motion.div>
+            );
+          })}
+        </Stack>
+      </motion.div>
     );
   }
 
@@ -265,7 +265,14 @@ export function IndexDesign5({ modules, viewMode }: Props) {
 
       {/* Main content grid */}
       <Grid size={{ xs: 12, md: 9 }}>
-        <Grid container spacing={3} component={motion.div} variants={containerVariants} initial="hidden" animate="visible">
+        <Grid
+          container
+          spacing={3}
+          component={motion.div}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           {modules.map((module, index) => (
             <Grid key={module.id} size={{ xs: 12, sm: 6, lg: 4 }}>
               <motion.div variants={cardVariants}>
@@ -276,107 +283,107 @@ export function IndexDesign5({ modules, viewMode }: Props) {
                     border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
                     boxShadow: 'none',
                     position: 'relative',
-                  overflow: 'hidden',
-                  transition: 'all 0.3s ease',
-                  '&:hover': {
-                    borderColor:
-                      module.color === 'primary'
-                        ? theme.palette.primary.main
-                        : theme.palette.secondary.main,
-                    boxShadow: theme.customShadows.z12,
-                    '& .module-number': {
-                      opacity: 0.15,
-                    },
-                  },
-                }}
-              >
-                {/* Background number */}
-                <Typography
-                  className="module-number"
-                  sx={{
-                    position: 'absolute',
-                    top: -10,
-                    right: 10,
-                    fontSize: 100,
-                    fontWeight: 900,
-                    opacity: 0.04,
-                    lineHeight: 1,
-                    transition: 'opacity 0.3s ease',
-                    fontFamily: '"DM Sans Variable", sans-serif',
-                  }}
-                >
-                  {String(index + 1).padStart(2, '0')}
-                </Typography>
-
-                <CardActionArea
-                  onClick={() => handleClick(module.path)}
-                  sx={{
-                    p: 3,
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                    gap: 2,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: 52,
-                      height: 52,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: 2,
-                      bgcolor: alpha(
+                    overflow: 'hidden',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      borderColor:
                         module.color === 'primary'
                           ? theme.palette.primary.main
                           : theme.palette.secondary.main,
-                        0.1
-                      ),
+                      boxShadow: theme.customShadows.z12,
+                      '& .module-number': {
+                        opacity: 0.15,
+                      },
+                    },
+                  }}
+                >
+                  {/* Background number */}
+                  <Typography
+                    className="module-number"
+                    sx={{
+                      position: 'absolute',
+                      top: -10,
+                      right: 10,
+                      fontSize: 100,
+                      fontWeight: 900,
+                      opacity: 0.04,
+                      lineHeight: 1,
+                      transition: 'opacity 0.3s ease',
+                      fontFamily: '"DM Sans Variable", sans-serif',
                     }}
                   >
-                    <Iconify
-                      icon={module.icon}
-                      width={28}
-                      sx={{
-                        color: module.color === 'primary' ? 'primary.main' : 'secondary.main',
-                      }}
-                    />
-                  </Box>
+                    {String(index + 1).padStart(2, '0')}
+                  </Typography>
 
-                  <Box>
-                    <Typography
-                      variant="subtitle1"
+                  <CardActionArea
+                    onClick={() => handleClick(module.path)}
+                    sx={{
+                      p: 3,
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                      gap: 2,
+                    }}
+                  >
+                    <Box
                       sx={{
-                        fontWeight: 600,
-                        mb: 0.5,
-                      }}
-                    >
-                      {module.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {module.subtitle}
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ mt: 'auto', pt: 1 }}>
-                    <Typography
-                      variant="caption"
-                      sx={{
+                        width: 52,
+                        height: 52,
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 0.5,
-                        color: module.color === 'primary' ? 'primary.main' : 'secondary.main',
-                        fontWeight: 600,
+                        justifyContent: 'center',
+                        borderRadius: 2,
+                        bgcolor: alpha(
+                          module.color === 'primary'
+                            ? theme.palette.primary.main
+                            : theme.palette.secondary.main,
+                          0.1
+                        ),
                       }}
                     >
-                      Open module
-                      <Iconify icon="eva:arrow-ios-forward-fill" width={16} />
-                    </Typography>
-                  </Box>
-                </CardActionArea>
-              </Card>
-            </motion.div>
+                      <Iconify
+                        icon={module.icon}
+                        width={28}
+                        sx={{
+                          color: module.color === 'primary' ? 'primary.main' : 'secondary.main',
+                        }}
+                      />
+                    </Box>
+
+                    <Box>
+                      <Typography
+                        variant="subtitle1"
+                        sx={{
+                          fontWeight: 600,
+                          mb: 0.5,
+                        }}
+                      >
+                        {module.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {module.subtitle}
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ mt: 'auto', pt: 1 }}>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 0.5,
+                          color: module.color === 'primary' ? 'primary.main' : 'secondary.main',
+                          fontWeight: 600,
+                        }}
+                      >
+                        Open module
+                        <Iconify icon="eva:arrow-ios-forward-fill" width={16} />
+                      </Typography>
+                    </Box>
+                  </CardActionArea>
+                </Card>
+              </motion.div>
             </Grid>
           ))}
         </Grid>

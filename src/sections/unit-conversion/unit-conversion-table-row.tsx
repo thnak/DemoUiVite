@@ -31,7 +31,12 @@ type UnitConversionTableRowProps = {
   onDeleteRow?: () => void;
 };
 
-export function UnitConversionTableRow({ row, selected, onSelectRow, onDeleteRow }: UnitConversionTableRowProps) {
+export function UnitConversionTableRow({
+  row,
+  selected,
+  onSelectRow,
+  onDeleteRow,
+}: UnitConversionTableRowProps) {
   const router = useRouter();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 

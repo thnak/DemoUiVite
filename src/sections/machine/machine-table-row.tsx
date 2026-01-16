@@ -161,7 +161,12 @@ export function MachineTableRow({
 
         <TableCell align="center">
           {isLoadingCount ? (
-            <Skeleton variant="rectangular" width={40} height={24} sx={{ mx: 'auto', borderRadius: 1 }} />
+            <Skeleton
+              variant="rectangular"
+              width={40}
+              height={24}
+              sx={{ mx: 'auto', borderRadius: 1 }}
+            />
           ) : (
             <Chip
               label={productCount ?? 0}

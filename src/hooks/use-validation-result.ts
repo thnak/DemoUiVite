@@ -1,6 +1,6 @@
 /**
  * React hook for managing ValidationResult state in forms
- * 
+ *
  * This hook provides utilities to:
  * - Store and manage ValidationResult from API responses
  * - Extract field-level errors for display
@@ -74,7 +74,7 @@ interface UseValidationResultReturn {
 
 /**
  * Hook for managing ValidationResult state in forms
- * 
+ *
  * @example
  * ```tsx
  * const {
@@ -87,7 +87,7 @@ interface UseValidationResultReturn {
  *   hasError,
  *   clearFieldError,
  * } = useValidationResult();
- * 
+ *
  * // In mutation callback
  * onSuccess: (result) => {
  *   setValidationResult(result);
@@ -95,7 +95,7 @@ interface UseValidationResultReturn {
  *     router.push('/list');
  *   }
  * }
- * 
+ *
  * // In form field
  * <TextField
  *   error={hasError('name')}
@@ -144,22 +144,19 @@ export function useValidationResult(): UseValidationResultReturn {
     [validationResult]
   );
 
-  const clearFieldError = useCallback(
-    (fieldName: string) => {
-      setValidationResult((prev) => {
-        if (!prev?.errors) return prev;
+  const clearFieldError = useCallback((fieldName: string) => {
+    setValidationResult((prev) => {
+      if (!prev?.errors) return prev;
 
-        const newErrors = { ...prev.errors };
-        delete newErrors[fieldName];
+      const newErrors = { ...prev.errors };
+      delete newErrors[fieldName];
 
-        return {
-          ...prev,
-          errors: Object.keys(newErrors).length > 0 ? newErrors : null,
-        };
-      });
-    },
-    []
-  );
+      return {
+        ...prev,
+        errors: Object.keys(newErrors).length > 0 ? newErrors : null,
+      };
+    });
+  }, []);
 
   return {
     validationResult,

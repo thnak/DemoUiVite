@@ -35,12 +35,9 @@ export function AreaSelector({
   const [selectedArea, setSelectedArea] = useState<AreaEntity | null>(null);
 
   // Fetch entity by ID when value prop is provided
-  const { data: entityById, isFetching: isFetchingById } = useGetAreaById(
-    value || '',
-    {
-      enabled: !!value && !selectedArea,
-    }
-  );
+  const { data: entityById, isFetching: isFetchingById } = useGetAreaById(value || '', {
+    enabled: !!value && !selectedArea,
+  });
 
   // Set initial value when entity is fetched
   useEffect(() => {
@@ -54,18 +51,17 @@ export function AreaSelector({
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
-    () => debounce((searchValue: string) => {
-      setDebouncedInputValue(searchValue);
-    }, 500),
+    () =>
+      debounce((searchValue: string) => {
+        setDebouncedInputValue(searchValue);
+      }, 500),
     []
   );
 
-  const { data: searchResults, isFetching: isFetchingSearch } = useSearchArea(
-    {
-      searchText: debouncedInputValue || undefined,
-      maxResults: 10,
-    }
-  );
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchArea({
+    searchText: debouncedInputValue || undefined,
+    maxResults: 10,
+  });
 
   const areas = searchResults?.data || [];
   const isFetching = isFetchingById || isFetchingSearch;

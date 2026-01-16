@@ -60,22 +60,22 @@ export function StopMachineReasonMachineMappingView(
   } | null>(null);
 
   // Fetch stop machine reason data
-  const { data: reasonData, isLoading: isLoadingReason } = useGetStopMachineReasonById(
+  const { data: reasonData, isLoading: isLoadingReason } = useGetStopMachineReasonById(id || '', {
+    enabled: !!id,
+  });
+
+  // Fetch mapped machines
+  const {
+    data: mappedMachinesData,
+    isLoading: isLoadingMapped,
+    refetch: refetchMappedMachines,
+  } = useGetapiStopMachineReasongetstopreasonmappingsbyreasonidreasonId(
     id || '',
+    { search: mappedSearchText },
     {
       enabled: !!id,
     }
   );
-
-  // Fetch mapped machines
-  const { data: mappedMachinesData, isLoading: isLoadingMapped, refetch: refetchMappedMachines } =
-    useGetapiStopMachineReasongetstopreasonmappingsbyreasonidreasonId(
-      id || '',
-      { search: mappedSearchText },
-      {
-        enabled: !!id,
-      }
-    );
 
   // Get available machines query
   const {
@@ -354,7 +354,7 @@ export function StopMachineReasonMachineMappingView(
             <Typography variant="h6" sx={{ mb: 2 }}>
               Mapped Machines ({mappedMachines.length})
             </Typography>
-            
+
             {/* Search for mapped machines */}
             <TextField
               fullWidth
@@ -373,7 +373,7 @@ export function StopMachineReasonMachineMappingView(
                 },
               }}
             />
-            
+
             <Box
               sx={{
                 height: 'calc(100% - 110px)',

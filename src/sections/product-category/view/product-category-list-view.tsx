@@ -56,12 +56,14 @@ export function ProductCategoryListView() {
   const { mutate: fetchProductCategories, isPending: isLoading } = useGetProductCategoryPage({
     onSuccess: (result) => {
       if (result.items) {
-        const formattedData: ProductCategoryProps[] = result.items.map((item: ProductCategoryEntity) => ({
-          id: item.id?.toString() || '',
-          code: item.code || '',
-          name: item.name || '',
-          description: item.description || '',
-        }));
+        const formattedData: ProductCategoryProps[] = result.items.map(
+          (item: ProductCategoryEntity) => ({
+            id: item.id?.toString() || '',
+            code: item.code || '',
+            name: item.name || '',
+            description: item.description || '',
+          })
+        );
         setProductCategories(formattedData);
         setTotalCount(result.totalItems || 0);
       }

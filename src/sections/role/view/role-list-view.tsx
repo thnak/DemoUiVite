@@ -94,13 +94,10 @@ export function RoleListView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table.page, table.rowsPerPage, table.orderBy, table.order, filterName]);
 
-  const handleDeleteRow = useCallback(
-    (id: string) => {
-      setItemToDelete(id);
-      setDeleteDialogOpen(true);
-    },
-    []
-  );
+  const handleDeleteRow = useCallback((id: string) => {
+    setItemToDelete(id);
+    setDeleteDialogOpen(true);
+  }, []);
 
   const handleConfirmDelete = useCallback(() => {
     if (itemToDelete) {
@@ -158,7 +155,11 @@ export function RoleListView() {
           >
             Import
           </Button>
-          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="solar:cloud-download-bold" />}>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="solar:cloud-download-bold" />}
+          >
             Export
           </Button>
           <Button

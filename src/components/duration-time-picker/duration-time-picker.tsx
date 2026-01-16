@@ -16,7 +16,11 @@ import Typography from '@mui/material/Typography';
  * - 'hours-minutes-seconds': Hours, minutes, and seconds (for precise durations)
  * - 'seconds': Seconds only (for cycle times and thresholds)
  */
-export type DurationPrecision = 'hours-minutes' | 'days-hours-minutes' | 'hours-minutes-seconds' | 'seconds';
+export type DurationPrecision =
+  | 'hours-minutes'
+  | 'days-hours-minutes'
+  | 'hours-minutes-seconds'
+  | 'seconds';
 
 // ----------------------------------------------------------------------
 
@@ -76,13 +80,13 @@ export function partsToIsoDuration(parts: {
   }
 
   let duration = 'P';
-  
+
   if (days > 0) {
     duration += `${days}D`;
   }
-  
+
   duration += 'T';
-  
+
   if (hours > 0) {
     duration += `${hours}H`;
   }
@@ -114,10 +118,10 @@ export function secondsToIsoDuration(seconds: number): string {
  */
 export function isoDurationToSeconds(duration: string | undefined): number {
   if (!duration) return 0;
-  
+
   const parts = parseDurationToParts(duration);
   const { days, hours, minutes, seconds } = parts;
-  
+
   return days * 86400 + hours * 3600 + minutes * 60 + seconds;
 }
 
@@ -148,15 +152,15 @@ export function formatDurationToHumanReadable(
   if (precision === 'days-hours-minutes' && days > 0) {
     result.push(`${days} ${days === 1 ? 'day' : 'days'}`);
   }
-  
+
   if (hours > 0) {
     result.push(`${hours} ${hours === 1 ? 'hour' : 'hours'}`);
   }
-  
+
   if (minutes > 0) {
     result.push(`${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`);
   }
-  
+
   if (precision === 'hours-minutes-seconds' && seconds > 0) {
     result.push(`${seconds} ${seconds === 1 ? 'second' : 'seconds'}`);
   }
@@ -243,7 +247,7 @@ export function DurationTimePicker({
   }, [value, precision]);
 
   // Local state for seconds-only mode
-  const [totalSecondsStr, setTotalSecondsStr] = useState(() => 
+  const [totalSecondsStr, setTotalSecondsStr] = useState(() =>
     precision === 'seconds' && totalSeconds > 0 ? String(totalSeconds) : ''
   );
 
@@ -253,8 +257,12 @@ export function DurationTimePicker({
   // Local state for each input field (as strings to allow empty state)
   const [daysStr, setDaysStr] = useState(() => (parts.days > 0 ? String(parts.days) : ''));
   const [hoursStr, setHoursStr] = useState(() => (parts.hours > 0 ? String(parts.hours) : ''));
-  const [minutesStr, setMinutesStr] = useState(() => (parts.minutes > 0 ? String(parts.minutes) : ''));
-  const [secondsStr, setSecondsStr] = useState(() => (parts.seconds > 0 ? String(parts.seconds) : ''));
+  const [minutesStr, setMinutesStr] = useState(() =>
+    parts.minutes > 0 ? String(parts.minutes) : ''
+  );
+  const [secondsStr, setSecondsStr] = useState(() =>
+    parts.seconds > 0 ? String(parts.seconds) : ''
+  );
 
   // Track previous values to detect external changes
   const prevValueRef = useRef(value);
@@ -268,19 +276,19 @@ export function DurationTimePicker({
     if (value !== prevValueRef.current || precision !== prevPrecisionRef.current) {
       prevValueRef.current = value;
       prevPrecisionRef.current = precision;
-      
+
       if (precision === 'seconds') {
         const newTotalSeconds = isoDurationToSeconds(value);
         setTotalSecondsStr(newTotalSeconds > 0 ? String(newTotalSeconds) : '');
       } else {
         const newParts = parseDurationToParts(value);
-         
+
         setDaysStr(newParts.days > 0 ? String(newParts.days) : '');
-         
+
         setHoursStr(newParts.hours > 0 ? String(newParts.hours) : '');
-         
+
         setMinutesStr(newParts.minutes > 0 ? String(newParts.minutes) : '');
-         
+
         setSecondsStr(newParts.seconds > 0 ? String(newParts.seconds) : '');
       }
     }
@@ -291,7 +299,7 @@ export function DurationTimePicker({
   const handleSecondsOnlyChange = useCallback(
     (newValue: string) => {
       setTotalSecondsStr(newValue);
-      
+
       if (onChange) {
         const secs = newValue === '' ? 0 : parseInt(newValue, 10) || 0;
         const isoDuration = secondsToIsoDuration(secs);
@@ -315,10 +323,22 @@ export function DurationTimePicker({
       updateState[partName]?.(newValue);
 
       // Parse all values (empty string = 0)
-      const days = partName === 'days' ? (newValue === '' ? 0 : parseInt(newValue, 10) || 0) : parts.days;
-      const hours = partName === 'hours' ? (newValue === '' ? 0 : parseInt(newValue, 10) || 0) : parts.hours;
-      const minutes = partName === 'minutes' ? (newValue === '' ? 0 : parseInt(newValue, 10) || 0) : parts.minutes;
-      const seconds = partName === 'seconds' ? (newValue === '' ? 0 : parseInt(newValue, 10) || 0) : parts.seconds;
+      const days =
+        partName === 'days' ? (newValue === '' ? 0 : parseInt(newValue, 10) || 0) : parts.days;
+      const hours =
+        partName === 'hours' ? (newValue === '' ? 0 : parseInt(newValue, 10) || 0) : parts.hours;
+      const minutes =
+        partName === 'minutes'
+          ? newValue === ''
+            ? 0
+            : parseInt(newValue, 10) || 0
+          : parts.minutes;
+      const seconds =
+        partName === 'seconds'
+          ? newValue === ''
+            ? 0
+            : parseInt(newValue, 10) || 0
+          : parts.seconds;
 
       // Convert to ISO 8601 and notify parent
       if (onChange) {

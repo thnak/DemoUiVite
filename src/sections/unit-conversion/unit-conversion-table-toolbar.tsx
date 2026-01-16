@@ -17,7 +17,11 @@ type UnitConversionTableToolbarProps = {
   onFilterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export function UnitConversionTableToolbar({ numSelected, filterName, onFilterName }: UnitConversionTableToolbarProps) {
+export function UnitConversionTableToolbar({
+  numSelected,
+  filterName,
+  onFilterName,
+}: UnitConversionTableToolbarProps) {
   return (
     <Toolbar
       sx={{

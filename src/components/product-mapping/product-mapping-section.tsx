@@ -139,7 +139,8 @@ export function ProductMappingSection({
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
           <Iconify icon="solar:bell-bing-bold-duotone" width={24} />
           <Typography variant="body2" color="text.secondary">
-            Product mapping will be available after creating the machine. Please save the form first.
+            Product mapping will be available after creating the machine. Please save the form
+            first.
           </Typography>
         </Box>
       </Card>
@@ -158,7 +159,9 @@ export function ProductMappingSection({
           <Typography variant="subtitle2" sx={{ mb: 2 }}>
             Mapped Products ({mappedProducts.length})
           </Typography>
-          <TableContainer sx={{ maxHeight: 400, border: 1, borderColor: 'divider', borderRadius: 1 }}>
+          <TableContainer
+            sx={{ maxHeight: 400, border: 1, borderColor: 'divider', borderRadius: 1 }}
+          >
             {isLoadingMapped ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
                 <CircularProgress size={32} />
@@ -253,7 +256,9 @@ export function ProductMappingSection({
           </Button>
 
           {/* Available products table */}
-          <TableContainer sx={{ maxHeight: 300, border: 1, borderColor: 'divider', borderRadius: 1 }}>
+          <TableContainer
+            sx={{ maxHeight: 300, border: 1, borderColor: 'divider', borderRadius: 1 }}
+          >
             {isLoadingAvailable ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
                 <CircularProgress size={32} />
@@ -327,7 +332,11 @@ export function ProductMappingSection({
               onClick={handleAddSelected}
               disabled={selectedProductIds.length === 0 || isAdding}
             >
-              {isAdding ? <CircularProgress size={24} /> : `Add Selected (${selectedProductIds.length})`}
+              {isAdding ? (
+                <CircularProgress size={24} />
+              ) : (
+                `Add Selected (${selectedProductIds.length})`
+              )}
             </Button>
           </Box>
         </Grid>

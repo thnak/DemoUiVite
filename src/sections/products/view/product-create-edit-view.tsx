@@ -1,3 +1,4 @@
+import { MuiColorInput } from 'mui-color-input';
 import { useState, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
@@ -18,6 +19,7 @@ import { useRouter } from 'src/routes/hooks';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { UnitSelector } from 'src/components/selectors/unit-selector';
+import { TranslationSection } from 'src/components/translation-section';
 import { ImageEntityResourceUploader } from 'src/components/image-entity-resource-uploader';
 import { ProductCategorySelector } from 'src/components/selectors/product-category-selector';
 
@@ -37,8 +39,9 @@ interface ProductFormData {
   height: string;
   unitOfMeasureId: string | null;
   secondaryUnitOfMeasureId: string | null;
+  colorHex: string;
+  translations: Record<string, string>;
 }
-
 
 interface ProductCreateEditViewProps {
   isEdit?: boolean;
@@ -59,6 +62,8 @@ interface ProductCreateEditViewProps {
     };
     unitOfMeasureId?: string;
     secondaryUnitOfMeasureId?: string;
+    colorHex?: string;
+    translations?: Record<string, string>;
   };
 }
 
@@ -75,7 +80,7 @@ export function ProductCreateEditView({
     name: currentProduct?.name || '',
     code: currentProduct?.code || '',
     categoryId: currentProduct?.categoryId || null,
-    price: currentProduct?.price?.toString() ?? '' ,
+    price: currentProduct?.price?.toString() ?? '',
     stock: currentProduct?.stock?.toString() ?? '',
     weight: currentProduct?.weight?.toString() ?? '',
     length: currentProduct?.dimensions?.length?.toString() ?? '',
@@ -83,6 +88,8 @@ export function ProductCreateEditView({
     height: currentProduct?.dimensions?.height?.toString() ?? '',
     unitOfMeasureId: currentProduct?.unitOfMeasureId || null,
     secondaryUnitOfMeasureId: currentProduct?.secondaryUnitOfMeasureId || null,
+    colorHex: currentProduct?.colorHex || '#1976d2',
+    translations: currentProduct?.translations || {},
   });
 
   const handleCloseError = useCallback(() => {
@@ -104,7 +111,6 @@ export function ProductCreateEditView({
     []
   );
 
-
   const handleCategoryChange = useCallback((value: string | null) => {
     setFormData((prev) => ({
       ...prev,
@@ -121,6 +127,20 @@ export function ProductCreateEditView({
     },
     []
   );
+
+  const handleColorChange = useCallback((newColor: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      colorHex: newColor,
+    }));
+  }, []);
+
+  const handleTranslationsChange = useCallback((translations: Record<string, string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      translations,
+    }));
+  }, []);
 
   const handleSubmit = useCallback(async () => {
     if (!formData.name) {
@@ -173,26 +193,31 @@ export function ProductCreateEditView({
           updates.push({ key: 'weight', value: weight.toString() });
         }
         if (length !== undefined || width !== undefined || height !== undefined) {
-          updates.push({ 
-            key: 'dimensions', 
-            value: JSON.stringify({ length, width, height }) 
+          updates.push({
+            key: 'dimensions',
+            value: JSON.stringify({ length, width, height }),
           });
         }
         if (formData.unitOfMeasureId) {
           updates.push({ key: 'unitOfMeasureId', value: formData.unitOfMeasureId });
         }
         if (formData.secondaryUnitOfMeasureId) {
-          updates.push({ key: 'secondaryUnitOfMeasureId', value: formData.secondaryUnitOfMeasureId });
+          updates.push({
+            key: 'secondaryUnitOfMeasureId',
+            value: formData.secondaryUnitOfMeasureId,
+          });
         }
         if (imageUrl !== null) {
           updates.push({ key: 'imageUrl', value: imageUrl });
         }
         updates.push({ key: 'isDraft', value: (!published).toString() });
+        updates.push({ key: 'colorHex', value: formData.colorHex });
         await updateProduct(currentProduct.id, updates);
       } else {
-        const dimensions = (length !== undefined || width !== undefined || height !== undefined) 
-          ? { length, width, height } 
-          : undefined;
+        const dimensions =
+          length !== undefined || width !== undefined || height !== undefined
+            ? { length, width, height }
+            : undefined;
         await createProduct({
           name: formData.name,
           code: formData.code,
@@ -205,25 +230,19 @@ export function ProductCreateEditView({
           secondaryUnitOfMeasureId: formData.secondaryUnitOfMeasureId || undefined,
           imageUrl: imageUrl || undefined,
           isDraft: !published,
+          colorHex: formData.colorHex,
           // Add description as empty string to satisfy required field
           description: '',
           isActive: true,
         } as any); // Cast to any to bypass strict type checking for required fields
       }
-    router.push('/products');
-  } catch (e: any) {
-    setErrorMessage(e?.message ?? 'Something went wrong');
-  }
+      router.push('/products');
+    } catch (e: any) {
+      setErrorMessage(e?.message ?? 'Something went wrong');
+    }
 
     // Navigate back to list after save
-  }, [
-    formData,
-    isEdit,
-    currentProduct,
-    router,
-    imageUrl,
-    published,
-  ]);
+  }, [formData, isEdit, currentProduct, router, imageUrl, published]);
 
   const handleCancel = useCallback(() => {
     router.push('/products');
@@ -286,6 +305,41 @@ export function ProductCreateEditView({
                   label=""
                   sx={{ m: 0 }}
                 />
+              </Box>
+            </Box>
+
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Product Color
+              </Typography>
+              <MuiColorInput
+                fullWidth
+                format="hex"
+                value={formData.colorHex}
+                onChange={handleColorChange}
+              />
+              <Box
+                sx={{
+                  mt: 2,
+                  p: 2,
+                  bgcolor: formData.colorHex,
+                  borderRadius: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: 60,
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'white',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                    fontWeight: 'medium',
+                  }}
+                >
+                  Preview: {formData.name || 'Product Name'}
+                </Typography>
               </Box>
             </Box>
           </Card>
@@ -447,6 +501,11 @@ export function ProductCreateEditView({
                 </Grid>
               </Grid>
             </Card>
+
+            <TranslationSection
+              translations={formData.translations}
+              onTranslationsChange={handleTranslationsChange}
+            />
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
               <Button variant="outlined" color="inherit" onClick={handleCancel}>

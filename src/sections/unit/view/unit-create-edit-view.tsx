@@ -107,7 +107,7 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
     };
   }, [isEdit, unitData]);
 
-  const [formData, setFormData] = useState<UnitFormData>(initialFormData); 
+  const [formData, setFormData] = useState<UnitFormData>(initialFormData);
 
   const { mutate: createUnit, isPending: isCreating } = useCreateUnit({
     onSuccess: (result) => {
@@ -289,7 +289,13 @@ export function UnitCreateEditView({ isEdit = false }: UnitCreateEditViewProps) 
               <Button
                 variant="contained"
                 onClick={handleSave}
-                disabled={isCreating || isUpdating || !formData.name || !formData.symbol || !formData.unitGroupId}
+                disabled={
+                  isCreating ||
+                  isUpdating ||
+                  !formData.name ||
+                  !formData.symbol ||
+                  !formData.unitGroupId
+                }
               >
                 {isCreating || isUpdating ? 'Saving...' : 'Save'}
               </Button>

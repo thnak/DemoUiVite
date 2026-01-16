@@ -1,10 +1,12 @@
 import type { CalendarEntity, ShiftTemplateEntity } from 'src/api/types/generated';
 
 import { useParams } from 'react-router';
+import { MuiColorInput } from 'mui-color-input';
 import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -28,6 +30,7 @@ import {
 } from 'src/api/services/generated/calendar';
 
 import { useTour, TourButton } from 'src/components/tour';
+import { TranslationSection } from 'src/components/translation-section';
 import { DurationTimePicker } from 'src/components/duration-time-picker';
 import { TimeShiftCaseVisualization } from 'src/components/time-shift-case-visualization';
 
@@ -49,6 +52,8 @@ interface CalendarFormData {
   mergeCase4ToShift1: boolean;
   mergeCase5ToLatest: boolean;
   autoVirtualShift: boolean;
+  colorHex: string;
+  translations: Record<string, string>;
 }
 
 const defaultFormData: CalendarFormData = {
@@ -65,6 +70,8 @@ const defaultFormData: CalendarFormData = {
   mergeCase4ToShift1: false,
   mergeCase5ToLatest: false,
   autoVirtualShift: false,
+  colorHex: '#1976d2',
+  translations: {},
 };
 
 // ----------------------------------------------------------------------
@@ -139,6 +146,8 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
               mergeCase4ToShift1: calendar.mergeCase4ToShift1 || false,
               mergeCase5ToLatest: calendar.mergeCase5ToLatest || false,
               autoVirtualShift: calendar.autoVirtualShift || false,
+              colorHex: calendar.colorHex || '#1976d2',
+              translations: calendar.translations || {},
             });
 
             // Find and set the selected shift template
@@ -173,11 +182,22 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
     []
   );
 
+  const handleColorChange = useCallback((newColor: string) => {
+    setFormData((prev) => ({ ...prev, colorHex: newColor }));
+  }, []);
+
   const handleShiftTemplateChange = useCallback((_: unknown, value: ShiftTemplateEntity | null) => {
     setSelectedShiftTemplate(value);
     setFormData((prev) => ({
       ...prev,
       shiftTemplateId: value?.id?.toString() || '',
+    }));
+  }, []);
+
+  const handleTranslationsChange = useCallback((translations: Record<string, string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      translations,
     }));
   }, []);
 
@@ -214,6 +234,8 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             { key: 'mergeCase4ToShift1', value: formData.mergeCase4ToShift1 },
             { key: 'mergeCase5ToLatest', value: formData.mergeCase5ToLatest },
             { key: 'autoVirtualShift', value: formData.autoVirtualShift },
+            { key: 'colorHex', value: formData.colorHex },
+            { key: 'translations', value: JSON.stringify(formData.translations) },
           ];
           const updateResult = await updateCalendar(calendarId, updates);
           if (updateResult.isValid) {
@@ -242,6 +264,8 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
             mergeCase4ToShift1: formData.mergeCase4ToShift1,
             mergeCase5ToLatest: formData.mergeCase5ToLatest,
             autoVirtualShift: formData.autoVirtualShift,
+            colorHex: formData.colorHex,
+            translations: formData.translations,
           };
           const result = await createCalendar(entity as any);
           if (result.isValid) {
@@ -323,28 +347,47 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
         <TourButton onStartTour={startTour} />
       </Box>
 
-      <Card>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <Stack spacing={3}>
-              <TextField
+      <Grid container spacing={3}>
+        <Grid size={{ xs: 12, md: 4 }}>
+          <Card sx={{ p: 3 }}>
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Color
+              </Typography>
+              <MuiColorInput
                 fullWidth
-                label="Code"
-                value={formData.code}
-                onChange={(e) => handleInputChange('code', e.target.value)}
-                required
-                data-tour="calendar-code"
+                format="hex"
+                value={formData.colorHex}
+                onChange={handleColorChange}
+                helperText="Choose a color to represent this calendar"
               />
+              <Box
+                sx={{
+                  mt: 2,
+                  p: 2,
+                  bgcolor: formData.colorHex,
+                  borderRadius: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: 60,
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'white',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                    fontWeight: 'medium',
+                  }}
+                >
+                  Preview: {formData.name || 'Calendar Name'}
+                </Typography>
+              </Box>
 
-              <TextField
-                fullWidth
-                label="Name"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                required
-                data-tour="calendar-name"
-              />
-
+              <Typography variant="subtitle2" sx={{ mb: 1, mt: 3 }}>
+                Reference Data
+              </Typography>
               <Autocomplete
                 fullWidth
                 options={shiftTemplates}
@@ -394,170 +437,235 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
                   );
                 }}
               />
-
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} data-tour="calendar-dates">
-                <TextField
-                  fullWidth
-                  label="Apply From"
-                  type="date"
-                  value={formData.applyFrom}
-                  onChange={(e) => handleInputChange('applyFrom', e.target.value)}
-                  slotProps={{
-                    inputLabel: { shrink: true },
-                  }}
-                />
-
-                <TextField
-                  fullWidth
-                  label="Apply To"
-                  type="date"
-                  value={formData.applyTo}
-                  onChange={(e) => handleInputChange('applyTo', e.target.value)}
-                  disabled={formData.plan2Infinite}
-                  slotProps={{
-                    inputLabel: { shrink: true },
-                  }}
-                />
-              </Stack>
-
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={formData.plan2Infinite}
-                    onChange={(e) => {
-                      handleInputChange('plan2Infinite', e.target.checked);
-                      if (e.target.checked) {
-                        handleInputChange('applyTo', '');
-                      }
-                    }}
-                  />
-                }
-                label="Plan to Infinite (when enabled, Apply To is not applicable)"
-                data-tour="calendar-infinite"
-              />
-
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} data-tour="calendar-work-time">
-                <DurationTimePicker
-                  fullWidth
-                  label="Work Date Start Time"
-                  value={formData.workDateStartTime}
-                  onChange={(duration) => handleInputChange('workDateStartTime', duration)}
-                />
-
-                <DurationTimePicker
-                  fullWidth
-                  label="Time Offset"
-                  value={formData.timeOffset}
-                  onChange={(duration) => handleInputChange('timeOffset', duration)}
-                />
-              </Stack>
-
-              <TextField
-                fullWidth
-                label="Description"
-                value={formData.description}
-                onChange={(e) => handleInputChange('description', e.target.value)}
-                multiline
-                rows={3}
-                data-tour="calendar-description"
-              />
-
-              {/* Time-Shift Policy Configuration */}
-              <Box data-tour="calendar-policy">
-                <Typography variant="h6" sx={{ mb: 2, mt: 2 }}>
-                  Time-Shift Policy Configuration
+            </Box>
+          </Card>
+        </Grid>
+        <Grid size={{ xs: 12, md: 8 }}>
+          <Stack spacing={3}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={3}>
+                <Typography variant="h6" sx={{ mb: 3 }}>
+                  Basic Information
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                  Configure how the 8 time-shift cases are handled for OEE computation. These policies control merging, thresholds, and virtual shift creation.
-                </Typography>
-
-                <Stack spacing={3}>
+                <Stack
+                  direction={{ xs: 'column', sm: 'row' }}
+                  spacing={2}
+                  data-tour="calendar-base-info"
+                >
                   <TextField
                     fullWidth
-                    label="Late Buffer Minutes"
-                    type="number"
-                    value={formData.lateBufferMinutes}
-                    onChange={(e) => handleInputChange('lateBufferMinutes', parseInt(e.target.value, 10) || 0)}
-                    helperText="Threshold in minutes to distinguish Case 5 (Overtime) from Case 6 (Night Run). Default: 120 minutes (2 hours)."
-                    data-tour="calendar-late-buffer"
+                    label="Code"
+                    value={formData.code}
+                    onChange={(e) => handleInputChange('code', e.target.value)}
+                    required
+                    data-tour="calendar-code"
+                  />
+
+                  <TextField
+                    fullWidth
+                    label="Name"
+                    value={formData.name}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    required
+                    data-tour="calendar-name"
+                  />
+                </Stack>
+
+                <Stack
+                  direction={{ xs: 'column', sm: 'row' }}
+                  spacing={2}
+                  data-tour="calendar-dates"
+                >
+                  <TextField
+                    fullWidth
+                    label="Apply From"
+                    type="date"
+                    value={formData.applyFrom}
+                    onChange={(e) => handleInputChange('applyFrom', e.target.value)}
                     slotProps={{
-                      htmlInput: { min: 0, max: 1440 },
+                      inputLabel: { shrink: true },
                     }}
                   />
 
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={formData.mergeCase4ToShift1}
-                        onChange={(e) => handleInputChange('mergeCase4ToShift1', e.target.checked)}
-                      />
-                    }
-                    label="Merge Case 4 (Early Start) to Shift 1"
-                    data-tour="calendar-case4-merge"
+                  <TextField
+                    fullWidth
+                    label="Apply To"
+                    type="date"
+                    value={formData.applyTo}
+                    onChange={(e) => handleInputChange('applyTo', e.target.value)}
+                    disabled={formData.plan2Infinite}
+                    slotProps={{
+                      inputLabel: { shrink: true },
+                    }}
                   />
-                  <Typography variant="caption" color="text.secondary" sx={{ mt: -2, mb: 1 }}>
-                    When enabled, runtime between work day start and first shift start is added to Shift 1 performance. When disabled, logged as separate &quot;Early Production&quot; bucket.
-                  </Typography>
-
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={formData.mergeCase5ToLatest}
-                        onChange={(e) => handleInputChange('mergeCase5ToLatest', e.target.checked)}
-                      />
-                    }
-                    label="Merge Case 5 (Overtime) to Latest Shift"
-                    data-tour="calendar-case5-merge"
-                  />
-                  <Typography variant="caption" color="text.secondary" sx={{ mt: -2, mb: 1 }}>
-                    When enabled, overtime within the late buffer is appended to the last shift. When disabled, tracked as separate &quot;Overtime Production&quot; bucket.
-                  </Typography>
-
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={formData.autoVirtualShift}
-                        onChange={(e) => handleInputChange('autoVirtualShift', e.target.checked)}
-                      />
-                    }
-                    label="Auto Virtual Shift for Weekends/Holidays"
-                    data-tour="calendar-auto-virtual"
-                  />
-                  <Typography variant="caption" color="text.secondary" sx={{ mt: -2, mb: 1 }}>
-                    When enabled, production on Sunday (Case 7) or holidays (Case 8) automatically generates a virtual shift with OEE calculation. When disabled, logged as unscheduled run.
-                  </Typography>
                 </Stack>
-              </Box>
 
-              {/* Time-Shift Case Visualization */}
-              <Box data-tour="calendar-visualization">
-                <TimeShiftCaseVisualization
-                  lateBufferMinutes={formData.lateBufferMinutes}
-                  mergeCase4ToShift1={formData.mergeCase4ToShift1}
-                  mergeCase5ToLatest={formData.mergeCase5ToLatest}
-                  autoVirtualShift={formData.autoVirtualShift}
-                  sx={{ mt: 3 }}
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.plan2Infinite}
+                      onChange={(e) => {
+                        handleInputChange('plan2Infinite', e.target.checked);
+                        if (e.target.checked) {
+                          handleInputChange('applyTo', '');
+                        }
+                      }}
+                    />
+                  }
+                  label="Plan to Infinite (when enabled, Apply To is not applicable)"
+                  data-tour="calendar-infinite"
                 />
-              </Box>
 
-              <Stack direction="row" spacing={2} justifyContent="flex-end" data-tour="calendar-actions">
-                <Button variant="outlined" onClick={handleCancel}>
-                  Cancel
-                </Button>
-                <Button type="submit" variant="contained" disabled={submitting}>
-                  {submitting ? (
-                    <CircularProgress size={24} color="inherit" />
-                  ) : isEdit ? (
-                    'Save Changes'
-                  ) : (
-                    'Create Calendar'
-                  )}
-                </Button>
+                <Stack
+                  direction={{ xs: 'column', sm: 'row' }}
+                  spacing={2}
+                  data-tour="calendar-work-time"
+                >
+                  <DurationTimePicker
+                    fullWidth
+                    label="Work Date Start Time"
+                    value={formData.workDateStartTime}
+                    onChange={(duration) => handleInputChange('workDateStartTime', duration)}
+                  />
+
+                  <DurationTimePicker
+                    fullWidth
+                    label="Time Offset"
+                    value={formData.timeOffset}
+                    onChange={(duration) => handleInputChange('timeOffset', duration)}
+                  />
+                </Stack>
+
+                <TextField
+                  fullWidth
+                  label="Description"
+                  value={formData.description}
+                  onChange={(e) => handleInputChange('description', e.target.value)}
+                  multiline
+                  rows={3}
+                  data-tour="calendar-description"
+                />
               </Stack>
+            </Card>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={3}>
+                {/* Time-Shift Policy Configuration */}
+                <Box data-tour="calendar-policy">
+                  <Typography variant="h6" sx={{ mb: 2, mt: 2 }}>
+                    Time-Shift Policy Configuration
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                    Configure how the 8 time-shift cases are handled for OEE computation. These
+                    policies control merging, thresholds, and virtual shift creation.
+                  </Typography>
+
+                  <Stack spacing={3}>
+                    <TextField
+                      fullWidth
+                      label="Late Buffer Minutes"
+                      type="number"
+                      value={formData.lateBufferMinutes}
+                      onChange={(e) =>
+                        handleInputChange('lateBufferMinutes', parseInt(e.target.value, 10) || 0)
+                      }
+                      helperText="Threshold in minutes to distinguish Case 5 (Overtime) from Case 6 (Night Run). Default: 120 minutes (2 hours)."
+                      data-tour="calendar-late-buffer"
+                      slotProps={{
+                        htmlInput: { min: 0, max: 1440 },
+                      }}
+                    />
+
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={formData.mergeCase4ToShift1}
+                          onChange={(e) =>
+                            handleInputChange('mergeCase4ToShift1', e.target.checked)
+                          }
+                        />
+                      }
+                      label="Merge Case 4 (Early Start) to Shift 1"
+                      data-tour="calendar-case4-merge"
+                    />
+                    <Typography variant="caption" color="text.secondary" sx={{ mt: -2, mb: 1 }}>
+                      When enabled, runtime between work day start and first shift start is added to
+                      Shift 1 performance. When disabled, logged as separate &quot;Early
+                      Production&quot; bucket.
+                    </Typography>
+
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={formData.mergeCase5ToLatest}
+                          onChange={(e) =>
+                            handleInputChange('mergeCase5ToLatest', e.target.checked)
+                          }
+                        />
+                      }
+                      label="Merge Case 5 (Overtime) to Latest Shift"
+                      data-tour="calendar-case5-merge"
+                    />
+                    <Typography variant="caption" color="text.secondary" sx={{ mt: -2, mb: 1 }}>
+                      When enabled, overtime within the late buffer is appended to the last shift.
+                      When disabled, tracked as separate &quot;Overtime Production&quot; bucket.
+                    </Typography>
+
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={formData.autoVirtualShift}
+                          onChange={(e) => handleInputChange('autoVirtualShift', e.target.checked)}
+                        />
+                      }
+                      label="Auto Virtual Shift for Weekends/Holidays"
+                      data-tour="calendar-auto-virtual"
+                    />
+                    <Typography variant="caption" color="text.secondary" sx={{ mt: -2, mb: 1 }}>
+                      When enabled, production on Sunday (Case 7) or holidays (Case 8) automatically
+                      generates a virtual shift with OEE calculation. When disabled, logged as
+                      unscheduled run.
+                    </Typography>
+                  </Stack>
+                </Box>
+              </Stack>
+            </Card>
+            {/* Time-Shift Case Visualization */}
+            <Box data-tour="calendar-visualization">
+              <TimeShiftCaseVisualization
+                lateBufferMinutes={formData.lateBufferMinutes}
+                mergeCase4ToShift1={formData.mergeCase4ToShift1}
+                mergeCase5ToLatest={formData.mergeCase5ToLatest}
+                autoVirtualShift={formData.autoVirtualShift}
+              />
+            </Box>
+            <TranslationSection
+              translations={formData.translations}
+              onTranslationsChange={handleTranslationsChange}
+              disabled={submitting}
+            />
+
+            <Stack
+              direction="row"
+              spacing={2}
+              justifyContent="flex-end"
+              data-tour="calendar-actions"
+            >
+              <Button variant="outlined" onClick={handleCancel}>
+                Cancel
+              </Button>
+              <Button type="submit" variant="contained" color="inherit" disabled={submitting}>
+                {submitting ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : isEdit ? (
+                  'Save Changes'
+                ) : (
+                  'Create Calendar'
+                )}
+              </Button>
             </Stack>
-          </form>
-        </CardContent>
-      </Card>
+          </Stack>
+        </Grid>
+      </Grid>
 
       <Snackbar
         open={!!errorMessage}

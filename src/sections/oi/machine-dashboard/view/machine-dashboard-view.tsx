@@ -80,11 +80,13 @@ export function MachineDashboardView() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  
+
   // Store OEE data for each machine
   const [machineOeeData, setMachineOeeData] = useState<Map<string, MachineOeeUpdate>>(new Map());
   // Store runtime block data for each machine
-  const [machineRuntimeBlocks, setMachineRuntimeBlocks] = useState<Map<string, MachineRuntimeBlock>>(new Map());
+  const [machineRuntimeBlocks, setMachineRuntimeBlocks] = useState<
+    Map<string, MachineRuntimeBlock>
+  >(new Map());
   const [loadingMachines, setLoadingMachines] = useState<Set<string>>(new Set());
 
   const hubService = MachineHubService.getInstance(apiConfig.baseUrl);
@@ -113,7 +115,7 @@ export function MachineDashboardView() {
       });
 
       let machineData = Array.isArray(response) ? response : [];
-      
+
       // Add mock data for visual testing if no real data (dev mode only)
       if (machineData.length === 0 && import.meta.env.DEV) {
         machineData = [
@@ -161,7 +163,7 @@ export function MachineDashboardView() {
           },
         ];
       }
-      
+
       setMachines(machineData);
     } catch (error) {
       console.error('Failed to load machines:', error);
@@ -189,7 +191,7 @@ export function MachineDashboardView() {
         // Subscribe to each machine
         for (const machine of machines) {
           if (!machine.machineId) continue;
-          
+
           const handleUpdate = (update: MachineOeeUpdate) => {
             if (mounted) {
               setMachineOeeData((prev) => {
@@ -322,12 +324,7 @@ export function MachineDashboardView() {
       </Container>
 
       {/* Settings Dialog */}
-      <Dialog
-        open={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
-        maxWidth="md"
-        fullWidth
-      >
+      <Dialog open={settingsOpen} onClose={() => setSettingsOpen(false)} maxWidth="md" fullWidth>
         <DialogTitle>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
@@ -363,9 +360,7 @@ export function MachineDashboardView() {
                 value={selectedAreas}
                 onChange={(e) =>
                   setSelectedAreas(
-                    typeof e.target.value === 'string'
-                      ? e.target.value.split(',')
-                      : e.target.value
+                    typeof e.target.value === 'string' ? e.target.value.split(',') : e.target.value
                   )
                 }
                 input={<OutlinedInput label="Filter by Area" />}

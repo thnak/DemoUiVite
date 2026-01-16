@@ -7,7 +7,10 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchIoTDeviceModel, useGetIoTDeviceModelById } from 'src/api/hooks/generated/use-io-tdevice-model';
+import {
+  useSearchIoTDeviceModel,
+  useGetIoTDeviceModelById,
+} from 'src/api/hooks/generated/use-io-tdevice-model';
 
 // ----------------------------------------------------------------------
 
@@ -32,19 +35,22 @@ export function IoTDeviceModelSelector({
 }: IoTDeviceModelSelectorProps) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
-  const [selectedIoTDeviceModel, setSelectedIoTDeviceModel] = useState<IoTDeviceModelEntity | null>(null);
+  const [selectedIoTDeviceModel, setSelectedIoTDeviceModel] = useState<IoTDeviceModelEntity | null>(
+    null
+  );
 
   // Fetch entity by ID when value prop is provided
-  const { data: entityById, isFetching: isFetchingById } = useGetIoTDeviceModelById(
-    value || '',
-    {
-      enabled: !!value && !selectedIoTDeviceModel,
-    }
-  );
+  const { data: entityById, isFetching: isFetchingById } = useGetIoTDeviceModelById(value || '', {
+    enabled: !!value && !selectedIoTDeviceModel,
+  });
 
   // Set initial value when entity is fetched
   useEffect(() => {
-    if (entityById && value && entityById.id?.toString() !== selectedIoTDeviceModel?.id?.toString()) {
+    if (
+      entityById &&
+      value &&
+      entityById.id?.toString() !== selectedIoTDeviceModel?.id?.toString()
+    ) {
       setSelectedIoTDeviceModel(entityById);
     } else if (!value && selectedIoTDeviceModel !== null) {
       setSelectedIoTDeviceModel(null);
@@ -54,18 +60,17 @@ export function IoTDeviceModelSelector({
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
-    () => debounce((searchValue: string) => {
-      setDebouncedInputValue(searchValue);
-    }, 500),
+    () =>
+      debounce((searchValue: string) => {
+        setDebouncedInputValue(searchValue);
+      }, 500),
     []
   );
 
-  const { data: searchResults, isFetching: isFetchingSearch } = useSearchIoTDeviceModel(
-    {
-      searchText: debouncedInputValue || undefined,
-      maxResults: 10,
-    }
-  );
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchIoTDeviceModel({
+    searchText: debouncedInputValue || undefined,
+    maxResults: 10,
+  });
 
   const items = searchResults?.data || [];
   const isFetching = isFetchingById || isFetchingSearch;
@@ -97,7 +102,15 @@ export function IoTDeviceModelSelector({
         if (typeof option === 'string') return option;
         // Try common property names across different entity types
         const entity = option as any;
-        return entity.name || entity.code || entity.sensorName || entity.sensorCode || entity.title || String(entity.id) || '';
+        return (
+          entity.name ||
+          entity.code ||
+          entity.sensorName ||
+          entity.sensorCode ||
+          entity.title ||
+          String(entity.id) ||
+          ''
+        );
       }}
       isOptionEqualToValue={(option, val) => option.id === val.id}
       loading={isFetching}
@@ -118,7 +131,7 @@ export function IoTDeviceModelSelector({
                   {params.InputProps.endAdornment}
                 </>
               ),
-            }
+            },
           }}
         />
       )}

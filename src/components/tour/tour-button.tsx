@@ -23,12 +23,12 @@ interface TourButtonProps extends Omit<ButtonProps, 'onClick'> {
  * @param color
  * @param other
  */
-export function TourButton({ 
-  onStartTour, 
+export function TourButton({
+  onStartTour,
   tooltip = 'Start guided tour',
   variant = 'outlined',
   color = 'inherit',
-  ...other 
+  ...other
 }: TourButtonProps) {
   return (
     <Tooltip title={tooltip} arrow>

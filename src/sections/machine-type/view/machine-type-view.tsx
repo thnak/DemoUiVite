@@ -15,7 +15,11 @@ import { RouterLink } from 'src/routes/components';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
-import { machineTypeKeys, useDeleteMachineType, useGetMachineTypePage } from 'src/api/hooks/generated/use-machine-type';
+import {
+  machineTypeKeys,
+  useDeleteMachineType,
+  useGetMachineTypePage,
+} from 'src/api/hooks/generated/use-machine-type';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -95,13 +99,10 @@ export function MachineTypeView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table.page, table.rowsPerPage, table.orderBy, table.order, filterName]);
 
-  const handleDeleteRow = useCallback(
-    (id: string) => {
-      setItemToDelete(id);
-      setDeleteDialogOpen(true);
-    },
-    []
-  );
+  const handleDeleteRow = useCallback((id: string) => {
+    setItemToDelete(id);
+    setDeleteDialogOpen(true);
+  }, []);
 
   const handleConfirmDelete = useCallback(() => {
     if (itemToDelete) {
@@ -185,7 +186,7 @@ export function MachineTypeView() {
                   { id: 'code', label: 'Code' },
                   { id: 'name', label: 'Name' },
                   { id: 'description', label: 'Description' },
-                  { id: '', label: '' }
+                  { id: '', label: '' },
                 ]}
               />
               <TableBody>

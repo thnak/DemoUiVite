@@ -98,20 +98,29 @@ export function UnitGroupListView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.page, params.rowsPerPage, params.orderBy, params.order, params.filterName]);
 
-  const handleFilterName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setParams({ filterName: event.target.value, page: 0 });
-  }, [setParams]);
+  const handleFilterName = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setParams({ filterName: event.target.value, page: 0 });
+    },
+    [setParams]
+  );
 
-  const handleChangePage = useCallback((_event: unknown, newPage: number) => {
-    setParams({ page: newPage });
-  }, [setParams]);
+  const handleChangePage = useCallback(
+    (_event: unknown, newPage: number) => {
+      setParams({ page: newPage });
+    },
+    [setParams]
+  );
 
-  const handleChangeRowsPerPage = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setParams({
-      rowsPerPage: parseInt(event.target.value, 10),
-      page: 0,
-    });
-  }, [setParams]);
+  const handleChangeRowsPerPage = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setParams({
+        rowsPerPage: parseInt(event.target.value, 10),
+        page: 0,
+      });
+    },
+    [setParams]
+  );
 
   const handleSelectRow = useCallback(
     (id: string) => {

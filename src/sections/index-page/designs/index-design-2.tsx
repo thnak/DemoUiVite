@@ -75,79 +75,79 @@ export function IndexDesign2({ modules, viewMode }: Props) {
           {modules.map((module, index) => (
             <motion.div key={module.id} variants={cardVariants}>
               <Card
-            sx={{
-              cursor: 'pointer',
-              borderRadius: 2,
-              border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
-              transition: 'all 0.2s ease-in-out',
-              bgcolor: 'background.paper',
-              '&:hover': {
-                bgcolor: alpha(
-                  module.color === 'primary'
-                    ? theme.palette.primary.main
-                    : theme.palette.secondary.main,
-                  0.04
-                ),
-                borderColor:
-                  module.color === 'primary'
-                    ? theme.palette.primary.main
-                    : theme.palette.secondary.main,
-              },
-            }}
-          >
-            <CardActionArea
-              onClick={() => handleClick(module.path)}
-              sx={{
-                py: 2,
-                px: 2.5,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 2.5,
-              }}
-            >
-              <Box
                 sx={{
-                  width: 48,
-                  height: 48,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 1.5,
-                  bgcolor: alpha(
-                    module.color === 'primary'
-                      ? theme.palette.primary.main
-                      : theme.palette.secondary.main,
-                    0.08
-                  ),
+                  cursor: 'pointer',
+                  borderRadius: 2,
+                  border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+                  transition: 'all 0.2s ease-in-out',
+                  bgcolor: 'background.paper',
+                  '&:hover': {
+                    bgcolor: alpha(
+                      module.color === 'primary'
+                        ? theme.palette.primary.main
+                        : theme.palette.secondary.main,
+                      0.04
+                    ),
+                    borderColor:
+                      module.color === 'primary'
+                        ? theme.palette.primary.main
+                        : theme.palette.secondary.main,
+                  },
                 }}
               >
-                <Iconify
-                  icon={module.icon}
-                  width={28}
+                <CardActionArea
+                  onClick={() => handleClick(module.path)}
                   sx={{
-                    color: module.color === 'primary' ? 'primary.main' : 'secondary.main',
+                    py: 2,
+                    px: 2.5,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 2.5,
                   }}
-                />
-              </Box>
+                >
+                  <Box
+                    sx={{
+                      width: 48,
+                      height: 48,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 1.5,
+                      bgcolor: alpha(
+                        module.color === 'primary'
+                          ? theme.palette.primary.main
+                          : theme.palette.secondary.main,
+                        0.08
+                      ),
+                    }}
+                  >
+                    <Iconify
+                      icon={module.icon}
+                      width={28}
+                      sx={{
+                        color: module.color === 'primary' ? 'primary.main' : 'secondary.main',
+                      }}
+                    />
+                  </Box>
 
-              <Box sx={{ flex: 1, minWidth: 0 }}>
-                <Typography variant="subtitle1" fontWeight={600} noWrap>
-                  {module.title}
-                </Typography>
-                <Typography variant="caption" color="text.secondary" noWrap>
-                  {module.subtitle}
-                </Typography>
-              </Box>
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Typography variant="subtitle1" fontWeight={600} noWrap>
+                      {module.title}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary" noWrap>
+                      {module.subtitle}
+                    </Typography>
+                  </Box>
 
-              <Typography variant="caption" color="text.disabled" sx={{ mr: 1 }}>
-                {String(index + 1).padStart(2, '0')}
-              </Typography>
-            </CardActionArea>
-          </Card>
-        </motion.div>
-        ))}
-      </Stack>
-    </motion.div>
+                  <Typography variant="caption" color="text.disabled" sx={{ mr: 1 }}>
+                    {String(index + 1).padStart(2, '0')}
+                  </Typography>
+                </CardActionArea>
+              </Card>
+            </motion.div>
+          ))}
+        </Stack>
+      </motion.div>
     );
   }
 
@@ -180,80 +180,80 @@ export function IndexDesign2({ modules, viewMode }: Props) {
                       '& .module-icon': {
                         transform: 'scale(1.15) rotate(5deg)',
                       },
-                },
-              }}
-            >
-              <CardActionArea
-                onClick={() => handleClick(module.path)}
-                sx={{
-                  height: '100%',
-                  p: 3,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Iconify
-                  className="module-icon"
-                  icon={module.icon}
-                  width={isLarge ? 56 : 44}
-                  sx={{
-                    color: module.color === 'primary' ? 'primary.main' : 'secondary.main',
-                    transition: 'transform 0.3s ease-in-out',
+                    },
                   }}
-                />
-
-                <Box>
-                  <Typography
-                    variant={isLarge ? 'h5' : 'h6'}
+                >
+                  <CardActionArea
+                    onClick={() => handleClick(module.path)}
                     sx={{
-                      fontWeight: 700,
-                      mb: 0.5,
-                      letterSpacing: '-0.02em',
+                      height: '100%',
+                      p: 3,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                      justifyContent: 'space-between',
                     }}
                   >
-                    {module.title}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{
-                      opacity: 0.8,
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    {module.subtitle}
-                  </Typography>
-                </Box>
+                    <Iconify
+                      className="module-icon"
+                      icon={module.icon}
+                      width={isLarge ? 56 : 44}
+                      sx={{
+                        color: module.color === 'primary' ? 'primary.main' : 'secondary.main',
+                        transition: 'transform 0.3s ease-in-out',
+                      }}
+                    />
 
-                {/* Decorative element */}
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: -40,
-                    right: -40,
-                    width: 120,
-                    height: 120,
-                    borderRadius: '50%',
-                    bgcolor: alpha(
-                      module.color === 'primary'
-                        ? theme.palette.primary.main
-                        : theme.palette.secondary.main,
-                      0.06
-                    ),
-                                  }}
-                />
-              </CardActionArea>
-            </Card>
-          </motion.div>
-          </Grid>
-        );
-      })}
-    </Grid>
-  </motion.div>
+                    <Box>
+                      <Typography
+                        variant={isLarge ? 'h5' : 'h6'}
+                        sx={{
+                          fontWeight: 700,
+                          mb: 0.5,
+                          letterSpacing: '-0.02em',
+                        }}
+                      >
+                        {module.title}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                          opacity: 0.8,
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        {module.subtitle}
+                      </Typography>
+                    </Box>
+
+                    {/* Decorative element */}
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: -40,
+                        right: -40,
+                        width: 120,
+                        height: 120,
+                        borderRadius: '50%',
+                        bgcolor: alpha(
+                          module.color === 'primary'
+                            ? theme.palette.primary.main
+                            : theme.palette.secondary.main,
+                          0.06
+                        ),
+                      }}
+                    />
+                  </CardActionArea>
+                </Card>
+              </motion.div>
+            </Grid>
+          );
+        })}
+      </Grid>
+    </motion.div>
   );
 }

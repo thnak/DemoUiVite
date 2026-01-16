@@ -26,10 +26,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { STANDARD_ROWS_PER_PAGE_OPTIONS } from 'src/constants/table';
-import {
-  deleteCalendar,
-  getapiCalendarsearchcalendars,
-} from 'src/api/services/generated/calendar';
+import { deleteCalendar, getapiCalendarsearchcalendars } from 'src/api/services/generated/calendar';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -272,7 +269,11 @@ export function CalendarView() {
           >
             Import
           </Button>
-          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="solar:cloud-download-bold" />}>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="solar:cloud-download-bold" />}
+          >
             Export
           </Button>
           <Button

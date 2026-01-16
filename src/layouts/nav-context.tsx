@@ -90,9 +90,7 @@ const getModuleFromPath = (pathname: string): NavModule => {
   }
 
   // Settings module routes
-  if (
-    pathname.startsWith('/settings')
-  ) {
+  if (pathname.startsWith('/settings')) {
     return 'settings';
   }
 

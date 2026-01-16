@@ -107,7 +107,9 @@ export function MachineOperationView() {
   // Dialog states
   const [productChangeDialogOpen, setProductChangeDialogOpen] = useState(false);
   const [productTargetDialogOpen, setProductTargetDialogOpen] = useState(false);
-  const [selectedProductForChange, setSelectedProductForChange] = useState<AvailableProduct | null>(null);
+  const [selectedProductForChange, setSelectedProductForChange] = useState<AvailableProduct | null>(
+    null
+  );
   const [targetQuantity, setTargetQuantity] = useState<string>('');
   const [addQuantityDialogOpen, setAddQuantityDialogOpen] = useState(false);
   const [quantityHistory, setQuantityHistory] = useState<QuantityAddHistory[]>([]);
@@ -136,9 +138,7 @@ export function MachineOperationView() {
   const handleRuntimeBlockUpdate = useCallback((block: MachineRuntimeBlock) => {
     setTimelineRecords((prevRecords) => {
       // Check if block with same startTime already exists
-      const existingIndex = prevRecords.findIndex(
-        (record) => record.startTime === block.startTime
-      );
+      const existingIndex = prevRecords.findIndex((record) => record.startTime === block.startTime);
 
       if (existingIndex >= 0) {
         // Update existing block
@@ -1421,7 +1421,12 @@ export function MachineOperationView() {
                               {product.productName}
                             </Typography>
                             {isRunning && (
-                              <Chip label="Đang chạy" size="small" color="success" sx={{ mt: 0.5 }} />
+                              <Chip
+                                label="Đang chạy"
+                                size="small"
+                                color="success"
+                                sx={{ mt: 0.5 }}
+                              />
                             )}
                           </Box>
                         </Stack>
@@ -1543,10 +1548,7 @@ export function MachineOperationView() {
       />
 
       {/* Keyboard Help Dialog */}
-      <KeyboardHelpDialog
-        open={showKeyboardHelp}
-        onClose={() => setShowKeyboardHelp(false)}
-      />
+      <KeyboardHelpDialog open={showKeyboardHelp} onClose={() => setShowKeyboardHelp(false)} />
     </Container>
   );
 }

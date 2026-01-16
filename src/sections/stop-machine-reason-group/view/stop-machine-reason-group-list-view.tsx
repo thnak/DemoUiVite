@@ -39,7 +39,8 @@ import type { StopMachineReasonGroupProps } from '../stop-machine-reason-group-t
 
 // ----------------------------------------------------------------------
 
-const emptyRows = (page: number, rowsPerPage: number, arrayLength: number) => page ? Math.max(0, (1 + page) * rowsPerPage - arrayLength) : 0;
+const emptyRows = (page: number, rowsPerPage: number, arrayLength: number) =>
+  page ? Math.max(0, (1 + page) * rowsPerPage - arrayLength) : 0;
 
 const IMPACT_LABELS: Record<StopMachineImpact, string> = {
   run: 'Run',
@@ -221,7 +222,11 @@ export function StopMachineReasonGroupListView() {
           >
             Import
           </Button>
-          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="solar:cloud-download-bold" />}>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="solar:cloud-download-bold" />}
+          >
             Export
           </Button>
           <Button

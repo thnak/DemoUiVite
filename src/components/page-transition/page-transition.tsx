@@ -38,13 +38,13 @@ const pageVariants = {
 
 /**
  * PageTransition component wraps page content with smooth fade and slide animations
- * 
+ *
  * Features:
  * - Smooth fade in/out (300ms enter, 200ms exit)
  * - Subtle vertical slide (8px) for natural motion
  * - Optimized easing curves for perceived smoothness
  * - Minimal performance impact with GPU-accelerated transforms
- * 
+ *
  * Usage:
  * ```tsx
  * <PageTransition>

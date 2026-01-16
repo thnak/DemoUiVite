@@ -252,12 +252,15 @@ export function CalendarDetailView() {
   }, []);
 
   // Handle day detail dialog
-  const handleDayClick = useCallback((date: Date, stats: GetWorkDateCalendarStatisticByCalendarResult[]) => {
-    if (stats.length > 0) {
-      setSelectedDate(date);
-      setDayDetailOpen(true);
-    }
-  }, []);
+  const handleDayClick = useCallback(
+    (date: Date, stats: GetWorkDateCalendarStatisticByCalendarResult[]) => {
+      if (stats.length > 0) {
+        setSelectedDate(date);
+        setDayDetailOpen(true);
+      }
+    },
+    []
+  );
 
   const handleCloseDayDetail = useCallback(() => {
     setDayDetailOpen(false);
@@ -344,12 +347,17 @@ export function CalendarDetailView() {
     stat: GetWorkDateCalendarStatisticByCalendarResult,
     index: number
   ) => {
-    const duration = stat.startTime && stat.endTime 
-      ? calculateDuration(stat.startTime, stat.endTime).toFixed(2)
-      : '0';
+    const duration =
+      stat.startTime && stat.endTime
+        ? calculateDuration(stat.startTime, stat.endTime).toFixed(2)
+        : '0';
 
     let cardColor = 'background.paper';
-    let icon: 'solar:clock-circle-outline' | 'eva:briefcase-outline' | 'solar:trash-bin-trash-bold' | 'solar:restart-bold' = 'solar:clock-circle-outline';
+    let icon:
+      | 'solar:clock-circle-outline'
+      | 'eva:briefcase-outline'
+      | 'solar:trash-bin-trash-bold'
+      | 'solar:restart-bold' = 'solar:clock-circle-outline';
     let typeLabel = 'Period';
 
     if (stat.isShiftTime && !stat.isBreakTime) {
@@ -399,8 +407,7 @@ export function CalendarDetailView() {
     const dateKey = formatDateKey(date);
     const dayStats = statisticsByDateKey.get(dateKey) || [];
     const isOtherMonth = !isCurrentMonth(date, selectedMonth);
-    const isToday =
-      date.toDateString() === new Date().toDateString();
+    const isToday = date.toDateString() === new Date().toDateString();
 
     // Calculate total hours for the day
     let totalShiftHours = 0;
@@ -555,25 +562,25 @@ export function CalendarDetailView() {
     const getBlockPosition = (startTime: string, endTime: string) => {
       const start = new Date(startTime);
       const end = new Date(endTime);
-      
+
       // Calculate minutes from day start
       const startMinutes = start.getHours() * 60 + start.getMinutes();
       const endMinutes = end.getHours() * 60 + end.getMinutes();
-      
+
       // Calculate percentage of day
       const topPercent = (startMinutes / totalMinutes) * 100;
       const heightPercent = ((endMinutes - startMinutes) / totalMinutes) * 100;
-      
+
       return { topPercent, heightPercent, startMinutes, endMinutes };
     };
 
     // Helper to format time
     const formatTime = (dateString: string) => {
       const date = new Date(dateString);
-      return date.toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
+      return date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
         minute: '2-digit',
-        hour12: false 
+        hour12: false,
       });
     };
 
@@ -595,12 +602,7 @@ export function CalendarDetailView() {
     };
 
     return (
-      <Dialog
-        open={dayDetailOpen}
-        onClose={handleCloseDayDetail}
-        maxWidth="md"
-        fullWidth
-      >
+      <Dialog open={dayDetailOpen} onClose={handleCloseDayDetail} maxWidth="md" fullWidth>
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="h6">
@@ -616,7 +618,7 @@ export function CalendarDetailView() {
             </Typography>
           </Box>
         </DialogTitle>
-        
+
         <DialogContent>
           {sortedBlocks.length === 0 ? (
             <Alert severity="info">No time blocks scheduled for this day</Alert>
@@ -675,23 +677,36 @@ export function CalendarDetailView() {
                         },
                       }}
                     >
-                      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          justifyContent: 'space-between',
+                        }}
+                      >
                         <Box sx={{ flex: 1 }}>
                           <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                             {block.name || 'Unnamed Block'}
                           </Typography>
-                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ display: 'block', mt: 0.5 }}
+                          >
                             {formatTime(block.startTime)} - {formatTime(block.endTime)}
                           </Typography>
-                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-                            Duration: {calculateDuration(block.startTime, block.endTime).toFixed(2)}h
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ display: 'block' }}
+                          >
+                            Duration: {calculateDuration(block.startTime, block.endTime).toFixed(2)}
+                            h
                           </Typography>
                         </Box>
-                        
+
                         <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-                          {block.isShiftTime && (
-                            <Iconify icon="eva:briefcase-outline" width={16} />
-                          )}
+                          {block.isShiftTime && <Iconify icon="eva:briefcase-outline" width={16} />}
                           {block.isBreakTime && (
                             <Iconify icon="solar:clock-circle-outline" width={16} />
                           )}
@@ -777,9 +792,10 @@ export function CalendarDetailView() {
                 </Box>
               </Grid>
             </Grid>
-            
+
             <Alert severity="info" sx={{ mt: 2 }}>
-              Resize functionality will be available when the API is complete. Resize handles are visible on hover at the top and bottom of each block.
+              Resize functionality will be available when the API is complete. Resize handles are
+              visible on hover at the top and bottom of each block.
             </Alert>
           </Box>
         </DialogContent>
@@ -853,7 +869,7 @@ export function CalendarDetailView() {
                     value={fromDate}
                     onChange={handleFromDateChange}
                     slotProps={{
-                      inputLabel: { shrink: true }
+                      inputLabel: { shrink: true },
                     }}
                   />
                 </Grid>
@@ -865,7 +881,7 @@ export function CalendarDetailView() {
                     value={toDate}
                     onChange={handleToDateChange}
                     slotProps={{
-                      inputLabel: { shrink: true }
+                      inputLabel: { shrink: true },
                     }}
                   />
                 </Grid>
@@ -1043,13 +1059,17 @@ export function CalendarDetailView() {
             <Grid container spacing={2}>
               <Grid size={{ xs: 6, sm: 3 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Box sx={{ width: 16, height: 16, bgcolor: 'primary.lighter', borderRadius: 0.5 }} />
+                  <Box
+                    sx={{ width: 16, height: 16, bgcolor: 'primary.lighter', borderRadius: 0.5 }}
+                  />
                   <Typography variant="caption">Shift Time</Typography>
                 </Box>
               </Grid>
               <Grid size={{ xs: 6, sm: 3 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Box sx={{ width: 16, height: 16, bgcolor: 'warning.lighter', borderRadius: 0.5 }} />
+                  <Box
+                    sx={{ width: 16, height: 16, bgcolor: 'warning.lighter', borderRadius: 0.5 }}
+                  />
                   <Typography variant="caption">Break Time</Typography>
                 </Box>
               </Grid>
@@ -1061,7 +1081,9 @@ export function CalendarDetailView() {
               </Grid>
               <Grid size={{ xs: 6, sm: 3 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Box sx={{ width: 16, height: 16, bgcolor: 'error.lighter', borderRadius: 0.5 }} />
+                  <Box
+                    sx={{ width: 16, height: 16, bgcolor: 'error.lighter', borderRadius: 0.5 }}
+                  />
                   <Typography variant="caption">Planned Stop</Typography>
                 </Box>
               </Grid>

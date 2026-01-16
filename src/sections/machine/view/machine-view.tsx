@@ -90,12 +90,11 @@ export function MachineView() {
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [inputTypeCounts, setInputTypeCounts] =
-    useState<Record<MachineInputType | 'all', number>>({
-      all: 0,
-      weightedChannels: 0,
-      pairParallel: 0,
-    });
+  const [inputTypeCounts, setInputTypeCounts] = useState<Record<MachineInputType | 'all', number>>({
+    all: 0,
+    weightedChannels: 0,
+    pairParallel: 0,
+  });
   // Map MachineEntity (API) -> MachineProps (UI)
   const machineProps: MachineProps[] = useMemo(
     () =>
@@ -256,10 +255,10 @@ export function MachineView() {
   }, [selected, fetchMachines]);
 
   const handleCloseBulkDeleteDialog = useCallback(() => {
-     if (!isDeleting) {
-       setBulkDeleteDialogOpen(false);
-     }
-   }, [isDeleting]);
+    if (!isDeleting) {
+      setBulkDeleteDialogOpen(false);
+    }
+  }, [isDeleting]);
 
   const handleSelectAll = useCallback(
     (checked: boolean) => {
@@ -391,7 +390,11 @@ export function MachineView() {
           >
             Import
           </Button>
-          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="solar:cloud-download-bold" />}>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="solar:cloud-download-bold" />}
+          >
             Export
           </Button>
           <Button

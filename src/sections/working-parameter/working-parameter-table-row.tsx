@@ -32,9 +32,7 @@ export function timeSpanToSeconds(input: unknown): number {
 
     // ISO duration
     if (/^P/i.test(s)) {
-      const m = s.match(
-        /^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?$/i
-      );
+      const m = s.match(/^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?$/i);
       if (!m) return 0;
       const days = Number(m[1] ?? 0);
       const hours = Number(m[2] ?? 0);
@@ -61,7 +59,9 @@ export function timeSpanToSeconds(input: unknown): number {
     const parts = t.split(':').map(Number);
     if (parts.some(Number.isNaN)) return 0;
 
-    let h = 0, m2 = 0, sec = 0;
+    let h = 0,
+      m2 = 0,
+      sec = 0;
     if (parts.length === 3) [h, m2, sec] = parts as [number, number, number];
     else if (parts.length === 2) [m2, sec] = parts as [number, number];
     else [sec] = parts as [number];
@@ -80,8 +80,6 @@ export function formatSecondsHms(totalSeconds: number): string {
   const pad = (n: number) => String(n).padStart(2, '0');
   return `${pad(h)}:${pad(m)}:${pad(sec)}`;
 }
-
-
 
 type WorkingParameterTableRowProps = {
   row: WorkingParameterProps;
@@ -136,7 +134,6 @@ export function WorkingParameterTableRow({
         <TableCell>{row.downtimeThreshold}</TableCell>
 
         <TableCell>{row.speedLossThreshold}</TableCell>
-
 
         <TableCell align="right">
           <IconButton onClick={handleOpenPopover}>

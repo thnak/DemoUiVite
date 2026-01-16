@@ -7,7 +7,10 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchMachineType, useGetMachineTypeById } from 'src/api/hooks/generated/use-machine-type';
+import {
+  useSearchMachineType,
+  useGetMachineTypeById,
+} from 'src/api/hooks/generated/use-machine-type';
 
 // ----------------------------------------------------------------------
 
@@ -35,12 +38,9 @@ export function MachineTypeSelector({
   const [selectedMachineType, setSelectedMachineType] = useState<MachineTypeEntity | null>(null);
 
   // Fetch entity by ID when value prop is provided
-  const { data: entityById, isFetching: isFetchingById } = useGetMachineTypeById(
-    value || '',
-    {
-      enabled: !!value && !selectedMachineType,
-    }
-  );
+  const { data: entityById, isFetching: isFetchingById } = useGetMachineTypeById(value || '', {
+    enabled: !!value && !selectedMachineType,
+  });
 
   // Set initial value when entity is fetched
   useEffect(() => {
@@ -54,18 +54,17 @@ export function MachineTypeSelector({
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
-    () => debounce((searchValue: string) => {
-      setDebouncedInputValue(searchValue);
-    }, 500),
+    () =>
+      debounce((searchValue: string) => {
+        setDebouncedInputValue(searchValue);
+      }, 500),
     []
   );
 
-  const { data: searchResults, isFetching: isFetchingSearch } = useSearchMachineType(
-    {
-      searchText: debouncedInputValue || undefined,
-      maxResults: 10,
-    }
-  );
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchMachineType({
+    searchText: debouncedInputValue || undefined,
+    maxResults: 10,
+  });
 
   const items = searchResults?.data || [];
   const isFetching = isFetchingById || isFetchingSearch;
@@ -97,7 +96,15 @@ export function MachineTypeSelector({
         if (typeof option === 'string') return option;
         // Try common property names across different entity types
         const entity = option as any;
-        return entity.name || entity.code || entity.sensorName || entity.sensorCode || entity.title || String(entity.id) || '';
+        return (
+          entity.name ||
+          entity.code ||
+          entity.sensorName ||
+          entity.sensorCode ||
+          entity.title ||
+          String(entity.id) ||
+          ''
+        );
       }}
       isOptionEqualToValue={(option, val) => option.id === val.id}
       loading={isFetching}
@@ -118,7 +125,7 @@ export function MachineTypeSelector({
                   {params.InputProps.endAdornment}
                 </>
               ),
-            }
+            },
           }}
         />
       )}

@@ -7,7 +7,10 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSearchStopMachineReason, useGetStopMachineReasonById } from 'src/api/hooks/generated/use-stop-machine-reason';
+import {
+  useSearchStopMachineReason,
+  useGetStopMachineReasonById,
+} from 'src/api/hooks/generated/use-stop-machine-reason';
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +35,8 @@ export function StopMachineReasonSelector({
 }: StopMachineReasonSelectorProps) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedInputValue, setDebouncedInputValue] = useState('');
-  const [selectedStopMachineReason, setSelectedStopMachineReason] = useState<StopMachineReasonEntity | null>(null);
+  const [selectedStopMachineReason, setSelectedStopMachineReason] =
+    useState<StopMachineReasonEntity | null>(null);
   const previousValueRef = useRef<string | null>(null);
 
   // Fetch entity by ID when value prop is provided
@@ -49,9 +53,9 @@ export function StopMachineReasonSelector({
     if (previousValueRef.current === value) {
       return;
     }
-    
+
     previousValueRef.current = value || null;
-    
+
     if (entityById && value) {
       // Only update if the selected entity ID differs from the value
       const currentId = selectedStopMachineReason?.id ? String(selectedStopMachineReason.id) : null;
@@ -66,18 +70,17 @@ export function StopMachineReasonSelector({
 
   // Debounce search input with 500ms delay
   const debouncedSetSearch = useMemo(
-    () => debounce((searchValue: string) => {
-      setDebouncedInputValue(searchValue);
-    }, 500),
+    () =>
+      debounce((searchValue: string) => {
+        setDebouncedInputValue(searchValue);
+      }, 500),
     []
   );
 
-  const { data: searchResults, isFetching: isFetchingSearch } = useSearchStopMachineReason(
-    {
-      searchText: debouncedInputValue || undefined,
-      maxResults: 10,
-    }
-  );
+  const { data: searchResults, isFetching: isFetchingSearch } = useSearchStopMachineReason({
+    searchText: debouncedInputValue || undefined,
+    maxResults: 10,
+  });
 
   const items = searchResults?.data || [];
   const isFetching = isFetchingById || isFetchingSearch;
@@ -109,7 +112,15 @@ export function StopMachineReasonSelector({
         if (typeof option === 'string') return option;
         // Try common property names across different entity types
         const entity = option as any;
-        return entity.name || entity.code || entity.sensorName || entity.sensorCode || entity.title || String(entity.id) || '';
+        return (
+          entity.name ||
+          entity.code ||
+          entity.sensorName ||
+          entity.sensorCode ||
+          entity.title ||
+          String(entity.id) ||
+          ''
+        );
       }}
       isOptionEqualToValue={(option, val) => option.id === val.id}
       loading={isFetching}
@@ -130,7 +141,7 @@ export function StopMachineReasonSelector({
                   {params.InputProps.endAdornment}
                 </>
               ),
-            }
+            },
           }}
         />
       )}

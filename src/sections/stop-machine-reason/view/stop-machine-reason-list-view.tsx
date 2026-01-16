@@ -39,7 +39,8 @@ import type { StopMachineReasonProps } from '../stop-machine-reason-table-row';
 
 // ----------------------------------------------------------------------
 
-const emptyRows = (page: number, rowsPerPage: number, arrayLength: number) => page ? Math.max(0, (1 + page) * rowsPerPage - arrayLength) : 0;
+const emptyRows = (page: number, rowsPerPage: number, arrayLength: number) =>
+  page ? Math.max(0, (1 + page) * rowsPerPage - arrayLength) : 0;
 
 export function StopMachineReasonListView() {
   const router = useRouter();
@@ -55,12 +56,16 @@ export function StopMachineReasonListView() {
 
   // Determine which groups to query - 'all' means empty array
   // Memoize to prevent infinite loops
-  const groupsToQuery = useMemo(() => 
-    currentGroup === 'all' ? undefined : [currentGroup],
+  const groupsToQuery = useMemo(
+    () => (currentGroup === 'all' ? undefined : [currentGroup]),
     [currentGroup]
   );
 
-  const { data, isLoading: queryLoading, refetch } = useGetapiStopMachineReasongetreasonpage({
+  const {
+    data,
+    isLoading: queryLoading,
+    refetch,
+  } = useGetapiStopMachineReasongetreasonpage({
     Search: filterName || undefined,
     PageNumber: table.page,
     PageSize: table.rowsPerPage,
@@ -105,7 +110,7 @@ export function StopMachineReasonListView() {
   const tabs = useMemo(() => {
     const allCount = Object.values(groupCounts).reduce((sum, count) => sum + count, 0);
     const result = [{ value: 'all', label: 'All', count: allCount }];
-    
+
     Object.entries(groupCounts).forEach(([group, count]) => {
       result.push({
         value: group,
@@ -113,7 +118,7 @@ export function StopMachineReasonListView() {
         count,
       });
     });
-    
+
     return result;
   }, [groupCounts]);
 
@@ -197,7 +202,11 @@ export function StopMachineReasonListView() {
           >
             Import
           </Button>
-          <Button variant="outlined" color="inherit" startIcon={<Iconify icon="solar:cloud-download-bold" />}>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<Iconify icon="solar:cloud-download-bold" />}
+          >
             Export
           </Button>
           <Button

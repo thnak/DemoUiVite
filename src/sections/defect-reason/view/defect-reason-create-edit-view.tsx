@@ -1,9 +1,9 @@
-
 import { MuiColorInput } from 'mui-color-input';
 import { useState, useCallback, type ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Switch from '@mui/material/Switch';
@@ -27,7 +27,7 @@ import {
 } from 'src/api/hooks/generated/use-defect-reason';
 
 import { Iconify } from 'src/components/iconify';
-
+import { TranslationSection } from 'src/components/translation-section';
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +38,7 @@ interface DefectReasonFormData {
   addScrapAndIncreaseTotalQuantity: boolean;
   colorHex: string;
   description: string;
+  translations: Record<string, string>;
 }
 
 interface DefectReasonCreateEditViewProps {
@@ -50,6 +51,7 @@ interface DefectReasonCreateEditViewProps {
     addScrapAndIncreaseTotalQuantity: boolean;
     colorHex: string;
     description: string;
+    translations?: Record<string, string>;
   };
 }
 
@@ -78,6 +80,7 @@ export function DefectReasonCreateEditView({
       currentDefectReason?.addScrapAndIncreaseTotalQuantity || false,
     colorHex: currentDefectReason?.colorHex || '#1976d2',
     description: currentDefectReason?.description || '',
+    translations: currentDefectReason?.translations || {},
   });
 
   const { mutate: createDefectReasonMutate, isPending: isCreating } = useCreateDefectReason({
@@ -152,6 +155,13 @@ export function DefectReasonCreateEditView({
     [clearFieldError]
   );
 
+  const handleTranslationsChange = useCallback((translations: Record<string, string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      translations,
+    }));
+  }, []);
+
   const handleSubmit = useCallback(() => {
     clearValidationResult();
     setErrorMessage(null);
@@ -175,6 +185,7 @@ export function DefectReasonCreateEditView({
           },
           { key: 'colorHex', value: formData.colorHex },
           { key: 'description', value: formData.description },
+          { key: 'translations', value: JSON.stringify(formData.translations) },
         ],
       });
     } else {
@@ -187,6 +198,7 @@ export function DefectReasonCreateEditView({
           addScrapAndIncreaseTotalQuantity: formData.addScrapAndIncreaseTotalQuantity,
           colorHex: formData.colorHex,
           description: formData.description,
+          translations: formData.translations,
         } as any, // Cast to any to bypass strict type checking for required fields,
       });
     }
@@ -228,153 +240,189 @@ export function DefectReasonCreateEditView({
         </Box>
       </Box>
 
-      <Card sx={{ p: 3 }}>
-        <Stack spacing={3}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <TextField
-              fullWidth
-              label="Defect reason code"
-              value={formData.code}
-              onChange={handleInputChange('code')}
-              error={hasError('code')}
-              helperText={getFieldErrorMessage('code')}
-            />
-
-            <TextField
-              fullWidth
-              label="Defect reason name"
-              value={formData.name}
-              onChange={handleInputChange('name')}
-              error={hasError('name')}
-              helperText={getFieldErrorMessage('name')}
-            />
-          </Box>
-
-          <FormControlLabel
-            control={
-              <Switch
-                checked={formData.requireExtraNoteFromOperator}
-                onChange={handleSwitchChange('requireExtraNoteFromOperator')}
+      <Grid container spacing={3}>
+        <Grid size={{ xs: 3, md: 4 }}>
+          <Card sx={{ p: 3 }}>
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Color
+              </Typography>
+              <MuiColorInput
+                fullWidth
+                format="hex"
+                value={formData.colorHex}
+                onChange={handleColorChange}
+                error={hasError('colorHex')}
+                helperText={
+                  getFieldErrorMessage('colorHex') ||
+                  'Choose a color to represent this defect reason'
+                }
               />
-            }
-            label="Require extra note from operator"
-          />
-
-          <FormControlLabel
-            control={
-              <Switch
-                checked={formData.addScrapAndIncreaseTotalQuantity}
-                onChange={handleSwitchChange('addScrapAndIncreaseTotalQuantity')}
-              />
-            }
-            label="Add scrap and increase total quantity"
-          />
-
-          <Box>
-            <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              Color
-            </Typography>
-            <MuiColorInput
-              fullWidth
-              format="hex"
-              value={formData.colorHex}
-              onChange={handleColorChange}
-              error={hasError('colorHex')}
-              helperText={getFieldErrorMessage('colorHex') || 'Choose a color to represent this defect reason'}
-            />
-            <Box
-              sx={{
-                mt: 2,
-                p: 2,
-                bgcolor: formData.colorHex,
-                borderRadius: 1,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minHeight: 60,
-              }}
-            >
-              <Typography
-                variant="body2"
+              <Box
                 sx={{
-                  color: 'white',
-                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                  fontWeight: 'medium',
+                  mt: 2,
+                  p: 2,
+                  bgcolor: formData.colorHex,
+                  borderRadius: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: 60,
                 }}
               >
-                Preview: {formData.name || 'Defect Reason Name'}
-              </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'white',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                    fontWeight: 'medium',
+                  }}
+                >
+                  Preview: {formData.name || 'Defect Reason Name'}
+                </Typography>
+              </Box>
             </Box>
-          </Box>
+          </Card>
+        </Grid>
+        <Grid size={{ xs: 12, md: 8 }}>
+          <Stack spacing={3}>
+            <Card sx={{ p: 3 }}>
+              <Typography variant="h6" sx={{ mb: 3 }}>
+                Basic Information
+              </Typography>
+              <Stack spacing={3}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <TextField
+                    fullWidth
+                    label="Defect reason code"
+                    value={formData.code}
+                    required
+                    onChange={handleInputChange('code')}
+                    error={hasError('code')}
+                    helperText={getFieldErrorMessage('code')}
+                  />
 
-          <TextField
-            fullWidth
-            label="Description"
-            value={formData.description}
-            onChange={handleInputChange('description')}
-            multiline
-            rows={4}
-            error={hasError('description')}
-            helperText={getFieldErrorMessage('description')}
-          />
-        </Stack>
+                  <TextField
+                    fullWidth
+                    label="Defect reason name"
+                    value={formData.name}
+                    onChange={handleInputChange('name')}
+                    error={hasError('name')}
+                    helperText={getFieldErrorMessage('name')}
+                  />
+                </Box>
 
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
-          <Button variant="outlined" color="inherit" onClick={handleCancel} disabled={isSubmitting}>
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            color="inherit"
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            sx={{
-              bgcolor: 'grey.900',
-              color: 'common.white',
-              '&:hover': {
-                bgcolor: 'grey.800',
-              },
-            }}
-          >
-            {isSubmitting ? (
-              <CircularProgress size={24} color="inherit" />
-            ) : isEdit ? (
-              'Save changes'
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.requireExtraNoteFromOperator}
+                      onChange={handleSwitchChange('requireExtraNoteFromOperator')}
+                    />
+                  }
+                  label="Require extra note from operator"
+                />
+
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.addScrapAndIncreaseTotalQuantity}
+                      onChange={handleSwitchChange('addScrapAndIncreaseTotalQuantity')}
+                    />
+                  }
+                  label="Add scrap and increase total quantity"
+                />
+
+                <TextField
+                  fullWidth
+                  label="Description"
+                  value={formData.description}
+                  onChange={handleInputChange('description')}
+                  multiline
+                  rows={4}
+                  error={hasError('description')}
+                  helperText={getFieldErrorMessage('description')}
+                />
+              </Stack>
+            </Card>
+            <TranslationSection
+              translations={formData.translations}
+              onTranslationsChange={handleTranslationsChange}
+              disabled={isSubmitting}
+            />
+            {/* Machine Mapping Section */}
+            {isEdit && currentDefectReason?.id ? (
+              <Card sx={{ p: 3 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    mb: 2,
+                  }}
+                >
+                  <Typography variant="h6">Machine Mapping</Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<Iconify icon="solar:settings-bold-duotone" />}
+                    onClick={() =>
+                      router.push(`/defect-reasons/${currentDefectReason.id}/machine-mapping`)
+                    }
+                  >
+                    Manage Machine Mapping
+                  </Button>
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                  Click the button above to manage machine mappings for this defect reason on a
+                  dedicated page with better performance.
+                </Typography>
+              </Card>
             ) : (
-              'Create defect reason'
+              <Card sx={{ p: 3, bgcolor: 'background.neutral' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                  <Iconify icon="solar:bell-bing-bold-duotone" width={24} />
+                  <Typography variant="body2" color="text.secondary">
+                    Machine mapping will be available after creating the defect reason. Please save
+                    the form first.
+                  </Typography>
+                </Box>
+              </Card>
             )}
-          </Button>
-        </Box>
-      </Card>
+          </Stack>
 
-      {/* Machine Mapping Section */}
-      {isEdit && currentDefectReason?.id ? (
-        <Card sx={{ p: 3 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-            <Typography variant="h6">Machine Mapping</Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={handleCancel}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
             <Button
               variant="contained"
-              color="primary"
-              startIcon={<Iconify icon="solar:settings-bold-duotone" />}
-              onClick={() => router.push(`/defect-reasons/${currentDefectReason.id}/machine-mapping`)}
+              color="inherit"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              sx={{
+                bgcolor: 'grey.900',
+                color: 'common.white',
+                '&:hover': {
+                  bgcolor: 'grey.800',
+                },
+              }}
             >
-              Manage Machine Mapping
+              {isSubmitting ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : isEdit ? (
+                'Save changes'
+              ) : (
+                'Create defect reason'
+              )}
             </Button>
           </Box>
-          <Typography variant="body2" color="text.secondary">
-            Click the button above to manage machine mappings for this defect reason on a dedicated page with better performance.
-          </Typography>
-        </Card>
-      ) : (
-        <Card sx={{ p: 3, bgcolor: 'background.neutral' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-            <Iconify icon="solar:bell-bing-bold-duotone" width={24} />
-            <Typography variant="body2" color="text.secondary">
-              Machine mapping will be available after creating the defect reason. Please save the form first.
-            </Typography>
-          </Box>
-        </Card>
-      )}
+        </Grid>
+      </Grid>
 
       <Snackbar
         open={!!(errorMessage || overallMessage)}

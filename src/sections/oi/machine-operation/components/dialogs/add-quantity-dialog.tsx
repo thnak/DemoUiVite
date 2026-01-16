@@ -186,11 +186,7 @@ export function AddQuantityDialog({
                             sx={{ width: '100px' }}
                           />
                         ) : (
-                          <Chip
-                            label={`+${history.addedQuantity}`}
-                            size="small"
-                            color="success"
-                          />
+                          <Chip label={`+${history.addedQuantity}`} size="small" color="success" />
                         )}
                       </TableCell>
                       <TableCell>{history.addedBy}</TableCell>

@@ -266,10 +266,7 @@ export function IoTSensorDataSeedingView({
                   <Typography variant="subtitle2" sx={{ mb: 1 }}>
                     Current Status
                   </Typography>
-                  <Label
-                    color={status?.isEnabled ? 'success' : 'default'}
-                    sx={{ px: 2, py: 1 }}
-                  >
+                  <Label color={status?.isEnabled ? 'success' : 'default'} sx={{ px: 2, py: 1 }}>
                     {status?.isEnabled ? 'Enabled' : 'Disabled'}
                   </Label>
                 </Box>
@@ -327,7 +324,7 @@ export function IoTSensorDataSeedingView({
                         onChange={(e) => setMean(Number(e.target.value))}
                         helperText="Average time delay between data generation"
                         slotProps={{
-                          htmlInput: { step: 0.1, min: 0 }
+                          htmlInput: { step: 0.1, min: 0 },
                         }}
                       />
                       <TextField
@@ -338,7 +335,7 @@ export function IoTSensorDataSeedingView({
                         onChange={(e) => setStd(Number(e.target.value))}
                         helperText="Variation in time delay"
                         slotProps={{
-                          htmlInput: { step: 0.1, min: 0.1 }
+                          htmlInput: { step: 0.1, min: 0.1 },
                         }}
                       />
                       <TextField
@@ -349,7 +346,7 @@ export function IoTSensorDataSeedingView({
                         onChange={(e) => setIntervalMs(Number(e.target.value))}
                         helperText="Base interval between data points (deprecated)"
                         slotProps={{
-                          htmlInput: { step: 100, min: 0 }
+                          htmlInput: { step: 100, min: 0 },
                         }}
                       />
                     </Stack>

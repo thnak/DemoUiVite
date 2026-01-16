@@ -17,7 +17,11 @@ type UnitGroupTableToolbarProps = {
   onFilterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export function UnitGroupTableToolbar({ numSelected, filterName, onFilterName }: UnitGroupTableToolbarProps) {
+export function UnitGroupTableToolbar({
+  numSelected,
+  filterName,
+  onFilterName,
+}: UnitGroupTableToolbarProps) {
   return (
     <Toolbar
       sx={{

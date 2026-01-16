@@ -134,7 +134,7 @@ export function OEESummaryFilters({
         onChange={handleStartDateChange}
         sx={{ minWidth: 160 }}
         slotProps={{
-          inputLabel: { shrink: true }
+          inputLabel: { shrink: true },
         }}
       />
       {/* End Date */}
@@ -146,7 +146,7 @@ export function OEESummaryFilters({
         onChange={handleEndDateChange}
         sx={{ minWidth: 160 }}
         slotProps={{
-          inputLabel: { shrink: true }
+          inputLabel: { shrink: true },
         }}
       />
       {/* Machines Multi-Select */}
