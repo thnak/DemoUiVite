@@ -85959,7 +85959,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2026-01-15"
+              "example": "2026-01-16"
             }
           },
           {
@@ -85969,7 +85969,7 @@
             "schema": {
               "type": "string",
               "format": "date",
-              "example": "2026-01-15"
+              "example": "2026-01-16"
             }
           },
           {
@@ -89648,13 +89648,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2026-01-15"
+            "example": "2026-01-16"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2026-01-15"
+            "example": "2026-01-16"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -89790,13 +89790,13 @@
             "type": "string",
             "description": "Áp dụng từ ngày",
             "format": "date",
-            "example": "2026-01-15"
+            "example": "2026-01-16"
           },
           "applyTo": {
             "type": "string",
             "description": "Áp dụng đến ngày",
             "format": "date",
-            "example": "2026-01-15"
+            "example": "2026-01-16"
           },
           "plan2Infinite": {
             "type": "boolean",
@@ -90086,12 +90086,12 @@
           "startDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-15"
+            "example": "2026-01-16"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-15"
+            "example": "2026-01-16"
           },
           "isWorkingTime": {
             "type": "boolean"
@@ -94668,7 +94668,7 @@
           "createDate": {
             "type": "string",
             "format": "date",
-            "example": "2026-01-15"
+            "example": "2026-01-16"
           }
         },
         "additionalProperties": false
@@ -99098,7 +99098,7 @@
             "type": "string",
             "description": "Installation date of the IoT device.",
             "format": "date",
-            "example": "2026-01-15"
+            "example": "2026-01-16"
           },
           "locationId": {
             "$ref": "#/components/schemas/ObjectId"
@@ -109778,7 +109778,7 @@
             "type": "string",
             "description": "Date of the work.",
             "format": "date",
-            "example": "2026-01-15"
+            "example": "2026-01-16"
           },
           "shiftName": {
             "type": "string",
@@ -122190,7 +122190,7 @@
             "type": "string",
             "description": "The specific work date this statistic applies to.",
             "format": "date",
-            "example": "2026-01-15"
+            "example": "2026-01-16"
           },
           "calendarId": {
             "$ref": "#/components/schemas/ObjectId"
