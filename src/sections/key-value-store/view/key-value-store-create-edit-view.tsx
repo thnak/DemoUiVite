@@ -215,7 +215,14 @@ export function KeyValueStoreCreateEditView({ isEdit = false }: KeyValueStoreCre
         } as any,
       });
     }
-  }, [formData, isEdit, id, createKeyValueStoreMutate, updateKeyValueStoreMutate, clearValidationResult]);
+  }, [
+    formData,
+    isEdit,
+    id,
+    createKeyValueStoreMutate,
+    updateKeyValueStoreMutate,
+    clearValidationResult,
+  ]);
 
   const handleCancel = useCallback(() => {
     router.push(returnUrl);
@@ -277,7 +284,10 @@ export function KeyValueStoreCreateEditView({ isEdit = false }: KeyValueStoreCre
                 }
                 label="Encrypt Value"
               />
-              <Typography variant="caption" sx={{ display: 'block', mt: 1, color: 'text.secondary' }}>
+              <Typography
+                variant="caption"
+                sx={{ display: 'block', mt: 1, color: 'text.secondary' }}
+              >
                 Enable encryption to protect sensitive data using .NET Data Protection API
               </Typography>
             </Box>
@@ -316,7 +326,8 @@ export function KeyValueStoreCreateEditView({ isEdit = false }: KeyValueStoreCre
                     rows={4}
                     error={hasError('value')}
                     helperText={
-                      getFieldErrorMessage('value') || 'The value to store (serialized as JSON string)'
+                      getFieldErrorMessage('value') ||
+                      'The value to store (serialized as JSON string)'
                     }
                   />
                 </Grid>
@@ -327,7 +338,9 @@ export function KeyValueStoreCreateEditView({ isEdit = false }: KeyValueStoreCre
                     value={formData.typeName}
                     onChange={handleInputChange('typeName')}
                     error={hasError('typeName')}
-                    helperText={getFieldErrorMessage('typeName') || 'Type name for runtime type checking'}
+                    helperText={
+                      getFieldErrorMessage('typeName') || 'Type name for runtime type checking'
+                    }
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
@@ -337,7 +350,10 @@ export function KeyValueStoreCreateEditView({ isEdit = false }: KeyValueStoreCre
                     type="datetime-local"
                     value={
                       formData.expiresAt
-                        ? new Date(formData.expiresAt.getTime() - formData.expiresAt.getTimezoneOffset() * 60000)
+                        ? new Date(
+                            formData.expiresAt.getTime() -
+                              formData.expiresAt.getTimezoneOffset() * 60000
+                          )
                             .toISOString()
                             .slice(0, 16)
                         : ''
@@ -377,7 +393,8 @@ export function KeyValueStoreCreateEditView({ isEdit = false }: KeyValueStoreCre
                         placeholder="Type and press Enter to add tags"
                         error={hasError('tags')}
                         helperText={
-                          getFieldErrorMessage('tags') || 'Tags for categorizing and grouping key-value pairs'
+                          getFieldErrorMessage('tags') ||
+                          'Tags for categorizing and grouping key-value pairs'
                         }
                       />
                     )}

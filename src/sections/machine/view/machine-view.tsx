@@ -2,8 +2,8 @@ import type { MachineInputType } from 'src/_mock';
 import type { MachineDto, OutputCalculationMode } from 'src/api/types/generated';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';

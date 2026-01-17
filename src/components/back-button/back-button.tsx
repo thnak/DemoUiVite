@@ -3,7 +3,6 @@ import type { ButtonProps, IconButtonProps } from '@mui/material';
 import { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 
@@ -86,7 +85,7 @@ export function BackButton({
     if (preserveQuery) {
       // Check if there's a referrer state with query params
       const state = location.state as { from?: string; search?: string } | undefined;
-      
+
       if (state?.from?.startsWith(href)) {
         // We came from the list page, use the stored search params
         targetPath = state.search ? `${href}${state.search}` : href;

@@ -28,8 +28,7 @@ import {
   getCalendarById,
 } from 'src/api/services/generated/calendar';
 
-import { BackButton } from 'src/components/back-button';
-import { useTour, TourButton } from 'src/components/tour';
+import { useTour } from 'src/components/tour';
 import { TranslationSection } from 'src/components/translation-section';
 import { DurationTimePicker } from 'src/components/duration-time-picker';
 import { TimeShiftCaseVisualization } from 'src/components/time-shift-case-visualization';
@@ -314,41 +313,6 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
 
   return (
     <DashboardContent>
-      <Box
-        sx={{
-          mb: 5,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <BackButton href="/calendars" variant="icon" buttonProps={{ sx: { mr: 1 } }} />
-          <Box>
-            <Typography variant="h4" sx={{ mb: 1 }}>
-              {isEdit ? 'Edit Calendar' : 'Create Calendar'}
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography variant="body2" sx={{ color: 'text.primary' }}>
-                Dashboard
-              </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                •
-              </Typography>
-              <Typography variant="body2" sx={{ color: 'text.primary' }}>
-                Calendars
-              </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                •
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              {isEdit ? 'Edit' : 'Create'}
-            </Typography>
-          </Box>
-        </Box>
-        <TourButton onStartTour={startTour} />
-      </Box>
-
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ p: 3 }}>
