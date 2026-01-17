@@ -1,7 +1,8 @@
 import type { BoxProps } from '@mui/material/Box';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
+import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 
 import { Iconify } from 'src/components/iconify';
@@ -34,12 +35,12 @@ export function Searchbar({ sx, ...other }: BoxProps) {
   }, [handleOpen]);
 
   return (
-    <>
-      <IconButton onClick={handleOpen} sx={sx} {...other}>
+    <Box sx={sx} {...other}>
+      <IconButton onClick={handleOpen}>
         <Iconify icon="eva:search-fill" />
       </IconButton>
 
       <SearchDialog open={open} onClose={handleClose} />
-    </>
+    </Box>
   );
 }

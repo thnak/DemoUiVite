@@ -207,7 +207,7 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
             },
           }}
         >
-          <Iconify icon="solar:copy-linear" width={18} />
+          <Iconify icon="solar:share-bold" width={18} />
         </IconButton>
       </ListItemButton>
     </ListItem>
@@ -254,7 +254,7 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
                 endAdornment: query && (
                   <InputAdornment position="end">
                     <IconButton size="small" onClick={() => setQuery('')}>
-                      <Iconify icon="eva:close-fill" width={20} />
+                      <Iconify icon="eva:close-outline" width={20} />
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -267,7 +267,7 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
             }}
           />
           <IconButton onClick={onClose}>
-            <Iconify icon="eva:close-fill" />
+            <Iconify icon="eva:close-outline" />
           </IconButton>
         </Stack>
 
@@ -314,7 +314,7 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
               color: 'text.secondary',
             }}
           >
-            <Iconify icon="eva:search-outline" width={64} sx={{ mb: 2, opacity: 0.3 }} />
+            <Iconify icon="eva:search-fill" width={64} sx={{ mb: 2, opacity: 0.3 }} />
             <Typography variant="h6" sx={{ mb: 1 }}>
               {currentLanguage === 'en' ? 'No results found' : 'Không tìm thấy kết quả'}
             </Typography>
