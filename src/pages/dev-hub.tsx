@@ -31,6 +31,14 @@ const DEV_PAGES: DevPageCard[] = [
     icon: 'solar:translation-bold',
     color: '#3b82f6',
   },
+  {
+    title: 'Report Builder',
+    description:
+      'Advanced report builder for developers. Create custom queries with joins, filters, and aggregations. Features entity discovery and live preview.',
+    path: '/dev/report-builder',
+    icon: 'solar:chart-bold-duotone',
+    color: '#8b5cf6',
+  },
   // Add more dev pages here as needed
 ];
 
