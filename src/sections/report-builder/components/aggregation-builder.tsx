@@ -1,7 +1,7 @@
 import {
   Card,
-  Stack,
   Chip,
+  Stack,
   Alert,
   Select,
   MenuItem,
@@ -48,31 +48,28 @@ export function AggregationBuilder({
   const aggregatedFields = fields.filter((f) => f.aggregation);
   const nonAggregatedFields = fields.filter((f) => !f.aggregation);
 
-  const handleToggleAggregation = (fieldName: string) => {
-    const existingField = fields.find((f) => f.field === fieldName);
-
-    if (existingField?.aggregation) {
-      // Remove aggregation
-      onFieldsChange(
-        fields.map((f) =>
-          f.field === fieldName ? { field: f.field, alias: f.alias } : f
-        )
-      );
-    } else {
-      // Add aggregation
-      onFieldsChange(
-        fields.map((f) =>
-          f.field === fieldName
-            ? { ...f, aggregation: 'Count', alias: f.alias || `${fieldName}_count` }
-            : f
-        )
-      );
-      // Add to groupBy if not already there
-      if (!groupBy.includes(fieldName)) {
-        onGroupByChange([...groupBy, fieldName]);
-      }
-    }
-  };
+  // Future: Toggle aggregation directly from this component
+  // const handleToggleAggregation = (fieldName: string) => {
+  //   const existingField = fields.find((f) => f.field === fieldName);
+  //   if (existingField?.aggregation) {
+  //     onFieldsChange(
+  //       fields.map((f) =>
+  //         f.field === fieldName ? { field: f.field, alias: f.alias } : f
+  //       )
+  //     );
+  //   } else {
+  //     onFieldsChange(
+  //       fields.map((f) =>
+  //         f.field === fieldName
+  //           ? { ...f, aggregation: 'Count', alias: f.alias || `${fieldName}_count` }
+  //           : f
+  //       )
+  //     );
+  //     if (!groupBy.includes(fieldName)) {
+  //       onGroupByChange([...groupBy, fieldName]);
+  //     }
+  //   }
+  // };
 
   const handleAggregationChange = (fieldName: string, aggregation: string) => {
     onFieldsChange(
