@@ -2,6 +2,7 @@ import type { MachineInputType } from 'src/_mock';
 import type { MachineDto, OutputCalculationMode } from 'src/api/types/generated';
 
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate, useLocation } from 'react-router-dom';
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -24,6 +25,7 @@ import { deleteMachine, getapiMachinesearchmachines } from 'src/api/services/gen
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { navigateWithState } from 'src/components/back-button';
 import { ConfirmDeleteDialog } from 'src/components/confirm-delete-dialog';
 
 import { getComparator } from '../utils';
@@ -72,6 +74,8 @@ const tableContentVariants = {
 export function MachineView() {
   const table = useTable();
   const router = useRouter();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [machines, setMachines] = useState<MachineDto[]>([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -324,10 +328,10 @@ export function MachineView() {
 
   const handleEditMachine = useCallback(
     (id: string) => {
-      // Navigate to edit page
-      router.push(`/machines/${id}/edit`);
+      // Navigate to edit page with state preservation
+      navigateWithState(navigate, `/machines/${id}/edit`, '/machines', location.search);
     },
-    [router]
+    [navigate, location.search]
   );
 
   const handleDeleteMachine = useCallback((id: string) => {

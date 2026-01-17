@@ -48,7 +48,11 @@ export function KeyValueStoreListView() {
     defaultOrder: 'asc',
   });
 
-  const { mutate: fetchKeyValueStorePage, data: keyValueStoreData, isPending: isLoading } = useGetKeyValueStorePage({
+  const {
+    mutate: fetchKeyValueStorePage,
+    data: keyValueStoreData,
+    isPending: isLoading,
+  } = useGetKeyValueStorePage({
     onError: (error) => {
       console.error('Failed to fetch key-value stores:', error);
     },
@@ -64,7 +68,14 @@ export function KeyValueStoreListView() {
         searchTerm: params.filterName || undefined,
       },
     });
-  }, [params.page, params.rowsPerPage, params.orderBy, params.order, params.filterName, fetchKeyValueStorePage]);
+  }, [
+    params.page,
+    params.rowsPerPage,
+    params.orderBy,
+    params.order,
+    params.filterName,
+    fetchKeyValueStorePage,
+  ]);
 
   // Derive keyValueStores and totalItems from keyValueStoreData using useMemo - React Compiler friendly
   const keyValueStores = useMemo<KeyValueStoreProps[]>(() => {

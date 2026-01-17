@@ -22,6 +22,7 @@ import { isValidationSuccess } from 'src/utils/validation-result';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useCreateArea, useUpdateArea } from 'src/api/hooks/generated/use-area';
 
+import { BackButton } from 'src/components/back-button';
 import { TranslationSection } from 'src/components/translation-section';
 
 // ----------------------------------------------------------------------
@@ -178,26 +179,38 @@ export function AreaCreateEditView({ isEdit = false, currentArea }: AreaCreateEd
 
   return (
     <DashboardContent>
-      <Box sx={{ mb: 5 }}>
-        <Typography variant="h4" sx={{ mb: 1 }}>
-          {isEdit ? 'Edit area' : 'Create a new area'}
-        </Typography>
+      <Box
+        sx={{
+          mb: 5,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="body2" sx={{ color: 'text.primary' }}>
-            Dashboard
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            •
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.primary' }}>
-            Area
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            •
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-            {isEdit ? 'Edit' : 'Create'}
-          </Typography>
+          <BackButton href="/area" variant="icon" buttonProps={{ sx: { mr: 1 } }} />
+          <Box>
+            <Typography variant="h4" sx={{ mb: 1 }}>
+              {isEdit ? 'Edit area' : 'Create a new area'}
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                Dashboard
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                •
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                Area
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                •
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+                {isEdit ? 'Edit' : 'Create'}
+              </Typography>
+            </Box>
+          </Box>
         </Box>
       </Box>
 

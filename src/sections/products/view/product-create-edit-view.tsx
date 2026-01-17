@@ -18,6 +18,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
+import { BackButton } from 'src/components/back-button';
 import { UnitSelector } from 'src/components/selectors/unit-selector';
 import { TranslationSection } from 'src/components/translation-section';
 import { ImageEntityResourceUploader } from 'src/components/image-entity-resource-uploader';
@@ -250,26 +251,38 @@ export function ProductCreateEditView({
 
   return (
     <DashboardContent>
-      <Box sx={{ mb: 5 }}>
-        <Typography variant="h4" sx={{ mb: 1 }}>
-          {isEdit ? 'Edit product' : 'Create a new product'}
-        </Typography>
+      <Box
+        sx={{
+          mb: 5,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="body2" sx={{ color: 'text.primary' }}>
-            Dashboard
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            •
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.primary' }}>
-            Product
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            •
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-            {isEdit ? 'Edit' : 'Create'}
-          </Typography>
+          <BackButton href="/products" variant="icon" buttonProps={{ sx: { mr: 1 } }} />
+          <Box>
+            <Typography variant="h4" sx={{ mb: 1 }}>
+              {isEdit ? 'Edit product' : 'Create a new product'}
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                Dashboard
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                •
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                Product
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                •
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+                {isEdit ? 'Edit' : 'Create'}
+              </Typography>
+            </Box>
+          </Box>
         </Box>
       </Box>
       <Grid container spacing={3}>

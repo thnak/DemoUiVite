@@ -76,11 +76,7 @@ export function TranslationSection({
         <Grid size={{ xs: 12, md: 4 }}>
           <FormControl fullWidth disabled={disabled}>
             <InputLabel>Language</InputLabel>
-            <Select
-              value={translationKey}
-              onChange={handleKeyChange}
-              label="Language"
-            >
+            <Select value={translationKey} onChange={handleKeyChange} label="Language">
               {availableLanguages.map((lang) => (
                 <MenuItem key={lang.value} value={lang.value}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -145,9 +141,7 @@ export function TranslationSection({
                       sx={{ width: 20, height: 15, objectFit: 'cover', borderRadius: 0.5 }}
                     />
                   )}
-                  <Typography variant="subtitle2">
-                    {language ? language.label : key}:
-                  </Typography>
+                  <Typography variant="subtitle2">{language ? language.label : key}:</Typography>
                 </Box>
                 <Typography variant="body2" sx={{ flexGrow: 1 }}>
                   {value}
