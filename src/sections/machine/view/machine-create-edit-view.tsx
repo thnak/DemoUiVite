@@ -43,6 +43,7 @@ import {
 } from 'src/api/hooks/generated/use-machine';
 
 import { Iconify } from 'src/components/iconify';
+import { BackButton } from 'src/components/back-button';
 import { AreaSelector } from 'src/components/selectors/area-selector';
 import { TranslationSection } from 'src/components/translation-section';
 import { CalendarSelector } from 'src/components/selectors/calendar-selector';
@@ -506,26 +507,38 @@ export function MachineCreateEditView({
 
   return (
     <DashboardContent>
-      <Box sx={{ mb: 5 }}>
-        <Typography variant="h4" sx={{ mb: 1 }}>
-          {isEdit ? 'Edit machine' : 'Create a new machine'}
-        </Typography>
+      <Box
+        sx={{
+          mb: 5,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="body2" sx={{ color: 'text.primary' }}>
-            Dashboard
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            •
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.primary' }}>
-            Machines
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            •
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-            {isEdit ? 'Edit' : 'Create'}
-          </Typography>
+          <BackButton href="/machines" variant="icon" buttonProps={{ sx: { mr: 1 } }} />
+          <Box>
+            <Typography variant="h4" sx={{ mb: 1 }}>
+              {isEdit ? 'Edit machine' : 'Create a new machine'}
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                Dashboard
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                •
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                Machines
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                •
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+                {isEdit ? 'Edit' : 'Create'}
+              </Typography>
+            </Box>
+          </Box>
         </Box>
       </Box>
 

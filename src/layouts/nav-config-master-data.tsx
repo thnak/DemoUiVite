@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
+import { Iconify } from 'src/components/iconify';
 import { SvgColor } from 'src/components/svg-color';
 
 import type { NavData } from './nav-config-dashboard';
@@ -18,22 +19,22 @@ export function useMasterDataNavData(): NavData {
         {
           title: t('nav.machine'),
           path: '/machines',
-          icon: icon('ic-cart'),
+          icon: <Iconify icon="solar:factory-bold-duotone" />,
         },
         {
           title: t('nav.machineType'),
           path: '/machine-types',
-          icon: icon('ic-cart'),
+          icon: <Iconify icon="solar:cpu-bolt-bold-duotone" />,
         },
         {
           title: t('nav.product'),
           path: '/products',
-          icon: icon('ic-cart'),
+          icon: <Iconify icon="solar:cart-3-bold" />,
         },
         {
           title: t('nav.productCategory'),
           path: '/product-categories',
-          icon: icon('ic-cart'),
+          icon: <Iconify icon="solar:grid-bold-duotone" />,
         },
         {
           title: t('nav.workingParameter'),
@@ -53,12 +54,12 @@ export function useMasterDataNavData(): NavData {
         {
           title: t('nav.stopMachineReason'),
           path: '/stop-machine-reason',
-          icon: icon('ic-disabled'),
+          icon: <Iconify icon="solar:danger-triangle-bold-duotone" />,
         },
         {
           title: t('nav.stopMachineReasonGroup'),
           path: '/stop-machine-reason-group',
-          icon: icon('ic-disabled'),
+          icon: <Iconify icon="solar:list-bold-duotone" />,
         },
         {
           title: t('nav.area'),
@@ -68,7 +69,7 @@ export function useMasterDataNavData(): NavData {
         {
           title: t('nav.calendar'),
           path: '/calendars',
-          icon: icon('ic-analytics'),
+          icon: <Iconify icon="solar:calendar-mark-bold" />,
         },
         {
           title: t('nav.shiftTemplate'),
