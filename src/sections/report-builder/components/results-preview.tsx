@@ -1,8 +1,8 @@
+import type { ReportResultDto } from 'src/api/types/generated';
+
 import { Card, Stack, Alert, Typography, CardContent, CircularProgress } from '@mui/material';
 
 import { Iconify } from 'src/components/iconify';
-
-import type { ReportResultDto } from 'src/api/types/generated';
 
 // ----------------------------------------------------------------------
 
@@ -38,12 +38,12 @@ export function ResultsPreview({ result, error, isLoading }: Props) {
         {!isLoading && !error && !result && (
           <Stack spacing={2} alignItems="center" sx={{ py: 4 }}>
             <Iconify
-              icon="solar:document-text-bold-duotone"
+              icon="solar:home-angle-bold-duotone"
               width={48}
               sx={{ color: 'text.disabled' }}
             />
             <Typography variant="body2" color="text.secondary" align="center">
-              Click "Preview Query" to see results
+              Click &quot;Preview Query&quot; to see results
             </Typography>
           </Stack>
         )}

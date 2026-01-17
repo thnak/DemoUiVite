@@ -1,5 +1,7 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import type { ReportQueryDto } from 'src/api/types/generated';
+
+import { useParams, useNavigate } from 'react-router-dom';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import {
   Box,
@@ -16,14 +18,13 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
 
-import type { ReportQueryDto } from '../types';
-import { useSavedReports, useReportQuery, useReportEntities } from '../hooks';
+import { useReportQuery, useSavedReports, useReportEntities } from '../hooks';
 import {
-  EntitySelector,
-  FieldSelector,
-  FilterBuilder,
   JoinBuilder,
   QueryPreview,
+  FieldSelector,
+  FilterBuilder,
+  EntitySelector,
   ResultsPreview,
 } from '../components';
 
@@ -34,34 +35,46 @@ export function ReportBuilderCreateEditView() {
   const { id } = useParams<{ id: string }>();
   const isEdit = !!id;
 
-  const { savedReports, saveReport, updateReport, getReportById } = useSavedReports();
+  const { saveReport, updateReport, getReportById } = useSavedReports();
   const { previewQuery, isPreviewing, previewResult, previewError } = useReportQuery();
   const { data: entities, isLoading: isLoadingEntities } = useReportEntities();
 
-  const [reportName, setReportName] = useState('');
-  const [reportDescription, setReportDescription] = useState('');
-  const [currentQuery, setCurrentQuery] = useState<ReportQueryDto>({
-    sourceEntity: undefined,
-    fields: [],
-    filters: [],
-    joins: [],
-    sorts: [],
-    groupBy: [],
-    page: 1,
-    pageSize: 50,
-  });
-
-  // Load existing report if editing
-  useEffect(() => {
+  // Get current report if editing
+  const currentReport = useMemo(() => {
     if (isEdit && id) {
-      const report = getReportById(id);
-      if (report) {
-        setReportName(report.name);
-        setReportDescription(report.description || '');
-        setCurrentQuery(report.query);
-      }
+      return getReportById(id);
     }
+    return null;
   }, [isEdit, id, getReportById]);
+
+  // Initialize form data from report
+  const initialFormData = useMemo(() => {
+    if (currentReport) {
+      return {
+        name: currentReport.name,
+        description: currentReport.description || '',
+        query: currentReport.query,
+      };
+    }
+    return {
+      name: '',
+      description: '',
+      query: {
+        sourceEntity: undefined,
+        fields: [],
+        filters: [],
+        joins: [],
+        sorts: [],
+        groupBy: [],
+        page: 1,
+        pageSize: 50,
+      } as ReportQueryDto,
+    };
+  }, [currentReport]);
+
+  const [reportName, setReportName] = useState(initialFormData.name);
+  const [reportDescription, setReportDescription] = useState(initialFormData.description);
+  const [currentQuery, setCurrentQuery] = useState<ReportQueryDto>(initialFormData.query);
 
   const selectedEntity = useMemo(
     () => entities?.find((e) => e.entityName === currentQuery.sourceEntity),
@@ -185,7 +198,7 @@ export function ReportBuilderCreateEditView() {
             {/* Entity Selector */}
             <EntitySelector
               entities={entities || []}
-              selectedEntity={currentQuery.sourceEntity}
+              selectedEntity={currentQuery.sourceEntity || undefined}
               onSelectEntity={handleEntityChange}
               isLoading={isLoadingEntities}
             />
@@ -207,7 +220,7 @@ export function ReportBuilderCreateEditView() {
                     fullWidth
                     variant="contained"
                     color="primary"
-                    startIcon={<Iconify icon="solar:diskette-bold" />}
+                    startIcon={<Iconify icon="solar:eye-bold" />}
                     onClick={handleSave}
                     disabled={!reportName.trim() || !currentQuery.sourceEntity}
                   >

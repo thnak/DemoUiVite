@@ -1,4 +1,4 @@
-import { Card, Stack, Typography, CardContent, TextField, MenuItem } from '@mui/material';
+import { Card, Stack, MenuItem, TextField, Typography, CardContent } from '@mui/material';
 
 import type { EntityMetadataDto } from '../types';
 
@@ -44,7 +44,7 @@ export function EntitySelector({ entities, selectedEntity, onSelectEntity, isLoa
                 {category}
               </MenuItem>,
               ...categoryEntities.map((entity) => (
-                <MenuItem key={entity.entityName} value={entity.entityName}>
+                <MenuItem key={entity.entityName || ''} value={entity.entityName || ''}>
                   {entity.displayName || entity.entityName}
                 </MenuItem>
               )),

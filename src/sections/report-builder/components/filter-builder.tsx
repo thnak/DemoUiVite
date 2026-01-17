@@ -18,7 +18,7 @@ export function FilterBuilder({ entity, filters, onFiltersChange }: Props) {
       ...filters,
       {
         field: entity?.properties?.[0]?.propertyName || '',
-        operator: 'Equals',
+        operator: 'equals',
         value: '',
       },
     ]);

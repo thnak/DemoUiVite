@@ -1,7 +1,8 @@
+import type { ReportQueryDto } from 'src/api/types/generated';
+
 import { useState, useCallback } from 'react';
 import { useMutation } from '@tanstack/react-query';
 
-import type { ReportQueryDto } from 'src/api/types/generated';
 import {
   postapireportsquerydata,
   postapireportsquerypreview,
@@ -39,23 +40,17 @@ export function useReportQuery() {
   });
 
   const executeQuery = useCallback(
-    (query: ReportQueryDto) => {
-      return executeMutation.mutateAsync(query);
-    },
+    (query: ReportQueryDto) => executeMutation.mutateAsync(query),
     [executeMutation]
   );
 
   const previewQuery = useCallback(
-    (query: ReportQueryDto) => {
-      return previewMutation.mutateAsync(query);
-    },
+    (query: ReportQueryDto) => previewMutation.mutateAsync(query),
     [previewMutation]
   );
 
   const validateQuery = useCallback(
-    (query: ReportQueryDto) => {
-      return validateMutation.mutateAsync(query);
-    },
+    (query: ReportQueryDto) => validateMutation.mutateAsync(query),
     [validateMutation]
   );
 

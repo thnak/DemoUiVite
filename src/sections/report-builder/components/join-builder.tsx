@@ -21,9 +21,9 @@ export function JoinBuilder({ sourceEntity, joins, onJoinsChange }: Props) {
       ...joins,
       {
         targetEntity: firstRelationship.targetEntity || '',
-        joinType: 'Inner',
+        joinType: 'inner',
         sourceField: firstRelationship.foreignKeyProperty || '',
-        targetField: firstRelationship.targetKeyProperty || 'Id',
+        targetField: firstRelationship.referencedProperty || 'Id',
         alias: firstRelationship.targetEntity?.replace('Entity', '') || '',
       },
     ]);
@@ -78,7 +78,7 @@ export function JoinBuilder({ sourceEntity, joins, onJoinsChange }: Props) {
                 }}
               >
                 <Iconify
-                  icon={join.joinType === 'Inner' ? 'solar:link-circle-bold' : 'solar:link-bold'}
+                  icon={join.joinType === 'inner' ? 'solar:info-circle-bold' : 'solar:link-bold-duotone'}
                   width={20}
                 />
                 <Stack sx={{ flex: 1 }}>

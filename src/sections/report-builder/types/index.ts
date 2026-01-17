@@ -1,9 +1,9 @@
 import type {
+  ReportJoinDto,
+  ReportSortDto,
   ReportQueryDto,
   ReportFieldDto,
   ReportFilterDto,
-  ReportJoinDto,
-  ReportSortDto,
   EntityMetadataDto,
   PropertyMetadataDto,
   RelationshipMetadataDto,
@@ -120,11 +120,11 @@ export type ReportExecutionResult = {
 
 // Re-export API types for convenience
 export type {
+  ReportJoinDto,
+  ReportSortDto,
   ReportQueryDto,
   ReportFieldDto,
   ReportFilterDto,
-  ReportJoinDto,
-  ReportSortDto,
   EntityMetadataDto,
   PropertyMetadataDto,
   RelationshipMetadataDto,

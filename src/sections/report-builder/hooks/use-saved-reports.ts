@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect } from 'react';
-
 import type { ReportQueryDto } from 'src/api/types/generated';
+
+import { useState, useCallback } from 'react';
 
 import type { SavedReport } from '../types';
 
@@ -12,20 +12,18 @@ const STORAGE_KEY = 'report-builder-saved-reports';
  * Hook for managing saved reports in localStorage
  */
 export function useSavedReports() {
-  const [savedReports, setSavedReports] = useState<SavedReport[]>([]);
-
-  // Load saved reports from localStorage on mount
-  useEffect(() => {
+  const [savedReports, setSavedReports] = useState<SavedReport[]>(() => {
+    // Initialize from localStorage on mount
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
-        const parsed = JSON.parse(stored) as SavedReport[];
-        setSavedReports(parsed);
+        return JSON.parse(stored) as SavedReport[];
       }
     } catch (error) {
       console.error('Failed to load saved reports:', error);
     }
-  }, []);
+    return [];
+  });
 
   // Save reports to localStorage whenever they change
   const persistReports = useCallback((reports: SavedReport[]) => {

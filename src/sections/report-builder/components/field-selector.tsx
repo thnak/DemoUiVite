@@ -38,7 +38,7 @@ export function FieldSelector({ entity, selectedFields, onFieldsChange }: Props)
       <Card>
         <CardContent>
           <Stack spacing={2} alignItems="center" sx={{ py: 4 }}>
-            <Iconify icon="solar:document-bold-duotone" width={48} sx={{ color: 'text.disabled' }} />
+            <Iconify icon="solar:home-angle-bold-duotone" width={48} sx={{ color: 'text.disabled' }} />
             <Typography variant="h6" color="text.secondary">
               Select an entity first
             </Typography>

@@ -1,4 +1,5 @@
 import type { MouseEvent } from 'react';
+
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,8 +9,8 @@ import {
   Table,
   Stack,
   Button,
-  MenuItem,
   Popover,
+  MenuItem,
   MenuList,
   TableRow,
   TableBody,
@@ -143,7 +144,7 @@ export function ReportBuilderListView() {
                     <TableCell colSpan={6} align="center" sx={{ py: 8 }}>
                       <Stack spacing={2} alignItems="center">
                         <Iconify
-                          icon="solar:document-add-bold-duotone"
+                          icon="solar:home-angle-bold-duotone"
                           width={64}
                           sx={{ color: 'text.disabled' }}
                         />
@@ -217,7 +218,7 @@ export function ReportBuilderListView() {
             Edit
           </MenuItem>
           <MenuItem onClick={handleDuplicate}>
-            <Iconify icon="solar:copy-bold" />
+            <Iconify icon="solar:pen-bold" />
             Duplicate
           </MenuItem>
           <MenuItem onClick={handleDelete} sx={{ color: 'error.main' }}>
