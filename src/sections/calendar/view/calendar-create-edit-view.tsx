@@ -28,6 +28,7 @@ import {
   getCalendarById,
 } from 'src/api/services/generated/calendar';
 
+import { BackButton } from 'src/components/back-button';
 import { useTour, TourButton } from 'src/components/tour';
 import { TranslationSection } from 'src/components/translation-section';
 import { DurationTimePicker } from 'src/components/duration-time-picker';
@@ -321,22 +322,24 @@ export function CalendarCreateEditView({ isEdit = false }: CalendarCreateEditVie
           justifyContent: 'space-between',
         }}
       >
-        <Box>
-          <Typography variant="h4" sx={{ mb: 1 }}>
-            {isEdit ? 'Edit Calendar' : 'Create Calendar'}
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" sx={{ color: 'text.primary' }}>
-              Dashboard
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <BackButton href="/calendars" variant="icon" buttonProps={{ sx: { mr: 1 } }} />
+          <Box>
+            <Typography variant="h4" sx={{ mb: 1 }}>
+              {isEdit ? 'Edit Calendar' : 'Create Calendar'}
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              •
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.primary' }}>
-              Calendars
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              •
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                Dashboard
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                •
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                Calendars
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                •
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>
               {isEdit ? 'Edit' : 'Create'}
