@@ -24,20 +24,20 @@ type Props = {
 
 // Filter operators as per REPORT_API_RULES.md
 const FILTER_OPERATORS = [
-  { value: 'Equals', label: 'Equals (=)', requiresValue: true },
-  { value: 'NotEquals', label: 'Not Equals (≠)', requiresValue: true },
-  { value: 'GreaterThan', label: 'Greater Than (>)', requiresValue: true },
-  { value: 'GreaterThanOrEqual', label: 'Greater Than or Equal (≥)', requiresValue: true },
-  { value: 'LessThan', label: 'Less Than (<)', requiresValue: true },
-  { value: 'LessThanOrEqual', label: 'Less Than or Equal (≤)', requiresValue: true },
-  { value: 'Contains', label: 'Contains', requiresValue: true },
-  { value: 'StartsWith', label: 'Starts With', requiresValue: true },
-  { value: 'EndsWith', label: 'Ends With', requiresValue: true },
+  { value: 'equals', label: 'Equals (=)', requiresValue: true },
+  { value: 'notEquals', label: 'Not Equals (≠)', requiresValue: true },
+  { value: 'greaterThan', label: 'Greater Than (>)', requiresValue: true },
+  { value: 'greaterThanOrEqual', label: 'Greater Than or Equal (≥)', requiresValue: true },
+  { value: 'lessThan', label: 'Less Than (<)', requiresValue: true },
+  { value: 'lessThanOrEqual', label: 'Less Than or Equal (≤)', requiresValue: true },
+  { value: 'contains', label: 'Contains', requiresValue: true },
+  { value: 'startsWith', label: 'Starts With', requiresValue: true },
+  { value: 'endsWith', label: 'Ends With', requiresValue: true },
 ] as const;
 
 const LOGICAL_OPERATORS = [
-  { value: 'And', label: 'AND' },
-  { value: 'Or', label: 'OR' },
+  { value: 'and', label: 'AND' },
+  { value: 'or', label: 'OR' },
 ] as const;
 
 export function FilterBuilder({ entity, filters, onFiltersChange }: Props) {
@@ -46,9 +46,9 @@ export function FilterBuilder({ entity, filters, onFiltersChange }: Props) {
       ...filters,
       {
         field: entity?.properties?.[0]?.propertyName || '',
-        operator: 'Equals',
+        operator: 'equals',
         value: '',
-        logicalOperator: 'And',
+        logicalOperator: 'and',
       },
     ]);
   };
@@ -124,7 +124,7 @@ export function FilterBuilder({ entity, filters, onFiltersChange }: Props) {
                     Select Field
                   </MenuItem>
                   {entity.properties?.map((prop) => (
-                    <MenuItem key={prop.propertyName} value={prop.propertyName}>
+                    <MenuItem key={prop.propertyName} value={prop.propertyName || ''}>
                       {prop.displayName || prop.propertyName}
                     </MenuItem>
                   ))}
@@ -133,7 +133,7 @@ export function FilterBuilder({ entity, filters, onFiltersChange }: Props) {
                 {/* Operator Selection */}
                 <Select
                   size="small"
-                  value={filter.operator || 'Equals'}
+                  value={filter.operator || 'equals'}
                   onChange={(e) => handleFilterChange(index, { operator: e.target.value as any })}
                 >
                   {FILTER_OPERATORS.map((op) => (
@@ -157,7 +157,7 @@ export function FilterBuilder({ entity, filters, onFiltersChange }: Props) {
                   {index < filters.length - 1 && (
                     <Select
                       size="small"
-                      value={filter.logicalOperator || 'And'}
+                      value={filter.logicalOperator || 'and'}
                       onChange={(e) =>
                         handleFilterChange(index, { logicalOperator: e.target.value as any })
                       }

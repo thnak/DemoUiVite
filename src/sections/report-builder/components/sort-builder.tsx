@@ -23,8 +23,8 @@ type Props = {
 };
 
 const SORT_DIRECTIONS = [
-  { value: 'Ascending', label: 'Ascending (A-Z, 0-9)', icon: 'solar:sort-vertical-bold' },
-  { value: 'Descending', label: 'Descending (Z-A, 9-0)', icon: 'solar:sort-vertical-bold' },
+  { value: 'ascending', label: 'Ascending (A-Z, 0-9)', icon: 'solar:sort-vertical-bold' },
+  { value: 'descending', label: 'Descending (Z-A, 9-0)', icon: 'solar:sort-vertical-bold' },
 ] as const;
 
 export function SortBuilder({ entity, sorts, onSortsChange, availableFields = [] }: Props) {
@@ -34,7 +34,7 @@ export function SortBuilder({ entity, sorts, onSortsChange, availableFields = []
       ...sorts,
       {
         field: firstField,
-        direction: 'Ascending',
+        direction: 'ascending',
       },
     ]);
   };
@@ -50,13 +50,13 @@ export function SortBuilder({ entity, sorts, onSortsChange, availableFields = []
 
   const allFields = [
     ...(entity?.properties?.map((p) => ({
-      value: p.propertyName,
-      label: p.displayName || p.propertyName,
+      value: p.propertyName || '',
+      label: p.displayName || p.propertyName || '',
     })) || []),
     ...availableFields
       .filter((f) => !entity?.properties?.some((p) => p.propertyName === f))
       .map((f) => ({ value: f, label: f })),
-  ];
+  ].filter(f => f.value !== '');
 
   if (!entity) {
     return (
@@ -130,7 +130,7 @@ export function SortBuilder({ entity, sorts, onSortsChange, availableFields = []
                   {/* Direction Selection */}
                   <Select
                     size="small"
-                    value={sort.direction || 'Ascending'}
+                    value={sort.direction || 'ascending'}
                     onChange={(e) =>
                       handleSortChange(index, { direction: e.target.value as any })
                     }
@@ -143,7 +143,7 @@ export function SortBuilder({ entity, sorts, onSortsChange, availableFields = []
                             icon={dir.icon}
                             width={16}
                             sx={{
-                              transform: dir.value === 'Descending' ? 'rotate(180deg)' : 'none',
+                              transform: dir.value === 'descending' ? 'rotate(180deg)' : 'none',
                             }}
                           />
                           <span>{dir.label.split(' ')[0]}</span>
