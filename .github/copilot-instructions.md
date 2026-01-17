@@ -1990,3 +1990,207 @@ See these files for examples:
 - `src/sections/oi/machine-operation/components/oee-apq-chart.tsx` - Radial chart with all OEE colors
 - `src/sections/oi/machine-dashboard/components/machine-card.tsx` - APQ progress bars with standard colors
 
+## Global Search Feature
+
+The application includes a comprehensive global search feature accessible from the header. This feature allows users to quickly search and navigate to any page in the application.
+
+### Overview
+
+- **Keyboard Shortcut**: `Cmd/Ctrl + K` opens the search dialog
+- **Location**: Search button in the header toolbar (next to theme toggle)
+- **Features**: Auto-suggestions, search history, category filtering, keyboard navigation
+
+### Implementation
+
+The search feature consists of three main parts:
+
+1. **Page Metadata** (`src/config/page-metadata.ts`): Contains metadata for all pages
+2. **Search Hook** (`src/components/search-dialog/use-page-search.ts`): Search logic and state management
+3. **Search Dialog** (`src/components/search-dialog/search-dialog.tsx`): UI component
+
+### How to Add New Pages to Search
+
+When adding a new page to the application, you **MUST** add its metadata to make it searchable:
+
+**Step 1**: Add page metadata to `src/config/page-metadata.ts`
+
+```typescript
+export const pageMetadata: PageMetadata[] = [
+  // ... existing pages
+  {
+    path: '/my-new-page',
+    title: { en: 'My New Page', vi: 'Trang Mới' },
+    description: {
+      en: 'Description of what this page does',
+      vi: 'Mô tả về trang này',
+    },
+    breadcrumbs: { 
+      en: ['Module Name', 'My New Page'], 
+      vi: ['Tên Module', 'Trang Mới'] 
+    },
+    category: 'master-data', // or other category
+    keywords: ['optional', 'search', 'keywords'], // Optional
+    sections: [ // Optional - for page subsections
+      {
+        id: 'section-1',
+        title: { en: 'Section Name', vi: 'Tên Phần' },
+        description: { en: 'Section description', vi: 'Mô tả phần' },
+      },
+    ],
+  },
+];
+```
+
+**Step 2**: Verify the page appears in search results
+
+- Open search dialog (`Cmd/Ctrl + K`)
+- Search for your page title or keywords
+- Verify it appears in results with correct information
+
+### Page Metadata Structure
+
+```typescript
+type PageMetadata = {
+  path: string;                    // Route path (e.g., '/machines')
+  title: {                         // Page title in both languages
+    en: string;
+    vi: string;
+  };
+  description: {                   // Page description for search results
+    en: string;
+    vi: string;
+  };
+  breadcrumbs: {                   // Navigation breadcrumbs
+    en: string[];
+    vi: string[];
+  };
+  sections?: PageSection[];        // Optional page subsections
+  keywords?: string[];             // Optional additional search terms
+  category?: 'dashboard' | 'master-data' | 'user-management' | 
+             'device-management' | 'mms' | 'oi' | 'settings' | 'other';
+};
+```
+
+### Categories
+
+Use these standard categories for filtering:
+
+- `dashboard` - Dashboard and analytics pages
+- `master-data` - Master data management (machines, products, areas, etc.)
+- `user-management` - User, role, and permission management
+- `device-management` - IoT device and sensor management
+- `mms` - Machine monitoring system (reports, tracking)
+- `oi` - Operation interface (operator dashboards)
+- `settings` - System settings and configuration
+- `other` - Miscellaneous pages
+
+### Search Features
+
+#### 1. Auto-suggestions
+- Shows recent searches when no query is entered
+- Displays popular pages as quick access
+- Suggestions update based on search history
+
+#### 2. Search History
+- Stores last 10 searches in localStorage
+- Accessible via empty search state
+- Clear history button available
+
+#### 3. Category Filtering
+- Quick filter chips at top of dialog
+- Narrows results to specific module
+- Categories: All, Dashboard, Master Data, Settings, etc.
+
+#### 4. Keyboard Navigation
+- `↑`/`↓` - Navigate through results
+- `Enter` - Open selected page
+- `Esc` - Close search dialog
+- `Cmd/Ctrl + K` - Open search dialog
+
+#### 5. Result Display
+- **Breadcrumbs**: Shows page location in app hierarchy
+- **Title**: Page name in current language
+- **Description**: Helpful description of page purpose
+- **Sections**: Chips showing page subsections (if any)
+- **Copy URL**: Button to copy page URL to clipboard
+
+### Usage Examples
+
+**Opening Search**:
+```typescript
+// Automatically opens with Cmd/Ctrl + K
+// Or click search icon in header
+```
+
+**Searching**:
+```typescript
+// Type query: "machine"
+// Results show:
+// - Machine List
+// - Machine Types
+// - Machine Tracking
+// etc.
+```
+
+**Filtering**:
+```typescript
+// Click "Master Data" chip
+// Results filtered to only master data pages
+```
+
+**Navigating**:
+```typescript
+// Use arrow keys to select result
+// Press Enter to navigate
+// Or click on result
+```
+
+### Customization
+
+**Change popular pages** (in `use-page-search.ts`):
+```typescript
+const popularPages = useMemo(() => {
+  const popularPaths = [
+    '/your-popular-page-1',
+    '/your-popular-page-2',
+    // ... add more
+  ];
+  return pageMetadata.filter((page) => popularPaths.includes(page.path));
+}, []);
+```
+
+**Adjust search history limit** (in `use-page-search.ts`):
+```typescript
+const MAX_HISTORY_ITEMS = 10; // Change this value
+```
+
+### Best Practices
+
+1. **Always add metadata** for new pages immediately after creating them
+2. **Use clear descriptions** that help users understand what the page does
+3. **Add relevant keywords** to improve searchability
+4. **Keep breadcrumbs consistent** with navigation hierarchy
+5. **Use proper category** to enable filtering
+6. **Test search** after adding new pages
+
+### Multi-Language Support
+
+The search feature automatically detects the current language from i18next and searches/displays results in that language. Always provide translations for both English (`en`) and Vietnamese (`vi`).
+
+### Performance
+
+- **Client-side only**: All search logic runs in the browser
+- **Fast**: Search results appear instantly (no network requests)
+- **Cached**: Search history persists across sessions via localStorage
+- **Efficient**: Uses simple string matching for quick results
+
+### Future Enhancements
+
+Potential improvements that could be added:
+
+1. **Fuzzy matching**: Handle typos and similar words
+2. **Search ranking**: Prioritize results by relevance
+3. **Recent pages**: Track recently visited pages
+4. **Favorites**: Allow users to bookmark frequently used pages
+5. **Search analytics**: Track popular searches to improve UX
+
