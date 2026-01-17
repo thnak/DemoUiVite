@@ -117,6 +117,9 @@ export const TimeBlockNameCreatePage = lazy(() => import('src/pages/time-block-n
 export const TimeBlockNameEditPage = lazy(() => import('src/pages/time-block-name-edit'));
 export const DevHubPage = lazy(() => import('src/pages/dev-hub'));
 export const TranslationDemoPage = lazy(() => import('src/pages/dev/translation-demo'));
+export const ReportBuilderPage = lazy(() => import('src/pages/dev/report-builder'));
+export const ReportBuilderCreatePage = lazy(() => import('src/pages/dev/report-builder-create'));
+export const ReportBuilderEditPage = lazy(() => import('src/pages/dev/report-builder-edit'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -239,6 +242,9 @@ export const routesSection: RouteObject[] = [
       { path: 'factory-layout', element: <FactoryLayoutPage /> },
       { path: 'dev', element: <DevHubPage /> },
       { path: 'dev/translation-demo', element: <TranslationDemoPage /> },
+      { path: 'dev/report-builder', element: <ReportBuilderPage /> },
+      { path: 'report-builder/create', element: <ReportBuilderCreatePage /> },
+      { path: 'report-builder/:id/edit', element: <ReportBuilderEditPage /> },
     ],
   },
   // Fullscreen layout for OI module (no header, no sidebar)
