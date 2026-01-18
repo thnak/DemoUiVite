@@ -469,6 +469,7 @@ export function MachineCreateEditView({
           { key: 'machineTypeId', value: formData.machineTypeId || undefined },
           { key: 'calculationMode', value: formData.calculationMode },
           { key: 'colorHex', value: formData.colorHex },
+          { key: 'translations', value: JSON.stringify(formData.translations) },
         ],
       });
     } else {
@@ -483,6 +484,7 @@ export function MachineCreateEditView({
           machineTypeId: formData.machineTypeId || undefined,
           calculationMode: formData.calculationMode,
           colorHex: formData.colorHex,
+          translations: formData.translations,
         } as any, // Cast to any to bypass strict type checking for required fields
       });
     }

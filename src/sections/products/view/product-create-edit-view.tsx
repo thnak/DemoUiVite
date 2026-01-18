@@ -213,6 +213,7 @@ export function ProductCreateEditView({
         }
         updates.push({ key: 'isDraft', value: (!published).toString() });
         updates.push({ key: 'colorHex', value: formData.colorHex });
+        updates.push({ key: 'translations', value: JSON.stringify(formData.translations) });
         await updateProduct(currentProduct.id, updates);
       } else {
         const dimensions =
@@ -232,6 +233,7 @@ export function ProductCreateEditView({
           imageUrl: imageUrl || undefined,
           isDraft: !published,
           colorHex: formData.colorHex,
+          translations: formData.translations,
           // Add description as empty string to satisfy required field
           description: '',
           isActive: true,

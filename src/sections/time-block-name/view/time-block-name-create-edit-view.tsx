@@ -1,5 +1,6 @@
 import type { ChangeEvent } from 'react';
 
+import { MuiColorInput } from 'mui-color-input';
 import { useMemo, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -12,7 +13,6 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -22,7 +22,7 @@ import {
   useGetTimeBlockNameById,
 } from 'src/api/hooks/generated/use-time-block-name';
 
-import { Iconify } from 'src/components/iconify';
+import { TranslationSection } from 'src/components/translation-section';
 import { ImageEntityResourceUploader } from 'src/components/image-entity-resource-uploader';
 
 // ----------------------------------------------------------------------
@@ -46,8 +46,6 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const [translationKey, setTranslationKey] = useState('');
-  const [translationValue, setTranslationValue] = useState('');
 
   // Fetch time block name data if editing
   const { data: timeBlockNameData, isLoading: isLoadingData } = useGetTimeBlockNameById(id || '', {
@@ -154,29 +152,18 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
     }));
   }, []);
 
-  const handleAddTranslation = useCallback(() => {
-    if (translationKey && translationValue) {
-      setFormData((prev) => ({
-        ...prev,
-        translations: {
-          ...prev.translations,
-          [translationKey]: translationValue,
-        } as any, // Cast to any to bypass strict type checking for required fields,
-      }));
-      setTranslationKey('');
-      setTranslationValue('');
-    }
-  }, [translationKey, translationValue]);
+  const handleColorChange = useCallback((newColor: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      colorHex: newColor,
+    }));
+  }, []);
 
-  const handleRemoveTranslation = useCallback((key: string) => {
-    setFormData((prev) => {
-      const newTranslations = { ...prev.translations };
-      delete newTranslations[key];
-      return {
-        ...prev,
-        translations: newTranslations,
-      };
-    });
+  const handleTranslationsChange = useCallback((translations: Record<string, string>) => {
+    setFormData((prev) => ({
+      ...prev,
+      translations,
+    }));
   }, []);
 
   const handleCloseError = useCallback(() => {
@@ -255,29 +242,41 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
             </Card>
 
             <Card sx={{ p: 3 }}>
-              <Typography variant="h6" sx={{ mb: 3 }}>
-                Color
-              </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <TextField
+              <Box>
+                <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                  Color
+                </Typography>
+                <MuiColorInput
                   fullWidth
-                  type="color"
-                  label="Color"
+                  format="hex"
                   value={formData.colorHex}
-                  onChange={handleChange('colorHex')}
+                  onChange={handleColorChange}
                   error={!!fieldErrors.colorHex}
-                  helperText={fieldErrors.colorHex}
+                  helperText={fieldErrors.colorHex || 'Choose a color to represent this time block name'}
                 />
                 <Box
                   sx={{
-                    width: '100%',
-                    height: 100,
-                    borderRadius: 1,
+                    mt: 2,
+                    p: 2,
                     bgcolor: formData.colorHex,
-                    border: '1px solid',
-                    borderColor: 'divider',
+                    borderRadius: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: 60,
                   }}
-                />
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: 'white',
+                      textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                      fontWeight: 'medium',
+                    }}
+                  >
+                    Preview: {formData.name || 'Time Block Name'}
+                  </Typography>
+                </Box>
               </Box>
             </Card>
           </Stack>
@@ -327,85 +326,11 @@ export function TimeBlockNameCreateEditView({ isEdit = false }: TimeBlockNameCre
               </Grid>
             </Card>
 
-            {isEdit && (
-              <Card sx={{ p: 3 }}>
-                <Typography variant="h6" sx={{ mb: 3 }}>
-                  Translations
-                </Typography>
-                <Grid container spacing={2}>
-                  <Grid size={{ xs: 12, md: 5 }}>
-                    <TextField
-                      fullWidth
-                      label="Language Code"
-                      placeholder="e.g., en, vi, fr"
-                      value={translationKey}
-                      onChange={(e) => setTranslationKey(e.target.value)}
-                    />
-                  </Grid>
-                  <Grid size={{ xs: 12, md: 5 }}>
-                    <TextField
-                      fullWidth
-                      label="Translation"
-                      placeholder="Translated name"
-                      value={translationValue}
-                      onChange={(e) => setTranslationValue(e.target.value)}
-                    />
-                  </Grid>
-                  <Grid size={{ xs: 12, md: 2 }}>
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      onClick={handleAddTranslation}
-                      disabled={!translationKey || !translationValue}
-                      sx={{ height: 56 }}
-                    >
-                      Add
-                    </Button>
-                  </Grid>
-                </Grid>
-
-                {Object.keys(formData.translations).length > 0 && (
-                  <Box sx={{ mt: 3 }}>
-                    <Typography variant="subtitle2" sx={{ mb: 2 }}>
-                      Current Translations:
-                    </Typography>
-                    <Stack spacing={1}>
-                      {Object.entries(formData.translations).map(([key, value]) => (
-                        <Box
-                          key={key}
-                          sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            p: 1.5,
-                            border: '1px solid',
-                            borderColor: 'divider',
-                            borderRadius: 1,
-                            bgcolor: 'background.neutral',
-                          }}
-                        >
-                          <Box>
-                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                              {key}
-                            </Typography>
-                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                              {value}
-                            </Typography>
-                          </Box>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleRemoveTranslation(key)}
-                            sx={{ color: 'error.main' }}
-                          >
-                            <Iconify icon="solar:trash-bin-trash-bold" />
-                          </IconButton>
-                        </Box>
-                      ))}
-                    </Stack>
-                  </Box>
-                )}
-              </Card>
-            )}
+            <TranslationSection
+              translations={formData.translations}
+              onTranslationsChange={handleTranslationsChange}
+              disabled={isCreating || isUpdating}
+            />
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
               <Button variant="outlined" onClick={handleCancel} disabled={isCreating || isUpdating}>
