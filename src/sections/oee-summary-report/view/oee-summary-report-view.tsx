@@ -1,5 +1,5 @@
-import { useMemo, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -7,17 +7,18 @@ import Card from '@mui/material/Card';
 import Tabs from '@mui/material/Tabs';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { useGetAreaPage } from 'src/api/hooks/generated/use-area';
+import { useGetMachinePage } from 'src/api/hooks/generated/use-machine';
+import { useGetTimeBlockNamePage } from 'src/api/hooks/generated/use-time-block-name';
 import {
-  _areas,
-  _shifts,
-  _machines,
-  type TimeRangeMode,
-  generateOEESummaryReport,
-  type OEESummaryFilters as OEESummaryFiltersType,
-} from 'src/_mock';
+  usePostapiproductionsreportsoeebytime,
+  usePostapiproductionsreportsoeebymachine,
+} from 'src/api/hooks/generated/use-production-report';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -30,6 +31,7 @@ import { OEESummaryMachineTable } from '../oee-summary-machine-table';
 // ----------------------------------------------------------------------
 
 type TabValue = 'machines' | 'times';
+type TimeRangeMode = 'days' | 'months' | 'years';
 
 // Easing constants
 const EASE_OUT = [0.4, 0, 0.2, 1] as const;
@@ -94,7 +96,7 @@ export function OEESummaryReportView() {
   const [currentTab, setCurrentTab] = useState<TabValue>('machines');
 
   // Filter state
-  const [timeRange, setTimeRange] = useState<TimeRangeMode>('months');
+  const [timeRange] = useState<TimeRangeMode>('months');
   const [startDate, setStartDate] = useState<Date>(
     new Date(new Date().getFullYear(), new Date().getMonth() - 11, 1)
   );
@@ -103,87 +105,178 @@ export function OEESummaryReportView() {
   const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
   const [selectedShifts, setSelectedShifts] = useState<string[]>([]);
 
-  // Create filters object
-  const filters: OEESummaryFiltersType = useMemo(
-    () => ({
-      timeRange,
-      startDate,
-      endDate,
-      machines: selectedMachines,
-      areas: selectedAreas,
-      shifts: selectedShifts,
-    }),
-    [timeRange, startDate, endDate, selectedMachines, selectedAreas, selectedShifts]
+  // Fetch machines for filter dropdown
+  const { mutate: fetchMachines, data: machinesData, isPending: loadingMachines } = useGetMachinePage();
+
+  // Fetch areas for filter dropdown
+  const { mutate: fetchAreas, data: areasData, isPending: loadingAreas } = useGetAreaPage();
+
+  // Fetch time block names (shifts) for filter dropdown
+  const { mutate: fetchShifts, data: shiftsData, isPending: loadingShifts } = useGetTimeBlockNamePage();
+
+  // Fetch OEE data by machine
+  const {
+    mutate: fetchOEEByMachine,
+    data: oeeByMachineData,
+    isPending: loadingOEEByMachine,
+    error: oeeByMachineError,
+  } = usePostapiproductionsreportsoeebymachine();
+
+  // Fetch OEE data by time
+  const {
+    mutate: fetchOEEByTime,
+    data: oeeByTimeData,
+    isPending: loadingOEEByTime,
+    error: oeeByTimeError,
+  } = usePostapiproductionsreportsoeebytime();
+
+  // Initial data fetch for dropdowns
+  useEffect(() => {
+    fetchMachines({
+      data: [],
+      params: { pageNumber: 0, pageSize: 100 },
+    });
+
+    fetchAreas({
+      data: [],
+      params: { pageNumber: 0, pageSize: 100 },
+    });
+
+    fetchShifts({
+      data: [],
+      params: { pageNumber: 0, pageSize: 100 },
+    });
+  }, [fetchMachines, fetchAreas, fetchShifts]);
+
+  // Fetch OEE data when filters change
+  useEffect(() => {
+    const fromDate = startDate.toISOString().split('T')[0];
+    const toDate = endDate.toISOString().split('T')[0];
+
+    fetchOEEByMachine({
+      data: {
+        fromDate,
+        toDate,
+        machineIds: selectedMachines.length > 0 ? selectedMachines : null,
+        timeBlockNameIds: selectedShifts.length > 0 ? selectedShifts : null,
+      },
+    });
+
+    fetchOEEByTime({
+      data: {
+        fromDate,
+        toDate,
+        machineIds: selectedMachines.length > 0 ? selectedMachines : null,
+        timeBlockNameIds: selectedShifts.length > 0 ? selectedShifts : null,
+      },
+    });
+  }, [startDate, endDate, selectedMachines, selectedShifts, fetchOEEByMachine, fetchOEEByTime]);
+
+  // Prepare machine and area data for filters
+  const machineOptions = useMemo(
+    () =>
+      machinesData?.data?.items?.map((m) => ({
+        id: m.id || '',
+        name: m.name || m.code || 'Unknown',
+      })) || [],
+    [machinesData]
   );
 
-  // Generate report data
-  const reportData = useMemo(() => generateOEESummaryReport(filters), [filters]);
+  const areaOptions = useMemo(
+    () =>
+      areasData?.data?.items?.map((a) => ({
+        id: a.id || '',
+        name: a.name || a.code || 'Unknown',
+      })) || [],
+    [areasData]
+  );
+
+  const shiftOptions = useMemo(
+    () =>
+      shiftsData?.data?.items?.map((s) => ({
+        id: s.id || '',
+        name: s.name || s.code || 'Unknown',
+      })) || [],
+    [shiftsData]
+  );
 
   // Prepare chart data for machines tab
   const machineChartData = useMemo(() => {
-    const topMachines = reportData.byMachines
-      .sort((a, b) => b.metrics.oee - a.metrics.oee)
+    const machines = oeeByMachineData?.data?.machines || [];
+    const topMachines = [...machines]
+      .sort((a, b) => (b.metrics?.oee || 0) - (a.metrics?.oee || 0))
       .slice(0, 10);
 
     return {
-      categories: topMachines.map((m) => m.machineName),
+      categories: topMachines.map((m) => m.machineName || 'Unknown'),
       series: [
         {
           name: 'OEE',
-          data: topMachines.map((m) => m.metrics.oee),
+          data: topMachines.map((m) => m.metrics?.oee || 0),
         },
         {
           name: 'Availability',
-          data: topMachines.map((m) => m.metrics.availability),
+          data: topMachines.map((m) => m.metrics?.availability || 0),
         },
         {
           name: 'Performance',
-          data: topMachines.map((m) => m.metrics.performance),
+          data: topMachines.map((m) => m.metrics?.performance || 0),
         },
         {
           name: 'Quality',
-          data: topMachines.map((m) => m.metrics.quality),
+          data: topMachines.map((m) => m.metrics?.quality || 0),
         },
       ],
     };
-  }, [reportData.byMachines]);
+  }, [oeeByMachineData]);
 
   // Prepare chart data for times tab
-  const timeChartData = useMemo(
-    () => ({
-      categories: reportData.byTimes.map((t) => t.periodLabel),
+  const timeChartData = useMemo(() => {
+    const timePeriods = oeeByTimeData?.data?.timePeriods || [];
+
+    return {
+      categories: timePeriods.map((t) => t.workDate || 'Unknown'),
       series: [
         {
           name: 'OEE',
-          data: reportData.byTimes.map((t) => t.metrics.oee),
+          data: timePeriods.map((t) => t.metrics?.oee || 0),
         },
         {
           name: 'Availability',
-          data: reportData.byTimes.map((t) => t.metrics.availability),
+          data: timePeriods.map((t) => t.metrics?.availability || 0),
         },
         {
           name: 'Performance',
-          data: reportData.byTimes.map((t) => t.metrics.performance),
+          data: timePeriods.map((t) => t.metrics?.performance || 0),
         },
         {
           name: 'Quality',
-          data: reportData.byTimes.map((t) => t.metrics.quality),
+          data: timePeriods.map((t) => t.metrics?.quality || 0),
         },
       ],
-    }),
-    [reportData.byTimes]
-  );
+    };
+  }, [oeeByTimeData]);
 
   const handleTabChange = useCallback((_event: React.SyntheticEvent, newValue: TabValue) => {
     setCurrentTab(newValue);
   }, []);
 
-  // Prepare machine and area data for filters
-  const machineOptions = useMemo(() => _machines.map((m) => ({ id: m.id, name: m.name })), []);
+  // Overall summary metrics
+  const overallMetrics = useMemo(() => {
+    const summary = currentTab === 'machines' 
+      ? oeeByMachineData?.data?.overallSummary 
+      : oeeByTimeData?.data?.overallSummary;
 
-  const areaOptions = useMemo(() => _areas.map((a) => ({ id: a.name, name: a.name })), []);
+    return {
+      oee: summary?.oee || 0,
+      availability: summary?.availability || 0,
+      performance: summary?.performance || 0,
+      quality: summary?.quality || 0,
+    };
+  }, [currentTab, oeeByMachineData, oeeByTimeData]);
 
-  const shiftOptions = useMemo(() => _shifts.map((s) => ({ id: s.id, name: s.name })), []);
+  const isLoading = loadingMachines || loadingAreas || loadingShifts || loadingOEEByMachine || loadingOEEByTime;
+  const hasError = oeeByMachineError || oeeByTimeError;
 
   return (
     <DashboardContent maxWidth="xl">
@@ -243,131 +336,145 @@ export function OEESummaryReportView() {
 
       {/* Overall Metrics */}
       <motion.div variants={containerVariants} initial="hidden" animate="visible">
-        <Grid container spacing={3} sx={{ mb: 3 }}>
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <motion.div variants={itemVariants}>
-              <OEESummaryMetricCard
-                title="Overall OEE"
-                value={reportData.overallMetrics.oee}
-                icon={<Iconify icon="solar:chart-bold" width={32} />}
-                subtitle="Target: 85%"
-              />
-            </motion.div>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <motion.div variants={itemVariants}>
-              <OEESummaryMetricCard
-                title="Availability"
-                value={reportData.overallMetrics.availability}
-                icon={<Iconify icon="solar:clock-circle-bold" width={32} />}
-                color="info"
-              />
-            </motion.div>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <motion.div variants={itemVariants}>
-              <OEESummaryMetricCard
-                title="Performance"
-                value={reportData.overallMetrics.performance}
-                icon={<Iconify icon="solar:bolt-bold" width={32} />}
-                color="warning"
-              />
-            </motion.div>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <motion.div variants={itemVariants}>
-              <OEESummaryMetricCard
-                title="Quality"
-                value={reportData.overallMetrics.quality}
-                icon={<Iconify icon="solar:star-bold" width={32} />}
-                color="success"
-              />
-            </motion.div>
-          </Grid>
-        </Grid>
-      </motion.div>
-
-      {/* Tabs */}
-      <motion.div variants={tabsCardVariants} initial="hidden" animate="visible">
-        <Card sx={{ mb: 3 }}>
-          <Tabs
-            value={currentTab}
-            onChange={handleTabChange}
-            sx={{
-              px: 2.5,
-              boxShadow: (theme) => `inset 0 -2px 0 0 ${theme.vars.palette.background.neutral}`,
-            }}
-          >
-            <Tab
-              value="machines"
-              label="By Machines"
-              icon={<Iconify icon="solar:widget-2-bold" width={24} />}
-              iconPosition="start"
-            />
-            <Tab
-              value="times"
-              label="By Times"
-              icon={<Iconify icon="solar:calendar-mark-bold" width={24} />}
-              iconPosition="start"
-            />
-          </Tabs>
-        </Card>
-      </motion.div>
-
-      {/* Tab Content */}
-      <AnimatePresence mode="wait">
-        {currentTab === 'machines' && (
-          <motion.div
-            key="machines"
-            variants={tabContentVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            <Stack spacing={3}>
-              {/* Machine Chart */}
-              <OEESummaryChart
-                title="Top 10 Machines OEE Performance"
-                subheader="Comparison of OEE metrics across machines"
-                chart={machineChartData}
-              />
-
-              {/* Machine Table */}
-              <OEESummaryMachineTable
-                title="Detailed Machine OEE Report"
-                subheader="All machines sorted by OEE performance"
-                data={reportData.byMachines}
-              />
-            </Stack>
-          </motion.div>
+        {hasError && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {oeeByMachineError?.message || oeeByTimeError?.message || 'Failed to load OEE data'}
+          </Alert>
         )}
 
-        {currentTab === 'times' && (
-          <motion.div
-            key="times"
-            variants={tabContentVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            <Stack spacing={3}>
-              {/* Time Chart */}
-              <OEESummaryChart
-                title="OEE Trend Over Time"
-                subheader="OEE metrics progression across time periods"
-                chart={timeChartData}
-              />
+        {isLoading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <>
+            <Grid container spacing={3} sx={{ mb: 3 }}>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <motion.div variants={itemVariants}>
+                  <OEESummaryMetricCard
+                    title="Overall OEE"
+                    value={overallMetrics.oee}
+                    icon={<Iconify icon="solar:chart-bold" width={32} />}
+                    subtitle="Target: 85%"
+                  />
+                </motion.div>
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <motion.div variants={itemVariants}>
+                  <OEESummaryMetricCard
+                    title="Availability"
+                    value={overallMetrics.availability}
+                    icon={<Iconify icon="solar:clock-circle-bold" width={32} />}
+                    color="info"
+                  />
+                </motion.div>
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <motion.div variants={itemVariants}>
+                  <OEESummaryMetricCard
+                    title="Performance"
+                    value={overallMetrics.performance}
+                    icon={<Iconify icon="solar:bolt-bold" width={32} />}
+                    color="warning"
+                  />
+                </motion.div>
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <motion.div variants={itemVariants}>
+                  <OEESummaryMetricCard
+                    title="Quality"
+                    value={overallMetrics.quality}
+                    icon={<Iconify icon="solar:star-bold" width={32} />}
+                    color="success"
+                  />
+                </motion.div>
+              </Grid>
+            </Grid>
 
-              {/* Time Table */}
-              <OEESummaryTimeTable
-                title="Detailed Time Period OEE Report"
-                subheader="OEE performance by time period"
-                data={reportData.byTimes}
-              />
-            </Stack>
-          </motion.div>
+            {/* Tabs */}
+            <motion.div variants={tabsCardVariants} initial="hidden" animate="visible">
+              <Card sx={{ mb: 3 }}>
+                <Tabs
+                  value={currentTab}
+                  onChange={handleTabChange}
+                  sx={{
+                    px: 2.5,
+                    boxShadow: (theme) => `inset 0 -2px 0 0 ${theme.vars.palette.background.neutral}`,
+                  }}
+                >
+                  <Tab
+                    value="machines"
+                    label="By Machines"
+                    icon={<Iconify icon="solar:widget-2-bold" width={24} />}
+                    iconPosition="start"
+                  />
+                  <Tab
+                    value="times"
+                    label="By Times"
+                    icon={<Iconify icon="solar:calendar-mark-bold" width={24} />}
+                    iconPosition="start"
+                  />
+                </Tabs>
+              </Card>
+            </motion.div>
+
+            {/* Tab Content */}
+            <AnimatePresence mode="wait">
+              {currentTab === 'machines' && (
+                <motion.div
+                  key="machines"
+                  variants={tabContentVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                >
+                  <Stack spacing={3}>
+                    {/* Machine Chart */}
+                    <OEESummaryChart
+                      title="Top 10 Machines OEE Performance"
+                      subheader="Comparison of OEE metrics across machines"
+                      chart={machineChartData}
+                    />
+
+                    {/* Machine Table */}
+                    <OEESummaryMachineTable
+                      title="Detailed Machine OEE Report"
+                      subheader="All machines sorted by OEE performance"
+                      data={oeeByMachineData?.data?.machines || []}
+                    />
+                  </Stack>
+                </motion.div>
+              )}
+
+              {currentTab === 'times' && (
+                <motion.div
+                  key="times"
+                  variants={tabContentVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                >
+                  <Stack spacing={3}>
+                    {/* Time Chart */}
+                    <OEESummaryChart
+                      title="OEE Trend Over Time"
+                      subheader="OEE metrics progression across time periods"
+                      chart={timeChartData}
+                    />
+
+                    {/* Time Table */}
+                    <OEESummaryTimeTable
+                      title="Detailed Time Period OEE Report"
+                      subheader="OEE performance by time period"
+                      data={oeeByTimeData?.data?.timePeriods || []}
+                    />
+                  </Stack>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </>
         )}
-      </AnimatePresence>
+      </motion.div>
     </DashboardContent>
   );
 }
