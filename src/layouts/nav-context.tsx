@@ -7,6 +7,7 @@ import { usePathname } from 'src/routes/hooks';
 import { useOINavData } from './nav-config-oi';
 import { useMMSNavData } from './nav-config-mms';
 import { useNavData } from './nav-config-dashboard';
+import { useReportNavData } from './nav-config-report';
 import { useDefaultNavData } from './nav-config-default';
 import { useSettingsNavData } from './nav-config-settings';
 import { useMasterDataNavData } from './nav-config-master-data';
@@ -25,6 +26,7 @@ type NavModule =
   | 'dashboard'
   | 'mms'
   | 'oi'
+  | 'report'
   | 'settings';
 
 type NavContextValue = {
@@ -74,9 +76,17 @@ const getModuleFromPath = (pathname: string): NavModule => {
     return 'device-management';
   }
 
+  // Report module routes
+  if (
+    pathname.startsWith('/report') ||
+    pathname.startsWith('/downtime-report') ||
+    pathname.startsWith('/oee-summary-report')
+  ) {
+    return 'report';
+  }
+
   // MMS (Machine Monitoring System) module routes
   if (
-    pathname.startsWith('/downtime-report') ||
     pathname.startsWith('/machine-tracking') ||
     pathname.startsWith('/production-tracking') ||
     pathname.startsWith('/alert-management')
@@ -116,6 +126,7 @@ export function NavProvider({ children }: NavProviderProps) {
   const dashboardNavData = useNavData();
   const mmsNavData = useMMSNavData();
   const oiNavData = useOINavData();
+  const reportNavData = useReportNavData();
   const settingsNavData = useSettingsNavData();
 
   const navData = useMemo(() => {
@@ -132,6 +143,8 @@ export function NavProvider({ children }: NavProviderProps) {
         return mmsNavData;
       case 'oi':
         return oiNavData;
+      case 'report':
+        return reportNavData;
       case 'settings':
         return settingsNavData;
       default:
@@ -146,6 +159,7 @@ export function NavProvider({ children }: NavProviderProps) {
     dashboardNavData,
     mmsNavData,
     oiNavData,
+    reportNavData,
     settingsNavData,
   ]);
 

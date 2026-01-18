@@ -318,9 +318,20 @@ export const pageMetadata: PageMetadata[] = [
       en: 'Analyze machine downtime and identify improvement opportunities',
       vi: 'Phân tích thời gian ngừng máy và xác định cơ hội cải thiện',
     },
-    breadcrumbs: { en: ['MMS', 'Downtime Report'], vi: ['MMS', 'Báo Cáo Thời Gian Ngừng'] },
-    category: 'mms',
+    breadcrumbs: { en: ['Reports', 'Downtime Report'], vi: ['Báo Cáo', 'Báo Cáo Thời Gian Ngừng'] },
+    category: 'other',
     keywords: ['stoppage', 'analysis', 'performance'],
+  },
+  {
+    path: '/report',
+    title: { en: 'OEE Summary Report', vi: 'Báo Cáo Tổng Hợp OEE' },
+    description: {
+      en: 'View overall equipment effectiveness metrics and trends',
+      vi: 'Xem các chỉ số hiệu quả tổng thể của thiết bị và xu hướng',
+    },
+    breadcrumbs: { en: ['Reports', 'OEE Summary'], vi: ['Báo Cáo', 'Tổng Hợp OEE'] },
+    category: 'other',
+    keywords: ['efficiency', 'performance', 'metrics', 'oee'],
   },
   {
     path: '/oee-summary-report',
@@ -329,9 +340,9 @@ export const pageMetadata: PageMetadata[] = [
       en: 'View overall equipment effectiveness metrics and trends',
       vi: 'Xem các chỉ số hiệu quả tổng thể của thiết bị và xu hướng',
     },
-    breadcrumbs: { en: ['MMS', 'OEE Summary'], vi: ['MMS', 'Tổng Hợp OEE'] },
-    category: 'mms',
-    keywords: ['efficiency', 'performance', 'metrics'],
+    breadcrumbs: { en: ['Reports', 'OEE Summary'], vi: ['Báo Cáo', 'Tổng Hợp OEE'] },
+    category: 'other',
+    keywords: ['efficiency', 'performance', 'metrics', 'oee'],
   },
 
   // OI - Operation Interface
@@ -422,25 +433,26 @@ export const pageMetadata: PageMetadata[] = [
 
   // Other
   {
+    path: '/dev/factory-layout',
+    title: { en: 'Factory Layout', vi: 'Bố Trí Nhà Máy' },
+    description: {
+      en: 'Visualize and manage factory floor layout with machines and areas',
+      vi: 'Hình dung và quản lý bố trí sàn nhà máy với máy móc và khu vực',
+    },
+    breadcrumbs: { en: ['Dev Hub', 'Factory Layout'], vi: ['Khu Vực Dev', 'Bố Trí Nhà Máy'] },
+    category: 'other',
+    keywords: ['floor plan', '2d', 'visualization'],
+  },
+  {
     path: '/factory-layout',
     title: { en: 'Factory Layout', vi: 'Bố Trí Nhà Máy' },
     description: {
       en: 'Visualize and manage factory floor layout with machines and areas',
       vi: 'Hình dung và quản lý bố trí sàn nhà máy với máy móc và khu vực',
     },
-    breadcrumbs: { en: ['Other', 'Factory Layout'], vi: ['Khác', 'Bố Trí Nhà Máy'] },
+    breadcrumbs: { en: ['Dev Hub', 'Factory Layout'], vi: ['Khu Vực Dev', 'Bố Trí Nhà Máy'] },
     category: 'other',
     keywords: ['floor plan', '2d', 'visualization'],
-  },
-  {
-    path: '/report',
-    title: { en: 'Report Builder', vi: 'Trình Tạo Báo Cáo' },
-    description: {
-      en: 'Create custom reports with filters and data visualization',
-      vi: 'Tạo báo cáo tùy chỉnh với bộ lọc và trực quan hóa dữ liệu',
-    },
-    breadcrumbs: { en: ['Reports', 'Builder'], vi: ['Báo Cáo', 'Trình Tạo'] },
-    category: 'other',
   },
 ];
 

@@ -30,6 +30,8 @@
     "productionTracking": "Production Tracking",
     "alertManagement": "Alert Management",
     "downtimeReport": "Downtime Report",
+    "reports": "Reports",
+    "oeeSummaryReport": "OEE Summary Report",
     "defectReason": "Defect Reason",
     "defectReasonGroup": "Defect Reason Group",
     "calendar": "Calendar",

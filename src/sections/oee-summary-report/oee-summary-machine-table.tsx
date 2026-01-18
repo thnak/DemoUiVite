@@ -1,5 +1,5 @@
-import type { MachineOEESummary } from 'src/_mock';
 import type { CardProps } from '@mui/material/Card';
+import type { MachineOeeSummary } from 'src/api/types/generated';
 
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
@@ -21,7 +21,7 @@ import { Scrollbar } from 'src/components/scrollbar';
 type Props = CardProps & {
   title?: string;
   subheader?: string;
-  data: MachineOEESummary[];
+  data: MachineOeeSummary[];
 };
 
 function getOEEStatusColor(value: number): 'success' | 'warning' | 'error' {
@@ -32,7 +32,7 @@ function getOEEStatusColor(value: number): 'success' | 'warning' | 'error' {
 
 export function OEESummaryMachineTable({ title, subheader, data, sx, ...other }: Props) {
   // Sort by OEE descending
-  const sortedData = [...data].sort((a, b) => b.metrics.oee - a.metrics.oee);
+  const sortedData = [...data].sort((a, b) => (b.metrics?.oee || 0) - (a.metrics?.oee || 0));
 
   return (
     <Card sx={sx} {...other}>
@@ -50,7 +50,7 @@ export function OEESummaryMachineTable({ title, subheader, data, sx, ...other }:
                 <TableCell align="center">Performance</TableCell>
                 <TableCell align="center">Quality</TableCell>
                 <TableCell align="right">Good Count</TableCell>
-                <TableCell align="right">Total Count</TableCell>
+                <TableCell align="right">Total Produced</TableCell>
                 <TableCell>Target Progress</TableCell>
               </TableRow>
             </TableHead>
@@ -59,36 +59,36 @@ export function OEESummaryMachineTable({ title, subheader, data, sx, ...other }:
                 <TableRow key={row.machineId} hover>
                   <TableCell>
                     {index === 0 ? '🏆 ' : ''}
-                    {row.machineName}
+                    {row.machineName || 'Unknown'}
                   </TableCell>
-                  <TableCell>{row.area}</TableCell>
+                  <TableCell>-</TableCell>
                   <TableCell align="center">
-                    <Label color={getOEEStatusColor(row.metrics.oee)} variant="filled">
-                      {fPercent(row.metrics.oee)}
+                    <Label color={getOEEStatusColor(row.metrics?.oee || 0)} variant="filled">
+                      {fPercent(row.metrics?.oee || 0)}
                     </Label>
                   </TableCell>
                   <TableCell align="center">
-                    <Label color={getOEEStatusColor(row.metrics.availability)} variant="soft">
-                      {fPercent(row.metrics.availability)}
+                    <Label color={getOEEStatusColor(row.metrics?.availability || 0)} variant="soft">
+                      {fPercent(row.metrics?.availability || 0)}
                     </Label>
                   </TableCell>
                   <TableCell align="center">
-                    <Label color={getOEEStatusColor(row.metrics.performance)} variant="soft">
-                      {fPercent(row.metrics.performance)}
+                    <Label color={getOEEStatusColor(row.metrics?.performance || 0)} variant="soft">
+                      {fPercent(row.metrics?.performance || 0)}
                     </Label>
                   </TableCell>
                   <TableCell align="center">
-                    <Label color={getOEEStatusColor(row.metrics.quality)} variant="soft">
-                      {fPercent(row.metrics.quality)}
+                    <Label color={getOEEStatusColor(row.metrics?.quality || 0)} variant="soft">
+                      {fPercent(row.metrics?.quality || 0)}
                     </Label>
                   </TableCell>
-                  <TableCell align="right">{fNumber(row.goodCount)}</TableCell>
-                  <TableCell align="right">{fNumber(row.totalCount)}</TableCell>
+                  <TableCell align="right">{fNumber(row.metrics?.goodCount || 0)}</TableCell>
+                  <TableCell align="right">{fNumber(row.metrics?.totalProducedQuantity || 0)}</TableCell>
                   <TableCell sx={{ minWidth: 150 }}>
                     <LinearProgress
                       variant="determinate"
-                      value={(row.metrics.oee / row.targetOEE) * 100}
-                      color={getOEEStatusColor(row.metrics.oee)}
+                      value={((row.metrics?.oee || 0) / 85) * 100}
+                      color={getOEEStatusColor(row.metrics?.oee || 0)}
                       sx={{ height: 8, borderRadius: 1 }}
                     />
                   </TableCell>
