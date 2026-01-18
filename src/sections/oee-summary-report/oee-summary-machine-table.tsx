@@ -50,7 +50,7 @@ export function OEESummaryMachineTable({ title, subheader, data, sx, ...other }:
                 <TableCell align="center">Performance</TableCell>
                 <TableCell align="center">Quality</TableCell>
                 <TableCell align="right">Good Count</TableCell>
-                <TableCell align="right">Total Count</TableCell>
+                <TableCell align="right">Total Produced</TableCell>
                 <TableCell>Target Progress</TableCell>
               </TableRow>
             </TableHead>
@@ -83,7 +83,7 @@ export function OEESummaryMachineTable({ title, subheader, data, sx, ...other }:
                     </Label>
                   </TableCell>
                   <TableCell align="right">{fNumber(row.metrics?.goodCount || 0)}</TableCell>
-                  <TableCell align="right">{fNumber(row.metrics?.totalCount || 0)}</TableCell>
+                  <TableCell align="right">{fNumber(row.metrics?.totalProducedQuantity || 0)}</TableCell>
                   <TableCell sx={{ minWidth: 150 }}>
                     <LinearProgress
                       variant="determinate"

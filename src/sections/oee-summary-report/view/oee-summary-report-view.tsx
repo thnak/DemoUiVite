@@ -175,7 +175,7 @@ export function OEESummaryReportView() {
   // Prepare machine and area data for filters
   const machineOptions = useMemo(
     () =>
-      machinesData?.data?.items?.map((m) => ({
+      machinesData?.items?.map((m) => ({
         id: m.id || '',
         name: m.name || m.code || 'Unknown',
       })) || [],
@@ -184,7 +184,7 @@ export function OEESummaryReportView() {
 
   const areaOptions = useMemo(
     () =>
-      areasData?.data?.items?.map((a) => ({
+      areasData?.items?.map((a) => ({
         id: a.id || '',
         name: a.name || a.code || 'Unknown',
       })) || [],
@@ -193,7 +193,7 @@ export function OEESummaryReportView() {
 
   const shiftOptions = useMemo(
     () =>
-      shiftsData?.data?.items?.map((s) => ({
+      shiftsData?.items?.map((s) => ({
         id: s.id || '',
         name: s.name || s.code || 'Unknown',
       })) || [],
@@ -202,7 +202,7 @@ export function OEESummaryReportView() {
 
   // Prepare chart data for machines tab
   const machineChartData = useMemo(() => {
-    const machines = oeeByMachineData?.data?.machines || [];
+    const machines = oeeByMachineData?.machines || [];
     const topMachines = [...machines]
       .sort((a, b) => (b.metrics?.oee || 0) - (a.metrics?.oee || 0))
       .slice(0, 10);
@@ -232,7 +232,7 @@ export function OEESummaryReportView() {
 
   // Prepare chart data for times tab
   const timeChartData = useMemo(() => {
-    const timePeriods = oeeByTimeData?.data?.timePeriods || [];
+    const timePeriods = oeeByTimeData?.timePeriods || [];
 
     return {
       categories: timePeriods.map((t) => t.workDate || 'Unknown'),
@@ -264,8 +264,8 @@ export function OEESummaryReportView() {
   // Overall summary metrics
   const overallMetrics = useMemo(() => {
     const summary = currentTab === 'machines' 
-      ? oeeByMachineData?.data?.overallSummary 
-      : oeeByTimeData?.data?.overallSummary;
+      ? oeeByMachineData?.overallSummary 
+      : oeeByTimeData?.overallSummary;
 
     return {
       oee: summary?.oee || 0,
@@ -325,7 +325,7 @@ export function OEESummaryReportView() {
           machines={machineOptions}
           areas={areaOptions}
           shifts={shiftOptions}
-          onTimeRangeChange={setTimeRange}
+          onTimeRangeChange={() => {}} // Not used - timeRange is constant
           onStartDateChange={(value: Date | null) => value && setStartDate(value)}
           onEndDateChange={(value: Date | null) => value && setEndDate(value)}
           onMachinesChange={setSelectedMachines}
@@ -440,7 +440,7 @@ export function OEESummaryReportView() {
                     <OEESummaryMachineTable
                       title="Detailed Machine OEE Report"
                       subheader="All machines sorted by OEE performance"
-                      data={oeeByMachineData?.data?.machines || []}
+                      data={oeeByMachineData?.machines || []}
                     />
                   </Stack>
                 </motion.div>
@@ -466,7 +466,7 @@ export function OEESummaryReportView() {
                     <OEESummaryTimeTable
                       title="Detailed Time Period OEE Report"
                       subheader="OEE performance by time period"
-                      data={oeeByTimeData?.data?.timePeriods || []}
+                      data={oeeByTimeData?.timePeriods || []}
                     />
                   </Stack>
                 </motion.div>
