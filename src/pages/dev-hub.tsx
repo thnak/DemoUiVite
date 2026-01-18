@@ -31,6 +31,14 @@ const DEV_PAGES: DevPageCard[] = [
     icon: 'solar:translation-bold',
     color: '#3b82f6',
   },
+  {
+    title: 'Factory Layout 2D',
+    description:
+      'Interactive 2D factory layout visualization with areas and machines. Shows factory-wide OEE metrics and performance indicators.',
+    path: '/dev/factory-layout',
+    icon: 'solar:map-bold',
+    color: '#10b981',
+  },
   // Add more dev pages here as needed
 ];
 

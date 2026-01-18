@@ -5,8 +5,8 @@ import { lazy, Suspense } from 'react';
 import Box from '@mui/material/Box';
 
 import { AuthLayout } from 'src/layouts/auth';
+import { DashboardLayout } from 'src/layouts/dashboard';
 import { FullscreenLayout } from 'src/layouts/fullscreen';
-import { DashboardLayout, FullWidthLayout } from 'src/layouts/dashboard';
 
 import { MachineSelectorProvider } from 'src/sections/oi/context/machine-selector-context';
 
@@ -110,7 +110,6 @@ export const MachineDashboardPage = lazy(() => import('src/pages/oi/machine-dash
 export const RoleListPage = lazy(() => import('src/pages/role-list'));
 export const RoleCreatePage = lazy(() => import('src/pages/role-create'));
 export const RoleEditPage = lazy(() => import('src/pages/role-edit'));
-export const ReportPage = lazy(() => import('src/pages/report'));
 export const FactoryLayoutPage = lazy(() => import('src/pages/factory-layout'));
 export const TimeBlockNameListPage = lazy(() => import('src/pages/time-block-name-list'));
 export const TimeBlockNameCreatePage = lazy(() => import('src/pages/time-block-name-create'));
@@ -182,8 +181,9 @@ export const routesSection: RouteObject[] = [
       { path: 'machines/:id/product-mapping', element: <MachineProductMappingPage /> },
       { path: 'machines/:id/oee', element: <MachineOEEPage /> },
       { path: 'machines/:id/tracking', element: <MachineTrackingPage /> },
-      { path: 'downtime-report', element: <DowntimeReportPage /> },
+      { path: 'report', element: <OEESummaryReportPage /> },
       { path: 'oee-summary-report', element: <OEESummaryReportPage /> },
+      { path: 'downtime-report', element: <DowntimeReportPage /> },
       { path: 'shift-templates', element: <ShiftTemplatesPage /> },
       { path: 'shift-templates/create', element: <ShiftTemplateCreatePage /> },
       { path: 'shift-templates/:id/edit', element: <ShiftTemplateEditPage /> },
@@ -236,9 +236,9 @@ export const routesSection: RouteObject[] = [
       { path: 'roles', element: <RoleListPage /> },
       { path: 'roles/create', element: <RoleCreatePage /> },
       { path: 'roles/:id/edit', element: <RoleEditPage /> },
-      { path: 'factory-layout', element: <FactoryLayoutPage /> },
       { path: 'dev', element: <DevHubPage /> },
       { path: 'dev/translation-demo', element: <TranslationDemoPage /> },
+      { path: 'dev/factory-layout', element: <FactoryLayoutPage /> },
     ],
   },
   // Fullscreen layout for OI module (no header, no sidebar)
@@ -262,17 +262,6 @@ export const routesSection: RouteObject[] = [
         ],
       },
     ],
-  },
-  // Full-width layout for report page
-  {
-    element: (
-      <FullWidthLayout>
-        <Suspense fallback={renderFallback()}>
-          <AnimatedOutlet />
-        </Suspense>
-      </FullWidthLayout>
-    ),
-    children: [{ path: 'report', element: <ReportPage /> }],
   },
   {
     path: 'sign-in',

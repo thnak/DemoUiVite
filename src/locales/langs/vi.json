@@ -29,6 +29,8 @@
     "productionTracking": "Theo dõi sản xuất",
     "alertManagement": "Quản lý cảnh báo",
     "downtimeReport": "Báo cáo thời gian ngừng máy",
+    "reports": "Báo cáo",
+    "oeeSummaryReport": "Báo cáo tổng hợp OEE",
     "defectReason": "Lý do lỗi",
     "defectReasonGroup": "Nhóm lý do lỗi",
     "calendar": "Lịch",
